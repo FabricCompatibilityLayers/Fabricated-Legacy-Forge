@@ -1,0 +1,105 @@
+plugins {
+	id 'fabric-loom' version "0.12-SNAPSHOT" // To use chocoloom, change the version to a commit hash
+	id 'maven-publish'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+archivesBaseName = project.archives_base_name
+version = project.mod_version
+group = project.maven_group
+
+repositories {
+	maven {
+		name = "legacy-fabric"
+		url = "https://maven.legacyfabric.net"
+	}
+}
+
+loom {
+	setIntermediaryUrl('https://maven.legacyfabric.net/net/fabricmc/intermediary/%1$s/intermediary-%1$s-v2.jar');
+	customMinecraftManifest.set("https://meta.legacyfabric.net/v2/manifest/${minecraft_version}")
+
+	// Required by 1.7.x
+	// runs {
+	// 	client {
+	// 		programArgs "--userProperties", "{}"
+	// 	}
+	// }
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+	// Only available for 1.8.9 as of March 20 of 2022.
+	// Fabric API provides hooks for events, item registration, and more. As most mods will need this, it's included by default. 
+	// If you know for a fact you don't, it's not required and can be safely removed.
+	modImplementation ("net.legacyfabric.legacy-fabric-api:legacy-fabric-api:${fabric_version}") {
+		exclude module: "fabric-loader-1.8.9"
+	}
+
+	if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+		implementation 'org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209'
+		implementation 'org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209'
+		implementation 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
+	}
+}
+
+if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+	configurations.all {
+		resolutionStrategy {
+			dependencySubstitution {
+				substitute module('org.lwjgl.lwjgl:lwjgl_util:2.9.2-nightly-201408222') with module('org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209')
+				substitute module('org.lwjgl.lwjgl:lwjgl:2.9.2-nightly-201408222') with module('org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209')
+			}
+			force 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
+		}
+	}
+}
+
+processResources {
+	inputs.property "version", project.version
+
+	filesMatching("fabric.mod.json") {
+		expand "version": project.version
+	}
+}
+
+// ensure that the encoding is set to UTF-8, no matter what the system default is
+// this fixes some edge cases with special characters not displaying correctly
+// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = "UTF-8"
+	if (JavaVersion.current().isJava9Compatible()) it.options.release = 8
+}
+
+java {
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+	// if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+}
+
+jar {
+	from("LICENSE") {
+		rename { "${it}_${project.archivesBaseName}" }
+	}
+}
+
+// configure the maven publication
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
+
+	// select the repositories you want to publish to
+	repositories {
+		// uncomment to publish to the local maven
+		// mavenLocal()
+	}
+}
