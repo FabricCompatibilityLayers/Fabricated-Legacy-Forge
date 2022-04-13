@@ -2,6 +2,7 @@ package modloader;
 
 import fr.catcore.fabricatedforge.mixin.modloader.common.BlockEntityAccessor;
 import fr.catcore.fabricatedforge.mixin.modloader.common.EntityTypeAccessor;
+import fr.catcore.fabricatedforge.utils.SetBaseBiomesLayerData;
 import net.minecraft.advancement.Achievement;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
@@ -235,7 +236,7 @@ public final class ModLoader {
     }
 
     public static void addBiome(Biome biomegenbase) {
-        Biome[] abiomegenbase = SetBaseBiomesLayer.biomeArray;
+        Biome[] abiomegenbase = SetBaseBiomesLayerData.biomeArray;
         List list = Arrays.asList(abiomegenbase);
         ArrayList arraylist = new ArrayList();
         arraylist.addAll(list);
@@ -243,7 +244,7 @@ public final class ModLoader {
             arraylist.add(biomegenbase);
         }
 
-        SetBaseBiomesLayer.biomeArray = (Biome[])((Biome[])arraylist.toArray(new Biome[0]));
+        SetBaseBiomesLayerData.biomeArray = (Biome[])((Biome[])arraylist.toArray(new Biome[0]));
     }
 
     public static void addCommand(Command cmd) {
@@ -1407,7 +1408,7 @@ public final class ModLoader {
     }
 
     public static void removeBiome(Biome biomegenbase) {
-        Biome[] abiomegenbase = SetBaseBiomesLayer.biomeArray;
+        Biome[] abiomegenbase = SetBaseBiomesLayerData.biomeArray;
         List list = Arrays.asList(abiomegenbase);
         ArrayList arraylist = new ArrayList();
         arraylist.addAll(list);
@@ -1415,7 +1416,7 @@ public final class ModLoader {
             arraylist.remove(biomegenbase);
         }
 
-        SetBaseBiomesLayer.biomeArray = (Biome[])((Biome[])arraylist.toArray(new Biome[0]));
+        SetBaseBiomesLayerData.biomeArray = (Biome[])((Biome[])arraylist.toArray(new Biome[0]));
     }
 
     public static void removeSpawn(Class class1, EntityCategory enumcreaturetype) {
