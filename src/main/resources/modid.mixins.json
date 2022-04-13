@@ -6,6 +6,7 @@
   "mixins": [
     "modloader.common.BlockEntityAccessor",
     "modloader.common.CrashReportMixin",
+    "modloader.common.DispenserBlockMixin",
     "modloader.common.EntityTypeAccessor",
     "modloader.common.SetBaseBiomesLayerMixin"
   ],
