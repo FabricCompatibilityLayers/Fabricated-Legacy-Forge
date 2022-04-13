@@ -11,7 +11,8 @@
     "modloader.common.EntityTypeAccessor",
     "modloader.common.FurnaceBlockEntityMixin",
     "modloader.common.ServerChunkProviderMixin",
-    "modloader.common.SetBaseBiomesLayerMixin"
+    "modloader.common.SetBaseBiomesLayerMixin",
+    "modloader.common.TrackedEntityInstanceMixin"
   ],
   "client": [
     "modloader.client.class_469Mixin",
