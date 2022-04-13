@@ -7,17 +7,18 @@
     "modloader.common.BlockEntityAccessor",
     "modloader.common.CrashReportMixin",
     "modloader.common.DispenserBlockMixin",
+    "modloader.common.EntityTrackerMixin",
     "modloader.common.EntityTypeAccessor",
     "modloader.common.FurnaceBlockEntityMixin",
     "modloader.common.SetBaseBiomesLayerMixin"
   ],
   "client": [
     "modloader.client.class_469Mixin",
-    "modloader.client.HeldItemRendererMixin",
     "modloader.client.class_535Mixin",
     "modloader.client.EntityRenderDispatcherMixin",
-    "modloader.client.ItemRendererMixin",
-    "modloader.client.IntegratedServerMixin"
+    "modloader.client.HeldItemRendererMixin",
+    "modloader.client.IntegratedServerMixin",
+    "modloader.client.ItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
