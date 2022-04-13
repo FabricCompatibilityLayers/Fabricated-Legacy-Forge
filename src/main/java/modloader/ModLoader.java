@@ -2,18 +2,18 @@ package modloader;
 
 import fr.catcore.fabricatedforge.mixin.modloader.common.BlockEntityAccessor;
 import fr.catcore.fabricatedforge.mixin.modloader.common.EntityTypeAccessor;
+import fr.catcore.fabricatedforge.mixin.modloader.client.PlayerEntityRendererAccessor;
 import fr.catcore.fabricatedforge.utils.SetBaseBiomesLayerData;
 import fr.catcore.fabricatedforge.utils.class_535Data;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancement.Achievement;
 import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.texture.TexturePackManager;
 import net.minecraft.command.Command;
 import net.minecraft.entity.*;
@@ -49,7 +49,6 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.EndBiome;
 import net.minecraft.world.biome.NetherBiome;
-import net.minecraft.world.biome.layer.SetBaseBiomesLayer;
 import net.minecraft.world.chunk.ChunkProvider;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -77,13 +76,12 @@ public final class ModLoader {
     private static final List animList = new LinkedList();
     private static final Map blockModels = new HashMap();
     private static final Map blockSpecialInv = new HashMap();
-    private static final File cfgdir = new File(Minecraft.getGameFolder(), "/config/");
+    private static final File cfgdir = new File(FabricLoader.getInstance().getGameDir().toFile(), "/config/");
     private static final File cfgfile;
     public static Level cfgLoggingLevel;
     private static Map classMap = null;
     private static long clock = 0L;
     private static Field field_animList = null;
-    private static Field field_armorList = null;
     private static Field field_modifiers = null;
     private static Field field_TileEntityRenderers = null;
     private static boolean hasInit = false;
@@ -96,10 +94,10 @@ public final class ModLoader {
     private static final Map keyList = new HashMap();
     private static String langPack = null;
     private static Map localizedStrings = new HashMap();
-    private static final File logfile = new File(Minecraft.getGameFolder(), "ModLoader.txt");
+    private static final File logfile = new File(FabricLoader.getInstance().getGameDir().toFile(), "ModLoader.txt");
     private static final Logger logger = Logger.getLogger("ModLoader");
     private static FileHandler logHandler = null;
-    private static final File modDir = new File(Minecraft.getGameFolder(), "/mods/");
+    private static final File modDir = new File(FabricLoader.getInstance().getGameDir().toFile(), "/mods/");
     private static final LinkedList modList = new LinkedList();
     private static int nextBlockModelID = 1000;
     private static final Map overrides = new HashMap();
@@ -214,7 +212,7 @@ public final class ModLoader {
 
     public static int addArmor(String s) {
         try {
-            String[] as = (String[])((String[])field_armorList.get((Object)null));
+            String[] as = PlayerEntityRendererAccessor.getArmor();
             List list = Arrays.asList(as);
             ArrayList arraylist = new ArrayList();
             arraylist.addAll(list);
@@ -223,14 +221,11 @@ public final class ModLoader {
             }
 
             int i = arraylist.indexOf(s);
-            field_armorList.set((Object)null, arraylist.toArray(new String[0]));
+            PlayerEntityRendererAccessor.setArmor((String[]) arraylist.toArray(new String[0]));
             return i;
         } catch (IllegalArgumentException var5) {
             logger.throwing("ModLoader", "AddArmor", var5);
             throwException("An impossible error has occured!", var5);
-        } catch (IllegalAccessException var6) {
-            logger.throwing("ModLoader", "AddArmor", var6);
-            throwException("An impossible error has occured!", var6);
         }
 
         return -1;
@@ -677,9 +672,6 @@ public final class ModLoader {
             field_modifiers.setAccessible(true);
             field_TileEntityRenderers = BlockEntityRenderDispatcher.class.getDeclaredFields()[0];
             field_TileEntityRenderers.setAccessible(true);
-            field_armorList = PlayerEntityRenderer.class.getDeclaredFields()[3];
-            field_modifiers.setInt(field_armorList, field_armorList.getModifiers() & -17);
-            field_armorList.setAccessible(true);
             field_animList = class_534.class.getDeclaredFields()[6];
             field_animList.setAccessible(true);
             Field[] afield = Biome.class.getDeclaredFields();

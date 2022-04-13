@@ -4,6 +4,16 @@
   "package": "fr.catcore.fabricatedforge.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+  ],
+  "client": [
+    "modloader.client.class_469Mixin",
+    "modloader.client.class_535Mixin",
+    "modloader.client.EntityRenderDispatcherMixin",
+    "modloader.client.HeldItemRendererMixin",
+    "modloader.client.IntegratedServerMixin",
+    "modloader.client.ItemRendererMixin",
+    "modloader.client.PlayerEntityRendererAccessor",
+
     "modloader.common.BlockEntityAccessor",
     "modloader.common.CraftingResultSlotMixin",
     "modloader.common.CrashReportMixin",
@@ -20,14 +30,6 @@
     "modloader.common.SetBaseBiomesLayerMixin",
     "modloader.common.TrackedEntityInstanceMixin",
     "modloader.common.VillagerEntityMixin"
-  ],
-  "client": [
-    "modloader.client.class_469Mixin",
-    "modloader.client.class_535Mixin",
-    "modloader.client.EntityRenderDispatcherMixin",
-    "modloader.client.HeldItemRendererMixin",
-    "modloader.client.IntegratedServerMixin",
-    "modloader.client.ItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

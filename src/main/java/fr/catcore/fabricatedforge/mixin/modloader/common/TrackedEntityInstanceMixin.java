@@ -18,7 +18,7 @@ public class TrackedEntityInstanceMixin {
 
     @Shadow public Entity trackedEntity;
 
-    @Inject(method = "method_2182", at = @At(value = "NEW", target = "Ljava/lang/IllegalArgumentException;<init>(Ljava/lang/String;)V"), cancellable = true)
+    @Inject(method = "method_2182", at = @At(value = "NEW", target = "java/lang/IllegalArgumentException"), cancellable = true)
     private void modLoaderGetSpawnPacket(CallbackInfoReturnable<Packet> cir) {
         Iterator i$ = ModLoader.getTrackers().values().iterator();
 

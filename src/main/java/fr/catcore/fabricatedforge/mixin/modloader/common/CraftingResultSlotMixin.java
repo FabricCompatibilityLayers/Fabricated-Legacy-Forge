@@ -19,7 +19,8 @@ public class CraftingResultSlotMixin {
 
     @Shadow @Final private Inventory field_4147;
 
-    @Inject(method = "method_3298", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/inventory/slot/CraftingResultSlot;onCrafted(Lnet/minecraft/item/ItemStack;)V"))
+    @Inject(method = "method_3298",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/slot/CraftingResultSlot;onCrafted(Lnet/minecraft/item/ItemStack;)V", shift = At.Shift.AFTER))
     private void modLoaderTakenFromCrafting(ItemStack par1, CallbackInfo ci) {
         ModLoader.takenFromCrafting(this.player, par1, this.field_4147);
     }
