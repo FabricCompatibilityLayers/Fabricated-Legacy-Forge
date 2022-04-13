@@ -8,6 +8,7 @@
     "modloader.common.CrashReportMixin",
     "modloader.common.DispenserBlockMixin",
     "modloader.common.EntityTypeAccessor",
+    "modloader.common.FurnaceBlockEntityMixin",
     "modloader.common.SetBaseBiomesLayerMixin"
   ],
   "client": [

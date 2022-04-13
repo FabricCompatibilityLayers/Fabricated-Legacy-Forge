@@ -18,8 +18,6 @@ import java.util.Random;
 @Mixin(DispenserBlock.class)
 public class DispenserBlockMixin {
 
-    @Shadow private Random random;
-
     @Inject(method = "method_298", at = @At("RETURN"), cancellable = true)
     private static void modLoaderDispenserBehavior(DispenserBlockEntity dispenserBlockEntity, World world, ItemStack itemStack, Random random, int i, int j, int k, int l, int m, double d, double e, double f, CallbackInfoReturnable<Integer> cir) {
         int result = cir.getReturnValue();
