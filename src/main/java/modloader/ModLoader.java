@@ -3,6 +3,7 @@ package modloader;
 import fr.catcore.fabricatedforge.mixin.modloader.common.BlockEntityAccessor;
 import fr.catcore.fabricatedforge.mixin.modloader.common.EntityTypeAccessor;
 import fr.catcore.fabricatedforge.utils.SetBaseBiomesLayerData;
+import fr.catcore.fabricatedforge.utils.class_535Data;
 import net.minecraft.advancement.Achievement;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
@@ -720,7 +721,7 @@ public final class ModLoader {
             }
 
             if (props.containsKey("grassFix")) {
-                class_535.cfgGrassFix = Boolean.parseBoolean(props.getProperty("grassFix"));
+                class_535Data.cfgGrassFix = Boolean.parseBoolean(props.getProperty("grassFix"));
             }
 
             logger.setLevel(cfgLoggingLevel);
@@ -758,7 +759,7 @@ public final class ModLoader {
 
             System.out.println("Done.");
             props.setProperty("loggingLevel", cfgLoggingLevel.getName());
-            props.setProperty("grassFix", Boolean.toString(class_535.cfgGrassFix));
+            props.setProperty("grassFix", Boolean.toString(class_535Data.cfgGrassFix));
             instance.options.keysAll = registerAllKeys(instance.options.keysAll);
             instance.options.load();
             initStats();

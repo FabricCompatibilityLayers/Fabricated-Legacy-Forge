@@ -13,7 +13,8 @@
   ],
   "client": [
     "modloader.client.class_469Mixin",
-    "modloader.client.HeldItemRendererMixin"
+    "modloader.client.HeldItemRendererMixin",
+    "modloader.client.class_535Mixin"
   ],
   "injectors": {
     "defaultRequire": 1
