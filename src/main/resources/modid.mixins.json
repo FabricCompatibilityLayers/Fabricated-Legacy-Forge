@@ -7,6 +7,7 @@
     "modloader.common.BlockEntityAccessor",
     "modloader.common.CraftingResultSlotMixin",
     "modloader.common.CrashReportMixin",
+    "modloader.common.DimensionMixin",
     "modloader.common.DispenserBlockMixin",
     "modloader.common.EntityTrackerMixin",
     "modloader.common.EntityTypeAccessor",
