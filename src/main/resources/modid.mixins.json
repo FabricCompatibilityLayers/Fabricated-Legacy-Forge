@@ -12,7 +12,8 @@
     "modloader.common.SetBaseBiomesLayerMixin"
   ],
   "client": [
-    "modloader.client.class_469Mixin"
+    "modloader.client.class_469Mixin",
+    "modloader.client.HeldItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
