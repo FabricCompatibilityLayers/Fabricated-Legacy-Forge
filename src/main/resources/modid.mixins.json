@@ -10,6 +10,7 @@
     "modloader.common.EntityTrackerMixin",
     "modloader.common.EntityTypeAccessor",
     "modloader.common.FurnaceBlockEntityMixin",
+    "modloader.common.ServerChunkProviderMixin",
     "modloader.common.SetBaseBiomesLayerMixin"
   ],
   "client": [
