@@ -1,12 +1,14 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.fabricmc.example.mixin",
+  "package": "fr.catcore.fabricatedforge.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "modloader.common.EntityTypeAccessor",
+    "modloader.common.BlockEntityAccessor",
+    "modloader.common.CrashReportMixin"
   ],
   "client": [
-    "ExampleMixin"
   ],
   "injectors": {
     "defaultRequire": 1
