@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "modloader.common.BlockEntityAccessor",
+    "modloader.common.CraftingResultSlotMixin",
     "modloader.common.CrashReportMixin",
     "modloader.common.DispenserBlockMixin",
     "modloader.common.EntityTrackerMixin",
