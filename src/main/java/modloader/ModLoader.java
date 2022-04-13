@@ -1,5 +1,7 @@
 package modloader;
 
+import fr.catcore.fabricatedforge.mixin.modloader.common.BlockEntityAccessor;
+import fr.catcore.fabricatedforge.mixin.modloader.common.EntityTypeAccessor;
 import net.minecraft.advancement.Achievement;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
@@ -95,8 +97,6 @@ public final class ModLoader {
     private static final File logfile = new File(Minecraft.getGameFolder(), "ModLoader.txt");
     private static final Logger logger = Logger.getLogger("ModLoader");
     private static FileHandler logHandler = null;
-    private static Method method_RegisterEntityID = null;
-    private static Method method_RegisterTileEntity = null;
     private static final File modDir = new File(Minecraft.getGameFolder(), "/mods/");
     private static final LinkedList modList = new LinkedList();
     private static int nextBlockModelID = 1000;
@@ -694,22 +694,6 @@ public final class ModLoader {
             }
 
             standardBiomes = (Biome[])((Biome[])linkedlist.toArray(new Biome[0]));
-
-            try {
-                method_RegisterTileEntity = BlockEntity.class.getDeclaredMethod("a", Class.class, String.class);
-            } catch (NoSuchMethodException var8) {
-                method_RegisterTileEntity = BlockEntity.class.getDeclaredMethod("addMapping", Class.class, String.class);
-            }
-
-            method_RegisterTileEntity.setAccessible(true);
-
-            try {
-                method_RegisterEntityID = EntityType.class.getDeclaredMethod("a", Class.class, String.class, Integer.TYPE);
-            } catch (NoSuchMethodException var7) {
-                method_RegisterEntityID = EntityType.class.getDeclaredMethod("addMapping", Class.class, String.class, Integer.TYPE);
-            }
-
-            method_RegisterEntityID.setAccessible(true);
         } catch (SecurityException var10) {
             logger.throwing("ModLoader", "init", var10);
             throwException(var10);
@@ -718,10 +702,6 @@ public final class ModLoader {
             logger.throwing("ModLoader", "init", var11);
             throwException(var11);
             throw new RuntimeException(var11);
-        } catch (NoSuchMethodException var12) {
-            logger.throwing("ModLoader", "init", var12);
-            throwException(var12);
-            throw new RuntimeException(var12);
         } catch (IllegalArgumentException var13) {
             logger.throwing("ModLoader", "init", var13);
             throwException(var13);
@@ -1371,16 +1351,10 @@ public final class ModLoader {
 
     public static void registerEntityID(Class class1, String s, int i) {
         try {
-            method_RegisterEntityID.invoke((Object)null, class1, s, i);
+            EntityTypeAccessor.callRegister(class1, s, i);
         } catch (IllegalArgumentException var4) {
             logger.throwing("ModLoader", "RegisterEntityID", var4);
             throwException(var4);
-        } catch (IllegalAccessException var5) {
-            logger.throwing("ModLoader", "RegisterEntityID", var5);
-            throwException(var5);
-        } catch (InvocationTargetException var6) {
-            logger.throwing("ModLoader", "RegisterEntityID", var6);
-            throwException(var6);
         }
 
     }
@@ -1415,7 +1389,7 @@ public final class ModLoader {
 
     public static void registerTileEntity(Class class1, String s, BlockEntityRenderer tileentityspecialrenderer) {
         try {
-            method_RegisterTileEntity.invoke((Object)null, class1, s);
+            BlockEntityAccessor.callRegister(class1, s);
             if (tileentityspecialrenderer != null) {
                 BlockEntityRenderDispatcher tileentityrenderer = BlockEntityRenderDispatcher.INSTANCE;
                 Map map = (Map)field_TileEntityRenderers.get(tileentityrenderer);
@@ -1428,9 +1402,6 @@ public final class ModLoader {
         } catch (IllegalAccessException var6) {
             logger.throwing("ModLoader", "RegisterTileEntity", var6);
             throwException(var6);
-        } catch (InvocationTargetException var7) {
-            logger.throwing("ModLoader", "RegisterTileEntity", var7);
-            throwException(var7);
         }
 
     }
