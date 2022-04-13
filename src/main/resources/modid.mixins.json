@@ -13,6 +13,7 @@
     "modloader.common.FurnaceBlockEntityMixin",
     "modloader.common.FurnaceOutputSlotMixin",
     "modloader.common.ItemEntityMixin",
+    "modloader.common.LevelGeneratorTypeMixin",
     "modloader.common.ServerChunkProviderMixin",
     "modloader.common.ServerPacketListenerMixin",
     "modloader.common.SetBaseBiomesLayerMixin",
