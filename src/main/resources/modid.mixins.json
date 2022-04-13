@@ -15,7 +15,8 @@
     "modloader.client.class_469Mixin",
     "modloader.client.HeldItemRendererMixin",
     "modloader.client.class_535Mixin",
-    "modloader.client.EntityRenderDispatcherMixin"
+    "modloader.client.EntityRenderDispatcherMixin",
+    "modloader.client.ItemRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
