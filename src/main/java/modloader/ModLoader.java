@@ -739,7 +739,7 @@ public final class ModLoader {
             }
 
             if (props.containsKey("grassFix")) {
-                class_535.cfgGrassFInventory = Boolean.parseBoolean(props.getProperty("grassFix"));
+                class_535.cfgGrassFix = Boolean.parseBoolean(props.getProperty("grassFix"));
             }
 
             logger.setLevel(cfgLoggingLevel);
@@ -1102,7 +1102,7 @@ public final class ModLoader {
             logger.finer("Zip found.");
             FileInputStream fileinputstream = new FileInputStream(file);
             ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
-            Object var4 = null;
+            Object obj = null;
 
             while(true) {
                 ZipEntry zipentry = zipinputstream.getNextEntry();
@@ -1167,7 +1167,7 @@ public final class ModLoader {
                         logger.finer("Zip found.");
                         FileInputStream fileinputstream = new FileInputStream(file2);
                         ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
-                        Object var8 = null;
+                        Object obj = null;
 
                         while(true) {
                             ZipEntry zipentry = zipinputstream.getNextEntry();
@@ -1270,9 +1270,9 @@ public final class ModLoader {
 
     }
 
-    public static KeyBinding[] registerAllKeys(KeyBinding[] array) {
+    public static KeyBinding[] registerAllKeys(KeyBinding[] akeybinding) {
         LinkedList linkedlist = new LinkedList();
-        linkedlist.addAll(Arrays.asList(array));
+        linkedlist.addAll(Arrays.asList(akeybinding));
         Iterator iterator = keyList.values().iterator();
 
         while(iterator.hasNext()) {
@@ -1706,11 +1706,11 @@ public final class ModLoader {
                         s = mlprop.name().length() != 0 ? mlprop.name() : field1.getName();
                         obj1 = field1.get((Object)null);
                         StringBuilder stringbuilder1 = new StringBuilder();
-                        if (mlprop.min() != -1.0D / 0.0) {
+                        if (mlprop.min() != Double.NEGATIVE_INFINITY) {
                             stringbuilder1.append(String.format(",>=%.1f", mlprop.min()));
                         }
 
-                        if (mlprop.max() != 1.0D / 0.0) {
+                        if (mlprop.max() != Double.POSITIVE_INFINITY) {
                             stringbuilder1.append(String.format(",<=%.1f", mlprop.max()));
                         }
 
@@ -1752,7 +1752,7 @@ public final class ModLoader {
                 }
 
                 d = ((Number)obj2).doubleValue();
-            } while(mlprop.min() != -1.0D / 0.0 && d < mlprop.min() || mlprop.max() != 1.0D / 0.0 && d > mlprop.max());
+            } while(mlprop.min() != Double.NEGATIVE_INFINITY && d < mlprop.min() || mlprop.max() != Double.POSITIVE_INFINITY && d > mlprop.max());
 
             logger.finer(s + " set to " + obj2);
             if (!obj2.equals(obj1)) {
@@ -1804,8 +1804,8 @@ public final class ModLoader {
                     } while(i <= 0);
 
                     j = -1;
-                    int k = -2147483648;
-                    int l = 2147483647;
+                    int k = Integer.MIN_VALUE;
+                    int l = Integer.MAX_VALUE;
                     String[] as;
                     if (s.indexOf(59) > 0) {
                         as = s.split(";");

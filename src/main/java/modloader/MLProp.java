@@ -12,7 +12,7 @@ public @interface MLProp {
 
     String info() default "";
 
-    double min() default -1.0D / 0.0;
+    double min() default Double.NEGATIVE_INFINITY;
 
-    double max() default 1.0D / 0.0;
+    double max() default Double.POSITIVE_INFINITY;
 }
