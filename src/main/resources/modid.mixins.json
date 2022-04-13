@@ -14,7 +14,8 @@
     "modloader.common.ServerChunkProviderMixin",
     "modloader.common.ServerPacketListenerMixin",
     "modloader.common.SetBaseBiomesLayerMixin",
-    "modloader.common.TrackedEntityInstanceMixin"
+    "modloader.common.TrackedEntityInstanceMixin",
+    "modloader.common.VillagerEntityMixin"
   ],
   "client": [
     "modloader.client.class_469Mixin",
