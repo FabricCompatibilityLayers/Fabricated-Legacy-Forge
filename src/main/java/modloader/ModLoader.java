@@ -1,12 +1,12 @@
 package modloader;
 
-import fr.catcore.fabricatedforge.mixin.modloader.common.BlockEntityAccessor;
-import fr.catcore.fabricatedforge.mixin.modloader.common.EntityTypeAccessor;
-import fr.catcore.fabricatedforge.mixin.modloader.client.PlayerEntityRendererAccessor;
-import fr.catcore.fabricatedforge.remapping.RemapUtil;
-import fr.catcore.fabricatedforge.utils.Constants;
-import fr.catcore.fabricatedforge.utils.SetBaseBiomesLayerData;
-import fr.catcore.fabricatedforge.utils.class_535Data;
+import fr.catcore.fabricatedmodloader.mixin.modloader.common.BlockEntityAccessor;
+import fr.catcore.fabricatedmodloader.mixin.modloader.common.EntityTypeAccessor;
+import fr.catcore.fabricatedmodloader.mixin.modloader.client.PlayerEntityRendererAccessor;
+import fr.catcore.fabricatedmodloader.remapping.RemapUtil;
+import fr.catcore.fabricatedmodloader.utils.Constants;
+import fr.catcore.fabricatedmodloader.utils.SetBaseBiomesLayerData;
+import fr.catcore.fabricatedmodloader.utils.class_535Data;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.impl.util.log.Log;
 import net.minecraft.advancement.Achievement;
@@ -63,7 +63,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.charset.Charset;
 import java.security.DigestException;
 import java.security.NoSuchAlgorithmException;
@@ -1108,8 +1107,9 @@ public final class ModLoader {
 
             for (j = 0; j < afile.length; j++) {
                 file2 = afile[j];
-                if (file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip"))) {
-                    if (file2.isFile()) {
+                if (file.isDirectory() || file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip"))) {
+                    File remappedFile = new File(Constants.REMAPPED_FOLDER, file2.getName());
+                    if (file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip"))) {
                         FileInputStream fileinputstream = new FileInputStream(file2);
                         ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
                         boolean fabric = false;
@@ -1132,10 +1132,28 @@ public final class ModLoader {
                             afile[j] = null;
                             continue;
                         }
+                    } else if (file2.isDirectory()) {
+                        boolean isMod = false;
+
+                        for (String fl : file2.list()) {
+                            if (fl.startsWith("mod_") && fl.endsWith(".class")) {
+                                isMod = true;
+                                break;
+                            }
+                        }
+
+                        if (!isMod) {
+                            afile[j] = null;
+                            continue;
+                        } else {
+                            remappedFile = new File(Constants.REMAPPED_FOLDER, file2.getName() + ".zip");
+                        }
+                    } else if (file2.isFile()) {
+                        afile[j] = null;
+                        continue;
                     }
-                    Log.info(Constants.LOG_CATEGORY, "Found potential ModLoader mod " + file2.getCanonicalPath());
-                    File remappedFile = new File(Constants.REMAPPED_FOLDER, file2.getName());
-                    RemapUtil.remapMod(file2.toPath(), remappedFile.toPath());
+                    Log.info(Constants.LOG_CATEGORY, "Found potential ModLoader mod " + file2.getName());
+                    if (!remappedFile.exists()) RemapUtil.remapMod(file2.toPath(), remappedFile.toPath());
                     afile[j] = remappedFile;
                 }
             }
