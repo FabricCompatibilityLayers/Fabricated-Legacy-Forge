@@ -3,9 +3,12 @@ package modloader;
 import fr.catcore.fabricatedforge.mixin.modloader.common.BlockEntityAccessor;
 import fr.catcore.fabricatedforge.mixin.modloader.common.EntityTypeAccessor;
 import fr.catcore.fabricatedforge.mixin.modloader.client.PlayerEntityRendererAccessor;
+import fr.catcore.fabricatedforge.remapping.RemapUtil;
+import fr.catcore.fabricatedforge.utils.Constants;
 import fr.catcore.fabricatedforge.utils.SetBaseBiomesLayerData;
 import fr.catcore.fabricatedforge.utils.class_535Data;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.impl.util.log.Log;
 import net.minecraft.advancement.Achievement;
 import net.minecraft.block.Block;
 import net.minecraft.client.*;
@@ -316,12 +319,7 @@ public final class ModLoader {
                 return;
             }
 
-            Package package1 = ModLoader.class.getPackage();
-            if (package1 != null) {
-                s1 = package1.getName() + "." + s1;
-            }
-
-            Class class1 = classloader.loadClass(s1);
+            Class class1 = classloader.loadClass(s1.replace("/", "."));
             if (!BaseMod.class.isAssignableFrom(class1)) {
                 return;
             }
@@ -336,6 +334,7 @@ public final class ModLoader {
         } catch (Throwable var6) {
             logger.fine("Failed to load mod from \"" + s + "\"");
             System.out.println("Failed to load mod from \"" + s + "\"");
+            var6.printStackTrace();
             logger.throwing("ModLoader", "addMod", var6);
             throwException(var6);
         }
@@ -649,6 +648,7 @@ public final class ModLoader {
 
     private static void init() {
         hasInit = true;
+        RemapUtil.init();
         String usedItemSpritesString = "1111111111111111111111111111111111111101111111111111111111111111111111111111111111111111111111111111110111111111111111000111111111111101111111110000000101111111000000010111111100000000001110110000000000000000000000000000000000000000000000001111111111111111";
         String usedTerrainSpritesString = "1111111111111111111111111100111111111111100111111111111110011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000001111111100000111111111100000001111111110000001111111111111111111";
 
@@ -1096,7 +1096,7 @@ public final class ModLoader {
 
     private static void readFromModFolder(File file) throws IOException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException {
         ClassLoader classloader = Minecraft.class.getClassLoader();
-        Method method = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+        Method method = classloader.getClass().getDeclaredMethod("addURL", URL.class);
         method.setAccessible(true);
         if (!file.isDirectory()) {
             throw new IllegalArgumentException("folder must be a Directory.");
@@ -1105,33 +1105,60 @@ public final class ModLoader {
             Arrays.sort(afile);
             int j;
             File file2;
-            if (classloader instanceof URLClassLoader) {
-                for(j = 0; j < afile.length; ++j) {
-                    file2 = afile[j];
-                    if (file2.isDirectory() || file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip"))) {
-                        method.invoke(classloader, file2.toURI().toURL());
+
+            for (j = 0; j < afile.length; j++) {
+                file2 = afile[j];
+                if (file2.isDirectory() || file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip"))) {
+                    if (file2.isFile()) {
+                        FileInputStream fileinputstream = new FileInputStream(file2);
+                        ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
+                        boolean fabric = false;
+                        while(true) {
+                            ZipEntry zipentry = zipinputstream.getNextEntry();
+                            if (zipentry == null) {
+                                zipinputstream.close();
+                                fileinputstream.close();
+                                break;
+                            }
+
+                            String s1 = zipentry.getName();
+                            if (s1.equals("fabric.mod.json")) {
+                                fabric = true;
+                                break;
+                            }
+                        }
+
+                        if (fabric) {
+                            afile[j] = null;
+                            continue;
+                        }
                     }
+                    Log.info(Constants.LOG_CATEGORY, "Found potential ModLoader mod " + file2.getCanonicalPath());
+                    File remappedFile = new File(Constants.REMAPPED_FOLDER, file2.getName());
+                    RemapUtil.remapMod(file2.toPath(), remappedFile.toPath());
+                    afile[j] = remappedFile;
                 }
             }
 
             for(j = 0; j < afile.length; ++j) {
                 file2 = afile[j];
-                if (file2.isDirectory() || file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip"))) {
+                if (file2 != null && (file2.isDirectory() || file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip")))) {
+                    method.invoke(classloader, file2.toURI().toURL());
+                }
+            }
+
+            for(j = 0; j < afile.length; ++j) {
+                file2 = afile[j];
+                if (file2 != null && (file2.isDirectory() || file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip")))) {
                     logger.finer("Adding mods from " + file2.getCanonicalPath());
                     if (!file2.isFile()) {
                         if (file2.isDirectory()) {
-                            Package package1 = ModLoader.class.getPackage();
-                            if (package1 != null) {
-                                String s = package1.getName().replace('.', File.separatorChar);
-                                file2 = new File(file2, s);
-                            }
-
                             logger.finer("Directory found.");
                             File[] afile1 = file2.listFiles();
                             if (afile1 != null) {
                                 for(int k = 0; k < afile1.length; ++k) {
                                     String s2 = afile1[k].getName();
-                                    if (afile1[k].isFile() && s2.startsWith("mod_") && s2.endsWith(".class")) {
+                                    if (afile1[k].isFile() && s2.startsWith("net/minecraft/mod_") && s2.endsWith(".class")) {
                                         addMod(classloader, s2);
                                     }
                                 }
@@ -1152,7 +1179,7 @@ public final class ModLoader {
                             }
 
                             String s1 = zipentry.getName();
-                            if (!zipentry.isDirectory() && s1.startsWith("mod_") && s1.endsWith(".class")) {
+                            if (!zipentry.isDirectory() && s1.startsWith("net/minecraft/mod_") && s1.endsWith(".class")) {
                                 addMod(classloader, s1);
                             }
                         }
