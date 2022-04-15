@@ -1108,7 +1108,7 @@ public final class ModLoader {
 
             for (j = 0; j < afile.length; j++) {
                 file2 = afile[j];
-                if (file2.isDirectory() || file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip"))) {
+                if (file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip"))) {
                     if (file2.isFile()) {
                         FileInputStream fileinputstream = new FileInputStream(file2);
                         ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
