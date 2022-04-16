@@ -13,6 +13,7 @@ public class Constants {
     public static final File REMAPPED_FOLDER = new File(VERSIONED_FOLDER, "mods");
 
     public static final LogCategory LOG_CATEGORY = new LogCategory("Mod", "FabricatedModLoader");
+    public static final LogCategory MODLOADER_LOG_CATEGORY = new LogCategory("Mod", "FabricatedModLoader", "ModLoader");
 
     static {
         MAIN_FOLDER.mkdirs();

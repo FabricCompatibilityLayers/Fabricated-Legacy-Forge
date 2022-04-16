@@ -37,6 +37,7 @@ public class RemapUtil {
     }
 
     public static void remapMod(Path from, Path to) {
+        if (to.toFile().exists()) return;
         Log.info(Constants.LOG_CATEGORY, "Remapping mod " + from.getFileName());
         TinyRemapper remapper = makeRemapper(MINECRAFT_TREE, LOADER_TREE, MODS_TREE);
         remapFile(remapper, from, to);

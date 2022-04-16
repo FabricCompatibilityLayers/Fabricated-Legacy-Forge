@@ -139,7 +139,7 @@ public final class ModLoader {
                 setPrivateValue(Achievement.class, achievement, 3, s1);
             }
         } catch (IllegalArgumentException | SecurityException | NoSuchFieldException var5) {
-            logger.throwing("ModLoader", "AddAchievementDesc", var5);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader AddAchievementDesc", var5);
             throwException(var5);
         }
 
@@ -151,7 +151,7 @@ public final class ModLoader {
         } else {
             if (!Entity.class.isAssignableFrom(entityClass)) {
                 Exception exception = new Exception(entityClass.getCanonicalName() + " is not an entity.");
-                logger.throwing("ModLoader", "addEntityTracker", exception);
+                Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader addEntityTracker", exception);
                 throwException(exception);
             }
 
@@ -164,14 +164,14 @@ public final class ModLoader {
     }
 
     public static int addAllFuel(int id, int metadata) {
-        logger.finest("Finding fuel for " + id);
+        Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Finding fuel for " + id);
         int result = 0;
 
         for(Iterator iter = modList.iterator(); iter.hasNext() && result == 0; result = ((BaseMod)iter.next()).addFuel(id, metadata)) {
         }
 
         if (result != 0) {
-            logger.finest("Returned " + result);
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Returned " + result);
         }
 
         return result;
@@ -180,7 +180,7 @@ public final class ModLoader {
     public static void addAllRenderers(Map renderers) {
         if (!hasInit) {
             init();
-            logger.fine("Initialized");
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Initialized");
         }
 
         Iterator i$ = modList.iterator();
@@ -193,7 +193,7 @@ public final class ModLoader {
     }
 
     public static void addAnimation(class_584 anim) {
-        logger.finest("Adding animation " + anim.toString());
+        Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Adding animation " + anim.toString());
         Iterator i$ = animList.iterator();
 
         while(i$.hasNext()) {
@@ -221,7 +221,7 @@ public final class ModLoader {
             PlayerEntityRendererAccessor.setArmor((String[]) arraylist.toArray(new String[0]));
             return i;
         } catch (IllegalArgumentException var5) {
-            logger.throwing("ModLoader", "AddArmor", var5);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader AddArmor", var5);
             throwException("An impossible error has occured!", var5);
         }
 
@@ -322,14 +322,14 @@ public final class ModLoader {
             BaseMod basemod = (BaseMod)class1.newInstance();
             if (basemod != null) {
                 modList.add(basemod);
-                logger.fine("Mod Initialized: \"" + basemod.toString() + "\" from " + s);
-                System.out.println("Mod Initialized: " + basemod.toString());
+                Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Mod Initialized: \"" + basemod.toString() + "\" from " + s);
+                Log.info(Constants.MODLOADER_LOG_CATEGORY, "Mod Initialized: " + basemod.toString());
             }
         } catch (Throwable var6) {
-            logger.fine("Failed to load mod from \"" + s + "\"");
-            System.out.println("Failed to load mod from \"" + s + "\"");
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Failed to load mod from \"" + s + "\"");
+            Log.info(Constants.MODLOADER_LOG_CATEGORY, "Failed to load mod from \"" + s + "\"");
             var6.printStackTrace();
-            logger.throwing("ModLoader", "addMod", var6);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader addMod", var6);
             throwException(var6);
         }
 
@@ -360,7 +360,7 @@ public final class ModLoader {
             }
         } else {
             exception1 = new Exception(obj.getClass().getName() + " cannot have name attached to it!");
-            logger.throwing("ModLoader", "AddName", exception1);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader AddName", exception1);
             throwException(exception1);
         }
 
@@ -368,7 +368,7 @@ public final class ModLoader {
             addLocalization(s2, s, s1);
         } else {
             exception1 = new Exception(obj + " is missing name tag!");
-            logger.throwing("ModLoader", "AddName", exception1);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader AddName", exception1);
             throwException(exception1);
         }
 
@@ -380,7 +380,7 @@ public final class ModLoader {
             addOverride(s, s1, i);
             return i;
         } catch (Throwable var3) {
-            logger.throwing("ModLoader", "addOverride", var3);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader addOverride", var3);
             throwException(var3);
             throw new RuntimeException(var3);
         }
@@ -401,8 +401,8 @@ public final class ModLoader {
             k = itemSpritesLeft;
         }
 
-        System.out.println("Overriding " + s + " with " + s1 + " @ " + i + ". " + k + " left.");
-        logger.finer("addOverride(" + s + "," + s1 + "," + i + "). " + k + " left.");
+        Log.info(Constants.MODLOADER_LOG_CATEGORY, "Overriding " + s + " with " + s1 + " @ " + i + ". " + k + " left.");
+        Log.debug(Constants.MODLOADER_LOG_CATEGORY, "addOverride(" + s + "," + s1 + "," + i + "). " + k + " left.");
         Map obj = (Map)overrides.get(Integer.valueOf(j));
         if (obj == null) {
             obj = new HashMap();
@@ -537,7 +537,7 @@ public final class ModLoader {
 
                 int k;
                 for(k = 0; k < athread.length; ++k) {
-                    System.out.println(athread[k].getName());
+                    Log.info(Constants.MODLOADER_LOG_CATEGORY, athread[k].getName());
                 }
 
                 for(k = 0; k < athread.length; ++k) {
@@ -547,7 +547,7 @@ public final class ModLoader {
                     }
                 }
             } catch (SecurityException | NoSuchFieldException var4) {
-                logger.throwing("ModLoader", "getMinecraftInstance", var4);
+                Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader getMinecraftInstance", var4);
                 throw new RuntimeException(var4);
             }
         }
@@ -561,7 +561,7 @@ public final class ModLoader {
             field.setAccessible(true);
             return field.get(obj);
         } catch (IllegalAccessException var4) {
-            logger.throwing("ModLoader", "getPrivateValue", var4);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader getPrivateValue", var4);
             throwException("An impossible error has occured!", var4);
             return null;
         }
@@ -573,7 +573,7 @@ public final class ModLoader {
             field.setAccessible(true);
             return field.get(obj);
         } catch (IllegalAccessException var4) {
-            logger.throwing("ModLoader", "getPrivateValue", var4);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader getPrivateValue", var4);
             throwException("An impossible error has occured!", var4);
             return null;
         }
@@ -602,7 +602,7 @@ public final class ModLoader {
         }
 
         Exception exception = new Exception("No more empty item sprite indices left!");
-        logger.throwing("ModLoader", "getUniqueItemSpriteIndex", exception);
+        Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader getUniqueItemSpriteIndex", exception);
         throwException(exception);
         return 0;
     }
@@ -614,7 +614,7 @@ public final class ModLoader {
             return getUniqueTerrainSpriteIndex();
         } else {
             Exception exception = new Exception("No registry for this texture: " + s);
-            logger.throwing("ModLoader", "getUniqueItemSpriteIndex", exception);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader getUniqueItemSpriteIndex", exception);
             throwException(exception);
             return 0;
         }
@@ -632,7 +632,7 @@ public final class ModLoader {
         }
 
         Exception exception = new Exception("No more empty terrain sprite indices left!");
-        logger.throwing("ModLoader", "getUniqueItemSpriteIndex", exception);
+        Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader getUniqueItemSpriteIndex", exception);
         throwException(exception);
         return 0;
     }
@@ -679,7 +679,7 @@ public final class ModLoader {
 
             standardBiomes = (Biome[])((Biome[])linkedlist.toArray(new Biome[0]));
         } catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException var10) {
-            logger.throwing("ModLoader", "init", var10);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader init", var10);
             throwException(var10);
             throw new RuntimeException(var10);
         }
@@ -701,8 +701,8 @@ public final class ModLoader {
                 logger.addHandler(logHandler);
             }
 
-            logger.fine("ModLoader 1.3.2 Initializing...");
-            System.out.println("ModLoader 1.3.2 Initializing...");
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.3.2 Initializing...");
+            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.3.2 Initializing...");
             addModsToClassPath();
             sortModList();
             Iterator iterator = modList.iterator();
@@ -710,8 +710,8 @@ public final class ModLoader {
             while(iterator.hasNext()) {
                 BaseMod basemod = (BaseMod)iterator.next();
                 basemod.load();
-                logger.fine("Mod Loaded: \"" + basemod.toString() + "\"");
-                System.out.println("Mod Loaded: " + basemod.toString());
+                Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Mod Loaded: \"" + basemod.toString() + "\"");
+                Log.info(Constants.MODLOADER_LOG_CATEGORY, "Mod Loaded: " + basemod.toString());
                 if (!props.containsKey(basemod.getClass().getSimpleName())) {
                     props.setProperty(basemod.getClass().getSimpleName(), "on");
                 }
@@ -724,7 +724,7 @@ public final class ModLoader {
                 basemod1.modsLoaded();
             }
 
-            System.out.println("Done.");
+            Log.info(Constants.MODLOADER_LOG_CATEGORY, "Done.");
             props.setProperty("loggingLevel", cfgLoggingLevel.getName());
             props.setProperty("grassFix", Boolean.toString(class_535Data.cfgGrassFix));
             instance.options.keysAll = registerAllKeys(instance.options.keysAll);
@@ -732,7 +732,7 @@ public final class ModLoader {
             initStats();
             saveConfig();
         } catch (Throwable var9) {
-            logger.throwing("ModLoader", "init", var9);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader init", var9);
             throwException("ModLoader has failed to initialize.", var9);
             if (logHandler != null) {
                 logHandler.close();
@@ -862,7 +862,7 @@ public final class ModLoader {
         minecraft.profiler.push("modtick");
         if (!hasInit) {
             init();
-            logger.fine("Initialized");
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Initialized");
         }
 
         if (texPack == null || minecraft.options.currentTexturePackName != texPack) {
@@ -876,7 +876,7 @@ public final class ModLoader {
             try {
                 properties = (Properties)getPrivateValue(Language.class, Language.getInstance(), 1);
             } catch (SecurityException | NoSuchFieldException var12) {
-                logger.throwing("ModLoader", "AddLocalization", var12);
+                Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader AddLocalization", var12);
                 throwException(var12);
             }
 
@@ -987,7 +987,7 @@ public final class ModLoader {
     public static void openGUI(PlayerEntity entityplayer, Screen guiscreen) {
         if (!hasInit) {
             init();
-            logger.fine("Initialized");
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Initialized");
         }
 
         Minecraft minecraft = getMinecraftInstance();
@@ -1002,7 +1002,7 @@ public final class ModLoader {
     public static void populateChunk(ChunkProvider ichunkprovider, int i, int j, World world) {
         if (!hasInit) {
             init();
-            logger.fine("Initialized");
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Initialized");
         }
 
         Random random = new Random(world.getSeed());
@@ -1168,7 +1168,7 @@ public final class ModLoader {
                     ModTextureStatic modtexturestatic = new ModTextureStatic(i, j, bufferedimage);
                     renderengine.method_1416(modtexturestatic);
                 } catch (Exception var13) {
-                    logger.throwing("ModLoader", "RegisterAllTextureOverrides", var13);
+                    Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader RegisterAllTextureOverrides", var13);
                     throwException(var13);
                     throw new RuntimeException(var13);
                 }
@@ -1200,7 +1200,7 @@ public final class ModLoader {
             }
         } catch (IllegalArgumentException | IllegalAccessException | SecurityException | InstantiationException |
                  InvocationTargetException | NoSuchMethodException var4) {
-            logger.throwing("ModLoader", "RegisterBlock", var4);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader RegisterBlock", var4);
             throwException(var4);
         }
 
@@ -1210,7 +1210,7 @@ public final class ModLoader {
         try {
             EntityTypeAccessor.callRegister(class1, s, i);
         } catch (IllegalArgumentException var4) {
-            logger.throwing("ModLoader", "RegisterEntityID", var4);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader RegisterEntityID", var4);
             throwException(var4);
         }
 
@@ -1254,7 +1254,7 @@ public final class ModLoader {
                 tileentityspecialrenderer.setDispatcher(tileentityrenderer);
             }
         } catch (IllegalArgumentException | IllegalAccessException var5) {
-            logger.throwing("ModLoader", "RegisterTileEntity", var5);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader RegisterTileEntity", var5);
             throwException(var5);
         }
 
@@ -1449,7 +1449,7 @@ public final class ModLoader {
 
             field.set(obj, obj1);
         } catch (IllegalAccessException var6) {
-            logger.throwing("ModLoader", "setPrivateValue", var6);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader setPrivateValue", var6);
             throwException("An impossible error has occured!", var6);
         }
 
@@ -1466,7 +1466,7 @@ public final class ModLoader {
             field.setAccessible(true);
             field.set(obj, obj1);
         } catch (IllegalAccessException var6) {
-            logger.throwing("ModLoader", "setPrivateValue", var6);
+            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader setPrivateValue", var6);
             throwException("An impossible error has occured!", var6);
         }
 
@@ -1567,7 +1567,7 @@ public final class ModLoader {
                             break;
                         }
 
-                        logger.finer(s + " not in config, using default: " + obj1);
+                        Log.debug(Constants.MODLOADER_LOG_CATEGORY, s + " not in config, using default: " + obj1);
                         properties.setProperty(s, obj1.toString());
                     }
                 } while(obj2 == null);
@@ -1579,7 +1579,7 @@ public final class ModLoader {
                 d = ((Number)obj2).doubleValue();
             } while(mlprop.min() != Double.NEGATIVE_INFINITY && d < mlprop.min() || mlprop.max() != Double.POSITIVE_INFINITY && d > mlprop.max());
 
-            logger.finer(s + " set to " + obj2);
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, s + " set to " + obj2);
             if (!obj2.equals(obj1)) {
                 field1.set((Object)null, obj2);
             }

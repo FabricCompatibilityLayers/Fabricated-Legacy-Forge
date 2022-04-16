@@ -6,6 +6,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.impl.ModContainerImpl;
 import net.fabricmc.loader.impl.discovery.ModCandidate;
 import net.fabricmc.loader.impl.game.GameProvider;
+import net.fabricmc.loader.impl.util.log.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -43,6 +44,7 @@ public class FakeModManager {
             getModMap(loader).put(modEntry.modId, container);
 
             MODS.add(modEntry);
+            Log.info(Constants.LOG_CATEGORY, "Added ModLoader mod " + modEntry.modName + " to mod list.");
         } catch (IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
