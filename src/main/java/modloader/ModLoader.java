@@ -5,6 +5,7 @@ import fr.catcore.fabricatedmodloader.mixin.modloader.common.EntityTypeAccessor;
 import fr.catcore.fabricatedmodloader.mixin.modloader.client.PlayerEntityRendererAccessor;
 import fr.catcore.fabricatedmodloader.remapping.RemapUtil;
 import fr.catcore.fabricatedmodloader.utils.Constants;
+import fr.catcore.fabricatedmodloader.utils.FakeModManager;
 import fr.catcore.fabricatedmodloader.utils.SetBaseBiomesLayerData;
 import fr.catcore.fabricatedmodloader.utils.class_535Data;
 import net.fabricmc.loader.api.FabricLoader;
@@ -62,6 +63,7 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.security.DigestException;
@@ -99,7 +101,6 @@ public final class ModLoader {
     private static final File logfile = new File(FabricLoader.getInstance().getGameDir().toFile(), "ModLoader.txt");
     private static final Logger logger = Logger.getLogger("ModLoader");
     private static FileHandler logHandler = null;
-    private static final File modDir = new File(FabricLoader.getInstance().getGameDir().toFile(), "/mods/");
     private static final LinkedList modList = new LinkedList();
     private static int nextBlockModelID = 1000;
     private static final Map overrides = new HashMap();
@@ -137,15 +138,9 @@ public final class ModLoader {
                 setPrivateValue(Stat.class, achievement, 1, s);
                 setPrivateValue(Achievement.class, achievement, 3, s1);
             }
-        } catch (IllegalArgumentException var5) {
+        } catch (IllegalArgumentException | SecurityException | NoSuchFieldException var5) {
             logger.throwing("ModLoader", "AddAchievementDesc", var5);
             throwException(var5);
-        } catch (SecurityException var6) {
-            logger.throwing("ModLoader", "AddAchievementDesc", var6);
-            throwException(var6);
-        } catch (NoSuchFieldException var7) {
-            logger.throwing("ModLoader", "AddAchievementDesc", var7);
-            throwException(var7);
         }
 
     }
@@ -551,12 +546,9 @@ public final class ModLoader {
                         break;
                     }
                 }
-            } catch (SecurityException var4) {
+            } catch (SecurityException | NoSuchFieldException var4) {
                 logger.throwing("ModLoader", "getMinecraftInstance", var4);
                 throw new RuntimeException(var4);
-            } catch (NoSuchFieldException var5) {
-                logger.throwing("ModLoader", "getMinecraftInstance", var5);
-                throw new RuntimeException(var5);
             }
         }
 
@@ -647,7 +639,6 @@ public final class ModLoader {
 
     private static void init() {
         hasInit = true;
-        RemapUtil.init();
         String usedItemSpritesString = "1111111111111111111111111111111111111101111111111111111111111111111111111111111111111111111111111111110111111111111111000111111111111101111111110000000101111111000000010111111100000000001110110000000000000000000000000000000000000000000000001111111111111111";
         String usedTerrainSpritesString = "1111111111111111111111111100111111111111100111111111111110011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000001111111100000111111111100000001111111110000001111111111111111111";
 
@@ -687,22 +678,10 @@ public final class ModLoader {
             }
 
             standardBiomes = (Biome[])((Biome[])linkedlist.toArray(new Biome[0]));
-        } catch (SecurityException var10) {
+        } catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException var10) {
             logger.throwing("ModLoader", "init", var10);
             throwException(var10);
             throw new RuntimeException(var10);
-        } catch (NoSuchFieldException var11) {
-            logger.throwing("ModLoader", "init", var11);
-            throwException(var11);
-            throw new RuntimeException(var11);
-        } catch (IllegalArgumentException var13) {
-            logger.throwing("ModLoader", "init", var13);
-            throwException(var13);
-            throw new RuntimeException(var13);
-        } catch (IllegalAccessException var14) {
-            logger.throwing("ModLoader", "init", var14);
-            throwException(var14);
-            throw new RuntimeException(var14);
         }
 
         try {
@@ -724,10 +703,7 @@ public final class ModLoader {
 
             logger.fine("ModLoader 1.3.2 Initializing...");
             System.out.println("ModLoader 1.3.2 Initializing...");
-            File file = new File(ModLoader.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            modDir.mkdirs();
-            readFromClassPath(file);
-            readFromModFolder(modDir);
+            addModsToClassPath();
             sortModList();
             Iterator iterator = modList.iterator();
 
@@ -899,12 +875,9 @@ public final class ModLoader {
 
             try {
                 properties = (Properties)getPrivateValue(Language.class, Language.getInstance(), 1);
-            } catch (SecurityException var12) {
+            } catch (SecurityException | NoSuchFieldException var12) {
                 logger.throwing("ModLoader", "AddLocalization", var12);
                 throwException(var12);
-            } catch (NoSuchFieldException var13) {
-                logger.throwing("ModLoader", "AddLocalization", var13);
-                throwException(var13);
             }
 
             langPack = Language.getInstance().getCode();
@@ -1049,163 +1022,22 @@ public final class ModLoader {
 
     }
 
-    private static void readFromClassPath(File file) throws FileNotFoundException, IOException {
-        logger.finer("Adding mods from " + file.getCanonicalPath());
-        ClassLoader classloader = ModLoader.class.getClassLoader();
-        if (!file.isFile() || !file.getName().endsWith(".jar") && !file.getName().endsWith(".zip")) {
-            if (file.isDirectory()) {
-                Package package1 = ModLoader.class.getPackage();
-                if (package1 != null) {
-                    String s = package1.getName().replace('.', File.separatorChar);
-                    file = new File(file, s);
-                }
-
-                logger.finer("Directory found.");
-                File[] afile = file.listFiles();
-                if (afile != null) {
-                    for(int i = 0; i < afile.length; ++i) {
-                        String s2 = afile[i].getName();
-                        if (afile[i].isFile() && s2.startsWith("mod_") && s2.endsWith(".class")) {
-                            addMod(classloader, s2);
-                        }
-                    }
-                }
-            }
-        } else {
-            logger.finer("Zip found.");
-            FileInputStream fileinputstream = new FileInputStream(file);
-            ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
-            Object obj = null;
-
-            while(true) {
-                ZipEntry zipentry = zipinputstream.getNextEntry();
-                if (zipentry == null) {
-                    fileinputstream.close();
-                    break;
-                }
-
-                String s1 = zipentry.getName();
-                if (!zipentry.isDirectory() && s1.startsWith("mod_") && s1.endsWith(".class")) {
-                    addMod(classloader, s1);
-                }
-            }
-        }
-
-    }
-
-    private static void readFromModFolder(File file) throws IOException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException {
+    private static void addModsToClassPath() throws IllegalArgumentException, SecurityException, NoSuchMethodException {
         ClassLoader classloader = Minecraft.class.getClassLoader();
         Method method = classloader.getClass().getDeclaredMethod("addURL", URL.class);
         method.setAccessible(true);
-        if (!file.isDirectory()) {
-            throw new IllegalArgumentException("folder must be a Directory.");
-        } else {
-            File[] afile = file.listFiles();
-            Arrays.sort(afile);
-            int j;
-            File file2;
 
-            for (j = 0; j < afile.length; j++) {
-                file2 = afile[j];
-                if (file.isDirectory() || file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip"))) {
-                    File remappedFile = new File(Constants.REMAPPED_FOLDER, file2.getName());
-                    if (file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip"))) {
-                        FileInputStream fileinputstream = new FileInputStream(file2);
-                        ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
-                        boolean fabric = false;
-                        while(true) {
-                            ZipEntry zipentry = zipinputstream.getNextEntry();
-                            if (zipentry == null) {
-                                zipinputstream.close();
-                                fileinputstream.close();
-                                break;
-                            }
-
-                            String s1 = zipentry.getName();
-                            if (s1.equals("fabric.mod.json")) {
-                                fabric = true;
-                                break;
-                            }
-                        }
-
-                        if (fabric) {
-                            afile[j] = null;
-                            continue;
-                        }
-                    } else if (file2.isDirectory()) {
-                        boolean isMod = false;
-
-                        for (String fl : file2.list()) {
-                            if (fl.startsWith("mod_") && fl.endsWith(".class")) {
-                                isMod = true;
-                                break;
-                            }
-                        }
-
-                        if (!isMod) {
-                            afile[j] = null;
-                            continue;
-                        } else {
-                            remappedFile = new File(Constants.REMAPPED_FOLDER, file2.getName() + ".zip");
-                        }
-                    } else if (file2.isFile()) {
-                        afile[j] = null;
-                        continue;
-                    }
-                    Log.info(Constants.LOG_CATEGORY, "Found potential ModLoader mod " + file2.getName());
-                    if (!remappedFile.exists()) RemapUtil.remapMod(file2.toPath(), remappedFile.toPath());
-                    afile[j] = remappedFile;
-                }
+        FakeModManager.getMods().forEach(modEntry -> {
+            try {
+                method.invoke(classloader, modEntry.file.toURI().toURL());
+            } catch (IllegalAccessException | InvocationTargetException | MalformedURLException e) {
+                throw new RuntimeException(e);
             }
+        });
 
-            for(j = 0; j < afile.length; ++j) {
-                file2 = afile[j];
-                if (file2 != null && (file2.isDirectory() || file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip")))) {
-                    method.invoke(classloader, file2.toURI().toURL());
-                }
-            }
-
-            for(j = 0; j < afile.length; ++j) {
-                file2 = afile[j];
-                if (file2 != null && (file2.isDirectory() || file2.isFile() && (file2.getName().endsWith(".jar") || file2.getName().endsWith(".zip")))) {
-                    logger.finer("Adding mods from " + file2.getCanonicalPath());
-                    if (!file2.isFile()) {
-                        if (file2.isDirectory()) {
-                            logger.finer("Directory found.");
-                            File[] afile1 = file2.listFiles();
-                            if (afile1 != null) {
-                                for(int k = 0; k < afile1.length; ++k) {
-                                    String s2 = afile1[k].getName();
-                                    if (afile1[k].isFile() && s2.startsWith("net/minecraft/mod_") && s2.endsWith(".class")) {
-                                        addMod(classloader, s2);
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        logger.finer("Zip found.");
-                        FileInputStream fileinputstream = new FileInputStream(file2);
-                        ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
-                        Object obj = null;
-
-                        while(true) {
-                            ZipEntry zipentry = zipinputstream.getNextEntry();
-                            if (zipentry == null) {
-                                zipinputstream.close();
-                                fileinputstream.close();
-                                break;
-                            }
-
-                            String s1 = zipentry.getName();
-                            if (!zipentry.isDirectory() && s1.startsWith("net/minecraft/mod_") && s1.endsWith(".class")) {
-                                addMod(classloader, s1);
-                            }
-                        }
-                    }
-                }
-            }
-
-        }
+        FakeModManager.getMods().forEach(modEntry -> {
+            addMod(classloader, modEntry.initClass);
+        });
     }
 
     public static void clientCustomPayload(CustomPayloadC2SPacket packet) {
@@ -1366,24 +1198,10 @@ public final class ModLoader {
             if (Block.BLOCKS[i] != null && Item.ITEMS[i] == null) {
                 Item.ITEMS[i] = itemblock;
             }
-        } catch (IllegalArgumentException var4) {
+        } catch (IllegalArgumentException | IllegalAccessException | SecurityException | InstantiationException |
+                 InvocationTargetException | NoSuchMethodException var4) {
             logger.throwing("ModLoader", "RegisterBlock", var4);
             throwException(var4);
-        } catch (IllegalAccessException var5) {
-            logger.throwing("ModLoader", "RegisterBlock", var5);
-            throwException(var5);
-        } catch (SecurityException var6) {
-            logger.throwing("ModLoader", "RegisterBlock", var6);
-            throwException(var6);
-        } catch (InstantiationException var7) {
-            logger.throwing("ModLoader", "RegisterBlock", var7);
-            throwException(var7);
-        } catch (InvocationTargetException var8) {
-            logger.throwing("ModLoader", "RegisterBlock", var8);
-            throwException(var8);
-        } catch (NoSuchMethodException var9) {
-            logger.throwing("ModLoader", "RegisterBlock", var9);
-            throwException(var9);
         }
 
     }
@@ -1435,12 +1253,9 @@ public final class ModLoader {
                 map.put(class1, tileentityspecialrenderer);
                 tileentityspecialrenderer.setDispatcher(tileentityrenderer);
             }
-        } catch (IllegalArgumentException var5) {
+        } catch (IllegalArgumentException | IllegalAccessException var5) {
             logger.throwing("ModLoader", "RegisterTileEntity", var5);
             throwException(var5);
-        } catch (IllegalAccessException var6) {
-            logger.throwing("ModLoader", "RegisterTileEntity", var6);
-            throwException(var6);
         }
 
     }

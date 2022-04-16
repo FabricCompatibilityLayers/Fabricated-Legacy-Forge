@@ -16,7 +16,8 @@
   "environment": "*",
   "accessWidener": "fabricated-modloader.accesswidener",
   "entrypoints": {
-    "main": [
+    "preLaunch": [
+      "fr.catcore.fabricatedmodloader.FabricatedModLoader"
     ]
   },
   "mixins": [

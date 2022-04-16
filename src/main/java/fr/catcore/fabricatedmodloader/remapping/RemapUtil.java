@@ -26,6 +26,9 @@ import java.util.zip.ZipInputStream;
 public class RemapUtil {
     private static TinyTree LOADER_TREE;
     private static TinyTree MINECRAFT_TREE;
+    private static TinyTree MODS_TREE;
+
+    private static final Map<String, String> MOD_MAPPINGS = new HashMap<>();
 
     public static void init() {
         generateMappings();
@@ -35,15 +38,14 @@ public class RemapUtil {
 
     public static void remapMod(Path from, Path to) {
         Log.info(Constants.LOG_CATEGORY, "Remapping mod " + from.getFileName());
-        makeModMappings(from);
-        TinyRemapper remapper = makeRemapper(MINECRAFT_TREE, LOADER_TREE, makeTree(new File(Constants.REMAPPED_FOLDER, from.getFileName() + ".tiny")));
+        TinyRemapper remapper = makeRemapper(MINECRAFT_TREE, LOADER_TREE, MODS_TREE);
         remapFile(remapper, from, to);
         Log.info(Constants.LOG_CATEGORY, "Remapped mod " + from.getFileName());
     }
 
-    private static void makeModMappings(Path modPath) {
+    public static List<String> makeModMappings(Path modPath) {
         File path = modPath.toFile();
-        List<String> modClasses = new ArrayList<>();
+        List<String> files = new ArrayList<>();
         if (path.isFile()) {
             try {
                 FileInputStream fileinputstream = new FileInputStream(path);
@@ -59,28 +61,42 @@ public class RemapUtil {
                     }
 
                     String s1 = zipentry.getName();
-                    if (!zipentry.isDirectory() && s1.endsWith(".class")) {
-                        modClasses.add(s1.replace(".class", ""));
+                    if (!zipentry.isDirectory()) {
+                        files.add(s1);
                     }
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         } else if (path.isDirectory()) {
-            modClasses.addAll(generateFolderMappings(path.listFiles()));
+            files.addAll(generateFolderMappings(path.listFiles()));
         }
 
+        List<String> classes = new ArrayList<>();
+
+        for (String file : files) {
+            if (file.endsWith(".class")) classes.add(file.replace(".class", ""));
+        }
+
+        classes.forEach(cl -> MOD_MAPPINGS.put(cl, "net/minecraft/" + cl));
+
+        return files;
+    }
+
+    public static void generateModMappings() {
         List<String> mappings = new ArrayList<>();
         mappings.add(toString("v1", "official", "intermediary", "named"));
-        modClasses.forEach(cl -> mappings.add(makeLoaderLine(cl, "net/minecraft/" + cl)));
-        FileUtils.writeTextFile(mappings, new File(Constants.REMAPPED_FOLDER, modPath.getFileName() + ".tiny"));
+        MOD_MAPPINGS.forEach((cl, remapped) -> mappings.add(makeLoaderLine(cl, remapped)));
+        FileUtils.writeTextFile(mappings, Constants.MOD_MAPPINGS_FILE);
+
+        MODS_TREE = makeTree(Constants.MOD_MAPPINGS_FILE);
     }
 
     private static List<String> generateFolderMappings(File[] files) {
         List<String> list = new ArrayList<>();
 
         for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(".class")) list.add(file.getName().replace(".class", ""));
+            if (file.isFile()) list.add(file.getName());
             else if (file.isDirectory()) {
                 String name = file.getName();
 
