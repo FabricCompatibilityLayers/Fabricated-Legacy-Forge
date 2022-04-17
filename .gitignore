@@ -25,3 +25,5 @@ run/
 
 # macos
 *.DS_Store
+
+ModLoader*
