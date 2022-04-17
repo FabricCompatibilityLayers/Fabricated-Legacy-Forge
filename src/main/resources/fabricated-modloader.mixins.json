@@ -13,6 +13,8 @@
     "modloader.client.IntegratedServerMixin",
     "modloader.client.ItemRendererMixin",
     "modloader.client.PlayerEntityRendererAccessor",
+    "modloader.client.BlockEntityRenderDispatcherAccessor",
+    "modloader.client.class_534Accessor",
 
     "modloader.common.BlockEntityAccessor",
     "modloader.common.CraftingResultSlotMixin",
@@ -29,7 +31,10 @@
     "modloader.common.ServerPacketListenerMixin",
     "modloader.common.SetBaseBiomesLayerMixin",
     "modloader.common.TrackedEntityInstanceMixin",
-    "modloader.common.VillagerEntityMixin"
+    "modloader.common.VillagerEntityMixin",
+    "modloader.common.LanguageAccessor",
+    "modloader.common.AchievementAccessor",
+    "modloader.common.StatAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

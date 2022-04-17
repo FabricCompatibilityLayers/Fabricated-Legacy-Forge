@@ -20,7 +20,6 @@ public class ModTextureAnimation extends class_584 {
     public ModTextureAnimation(int i, int j, int k, BufferedImage bufferedimage, int l) {
         super(i);
         this.index = 0;
-        this.ticks = 0;
         this.field_2156 = j;
         this.field_2157 = k;
         this.tickRate = l;
@@ -38,7 +37,7 @@ public class ModTextureAnimation extends class_584 {
             if (k1 != i1) {
                 BufferedImage bufferedimage1 = new BufferedImage(i1, j1 * i2, 6);
                 Graphics2D graphics2d = bufferedimage1.createGraphics();
-                graphics2d.drawImage(bufferedimage, 0, 0, i1, j1 * i2, 0, 0, k1, l1, (ImageObserver)null);
+                graphics2d.drawImage(bufferedimage, 0, 0, i1, j1 * i2, 0, 0, k1, l1, null);
                 graphics2d.dispose();
                 bufferedimage = bufferedimage1;
             }
@@ -52,8 +51,8 @@ public class ModTextureAnimation extends class_584 {
                     int l2 = ai[k2] >> 24 & 255;
                     int i3 = ai[k2] >> 16 & 255;
                     int j3 = ai[k2] >> 8 & 255;
-                    int k3 = ai[k2] >> 0 & 255;
-                    this.images[j2][k2 * 4 + 0] = (byte)i3;
+                    int k3 = ai[k2] & 255;
+                    this.images[j2][k2 * 4] = (byte)i3;
                     this.images[j2][k2 * 4 + 1] = (byte)j3;
                     this.images[j2][k2 * 4 + 2] = (byte)k3;
                     this.images[j2][k2 * 4 + 3] = (byte)l2;

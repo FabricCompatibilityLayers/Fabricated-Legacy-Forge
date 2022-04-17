@@ -8,8 +8,6 @@ public class TradeEntry {
     public int max;
 
     public TradeEntry(int id, float chance, boolean buying, int min, int max) {
-        this.min = 0;
-        this.max = 0;
         this.id = id;
         this.chance = chance;
         this.buying = buying;

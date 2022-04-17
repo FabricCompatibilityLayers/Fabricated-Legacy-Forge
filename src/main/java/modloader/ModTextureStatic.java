@@ -32,7 +32,7 @@ public class ModTextureStatic extends class_584 {
         } else {
             BufferedImage bufferedimage1 = new BufferedImage(l, i1, 6);
             Graphics2D graphics2d = bufferedimage1.createGraphics();
-            graphics2d.drawImage(bufferedimage, 0, 0, l, i1, 0, 0, j1, k1, (ImageObserver)null);
+            graphics2d.drawImage(bufferedimage, 0, 0, l, i1, 0, 0, j1, k1, null);
             bufferedimage1.getRGB(0, 0, l, i1, this.pixels, 0, l);
             graphics2d.dispose();
         }
@@ -45,7 +45,7 @@ public class ModTextureStatic extends class_584 {
             int j = this.pixels[i] >> 24 & 255;
             int k = this.pixels[i] >> 16 & 255;
             int l = this.pixels[i] >> 8 & 255;
-            int i1 = this.pixels[i] >> 0 & 255;
+            int i1 = this.pixels[i] & 255;
             if (this.field_2154) {
                 int j1 = (k + l + i1) / 3;
                 i1 = j1;
@@ -53,7 +53,7 @@ public class ModTextureStatic extends class_584 {
                 k = j1;
             }
 
-            this.field_2152[i * 4 + 0] = (byte)k;
+            this.field_2152[i * 4] = (byte)k;
             this.field_2152[i * 4 + 1] = (byte)l;
             this.field_2152[i * 4 + 2] = (byte)i1;
             this.field_2152[i * 4 + 3] = (byte)j;
