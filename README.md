@@ -1,16 +1,20 @@
-# Fabric Example Mod
+# Fabricated ModLoader
 
-## Setup
+Load ModLoader mods as if they were FabricLoader mods.
 
-1. Edit gradle.properties, build.gradle and mod.json to suit your needs.
-    * The "mixins" object can be removed from mod.json if you do not need to use mixins.
-    * Please replace all occurences of "modid" with your own mod ID - sometimes, a different string may also suffice.
-2. Run the following command:
+Currently, only mod folder mods are supported, mods with class edits are unsupported for now.
 
-```
-./gradlew
-```
+Supported Minecraft versions: 1.3.2.
 
-## License
+### Working Mods
+- [CakeIsALie](https://mcarchive.net/mods/cakeisalie)
+- [Fog Key](https://mcarchive.net/mods/fog-key)
+- [Inventory Tweaks](https://mcarchive.net/mods/invtweaks) (the mod localization doesn't work.)
+- [Timber](https://mcarchive.net/mods/timber)
+- [Rei's Minimap](https://mcarchive.net/mods/reiminimap) (Works/Doesn't randomly.)
+- [Biomes O' Plenty](https://mcarchive.net/mods/biomes-o-plenty) (Loads but no custom biomes generate.)
+- [Pfaeffs Mod](https://mcarchive.net/mods/asdf) (Loads but I'm not sure what it does.)
 
-This template is available under the CC0 license. Feel free to learn from it and incorporate it in your own projects.
+### TODO
+- Implement fix for mods supposed to work.
+- Add ModLoaderMP support.
