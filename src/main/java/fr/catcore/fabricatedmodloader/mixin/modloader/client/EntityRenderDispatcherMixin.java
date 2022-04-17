@@ -13,7 +13,8 @@ import java.util.Map;
 @Mixin(EntityRenderDispatcher.class)
 public class EntityRenderDispatcherMixin {
 
-    @Shadow private Map renderers;
+    @Shadow
+    private Map renderers;
 
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/util/Map;values()Ljava/util/Collection;", remap = false))
     private void modLoaderAddAllRenderers(CallbackInfo ci) {

@@ -5,8 +5,8 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 
+@SuppressWarnings("unused")
 public class ModTextureStatic extends class_584 {
     private boolean oldanaglyph;
     private int[] pixels;
@@ -41,7 +41,7 @@ public class ModTextureStatic extends class_584 {
     }
 
     public void update() {
-        for(int i = 0; i < this.pixels.length; ++i) {
+        for (int i = 0; i < this.pixels.length; ++i) {
             int j = this.pixels[i] >> 24 & 255;
             int k = this.pixels[i] >> 16 & 255;
             int l = this.pixels[i] >> 8 & 255;
@@ -53,10 +53,10 @@ public class ModTextureStatic extends class_584 {
                 k = j1;
             }
 
-            this.field_2152[i * 4] = (byte)k;
-            this.field_2152[i * 4 + 1] = (byte)l;
-            this.field_2152[i * 4 + 2] = (byte)i1;
-            this.field_2152[i * 4 + 3] = (byte)j;
+            this.field_2152[i * 4] = (byte) k;
+            this.field_2152[i * 4 + 1] = (byte) l;
+            this.field_2152[i * 4 + 2] = (byte) i1;
+            this.field_2152[i * 4 + 3] = (byte) j;
         }
 
         this.oldanaglyph = this.field_2154;
@@ -75,8 +75,8 @@ public class ModTextureStatic extends class_584 {
         int k2 = bufferedimage.getHeight();
         BufferedImage bufferedimage1 = new BufferedImage(j2 * 2, k2 * 2, 2);
 
-        for(int l2 = 0; l2 < k2; ++l2) {
-            for(int i3 = 0; i3 < j2; ++i3) {
+        for (int l2 = 0; l2 < k2; ++l2) {
+            for (int i3 = 0; i3 < j2; ++i3) {
                 int i = bufferedimage.getRGB(i3, l2);
                 int j1;
                 if (l2 == 0) {

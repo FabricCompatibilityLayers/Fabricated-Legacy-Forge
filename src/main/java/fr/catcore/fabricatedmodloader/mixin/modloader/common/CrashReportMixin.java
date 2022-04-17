@@ -11,7 +11,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(CrashReport.class)
 public abstract class CrashReportMixin {
 
-    @Shadow public abstract void addSection(String name, Object section);
+    @Shadow
+    public abstract void addSection(String name, Object section);
 
     @Inject(method = "fillSystemDetails", at = @At("RETURN"))
     private void addModLoaderSection(CallbackInfo ci) {

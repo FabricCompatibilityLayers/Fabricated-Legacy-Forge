@@ -21,6 +21,8 @@ import net.minecraft.world.WorldView;
 import java.util.Map;
 import java.util.Random;
 
+
+@SuppressWarnings("unused")
 public abstract class BaseMod {
     public BaseMod() {
     }

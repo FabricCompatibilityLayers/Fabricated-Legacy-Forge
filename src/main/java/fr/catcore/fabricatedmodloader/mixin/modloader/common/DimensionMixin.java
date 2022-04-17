@@ -15,20 +15,24 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(Dimension.class)
 public class DimensionMixin {
 
-    @Shadow public LayeredBiomeSource biomeSource;
+    @Shadow
+    public LayeredBiomeSource biomeSource;
 
-    @Shadow public LevelGeneratorType generatorType;
+    @Shadow
+    public LevelGeneratorType generatorType;
 
-    @Shadow public World world;
+    @Shadow
+    public World world;
 
-    @Shadow public boolean isNether;
+    @Shadow
+    public boolean isNether;
 
     /**
      * @author
      */
     @Overwrite
     public void init() {
-        this.biomeSource = ((ILevelGeneratorType)this.generatorType).getChunkManager(this.world);
+        this.biomeSource = ((ILevelGeneratorType) this.generatorType).getChunkManager(this.world);
     }
 
     /**
@@ -36,7 +40,7 @@ public class DimensionMixin {
      */
     @Overwrite
     public ChunkProvider createChunkGenerator() {
-        return ((ILevelGeneratorType)this.generatorType).getChunkGenerator(this.world);
+        return ((ILevelGeneratorType) this.generatorType).getChunkGenerator(this.world);
     }
 
     /**
@@ -44,7 +48,7 @@ public class DimensionMixin {
      */
     @Overwrite
     public int getAverageYLevel() {
-        return ((ILevelGeneratorType)this.generatorType).getSeaLevel(this.world);
+        return ((ILevelGeneratorType) this.generatorType).getSeaLevel(this.world);
     }
 
     /**
@@ -53,7 +57,7 @@ public class DimensionMixin {
     @Environment(EnvType.CLIENT)
     @Overwrite
     public boolean method_3993() {
-        return ((ILevelGeneratorType)this.generatorType).hasVoidParticles(this.isNether);
+        return ((ILevelGeneratorType) this.generatorType).hasVoidParticles(this.isNether);
     }
 
     /**
@@ -62,6 +66,6 @@ public class DimensionMixin {
     @Environment(EnvType.CLIENT)
     @Overwrite
     public double method_3994() {
-        return ((ILevelGeneratorType)this.generatorType).voidFadeMagnitude();
+        return ((ILevelGeneratorType) this.generatorType).voidFadeMagnitude();
     }
 }

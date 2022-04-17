@@ -15,9 +15,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(FurnaceBlockEntity.class)
 public abstract class FurnaceBlockEntityMixin {
 
-    @Shadow protected abstract boolean method_525();
+    @Shadow
+    protected abstract boolean method_525();
 
-    @Shadow private ItemStack[] stacks;
+    @Shadow
+    private ItemStack[] stacks;
 
     /**
      * @author

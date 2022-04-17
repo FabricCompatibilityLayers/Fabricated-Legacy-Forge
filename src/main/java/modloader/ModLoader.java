@@ -1,9 +1,9 @@
 package modloader;
 
 import fr.catcore.fabricatedmodloader.mixin.modloader.client.BlockEntityRenderDispatcherAccessor;
+import fr.catcore.fabricatedmodloader.mixin.modloader.client.PlayerEntityRendererAccessor;
 import fr.catcore.fabricatedmodloader.mixin.modloader.client.class_534Accessor;
 import fr.catcore.fabricatedmodloader.mixin.modloader.common.*;
-import fr.catcore.fabricatedmodloader.mixin.modloader.client.PlayerEntityRendererAccessor;
 import fr.catcore.fabricatedmodloader.utils.Constants;
 import fr.catcore.fabricatedmodloader.utils.FakeModManager;
 import fr.catcore.fabricatedmodloader.utils.SetBaseBiomesLayerData;
@@ -73,6 +73,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+@SuppressWarnings("unused")
 public final class ModLoader {
     private static final List<class_584> animList = new LinkedList<>();
     private static final Map<Integer, BaseMod> blockModels = new HashMap<>();
@@ -161,7 +162,7 @@ public final class ModLoader {
         Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Finding fuel for " + id);
         int result = 0;
 
-        for(Iterator<BaseMod> iter = modList.iterator(); iter.hasNext() && result == 0; result = ((BaseMod)iter.next()).addFuel(id, metadata)) {
+        for (Iterator<BaseMod> iter = modList.iterator(); iter.hasNext() && result == 0; result = iter.next().addFuel(id, metadata)) {
         }
 
         if (result != 0) {
@@ -234,7 +235,7 @@ public final class ModLoader {
     public static void registerCommands(MinecraftServer server) {
         CommandRegistryProvider manager = server.getCommandManager();
         if (manager instanceof CommandRegistry) {
-            CommandRegistry handler = (CommandRegistry)manager;
+            CommandRegistry handler = (CommandRegistry) manager;
 
             for (Command cmd : commandList) {
                 handler.registerCommand(cmd);
@@ -302,7 +303,7 @@ public final class ModLoader {
             }
 
             setupProperties(class1);
-            BaseMod basemod = (BaseMod)class1.getDeclaredConstructor().newInstance();
+            BaseMod basemod = (BaseMod) class1.getDeclaredConstructor().newInstance();
             modList.add(basemod);
             Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Mod Initialized: \"" + basemod + "\" from " + s);
             Log.info(Constants.MODLOADER_LOG_CATEGORY, "Mod Initialized: " + basemod);
@@ -334,7 +335,7 @@ public final class ModLoader {
                 s2 = block.getTranslationKey() + ".name";
             }
         } else if (obj instanceof ItemStack) {
-            ItemStack itemstack = (ItemStack)obj;
+            ItemStack itemstack = (ItemStack) obj;
             String s3 = Item.ITEMS[itemstack.id].getTranslationKey(itemstack);
             if (s3 != null) {
                 s2 = s3 + ".name";
@@ -452,36 +453,36 @@ public final class ModLoader {
     public static int dispenseEntity(World world, ItemStack itemstack, Random rnd, int blockX, int blockY, int blockZ, int offsetX, int offsetZ, double entityX, double entityY, double entityZ) {
         int type = 0;
 
-        for(Iterator<BaseMod> iterator = modList.iterator(); type == 0 && iterator.hasNext(); type = iterator.next().dispenseEntity(world, itemstack, rnd, blockX, blockY, blockZ, offsetX, offsetZ, entityX, entityY, entityZ)) {
+        for (Iterator<BaseMod> iterator = modList.iterator(); type == 0 && iterator.hasNext(); type = iterator.next().dispenseEntity(world, itemstack, rnd, blockX, blockY, blockZ, offsetX, offsetZ, entityX, entityY, entityZ)) {
         }
 
         return type;
     }
 
     public static void genericContainerRemoval(World world, int i, int j, int k) {
-        Inventory iinventory = (Inventory)world.method_3781(i, j, k);
+        Inventory iinventory = (Inventory) world.method_3781(i, j, k);
         if (iinventory != null) {
-            for(int l = 0; l < iinventory.getInvSize(); ++l) {
+            for (int l = 0; l < iinventory.getInvSize(); ++l) {
                 ItemStack itemstack = iinventory.getInvStack(l);
                 if (itemstack != null) {
                     double d = world.random.nextDouble() * 0.8D + 0.1D;
                     double d1 = world.random.nextDouble() * 0.8D + 0.1D;
 
                     ItemEntity entityitem;
-                    for(double d2 = world.random.nextDouble() * 0.8D + 0.1D; itemstack.count > 0; world.spawnEntity(entityitem)) {
+                    for (double d2 = world.random.nextDouble() * 0.8D + 0.1D; itemstack.count > 0; world.spawnEntity(entityitem)) {
                         int i1 = world.random.nextInt(21) + 10;
                         if (i1 > itemstack.count) {
                             i1 = itemstack.count;
                         }
 
                         itemstack.count -= i1;
-                        entityitem = new ItemEntity(world, (double)i + d, (double)j + d1, (double)k + d2, new ItemStack(itemstack.id, i1, itemstack.getMeta()));
+                        entityitem = new ItemEntity(world, (double) i + d, (double) j + d1, (double) k + d2, new ItemStack(itemstack.id, i1, itemstack.getMeta()));
                         double d3 = 0.05D;
                         entityitem.velocityX = world.random.nextGaussian() * d3;
                         entityitem.velocityY = world.random.nextGaussian() * d3 + 0.2D;
                         entityitem.velocityZ = world.random.nextGaussian() * d3;
                         if (itemstack.hasNbt()) {
-                            entityitem.stack.setNbt((NbtCompound)itemstack.getNbt().copy());
+                            entityitem.stack.setNbt((NbtCompound) itemstack.getNbt().copy());
                         }
                     }
 
@@ -544,7 +545,7 @@ public final class ModLoader {
     }
 
     private static int getUniqueItemSpriteIndex() {
-        while(itemSpriteIndex < usedItemSprites.length) {
+        while (itemSpriteIndex < usedItemSprites.length) {
             if (!usedItemSprites[itemSpriteIndex]) {
                 usedItemSprites[itemSpriteIndex] = true;
                 --itemSpritesLeft;
@@ -574,7 +575,7 @@ public final class ModLoader {
     }
 
     private static int getUniqueTerrainSpriteIndex() {
-        while(terrainSpriteIndex < usedTerrainSprites.length) {
+        while (terrainSpriteIndex < usedTerrainSprites.length) {
             if (!usedTerrainSprites[terrainSpriteIndex]) {
                 usedTerrainSprites[terrainSpriteIndex] = true;
                 --terrainSpritesLeft;
@@ -595,7 +596,7 @@ public final class ModLoader {
         String usedItemSpritesString = "1111111111111111111111111111111111111101111111111111111111111111111111111111111111111111111111111111110111111111111111000111111111111101111111110000000101111111000000010111111100000000001110110000000000000000000000000000000000000000000000001111111111111111";
         String usedTerrainSpritesString = "1111111111111111111111111100111111111111100111111111111110011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000001111111100000111111111100000001111111110000001111111111111111111";
 
-        for(int i = 0; i < 256; ++i) {
+        for (int i = 0; i < 256; ++i) {
             usedItemSprites[i] = usedItemSpritesString.charAt(i) == '1';
             if (!usedItemSprites[i]) {
                 ++itemSpritesLeft;
@@ -688,7 +689,7 @@ public final class ModLoader {
     private static void initStats() {
         int j;
         String s2;
-        for(j = 0; j < Block.BLOCKS.length; ++j) {
+        for (j = 0; j < Block.BLOCKS.length; ++j) {
             if (!Stats.ID_TO_STAT.containsKey(16777216 + j) && Block.BLOCKS[j] != null && Block.BLOCKS[j].hasStats()) {
                 s2 = CommonI18n.translate("stat.mineBlock", Block.BLOCKS[j].getTranslatedName());
                 Stats.BLOCK_STATS[j] = (new CraftingStat(16777216 + j, s2, j)).addStat();
@@ -696,7 +697,7 @@ public final class ModLoader {
             }
         }
 
-        for(j = 0; j < Item.ITEMS.length; ++j) {
+        for (j = 0; j < Item.ITEMS.length; ++j) {
             if (!Stats.ID_TO_STAT.containsKey(16908288 + j) && Item.ITEMS[j] != null) {
                 s2 = CommonI18n.translate("stat.useItem", Item.ITEMS[j].getName());
                 Stats.USED[j] = (new CraftingStat(16908288 + j, s2, j)).addStat();
@@ -749,7 +750,7 @@ public final class ModLoader {
             }
 
             basemod = iterator.next();
-        } while(!s.contentEquals(basemod.getName()));
+        } while (!s.contentEquals(basemod.getName()));
 
         return true;
     }
@@ -803,7 +804,7 @@ public final class ModLoader {
         }
 
         if (langPack == null || !Objects.equals(Language.getInstance().getCode(), langPack)) {
-            Properties properties = ((LanguageAccessor)Language.getInstance()).getTranslationMap();
+            Properties properties = ((LanguageAccessor) Language.getInstance()).getTranslationMap();
 
             langPack = Language.getInstance().getCode();
             if (properties != null) {
@@ -829,14 +830,14 @@ public final class ModLoader {
             Map.Entry<BaseMod, Boolean> entry;
 
             label126:
-            while(true) {
+            while (true) {
                 do {
                     if (!iterator1.hasNext()) {
                         break label126;
                     }
 
                     entry = iterator1.next();
-                } while(clock == l && entry.getValue());
+                } while (clock == l && entry.getValue());
 
                 if (!entry.getKey().onTickInGame(f, minecraft)) {
                     iterator1.remove();
@@ -849,14 +850,14 @@ public final class ModLoader {
             Map.Entry<BaseMod, Boolean> entry;
 
             label112:
-            while(true) {
+            while (true) {
                 do {
                     if (!iterator1.hasNext()) {
                         break label112;
                     }
 
                     entry = iterator1.next();
-                } while(clock == l && entry.getValue() & minecraft.playerEntity.world != null);
+                } while (clock == l && entry.getValue() & minecraft.playerEntity.world != null);
 
                 if (!entry.getKey().onTickInGUI(f, minecraft, minecraft.currentScreen)) {
                     iterator1.remove();
@@ -869,11 +870,11 @@ public final class ModLoader {
             Map.Entry<BaseMod, Map<KeyBinding, Boolean[]>> entry;
 
             label98:
-            while(iterator1.hasNext()) {
+            while (iterator1.hasNext()) {
                 entry = iterator1.next();
                 Iterator<Map.Entry<KeyBinding, Boolean[]>> iterator3 = entry.getValue().entrySet().iterator();
 
-                while(true) {
+                while (true) {
                     Map.Entry<KeyBinding, Boolean[]> entry3;
                     boolean flag;
                     Boolean[] aflag;
@@ -896,8 +897,8 @@ public final class ModLoader {
                             aflag = entry3.getValue();
                             flag1 = aflag[1];
                             aflag[1] = flag;
-                        } while(!flag);
-                    } while(flag1 && !aflag[0]);
+                        } while (!flag);
+                    } while (flag1 && !aflag[0]);
 
                     entry.getKey().keyboardEvent(entry3.getKey());
                 }
@@ -934,7 +935,7 @@ public final class ModLoader {
         Random random = new Random(world.getSeed());
         long l = random.nextLong() / 2L * 2L + 1L;
         long l1 = random.nextLong() / 2L * 2L + 1L;
-        random.setSeed((long)i * l + (long)j * l1 ^ world.getSeed());
+        random.setSeed((long) i * l + (long) j * l1 ^ world.getSeed());
 
         for (BaseMod basemod : modList) {
             if (world.dimension.canPlayersSleep()) {
@@ -971,7 +972,7 @@ public final class ModLoader {
                 int x = stream.readInt();
                 int y = stream.readInt();
                 int z = stream.readInt();
-                int dim = (byte)stream.read();
+                int dim = (byte) stream.read();
                 class_481 player = instance.playerEntity;
                 if (player._dimension != dim) {
                     return;
@@ -1100,7 +1101,7 @@ public final class ModLoader {
             int i = block.id;
             BlockItem itemblock;
             if (class1 != null) {
-                itemblock = (BlockItem)class1.getConstructor(Integer.TYPE).newInstance(i - 256);
+                itemblock = (BlockItem) class1.getConstructor(Integer.TYPE).newInstance(i - 256);
             } else {
                 itemblock = new BlockItem(i - 256);
             }
@@ -1159,7 +1160,7 @@ public final class ModLoader {
             BlockEntityAccessor.callRegister(class1, s);
             if (tileentityspecialrenderer != null) {
                 BlockEntityRenderDispatcher tileentityrenderer = BlockEntityRenderDispatcher.INSTANCE;
-                ((BlockEntityRenderDispatcherAccessor)tileentityrenderer).getRenderers().put(class1, tileentityspecialrenderer);
+                ((BlockEntityRenderDispatcherAccessor) tileentityrenderer).getRenderers().put(class1, tileentityspecialrenderer);
                 tileentityspecialrenderer.setDispatcher(tileentityrenderer);
             }
         } catch (IllegalArgumentException var5) {
@@ -1270,7 +1271,7 @@ public final class ModLoader {
             Iterator<String> iterator1 = packetChannels.keySet().iterator();
             stringbuilder.append(iterator1.next());
 
-            while(iterator1.hasNext()) {
+            while (iterator1.hasNext()) {
                 stringbuilder.append("\u0000");
                 stringbuilder.append(iterator1.next());
             }
@@ -1326,7 +1327,7 @@ public final class ModLoader {
 
     }
 
-    public static void setPrivateValue(Class class1, Object obj, int i, Object obj1) throws IllegalArgumentException, SecurityException, NoSuchFieldException {
+    public static void setPrivateValue(Class class1, Object obj, int i, Object obj1) throws IllegalArgumentException, SecurityException {
         try {
             Field field = class1.getDeclaredFields()[i];
             field.setAccessible(true);
@@ -1378,7 +1379,7 @@ public final class ModLoader {
         Field[] afield;
         int l = (afield = class1.getDeclaredFields()).length;
 
-        for(int k = 0; k < l; ++k) {
+        for (int k = 0; k < l; ++k) {
             Field field = afield[k];
             if ((field.getModifiers() & 8) != 0 && field.isAnnotationPresent(MLProp.class)) {
                 linkedlist.add(field);
@@ -1390,7 +1391,7 @@ public final class ModLoader {
         StringBuilder stringbuilder = new StringBuilder();
         Iterator<Field> iterator = linkedlist.iterator();
 
-        while(true) {
+        while (true) {
             MLProp mlprop;
             String s;
             Object obj1;
@@ -1399,7 +1400,7 @@ public final class ModLoader {
             Field field1;
             do {
                 do {
-                    while(true) {
+                    while (true) {
                         do {
                             do {
                                 if (!iterator.hasNext()) {
@@ -1412,8 +1413,8 @@ public final class ModLoader {
                                 }
 
                                 field1 = iterator.next();
-                            } while((field1.getModifiers() & 8) == 0);
-                        } while(!field1.isAnnotationPresent(MLProp.class));
+                            } while ((field1.getModifiers() & 8) == 0);
+                        } while (!field1.isAnnotationPresent(MLProp.class));
 
                         Class<?> class2 = field1.getType();
                         mlprop = field1.getAnnotation(MLProp.class);
@@ -1459,14 +1460,14 @@ public final class ModLoader {
                         Log.debug(Constants.MODLOADER_LOG_CATEGORY, s + " not in config, using default: " + obj1);
                         properties.setProperty(s, obj1.toString());
                     }
-                } while(obj2 == null);
+                } while (obj2 == null);
 
                 if (!(obj2 instanceof Number)) {
                     break;
                 }
 
-                d = ((Number)obj2).doubleValue();
-            } while(mlprop.min() != Double.NEGATIVE_INFINITY && d < mlprop.min() || mlprop.max() != Double.POSITIVE_INFINITY && d > mlprop.max());
+                d = ((Number) obj2).doubleValue();
+            } while (mlprop.min() != Double.NEGATIVE_INFINITY && d < mlprop.min() || mlprop.max() != Double.POSITIVE_INFINITY && d > mlprop.max());
 
             Log.debug(Constants.MODLOADER_LOG_CATEGORY, s + " set to " + obj2);
             if (!obj2.equals(obj1)) {
@@ -1486,17 +1487,17 @@ public final class ModLoader {
         int i = 0;
 
         label129:
-        while(linkedlist.size() != modList.size() && i <= 10) {
+        while (linkedlist.size() != modList.size() && i <= 10) {
             Iterator<BaseMod> iterator1 = modList.iterator();
 
-            while(true) {
+            while (true) {
                 BaseMod basemod1;
                 int j;
                 label125:
-                while(true) {
+                while (true) {
                     String s;
                     do {
-                        while(true) {
+                        while (true) {
                             do {
                                 if (!iterator1.hasNext()) {
                                     ++i;
@@ -1504,7 +1505,7 @@ public final class ModLoader {
                                 }
 
                                 basemod1 = iterator1.next();
-                            } while(linkedlist.contains(basemod1));
+                            } while (linkedlist.contains(basemod1));
 
                             s = basemod1.getPriorities();
                             if (s != null && s.indexOf(58) != -1) {
@@ -1513,7 +1514,7 @@ public final class ModLoader {
 
                             linkedlist.add(basemod1);
                         }
-                    } while(i <= 0);
+                    } while (i <= 0);
 
                     j = -1;
                     int k = Integer.MIN_VALUE;
@@ -1527,7 +1528,7 @@ public final class ModLoader {
 
                     int i1 = 0;
 
-                    while(true) {
+                    while (true) {
                         if (i1 >= as.length) {
                             break label125;
                         }

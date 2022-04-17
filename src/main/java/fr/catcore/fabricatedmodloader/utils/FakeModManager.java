@@ -57,6 +57,7 @@ public class FakeModManager {
     /**
      * Get mod map from Fabric loader with reflections.
      * If fails it will return empty map.
+     *
      * @param loader {@link FabricLoader} loader instance.
      * @return {@link Map} of {@link String} key and {@link ModContainer} value.
      */
@@ -66,8 +67,7 @@ public class FakeModManager {
             Field field = loader.getClass().getDeclaredField("modMap");
             field.setAccessible(true);
             return (Map<String, ModContainer>) field.get(loader);
-        }
-        catch (IllegalAccessException | NoSuchFieldException e) {
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
             return Maps.newHashMap();
         }
@@ -76,6 +76,7 @@ public class FakeModManager {
     /**
      * Get mod list from Fabric loader with reflections.
      * If fails it will return empty list.
+     *
      * @param loader {@link FabricLoader} loader instance.
      * @return {@link List} of {@link ModContainer}
      */
@@ -85,8 +86,7 @@ public class FakeModManager {
             Field field = loader.getClass().getDeclaredField("mods");
             field.setAccessible(true);
             return (List<ModContainer>) field.get(loader);
-        }
-        catch (IllegalAccessException | NoSuchFieldException e) {
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             e.printStackTrace();
             return Collections.EMPTY_LIST;
         }

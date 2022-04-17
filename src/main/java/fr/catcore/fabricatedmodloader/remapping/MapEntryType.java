@@ -19,7 +19,7 @@ public enum MapEntryType {
 
     public static MapEntryType getType(String name) {
         char c = name.charAt(0);
-        for (MapEntryType type: VALUES) {
+        for (MapEntryType type : VALUES) {
             if (type.firstChar == c) {
                 return type;
             }

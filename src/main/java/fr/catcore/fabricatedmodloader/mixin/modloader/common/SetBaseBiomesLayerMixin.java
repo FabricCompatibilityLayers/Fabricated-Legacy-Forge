@@ -14,7 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(SetBaseBiomesLayer.class)
 public class SetBaseBiomesLayerMixin {
 
-    @Shadow private Biome[] field_166;
+    @Shadow
+    private Biome[] field_166;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void useModLoaderBiomePool(long l, Layer layer, LevelGeneratorType levelGeneratorType, CallbackInfo ci) {

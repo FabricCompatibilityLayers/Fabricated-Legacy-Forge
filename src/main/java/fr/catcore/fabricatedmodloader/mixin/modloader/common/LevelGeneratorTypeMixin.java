@@ -15,30 +15,32 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(LevelGeneratorType.class)
 public class LevelGeneratorTypeMixin implements ILevelGeneratorType {
-    @Shadow @Final public static LevelGeneratorType FLAT;
+    @Shadow
+    @Final
+    public static LevelGeneratorType FLAT;
 
     @Override
     public LayeredBiomeSource getChunkManager(World world) {
-        return (LayeredBiomeSource)(((LevelGeneratorType)(Object)this) == FLAT ? new SingletonBiomeSource(Biome.PLAINS, 0.5F, 0.5F) : new LayeredBiomeSource(world));
+        return (LayeredBiomeSource) (((LevelGeneratorType) (Object) this) == FLAT ? new SingletonBiomeSource(Biome.PLAINS, 0.5F, 0.5F) : new LayeredBiomeSource(world));
     }
 
     @Override
     public ChunkProvider getChunkGenerator(World world) {
-        return (ChunkProvider)(((LevelGeneratorType)(Object)this) == FLAT ? new FlatChunkGenerator(world, world.getSeed(), world.getLevelProperties().hasStructures()) : new SurfaceChunkGenerator(world, world.getSeed(), world.getLevelProperties().hasStructures()));
+        return (ChunkProvider) (((LevelGeneratorType) (Object) this) == FLAT ? new FlatChunkGenerator(world, world.getSeed(), world.getLevelProperties().hasStructures()) : new SurfaceChunkGenerator(world, world.getSeed(), world.getLevelProperties().hasStructures()));
     }
 
     @Override
     public int getSeaLevel(World world) {
-        return ((LevelGeneratorType)(Object)this) != FLAT ? 64 : 4;
+        return ((LevelGeneratorType) (Object) this) != FLAT ? 64 : 4;
     }
 
     @Override
     public boolean hasVoidParticles(boolean flag) {
-        return ((LevelGeneratorType)(Object)this) != FLAT && !flag;
+        return ((LevelGeneratorType) (Object) this) != FLAT && !flag;
     }
 
     @Override
     public double voidFadeMagnitude() {
-        return ((LevelGeneratorType)(Object)this) != FLAT ? 0.03125 : 1.0;
+        return ((LevelGeneratorType) (Object) this) != FLAT ? 0.03125 : 1.0;
     }
 }

@@ -5,8 +5,8 @@ import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 
+@SuppressWarnings("unused")
 public class ModTextureAnimation extends class_584 {
     private final int tickRate;
     private final byte[][] images;
@@ -29,7 +29,7 @@ public class ModTextureAnimation extends class_584 {
         int j1 = GL11.glGetTexLevelParameteri(3553, 0, 4097) / 16;
         int k1 = bufferedimage.getWidth();
         int l1 = bufferedimage.getHeight();
-        int i2 = (int)Math.floor((double)(l1 / k1));
+        int i2 = (int) Math.floor((double) (l1 / k1));
         if (i2 <= 0) {
             throw new IllegalArgumentException("source has no complete images");
         } else {
@@ -42,20 +42,20 @@ public class ModTextureAnimation extends class_584 {
                 bufferedimage = bufferedimage1;
             }
 
-            for(int j2 = 0; j2 < i2; ++j2) {
+            for (int j2 = 0; j2 < i2; ++j2) {
                 int[] ai = new int[i1 * j1];
                 bufferedimage.getRGB(0, j1 * j2, i1, j1, ai, 0, i1);
                 this.images[j2] = new byte[i1 * j1 * 4];
 
-                for(int k2 = 0; k2 < ai.length; ++k2) {
+                for (int k2 = 0; k2 < ai.length; ++k2) {
                     int l2 = ai[k2] >> 24 & 255;
                     int i3 = ai[k2] >> 16 & 255;
                     int j3 = ai[k2] >> 8 & 255;
                     int k3 = ai[k2] & 255;
-                    this.images[j2][k2 * 4] = (byte)i3;
-                    this.images[j2][k2 * 4 + 1] = (byte)j3;
-                    this.images[j2][k2 * 4 + 2] = (byte)k3;
-                    this.images[j2][k2 * 4 + 3] = (byte)l2;
+                    this.images[j2][k2 * 4] = (byte) i3;
+                    this.images[j2][k2 * 4 + 1] = (byte) j3;
+                    this.images[j2][k2 * 4 + 2] = (byte) k3;
+                    this.images[j2][k2 * 4 + 3] = (byte) l2;
                 }
             }
 

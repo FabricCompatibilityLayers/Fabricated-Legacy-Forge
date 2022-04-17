@@ -23,7 +23,8 @@ import java.util.Random;
 @Mixin(VillagerEntity.class)
 public abstract class VillagerEntityMixin extends Entity {
 
-    @Shadow public abstract int profession();
+    @Shadow
+    public abstract int profession();
 
     @Shadow
     private static void method_3107(TraderOfferList traderOfferList, int i, Random random, float f) {
@@ -33,7 +34,9 @@ public abstract class VillagerEntityMixin extends Entity {
     private static void method_3110(TraderOfferList traderOfferList, int i, Random random, float f) {
     }
 
-    @Shadow @Final private static Map field_3947;
+    @Shadow
+    @Final
+    private static Map field_3947;
 
     public VillagerEntityMixin(World world) {
         super(world);
@@ -52,8 +55,8 @@ public abstract class VillagerEntityMixin extends Entity {
         if (list != null) {
             Iterator i$ = list.iterator();
 
-            while(i$.hasNext()) {
-                TradeEntry entry = (TradeEntry)i$.next();
+            while (i$.hasNext()) {
+                TradeEntry entry = (TradeEntry) i$.next();
                 if (entry.buying) {
                     method_3107(merchantrecipelist, entry.id, this.random, entry.chance);
                 } else {
@@ -69,8 +72,8 @@ public abstract class VillagerEntityMixin extends Entity {
         List list = ModLoader.getTrades(-1);
         Iterator i$ = list.iterator();
 
-        while(i$.hasNext()) {
-            TradeEntry entry = (TradeEntry)i$.next();
+        while (i$.hasNext()) {
+            TradeEntry entry = (TradeEntry) i$.next();
             if (entry.buying) {
                 if (entry.min > 0 && entry.max > 0) {
                     field_3947.put(entry.id, new Pair(entry.min, entry.max));

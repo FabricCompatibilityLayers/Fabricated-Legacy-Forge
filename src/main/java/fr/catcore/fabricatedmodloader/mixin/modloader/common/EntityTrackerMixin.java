@@ -25,7 +25,8 @@ import java.util.Iterator;
 @Mixin(EntityTracker.class)
 public abstract class EntityTrackerMixin {
 
-    @Shadow public abstract void startTracking(Entity entity, int i, int j, boolean bl);
+    @Shadow
+    public abstract void startTracking(Entity entity, int i, int j, boolean bl);
 
     @Inject(method = "startTracking(Lnet/minecraft/entity/Entity;)V", at = @At("RETURN"))
     private void modLoaderAddTrackers(Entity entity, CallbackInfo ci) {
@@ -55,8 +56,8 @@ public abstract class EntityTrackerMixin {
         )) {
             Iterator i$ = ModLoader.getTrackers().values().iterator();
 
-            while(i$.hasNext()) {
-                EntityTrackerNonliving tracker = (EntityTrackerNonliving)i$.next();
+            while (i$.hasNext()) {
+                EntityTrackerNonliving tracker = (EntityTrackerNonliving) i$.next();
                 if (tracker.entityClass.isAssignableFrom(entity.getClass())) {
                     this.startTracking(entity, tracker.viewDistance, tracker.updateFrequency, tracker.trackMotion);
                 }

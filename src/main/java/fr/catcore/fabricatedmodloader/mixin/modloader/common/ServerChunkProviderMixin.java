@@ -13,9 +13,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerChunkProvider.class)
 public class ServerChunkProviderMixin {
 
-    @Shadow private ChunkProvider chunkGenerator;
+    @Shadow
+    private ChunkProvider chunkGenerator;
 
-    @Shadow private ServerWorld world;
+    @Shadow
+    private ServerWorld world;
 
     @Inject(method = "decorateChunk", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/chunk/Chunk;setModified()V"))
     private void modLoaderPopulateChunk(ChunkProvider provider, int x, int z, CallbackInfo ci) {

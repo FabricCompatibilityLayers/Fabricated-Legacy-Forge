@@ -14,6 +14,6 @@ public class IntegratedServerMixin {
 
     @Inject(method = "<init>", at = @At(value = "NEW", target = "net/minecraft/client/class_604", ordinal = 0))
     private void modLoaderRegisterCommands(Minecraft string, String string2, String levelInfo, LevelInfo par4, CallbackInfo ci) {
-        ModLoader.registerCommands((IntegratedServer)(Object)this);
+        ModLoader.registerCommands((IntegratedServer) (Object) this);
     }
 }

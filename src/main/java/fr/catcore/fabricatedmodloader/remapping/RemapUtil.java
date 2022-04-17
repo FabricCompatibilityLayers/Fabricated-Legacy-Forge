@@ -131,6 +131,7 @@ public class RemapUtil {
 
     /**
      * Will convert array to mapping-like string (with tab separator).
+     *
      * @param line array of {@link String} that represents mappings line.
      */
     private static String toString(String... line) {
@@ -148,6 +149,7 @@ public class RemapUtil {
 
     /**
      * Will make tree for specified mappings file.
+     *
      * @param file mappings {@link File} in tiny format.
      */
     private static TinyTree makeTree(File file) {
@@ -157,8 +159,7 @@ public class RemapUtil {
             BufferedReader bufferedReader = new BufferedReader(reader);
             tree = TinyMappingFactory.loadWithDetection(bufferedReader);
             tree = wrapTree(tree);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return tree;
@@ -179,7 +180,7 @@ public class RemapUtil {
             builder.fixPackageAccess(true);
         }
 
-        for (TinyTree tree: trees) {
+        for (TinyTree tree : trees) {
             builder.withMappings(createProvider(tree));
         }
 
@@ -198,9 +199,10 @@ public class RemapUtil {
 
     /**
      * Will remap file with specified remapper and store it into output.
+     *
      * @param remapper {@link TinyRemapper} to remap with.
-     * @param input {@link Path} for the input file.
-     * @param output {@link Path} for the output file.
+     * @param input    {@link Path} for the input file.
+     * @param output   {@link Path} for the output file.
      */
     private static void remapFile(TinyRemapper remapper, Path input, Path output) {
         try {
@@ -212,8 +214,7 @@ public class RemapUtil {
             remapper.finish();
 
             outputConsumer.close();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             remapper.finish();
             throw new RuntimeException("Failed to remap jar", e);
         }

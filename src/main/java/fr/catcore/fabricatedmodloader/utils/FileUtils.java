@@ -20,8 +20,7 @@ public class FileUtils {
             }
             bufferedWriter.close();
             fileWriter.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -40,8 +39,7 @@ public class FileUtils {
             bufferedWriter.close();
             streamReader.close();
             stream.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         return result;

@@ -5,7 +5,6 @@ import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +41,7 @@ public class MLModDiscoverer {
                     try {
                         FileInputStream fileinputstream = new FileInputStream(file);
                         ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
-                        while(true) {
+                        while (true) {
                             ZipEntry zipentry = zipinputstream.getNextEntry();
                             if (zipentry == null) {
                                 zipinputstream.close();

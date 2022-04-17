@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.GameRenderer;
 
 public class EntityRendererProxy extends GameRenderer {
-    private Minecraft game;
+    private final Minecraft game;
 
     public EntityRendererProxy(Minecraft minecraft) {
         super(minecraft);

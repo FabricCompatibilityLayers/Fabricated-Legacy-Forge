@@ -16,7 +16,8 @@ import java.util.Objects;
 
 @Mixin(ServerPacketListener.class)
 public class ServerPacketListenerMixin implements IServerPacketListener {
-    @Shadow private ServerPlayerEntity player;
+    @Shadow
+    private ServerPlayerEntity player;
 
     @Override
     public ServerPlayerEntity getPlayer() {
@@ -25,7 +26,7 @@ public class ServerPacketListenerMixin implements IServerPacketListener {
 
     @Inject(method = "onChatMessage", at = @At("HEAD"))
     private void modLoaderServerChat(ChatMessage_S2CPacket par1, CallbackInfo ci) {
-        ModLoader.serverChat((ServerPacketListener)(Object) this, par1.message);
+        ModLoader.serverChat((ServerPacketListener) (Object) this, par1.message);
     }
 
     @Inject(method = "onCustomPayload", at = @At("RETURN"))
@@ -33,7 +34,7 @@ public class ServerPacketListenerMixin implements IServerPacketListener {
         if (!Objects.equals(par1.channel, "MC|BEdit")
                 && !Objects.equals(par1.channel, "MC|BSign")
                 && !Objects.equals(par1.channel, "MC|TrSel")) {
-            ModLoader.serverCustomPayload((ServerPacketListener)(Object) this, par1);
+            ModLoader.serverCustomPayload((ServerPacketListener) (Object) this, par1);
         }
     }
 }

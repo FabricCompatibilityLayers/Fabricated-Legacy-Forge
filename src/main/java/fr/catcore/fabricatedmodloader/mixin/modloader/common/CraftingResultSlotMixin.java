@@ -15,9 +15,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(CraftingResultSlot.class)
 public class CraftingResultSlotMixin {
 
-    @Shadow private PlayerEntity player;
+    @Shadow
+    private PlayerEntity player;
 
-    @Shadow @Final private Inventory field_4147;
+    @Shadow
+    @Final
+    private Inventory field_4147;
 
     @Inject(method = "method_3298",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/inventory/slot/CraftingResultSlot;onCrafted(Lnet/minecraft/item/ItemStack;)V", shift = At.Shift.AFTER))
