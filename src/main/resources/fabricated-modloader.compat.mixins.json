@@ -6,9 +6,11 @@
   "mixins": [
   ],
   "client": [
-    "FixInvTweaksLocalization"
+    "invtweaks.FixInvTweaksLocalization",
+    "invtweaks.FixInvTweaksReflection"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "plugin": "fr.catcore.fabricatedmodloader.mixin.compat.ModCompatMixinPlugin"
 }

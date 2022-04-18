@@ -2,10 +2,15 @@ package fr.catcore.fabricatedmodloader.utils;
 
 import fr.catcore.fabricatedmodloader.remapping.RemapUtil;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -79,5 +84,7 @@ public class MLModDiscoverer {
 
             FakeModManager.addModEntry(entry);
         }
+
+        FakeModManager.getMods().forEach(modEntry -> FabricLauncherBase.getLauncher().addToClassPath(modEntry.file.toPath()));
     }
 }
