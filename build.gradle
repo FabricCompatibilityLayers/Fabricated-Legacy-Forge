@@ -36,7 +36,6 @@ dependencies {
 //	modImplementation(files("./jars/FogKey132c.zip"))
 //	modImplementation(files("./jars/Pfaeffs Mod V1.0.2.zip"))
 //	modImplementation(files("./jars/Timber_1.3.2.zip"))
-//	modImplementation(files("./jars/BiomesOPlenty.zip"))
 
 	if (System.getProperty("os.name").toLowerCase().contains("mac")) {
 		implementation 'org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209'

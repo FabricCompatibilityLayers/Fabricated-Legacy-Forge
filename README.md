@@ -12,7 +12,6 @@ Supported Minecraft versions: 1.3.2.
 - [Inventory Tweaks](https://mcarchive.net/mods/invtweaks)
 - [Timber](https://mcarchive.net/mods/timber)
 - [Rei's Minimap](https://mcarchive.net/mods/reiminimap) (Works/Doesn't randomly.)
-- [Biomes O' Plenty](https://mcarchive.net/mods/biomes-o-plenty) (Loads but no custom biomes generate.)
 - [Pfaeffs Mod](https://mcarchive.net/mods/asdf) (Loads but I'm not sure what it does.)
 
 ### TODO
