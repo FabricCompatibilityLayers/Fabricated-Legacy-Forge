@@ -21,7 +21,8 @@
     ]
   },
   "mixins": [
-    "fabricated-modloader.mixins.json"
+    "fabricated-modloader.mixins.json",
+    "fabricated-modloader.compat.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.13.0",
