@@ -947,19 +947,8 @@ public final class ModLoader {
 
     }
 
-    private static void addModsToClassPath() throws IllegalArgumentException, SecurityException, NoSuchMethodException {
+    private static void addModsToClassPath() throws IllegalArgumentException, SecurityException {
         ClassLoader classloader = Minecraft.class.getClassLoader();
-        Method method = classloader.getClass().getDeclaredMethod("addURL", URL.class);
-        method.setAccessible(true);
-
-        FakeModManager.getMods().forEach(modEntry -> {
-            try {
-                method.invoke(classloader, modEntry.file.toURI().toURL());
-            } catch (IllegalAccessException | InvocationTargetException | MalformedURLException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
         FakeModManager.getMods().forEach(modEntry -> addMod(classloader, modEntry.initClass));
     }
 

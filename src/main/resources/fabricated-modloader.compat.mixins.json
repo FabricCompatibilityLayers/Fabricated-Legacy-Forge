@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "fr.catcore.fabricatedmodloader.mixin.compat",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "invtweaks.FixInvTweaksLocalization",
+    "invtweaks.FixInvTweaksReflection"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "plugin": "fr.catcore.fabricatedmodloader.mixin.compat.ModCompatMixinPlugin"
+}

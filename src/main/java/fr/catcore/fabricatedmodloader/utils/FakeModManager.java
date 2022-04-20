@@ -22,14 +22,22 @@ public class FakeModManager {
 
     private static final List<MLModEntry> MODS = new ArrayList<>();
 
-    public static void init() {
-        try {
-            createBuiltin = ModCandidate.class.getDeclaredMethod("createBuiltin", GameProvider.BuiltinMod.class);
-            createBuiltin.setAccessible(true);
+    private static boolean loaded = false;
+    private static boolean loading = false;
 
-            MLModDiscoverer.init();
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
+    public static void init() {
+        if (!loaded && !loading) {
+            loading = true;
+            try {
+                createBuiltin = ModCandidate.class.getDeclaredMethod("createBuiltin", GameProvider.BuiltinMod.class);
+                createBuiltin.setAccessible(true);
+
+                MLModDiscoverer.init();
+                loading = false;
+                loaded = true;
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

@@ -30,6 +30,13 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	include(implementation('com.google.guava:guava:28.0-jre'))
 
+//	modImplementation(files("./jars/InvTweaks-1.43-1.3.2.zip"))
+//	modImplementation(files("./jars/[1.3.2]ReiMinimap_v3.2_05.zip"))
+//	modImplementation(files("./jars/CakeIsALie Classik Solo.zip"))
+//	modImplementation(files("./jars/FogKey132c.zip"))
+//	modImplementation(files("./jars/Pfaeffs Mod V1.0.2.zip"))
+//	modImplementation(files("./jars/Timber_1.3.2.zip"))
+
 	if (System.getProperty("os.name").toLowerCase().contains("mac")) {
 		implementation 'org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209'
 		implementation 'org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209'
