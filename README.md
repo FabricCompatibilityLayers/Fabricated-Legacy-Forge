@@ -11,8 +11,8 @@ Supported Minecraft versions: 1.3.2.
 - [Fog Key](https://mcarchive.net/mods/fog-key)
 - [Inventory Tweaks](https://mcarchive.net/mods/invtweaks)
 - [Timber](https://mcarchive.net/mods/timber)
-- [Rei's Minimap](https://mcarchive.net/mods/reiminimap) (Works/Doesn't randomly.)
-- [Pfaeffs Mod](https://mcarchive.net/mods/asdf) (Loads but I'm not sure what it does.)
+- [Rei's Minimap](https://mcarchive.net/mods/reiminimap)
+- [Pfaeffs Mod](https://mcarchive.net/mods/asdf)
 
 ### TODO
 - Implement fix for mods supposed to work.
