@@ -21,7 +21,7 @@ public class TrackedEntityInstanceMixin {
 
     @Inject(method = "method_2182", at = @At(value = "NEW", target = "java/lang/IllegalArgumentException"), cancellable = true)
     private void modLoaderGetSpawnPacket(CallbackInfoReturnable<Packet> cir) {
-        Iterator i$ = ModLoader.getTrackers().values().iterator();
+        Iterator<EntityTrackerNonliving> i$ = ModLoader.getTrackers().values().iterator();
 
         EntityTrackerNonliving tracker;
         do {
@@ -29,7 +29,7 @@ public class TrackedEntityInstanceMixin {
                 throw new IllegalArgumentException("Don't know how to add " + this.trackedEntity.getClass() + "!");
             }
 
-            tracker = (EntityTrackerNonliving) i$.next();
+            tracker = i$.next();
         } while (!tracker.entityClass.isAssignableFrom(this.trackedEntity.getClass()));
 
         cir.setReturnValue(tracker.mod.getSpawnPacket(this.trackedEntity, tracker.id));

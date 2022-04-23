@@ -51,12 +51,9 @@ public abstract class VillagerEntityMixin extends Entity {
     }
 
     private void addModTrades(TraderOfferList merchantrecipelist) {
-        List list = ModLoader.getTrades(this.profession());
+        List<TradeEntry> list = ModLoader.getTrades(this.profession());
         if (list != null) {
-            Iterator i$ = list.iterator();
-
-            while (i$.hasNext()) {
-                TradeEntry entry = (TradeEntry) i$.next();
+            for (TradeEntry entry : list) {
                 if (entry.buying) {
                     method_3107(merchantrecipelist, entry.id, this.random, entry.chance);
                 } else {
@@ -69,16 +66,9 @@ public abstract class VillagerEntityMixin extends Entity {
 
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void modLoaderAddTrades(CallbackInfo ci) {
-        List list = ModLoader.getTrades(-1);
-        Iterator i$ = list.iterator();
-
-        while (i$.hasNext()) {
-            TradeEntry entry = (TradeEntry) i$.next();
-            if (entry.buying) {
-                if (entry.min > 0 && entry.max > 0) {
-                    field_3947.put(entry.id, new Pair(entry.min, entry.max));
-                }
-            } else if (entry.min > 0 && entry.max > 0) {
+        List<TradeEntry> list = ModLoader.getTrades(-1);
+        for (TradeEntry entry : list) {
+            if (entry.min > 0 && entry.max > 0) {
                 field_3947.put(entry.id, new Pair(entry.min, entry.max));
             }
         }
