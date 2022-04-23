@@ -15,6 +15,7 @@
     "modloader.client.PlayerEntityRendererAccessor",
     "modloader.client.BlockEntityRenderDispatcherAccessor",
     "modloader.client.class_534Accessor",
+    "modloader.client.SoundLoaderMixin",
 
     "modloader.common.BlockEntityAccessor",
     "modloader.common.CraftingResultSlotMixin",

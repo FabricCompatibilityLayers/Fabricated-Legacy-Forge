@@ -1,6 +1,9 @@
 package fr.catcore.fabricatedmodloader.mixin.modloader.client;
 
+import com.google.common.collect.Lists;
+import fr.catcore.fabricatedmodloader.utils.class_535Data;
 import modloader.ModLoader;
+import net.minecraft.block.AnvilBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.class_523;
 import net.minecraft.client.class_535;
@@ -10,9 +13,13 @@ import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
 
 @Mixin(class_535.class)
 public abstract class class_535Mixin {
@@ -22,9 +29,6 @@ public abstract class class_535Mixin {
 
     @Shadow
     public boolean field_2048;
-
-    @Shadow
-    public abstract void method_1445(Block block, int i, double d, double e, double f);
 
     @Shadow
     public abstract void method_1446(Block block, int i, double d, double e, double f, double g);
@@ -53,42 +57,32 @@ public abstract class class_535Mixin {
     @Shadow
     public abstract void method_1443(Block block, double d, double e, double f, double g, double h);
 
+    @Shadow public abstract void method_4320(Block block);
+
+    @Shadow public abstract void method_4311(double d, double e, double f, double g, double h, double i);
+
+    @Shadow public abstract void method_1431();
+
+    @Shadow public abstract void method_4312(int i);
+
+    @Shadow public abstract boolean method_4316(AnvilBlock anvilBlock, int i, int j, int k, int l, boolean bl);
+
+    @Shadow public double field_5187;
+
+    @Shadow public abstract void method_1445(Block block, int i, double d, double e, double f, float g);
+
+    @Shadow public static boolean field_2047;
+    @Unique
+    private static final List<Integer> RENDERER_TYPES = Lists.newArrayList(
+            0, 31, 4, 13, 1, 19, 23, 6, 2, 3, 5,
+            8, 7, 9, 10, 27, 11, 32, 12, 29, 30,
+            14, 15, 16, 17, 18, 20, 21, 24, 33,
+            35, 25, 26, 28, 34
+    );
     @Inject(method = "method_1458", at = @At("RETURN"), cancellable = true)
     private void modLoaderRenderWorldBlock(Block block, int i, int j, int k, CallbackInfoReturnable<Boolean> cir) {
         int type = block.getBlockType();
-        if (!cir.getReturnValue() && !(
-                type == 0
-                        || type == 31
-                        || type == 4
-                        || type == 13
-                        || type == 1
-                        || type == 19
-                        || type == 23
-                        || type == 6
-                        || type == 2
-                        || type == 3
-                        || type == 5
-                        || type == 8
-                        || type == 7
-                        || type == 9
-                        || type == 10
-                        || type == 27
-                        || type == 11
-                        || type == 12
-                        || type == 29
-                        || type == 30
-                        || type == 14
-                        || type == 15
-                        || type == 16
-                        || type == 17
-                        || type == 18
-                        || type == 20
-                        || type == 21
-                        || type == 24
-                        || type == 25
-                        || type == 26
-                        || type == 28
-        )) {
+        if (!cir.getReturnValue() && !RENDERER_TYPES.contains(type)) {
             cir.setReturnValue(ModLoader.renderWorldBlock((class_535) (Object) this, this.field_2017, i, j, k, block, type));
         }
     }
@@ -110,25 +104,26 @@ public abstract class class_535Mixin {
                 var6 = 16777215;
             }
 
-            var7 = (float) (var6 >> 16 & 255) / 255.0F;
-            var8 = (float) (var6 >> 8 & 255) / 255.0F;
-            var9 = (float) (var6 & 255) / 255.0F;
+            var7 = (float)(var6 >> 16 & 255) / 255.0F;
+            var8 = (float)(var6 >> 8 & 255) / 255.0F;
+            var9 = (float)(var6 & 255) / 255.0F;
             GL11.glColor4f(var7 * f, var8 * f, var9 * f, 1.0F);
         }
 
         var6 = block.getBlockType();
+        this.method_4320(block);
         int var14;
         if (var6 != 0 && var6 != 31 && var6 != 16 && var6 != 26) {
             if (var6 == 1) {
                 var4.method_1405();
                 var4.method_1407(0.0F, -1.0F, 0.0F);
-                this.method_1445(block, i, -0.5, -0.5, -0.5);
+                this.method_1445(block, i, -0.5, -0.5, -0.5, 1.0F);
                 var4.method_1396();
             } else if (var6 == 19) {
                 var4.method_1405();
                 var4.method_1407(0.0F, -1.0F, 0.0F);
                 block.setBlockItemBounds();
-                this.method_1446(block, i, block.boundingBoxMaxY, -0.5, -0.5, -0.5);
+                this.method_1446(block, i, this.field_5187, -0.5, -0.5, -0.5);
                 var4.method_1396();
             } else if (var6 == 23) {
                 var4.method_1405();
@@ -188,13 +183,13 @@ public abstract class class_535Mixin {
                 this.method_1443(block, -0.5, -0.5, -0.5, 0.0, 0.0);
                 var4.method_1396();
             } else if (var6 == 10) {
-                for (var14 = 0; var14 < 2; ++var14) {
+                for(var14 = 0; var14 < 2; ++var14) {
                     if (var14 == 0) {
-                        block.setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.5F);
+                        this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 0.5);
                     }
 
                     if (var14 == 1) {
-                        block.setBoundingBox(0.0F, 0.0F, 0.5F, 1.0F, 0.5F, 1.0F);
+                        this.method_4311(0.0, 0.0, 0.5, 1.0, 0.5, 1.0);
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -229,7 +224,7 @@ public abstract class class_535Mixin {
                 GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
                 var4.method_1405();
 
-                for (int var15 = 0; var15 < 8; ++var15) {
+                for(int var15 = 0; var15 < 8; ++var15) {
                     byte var16 = 0;
                     byte var17 = 1;
                     if (var15 == 0) {
@@ -268,11 +263,11 @@ public abstract class class_535Mixin {
                         var16 = 3;
                     }
 
-                    float var11 = (float) var16 / 16.0F;
-                    float var12 = 1.0F - (float) var14 / 16.0F;
-                    float var13 = 1.0F - (float) (var14 + var17) / 16.0F;
+                    float var11 = (float)var16 / 16.0F;
+                    float var12 = 1.0F - (float)var14 / 16.0F;
+                    float var13 = 1.0F - (float)(var14 + var17) / 16.0F;
                     var14 += var17;
-                    block.setBoundingBox(0.5F - var11, var13, 0.5F - var11, 0.5F + var11, var12, 0.5F + var11);
+                    this.method_4311(0.5F - var11, var13, 0.5F - var11, 0.5F + var11, var12, 0.5F + var11);
                     var4.method_1407(0.0F, -1.0F, 0.0F);
                     this.method_1444(block, 0.0, 0.0, 0.0, block.method_395(0));
                     var4.method_1407(0.0F, 1.0F, 0.0F);
@@ -289,25 +284,25 @@ public abstract class class_535Mixin {
 
                 var4.method_1396();
                 GL11.glTranslatef(0.5F, 0.5F, 0.5F);
-                block.setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
             } else if (var6 == 11) {
-                for (var14 = 0; var14 < 4; ++var14) {
+                for(var14 = 0; var14 < 4; ++var14) {
                     var8 = 0.125F;
                     if (var14 == 0) {
-                        block.setBoundingBox(0.5F - var8, 0.0F, 0.0F, 0.5F + var8, 1.0F, var8 * 2.0F);
+                        this.method_4311(0.5F - var8, 0.0, 0.0, 0.5F + var8, 1.0, var8 * 2.0F);
                     }
 
                     if (var14 == 1) {
-                        block.setBoundingBox(0.5F - var8, 0.0F, 1.0F - var8 * 2.0F, 0.5F + var8, 1.0F, 1.0F);
+                        this.method_4311(0.5F - var8, 0.0, 1.0F - var8 * 2.0F, 0.5F + var8, 1.0, 1.0);
                     }
 
                     var8 = 0.0625F;
                     if (var14 == 2) {
-                        block.setBoundingBox(0.5F - var8, 1.0F - var8 * 3.0F, -var8 * 2.0F, 0.5F + var8, 1.0F - var8, 1.0F + var8 * 2.0F);
+                        this.method_4311(0.5F - var8, 1.0F - var8 * 3.0F, -var8 * 2.0F, 0.5F + var8, 1.0F - var8, 1.0F + var8 * 2.0F);
                     }
 
                     if (var14 == 3) {
-                        block.setBoundingBox(0.5F - var8, 0.5F - var8 * 3.0F, -var8 * 2.0F, 0.5F + var8, 0.5F - var8, 1.0F + var8 * 2.0F);
+                        this.method_4311(0.5F - var8, 0.5F - var8 * 3.0F, -var8 * 2.0F, 0.5F + var8, 0.5F - var8, 1.0F + var8 * 2.0F);
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -338,21 +333,21 @@ public abstract class class_535Mixin {
                     GL11.glTranslatef(0.5F, 0.5F, 0.5F);
                 }
 
-                block.setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
             } else if (var6 == 21) {
-                for (var14 = 0; var14 < 3; ++var14) {
+                for(var14 = 0; var14 < 3; ++var14) {
                     var8 = 0.0625F;
                     if (var14 == 0) {
-                        block.setBoundingBox(0.5F - var8, 0.3F, 0.0F, 0.5F + var8, 1.0F, var8 * 2.0F);
+                        this.method_4311(0.5F - var8, 0.30000001192092896, 0.0, 0.5F + var8, 1.0, var8 * 2.0F);
                     }
 
                     if (var14 == 1) {
-                        block.setBoundingBox(0.5F - var8, 0.3F, 1.0F - var8 * 2.0F, 0.5F + var8, 1.0F, 1.0F);
+                        this.method_4311(0.5F - var8, 0.30000001192092896, 1.0F - var8 * 2.0F, 0.5F + var8, 1.0, 1.0);
                     }
 
                     var8 = 0.0625F;
                     if (var14 == 2) {
-                        block.setBoundingBox(0.5F - var8, 0.5F, 0.0F, 0.5F + var8, 1.0F - var8, 1.0F);
+                        this.method_4311(0.5F - var8, 0.5, 0.0, 0.5F + var8, 1.0F - var8, 1.0);
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -382,10 +377,94 @@ public abstract class class_535Mixin {
                     var4.method_1396();
                     GL11.glTranslatef(0.5F, 0.5F, 0.5F);
                 }
+            } else if (var6 == 32) {
+                for(var14 = 0; var14 < 2; ++var14) {
+                    if (var14 == 0) {
+                        this.method_4311(0.0, 0.0, 0.3125, 1.0, 0.8125, 0.6875);
+                    }
 
-                block.setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                    if (var14 == 1) {
+                        this.method_4311(0.25, 0.0, 0.25, 0.75, 1.0, 0.75);
+                    }
+
+                    GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+                    var4.method_1405();
+                    var4.method_1407(0.0F, -1.0F, 0.0F);
+                    this.method_1444(block, 0.0, 0.0, 0.0, block.method_396(0, i));
+                    var4.method_1396();
+                    var4.method_1405();
+                    var4.method_1407(0.0F, 1.0F, 0.0F);
+                    this.method_1456(block, 0.0, 0.0, 0.0, block.method_396(1, i));
+                    var4.method_1396();
+                    var4.method_1405();
+                    var4.method_1407(0.0F, 0.0F, -1.0F);
+                    this.method_1461(block, 0.0, 0.0, 0.0, block.method_396(2, i));
+                    var4.method_1396();
+                    var4.method_1405();
+                    var4.method_1407(0.0F, 0.0F, 1.0F);
+                    this.method_1465(block, 0.0, 0.0, 0.0, block.method_396(3, i));
+                    var4.method_1396();
+                    var4.method_1405();
+                    var4.method_1407(-1.0F, 0.0F, 0.0F);
+                    this.method_1468(block, 0.0, 0.0, 0.0, block.method_396(4, i));
+                    var4.method_1396();
+                    var4.method_1405();
+                    var4.method_1407(1.0F, 0.0F, 0.0F);
+                    this.method_1470(block, 0.0, 0.0, 0.0, block.method_396(5, i));
+                    var4.method_1396();
+                    GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+                }
+
+                this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
+            } else if (var6 == 35) {
+                GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+                this.method_4316((AnvilBlock)block, 0, 0, 0, i, true);
+                GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+            } else if (var6 == 34) {
+                for(var14 = 0; var14 < 3; ++var14) {
+                    if (var14 == 0) {
+                        this.method_4311(0.125, 0.0, 0.125, 0.875, 0.1875, 0.875);
+                        this.method_4312(Block.OBSIDIAN.field_439);
+                    } else if (var14 == 1) {
+                        this.method_4311(0.1875, 0.1875, 0.1875, 0.8125, 0.875, 0.8125);
+                        this.method_4312(41);
+                    } else if (var14 == 2) {
+                        this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
+                        this.method_4312(Block.GLASS_BLOCK.field_439);
+                    }
+
+                    GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+                    var4.method_1405();
+                    var4.method_1407(0.0F, -1.0F, 0.0F);
+                    this.method_1444(block, 0.0, 0.0, 0.0, block.method_396(0, i));
+                    var4.method_1396();
+                    var4.method_1405();
+                    var4.method_1407(0.0F, 1.0F, 0.0F);
+                    this.method_1456(block, 0.0, 0.0, 0.0, block.method_396(1, i));
+                    var4.method_1396();
+                    var4.method_1405();
+                    var4.method_1407(0.0F, 0.0F, -1.0F);
+                    this.method_1461(block, 0.0, 0.0, 0.0, block.method_396(2, i));
+                    var4.method_1396();
+                    var4.method_1405();
+                    var4.method_1407(0.0F, 0.0F, 1.0F);
+                    this.method_1465(block, 0.0, 0.0, 0.0, block.method_396(3, i));
+                    var4.method_1396();
+                    var4.method_1405();
+                    var4.method_1407(-1.0F, 0.0F, 0.0F);
+                    this.method_1468(block, 0.0, 0.0, 0.0, block.method_396(4, i));
+                    var4.method_1396();
+                    var4.method_1405();
+                    var4.method_1407(1.0F, 0.0F, 0.0F);
+                    this.method_1470(block, 0.0, 0.0, 0.0, block.method_396(5, i));
+                    var4.method_1396();
+                    GL11.glTranslatef(0.5F, 0.5F, 0.5F);
+                }
+
+                this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
+                this.method_1431();
             } else {
-                ModLoader.renderInvBlock((class_535) (Object) this, block, i, var6);
+                ModLoader.renderInvBlock((class_535)(Object) this, block, i, var6);
             }
         } else {
             if (var6 == 16) {
@@ -393,6 +472,7 @@ public abstract class class_535Mixin {
             }
 
             block.setBlockItemBounds();
+            this.method_4320(block);
             GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
             GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
             var4.method_1405();
@@ -401,9 +481,9 @@ public abstract class class_535Mixin {
             var4.method_1396();
             if (var5 && this.field_2048) {
                 var14 = block.method_459(i);
-                var8 = (float) (var14 >> 16 & 255) / 255.0F;
-                var9 = (float) (var14 >> 8 & 255) / 255.0F;
-                float var10 = (float) (var14 & 255) / 255.0F;
+                var8 = (float)(var14 >> 16 & 255) / 255.0F;
+                var9 = (float)(var14 >> 8 & 255) / 255.0F;
+                float var10 = (float)(var14 & 255) / 255.0F;
                 GL11.glColor4f(var8 * f, var9 * f, var10 * f, 1.0F);
             }
 
@@ -438,19 +518,13 @@ public abstract class class_535Mixin {
 
     @Inject(method = "method_1455", at = @At("RETURN"), cancellable = true)
     private static void modLoaderRenderBlockIsItemFull3D(int i, CallbackInfoReturnable<Boolean> cir) {
-        if (!(
-                i == 0
-                        || i == 31
-                        || i == 13
-                        || i == 10
-                        || i == 11
-                        || i == 27
-                        || i == 22
-                        || i == 21
-                        || i == 16
-                        || i == 26
-        )) {
+        if (!cir.getReturnValue()) {
             cir.setReturnValue(ModLoader.renderBlockIsItemFull3D(i));
         }
+    }
+
+    @Inject(method = "<clinit>", at = @At("RETURN"))
+    private static void modLoaderCfgGrassFix(CallbackInfo ci) {
+        field_2047 = class_535Data.cfgGrassFix;
     }
 }

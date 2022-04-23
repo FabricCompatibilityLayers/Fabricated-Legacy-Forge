@@ -8,12 +8,10 @@ import net.minecraft.entity.EndCrystalEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.FallingBlockEntity;
 import net.minecraft.entity.TntEntity;
+import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.AbstractArrowEntity;
-import net.minecraft.entity.projectile.ExplosiveProjectileEntity;
-import net.minecraft.entity.projectile.FishingBobberEntity;
-import net.minecraft.entity.projectile.SmallFireballEntity;
+import net.minecraft.entity.projectile.*;
 import net.minecraft.entity.thrown.*;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.entity.vehicle.BoatEntity;
@@ -52,10 +50,11 @@ public abstract class class_469Mixin {
      */
     @Overwrite
     public void onEntitySpawn(EntitySpawn_S2CPacket packet) {
-        double var2 = (double) packet.x / 32.0;
-        double var4 = (double) packet.y / 32.0;
-        double var6 = (double) packet.z / 32.0;
+        double var2 = (double)packet.x / 32.0;
+        double var4 = (double)packet.y / 32.0;
+        double var6 = (double)packet.z / 32.0;
         Object var8 = null;
+        boolean var9 = true;
         if (packet.type == 10) {
             var8 = new AbstractMinecartEntity(this.world, var2, var4, var6, 0);
         } else if (packet.type == 11) {
@@ -63,9 +62,9 @@ public abstract class class_469Mixin {
         } else if (packet.type == 12) {
             var8 = new AbstractMinecartEntity(this.world, var2, var4, var6, 2);
         } else if (packet.type == 90) {
-            Entity var9 = this.getEntityById(packet.ownerId);
-            if (var9 instanceof PlayerEntity) {
-                var8 = new FishingBobberEntity(this.world, var2, var4, var6, (PlayerEntity) var9);
+            Entity var10 = this.getEntityById(packet.ownerId);
+            if (var10 instanceof PlayerEntity) {
+                var8 = new FishingBobberEntity(this.world, var2, var4, var6, (PlayerEntity)var10);
             }
 
             packet.ownerId = 0;
@@ -73,15 +72,22 @@ public abstract class class_469Mixin {
             var8 = new AbstractArrowEntity(this.world, var2, var4, var6);
         } else if (packet.type == 61) {
             var8 = new SnowballEntity(this.world, var2, var4, var6);
+        } else if (packet.type == 71) {
+            var8 = new ItemFrameEntity(this.world, (int)var2, (int)var4, (int)var6, packet.ownerId);
+            packet.ownerId = 0;
+            var9 = false;
         } else if (packet.type == 65) {
             var8 = new EnderPearlEntity(this.world, var2, var4, var6);
         } else if (packet.type == 72) {
             var8 = new EyeOfEnderEntity(this.world, var2, var4, var6);
         } else if (packet.type == 63) {
-            var8 = new ExplosiveProjectileEntity(this.world, var2, var4, var6, (double) packet.velocityX / 8000.0, (double) packet.velocityY / 8000.0, (double) packet.velocityZ / 8000.0);
+            var8 = new FireballEntity(this.world, var2, var4, var6, (double)packet.velocityX / 8000.0, (double)packet.velocityY / 8000.0, (double)packet.velocityZ / 8000.0);
             packet.ownerId = 0;
         } else if (packet.type == 64) {
-            var8 = new SmallFireballEntity(this.world, var2, var4, var6, (double) packet.velocityX / 8000.0, (double) packet.velocityY / 8000.0, (double) packet.velocityZ / 8000.0);
+            var8 = new SmallFireballEntity(this.world, var2, var4, var6, (double)packet.velocityX / 8000.0, (double)packet.velocityY / 8000.0, (double)packet.velocityZ / 8000.0);
+            packet.ownerId = 0;
+        } else if (packet.type == 66) {
+            var8 = new WitherSkullEntity(this.world, var2, var4, var6, (double)packet.velocityX / 8000.0, (double)packet.velocityY / 8000.0, (double)packet.velocityZ / 8000.0);
             packet.ownerId = 0;
         } else if (packet.type == 62) {
             var8 = new EggEntity(this.world, var2, var4, var6);
@@ -110,35 +116,38 @@ public abstract class class_469Mixin {
         }
 
         if (var8 != null) {
-            ((Entity) var8).trackedX = packet.x;
-            ((Entity) var8).trackedY = packet.y;
-            ((Entity) var8).trackedZ = packet.z;
-            ((Entity) var8).yaw = 0.0F;
-            ((Entity) var8).pitch = 0.0F;
-            Entity[] var15 = ((Entity) var8).getParts();
-            if (var15 != null) {
-                int var10 = packet.id - ((Entity) var8).id;
-                Entity[] var11 = var15;
-                int var12 = var15.length;
+            ((Entity)var8).trackedX = packet.x;
+            ((Entity)var8).trackedY = packet.y;
+            ((Entity)var8).trackedZ = packet.z;
+            if (var9) {
+                ((Entity)var8).yaw = 0.0F;
+                ((Entity)var8).pitch = 0.0F;
+            }
 
-                for (int var13 = 0; var13 < var12; ++var13) {
-                    Entity var14 = var11[var13];
-                    var14.id += var10;
+            Entity[] var16 = ((Entity)var8).getParts();
+            if (var16 != null) {
+                int var11 = packet.id - ((Entity)var8).id;
+                Entity[] var12 = var16;
+                int var13 = var16.length;
+
+                for(int var14 = 0; var14 < var13; ++var14) {
+                    Entity var15 = var12[var14];
+                    var15.id += var11;
                 }
             }
 
-            ((Entity) var8).id = packet.id;
-            this.world.method_1253(packet.id, (Entity) var8);
+            ((Entity)var8).id = packet.id;
+            this.world.method_1253(packet.id, (Entity)var8);
             if (packet.ownerId > 0) {
                 if (packet.type == 60) {
-                    Entity var16 = this.getEntityById(packet.ownerId);
-                    if (var16 instanceof MobEntity) {
-                        AbstractArrowEntity var17 = (AbstractArrowEntity) var8;
-                        var17.owner = var16;
+                    Entity var17 = this.getEntityById(packet.ownerId);
+                    if (var17 instanceof MobEntity) {
+                        AbstractArrowEntity var18 = (AbstractArrowEntity)var8;
+                        var18.owner = var17;
                     }
                 }
 
-                ((Entity) var8).setVelocityClient((double) packet.velocityX / 8000.0, (double) packet.velocityY / 8000.0, (double) packet.velocityZ / 8000.0);
+                ((Entity)var8).setVelocityClient((double)packet.velocityX / 8000.0, (double)packet.velocityY / 8000.0, (double)packet.velocityZ / 8000.0);
             }
         }
 
@@ -166,7 +175,7 @@ public abstract class class_469Mixin {
 
     @Inject(method = "onOpenScreen", at = @At("HEAD"), cancellable = true)
     private void modLoaderClientOpenWindow(OpenScreen_S2CPacket par1, CallbackInfo ci) {
-        if (par1.type > 6 || par1.type < 0) {
+        if (par1.type > 8 || par1.type < 0) {
             ModLoader.clientOpenWindow(par1);
             ci.cancel();
         }
