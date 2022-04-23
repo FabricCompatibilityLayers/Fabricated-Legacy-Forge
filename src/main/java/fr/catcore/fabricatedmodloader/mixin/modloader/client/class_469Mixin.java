@@ -101,10 +101,7 @@ public abstract class class_469Mixin {
             var8 = new FallingBlockEntity(this.world, var2, var4, var6, packet.ownerId & '\uffff', packet.ownerId >> 16);
             packet.ownerId = 0;
         } else {
-            Iterator i$ = ModLoader.getTrackers().values().iterator();
-
-            while (i$.hasNext()) {
-                EntityTrackerNonliving tracker = (EntityTrackerNonliving) i$.next();
+            for (EntityTrackerNonliving tracker : (Iterable<EntityTrackerNonliving>) ModLoader.getTrackers().values()) {
                 if (packet.type == tracker.id) {
                     var8 = tracker.mod.spawnEntity(packet.type, this.world, var2, var4, var6);
                     break;

@@ -1,5 +1,13 @@
 accessWidener v1 named
 
+# Private
+accessible method net/minecraft/server/integrated/IntegratedServer setupWorld ()V
+accessible method net/minecraft/server/integrated/IntegratedServer populateCrashReport (Lnet/minecraft/util/crash/CrashReport;)Lnet/minecraft/util/crash/CrashReport;
+
+accessible method net/minecraft/world/level/LevelGeneratorType <init> (ILjava/lang/String;)V
+accessible method net/minecraft/world/level/LevelGeneratorType <init> (ILjava/lang/String;I)V
+
+# Protected
 accessible method net/minecraft/recipe/RecipeDispatcher method_3495 (Lnet/minecraft/item/ItemStack;[Ljava/lang/Object;)V
 accessible method net/minecraft/recipe/RecipeDispatcher registerShapelessRecipe (Lnet/minecraft/item/ItemStack;[Ljava/lang/Object;)V
 
