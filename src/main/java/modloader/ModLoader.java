@@ -2,22 +2,25 @@ package modloader;
 
 import fr.catcore.fabricatedmodloader.mixin.modloader.client.BlockEntityRenderDispatcherAccessor;
 import fr.catcore.fabricatedmodloader.mixin.modloader.client.PlayerEntityRendererAccessor;
+import fr.catcore.fabricatedmodloader.mixin.modloader.client.SoundSystemAccessor;
 import fr.catcore.fabricatedmodloader.mixin.modloader.client.class_534Accessor;
 import fr.catcore.fabricatedmodloader.mixin.modloader.common.*;
-import fr.catcore.fabricatedmodloader.utils.Constants;
-import fr.catcore.fabricatedmodloader.utils.FakeModManager;
-import fr.catcore.fabricatedmodloader.utils.SetBaseBiomesLayerData;
-import fr.catcore.fabricatedmodloader.utils.class_535Data;
+import fr.catcore.fabricatedmodloader.mixininterface.ISoundLoader;
+import fr.catcore.fabricatedmodloader.utils.*;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.impl.util.log.Log;
 import net.minecraft.advancement.Achievement;
 import net.minecraft.block.Block;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.client.*;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.sound.SoundLoader;
+import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.client.texture.TexturePackManager;
 import net.minecraft.command.Command;
 import net.minecraft.entity.*;
@@ -108,12 +111,16 @@ public final class ModLoader {
     private static boolean texturesAdded = false;
     private static final boolean[] usedItemSprites = new boolean[256];
     private static final boolean[] usedTerrainSprites = new boolean[256];
-    public static final String VERSION = "ModLoader 1.3.2";
+    public static final String VERSION = "ModLoader 1.4.2";
     private static class_469 clientHandler = null;
     private static final List<Command> commandList = new LinkedList<>();
     private static final Map<Integer, List<TradeEntry>> tradeItems = new HashMap<>();
     private static final Map<Integer, BaseMod> containerGUIs = new HashMap<>();
     private static final Map<Class<?>, EntityTrackerNonliving> trackers = new HashMap<>();
+    private static final Map<Item, DispenserBehavior> dispenserBehaviors = new HashMap();
+    private static SoundLoader soundPoolSounds;
+    private static SoundLoader soundPoolStreaming;
+    private static SoundLoader soundPoolMusic;
 
     public static void addAchievementDesc(Achievement achievement, String s, String s1) {
         try {
@@ -232,7 +239,11 @@ public final class ModLoader {
         commandList.add(cmd);
     }
 
-    public static void registerCommands(MinecraftServer server) {
+    public static void addDispenserBehavior(Item item, DispenserBehavior behavior) {
+        dispenserBehaviors.put(item, behavior);
+    }
+
+    public static void registerServer(MinecraftServer server) {
         CommandRegistryProvider manager = server.getCommandManager();
         if (manager instanceof CommandRegistry) {
             CommandRegistry handler = (CommandRegistry) manager;
@@ -241,6 +252,9 @@ public final class ModLoader {
                 handler.registerCommand(cmd);
             }
 
+            for (Map.Entry<Item, DispenserBehavior> entry : dispenserBehaviors.entrySet()) {
+                DispenserBlock.BEHAVIOR_REGISTRY.put(entry.getKey(), entry.getValue());
+            }
         }
     }
 
@@ -450,15 +464,6 @@ public final class ModLoader {
 
     }
 
-    public static int dispenseEntity(World world, ItemStack itemstack, Random rnd, int blockX, int blockY, int blockZ, int offsetX, int offsetZ, double entityX, double entityY, double entityZ) {
-        int type = 0;
-
-        for (Iterator<BaseMod> iterator = modList.iterator(); type == 0 && iterator.hasNext(); type = iterator.next().dispenseEntity(world, itemstack, rnd, blockX, blockY, blockZ, offsetX, offsetZ, entityX, entityY, entityZ)) {
-        }
-
-        return type;
-    }
-
     public static void genericContainerRemoval(World world, int i, int j, int k) {
         Inventory iinventory = (Inventory) world.method_3781(i, j, k);
         if (iinventory != null) {
@@ -593,8 +598,8 @@ public final class ModLoader {
 
     private static void init() {
         hasInit = true;
-        String usedItemSpritesString = "1111111111111111111111111111111111111101111111111111111111111111111111111111111111111111111111111111110111111111111111000111111111111101111111110000000101111111000000010111111100000000001110110000000000000000000000000000000000000000000000001111111111111111";
-        String usedTerrainSpritesString = "1111111111111111111111111100111111111111100111111111111110011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000000001111111100000111111111100000001111111110000001111111111111111111";
+        String usedItemSpritesString = "1111111111111111111111111111111111111101111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000001111111111000000010111111110000000011111111000000000000110000000000000000011111000000000001111111111111111";
+        String usedTerrainSpritesString = "1111111111111111111111111100111111111111110111111111111110011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000001111111111111111111111111000001111111111100001111111111111111111";
 
         for (int i = 0; i < 256; ++i) {
             usedItemSprites[i] = usedItemSpritesString.charAt(i) == '1';
@@ -611,6 +616,9 @@ public final class ModLoader {
         try {
             instance = Minecraft.getMinecraft();
             instance.gameRenderer = new EntityRendererProxy(instance);
+            soundPoolSounds = ((SoundSystemAccessor)instance.soundSystem).getSoundsLoader();
+            soundPoolStreaming = ((SoundSystemAccessor)instance.soundSystem).getStreamingLoader();
+            soundPoolMusic = ((SoundSystemAccessor)instance.soundSystem).getMusicLoader();
             field_modifiers = Field.class.getDeclaredField("modifiers");
             field_modifiers.setAccessible(true);
             Field[] afield = Biome.class.getDeclaredFields();
@@ -650,8 +658,8 @@ public final class ModLoader {
                 logger.addHandler(logHandler);
             }
 
-            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.3.2 Initializing...");
-            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.3.2 Initializing...");
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.4.2 Initializing...");
+            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.4.2 Initializing...");
             addModsToClassPath();
             sortModList();
 
@@ -949,6 +957,20 @@ public final class ModLoader {
 
     private static void addModsToClassPath() throws IllegalArgumentException, SecurityException {
         ClassLoader classloader = Minecraft.class.getClassLoader();
+
+        FakeModManager.getMods().forEach(modEntry -> {
+            modEntry.sounds.forEach((soundType, strings) -> {
+                ISoundLoader soundLoader = (ISoundLoader) (soundType == MLModEntry.SoundType.sound ? soundPoolSounds : soundType == MLModEntry.SoundType.music ? soundPoolMusic : soundPoolStreaming);
+                for (String soundName : strings) {
+                    try {
+                        soundLoader.addSound(soundName, new URL(String.format("jar:%s!/%s", modEntry.file, "resources/" + soundType.name() + "/" + soundName)));
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        });
+        
         FakeModManager.getMods().forEach(modEntry -> addMod(classloader, modEntry.initClass));
     }
 
@@ -1010,7 +1032,7 @@ public final class ModLoader {
 
     public static void serverOpenWindow(ServerPlayerEntity player, ScreenHandler container, int id, int x, int y, int z) {
         try {
-            Field winIDField = ServerPlayerEntity.class.getDeclaredFields()[17];
+            Field winIDField = ServerPlayerEntity.class.getDeclaredFields()[16];
             winIDField.setAccessible(true);
             System.out.println(winIDField.getName());
             int winID = winIDField.getInt(player);
@@ -1207,7 +1229,7 @@ public final class ModLoader {
 
     public static boolean renderBlockIsItemFull3D(int i) {
         if (!blockSpecialInv.containsKey(i)) {
-            return i == 26;
+            return i == 35;
         } else {
             return blockSpecialInv.get(i);
         }
@@ -1356,9 +1378,8 @@ public final class ModLoader {
         int i = 0;
         int j = 0;
         File file = new File(cfgdir, class1.getSimpleName() + ".cfg");
-        Path path = file.toPath();
         if (file.exists() && file.canRead()) {
-            properties.load(Files.newInputStream(path));
+            properties.load(Files.newInputStream(file.toPath()));
         }
 
         if (properties.containsKey("checksum")) {
@@ -1368,7 +1389,7 @@ public final class ModLoader {
         Field[] afield;
         int l = (afield = class1.getDeclaredFields()).length;
 
-        for (int k = 0; k < l; ++k) {
+        for(int k = 0; k < l; ++k) {
             Field field = afield[k];
             if ((field.getModifiers() & 8) != 0 && field.isAnnotationPresent(MLProp.class)) {
                 linkedlist.add(field);
@@ -1380,7 +1401,7 @@ public final class ModLoader {
         StringBuilder stringbuilder = new StringBuilder();
         Iterator<Field> iterator = linkedlist.iterator();
 
-        while (true) {
+        while(true) {
             MLProp mlprop;
             String s;
             Object obj1;
@@ -1389,13 +1410,13 @@ public final class ModLoader {
             Field field1;
             do {
                 do {
-                    while (true) {
+                    while(true) {
                         do {
                             do {
                                 if (!iterator.hasNext()) {
                                     properties.put("checksum", Integer.toString(i, 36));
                                     if (!properties.isEmpty() && (file.exists() || file.createNewFile()) && file.canWrite()) {
-                                        properties.store(Files.newOutputStream(path), stringbuilder.toString());
+                                        properties.store(Files.newOutputStream(file.toPath()), stringbuilder.toString());
                                     }
 
                                     return;
@@ -1449,14 +1470,14 @@ public final class ModLoader {
                         Log.debug(Constants.MODLOADER_LOG_CATEGORY, s + " not in config, using default: " + obj1);
                         properties.setProperty(s, obj1.toString());
                     }
-                } while (obj2 == null);
+                } while(obj2 == null);
 
                 if (!(obj2 instanceof Number)) {
                     break;
                 }
 
-                d = ((Number) obj2).doubleValue();
-            } while (mlprop.min() != Double.NEGATIVE_INFINITY && d < mlprop.min() || mlprop.max() != Double.POSITIVE_INFINITY && d > mlprop.max());
+                d = ((Number)obj2).doubleValue();
+            } while(mlprop.min() != Double.NEGATIVE_INFINITY && d < mlprop.min() || mlprop.max() != Double.POSITIVE_INFINITY && d > mlprop.max());
 
             Log.debug(Constants.MODLOADER_LOG_CATEGORY, s + " set to " + obj2);
             if (!obj2.equals(obj1)) {
@@ -1616,11 +1637,10 @@ public final class ModLoader {
         sb.append("Mods loaded: ");
         sb.append(getLoadedMods().size() + 1);
         sb.append('\n');
-        sb.append("ModLoader 1.3.2");
+        sb.append("ModLoader 1.4.2");
         sb.append('\n');
 
-        for (Object o : getLoadedMods()) {
-            BaseMod mod = (BaseMod) o;
+        for (BaseMod mod : (List<BaseMod>)getLoadedMods()) {
             sb.append(mod.getName());
             sb.append(' ');
             sb.append(mod.getVersion());

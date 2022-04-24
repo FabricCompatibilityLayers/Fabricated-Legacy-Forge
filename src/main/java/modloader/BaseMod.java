@@ -34,10 +34,6 @@ public abstract class BaseMod {
     public void addRenderer(Map map) {
     }
 
-    public int dispenseEntity(World world, ItemStack itemstack, Random rnd, int blockX, int blockY, int blockZ, int offsetX, int offsetZ, double entityX, double entityY, double entityZ) {
-        return 0;
-    }
-
     public void generateNether(World world, Random random, int i, int j) {
     }
 

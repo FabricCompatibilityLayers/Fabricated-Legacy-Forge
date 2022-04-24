@@ -16,12 +16,12 @@
     "modloader.client.BlockEntityRenderDispatcherAccessor",
     "modloader.client.class_534Accessor",
     "modloader.client.SoundLoaderMixin",
+    "modloader.client.SoundSystemAccessor",
 
     "modloader.common.BlockEntityAccessor",
     "modloader.common.CraftingResultSlotMixin",
     "modloader.common.CrashReportMixin",
     "modloader.common.DimensionMixin",
-    "modloader.common.DispenserBlockMixin",
     "modloader.common.EntityTrackerMixin",
     "modloader.common.EntityTypeAccessor",
     "modloader.common.FurnaceBlockEntityMixin",

@@ -35,6 +35,7 @@ public class MLModDiscoverer {
                 File remappedFile = new File(Constants.REMAPPED_FOLDER, name);
 
                 List<String> modName = new ArrayList<>();
+                Map<MLModEntry.SoundType, List<String>> modSounds = new HashMap<>();
 
                 if (file.isDirectory()) {
                     remappedFile = new File(Constants.REMAPPED_FOLDER, name + ".zip");
@@ -70,6 +71,15 @@ public class MLModDiscoverer {
                                     break;
                                 } else if (s1.startsWith("mod_") && s1.endsWith(".class")) {
                                     modName.add(s1.replace("mod_", "").replace(".class", ""));
+                                } else if (s1.startsWith("resources/streaming/")) {
+                                    modSounds.computeIfAbsent(MLModEntry.SoundType.streaming, soundType -> new ArrayList<>())
+                                            .add(s1.substring(20));
+                                } else if (s1.startsWith("resources/sound/")) {
+                                    modSounds.computeIfAbsent(MLModEntry.SoundType.sound, soundType -> new ArrayList<>())
+                                            .add(s1.substring(16));
+                                } else if (s1.startsWith("resources/music/")) {
+                                    modSounds.computeIfAbsent(MLModEntry.SoundType.music, soundType -> new ArrayList<>())
+                                            .add(s1.substring(16));
                                 }
                             }
                         }
@@ -124,7 +134,7 @@ public class MLModDiscoverer {
                 if (!modName.isEmpty()) {
                     List<String> files = RemapUtil.makeModMappings(file.toPath());
                     String firstModName = modName.remove(0);
-                    mods.add(new MLModEntry(firstModName, firstModName.toLowerCase(Locale.ENGLISH), "net/minecraft/mod_" + firstModName + ".class", remappedFile, file));
+                    mods.add(new MLModEntry(firstModName, firstModName.toLowerCase(Locale.ENGLISH), "net/minecraft/mod_" + firstModName + ".class", remappedFile, file, modSounds));
 
                     while (!modName.isEmpty()) {
                         String modname = modName.remove(0);
