@@ -34,7 +34,10 @@
     "modloader.common.VillagerEntityMixin",
     "modloader.common.LanguageAccessor",
     "modloader.common.AchievementAccessor",
-    "modloader.common.StatAccessor"
+    "modloader.common.StatAccessor",
+    "modloader.common.RecipeDispatcherAccessor",
+    "modloader.common.WeightAccessor",
+    "modloader.common.StatsAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
