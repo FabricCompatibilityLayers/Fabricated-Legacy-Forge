@@ -16,13 +16,17 @@ import java.util.Map;
 
 @Mixin(SoundLoader.class)
 public class SoundLoaderMixin implements ISoundLoader {
-    @Shadow public boolean field_2269;
+    @Shadow
+    public boolean field_2269;
 
-    @Shadow private Map soundMap;
+    @Shadow
+    private Map soundMap;
 
-    @Shadow private List soundList;
+    @Shadow
+    private List soundList;
 
-    @Shadow public int soundCount;
+    @Shadow
+    public int soundCount;
 
     /**
      * @author
@@ -42,7 +46,7 @@ public class SoundLoaderMixin implements ISoundLoader {
         String var3 = par1Str;
         par1Str = par1Str.substring(0, par1Str.indexOf("."));
         if (this.field_2269) {
-            while(Character.isDigit(par1Str.charAt(par1Str.length() - 1))) {
+            while (Character.isDigit(par1Str.charAt(par1Str.length() - 1))) {
                 par1Str = par1Str.substring(0, par1Str.length() - 1);
             }
         }
@@ -53,7 +57,7 @@ public class SoundLoaderMixin implements ISoundLoader {
         }
 
         Sound var4 = new Sound(var3, par2URL);
-        ((List)this.soundMap.get(par1Str)).add(var4);
+        ((List) this.soundMap.get(par1Str)).add(var4);
         this.soundList.add(var4);
         ++this.soundCount;
         return var4;

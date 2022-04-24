@@ -6,12 +6,7 @@ import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.zip.ZipEntry;
@@ -91,9 +86,8 @@ public class MLModDiscoverer {
                                 tempFile.deleteOnExit();
 
                                 boolean renameOk = file.renameTo(tempFile);
-                                if (!renameOk)
-                                {
-                                    throw new RuntimeException("could not rename the file "+file.getAbsolutePath()+" to "+tempFile.getAbsolutePath());
+                                if (!renameOk) {
+                                    throw new RuntimeException("could not rename the file " + file.getAbsolutePath() + " to " + tempFile.getAbsolutePath());
                                 }
 
                                 ZipInputStream zin = new ZipInputStream(Files.newInputStream(tempFile.toPath()));

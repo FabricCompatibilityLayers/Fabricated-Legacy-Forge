@@ -24,18 +24,22 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
     @Shadow
     private ItemStack[] stacks;
 
-    @Shadow public int fuelTime;
+    @Shadow
+    public int fuelTime;
 
     @Shadow
     public static int getBurnTime(ItemStack stack) {
         return 0;
     }
 
-    @Shadow public int totalFuelTime;
+    @Shadow
+    public int totalFuelTime;
 
-    @Shadow public abstract boolean isFueled();
+    @Shadow
+    public abstract boolean isFueled();
 
-    @Shadow public int field_547;
+    @Shadow
+    public int field_547;
 
     /**
      * @author

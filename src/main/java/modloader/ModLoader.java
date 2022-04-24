@@ -400,11 +400,11 @@ public final class ModLoader {
     }
 
     public static void addRecipe(ItemStack itemstack, Object... aobj) {
-        ((RecipeDispatcherAccessor)RecipeDispatcher.getInstance()).method_3495_invoker(itemstack, aobj);
+        ((RecipeDispatcherAccessor) RecipeDispatcher.getInstance()).method_3495_invoker(itemstack, aobj);
     }
 
     public static void addShapelessRecipe(ItemStack itemstack, Object... aobj) {
-        ((RecipeDispatcherAccessor)RecipeDispatcher.getInstance()).registerShapelessRecipe_invoker(itemstack, aobj);
+        ((RecipeDispatcherAccessor) RecipeDispatcher.getInstance()).registerShapelessRecipe_invoker(itemstack, aobj);
     }
 
     public static void addSmelting(int i, ItemStack itemstack, float xp) {
@@ -432,7 +432,7 @@ public final class ModLoader {
 
                     for (SpawnEntry spawnlistentry : list) {
                         if (spawnlistentry.type == class1) {
-                            ((WeightAccessor)spawnlistentry).setWeight(i);
+                            ((WeightAccessor) spawnlistentry).setWeight(i);
                             spawnlistentry.minGroupSize = j;
                             spawnlistentry.maxGroupSize = k;
                             flag = true;
@@ -613,9 +613,9 @@ public final class ModLoader {
         try {
             instance = Minecraft.getMinecraft();
             instance.gameRenderer = new EntityRendererProxy(instance);
-            soundPoolSounds = ((SoundSystemAccessor)instance.soundSystem).getSoundsLoader();
-            soundPoolStreaming = ((SoundSystemAccessor)instance.soundSystem).getStreamingLoader();
-            soundPoolMusic = ((SoundSystemAccessor)instance.soundSystem).getMusicLoader();
+            soundPoolSounds = ((SoundSystemAccessor) instance.soundSystem).getSoundsLoader();
+            soundPoolStreaming = ((SoundSystemAccessor) instance.soundSystem).getStreamingLoader();
+            soundPoolMusic = ((SoundSystemAccessor) instance.soundSystem).getMusicLoader();
             field_modifiers = Field.class.getDeclaredField("modifiers");
             field_modifiers.setAccessible(true);
             Field[] afield = Biome.class.getDeclaredFields();
@@ -1384,7 +1384,7 @@ public final class ModLoader {
         Field[] afield;
         int l = (afield = class1.getDeclaredFields()).length;
 
-        for(int k = 0; k < l; ++k) {
+        for (int k = 0; k < l; ++k) {
             Field field = afield[k];
             if ((field.getModifiers() & 8) != 0 && field.isAnnotationPresent(MLProp.class)) {
                 linkedlist.add(field);
@@ -1396,7 +1396,7 @@ public final class ModLoader {
         StringBuilder stringbuilder = new StringBuilder();
         Iterator<Field> iterator = linkedlist.iterator();
 
-        while(true) {
+        while (true) {
             MLProp mlprop;
             String s;
             Object obj1;
@@ -1405,7 +1405,7 @@ public final class ModLoader {
             Field field1;
             do {
                 do {
-                    while(true) {
+                    while (true) {
                         do {
                             do {
                                 if (!iterator.hasNext()) {
@@ -1465,14 +1465,14 @@ public final class ModLoader {
                         Log.debug(Constants.MODLOADER_LOG_CATEGORY, s + " not in config, using default: " + obj1);
                         properties.setProperty(s, obj1.toString());
                     }
-                } while(obj2 == null);
+                } while (obj2 == null);
 
                 if (!(obj2 instanceof Number)) {
                     break;
                 }
 
-                d = ((Number)obj2).doubleValue();
-            } while(mlprop.min() != Double.NEGATIVE_INFINITY && d < mlprop.min() || mlprop.max() != Double.POSITIVE_INFINITY && d > mlprop.max());
+                d = ((Number) obj2).doubleValue();
+            } while (mlprop.min() != Double.NEGATIVE_INFINITY && d < mlprop.min() || mlprop.max() != Double.POSITIVE_INFINITY && d > mlprop.max());
 
             Log.debug(Constants.MODLOADER_LOG_CATEGORY, s + " set to " + obj2);
             if (!obj2.equals(obj1)) {
@@ -1635,7 +1635,7 @@ public final class ModLoader {
         sb.append("ModLoader 1.4.2");
         sb.append('\n');
 
-        for (BaseMod mod : (List<BaseMod>)getLoadedMods()) {
+        for (BaseMod mod : (List<BaseMod>) getLoadedMods()) {
             sb.append(mod.getName());
             sb.append(' ');
             sb.append(mod.getVersion());

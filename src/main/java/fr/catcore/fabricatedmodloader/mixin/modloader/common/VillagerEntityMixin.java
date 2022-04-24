@@ -15,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -38,7 +37,9 @@ public abstract class VillagerEntityMixin extends Entity {
     @Final
     private static Map field_3947;
 
-    @Shadow @Final private static Map field_3946;
+    @Shadow
+    @Final
+    private static Map field_3946;
 
     public VillagerEntityMixin(World world) {
         super(world);

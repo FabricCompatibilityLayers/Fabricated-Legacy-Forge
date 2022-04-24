@@ -13,7 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ItemEntity.class)
 public class ItemEntityMixin {
 
-    @Shadow public ItemStack field_23087;
+    @Shadow
+    public ItemStack field_23087;
 
     @Inject(method = "onPlayerCollision", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;playSound(Lnet/minecraft/entity/Entity;Ljava/lang/String;FF)V"))
     private void modLoaderOnItemPickup(PlayerEntity par1, CallbackInfo ci) {

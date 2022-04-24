@@ -27,7 +27,8 @@ public class DimensionMixin {
     @Shadow
     public boolean isNether;
 
-    @Shadow public String generatorOptions;
+    @Shadow
+    public String generatorOptions;
 
     /**
      * @author
