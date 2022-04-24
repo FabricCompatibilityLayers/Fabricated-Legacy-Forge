@@ -482,7 +482,7 @@ public final class ModLoader {
                         entityitem.velocityY = world.random.nextGaussian() * d3 + 0.2D;
                         entityitem.velocityZ = world.random.nextGaussian() * d3;
                         if (itemstack.hasNbt()) {
-                            entityitem.stack.setNbt((NbtCompound) itemstack.getNbt().copy());
+                            entityitem.field_23087.setNbt((NbtCompound) itemstack.getNbt().copy());
                         }
                     }
 
@@ -963,7 +963,7 @@ public final class ModLoader {
                 int z = stream.readInt();
                 int dim = (byte) stream.read();
                 class_481 player = instance.playerEntity;
-                if (player._dimension != dim) {
+                if (player.dimension != dim) {
                     return;
                 }
 
@@ -1023,7 +1023,7 @@ public final class ModLoader {
             stream.writeInt(x);
             stream.writeInt(y);
             stream.writeInt(z);
-            stream.write(player._dimension);
+            stream.write(player.dimension);
             player.field_2823.sendPacket(new CustomPayloadC2SPacket("ML|OpenTE", bytestream.toByteArray()));
             player.openScreenHandler = container;
             player.openScreenHandler.syncId = winID;
