@@ -38,6 +38,8 @@ public abstract class VillagerEntityMixin extends Entity {
     @Final
     private static Map field_3947;
 
+    @Shadow @Final private static Map field_3946;
+
     public VillagerEntityMixin(World world) {
         super(world);
     }
@@ -67,9 +69,15 @@ public abstract class VillagerEntityMixin extends Entity {
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void modLoaderAddTrades(CallbackInfo ci) {
         List<TradeEntry> list = ModLoader.getTrades(-1);
-        for (TradeEntry entry : list) {
-            if (entry.min > 0 && entry.max > 0) {
-                field_3947.put(entry.id, new Pair(entry.min, entry.max));
+        if (list != null) {
+            for (TradeEntry entry : list) {
+                if (entry.buying) {
+                    if (entry.min > 0 && entry.max > 0) {
+                        field_3946.put(entry.id, new Pair(entry.min, entry.max));
+                    }
+                } else if (entry.min > 0 && entry.max > 0) {
+                    field_3947.put(entry.id, new Pair(entry.min, entry.max));
+                }
             }
         }
     }

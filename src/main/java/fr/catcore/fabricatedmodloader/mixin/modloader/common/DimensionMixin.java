@@ -27,6 +27,8 @@ public class DimensionMixin {
     @Shadow
     public boolean isNether;
 
+    @Shadow public String generatorOptions;
+
     /**
      * @author
      */
@@ -40,7 +42,7 @@ public class DimensionMixin {
      */
     @Overwrite
     public ChunkProvider createChunkGenerator() {
-        return ((ILevelGeneratorType) this.generatorType).getChunkGenerator(this.world);
+        return ((ILevelGeneratorType) this.generatorType).getChunkGenerator(this.world, this.generatorOptions);
     }
 
     /**

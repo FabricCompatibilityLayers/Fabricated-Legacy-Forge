@@ -8,6 +8,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkProvider;
 import net.minecraft.world.chunk.FlatChunkGenerator;
 import net.minecraft.world.chunk.SurfaceChunkGenerator;
+import net.minecraft.world.gen.FlatWorldHelper;
 import net.minecraft.world.level.LevelGeneratorType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,12 +22,12 @@ public class LevelGeneratorTypeMixin implements ILevelGeneratorType {
 
     @Override
     public LayeredBiomeSource getChunkManager(World world) {
-        return (LayeredBiomeSource) (((LevelGeneratorType) (Object) this) == FLAT ? new SingletonBiomeSource(Biome.PLAINS, 0.5F, 0.5F) : new LayeredBiomeSource(world));
+        return (LayeredBiomeSource) (((LevelGeneratorType) (Object) this) == FLAT ? new SingletonBiomeSource(Biome.BIOMES[FlatWorldHelper.method_4101(world.getLevelProperties().getGeneratorOptions()).getBiomeId()], 0.5F, 0.5F) : new LayeredBiomeSource(world));
     }
 
     @Override
-    public ChunkProvider getChunkGenerator(World world) {
-        return (ChunkProvider) (((LevelGeneratorType) (Object) this) == FLAT ? new FlatChunkGenerator(world, world.getSeed(), world.getLevelProperties().hasStructures()) : new SurfaceChunkGenerator(world, world.getSeed(), world.getLevelProperties().hasStructures()));
+    public ChunkProvider getChunkGenerator(World world, String params) {
+        return (ChunkProvider) (((LevelGeneratorType) (Object) this) == FLAT ? new FlatChunkGenerator(world, world.getSeed(), world.getLevelProperties().hasStructures(), params) : new SurfaceChunkGenerator(world, world.getSeed(), world.getLevelProperties().hasStructures()));
     }
 
     @Override

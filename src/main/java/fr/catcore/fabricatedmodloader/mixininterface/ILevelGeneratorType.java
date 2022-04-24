@@ -8,7 +8,7 @@ public interface ILevelGeneratorType {
 
     LayeredBiomeSource getChunkManager(World world);
 
-    ChunkProvider getChunkGenerator(World world);
+    ChunkProvider getChunkGenerator(World world, String params);
 
     int getSeaLevel(World world);
 

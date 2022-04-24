@@ -33,7 +33,10 @@ public class ServerPacketListenerMixin implements IServerPacketListener {
     private void modLoaderServerCustomPayload(CustomPayloadC2SPacket par1, CallbackInfo ci) {
         if (!Objects.equals(par1.channel, "MC|BEdit")
                 && !Objects.equals(par1.channel, "MC|BSign")
-                && !Objects.equals(par1.channel, "MC|TrSel")) {
+                && !Objects.equals(par1.channel, "MC|TrSel")
+                && !Objects.equals(par1.channel, "MC|AdvCdm")
+                && !Objects.equals(par1.channel, "MC|Beacon")
+                && !Objects.equals(par1.channel, "MC|ItemName")) {
             ModLoader.serverCustomPayload((ServerPacketListener) (Object) this, par1);
         }
     }
