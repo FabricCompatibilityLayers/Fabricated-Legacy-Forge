@@ -152,8 +152,8 @@ public class MLModDiscoverer {
     }
 
     static {
-        EXCLUDED.put("ReiMinimap", new BArrayList<>());
-        EXCLUDED.get("ReiMinimap")
-                .put("aow.class");
+//        EXCLUDED.put("ReiMinimap", new BArrayList<>());
+//        EXCLUDED.get("ReiMinimap")
+//                .put("aow.class");
     }
 }

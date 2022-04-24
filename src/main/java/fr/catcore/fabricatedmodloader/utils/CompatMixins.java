@@ -10,7 +10,7 @@ public class CompatMixins {
 
     static {
         boolean invTweaks = FabricLoader.getInstance().isModLoaded("invtweaks");
-        MIXINS.put("fr.catcore.fabricatedmodloader.mixin.compat.invtweaks.FixInvTweaksLocalization", invTweaks);
-        MIXINS.put("fr.catcore.fabricatedmodloader.mixin.compat.invtweaks.FixInvTweaksReflection", invTweaks);
+//        MIXINS.put("fr.catcore.fabricatedmodloader.mixin.compat.invtweaks.FixInvTweaksLocalization", invTweaks);
+//        MIXINS.put("fr.catcore.fabricatedmodloader.mixin.compat.invtweaks.FixInvTweaksReflection", invTweaks);
     }
 }
