@@ -115,10 +115,5 @@ accessible method net/minecraft/client/class_535 method_4317 (Lnet/minecraft/blo
 
 accessible method net/minecraft/server/integrated/IntegratedServer setupWorld ()V
 
-# Protected
-#accessible method net/minecraft/recipe/RecipeDispatcher method_3495 (Lnet/minecraft/item/ItemStack;[Ljava/lang/Object;)V
-#accessible method net/minecraft/recipe/RecipeDispatcher registerShapelessRecipe (Lnet/minecraft/item/ItemStack;[Ljava/lang/Object;)V
-#
-#accessible field net/minecraft/util/collection/Weight weight I
-#
-#accessible field net/minecraft/stat/Stats ID_TO_STAT Ljava/util/Map;
+accessible method net/minecraft/world/level/LevelGeneratorType <init> (ILjava/lang/String;)V
+accessible method net/minecraft/world/level/LevelGeneratorType <init> (ILjava/lang/String;I)V

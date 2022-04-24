@@ -389,11 +389,11 @@ public final class ModLoader {
     }
 
     public static void addRecipe(ItemStack itemstack, Object... aobj) {
-        RecipeDispatcher.getInstance().method_3495(itemstack, aobj);
+        ((RecipeDispatcherAccessor)RecipeDispatcher.getInstance()).method_3495_invoker(itemstack, aobj);
     }
 
     public static void addShapelessRecipe(ItemStack itemstack, Object... aobj) {
-        RecipeDispatcher.getInstance().registerShapelessRecipe(itemstack, aobj);
+        ((RecipeDispatcherAccessor)RecipeDispatcher.getInstance()).registerShapelessRecipe_invoker(itemstack, aobj);
     }
 
     public static void addSmelting(int i, ItemStack itemstack, float xp) {
@@ -421,7 +421,7 @@ public final class ModLoader {
 
                     for (SpawnEntry spawnlistentry : list) {
                         if (spawnlistentry.type == class1) {
-                            spawnlistentry.weight = i;
+                            ((WeightAccessor)spawnlistentry).setWeight(i);
                             spawnlistentry.minGroupSize = j;
                             spawnlistentry.maxGroupSize = k;
                             flag = true;
@@ -690,7 +690,7 @@ public final class ModLoader {
         int j;
         String s2;
         for (j = 0; j < Block.BLOCKS.length; ++j) {
-            if (!Stats.ID_TO_STAT.containsKey(16777216 + j) && Block.BLOCKS[j] != null && Block.BLOCKS[j].hasStats()) {
+            if (!StatsAccessor.getIdToStat().containsKey(16777216 + j) && Block.BLOCKS[j] != null && Block.BLOCKS[j].hasStats()) {
                 s2 = CommonI18n.translate("stat.mineBlock", Block.BLOCKS[j].getTranslatedName());
                 Stats.BLOCK_STATS[j] = (new CraftingStat(16777216 + j, s2, j)).addStat();
                 Stats.MINE.add(Stats.BLOCK_STATS[j]);
@@ -698,7 +698,7 @@ public final class ModLoader {
         }
 
         for (j = 0; j < Item.ITEMS.length; ++j) {
-            if (!Stats.ID_TO_STAT.containsKey(16908288 + j) && Item.ITEMS[j] != null) {
+            if (!StatsAccessor.getIdToStat().containsKey(16908288 + j) && Item.ITEMS[j] != null) {
                 s2 = CommonI18n.translate("stat.useItem", Item.ITEMS[j].getName());
                 Stats.USED[j] = (new CraftingStat(16908288 + j, s2, j)).addStat();
                 if (j >= Block.BLOCKS.length) {
@@ -706,7 +706,7 @@ public final class ModLoader {
                 }
             }
 
-            if (!Stats.ID_TO_STAT.containsKey(16973824 + j) && Item.ITEMS[j] != null && Item.ITEMS[j].isDamageable()) {
+            if (!StatsAccessor.getIdToStat().containsKey(16973824 + j) && Item.ITEMS[j] != null && Item.ITEMS[j].isDamageable()) {
                 s2 = CommonI18n.translate("stat.breakItem", Item.ITEMS[j].getName());
                 Stats.BROKEN[j] = (new CraftingStat(16973824 + j, s2, j)).addStat();
             }
@@ -723,7 +723,7 @@ public final class ModLoader {
         }
 
         for (int k : hashset) {
-            if (!Stats.ID_TO_STAT.containsKey(16842752 + k) && Item.ITEMS[k] != null) {
+            if (!StatsAccessor.getIdToStat().containsKey(16842752 + k) && Item.ITEMS[k] != null) {
                 String s3 = CommonI18n.translate("stat.craftItem", Item.ITEMS[k].getName());
                 Stats.CRAFTING_STATS[k] = (new CraftingStat(16842752 + k, s3, k)).addStat();
             }
