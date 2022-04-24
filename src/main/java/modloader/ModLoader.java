@@ -20,7 +20,6 @@ import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.sound.SoundLoader;
-import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.client.texture.TexturePackManager;
 import net.minecraft.command.Command;
 import net.minecraft.entity.*;
@@ -64,12 +63,10 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
@@ -117,7 +114,7 @@ public final class ModLoader {
     private static final Map<Integer, List<TradeEntry>> tradeItems = new HashMap<>();
     private static final Map<Integer, BaseMod> containerGUIs = new HashMap<>();
     private static final Map<Class<?>, EntityTrackerNonliving> trackers = new HashMap<>();
-    private static final Map<Item, DispenserBehavior> dispenserBehaviors = new HashMap();
+    private static final Map<Item, DispenserBehavior> dispenserBehaviors = new HashMap<>();
     private static SoundLoader soundPoolSounds;
     private static SoundLoader soundPoolStreaming;
     private static SoundLoader soundPoolMusic;
@@ -958,19 +955,17 @@ public final class ModLoader {
     private static void addModsToClassPath() throws IllegalArgumentException, SecurityException {
         ClassLoader classloader = Minecraft.class.getClassLoader();
 
-        FakeModManager.getMods().forEach(modEntry -> {
-            modEntry.sounds.forEach((soundType, strings) -> {
-                ISoundLoader soundLoader = (ISoundLoader) (soundType == MLModEntry.SoundType.sound ? soundPoolSounds : soundType == MLModEntry.SoundType.music ? soundPoolMusic : soundPoolStreaming);
-                for (String soundName : strings) {
-                    try {
-                        soundLoader.addSound(soundName, new URL(String.format("jar:%s!/%s", modEntry.file, "resources/" + soundType.name() + "/" + soundName)));
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
+        FakeModManager.getMods().forEach(modEntry -> modEntry.sounds.forEach((soundType, strings) -> {
+            ISoundLoader soundLoader = (ISoundLoader) (soundType == MLModEntry.SoundType.sound ? soundPoolSounds : soundType == MLModEntry.SoundType.music ? soundPoolMusic : soundPoolStreaming);
+            for (String soundName : strings) {
+                try {
+                    soundLoader.addSound(soundName, new URL(String.format("jar:%s!/%s", modEntry.file, "resources/" + soundType.name() + "/" + soundName)));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
                 }
-            });
-        });
-        
+            }
+        }));
+
         FakeModManager.getMods().forEach(modEntry -> addMod(classloader, modEntry.initClass));
     }
 
