@@ -123,15 +123,12 @@ public abstract class class_469Mixin {
                 ((Entity) var8).pitch = 0.0F;
             }
 
-            Entity[] var16 = ((Entity) var8).getParts();
-            if (var16 != null) {
+            Entity[] var13 = ((Entity) var8).getParts();
+            if (var13 != null) {
                 int var11 = packet.id - ((Entity) var8).id;
-                Entity[] var12 = var16;
-                int var13 = var16.length;
 
-                for (int var14 = 0; var14 < var13; ++var14) {
-                    Entity var15 = var12[var14];
-                    var15.id += var11;
+                for (int var12 = 0; var12 < var13.length; ++var12) {
+                    var13[var12].id += var11;
                 }
             }
 
@@ -139,10 +136,10 @@ public abstract class class_469Mixin {
             this.world.method_1253(packet.id, (Entity) var8);
             if (packet.ownerId > 0) {
                 if (packet.type == 60) {
-                    Entity var17 = this.getEntityById(packet.ownerId);
-                    if (var17 instanceof MobEntity) {
-                        AbstractArrowEntity var18 = (AbstractArrowEntity) var8;
-                        var18.owner = var17;
+                    Entity var14 = this.getEntityById(packet.ownerId);
+                    if (var14 instanceof MobEntity) {
+                        AbstractArrowEntity var15 = (AbstractArrowEntity) var8;
+                        var15.owner = var14;
                     }
                 }
 

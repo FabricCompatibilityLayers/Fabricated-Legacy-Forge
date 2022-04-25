@@ -42,22 +42,22 @@ public class SoundLoaderMixin implements ISoundLoader {
     }
 
     @Override
-    public Sound addSound(String par1Str, URL par2URL) {
-        String var3 = par1Str;
-        par1Str = par1Str.substring(0, par1Str.indexOf("."));
+    public Sound addSound(String key, URL url) {
+        String var3 = key;
+        key = key.substring(0, key.indexOf("."));
         if (this.field_2269) {
-            while (Character.isDigit(par1Str.charAt(par1Str.length() - 1))) {
-                par1Str = par1Str.substring(0, par1Str.length() - 1);
+            while (Character.isDigit(key.charAt(key.length() - 1))) {
+                key = key.substring(0, key.length() - 1);
             }
         }
 
-        par1Str = par1Str.replaceAll("/", ".");
-        if (!this.soundMap.containsKey(par1Str)) {
-            this.soundMap.put(par1Str, new ArrayList());
+        key = key.replaceAll("/", ".");
+        if (!this.soundMap.containsKey(key)) {
+            this.soundMap.put(key, new ArrayList());
         }
 
-        Sound var4 = new Sound(var3, par2URL);
-        ((List) this.soundMap.get(par1Str)).add(var4);
+        Sound var4 = new Sound(var3, url);
+        ((List) this.soundMap.get(key)).add(var4);
         this.soundList.add(var4);
         ++this.soundCount;
         return var4;

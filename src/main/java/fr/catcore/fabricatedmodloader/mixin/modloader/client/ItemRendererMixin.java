@@ -40,116 +40,118 @@ public abstract class ItemRendererMixin extends EntityRenderer {
     public void render(ItemEntity itemEntity, double d, double e, double f, float g, float h) {
         this.field_2126.setSeed(187L);
         ItemStack var10 = itemEntity.field_23087;
-        GL11.glPushMatrix();
-        float var11 = MathHelper.sin(((float) itemEntity.age + h) / 10.0F + itemEntity.hoverHeight) * 0.1F + 0.1F;
-        float var12 = (((float) itemEntity.age + h) / 20.0F + itemEntity.hoverHeight) * 57.295776F;
-        byte var13 = 1;
-        if (itemEntity.field_23087.count > 1) {
-            var13 = 2;
-        }
-
-        if (itemEntity.field_23087.count > 5) {
-            var13 = 3;
-        }
-
-        if (itemEntity.field_23087.count > 20) {
-            var13 = 4;
-        }
-
-        GL11.glTranslatef((float) d, (float) e + var11, (float) f);
-        GL11.glEnable(32826);
-        Block var14 = var10.id < Block.BLOCKS.length ? Block.BLOCKS[var10.id] : null;
-        int var16;
-        float var19;
-        float var20;
-        float var24;
-        if (var14 != null && class_535.method_1455(var14.getBlockType())) {
-            GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
-            if (field_5197) {
-                GL11.glScalef(1.25F, 1.25F, 1.25F);
-                GL11.glTranslatef(0.0F, 0.05F, 0.0F);
-                GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+        if (var10.getItem() != null) {
+            GL11.glPushMatrix();
+            float var11 = MathHelper.sin(((float) itemEntity.age + h) / 10.0F + itemEntity.hoverHeight) * 0.1F + 0.1F;
+            float var12 = (((float) itemEntity.age + h) / 20.0F + itemEntity.hoverHeight) * 57.295776F;
+            byte var13 = 1;
+            if (itemEntity.field_23087.count > 1) {
+                var13 = 2;
             }
 
-            this.method_1529("/terrain.png");
-            float var22 = 0.25F;
-            var16 = var14.getBlockType();
-            if (var16 == 1 || var16 == 19 || var16 == 12 || var16 == 2) {
-                var22 = 0.5F;
+            if (itemEntity.field_23087.count > 5) {
+                var13 = 3;
             }
 
-            GL11.glScalef(var22, var22, var22);
-
-            for (int var23 = 0; var23 < var13; ++var23) {
-                GL11.glPushMatrix();
-                if (var23 > 0) {
-                    var24 = (this.field_2126.nextFloat() * 2.0F - 1.0F) * 0.2F / var22;
-                    var19 = (this.field_2126.nextFloat() * 2.0F - 1.0F) * 0.2F / var22;
-                    var20 = (this.field_2126.nextFloat() * 2.0F - 1.0F) * 0.2F / var22;
-                    GL11.glTranslatef(var24, var19, var20);
-                }
-
-                var24 = 1.0F;
-                this.field_2125.method_1447(var14, var10.getMeta(), var24);
-                GL11.glPopMatrix();
+            if (itemEntity.field_23087.count > 20) {
+                var13 = 4;
             }
-        } else {
-            int var15;
-            float var17;
-            if (var10.getItem().method_3397()) {
+
+            GL11.glTranslatef((float) d, (float) e + var11, (float) f);
+            GL11.glEnable(32826);
+            Block var14 = var10.id < Block.BLOCKS.length ? Block.BLOCKS[var10.id] : null;
+            int var16;
+            float var19;
+            float var20;
+            float var24;
+            if (var14 != null && class_535.method_1455(var14.getBlockType())) {
+                GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
                 if (field_5197) {
-                    GL11.glScalef(0.5128205F, 0.5128205F, 0.5128205F);
-                    GL11.glTranslatef(0.0F, -0.05F, 0.0F);
-                    GL11.glDisable(2896);
-                } else {
-                    GL11.glScalef(0.5F, 0.5F, 0.5F);
+                    GL11.glScalef(1.25F, 1.25F, 1.25F);
+                    GL11.glTranslatef(0.0F, 0.05F, 0.0F);
+                    GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
                 }
 
-                this.method_1529("/gui/items.png");
+                this.method_1529("/terrain.png");
+                float var22 = 0.25F;
+                var16 = var14.getBlockType();
+                if (var16 == 1 || var16 == 19 || var16 == 12 || var16 == 2) {
+                    var22 = 0.5F;
+                }
 
-                for (var15 = 0; var15 <= 1; ++var15) {
-                    var16 = var10.getItem().method_3369(var10.getMeta(), var15);
-                    var17 = 1.0F;
-                    if (this.field_2123) {
-                        int var18 = Item.ITEMS[var10.id].getDisplayColor(var10, var15);
-                        var19 = (float) (var18 >> 16 & 255) / 255.0F;
-                        var20 = (float) (var18 >> 8 & 255) / 255.0F;
-                        float var21 = (float) (var18 & 255) / 255.0F;
-                        GL11.glColor4f(var19 * var17, var20 * var17, var21 * var17, 1.0F);
+                GL11.glScalef(var22, var22, var22);
+
+                for (int var23 = 0; var23 < var13; ++var23) {
+                    GL11.glPushMatrix();
+                    if (var23 > 0) {
+                        var24 = (this.field_2126.nextFloat() * 2.0F - 1.0F) * 0.2F / var22;
+                        var19 = (this.field_2126.nextFloat() * 2.0F - 1.0F) * 0.2F / var22;
+                        var20 = (this.field_2126.nextFloat() * 2.0F - 1.0F) * 0.2F / var22;
+                        GL11.glTranslatef(var24, var19, var20);
                     }
 
-                    this.method_22509(var16, var13);
+                    var24 = 1.0F;
+                    this.field_2125.method_1447(var14, var10.getMeta(), var24);
+                    GL11.glPopMatrix();
                 }
             } else {
-                if (field_5197) {
-                    GL11.glScalef(0.5128205F, 0.5128205F, 0.5128205F);
-                    GL11.glTranslatef(0.0F, -0.05F, 0.0F);
-                    GL11.glDisable(2896);
-                } else {
-                    GL11.glScalef(0.5F, 0.5F, 0.5F);
-                }
+                int var15;
+                float var17;
+                if (var10.getItem().method_3397()) {
+                    if (field_5197) {
+                        GL11.glScalef(0.5128205F, 0.5128205F, 0.5128205F);
+                        GL11.glTranslatef(0.0F, -0.05F, 0.0F);
+                        GL11.glDisable(2896);
+                    } else {
+                        GL11.glScalef(0.5F, 0.5F, 0.5F);
+                    }
 
-                var15 = var10.method_3429();
-                if (var14 != null) {
-                    this.method_1529("/terrain.png");
-                } else {
                     this.method_1529("/gui/items.png");
-                }
 
-                if (this.field_2123) {
-                    var16 = Item.ITEMS[var10.id].getDisplayColor(var10, 0);
-                    var17 = (float) (var16 >> 16 & 255) / 255.0F;
-                    var24 = (float) (var16 >> 8 & 255) / 255.0F;
-                    var19 = (float) (var16 & 255) / 255.0F;
-                    var20 = 1.0F;
-                    GL11.glColor4f(var17 * var20, var24 * var20, var19 * var20, 1.0F);
-                }
+                    for (var15 = 0; var15 <= 1; ++var15) {
+                        var16 = var10.getItem().method_3369(var10.getMeta(), var15);
+                        var17 = 1.0F;
+                        if (this.field_2123) {
+                            int var18 = Item.ITEMS[var10.id].getDisplayColor(var10, var15);
+                            var19 = (float) (var18 >> 16 & 255) / 255.0F;
+                            var20 = (float) (var18 >> 8 & 255) / 255.0F;
+                            float var21 = (float) (var18 & 255) / 255.0F;
+                            GL11.glColor4f(var19 * var17, var20 * var17, var21 * var17, 1.0F);
+                        }
 
-                this.method_22509(var15, var13);
+                        this.method_22509(var16, var13);
+                    }
+                } else {
+                    if (field_5197) {
+                        GL11.glScalef(0.5128205F, 0.5128205F, 0.5128205F);
+                        GL11.glTranslatef(0.0F, -0.05F, 0.0F);
+                        GL11.glDisable(2896);
+                    } else {
+                        GL11.glScalef(0.5F, 0.5F, 0.5F);
+                    }
+
+                    var15 = var10.method_3429();
+                    if (var14 != null) {
+                        this.method_1529("/terrain.png");
+                    } else {
+                        this.method_1529("/gui/items.png");
+                    }
+
+                    if (this.field_2123) {
+                        var16 = Item.ITEMS[var10.id].getDisplayColor(var10, 0);
+                        var17 = (float) (var16 >> 16 & 255) / 255.0F;
+                        var24 = (float) (var16 >> 8 & 255) / 255.0F;
+                        var19 = (float) (var16 & 255) / 255.0F;
+                        var20 = 1.0F;
+                        GL11.glColor4f(var17 * var20, var24 * var20, var19 * var20, 1.0F);
+                    }
+
+                    this.method_22509(var15, var13);
+                }
             }
-        }
 
-        GL11.glDisable(32826);
-        GL11.glPopMatrix();
+            GL11.glDisable(32826);
+            GL11.glPopMatrix();
+        }
     }
 }

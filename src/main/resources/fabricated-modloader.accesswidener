@@ -98,7 +98,7 @@ accessible method net/minecraft/client/class_535 method_1488 (Lnet/minecraft/blo
 accessible method net/minecraft/client/class_535 method_1435 (Lnet/minecraft/block/BrewingStandBlock;III)Z
 accessible method net/minecraft/client/class_535 method_1436 (Lnet/minecraft/block/CauldronBlock;III)Z
 accessible method net/minecraft/client/class_535 method_4318 (Lnet/minecraft/block/FlowerPotBlock;III)Z
-accessible method net/minecraft/client/class_535 method_4314 (Lnet/minecraft/block/AnvilBlock;III)Z
+accessible method net/minecraft/client/class_535 method_4313 (Lnet/minecraft/block/AnvilBlock;III)Z
 accessible method net/minecraft/client/class_535 method_4316 (Lnet/minecraft/block/AnvilBlock;IIIIZ)Z
 accessible method net/minecraft/client/class_535 method_4315 (Lnet/minecraft/block/AnvilBlock;IIIIFFFFZZI)F
 accessible method net/minecraft/client/class_535 method_1489 (Lnet/minecraft/block/Block;III)Z
