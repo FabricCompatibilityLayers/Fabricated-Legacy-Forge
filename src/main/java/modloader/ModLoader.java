@@ -108,7 +108,7 @@ public final class ModLoader {
     private static boolean texturesAdded = false;
     private static final boolean[] usedItemSprites = new boolean[256];
     private static final boolean[] usedTerrainSprites = new boolean[256];
-    public static final String VERSION = "ModLoader 1.4.4";
+    public static final String VERSION = "ModLoader 1.4.5";
     private static class_469 clientHandler = null;
     private static final List<Command> commandList = new LinkedList<>();
     private static final Map<Integer, List<TradeEntry>> tradeItems = new HashMap<>();
@@ -655,8 +655,8 @@ public final class ModLoader {
                 logger.addHandler(logHandler);
             }
 
-            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.4.4 Initializing...");
-            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.4.4 Initializing...");
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.4.5 Initializing...");
+            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.4.5 Initializing...");
             addModsToClassPath();
             sortModList();
 
@@ -1632,7 +1632,7 @@ public final class ModLoader {
         sb.append("Mods loaded: ");
         sb.append(getLoadedMods().size() + 1);
         sb.append('\n');
-        sb.append("ModLoader 1.4.4");
+        sb.append("ModLoader 1.4.5");
         sb.append('\n');
 
         for (BaseMod mod : (List<BaseMod>) getLoadedMods()) {

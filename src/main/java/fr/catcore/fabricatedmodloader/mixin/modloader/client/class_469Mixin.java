@@ -49,9 +49,9 @@ public abstract class class_469Mixin {
      */
     @Overwrite
     public void onEntitySpawn(EntitySpawn_S2CPacket packet) {
-        double var2 = (double) packet.x / 32.0;
-        double var4 = (double) packet.y / 32.0;
-        double var6 = (double) packet.z / 32.0;
+        double var2 = (double)packet.x / 32.0;
+        double var4 = (double)packet.y / 32.0;
+        double var6 = (double)packet.z / 32.0;
         Object var8 = null;
         boolean var9 = true;
         if (packet.type == 10) {
@@ -63,7 +63,7 @@ public abstract class class_469Mixin {
         } else if (packet.type == 90) {
             Entity var10 = this.getEntityById(packet.ownerId);
             if (var10 instanceof PlayerEntity) {
-                var8 = new FishingBobberEntity(this.world, var2, var4, var6, (PlayerEntity) var10);
+                var8 = new FishingBobberEntity(this.world, var2, var4, var6, (PlayerEntity)var10);
             }
 
             packet.ownerId = 0;
@@ -72,7 +72,7 @@ public abstract class class_469Mixin {
         } else if (packet.type == 61) {
             var8 = new SnowballEntity(this.world, var2, var4, var6);
         } else if (packet.type == 71) {
-            var8 = new ItemFrameEntity(this.world, (int) var2, (int) var4, (int) var6, packet.ownerId);
+            var8 = new ItemFrameEntity(this.world, (int)var2, (int)var4, (int)var6, packet.ownerId);
             packet.ownerId = 0;
             var9 = false;
         } else if (packet.type == 65) {
@@ -80,13 +80,13 @@ public abstract class class_469Mixin {
         } else if (packet.type == 72) {
             var8 = new EyeOfEnderEntity(this.world, var2, var4, var6);
         } else if (packet.type == 63) {
-            var8 = new FireballEntity(this.world, var2, var4, var6, (double) packet.velocityX / 8000.0, (double) packet.velocityY / 8000.0, (double) packet.velocityZ / 8000.0);
+            var8 = new FireballEntity(this.world, var2, var4, var6, (double)packet.velocityX / 8000.0, (double)packet.velocityY / 8000.0, (double)packet.velocityZ / 8000.0);
             packet.ownerId = 0;
         } else if (packet.type == 64) {
-            var8 = new SmallFireballEntity(this.world, var2, var4, var6, (double) packet.velocityX / 8000.0, (double) packet.velocityY / 8000.0, (double) packet.velocityZ / 8000.0);
+            var8 = new SmallFireballEntity(this.world, var2, var4, var6, (double)packet.velocityX / 8000.0, (double)packet.velocityY / 8000.0, (double)packet.velocityZ / 8000.0);
             packet.ownerId = 0;
         } else if (packet.type == 66) {
-            var8 = new WitherSkullEntity(this.world, var2, var4, var6, (double) packet.velocityX / 8000.0, (double) packet.velocityY / 8000.0, (double) packet.velocityZ / 8000.0);
+            var8 = new WitherSkullEntity(this.world, var2, var4, var6, (double)packet.velocityX / 8000.0, (double)packet.velocityY / 8000.0, (double)packet.velocityZ / 8000.0);
             packet.ownerId = 0;
         } else if (packet.type == 62) {
             var8 = new EggEntity(this.world, var2, var4, var6);
@@ -115,35 +115,35 @@ public abstract class class_469Mixin {
         }
 
         if (var8 != null) {
-            ((Entity) var8).trackedX = packet.x;
-            ((Entity) var8).trackedY = packet.y;
-            ((Entity) var8).trackedZ = packet.z;
+            ((Entity)var8).trackedX = packet.x;
+            ((Entity)var8).trackedY = packet.y;
+            ((Entity)var8).trackedZ = packet.z;
             if (var9) {
-                ((Entity) var8).yaw = 0.0F;
-                ((Entity) var8).pitch = 0.0F;
+                ((Entity)var8).yaw = 0.0F;
+                ((Entity)var8).pitch = 0.0F;
             }
 
-            Entity[] var13 = ((Entity) var8).getParts();
+            Entity[] var13 = ((Entity)var8).getParts();
             if (var13 != null) {
-                int var11 = packet.id - ((Entity) var8).id;
+                int var11 = packet.id - ((Entity)var8).id;
 
-                for (int var12 = 0; var12 < var13.length; ++var12) {
+                for(int var12 = 0; var12 < var13.length; ++var12) {
                     var13[var12].id += var11;
                 }
             }
 
-            ((Entity) var8).id = packet.id;
-            this.world.method_1253(packet.id, (Entity) var8);
+            ((Entity)var8).id = packet.id;
+            this.world.method_1253(packet.id, (Entity)var8);
             if (packet.ownerId > 0) {
                 if (packet.type == 60) {
                     Entity var14 = this.getEntityById(packet.ownerId);
                     if (var14 instanceof MobEntity) {
-                        AbstractArrowEntity var15 = (AbstractArrowEntity) var8;
+                        AbstractArrowEntity var15 = (AbstractArrowEntity)var8;
                         var15.owner = var14;
                     }
                 }
 
-                ((Entity) var8).setVelocityClient((double) packet.velocityX / 8000.0, (double) packet.velocityY / 8000.0, (double) packet.velocityZ / 8000.0);
+                ((Entity)var8).setVelocityClient((double)packet.velocityX / 8000.0, (double)packet.velocityY / 8000.0, (double)packet.velocityZ / 8000.0);
             }
         }
 

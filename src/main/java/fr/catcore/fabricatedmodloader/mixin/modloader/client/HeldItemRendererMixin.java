@@ -43,10 +43,10 @@ public abstract class HeldItemRendererMixin {
 
             Tessellator var5 = Tessellator.INSTANCE;
             int var6 = mobEntity.method_2630(itemStack, i);
-            float var7 = ((float) (var6 % 16 * 16) + 0.0F) / 256.0F;
-            float var8 = ((float) (var6 % 16 * 16) + 15.99F) / 256.0F;
-            float var9 = ((float) (var6 / 16 * 16) + 0.0F) / 256.0F;
-            float var10 = ((float) (var6 / 16 * 16) + 15.99F) / 256.0F;
+            float var7 = ((float)(var6 % 16 * 16) + 0.0F) / 256.0F;
+            float var8 = ((float)(var6 % 16 * 16) + 15.99F) / 256.0F;
+            float var9 = ((float)(var6 / 16 * 16) + 0.0F) / 256.0F;
+            float var10 = ((float)(var6 / 16 * 16) + 15.99F) / 256.0F;
             float var11 = 0.0F;
             float var12 = 0.3F;
             GL11.glEnable(32826);
@@ -69,14 +69,14 @@ public abstract class HeldItemRendererMixin {
                 GL11.glPushMatrix();
                 float var15 = 0.125F;
                 GL11.glScalef(var15, var15, var15);
-                float var16 = (float) (Minecraft.getTime() % 3000L) / 3000.0F * 8.0F;
+                float var16 = (float)(Minecraft.getTime() % 3000L) / 3000.0F * 8.0F;
                 GL11.glTranslatef(var16, 0.0F, 0.0F);
                 GL11.glRotatef(-50.0F, 0.0F, 0.0F, 1.0F);
                 this.method_4306(var5, 0.0F, 0.0F, 1.0F, 1.0F);
                 GL11.glPopMatrix();
                 GL11.glPushMatrix();
                 GL11.glScalef(var15, var15, var15);
-                var16 = (float) (Minecraft.getTime() % 4873L) / 4873.0F * 8.0F;
+                var16 = (float)(Minecraft.getTime() % 4873L) / 4873.0F * 8.0F;
                 GL11.glTranslatef(-var16, 0.0F, 0.0F);
                 GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F);
                 this.method_4306(var5, 0.0F, 0.0F, 1.0F, 1.0F);

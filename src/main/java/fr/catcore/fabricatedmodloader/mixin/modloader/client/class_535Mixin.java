@@ -113,9 +113,9 @@ public abstract class class_535Mixin {
                 var6 = 16777215;
             }
 
-            var7 = (float) (var6 >> 16 & 255) / 255.0F;
-            var8 = (float) (var6 >> 8 & 255) / 255.0F;
-            var9 = (float) (var6 & 255) / 255.0F;
+            var7 = (float)(var6 >> 16 & 255) / 255.0F;
+            var8 = (float)(var6 >> 8 & 255) / 255.0F;
+            var9 = (float)(var6 & 255) / 255.0F;
             GL11.glColor4f(var7 * f, var8 * f, var9 * f, 1.0F);
         }
 
@@ -192,7 +192,7 @@ public abstract class class_535Mixin {
                 this.method_1443(block, -0.5, -0.5, -0.5, 0.0, 0.0);
                 var4.method_1396();
             } else if (var6 == 10) {
-                for (var14 = 0; var14 < 2; ++var14) {
+                for(var14 = 0; var14 < 2; ++var14) {
                     if (var14 == 0) {
                         this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 0.5);
                     }
@@ -233,7 +233,7 @@ public abstract class class_535Mixin {
                 GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
                 var4.method_1405();
 
-                for (int var15 = 0; var15 < 8; ++var15) {
+                for(int var15 = 0; var15 < 8; ++var15) {
                     byte var16 = 0;
                     byte var17 = 1;
                     if (var15 == 0) {
@@ -272,11 +272,11 @@ public abstract class class_535Mixin {
                         var16 = 3;
                     }
 
-                    float var11 = (float) var16 / 16.0F;
-                    float var12 = 1.0F - (float) var14 / 16.0F;
-                    float var13 = 1.0F - (float) (var14 + var17) / 16.0F;
+                    float var11 = (float)var16 / 16.0F;
+                    float var12 = 1.0F - (float)var14 / 16.0F;
+                    float var13 = 1.0F - (float)(var14 + var17) / 16.0F;
                     var14 += var17;
-                    this.method_4311(0.5F - var11, var13, 0.5F - var11, 0.5F + var11, var12, 0.5F + var11);
+                    this.method_4311((double)(0.5F - var11), (double)var13, (double)(0.5F - var11), (double)(0.5F + var11), (double)var12, (double)(0.5F + var11));
                     var4.method_1407(0.0F, -1.0F, 0.0F);
                     this.method_1444(block, 0.0, 0.0, 0.0, block.method_395(0));
                     var4.method_1407(0.0F, 1.0F, 0.0F);
@@ -295,23 +295,23 @@ public abstract class class_535Mixin {
                 GL11.glTranslatef(0.5F, 0.5F, 0.5F);
                 this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
             } else if (var6 == 11) {
-                for (var14 = 0; var14 < 4; ++var14) {
+                for(var14 = 0; var14 < 4; ++var14) {
                     var8 = 0.125F;
                     if (var14 == 0) {
-                        this.method_4311(0.5F - var8, 0.0, 0.0, 0.5F + var8, 1.0, var8 * 2.0F);
+                        this.method_4311((double)(0.5F - var8), 0.0, 0.0, (double)(0.5F + var8), 1.0, (double)(var8 * 2.0F));
                     }
 
                     if (var14 == 1) {
-                        this.method_4311(0.5F - var8, 0.0, 1.0F - var8 * 2.0F, 0.5F + var8, 1.0, 1.0);
+                        this.method_4311((double)(0.5F - var8), 0.0, (double)(1.0F - var8 * 2.0F), (double)(0.5F + var8), 1.0, 1.0);
                     }
 
                     var8 = 0.0625F;
                     if (var14 == 2) {
-                        this.method_4311(0.5F - var8, 1.0F - var8 * 3.0F, -var8 * 2.0F, 0.5F + var8, 1.0F - var8, 1.0F + var8 * 2.0F);
+                        this.method_4311((double)(0.5F - var8), (double)(1.0F - var8 * 3.0F), (double)(-var8 * 2.0F), (double)(0.5F + var8), (double)(1.0F - var8), (double)(1.0F + var8 * 2.0F));
                     }
 
                     if (var14 == 3) {
-                        this.method_4311(0.5F - var8, 0.5F - var8 * 3.0F, -var8 * 2.0F, 0.5F + var8, 0.5F - var8, 1.0F + var8 * 2.0F);
+                        this.method_4311((double)(0.5F - var8), (double)(0.5F - var8 * 3.0F), (double)(-var8 * 2.0F), (double)(0.5F + var8), (double)(0.5F - var8), (double)(1.0F + var8 * 2.0F));
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -344,19 +344,19 @@ public abstract class class_535Mixin {
 
                 this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
             } else if (var6 == 21) {
-                for (var14 = 0; var14 < 3; ++var14) {
+                for(var14 = 0; var14 < 3; ++var14) {
                     var8 = 0.0625F;
                     if (var14 == 0) {
-                        this.method_4311(0.5F - var8, 0.30000001192092896, 0.0, 0.5F + var8, 1.0, var8 * 2.0F);
+                        this.method_4311((double)(0.5F - var8), 0.30000001192092896, 0.0, (double)(0.5F + var8), 1.0, (double)(var8 * 2.0F));
                     }
 
                     if (var14 == 1) {
-                        this.method_4311(0.5F - var8, 0.30000001192092896, 1.0F - var8 * 2.0F, 0.5F + var8, 1.0, 1.0);
+                        this.method_4311((double)(0.5F - var8), 0.30000001192092896, (double)(1.0F - var8 * 2.0F), (double)(0.5F + var8), 1.0, 1.0);
                     }
 
                     var8 = 0.0625F;
                     if (var14 == 2) {
-                        this.method_4311(0.5F - var8, 0.5, 0.0, 0.5F + var8, 1.0F - var8, 1.0);
+                        this.method_4311((double)(0.5F - var8), 0.5, 0.0, (double)(0.5F + var8), (double)(1.0F - var8), 1.0);
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -387,7 +387,7 @@ public abstract class class_535Mixin {
                     GL11.glTranslatef(0.5F, 0.5F, 0.5F);
                 }
             } else if (var6 == 32) {
-                for (var14 = 0; var14 < 2; ++var14) {
+                for(var14 = 0; var14 < 2; ++var14) {
                     if (var14 == 0) {
                         this.method_4311(0.0, 0.0, 0.3125, 1.0, 0.8125, 0.6875);
                     }
@@ -427,10 +427,10 @@ public abstract class class_535Mixin {
                 this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
             } else if (var6 == 35) {
                 GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-                this.method_4316((AnvilBlock) block, 0, 0, 0, i, true);
+                this.method_4316((AnvilBlock)block, 0, 0, 0, i, true);
                 GL11.glTranslatef(0.5F, 0.5F, 0.5F);
             } else if (var6 == 34) {
-                for (var14 = 0; var14 < 3; ++var14) {
+                for(var14 = 0; var14 < 3; ++var14) {
                     if (var14 == 0) {
                         this.method_4311(0.125, 0.0, 0.125, 0.875, 0.1875, 0.875);
                         this.method_4312(Block.OBSIDIAN.field_439);
@@ -490,9 +490,9 @@ public abstract class class_535Mixin {
             var4.method_1396();
             if (var5 && this.field_2048) {
                 var14 = block.method_459(i);
-                var8 = (float) (var14 >> 16 & 255) / 255.0F;
-                var9 = (float) (var14 >> 8 & 255) / 255.0F;
-                float var10 = (float) (var14 & 255) / 255.0F;
+                var8 = (float)(var14 >> 16 & 255) / 255.0F;
+                var9 = (float)(var14 >> 8 & 255) / 255.0F;
+                float var10 = (float)(var14 & 255) / 255.0F;
                 GL11.glColor4f(var8 * f, var9 * f, var10 * f, 1.0F);
             }
 
