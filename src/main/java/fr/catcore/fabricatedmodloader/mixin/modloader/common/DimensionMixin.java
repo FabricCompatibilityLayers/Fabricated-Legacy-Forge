@@ -31,7 +31,8 @@ public class DimensionMixin {
     public String generatorOptions;
 
     /**
-     * @author
+     * @reason ModLoader patch
+     * @author Risugami
      */
     @Overwrite
     public void init() {
@@ -39,7 +40,8 @@ public class DimensionMixin {
     }
 
     /**
-     * @author
+     * @reason ModLoader patch
+     * @author Risugami
      */
     @Overwrite
     public ChunkProvider createChunkGenerator() {
@@ -47,7 +49,8 @@ public class DimensionMixin {
     }
 
     /**
-     * @author
+     * @reason ModLoader patch
+     * @author Risugami
      */
     @Overwrite
     public int getAverageYLevel() {
@@ -55,7 +58,8 @@ public class DimensionMixin {
     }
 
     /**
-     * @author
+     * @reason ModLoader patch
+     * @author Risugami
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -64,7 +68,8 @@ public class DimensionMixin {
     }
 
     /**
-     * @author
+     * @reason ModLoader patch
+     * @author Risugami
      */
     @Environment(EnvType.CLIENT)
     @Overwrite

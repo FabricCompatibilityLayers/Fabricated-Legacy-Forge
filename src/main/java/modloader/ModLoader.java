@@ -63,8 +63,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
@@ -616,8 +614,6 @@ public final class ModLoader {
             soundPoolSounds = ((SoundSystemAccessor) instance.soundSystem).getSoundsLoader();
             soundPoolStreaming = ((SoundSystemAccessor) instance.soundSystem).getStreamingLoader();
             soundPoolMusic = ((SoundSystemAccessor) instance.soundSystem).getMusicLoader();
-            field_modifiers = Field.class.getDeclaredField("modifiers");
-            field_modifiers.setAccessible(true);
             Field[] afield = Biome.class.getDeclaredFields();
             LinkedList<Biome> linkedlist = new LinkedList<>();
 
@@ -632,7 +628,7 @@ public final class ModLoader {
             }
 
             standardBiomes = linkedlist.toArray(new Biome[0]);
-        } catch (SecurityException | NoSuchFieldException | IllegalArgumentException | IllegalAccessException var10) {
+        } catch (SecurityException | IllegalArgumentException | IllegalAccessException var10) {
             Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader init", var10);
             throwException(var10);
             throw new RuntimeException(var10);
@@ -1337,13 +1333,19 @@ public final class ModLoader {
         try {
             Field field = class1.getDeclaredFields()[i];
             field.setAccessible(true);
+
+            if (field_modifiers == null) {
+                field_modifiers = Field.class.getDeclaredField("modifiers");
+                field_modifiers.setAccessible(true);
+            }
+
             int j = field_modifiers.getInt(field);
             if ((j & 16) != 0) {
                 field_modifiers.setInt(field, j & -17);
             }
 
             field.set(obj, obj1);
-        } catch (IllegalAccessException var6) {
+        } catch (IllegalAccessException | NoSuchFieldException var6) {
             Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader setPrivateValue", var6);
             throwException("An impossible error has occured!", var6);
         }
@@ -1353,6 +1355,12 @@ public final class ModLoader {
     public static void setPrivateValue(Class class1, Object obj, String s, Object obj1) throws IllegalArgumentException, SecurityException, NoSuchFieldException {
         try {
             Field field = class1.getDeclaredField(s);
+
+            if (field_modifiers == null) {
+                field_modifiers = Field.class.getDeclaredField("modifiers");
+                field_modifiers.setAccessible(true);
+            }
+
             int i = field_modifiers.getInt(field);
             if ((i & 16) != 0) {
                 field_modifiers.setInt(field, i & -17);

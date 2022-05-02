@@ -1,18 +1,18 @@
 package fr.catcore.fabricatedmodloader.mixin.modloader.common;
 
 import modloader.ModLoader;
-import net.minecraft.block.FurnaceBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.SmeltingRecipeRegistry;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(FurnaceBlockEntity.class)
@@ -24,42 +24,23 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
     @Shadow
     private ItemStack[] stacks;
 
-    @Shadow
-    public int fuelTime;
+    @Unique
+    private Item cachedRecipeReminder = null;
 
-    @Shadow
-    public static int getBurnTime(ItemStack stack) {
-        return 0;
+    @Inject(
+            method = "method_524",
+            at = @At(value = "FIELD", opcode = Opcodes.GETFIELD,
+                    target = "Lnet/minecraft/item/ItemStack;count:I", shift = At.Shift.AFTER)
+    )
+    private void modLoader$fixStack(CallbackInfo ci) {
+        if (this.stacks[0].count <= 0) this.cachedRecipeReminder = this.stacks[0].getItem().getRecipeRemainder();
     }
 
-    @Shadow
-    public int totalFuelTime;
-
-    @Shadow
-    public abstract boolean isFueled();
-
-    @Shadow
-    public int field_547;
-
-    /**
-     * @author
-     */
-    @Overwrite
-    public void method_524() {
-        if (this.method_525()) {
-            ItemStack var1 = SmeltingRecipeRegistry.getInstance().method_3490(this.stacks[0].getItem().id);
-            if (this.stacks[2] == null) {
-                this.stacks[2] = var1.copy();
-            } else if (this.stacks[2].id == var1.id) {
-                ++this.stacks[2].count;
-            }
-
-            --this.stacks[0].count;
-            if (this.stacks[0].count <= 0) {
-                Item item = this.stacks[0].getItem().getRecipeRemainder();
-                this.stacks[0] = item != null ? new ItemStack(item) : null;
-            }
-
+    @Inject(method = "method_524", at = @At("RETURN"))
+    private void modLoader$fixStackPart2(CallbackInfo ci) {
+        if (this.method_525() && this.cachedRecipeReminder != null && this.stacks[0] == null) {
+            this.stacks[0] = new ItemStack(this.cachedRecipeReminder);
+            this.cachedRecipeReminder = null;
         }
     }
 
@@ -72,52 +53,16 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
         }
     }
 
-    /**
-     * @author
-     */
-    @Overwrite
-    public void method_545() {
-        boolean var1 = this.fuelTime > 0;
-        boolean var2 = false;
-        if (this.fuelTime > 0) {
-            --this.fuelTime;
+    @Inject(method = "method_545", at = @At(
+            value = "FIELD",
+            opcode = Opcodes.PUTFIELD,
+            target = "Lnet/minecraft/item/ItemStack;count:I",
+            ordinal = 0,
+            shift = At.Shift.AFTER
+    ))
+    private void modLoader$fixStackSecond(CallbackInfo ci) {
+        if (this.stacks[1].count < 0) {
+            this.stacks[1].count = 0;
         }
-
-        if (!this.world.isClient) {
-            if (this.fuelTime == 0 && this.method_525()) {
-                this.totalFuelTime = this.fuelTime = getBurnTime(this.stacks[1]);
-                if (this.fuelTime > 0) {
-                    var2 = true;
-                    if (this.stacks[1] != null) {
-                        --this.stacks[1].count;
-                        if (this.stacks[1].count <= 0) {
-                            Item var3 = this.stacks[1].getItem().getRecipeRemainder();
-                            this.stacks[1] = var3 != null ? new ItemStack(var3) : null;
-                        }
-                    }
-                }
-            }
-
-            if (this.isFueled() && this.method_525()) {
-                ++this.field_547;
-                if (this.field_547 == 200) {
-                    this.field_547 = 0;
-                    this.method_524();
-                    var2 = true;
-                }
-            } else {
-                this.field_547 = 0;
-            }
-
-            if (var1 != this.fuelTime > 0) {
-                var2 = true;
-                FurnaceBlock.method_321(this.fuelTime > 0, this.world, this.x, this.y, this.z);
-            }
-        }
-
-        if (var2) {
-            this.markDirty();
-        }
-
     }
 }
