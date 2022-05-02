@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedmodloader.mixin.modloader.client;
 
+import com.google.common.collect.Lists;
 import modloader.EntityTrackerNonliving;
 import modloader.ModLoader;
 import net.minecraft.client.class_469;
@@ -23,14 +24,17 @@ import net.minecraft.network.packet.s2c.play.ChatMessage_S2CPacket;
 import net.minecraft.network.packet.s2c.play.Disconnect_S2CPacket;
 import net.minecraft.network.packet.s2c.play.EntitySpawn_S2CPacket;
 import net.minecraft.network.packet.s2c.play.OpenScreen_S2CPacket;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 @Mixin(class_469.class)
@@ -39,109 +43,45 @@ public abstract class class_469Mixin {
     @Shadow
     private ClientWorld world;
 
-    @Shadow
-    protected abstract Entity getEntityById(int id);
-
     @Inject(method = "onGameJoin", at = @At("RETURN"))
     private void modLoaderClientConnect(class_690 par1, CallbackInfo ci) {
         ModLoader.clientConnect((class_469) (Object) this, par1);
     }
 
-    /**
-     * @author
-     */
-    @Overwrite
-    public void onEntitySpawn(EntitySpawn_S2CPacket packet) {
-        double var2 = (double) packet.x / 32.0;
-        double var4 = (double) packet.y / 32.0;
-        double var6 = (double) packet.z / 32.0;
-        Object var8 = null;
-        if (packet.type == 10) {
-            var8 = new AbstractMinecartEntity(this.world, var2, var4, var6, 0);
-        } else if (packet.type == 11) {
-            var8 = new AbstractMinecartEntity(this.world, var2, var4, var6, 1);
-        } else if (packet.type == 12) {
-            var8 = new AbstractMinecartEntity(this.world, var2, var4, var6, 2);
-        } else if (packet.type == 90) {
-            Entity var9 = this.getEntityById(packet.ownerId);
-            if (var9 instanceof PlayerEntity) {
-                var8 = new FishingBobberEntity(this.world, var2, var4, var6, (PlayerEntity) var9);
-            }
+    private static final List<Integer> PACKET_TYPES = Lists.newArrayList(
+            10, 11, 12, 90,
+            60, 61, 65, 72, 63,
+            64, 62, 73, 75, 1, 50, 51,
+            70
+    );
 
-            packet.ownerId = 0;
-        } else if (packet.type == 60) {
-            var8 = new AbstractArrowEntity(this.world, var2, var4, var6);
-        } else if (packet.type == 61) {
-            var8 = new SnowballEntity(this.world, var2, var4, var6);
-        } else if (packet.type == 65) {
-            var8 = new EnderPearlEntity(this.world, var2, var4, var6);
-        } else if (packet.type == 72) {
-            var8 = new EyeOfEnderEntity(this.world, var2, var4, var6);
-        } else if (packet.type == 63) {
-            var8 = new ExplosiveProjectileEntity(this.world, var2, var4, var6, (double) packet.velocityX / 8000.0, (double) packet.velocityY / 8000.0, (double) packet.velocityZ / 8000.0);
-            packet.ownerId = 0;
-        } else if (packet.type == 64) {
-            var8 = new SmallFireballEntity(this.world, var2, var4, var6, (double) packet.velocityX / 8000.0, (double) packet.velocityY / 8000.0, (double) packet.velocityZ / 8000.0);
-            packet.ownerId = 0;
-        } else if (packet.type == 62) {
-            var8 = new EggEntity(this.world, var2, var4, var6);
-        } else if (packet.type == 73) {
-            var8 = new PotionEntity(this.world, var2, var4, var6, packet.ownerId);
-            packet.ownerId = 0;
-        } else if (packet.type == 75) {
-            var8 = new ExperienceBottleEntity(this.world, var2, var4, var6);
-            packet.ownerId = 0;
-        } else if (packet.type == 1) {
-            var8 = new BoatEntity(this.world, var2, var4, var6);
-        } else if (packet.type == 50) {
-            var8 = new TntEntity(this.world, var2, var4, var6);
-        } else if (packet.type == 51) {
-            var8 = new EndCrystalEntity(this.world, var2, var4, var6);
-        } else if (packet.type == 70) {
-            var8 = new FallingBlockEntity(this.world, var2, var4, var6, packet.ownerId & '\uffff', packet.ownerId >> 16);
-            packet.ownerId = 0;
-        } else {
+    @Unique
+    private EntitySpawn_S2CPacket cachedPacket = null;
+
+    @Inject(method = "onEntitySpawn", at = @At("HEAD"))
+    private void onEntitySpawn$getPacket(EntitySpawn_S2CPacket par1, CallbackInfo ci) {
+        this.cachedPacket = par1;
+    }
+
+    @ModifyVariable(method = "onEntitySpawn",
+            at = @At(value = "STORE", ordinal = 0)
+    )
+    private Entity modLoaderSpawnEntity(Entity value) {
+        if (this.cachedPacket != null && !PACKET_TYPES.contains(this.cachedPacket.type)) {
+            double var2 = (double) this.cachedPacket.x / 32.0;
+            double var4 = (double) this.cachedPacket.y / 32.0;
+            double var6 = (double) this.cachedPacket.z / 32.0;
+
             for (EntityTrackerNonliving tracker : (Iterable<EntityTrackerNonliving>) ModLoader.getTrackers().values()) {
-                if (packet.type == tracker.id) {
-                    var8 = tracker.mod.spawnEntity(packet.type, this.world, var2, var4, var6);
+                if (this.cachedPacket.type == tracker.id) {
+                    value = tracker.mod.spawnEntity(this.cachedPacket.type, this.world, var2, var4, var6);
+                    this.cachedPacket = null;
                     break;
                 }
             }
         }
 
-        if (var8 != null) {
-            ((Entity) var8).trackedX = packet.x;
-            ((Entity) var8).trackedY = packet.y;
-            ((Entity) var8).trackedZ = packet.z;
-            ((Entity) var8).yaw = 0.0F;
-            ((Entity) var8).pitch = 0.0F;
-            Entity[] var15 = ((Entity) var8).getParts();
-            if (var15 != null) {
-                int var10 = packet.id - ((Entity) var8).id;
-                Entity[] var11 = var15;
-                int var12 = var15.length;
-
-                for (int var13 = 0; var13 < var12; ++var13) {
-                    Entity var14 = var11[var13];
-                    var14.id += var10;
-                }
-            }
-
-            ((Entity) var8).id = packet.id;
-            this.world.method_1253(packet.id, (Entity) var8);
-            if (packet.ownerId > 0) {
-                if (packet.type == 60) {
-                    Entity var16 = this.getEntityById(packet.ownerId);
-                    if (var16 instanceof MobEntity) {
-                        AbstractArrowEntity var17 = (AbstractArrowEntity) var8;
-                        var17.owner = var16;
-                    }
-                }
-
-                ((Entity) var8).setVelocityClient((double) packet.velocityX / 8000.0, (double) packet.velocityY / 8000.0, (double) packet.velocityZ / 8000.0);
-            }
-        }
-
+        return value;
     }
 
     @Inject(method = "onDisconnect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;connect(Lnet/minecraft/client/world/ClientWorld;)V"))
