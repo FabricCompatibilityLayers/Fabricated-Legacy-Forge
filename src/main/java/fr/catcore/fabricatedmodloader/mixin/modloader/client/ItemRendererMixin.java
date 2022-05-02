@@ -7,9 +7,7 @@ import net.minecraft.entity.ItemEntity;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemRenderer.class)
@@ -58,6 +56,36 @@ public abstract class ItemRendererMixin extends EntityRenderer {
     private void modLoader$renderfixPart2(ItemEntity d, double e, double f, double g, float h, float par6, CallbackInfo ci) {
         if (this.cachedItemId != -1 && this.cachedItemId >= Block.BLOCKS.length) {
             d.method_4548().id = this.cachedItemId;
+        }
+    }
+
+    @Unique
+    private int cachedItemId2 = -1;
+
+    @Inject(method = "method_4335", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glTranslatef(FFF)V", ordinal = 1))
+    private void modLoader$otherRenderFix1(ItemEntity i, int j, int f, float g, float h, float k, float par7, CallbackInfo ci) {
+        if (i.method_4548().id >= Block.BLOCKS.length) {
+            this.cachedItemId2 = i.method_4548().id;
+            i.method_4548().id = 0;
+        }
+    }
+
+    @ModifyArg(method = "method_4335",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/ItemRenderer;method_1529(Ljava/lang/String;)V", ordinal = 0)
+    )
+    private String modLoader$otherRenderFix2(String par1) {
+        if (this.cachedItemId2 != -1) par1 = "/gui/items.png";
+
+        return par1;
+    }
+
+    @Inject(method = "method_4335",
+            at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", ordinal = 0)
+    )
+    private void modLoader$otherRenderFix3(ItemEntity i, int j, int f, float g, float h, float k, float par7, CallbackInfo ci) {
+        if (this.cachedItemId2 != -1) {
+            i.method_4548().id = this.cachedItemId2;
+            this.cachedItemId2 = -1;
         }
     }
 }

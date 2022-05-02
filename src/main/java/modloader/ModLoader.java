@@ -108,7 +108,7 @@ public final class ModLoader {
     private static boolean texturesAdded = false;
     private static final boolean[] usedItemSprites = new boolean[256];
     private static final boolean[] usedTerrainSprites = new boolean[256];
-    public static final String VERSION = "ModLoader 1.4.5";
+    public static final String VERSION = "ModLoader 1.4.6";
     private static class_469 clientHandler = null;
     private static final List<Command> commandList = new LinkedList<>();
     private static final Map<Integer, List<TradeEntry>> tradeItems = new HashMap<>();
@@ -595,7 +595,7 @@ public final class ModLoader {
 
     private static void init() {
         hasInit = true;
-        String usedItemSpritesString = "1111111111111111111111111111111111111101111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000001111111111100000010111111110000000011111111000000000000110100000000000000011111000000000001111111111111111";
+        String usedItemSpritesString = "1111111111111111111111111111111111111101111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000001111111111100000010111111110000000011111111000000001110111100000000000000011111000000000001111111111111111";
         String usedTerrainSpritesString = "1111111111111111111111111100111111111111110111111111111110011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000001111111111111111111111111000001111111111100001111111111111111111";
 
         for (int i = 0; i < 256; ++i) {
@@ -653,8 +653,8 @@ public final class ModLoader {
                 logger.addHandler(logHandler);
             }
 
-            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.4.5 Initializing...");
-            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.4.5 Initializing...");
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.4.6 Initializing...");
+            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.4.6 Initializing...");
             addModsToClassPath();
             sortModList();
 
@@ -1643,7 +1643,7 @@ public final class ModLoader {
         sb.append("Mods loaded: ");
         sb.append(getLoadedMods().size() + 1);
         sb.append('\n');
-        sb.append("ModLoader 1.4.5");
+        sb.append("ModLoader 1.4.6");
         sb.append('\n');
 
         for (BaseMod mod : (List<BaseMod>) getLoadedMods()) {

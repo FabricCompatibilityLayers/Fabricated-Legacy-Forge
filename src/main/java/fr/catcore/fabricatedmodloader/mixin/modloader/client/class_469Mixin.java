@@ -1,17 +1,16 @@
 package fr.catcore.fabricatedmodloader.mixin.modloader.client;
 
 import com.google.common.collect.Lists;
+import fr.catcore.fabricatedmodloader.mixin.modloader.common.BlockEntityAccessor;
 import modloader.EntityTrackerNonliving;
 import modloader.ModLoader;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.class_469;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.class_690;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.network.packet.s2c.play.ChatMessage_S2CPacket;
-import net.minecraft.network.packet.s2c.play.Disconnect_S2CPacket;
-import net.minecraft.network.packet.s2c.play.EntitySpawn_S2CPacket;
-import net.minecraft.network.packet.s2c.play.OpenScreen_S2CPacket;
+import net.minecraft.network.packet.s2c.play.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -19,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,9 +36,9 @@ public abstract class class_469Mixin {
 
     private static final List<Integer> PACKET_TYPES = Lists.newArrayList(
             10, 11, 12, 90,
-            60, 61, 71, 65, 72, 63,
+            60, 61, 71, 65, 72, 76, 63,
             64, 66, 62, 73, 75, 1, 50, 51,
-            70
+            2, 70
     );
 
     @Unique
@@ -95,6 +95,22 @@ public abstract class class_469Mixin {
         if (par1.type > 8 || par1.type < 0) {
             ModLoader.clientOpenWindow(par1);
             ci.cancel();
+        }
+    }
+
+    @Inject(method = "onBlockEntityUpdate",
+            at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/world/ClientWorld;method_3781(III)Lnet/minecraft/block/entity/BlockEntity;"),
+            locals = LocalCapture.CAPTURE_FAILHARD,
+            cancellable = true
+    )
+    private void modLoader$onBlockEntityUpdate(BlockEntityUpdate_S2CPacket par1, CallbackInfo ci, BlockEntity var2) {
+        if (var2 != null && par1.type == 255 && par1.nbt != null) {
+            String pname = par1.nbt.getString("id");
+            String tename = (String) BlockEntityAccessor.getStringClassMap().get(var2.getClass());
+            if (pname != null && pname.equals(tename)) {
+                var2.fromNbt(par1.nbt);
+                ci.cancel();
+            }
         }
     }
 

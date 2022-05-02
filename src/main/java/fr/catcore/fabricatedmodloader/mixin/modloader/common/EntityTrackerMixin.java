@@ -43,6 +43,7 @@ public abstract class EntityTrackerMixin {
                         || entity instanceof EggEntity
                         || entity instanceof PotionEntity
                         || entity instanceof ExperienceBottleEntity
+                        || entity instanceof FireworkRocketEntity
                         || entity instanceof ItemEntity
                         || entity instanceof AbstractMinecartEntity
                         || entity instanceof BoatEntity
