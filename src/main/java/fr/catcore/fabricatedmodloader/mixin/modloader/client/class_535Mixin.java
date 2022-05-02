@@ -3,13 +3,11 @@ package fr.catcore.fabricatedmodloader.mixin.modloader.client;
 import com.google.common.collect.Lists;
 import fr.catcore.fabricatedmodloader.utils.class_535Data;
 import modloader.ModLoader;
-import net.minecraft.block.AnvilBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.class_535;
 import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -23,7 +21,8 @@ public abstract class class_535Mixin {
     @Shadow
     public WorldView field_2017;
 
-    @Shadow public static boolean field_2047;
+    @Shadow
+    public static boolean field_2047;
     private static final List<Integer> RENDER_BLOCKS = Lists.newArrayList(
             0, 31, 4, 13, 1, 19, 23, 6,
             2, 3, 5, 8, 7, 9, 10, 27, 11, 32, 12,
