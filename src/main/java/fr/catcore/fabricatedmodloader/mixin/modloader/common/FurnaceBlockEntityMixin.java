@@ -1,21 +1,17 @@
 package fr.catcore.fabricatedmodloader.mixin.modloader.common;
 
 import modloader.ModLoader;
-import net.minecraft.block.FurnaceBlock;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.SmeltingRecipeRegistry;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -27,19 +23,6 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
 
     @Shadow
     private ItemStack[] stacks;
-
-    @Shadow public int fuelTime;
-
-    @Shadow
-    public static int getBurnTime(ItemStack stack) {
-        return 0;
-    }
-
-    @Shadow public int totalFuelTime;
-
-    @Shadow public abstract boolean isFueled();
-
-    @Shadow public int field_547;
 
     @Unique
     private Item cachedRecipeReminder = null;
@@ -60,28 +43,6 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
             this.cachedRecipeReminder = null;
         }
     }
-
-//    /**
-//     * @author
-//     */
-//    @Overwrite
-//    public void method_524() {
-//        if (this.method_525()) {
-//            ItemStack var1 = SmeltingRecipeRegistry.getInstance().method_3490(this.stacks[0].getItem().id);
-//            if (this.stacks[2] == null) {
-//                this.stacks[2] = var1.copy();
-//            } else if (this.stacks[2].id == var1.id) {
-//                ++this.stacks[2].count;
-//            }
-//
-//            --this.stacks[0].count;
-//            if (this.stacks[0].count <= 0) {
-//                Item item = this.stacks[0].getItem().getRecipeRemainder();
-//                this.stacks[0] = item != null ? new ItemStack(item) : null;
-//            }
-//
-//        }
-//    }
 
     @Inject(method = "getBurnTime", at = @At("RETURN"), cancellable = true)
     private static void modLoaderBurnTime(ItemStack stack, CallbackInfoReturnable<Integer> cir) {

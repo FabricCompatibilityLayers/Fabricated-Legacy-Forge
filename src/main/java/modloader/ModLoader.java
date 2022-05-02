@@ -61,9 +61,6 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -389,11 +386,11 @@ public final class ModLoader {
     }
 
     public static void addRecipe(ItemStack itemstack, Object... aobj) {
-        ((RecipeDispatcherAccessor)RecipeDispatcher.getInstance()).method_3495_invoker(itemstack, aobj);
+        ((RecipeDispatcherAccessor) RecipeDispatcher.getInstance()).method_3495_invoker(itemstack, aobj);
     }
 
     public static void addShapelessRecipe(ItemStack itemstack, Object... aobj) {
-        ((RecipeDispatcherAccessor)RecipeDispatcher.getInstance()).registerShapelessRecipe_invoker(itemstack, aobj);
+        ((RecipeDispatcherAccessor) RecipeDispatcher.getInstance()).registerShapelessRecipe_invoker(itemstack, aobj);
     }
 
     public static void addSmelting(int i, ItemStack itemstack, float xp) {
@@ -421,7 +418,7 @@ public final class ModLoader {
 
                     for (SpawnEntry spawnlistentry : list) {
                         if (spawnlistentry.type == class1) {
-                            ((WeightAccessor)spawnlistentry).setWeight(i);
+                            ((WeightAccessor) spawnlistentry).setWeight(i);
                             spawnlistentry.minGroupSize = j;
                             spawnlistentry.maxGroupSize = k;
                             flag = true;
