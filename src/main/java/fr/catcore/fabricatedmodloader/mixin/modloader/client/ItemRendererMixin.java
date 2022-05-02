@@ -1,157 +1,63 @@
 package fr.catcore.fabricatedmodloader.mixin.modloader.client;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.class_535;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-
-import java.util.Random;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemRenderer.class)
 public abstract class ItemRendererMixin extends EntityRenderer {
 
-    @Shadow
-    private Random field_2126;
+    @Unique
+    private int cachedItemId = -1;
 
-    @Shadow
-    private class_535 field_2125;
+    @Inject(
+            method = "render(Lnet/minecraft/entity/ItemEntity;DDDFF)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lorg/lwjgl/opengl/GL11;glEnable(I)V",
+                    remap = false
+            )
+    )
+    private void modLoader$renderfixPart1(ItemEntity d, double e, double f, double g, float h, float par6, CallbackInfo ci) {
+        if (d.field_23087.id >= Block.BLOCKS.length) {
+            this.cachedItemId = d.field_23087.id;
+            d.field_23087.id = 0;
+        } else {
+            this.cachedItemId = -1;
+        }
+    }
 
-    @Shadow
-    public boolean field_2123;
+    @ModifyVariable(
+            method = "render(Lnet/minecraft/entity/ItemEntity;DDDFF)V",
+            at = @At("STORE")
+    )
+    private Block modLoader$renderfixPart2(Block value) {
+        if (this.cachedItemId != -1 && this.cachedItemId >= Block.BLOCKS.length) {
+            return null;
+        }
+        return value;
+    }
 
-    @Shadow
-    protected abstract void method_22509(int i, int j);
-
-    @Shadow
-    public static boolean field_5197;
-
-    /**
-     * @author
-     */
-    @Overwrite
-    public void render(ItemEntity itemEntity, double d, double e, double f, float g, float h) {
-        this.field_2126.setSeed(187L);
-        ItemStack var10 = itemEntity.field_23087;
-        if (var10.getItem() != null) {
-            GL11.glPushMatrix();
-            float var11 = MathHelper.sin(((float)itemEntity.age + h) / 10.0F + itemEntity.hoverHeight) * 0.1F + 0.1F;
-            float var12 = (((float)itemEntity.age + h) / 20.0F + itemEntity.hoverHeight) * 57.295776F;
-            byte var13 = 1;
-            if (itemEntity.field_23087.count > 1) {
-                var13 = 2;
-            }
-
-            if (itemEntity.field_23087.count > 5) {
-                var13 = 3;
-            }
-
-            if (itemEntity.field_23087.count > 20) {
-                var13 = 4;
-            }
-
-            GL11.glTranslatef((float)d, (float)e + var11, (float)f);
-            GL11.glEnable(32826);
-            Block var14 = var10.id < Block.BLOCKS.length ? Block.BLOCKS[var10.id] : null;
-            int var16;
-            float var19;
-            float var20;
-            float var24;
-            if (var14 != null && class_535.method_1455(var14.getBlockType())) {
-                GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
-                if (field_5197) {
-                    GL11.glScalef(1.25F, 1.25F, 1.25F);
-                    GL11.glTranslatef(0.0F, 0.05F, 0.0F);
-                    GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-                }
-
-                this.method_1529("/terrain.png");
-                float var22 = 0.25F;
-                var16 = var14.getBlockType();
-                if (var16 == 1 || var16 == 19 || var16 == 12 || var16 == 2) {
-                    var22 = 0.5F;
-                }
-
-                GL11.glScalef(var22, var22, var22);
-
-                for(int var23 = 0; var23 < var13; ++var23) {
-                    GL11.glPushMatrix();
-                    if (var23 > 0) {
-                        var24 = (this.field_2126.nextFloat() * 2.0F - 1.0F) * 0.2F / var22;
-                        var19 = (this.field_2126.nextFloat() * 2.0F - 1.0F) * 0.2F / var22;
-                        var20 = (this.field_2126.nextFloat() * 2.0F - 1.0F) * 0.2F / var22;
-                        GL11.glTranslatef(var24, var19, var20);
-                    }
-
-                    var24 = 1.0F;
-                    this.field_2125.method_1447(var14, var10.getMeta(), var24);
-                    GL11.glPopMatrix();
-                }
-            } else {
-                int var15;
-                float var17;
-                if (var10.getItem().method_3397()) {
-                    if (field_5197) {
-                        GL11.glScalef(0.5128205F, 0.5128205F, 0.5128205F);
-                        GL11.glTranslatef(0.0F, -0.05F, 0.0F);
-                        GL11.glDisable(2896);
-                    } else {
-                        GL11.glScalef(0.5F, 0.5F, 0.5F);
-                    }
-
-                    this.method_1529("/gui/items.png");
-
-                    for(var15 = 0; var15 <= 1; ++var15) {
-                        var16 = var10.getItem().method_3369(var10.getMeta(), var15);
-                        var17 = 1.0F;
-                        if (this.field_2123) {
-                            int var18 = Item.ITEMS[var10.id].getDisplayColor(var10, var15);
-                            var19 = (float)(var18 >> 16 & 255) / 255.0F;
-                            var20 = (float)(var18 >> 8 & 255) / 255.0F;
-                            float var21 = (float)(var18 & 255) / 255.0F;
-                            GL11.glColor4f(var19 * var17, var20 * var17, var21 * var17, 1.0F);
-                        }
-
-                        this.method_22509(var16, var13);
-                    }
-                } else {
-                    if (field_5197) {
-                        GL11.glScalef(0.5128205F, 0.5128205F, 0.5128205F);
-                        GL11.glTranslatef(0.0F, -0.05F, 0.0F);
-                        GL11.glDisable(2896);
-                    } else {
-                        GL11.glScalef(0.5F, 0.5F, 0.5F);
-                    }
-
-                    var15 = var10.method_3429();
-                    if (var14 != null) {
-                        this.method_1529("/terrain.png");
-                    } else {
-                        this.method_1529("/gui/items.png");
-                    }
-
-                    if (this.field_2123) {
-                        var16 = Item.ITEMS[var10.id].getDisplayColor(var10, 0);
-                        var17 = (float)(var16 >> 16 & 255) / 255.0F;
-                        var24 = (float)(var16 >> 8 & 255) / 255.0F;
-                        var19 = (float)(var16 & 255) / 255.0F;
-                        var20 = 1.0F;
-                        GL11.glColor4f(var17 * var20, var24 * var20, var19 * var20, 1.0F);
-                    }
-
-                    this.method_22509(var15, var13);
-                }
-            }
-
-            GL11.glDisable(32826);
-            GL11.glPopMatrix();
+    @Inject(
+            method = "render(Lnet/minecraft/entity/ItemEntity;DDDFF)V",
+            at = @At(
+                    value = "FIELD",
+                    opcode = Opcodes.GETFIELD,
+                    target = "Lnet/minecraft/item/ItemStack;id:I",
+                    shift = At.Shift.AFTER
+            )
+    )
+    private void modLoader$renderfixPart2(ItemEntity d, double e, double f, double g, float h, float par6, CallbackInfo ci) {
+        if (this.cachedItemId != -1 && this.cachedItemId >= Block.BLOCKS.length) {
+            d.field_23087.id = this.cachedItemId;
         }
     }
 }
