@@ -65,7 +65,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
     @Unique
     private int cachedItemId2 = -1;
 
-    @Inject(method = "method_4335", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glTranslatef(FFF)V", ordinal = 1))
+    @Inject(method = "method_4335", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glTranslatef(FFF)V", ordinal = 1, remap = false))
     private void modLoader$otherRenderFix1(ItemEntity i, int j, int f, float g, float h, float k, float par7, CallbackInfo ci) {
         if (i.method_4548().id >= Block.BLOCKS.length) {
             this.cachedItemId2 = i.method_4548().id;
@@ -83,7 +83,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
     }
 
     @Inject(method = "method_4335",
-            at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", ordinal = 0)
+            at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", ordinal = 0, remap = false)
     )
     private void modLoader$otherRenderFix3(ItemEntity i, int j, int f, float g, float h, float k, float par7, CallbackInfo ci) {
         if (this.cachedItemId2 != -1) {
