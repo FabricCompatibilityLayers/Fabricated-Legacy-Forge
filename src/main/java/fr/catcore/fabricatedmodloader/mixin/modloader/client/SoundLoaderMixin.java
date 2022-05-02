@@ -29,7 +29,8 @@ public class SoundLoaderMixin implements ISoundLoader {
     public int soundCount;
 
     /**
-     * @author
+     * @reason ModLoader patch
+     * @author Risugami
      */
     @Overwrite
     public Sound getSound(String key, File file) {

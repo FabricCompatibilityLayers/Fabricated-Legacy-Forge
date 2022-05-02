@@ -63,6 +63,8 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
@@ -716,7 +718,8 @@ public final class ModLoader {
         HashSet<Integer> hashset = new HashSet<>();
 
         for (RecipeType obj : (Iterable<RecipeType>) RecipeDispatcher.getInstance().getAllRecipes()) {
-            hashset.add(obj.getOutput().id);
+            ItemStack output = obj.getOutput();
+            if (output != null) hashset.add(output.id);
         }
 
         for (ItemStack obj1 : (Iterable<ItemStack>) SmeltingRecipeRegistry.getInstance().getRecipeMap().values()) {

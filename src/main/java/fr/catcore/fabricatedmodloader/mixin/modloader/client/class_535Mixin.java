@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedmodloader.mixin.modloader.client;
 
 import com.google.common.collect.Lists;
+import fr.catcore.fabricatedmodloader.utils.class_535Data;
 import modloader.ModLoader;
 import net.minecraft.block.AnvilBlock;
 import net.minecraft.block.Block;
@@ -22,11 +23,12 @@ public abstract class class_535Mixin {
     @Shadow
     public WorldView field_2017;
 
+    @Shadow public static boolean field_2047;
     private static final List<Integer> RENDER_BLOCKS = Lists.newArrayList(
             0, 31, 4, 13, 1, 19, 23, 6,
-            2, 3, 5, 8, 7, 9, 10, 27, 11, 12, 29,
-            30, 14, 15, 16, 17, 18, 20, 21, 24, 25,
-            26, 28
+            2, 3, 5, 8, 7, 9, 10, 27, 11, 32, 12,
+            29, 30, 14, 15, 16, 17, 18, 20, 21, 24,
+            33, 35, 25, 26, 28, 34
     );
 
     @Inject(method = "method_1458", at = @At("RETURN"), cancellable = true)
@@ -38,7 +40,7 @@ public abstract class class_535Mixin {
     }
 
     private static final List<Integer> RENDER_BLOCKS_INV = Lists.newArrayList(
-            1, 19, 23, 13, 22, 6, 2, 10, 27, 11, 21
+            1, 19, 23, 13, 22, 6, 2, 10, 27, 11, 21, 32, 35, 34
     );
 
     @Inject(method = "method_1447",

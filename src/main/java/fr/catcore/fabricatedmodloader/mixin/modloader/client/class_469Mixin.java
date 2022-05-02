@@ -36,8 +36,8 @@ public abstract class class_469Mixin {
 
     private static final List<Integer> PACKET_TYPES = Lists.newArrayList(
             10, 11, 12, 90,
-            60, 61, 65, 72, 63,
-            64, 62, 73, 75, 1, 50, 51,
+            60, 61, 71, 65, 72, 63,
+            64, 66, 62, 73, 75, 1, 50, 51,
             70
     );
 
