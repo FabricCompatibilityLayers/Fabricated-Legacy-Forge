@@ -27,9 +27,9 @@ public abstract class ItemRendererMixin extends EntityRenderer {
             )
     )
     private void modLoader$renderfixPart1(ItemEntity d, double e, double f, double g, float h, float par6, CallbackInfo ci) {
-        if (d.field_23087.id >= Block.BLOCKS.length) {
-            this.cachedItemId = d.field_23087.id;
-            d.field_23087.id = 0;
+        if (d.method_4548().id >= Block.BLOCKS.length) {
+            this.cachedItemId = d.method_4548().id;
+            d.method_4548().id = 0;
         } else {
             this.cachedItemId = -1;
         }
@@ -57,7 +57,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
     )
     private void modLoader$renderfixPart2(ItemEntity d, double e, double f, double g, float h, float par6, CallbackInfo ci) {
         if (this.cachedItemId != -1 && this.cachedItemId >= Block.BLOCKS.length) {
-            d.field_23087.id = this.cachedItemId;
+            d.method_4548().id = this.cachedItemId;
         }
     }
 }

@@ -400,7 +400,7 @@ public final class ModLoader {
     }
 
     public static void addRecipe(ItemStack itemstack, Object... aobj) {
-        ((RecipeDispatcherAccessor) RecipeDispatcher.getInstance()).method_3495_invoker(itemstack, aobj);
+        ((RecipeDispatcherAccessor) RecipeDispatcher.getInstance()).registerShapedRecipe_invoker(itemstack, aobj);
     }
 
     public static void addShapelessRecipe(ItemStack itemstack, Object... aobj) {
@@ -484,7 +484,7 @@ public final class ModLoader {
                         entityitem.velocityY = world.random.nextGaussian() * d3 + 0.2D;
                         entityitem.velocityZ = world.random.nextGaussian() * d3;
                         if (itemstack.hasNbt()) {
-                            entityitem.field_23087.setNbt((NbtCompound) itemstack.getNbt().copy());
+                            entityitem.method_4548().setNbt((NbtCompound) itemstack.getNbt().copy());
                         }
                     }
 
