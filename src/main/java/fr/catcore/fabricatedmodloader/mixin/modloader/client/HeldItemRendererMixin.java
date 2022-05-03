@@ -9,15 +9,9 @@ import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HeldItemRenderer.class)
 public abstract class HeldItemRendererMixin {
@@ -70,9 +64,11 @@ public abstract class HeldItemRendererMixin {
 //        }
 //    }
 
-    @Shadow private Minecraft field_1876;
+    @Shadow
+    private Minecraft field_1876;
 
-    @Shadow private class_535 field_1880;
+    @Shadow
+    private class_535 field_1880;
 
     @Shadow
     public static void method_4306(Tessellator tessellator, float f, float g, float h, float i, int j, int k, float l) {
@@ -133,14 +129,14 @@ public abstract class HeldItemRendererMixin {
                 GL11.glPushMatrix();
                 float var14 = 0.125F;
                 GL11.glScalef(var14, var14, var14);
-                float var15 = (float)(Minecraft.getTime() % 3000L) / 3000.0F * 8.0F;
+                float var15 = (float) (Minecraft.getTime() % 3000L) / 3000.0F * 8.0F;
                 GL11.glTranslatef(var15, 0.0F, 0.0F);
                 GL11.glRotatef(-50.0F, 0.0F, 0.0F, 1.0F);
                 method_4306(var5, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
                 GL11.glPopMatrix();
                 GL11.glPushMatrix();
                 GL11.glScalef(var14, var14, var14);
-                var15 = (float)(Minecraft.getTime() % 4873L) / 4873.0F * 8.0F;
+                var15 = (float) (Minecraft.getTime() % 4873L) / 4873.0F * 8.0F;
                 GL11.glTranslatef(-var15, 0.0F, 0.0F);
                 GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F);
                 method_4306(var5, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);

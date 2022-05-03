@@ -10,7 +10,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,7 +17,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
@@ -72,15 +70,20 @@ public abstract class ItemRendererMixin extends EntityRenderer {
 //        }
 //    }
 
-    @Shadow private Random field_2126;
+    @Shadow
+    private Random field_2126;
 
-    @Shadow public static boolean field_5197;
+    @Shadow
+    public static boolean field_5197;
 
-    @Shadow private class_535 field_2125;
+    @Shadow
+    private class_535 field_2125;
 
-    @Shadow public boolean field_2123;
+    @Shadow
+    public boolean field_2123;
 
-    @Shadow protected abstract void method_4335(ItemEntity itemEntity, class_1557 arg, int i, float f, float g, float h, float j);
+    @Shadow
+    protected abstract void method_4335(ItemEntity itemEntity, class_1557 arg, int i, float f, float g, float h, float j);
 
     /**
      * @reason ModLoader patch
@@ -92,8 +95,8 @@ public abstract class ItemRendererMixin extends EntityRenderer {
         ItemStack var10 = itemEntity.method_4548();
         if (var10.getItem() != null) {
             GL11.glPushMatrix();
-            float var11 = MathHelper.sin(((float)itemEntity.age + h) / 10.0F + itemEntity.hoverHeight) * 0.1F + 0.1F;
-            float var12 = (((float)itemEntity.age + h) / 20.0F + itemEntity.hoverHeight) * 57.295776F;
+            float var11 = MathHelper.sin(((float) itemEntity.age + h) / 10.0F + itemEntity.hoverHeight) * 0.1F + 0.1F;
+            float var12 = (((float) itemEntity.age + h) / 20.0F + itemEntity.hoverHeight) * 57.295776F;
             byte var13 = 1;
             if (itemEntity.method_4548().count > 1) {
                 var13 = 2;
@@ -111,7 +114,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
                 var13 = 5;
             }
 
-            GL11.glTranslatef((float)d, (float)e + var11, (float)f);
+            GL11.glTranslatef((float) d, (float) e + var11, (float) f);
             GL11.glEnable(32826);
 
             Block var28 = null;
@@ -140,7 +143,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
 
                 GL11.glScalef(var24, var24, var24);
 
-                for(var17 = 0; var17 < var13; ++var17) {
+                for (var17 = 0; var17 < var13; ++var17) {
                     GL11.glPushMatrix();
                     if (var17 > 0) {
                         var18 = (this.field_2126.nextFloat() * 2.0F - 1.0F) * 0.2F / var24;
@@ -165,15 +168,15 @@ public abstract class ItemRendererMixin extends EntityRenderer {
 
                     this.method_1529("/gui/items.png");
 
-                    for(int var14 = 0; var14 <= 1; ++var14) {
+                    for (int var14 = 0; var14 <= 1; ++var14) {
                         this.field_2126.setSeed(187L);
                         class_1557 var15 = var10.getItem().method_3369(var10.getMeta(), var14);
                         var16 = 1.0F;
                         if (this.field_2123) {
                             var17 = Item.ITEMS[var10.id].getDisplayColor(var10, var14);
-                            var18 = (float)(var17 >> 16 & 255) / 255.0F;
-                            var19 = (float)(var17 >> 8 & 255) / 255.0F;
-                            var20 = (float)(var17 & 255) / 255.0F;
+                            var18 = (float) (var17 >> 16 & 255) / 255.0F;
+                            var19 = (float) (var17 >> 8 & 255) / 255.0F;
+                            var20 = (float) (var17 & 255) / 255.0F;
                             GL11.glColor4f(var18 * var16, var19 * var16, var20 * var16, 1.0F);
                             this.method_4335(itemEntity, var15, var13, h, var18 * var16, var19 * var16, var20 * var16);
                         } else {
@@ -197,9 +200,9 @@ public abstract class ItemRendererMixin extends EntityRenderer {
 
                     if (this.field_2123) {
                         int var23 = Item.ITEMS[var10.id].getDisplayColor(var10, 0);
-                        var16 = (float)(var23 >> 16 & 255) / 255.0F;
-                        float var26 = (float)(var23 >> 8 & 255) / 255.0F;
-                        var18 = (float)(var23 & 255) / 255.0F;
+                        var16 = (float) (var23 >> 16 & 255) / 255.0F;
+                        float var26 = (float) (var23 >> 8 & 255) / 255.0F;
+                        var18 = (float) (var23 & 255) / 255.0F;
                         var19 = 1.0F;
                         this.method_4335(itemEntity, var21, var13, h, var16 * var19, var26 * var19, var18 * var19);
                     } else {

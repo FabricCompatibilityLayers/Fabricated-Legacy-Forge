@@ -15,13 +15,17 @@ import java.util.List;
 @Mixin(class_1528.class)
 public class class_1528Mixin {
 
-    @Shadow private float field_5970;
+    @Shadow
+    private float field_5970;
 
-    @Shadow private float field_5972;
+    @Shadow
+    private float field_5972;
 
-    @Shadow private float field_5971;
+    @Shadow
+    private float field_5971;
 
-    @Shadow private float field_5973;
+    @Shadow
+    private float field_5973;
 
     @Inject(method = "method_5195", cancellable = true, at = @At("HEAD"))
     private static void modLoaderGetCustomAnimationLogic(String string, CallbackInfoReturnable<class_1528> cir) {

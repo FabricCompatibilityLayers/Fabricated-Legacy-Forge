@@ -47,7 +47,7 @@ public class SoundLoaderMixin implements ISoundLoader {
         String var3 = key;
         key = key.substring(0, key.indexOf("."));
         if (this.field_2269) {
-            while(Character.isDigit(key.charAt(key.length() - 1))) {
+            while (Character.isDigit(key.charAt(key.length() - 1))) {
                 key = key.substring(0, key.length() - 1);
             }
         }
@@ -58,7 +58,7 @@ public class SoundLoaderMixin implements ISoundLoader {
         }
 
         Sound var4 = new Sound(var3, url);
-        ((List)this.soundMap.get(key)).add(var4);
+        ((List) this.soundMap.get(key)).add(var4);
         this.soundList.add(var4);
         ++this.soundCount;
         return var4;
