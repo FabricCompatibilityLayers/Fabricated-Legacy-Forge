@@ -3,7 +3,6 @@ accessWidener v1 named
 accessible method net/minecraft/client/class_534 getTextureFromPath (Ljava/lang/String;)I
 
 accessible field net/minecraft/client/class_535 field_5946 Lnet/minecraft/client/class_1557;
-accessible field net/minecraft/client/class_535 field_2049 I
 accessible field net/minecraft/client/class_535 field_2050 Z
 accessible field net/minecraft/client/class_535 field_2051 Z
 accessible field net/minecraft/client/class_535 field_5184 D
@@ -22,13 +21,6 @@ accessible field net/minecraft/client/class_535 field_2055 I
 accessible field net/minecraft/client/class_535 field_2056 I
 accessible field net/minecraft/client/class_535 field_2057 I
 accessible field net/minecraft/client/class_535 field_2058 Z
-accessible field net/minecraft/client/class_535 field_2059 F
-accessible field net/minecraft/client/class_535 field_2060 F
-accessible field net/minecraft/client/class_535 field_2061 F
-accessible field net/minecraft/client/class_535 field_2062 F
-accessible field net/minecraft/client/class_535 field_2063 F
-accessible field net/minecraft/client/class_535 field_2064 F
-accessible field net/minecraft/client/class_535 field_2065 F
 accessible field net/minecraft/client/class_535 field_2066 F
 accessible field net/minecraft/client/class_535 field_22483 F
 accessible field net/minecraft/client/class_535 field_22484 F
@@ -77,7 +69,6 @@ accessible field net/minecraft/client/class_535 field_2030 I
 accessible field net/minecraft/client/class_535 field_2031 I
 accessible field net/minecraft/client/class_535 field_2032 I
 accessible field net/minecraft/client/class_535 field_22499 I
-accessible field net/minecraft/client/class_535 field_2033 I
 accessible field net/minecraft/client/class_535 field_2034 I
 accessible field net/minecraft/client/class_535 field_2035 I
 accessible field net/minecraft/client/class_535 field_2036 I
@@ -94,18 +85,6 @@ accessible field net/minecraft/client/class_535 field_2046 F
 accessible field net/minecraft/client/class_535 field_2005 F
 accessible field net/minecraft/client/class_535 field_2006 F
 accessible field net/minecraft/client/class_535 field_2007 F
-accessible field net/minecraft/client/class_535 field_2008 Z
-accessible field net/minecraft/client/class_535 field_2009 Z
-accessible field net/minecraft/client/class_535 field_2010 Z
-accessible field net/minecraft/client/class_535 field_2011 Z
-accessible field net/minecraft/client/class_535 field_2012 Z
-accessible field net/minecraft/client/class_535 field_2013 Z
-accessible field net/minecraft/client/class_535 field_2014 Z
-accessible field net/minecraft/client/class_535 field_2015 Z
-accessible field net/minecraft/client/class_535 field_2016 Z
-accessible field net/minecraft/client/class_535 field_2018 Z
-accessible field net/minecraft/client/class_535 field_2019 Z
-accessible field net/minecraft/client/class_535 field_2020 Z
 accessible field net/minecraft/client/class_535 field_22487 Z
 accessible field net/minecraft/client/class_535 field_22488 Z
 accessible field net/minecraft/client/class_535 field_22489 Z
@@ -118,7 +97,6 @@ accessible field net/minecraft/client/class_535 field_22495 Z
 accessible field net/minecraft/client/class_535 field_22496 Z
 accessible field net/minecraft/client/class_535 field_22497 Z
 accessible field net/minecraft/client/class_535 field_22498 Z
-accessible method net/minecraft/client/class_535 method_1487 (Lnet/minecraft/block/Block;III)Z
 accessible method net/minecraft/client/class_535 method_1488 (Lnet/minecraft/block/Block;III)Z
 accessible method net/minecraft/client/class_535 method_1435 (Lnet/minecraft/block/BrewingStandBlock;III)Z
 accessible method net/minecraft/client/class_535 method_1436 (Lnet/minecraft/block/CauldronBlock;III)Z
@@ -126,7 +104,6 @@ accessible method net/minecraft/client/class_535 method_4318 (Lnet/minecraft/blo
 accessible method net/minecraft/client/class_535 method_4313 (Lnet/minecraft/block/AnvilBlock;III)Z
 accessible method net/minecraft/client/class_535 method_4316 (Lnet/minecraft/block/AnvilBlock;IIIIZ)Z
 accessible method net/minecraft/client/class_535 method_4315 (Lnet/minecraft/block/AnvilBlock;IIIIFFFFZZI)F
-accessible method net/minecraft/client/class_535 method_1489 (Lnet/minecraft/block/Block;III)Z
 accessible method net/minecraft/client/class_535 method_1459 (Lnet/minecraft/block/Block;IIIZ)Z
 accessible method net/minecraft/client/class_535 method_1432 (DDDDDDFD)V
 accessible method net/minecraft/client/class_535 method_1454 (DDDDDDFD)V
