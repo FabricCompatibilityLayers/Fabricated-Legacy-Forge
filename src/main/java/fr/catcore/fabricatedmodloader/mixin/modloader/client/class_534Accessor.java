@@ -11,9 +11,6 @@ import java.util.List;
 @Mixin(class_534.class)
 public interface class_534Accessor {
 
-    @Accessor("field_1978")
-    List<class_584> getAnimations();
-
     @Accessor("packManager")
     TexturePackManager getTexturePackManager();
 }

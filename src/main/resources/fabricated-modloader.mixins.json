@@ -17,6 +17,7 @@
     "modloader.client.class_534Accessor",
     "modloader.client.SoundLoaderMixin",
     "modloader.client.SoundSystemAccessor",
+    "modloader.client.class_1528Mixin",
 
     "modloader.common.BlockEntityAccessor",
     "modloader.common.CraftingResultSlotMixin",
@@ -28,7 +29,6 @@
     "modloader.common.FurnaceOutputSlotMixin",
     "modloader.common.ItemEntityMixin",
     "modloader.common.LevelGeneratorTypeMixin",
-    "modloader.common.ServerChunkProviderMixin",
     "modloader.common.ServerPacketListenerMixin",
     "modloader.common.SetBaseBiomesLayerMixin",
     "modloader.common.TrackedEntityInstanceMixin",
@@ -38,8 +38,7 @@
     "modloader.common.StatAccessor",
     "modloader.common.RecipeDispatcherAccessor",
     "modloader.common.WeightAccessor",
-    "modloader.common.StatsAccessor",
-    "modloader.common.ScreenHandlerMixin"
+    "modloader.common.StatsAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

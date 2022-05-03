@@ -75,7 +75,6 @@ import java.util.logging.SimpleFormatter;
 
 @SuppressWarnings("unused")
 public final class ModLoader {
-    private static final List<class_584> animList = new LinkedList<>();
     private static final Map<Integer, BaseMod> blockModels = new HashMap<>();
     private static final Map<Integer, Boolean> blockSpecialInv = new HashMap<>();
     private static final File cfgdir = new File(FabricLoader.getInstance().getGameDir().toFile(), "/config/");
@@ -84,12 +83,9 @@ public final class ModLoader {
     private static long clock = 0L;
     private static Field field_modifiers = null;
     private static boolean hasInit = false;
-    private static int highestEntityId = 3000;
     private static final Map<BaseMod, Boolean> inGameHooks = new HashMap<>();
     private static final Map<BaseMod, Boolean> inGUIHooks = new HashMap<>();
     private static Minecraft instance = null;
-    private static int itemSpriteIndex = 0;
-    private static int itemSpritesLeft = 0;
     private static final Map<BaseMod, Map<KeyBinding, Boolean[]>> keyList = new HashMap<>();
     private static String langPack = null;
     private static final Map<String, Map<String, String>> localizedStrings = new HashMap<>();
@@ -102,19 +98,14 @@ public final class ModLoader {
     private static final Map<String, BaseMod> packetChannels = new HashMap<>();
     public static final Properties props = new Properties();
     private static Biome[] standardBiomes;
-    private static int terrainSpriteIndex = 0;
-    private static int terrainSpritesLeft = 0;
-    private static String texPack = null;
-    private static boolean texturesAdded = false;
-    private static final boolean[] usedItemSprites = new boolean[256];
-    private static final boolean[] usedTerrainSprites = new boolean[256];
-    public static final String VERSION = "ModLoader 1.4.7";
+    public static final String VERSION = "ModLoader 1.5";
     private static class_469 clientHandler = null;
     private static final List<Command> commandList = new LinkedList<>();
     private static final Map<Integer, List<TradeEntry>> tradeItems = new HashMap<>();
     private static final Map<Integer, BaseMod> containerGUIs = new HashMap<>();
     private static final Map<Class<?>, EntityTrackerNonliving> trackers = new HashMap<>();
     private static final Map<Item, DispenserBehavior> dispenserBehaviors = new HashMap<>();
+    private static final Map<String, class_1528> customTextures = new HashMap<>();
     private static SoundLoader soundPoolSounds;
     private static SoundLoader soundPoolStreaming;
     private static SoundLoader soundPoolMusic;
@@ -186,19 +177,6 @@ public final class ModLoader {
             mod.addRenderer(renderers);
         }
 
-    }
-
-    public static void addAnimation(class_584 anim) {
-        Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Adding animation " + anim.toString());
-
-        for (class_584 oldAnim : animList) {
-            if (oldAnim.field_2153 == anim.field_2153 && oldAnim.field_2157 == anim.field_2157) {
-                animList.remove(anim);
-                break;
-            }
-        }
-
-        animList.add(anim);
     }
 
     public static int addArmor(String s) {
@@ -367,38 +345,6 @@ public final class ModLoader {
 
     }
 
-    public static int addOverride(String s, String s1) {
-        try {
-            int i = getUniqueSpriteIndex(s);
-            addOverride(s, s1, i);
-            return i;
-        } catch (Throwable var3) {
-            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader addOverride", var3);
-            throwException(var3);
-            throw new RuntimeException(var3);
-        }
-    }
-
-    public static void addOverride(String s, String s1, int i) {
-        byte j;
-        int k;
-        if (s.equals("/terrain.png")) {
-            j = 0;
-            k = terrainSpritesLeft;
-        } else {
-            if (!s.equals("/gui/items.png")) {
-                return;
-            }
-
-            j = 1;
-            k = itemSpritesLeft;
-        }
-
-        Log.info(Constants.MODLOADER_LOG_CATEGORY, "Overriding " + s + " with " + s1 + " @ " + i + ". " + k + " left.");
-        Log.debug(Constants.MODLOADER_LOG_CATEGORY, "addOverride(" + s + "," + s1 + "," + i + "). " + k + " left.");
-        overrides.computeIfAbsent((int) j, k1 -> new HashMap<>()).put(s1, i);
-    }
-
     public static void addRecipe(ItemStack itemstack, Object... aobj) {
         ((RecipeDispatcherAccessor) RecipeDispatcher.getInstance()).registerShapedRecipe_invoker(itemstack, aobj);
     }
@@ -542,73 +488,8 @@ public final class ModLoader {
         return i;
     }
 
-    public static int getUniqueEntityId() {
-        return highestEntityId++;
-    }
-
-    private static int getUniqueItemSpriteIndex() {
-        while (itemSpriteIndex < usedItemSprites.length) {
-            if (!usedItemSprites[itemSpriteIndex]) {
-                usedItemSprites[itemSpriteIndex] = true;
-                --itemSpritesLeft;
-                return itemSpriteIndex++;
-            }
-
-            ++itemSpriteIndex;
-        }
-
-        Exception exception = new Exception("No more empty item sprite indices left!");
-        Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader getUniqueItemSpriteIndex", exception);
-        throwException(exception);
-        return 0;
-    }
-
-    public static int getUniqueSpriteIndex(String s) {
-        if (s.equals("/gui/items.png")) {
-            return getUniqueItemSpriteIndex();
-        } else if (s.equals("/terrain.png")) {
-            return getUniqueTerrainSpriteIndex();
-        } else {
-            Exception exception = new Exception("No registry for this texture: " + s);
-            Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader getUniqueItemSpriteIndex", exception);
-            throwException(exception);
-            return 0;
-        }
-    }
-
-    private static int getUniqueTerrainSpriteIndex() {
-        while (terrainSpriteIndex < usedTerrainSprites.length) {
-            if (!usedTerrainSprites[terrainSpriteIndex]) {
-                usedTerrainSprites[terrainSpriteIndex] = true;
-                --terrainSpritesLeft;
-                return terrainSpriteIndex++;
-            }
-
-            ++terrainSpriteIndex;
-        }
-
-        Exception exception = new Exception("No more empty terrain sprite indices left!");
-        Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader getUniqueItemSpriteIndex", exception);
-        throwException(exception);
-        return 0;
-    }
-
     private static void init() {
         hasInit = true;
-        String usedItemSpritesString = "1111111111111111111111111111111111111101111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000001111111111100000010111111110000000011111111000000001110111100000000000000011111000000000001111111111111111";
-        String usedTerrainSpritesString = "1111111111111111111111111100111111111111110111111111111110011111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111000001111111111111111111111111000001111111111100001111111111111111111";
-
-        for (int i = 0; i < 256; ++i) {
-            usedItemSprites[i] = usedItemSpritesString.charAt(i) == '1';
-            if (!usedItemSprites[i]) {
-                ++itemSpritesLeft;
-            }
-
-            usedTerrainSprites[i] = usedTerrainSpritesString.charAt(i) == '1';
-            if (!usedTerrainSprites[i]) {
-                ++terrainSpritesLeft;
-            }
-        }
 
         try {
             instance = Minecraft.getMinecraft();
@@ -653,8 +534,8 @@ public final class ModLoader {
                 logger.addHandler(logHandler);
             }
 
-            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.4.7 Initializing...");
-            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.4.7 Initializing...");
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.5 Initializing...");
+            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.5 Initializing...");
             addModsToClassPath();
             sortModList();
 
@@ -802,11 +683,6 @@ public final class ModLoader {
             Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Initialized");
         }
 
-        if (texPack == null || !Objects.equals(minecraft.options.currentTexturePackName, texPack)) {
-            texturesAdded = false;
-            texPack = minecraft.options.currentTexturePackName;
-        }
-
         if (langPack == null || !Objects.equals(Language.getInstance().getCode(), langPack)) {
             Properties properties = ((LanguageAccessor) Language.getInstance()).getTranslationMap();
 
@@ -820,11 +696,6 @@ public final class ModLoader {
                     properties.putAll(localizedStrings.get(langPack));
                 }
             }
-        }
-
-        if (!texturesAdded && minecraft.field_3813 != null) {
-            registerAllTextureOverrides(minecraft.field_3813);
-            texturesAdded = true;
         }
 
         long l = 0L;
@@ -1058,39 +929,6 @@ public final class ModLoader {
         }
 
         return linkedlist.toArray(new KeyBinding[0]);
-    }
-
-    public static void registerAllTextureOverrides(class_534 renderengine) {
-        animList.clear();
-        Minecraft minecraft = getMinecraftInstance();
-
-        for (BaseMod basemod : modList) {
-            basemod.registerAnimation(minecraft);
-        }
-
-        for (class_584 texturefx : animList) {
-            renderengine.method_1416(texturefx);
-        }
-
-        for (Map.Entry<Integer, Map<String, Integer>> entry : overrides.entrySet()) {
-
-            for (Map.Entry<String, Integer> entry1 : entry.getValue().entrySet()) {
-                String s = entry1.getKey();
-                int i = entry1.getValue();
-                int j = entry.getKey();
-
-                try {
-                    BufferedImage bufferedimage = loadImage(renderengine, s);
-                    ModTextureStatic modtexturestatic = new ModTextureStatic(i, j, bufferedimage);
-                    renderengine.method_1416(modtexturestatic);
-                } catch (Exception var13) {
-                    Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader RegisterAllTextureOverrides", var13);
-                    throwException(var13);
-                    throw new RuntimeException(var13);
-                }
-            }
-        }
-
     }
 
     public static void registerBlock(Block block) {
@@ -1395,7 +1233,7 @@ public final class ModLoader {
         Field[] afield;
         int l = (afield = class1.getDeclaredFields()).length;
 
-        for (int k = 0; k < l; ++k) {
+        for(int k = 0; k < l; ++k) {
             Field field = afield[k];
             if ((field.getModifiers() & 8) != 0 && field.isAnnotationPresent(MLProp.class)) {
                 linkedlist.add(field);
@@ -1407,7 +1245,7 @@ public final class ModLoader {
         StringBuilder stringbuilder = new StringBuilder();
         Iterator<Field> iterator = linkedlist.iterator();
 
-        while (true) {
+        while(true) {
             MLProp mlprop;
             String s;
             Object obj1;
@@ -1416,7 +1254,7 @@ public final class ModLoader {
             Field field1;
             do {
                 do {
-                    while (true) {
+                    while(true) {
                         do {
                             do {
                                 if (!iterator.hasNext()) {
@@ -1476,14 +1314,14 @@ public final class ModLoader {
                         Log.debug(Constants.MODLOADER_LOG_CATEGORY, s + " not in config, using default: " + obj1);
                         properties.setProperty(s, obj1.toString());
                     }
-                } while (obj2 == null);
+                } while(obj2 == null);
 
                 if (!(obj2 instanceof Number)) {
                     break;
                 }
 
-                d = ((Number) obj2).doubleValue();
-            } while (mlprop.min() != Double.NEGATIVE_INFINITY && d < mlprop.min() || mlprop.max() != Double.POSITIVE_INFINITY && d > mlprop.max());
+                d = ((Number)obj2).doubleValue();
+            } while(mlprop.min() != Double.NEGATIVE_INFINITY && d < mlprop.min() || mlprop.max() != Double.POSITIVE_INFINITY && d > mlprop.max());
 
             Log.debug(Constants.MODLOADER_LOG_CATEGORY, s + " set to " + obj2);
             if (!obj2.equals(obj1)) {
@@ -1643,7 +1481,7 @@ public final class ModLoader {
         sb.append("Mods loaded: ");
         sb.append(getLoadedMods().size() + 1);
         sb.append('\n');
-        sb.append("ModLoader 1.4.7");
+        sb.append("ModLoader 1.5");
         sb.append('\n');
 
         for (BaseMod mod : (List<BaseMod>) getLoadedMods()) {
@@ -1654,6 +1492,14 @@ public final class ModLoader {
         }
 
         return sb.toString();
+    }
+
+    public static void addCustomAnimationLogic(String name, class_1528 tex) {
+        customTextures.put(name, tex);
+    }
+
+    public static class_1528 getCustomAnimationLogic(String name) {
+        return customTextures.getOrDefault(name, null);
     }
 
     private ModLoader() {

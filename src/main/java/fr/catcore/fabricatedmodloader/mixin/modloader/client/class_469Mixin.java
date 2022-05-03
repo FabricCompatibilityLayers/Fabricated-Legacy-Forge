@@ -35,7 +35,7 @@ public abstract class class_469Mixin {
     }
 
     private static final List<Integer> PACKET_TYPES = Lists.newArrayList(
-            10, 11, 12, 90,
+            10, 90,
             60, 61, 71, 65, 72, 76, 63,
             64, 66, 62, 73, 75, 1, 50, 51,
             2, 70
@@ -92,7 +92,7 @@ public abstract class class_469Mixin {
 
     @Inject(method = "onOpenScreen", at = @At("HEAD"), cancellable = true)
     private void modLoaderClientOpenWindow(OpenScreen_S2CPacket par1, CallbackInfo ci) {
-        if (par1.type > 8 || par1.type < 0) {
+        if (par1.type > 10 || par1.type < 0) {
             ModLoader.clientOpenWindow(par1);
             ci.cancel();
         }
