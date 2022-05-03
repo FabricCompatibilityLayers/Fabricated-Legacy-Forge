@@ -12,7 +12,8 @@ import java.util.List;
 @Mixin(ScreenHandler.class)
 public class ScreenHandlerMixin {
 
-    @Shadow public List slots;
+    @Shadow
+    public List slots;
 
     /**
      * @reason ModLoader patch
@@ -30,8 +31,8 @@ public class ScreenHandlerMixin {
         ItemStack var8;
         int maxStack;
         if (stack.isDamaged()) {
-            while(stack.count > 0 && (!fromLast && var6 < endIndex || fromLast && var6 >= startIndex)) {
-                var7 = (Slot)this.slots.get(var6);
+            while (stack.count > 0 && (!fromLast && var6 < endIndex || fromLast && var6 >= startIndex)) {
+                var7 = (Slot) this.slots.get(var6);
                 var8 = var7.getStack();
                 maxStack = Math.min(var7.getMaxStackAmount(), stack.getMaxCount());
                 if (var8 != null && var7.canInsert(stack) && var8.id == stack.id && (!stack.isUnbreakable() || stack.getMeta() == var8.getMeta()) && ItemStack.equalsIgnoreDamage(stack, var8)) {
@@ -64,8 +65,8 @@ public class ScreenHandlerMixin {
                 var6 = startIndex;
             }
 
-            while(!fromLast && var6 < endIndex || fromLast && var6 >= startIndex) {
-                var7 = (Slot)this.slots.get(var6);
+            while (!fromLast && var6 < endIndex || fromLast && var6 >= startIndex) {
+                var7 = (Slot) this.slots.get(var6);
                 var8 = var7.getStack();
                 maxStack = Math.min(var7.getMaxStackAmount(), stack.getMaxCount());
                 if (var8 == null && var7.canInsert(stack)) {
