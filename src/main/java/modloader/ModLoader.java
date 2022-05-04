@@ -4,14 +4,17 @@ import fr.catcore.fabricatedmodloader.mixin.modloader.client.BipedEntityRenderer
 import fr.catcore.fabricatedmodloader.mixin.modloader.client.BlockEntityRenderDispatcherAccessor;
 import fr.catcore.fabricatedmodloader.mixin.modloader.client.MinecraftClientAccessor;
 import fr.catcore.fabricatedmodloader.mixin.modloader.common.*;
-import fr.catcore.fabricatedmodloader.mixininterface.ISoundLoader;
-import fr.catcore.fabricatedmodloader.utils.*;
+import fr.catcore.fabricatedmodloader.utils.Constants;
+import fr.catcore.fabricatedmodloader.utils.FakeModManager;
+import fr.catcore.fabricatedmodloader.utils.SetBaseBiomesLayerData;
+import fr.catcore.fabricatedmodloader.utils.class_535Data;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.impl.util.log.Log;
 import net.minecraft.advancement.Achievement;
 import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.class_1557;
 import net.minecraft.client.class_469;
@@ -63,8 +66,6 @@ import org.lwjgl.input.Mouse;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.*;
@@ -359,11 +360,11 @@ public final class ModLoader {
         SmeltingRecipeRegistry.getInstance().method_3488(i, itemstack, xp);
     }
 
-    public static void addSpawn(Class class1, int i, int j, int k, EntityCategory enumcreaturetype) {
+    public static void addSpawn(Class<? extends Entity> class1, int i, int j, int k, EntityCategory enumcreaturetype) {
         addSpawn(class1, i, j, k, enumcreaturetype, null);
     }
 
-    public static void addSpawn(Class class1, int i, int j, int k, EntityCategory enumcreaturetype, Biome[] abiomegenbase) {
+    public static void addSpawn(Class<? extends Entity> class1, int i, int j, int k, EntityCategory enumcreaturetype, Biome[] abiomegenbase) {
         if (class1 == null) {
             throw new IllegalArgumentException("entityClass cannot be null");
         } else if (enumcreaturetype == null) {
@@ -402,7 +403,7 @@ public final class ModLoader {
     }
 
     public static void addSpawn(String s, int i, int j, int k, EntityCategory enumcreaturetype, Biome[] abiomegenbase) {
-        Class<?> class1 = EntityTypeAccessor.getClassMap().get(s);
+        Class<? extends Entity> class1 = (Class<? extends Entity>) EntityTypeAccessor.getClassMap().get(s);
         if (class1 != null && MobEntity.class.isAssignableFrom(class1)) {
             addSpawn(class1, i, j, k, enumcreaturetype, abiomegenbase);
         }
@@ -459,7 +460,7 @@ public final class ModLoader {
         return instance;
     }
 
-    public static Object getPrivateValue(Class class1, Object obj, int i) throws IllegalArgumentException, SecurityException {
+    public static Object getPrivateValue(Class<?> class1, Object obj, int i) throws IllegalArgumentException, SecurityException {
         try {
             Field field = class1.getDeclaredFields()[i];
             field.setAccessible(true);
@@ -471,7 +472,7 @@ public final class ModLoader {
         }
     }
 
-    public static Object getPrivateValue(Class class1, Object obj, String s) throws IllegalArgumentException, SecurityException, NoSuchFieldException {
+    public static Object getPrivateValue(Class<?> class1, Object obj, String s) throws IllegalArgumentException, SecurityException, NoSuchFieldException {
         try {
             Field field = class1.getDeclaredField(s);
             field.setAccessible(true);
@@ -668,7 +669,7 @@ public final class ModLoader {
         }
 
         if (langPack == null || !Objects.equals(minecraft.options.language, langPack)) {
-            Map properties = ((LanguageAccessor) LanguageAccessor.getInstance()).getTranslationMap();
+            Map<String, String> properties = ((LanguageAccessor) LanguageAccessor.getInstance()).getTranslationMap();
 
             langPack = minecraft.options.language;
             if (properties != null) {
@@ -919,7 +920,7 @@ public final class ModLoader {
         registerBlock(block, null);
     }
 
-    public static void registerBlock(Block block, Class class1) {
+    public static void registerBlock(Block block, Class<? extends Item> class1) {
         try {
             if (block == null) {
                 throw new IllegalArgumentException("block parameter cannot be null.");
@@ -944,7 +945,7 @@ public final class ModLoader {
 
     }
 
-    public static void registerEntityID(Class class1, String s, int i) {
+    public static void registerEntityID(Class<? extends Entity> class1, String s, int i) {
         try {
             EntityTypeAccessor.callRegister(class1, s, i);
         } catch (IllegalArgumentException var4) {
@@ -954,7 +955,7 @@ public final class ModLoader {
 
     }
 
-    public static void registerEntityID(Class class1, String s, int i, int j, int k) {
+    public static void registerEntityID(Class<? extends Entity> class1, String s, int i, int j, int k) {
         registerEntityID(class1, s, i);
         EntityType.field_3267.put(i, new class_868(i, j, k));
     }
@@ -978,11 +979,11 @@ public final class ModLoader {
         }
     }
 
-    public static void registerTileEntity(Class class1, String s) {
+    public static void registerTileEntity(Class<? extends BlockEntity> class1, String s) {
         registerTileEntity(class1, s, null);
     }
 
-    public static void registerTileEntity(Class class1, String s, BlockEntityRenderer tileentityspecialrenderer) {
+    public static void registerTileEntity(Class<? extends BlockEntity> class1, String s, BlockEntityRenderer tileentityspecialrenderer) {
         try {
             BlockEntityAccessor.callRegister(class1, s);
             if (tileentityspecialrenderer != null) {
@@ -1006,11 +1007,11 @@ public final class ModLoader {
         SetBaseBiomesLayerData.biomeArray = arraylist.toArray(new Biome[0]);
     }
 
-    public static void removeSpawn(Class class1, EntityCategory enumcreaturetype) {
+    public static void removeSpawn(Class<? extends Entity> class1, EntityCategory enumcreaturetype) {
         removeSpawn(class1, enumcreaturetype, null);
     }
 
-    public static void removeSpawn(Class class1, EntityCategory enumcreaturetype, Biome[] abiomegenbase) {
+    public static void removeSpawn(Class<? extends Entity> class1, EntityCategory enumcreaturetype, Biome[] abiomegenbase) {
         if (class1 == null) {
             throw new IllegalArgumentException("entityClass cannot be null");
         } else if (enumcreaturetype == null) {
@@ -1036,7 +1037,7 @@ public final class ModLoader {
     }
 
     public static void removeSpawn(String s, EntityCategory enumcreaturetype, Biome[] abiomegenbase) {
-        Class<?> class1 = EntityTypeAccessor.getClassMap().get(s);
+        Class<? extends Entity> class1 = (Class<? extends Entity>) EntityTypeAccessor.getClassMap().get(s);
         if (class1 != null && MobEntity.class.isAssignableFrom(class1)) {
             removeSpawn(class1, enumcreaturetype, abiomegenbase);
         }
@@ -1154,7 +1155,7 @@ public final class ModLoader {
 
     }
 
-    public static void setPrivateValue(Class class1, Object obj, int i, Object obj1) throws IllegalArgumentException, SecurityException {
+    public static void setPrivateValue(Class<?> class1, Object obj, int i, Object obj1) throws IllegalArgumentException, SecurityException {
         try {
             Field field = class1.getDeclaredFields()[i];
             field.setAccessible(true);
@@ -1177,7 +1178,7 @@ public final class ModLoader {
 
     }
 
-    public static void setPrivateValue(Class class1, Object obj, String s, Object obj1) throws IllegalArgumentException, SecurityException, NoSuchFieldException {
+    public static void setPrivateValue(Class<?> class1, Object obj, String s, Object obj1) throws IllegalArgumentException, SecurityException, NoSuchFieldException {
         try {
             Field field = class1.getDeclaredField(s);
 
@@ -1200,7 +1201,7 @@ public final class ModLoader {
 
     }
 
-    private static void setupProperties(Class class1) throws IllegalArgumentException, IllegalAccessException, IOException, SecurityException {
+    private static void setupProperties(Class<?> class1) throws IllegalArgumentException, IllegalAccessException, IOException, SecurityException {
         LinkedList<Field> linkedlist = new LinkedList<>();
         Properties properties = new Properties();
         int i = 0;
@@ -1342,7 +1343,7 @@ public final class ModLoader {
                                     continue label129;
                                 }
 
-                                basemod1 = (BaseMod) iterator1.next();
+                                basemod1 = iterator1.next();
                             } while (linkedlist.contains(basemod1));
 
                             s = basemod1.getPriorities();
@@ -1468,7 +1469,7 @@ public final class ModLoader {
         sb.append("ModLoader 1.6.1");
         sb.append('\n');
 
-        for (BaseMod mod : (List<BaseMod>) getLoadedMods()) {
+        for (BaseMod mod : getLoadedMods()) {
             sb.append(mod.getName());
             sb.append(' ');
             sb.append(mod.getVersion());
