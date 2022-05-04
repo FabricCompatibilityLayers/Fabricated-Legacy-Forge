@@ -24,10 +24,10 @@ public abstract class class_535Mixin {
     @Shadow
     public static boolean field_2047;
     private static final List<Integer> RENDER_BLOCKS = Lists.newArrayList(
-            0, 31, 39, 4, 13, 1, 19, 23, 6,
-            2, 3, 5, 8, 7, 9, 10, 27, 11, 32, 12,
-            29, 30, 14, 15, 36, 37, 16, 17, 18, 20, 21, 24,
-            33, 35, 25, 26, 28, 34, 38
+            -1, 0, 4, 31, 1, 2, 20, 11, 39,
+            5, 13, 9, 19, 23, 6, 3, 8, 7, 10, 27,
+            32, 12, 29, 30, 14, 15, 36, 37, 16, 17,
+            18, 21, 24, 33, 35, 25, 26, 28, 34, 38
     );
 
     @Inject(method = "method_1458", at = @At("RETURN"), cancellable = true)
@@ -48,7 +48,7 @@ public abstract class class_535Mixin {
     )
     private void modLoaderRenderInvBlock(Block block, int i, float f, CallbackInfo ci) {
         int var6 = block.getBlockType();
-        if (var6 != 0 && var6 != 31 && var6 != 16 && var6 != 26) {
+        if (var6 != 0 && var6 != 31 && var6 != 39 && var6 != 16 && var6 != 26) {
             if (!RENDER_BLOCKS_INV.contains(var6)) {
                 ModLoader.renderInvBlock((class_535) (Object) this, block, i, var6);
                 ci.cancel();

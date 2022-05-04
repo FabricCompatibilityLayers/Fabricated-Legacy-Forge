@@ -98,7 +98,7 @@ public final class ModLoader {
     private static final Map<String, BaseMod> packetChannels = new HashMap<>();
     public static final Properties props = new Properties();
     private static Biome[] standardBiomes;
-    public static final String VERSION = "ModLoader 1.5";
+    public static final String VERSION = "ModLoader 1.5.1";
     private static class_469 clientHandler = null;
     private static final List<Command> commandList = new LinkedList<>();
     private static final Map<Integer, List<TradeEntry>> tradeItems = new HashMap<>();
@@ -534,8 +534,8 @@ public final class ModLoader {
                 logger.addHandler(logHandler);
             }
 
-            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.5 Initializing...");
-            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.5 Initializing...");
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.5.1 Initializing...");
+            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.5.1 Initializing...");
             addModsToClassPath();
             sortModList();
 
@@ -1481,7 +1481,7 @@ public final class ModLoader {
         sb.append("Mods loaded: ");
         sb.append(getLoadedMods().size() + 1);
         sb.append('\n');
-        sb.append("ModLoader 1.5");
+        sb.append("ModLoader 1.5.1");
         sb.append('\n');
 
         for (BaseMod mod : (List<BaseMod>) getLoadedMods()) {
