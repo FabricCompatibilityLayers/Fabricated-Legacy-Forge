@@ -38,7 +38,8 @@
     "modloader.common.StatAccessor",
     "modloader.common.RecipeDispatcherAccessor",
     "modloader.common.WeightAccessor",
-    "modloader.common.StatsAccessor"
+    "modloader.common.StatsAccessor",
+    "modloader.common.ServerChunkProviderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
