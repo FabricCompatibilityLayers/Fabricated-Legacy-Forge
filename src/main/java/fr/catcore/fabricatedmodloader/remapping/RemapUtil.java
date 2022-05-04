@@ -121,6 +121,7 @@ public class RemapUtil {
             mappings.add(makeLoaderLine("EntityTrackerNonliving", "modloader/EntityTrackerNonliving"));
             mappings.add(makeLoaderLine("MLProp", "modloader/MLProp"));
             mappings.add(makeLoaderLine("ModLoader", "modloader/ModLoader"));
+            mappings.add(makeLoaderLine("ModResourcePack", "modloader/ModResourcePack"));
             mappings.add(makeLoaderLine("ModTextureAnimation", "modloader/ModTextureAnimation"));
             mappings.add(makeLoaderLine("ModTextureStatic", "modloader/ModTextureStatic"));
             mappings.add(makeLoaderLine("TradeEntry", "modloader/TradeEntry"));

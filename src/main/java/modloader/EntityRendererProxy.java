@@ -1,12 +1,12 @@
 package modloader;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 
 public class EntityRendererProxy extends GameRenderer {
-    private final Minecraft game;
+    private final MinecraftClient game;
 
-    public EntityRendererProxy(Minecraft minecraft) {
+    public EntityRendererProxy(MinecraftClient minecraft) {
         super(minecraft);
         this.game = minecraft;
     }

@@ -1,7 +1,5 @@
 accessWidener v1 named
 
-accessible method net/minecraft/client/class_534 getTextureFromPath (Ljava/lang/String;)I
-
 accessible field net/minecraft/client/class_535 field_5946 Lnet/minecraft/client/class_1557;
 accessible field net/minecraft/client/class_535 field_2050 Z
 accessible field net/minecraft/client/class_535 field_2051 Z
@@ -13,7 +11,7 @@ accessible field net/minecraft/client/class_535 field_5188 D
 accessible field net/minecraft/client/class_535 field_5189 D
 accessible field net/minecraft/client/class_535 field_5190 Z
 accessible field net/minecraft/client/class_535 field_5947 Z
-accessible field net/minecraft/client/class_535 field_5948 Lnet/minecraft/client/Minecraft;
+accessible field net/minecraft/client/class_535 field_5948 Lnet/minecraft/client/MinecraftClient;
 accessible field net/minecraft/client/class_535 field_2052 I
 accessible field net/minecraft/client/class_535 field_2053 I
 accessible field net/minecraft/client/class_535 field_2054 I

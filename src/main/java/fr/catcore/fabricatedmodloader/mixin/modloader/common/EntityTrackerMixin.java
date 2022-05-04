@@ -5,8 +5,7 @@ import modloader.ModLoader;
 import net.minecraft.entity.*;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.decoration.ItemFrameEntity;
-import net.minecraft.entity.decoration.PaintingEntity;
+import net.minecraft.entity.decoration.AbstractDecorationEntity;
 import net.minecraft.entity.passive.BatEntity;
 import net.minecraft.entity.passive.SquidEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -54,10 +53,9 @@ public abstract class EntityTrackerMixin {
                         || entity instanceof EnderDragonEntity
                         || entity instanceof TntEntity
                         || entity instanceof FallingBlockEntity
-                        || entity instanceof PaintingEntity
+                        || entity instanceof AbstractDecorationEntity
                         || entity instanceof ExperienceOrbEntity
                         || entity instanceof EndCrystalEntity
-                        || entity instanceof ItemFrameEntity
         )) {
             for (EntityTrackerNonliving tracker : (Iterable<EntityTrackerNonliving>) ModLoader.getTrackers().values()) {
                 if (tracker.entityClass.isAssignableFrom(entity.getClass())) {

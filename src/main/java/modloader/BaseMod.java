@@ -1,7 +1,7 @@
 package modloader;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.class_469;
 import net.minecraft.client.class_535;
 import net.minecraft.client.gui.screen.Screen;
@@ -61,11 +61,11 @@ public abstract class BaseMod {
     public void onItemPickup(PlayerEntity entityplayer, ItemStack itemstack) {
     }
 
-    public boolean onTickInGame(float f, Minecraft minecraft) {
+    public boolean onTickInGame(float f, MinecraftClient minecraft) {
         return false;
     }
 
-    public boolean onTickInGUI(float f, Minecraft minecraft, Screen guiscreen) {
+    public boolean onTickInGUI(float f, MinecraftClient minecraft, Screen guiscreen) {
         return false;
     }
 
@@ -81,7 +81,7 @@ public abstract class BaseMod {
     public void serverCustomPayload(ServerPacketListener serverHandler, CustomPayloadC2SPacket packet250custompayload) {
     }
 
-    public void registerAnimation(Minecraft minecraft) {
+    public void registerAnimation(MinecraftClient minecraft) {
     }
 
     public void renderInvBlock(class_535 renderblocks, Block block, int i, int j) {

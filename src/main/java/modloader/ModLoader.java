@@ -1,9 +1,8 @@
 package modloader;
 
+import fr.catcore.fabricatedmodloader.mixin.modloader.client.BipedEntityRendererAccessor;
 import fr.catcore.fabricatedmodloader.mixin.modloader.client.BlockEntityRenderDispatcherAccessor;
-import fr.catcore.fabricatedmodloader.mixin.modloader.client.PlayerEntityRendererAccessor;
-import fr.catcore.fabricatedmodloader.mixin.modloader.client.SoundSystemAccessor;
-import fr.catcore.fabricatedmodloader.mixin.modloader.client.class_534Accessor;
+import fr.catcore.fabricatedmodloader.mixin.modloader.client.MinecraftClientAccessor;
 import fr.catcore.fabricatedmodloader.mixin.modloader.common.*;
 import fr.catcore.fabricatedmodloader.mixininterface.ISoundLoader;
 import fr.catcore.fabricatedmodloader.utils.*;
@@ -13,14 +12,17 @@ import net.minecraft.advancement.Achievement;
 import net.minecraft.block.Block;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.block.dispenser.DispenserBehavior;
-import net.minecraft.client.*;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.class_1557;
+import net.minecraft.client.class_469;
+import net.minecraft.client.class_535;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
+import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.sound.SoundLoader;
-import net.minecraft.client.texture.TexturePackManager;
 import net.minecraft.command.Command;
 import net.minecraft.entity.*;
 import net.minecraft.entity.mob.MobEntity;
@@ -39,6 +41,7 @@ import net.minecraft.network.packet.s2c.play.OpenScreen_S2CPacket;
 import net.minecraft.recipe.RecipeDispatcher;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
+import net.minecraft.resource.ResourcePack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerPacketListener;
@@ -47,7 +50,6 @@ import net.minecraft.server.command.CommandRegistryProvider;
 import net.minecraft.stat.CraftingStat;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.CommonI18n;
-import net.minecraft.util.Language;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
@@ -58,8 +60,6 @@ import net.minecraft.world.chunk.ChunkProvider;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -85,7 +85,7 @@ public final class ModLoader {
     private static boolean hasInit = false;
     private static final Map<BaseMod, Boolean> inGameHooks = new HashMap<>();
     private static final Map<BaseMod, Boolean> inGUIHooks = new HashMap<>();
-    private static Minecraft instance = null;
+    private static MinecraftClient instance = null;
     private static final Map<BaseMod, Map<KeyBinding, Boolean[]>> keyList = new HashMap<>();
     private static String langPack = null;
     private static final Map<String, Map<String, String>> localizedStrings = new HashMap<>();
@@ -98,17 +98,18 @@ public final class ModLoader {
     private static final Map<String, BaseMod> packetChannels = new HashMap<>();
     public static final Properties props = new Properties();
     private static Biome[] standardBiomes;
-    public static final String VERSION = "ModLoader 1.5.2";
+    public static final String VERSION = "ModLoader 1.6.1";
     private static class_469 clientHandler = null;
     private static final List<Command> commandList = new LinkedList<>();
     private static final Map<Integer, List<TradeEntry>> tradeItems = new HashMap<>();
     private static final Map<Integer, BaseMod> containerGUIs = new HashMap<>();
-    private static final Map<Class<?>, EntityTrackerNonliving> trackers = new HashMap<>();
+    private static final Map<Class<? extends Entity>, EntityTrackerNonliving> trackers = new HashMap<>();
     private static final Map<Item, DispenserBehavior> dispenserBehaviors = new HashMap<>();
-    private static final Map<String, class_1528> customTextures = new HashMap<>();
+    private static final Map<String, class_1557> customTextures = new HashMap<>();
     private static SoundLoader soundPoolSounds;
     private static SoundLoader soundPoolStreaming;
     private static SoundLoader soundPoolMusic;
+    private static List<ResourcePack> resourcePacks;
 
     public static void addAchievementDesc(Achievement achievement, String s, String s1) {
         try {
@@ -135,7 +136,7 @@ public final class ModLoader {
 
     }
 
-    public static void addEntityTracker(BaseMod mod, Class entityClass, int id, int viewDistance, int updateFrequency, boolean trackMotion) {
+    public static void addEntityTracker(BaseMod mod, Class<? extends Entity> entityClass, int id, int viewDistance, int updateFrequency, boolean trackMotion) {
         if (entityClass == null) {
             throw new IllegalArgumentException();
         } else {
@@ -149,7 +150,7 @@ public final class ModLoader {
         }
     }
 
-    public static Map getTrackers() {
+    public static Map<Class<? extends Entity>, EntityTrackerNonliving> getTrackers() {
         return Collections.unmodifiableMap(trackers);
     }
 
@@ -167,7 +168,7 @@ public final class ModLoader {
         return result;
     }
 
-    public static void addAllRenderers(Map renderers) {
+    public static void addAllRenderers(Map<Class<? extends Entity>, EntityRenderer> renderers) {
         if (!hasInit) {
             init();
             Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Initialized");
@@ -181,7 +182,7 @@ public final class ModLoader {
 
     public static int addArmor(String s) {
         try {
-            String[] as = PlayerEntityRendererAccessor.getArmor();
+            String[] as = BipedEntityRendererAccessor.getArmorTypes();
             List<String> list = Arrays.asList(as);
             ArrayList<String> arraylist = new ArrayList<>(list);
             if (!arraylist.contains(s)) {
@@ -189,7 +190,7 @@ public final class ModLoader {
             }
 
             int i = arraylist.indexOf(s);
-            PlayerEntityRendererAccessor.setArmor(arraylist.toArray(new String[0]));
+            BipedEntityRendererAccessor.setArmorTypes(arraylist.toArray(new String[0]));
             return i;
         } catch (IllegalArgumentException var5) {
             Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader AddArmor", var5);
@@ -261,7 +262,7 @@ public final class ModLoader {
         list.add(entry);
     }
 
-    public static List getTrades(int profession) {
+    public static List<TradeEntry> getTrades(int profession) {
         if (profession != -1) {
             return tradeItems.containsKey(profession) ? Collections.unmodifiableList(tradeItems.get(profession)) : null;
         } else {
@@ -292,6 +293,7 @@ public final class ModLoader {
             }
 
             setupProperties(class1);
+            resourcePacks.add(new ModResourcePack(class1));
             BaseMod basemod = (BaseMod) class1.getDeclaredConstructor().newInstance();
             modList.add(basemod);
             Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Mod Initialized: \"" + basemod + "\" from " + s);
@@ -441,7 +443,7 @@ public final class ModLoader {
 
     }
 
-    public static List getLoadedMods() {
+    public static List<BaseMod> getLoadedMods() {
         return Collections.unmodifiableList(modList);
     }
 
@@ -449,9 +451,9 @@ public final class ModLoader {
         return logger;
     }
 
-    public static Minecraft getMinecraftInstance() {
+    public static MinecraftClient getMinecraftInstance() {
         if (instance == null) {
-            instance = Minecraft.getMinecraft();
+            instance = MinecraftClient.getInstance();
         }
 
         return instance;
@@ -492,11 +494,8 @@ public final class ModLoader {
         hasInit = true;
 
         try {
-            instance = Minecraft.getMinecraft();
-            instance.gameRenderer = new EntityRendererProxy(instance);
-            soundPoolSounds = ((SoundSystemAccessor) instance.soundSystem).getSoundsLoader();
-            soundPoolStreaming = ((SoundSystemAccessor) instance.soundSystem).getStreamingLoader();
-            soundPoolMusic = ((SoundSystemAccessor) instance.soundSystem).getMusicLoader();
+            instance = MinecraftClient.getInstance();
+            resourcePacks = ((MinecraftClientAccessor) instance).getResourcePacks();
             Field[] afield = Biome.class.getDeclaredFields();
             LinkedList<Biome> linkedlist = new LinkedList<>();
 
@@ -534,8 +533,8 @@ public final class ModLoader {
                 logger.addHandler(logHandler);
             }
 
-            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.5.2 Initializing...");
-            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.5.2 Initializing...");
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.6.1 Initializing...");
+            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.6.1 Initializing...");
             addModsToClassPath();
             sortModList();
 
@@ -617,7 +616,7 @@ public final class ModLoader {
     }
 
     public static boolean isGUIOpen(Class class1) {
-        Minecraft minecraft = getMinecraftInstance();
+        MinecraftClient minecraft = getMinecraftInstance();
         if (class1 == null) {
             return minecraft.currentScreen == null;
         } else {
@@ -652,21 +651,6 @@ public final class ModLoader {
         }
     }
 
-    public static BufferedImage loadImage(class_534 renderengine, String s) throws Exception {
-        TexturePackManager texturepacklist = ((class_534Accessor) renderengine).getTexturePackManager();
-        InputStream inputstream = texturepacklist.getCurrentTexturePack().openStream(s);
-        if (inputstream == null) {
-            throw new Exception("Image not found: " + s);
-        } else {
-            BufferedImage bufferedimage = ImageIO.read(inputstream);
-            if (bufferedimage == null) {
-                throw new Exception("Image corrupted: " + s);
-            } else {
-                return bufferedimage;
-            }
-        }
-    }
-
     public static void onItemPickup(PlayerEntity entityplayer, ItemStack itemstack) {
         for (BaseMod basemod : modList) {
             basemod.onItemPickup(entityplayer, itemstack);
@@ -674,7 +658,7 @@ public final class ModLoader {
 
     }
 
-    public static void onTick(float f, Minecraft minecraft) {
+    public static void onTick(float f, MinecraftClient minecraft) {
         minecraft.profiler.pop();
         minecraft.profiler.pop();
         minecraft.profiler.push("modtick");
@@ -683,10 +667,10 @@ public final class ModLoader {
             Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Initialized");
         }
 
-        if (langPack == null || !Objects.equals(Language.getInstance().getCode(), langPack)) {
-            Properties properties = ((LanguageAccessor) Language.getInstance()).getTranslationMap();
+        if (langPack == null || !Objects.equals(minecraft.options.language, langPack)) {
+            Map properties = ((LanguageAccessor) LanguageAccessor.getInstance()).getTranslationMap();
 
-            langPack = Language.getInstance().getCode();
+            langPack = minecraft.options.language;
             if (properties != null) {
                 if (localizedStrings.containsKey("en_US")) {
                     properties.putAll(localizedStrings.get("en_US"));
@@ -699,8 +683,8 @@ public final class ModLoader {
         }
 
         long l = 0L;
-        if (minecraft.playerEntity != null && minecraft.playerEntity.world != null) {
-            l = minecraft.playerEntity.world.getTimeOfDay();
+        if (minecraft.field_3805 != null && minecraft.field_3805.world != null) {
+            l = minecraft.field_3805.world.getTimeOfDay();
             Iterator<Map.Entry<BaseMod, Boolean>> iterator1 = inGameHooks.entrySet().iterator();
             Map.Entry<BaseMod, Boolean> entry;
 
@@ -720,7 +704,7 @@ public final class ModLoader {
             }
         }
 
-        if (minecraft.playerEntity != null && minecraft.currentScreen != null) {
+        if (minecraft.field_3805 != null) {
             Iterator<Map.Entry<BaseMod, Boolean>> iterator1 = inGUIHooks.entrySet().iterator();
             Map.Entry<BaseMod, Boolean> entry;
 
@@ -732,7 +716,7 @@ public final class ModLoader {
                     }
 
                     entry = iterator1.next();
-                } while (clock == l && entry.getValue() & minecraft.playerEntity.world != null);
+                } while (clock == l && entry.getValue() && minecraft.field_3805 != null && minecraft.field_3805.world != null);
 
                 if (!entry.getKey().onTickInGUI(f, minecraft, minecraft.currentScreen)) {
                     iterator1.remove();
@@ -792,8 +776,8 @@ public final class ModLoader {
             Log.debug(Constants.MODLOADER_LOG_CATEGORY, "Initialized");
         }
 
-        Minecraft minecraft = getMinecraftInstance();
-        if (minecraft.playerEntity == entityplayer) {
+        MinecraftClient minecraft = getMinecraftInstance();
+        if (minecraft.field_3805 == entityplayer) {
             if (guiscreen != null) {
                 minecraft.openScreen(guiscreen);
             }
@@ -823,18 +807,18 @@ public final class ModLoader {
     }
 
     private static void addModsToClassPath() throws IllegalArgumentException, SecurityException {
-        ClassLoader classloader = Minecraft.class.getClassLoader();
+        ClassLoader classloader = MinecraftClient.class.getClassLoader();
 
-        FakeModManager.getMods().forEach(modEntry -> modEntry.sounds.forEach((soundType, strings) -> {
-            ISoundLoader soundLoader = (ISoundLoader) (soundType == MLModEntry.SoundType.sound ? soundPoolSounds : soundType == MLModEntry.SoundType.music ? soundPoolMusic : soundPoolStreaming);
-            for (String soundName : strings) {
-                try {
-                    soundLoader.addSound(soundName, new URL(String.format("jar:%s!/%s", modEntry.file, "resources/" + soundType.name() + "/" + soundName)));
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-            }
-        }));
+//        FakeModManager.getMods().forEach(modEntry -> modEntry.sounds.forEach((soundType, strings) -> {
+//            ISoundLoader soundLoader = (ISoundLoader) (soundType == MLModEntry.SoundType.sound ? soundPoolSounds : soundType == MLModEntry.SoundType.music ? soundPoolMusic : soundPoolStreaming);
+//            for (String soundName : strings) {
+//                try {
+//                    soundLoader.addSound(soundName, new URL(String.format("jar:%s!/%s", modEntry.file, "resources/" + soundType.name() + "/" + soundName)));
+//                } catch (MalformedURLException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }));
 
         FakeModManager.getMods().forEach(modEntry -> addMod(classloader, modEntry.initClass));
     }
@@ -849,7 +833,7 @@ public final class ModLoader {
                 int y = stream.readInt();
                 int z = stream.readInt();
                 int dim = (byte) stream.read();
-                class_481 player = instance.playerEntity;
+                class_481 player = instance.field_3805;
                 if (player.dimension != dim) {
                     return;
                 }
@@ -897,7 +881,7 @@ public final class ModLoader {
 
     public static void serverOpenWindow(ServerPlayerEntity player, ScreenHandler container, int id, int x, int y, int z) {
         try {
-            Field winIDField = ServerPlayerEntity.class.getDeclaredFields()[16];
+            Field winIDField = ServerPlayerEntity.class.getDeclaredFields()[17];
             winIDField.setAccessible(true);
             System.out.println(winIDField.getName());
             int winID = winIDField.getInt(player);
@@ -1333,8 +1317,8 @@ public final class ModLoader {
     private static void sortModList() throws Exception {
         HashMap<String, BaseMod> hashmap = new HashMap<>();
 
-        for (BaseMod baseMod : (Iterable<BaseMod>) getLoadedMods()) {
-            hashmap.put(baseMod.getClass().getSimpleName(), baseMod);
+        for (BaseMod basemod : getLoadedMods()) {
+            hashmap.put(basemod.getClass().getSimpleName(), basemod);
         }
 
         LinkedList<BaseMod> linkedlist = new LinkedList<>();
@@ -1358,7 +1342,7 @@ public final class ModLoader {
                                     continue label129;
                                 }
 
-                                basemod1 = iterator1.next();
+                                basemod1 = (BaseMod) iterator1.next();
                             } while (linkedlist.contains(basemod1));
 
                             s = basemod1.getPriorities();
@@ -1464,7 +1448,7 @@ public final class ModLoader {
     }
 
     public static void throwException(String s, Throwable throwable) {
-        Minecraft minecraft = getMinecraftInstance();
+        MinecraftClient minecraft = getMinecraftInstance();
         if (minecraft != null) {
             minecraft.printCrashReport(new CrashReport(s, throwable));
         } else {
@@ -1481,7 +1465,7 @@ public final class ModLoader {
         sb.append("Mods loaded: ");
         sb.append(getLoadedMods().size() + 1);
         sb.append('\n');
-        sb.append("ModLoader 1.5.2");
+        sb.append("ModLoader 1.6.1");
         sb.append('\n');
 
         for (BaseMod mod : (List<BaseMod>) getLoadedMods()) {
@@ -1494,11 +1478,11 @@ public final class ModLoader {
         return sb.toString();
     }
 
-    public static void addCustomAnimationLogic(String name, class_1528 tex) {
+    public static void addCustomAnimationLogic(String name, class_1557 tex) {
         customTextures.put(name, tex);
     }
 
-    public static class_1528 getCustomAnimationLogic(String name) {
+    public static class_1557 getCustomAnimationLogic(String name) {
         return customTextures.getOrDefault(name, null);
     }
 

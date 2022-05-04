@@ -4,11 +4,16 @@ import net.minecraft.util.Language;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-import java.util.Properties;
+import java.util.Map;
 
 @Mixin(Language.class)
 public interface LanguageAccessor {
 
-    @Accessor("_translations")
-    Properties getTranslationMap();
+    @Accessor("translations")
+    Map getTranslationMap();
+
+    @Accessor("INSTANCE")
+    static Language getInstance() {
+        return null;
+    }
 }
