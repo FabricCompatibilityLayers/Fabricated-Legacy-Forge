@@ -57,7 +57,7 @@ public abstract class EntityTrackerMixin {
                         || entity instanceof ExperienceOrbEntity
                         || entity instanceof EndCrystalEntity
         )) {
-            for (EntityTrackerNonliving tracker : (Iterable<EntityTrackerNonliving>) ModLoader.getTrackers().values()) {
+            for (EntityTrackerNonliving tracker : ModLoader.getTrackers().values()) {
                 if (tracker.entityClass.isAssignableFrom(entity.getClass())) {
                     this.startTracking(entity, tracker.viewDistance, tracker.updateFrequency, tracker.trackMotion);
                 }

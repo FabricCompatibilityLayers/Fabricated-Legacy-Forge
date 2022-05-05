@@ -61,7 +61,7 @@ public abstract class class_469Mixin {
             double var4 = (double) this.cachedPacket.y / 32.0;
             double var6 = (double) this.cachedPacket.z / 32.0;
 
-            for (EntityTrackerNonliving tracker : (Iterable<EntityTrackerNonliving>) ModLoader.getTrackers().values()) {
+            for (EntityTrackerNonliving tracker : ModLoader.getTrackers().values()) {
                 if (this.cachedPacket.type == tracker.id) {
                     value = tracker.mod.spawnEntity(this.cachedPacket.type, this.world, var2, var4, var6);
                     this.cachedPacket = null;
@@ -114,7 +114,7 @@ public abstract class class_469Mixin {
 
     @Inject(method = "onCustomPayload", at = @At("RETURN"))
     private void modLoaderClientCustomPayload(CustomPayloadC2SPacket par1, CallbackInfo ci) {
-        if (!Objects.equals(par1.channel, "MC|TrList")) {
+        if (!Objects.equals(par1.channel, "MC|TrList") && !Objects.equals(par1.channel, "MC|Brand")) {
             ModLoader.clientCustomPayload(par1);
         }
     }
