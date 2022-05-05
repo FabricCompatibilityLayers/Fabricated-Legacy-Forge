@@ -52,17 +52,4 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
             cir.setReturnValue(ModLoader.addAllFuel(stack.id, stack.getMeta()));
         }
     }
-
-    @Inject(method = "method_545", at = @At(
-            value = "FIELD",
-            opcode = Opcodes.PUTFIELD,
-            target = "Lnet/minecraft/item/ItemStack;count:I",
-            ordinal = 0,
-            shift = At.Shift.AFTER
-    ))
-    private void modLoader$fixStackSecond(CallbackInfo ci) {
-        if (this.stacks[1].count < 0) {
-            this.stacks[1].count = 0;
-        }
-    }
 }

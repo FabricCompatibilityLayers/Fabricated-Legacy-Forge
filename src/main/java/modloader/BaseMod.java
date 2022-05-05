@@ -7,13 +7,11 @@ import net.minecraft.client.class_535;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.options.KeyBinding;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.class_481;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.network.packet.s2c.play.EntitySpawn_S2CPacket;
 import net.minecraft.server.ServerPacketListener;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
@@ -112,14 +110,6 @@ public abstract class BaseMod {
     }
 
     public HandledScreen getContainerGUI(class_481 player, int inventoryType, int x, int y, int z) {
-        return null;
-    }
-
-    public Entity spawnEntity(int id, World world, double x, double y, double z) {
-        return null;
-    }
-
-    public EntitySpawn_S2CPacket getSpawnPacket(Entity entity, int id) {
         return null;
     }
 }

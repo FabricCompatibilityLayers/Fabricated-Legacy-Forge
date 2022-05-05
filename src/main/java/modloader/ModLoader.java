@@ -105,12 +105,11 @@ public final class ModLoader {
     private static boolean texturesAdded = false;
     private static final boolean[] usedItemSprites = new boolean[256];
     private static final boolean[] usedTerrainSprites = new boolean[256];
-    public static final String VERSION = "ModLoader 1.3.2";
+    public static final String VERSION = "ModLoader 1.3.1";
     private static class_469 clientHandler = null;
     private static final List<Command> commandList = new LinkedList<>();
     private static final Map<Integer, List<TradeEntry>> tradeItems = new HashMap<>();
     private static final Map<Integer, BaseMod> containerGUIs = new HashMap<>();
-    private static final Map<Class<?>, EntityTrackerNonliving> trackers = new HashMap<>();
 
     public static void addAchievementDesc(Achievement achievement, String s, String s1) {
         try {
@@ -135,24 +134,6 @@ public final class ModLoader {
             throwException(var5);
         }
 
-    }
-
-    public static void addEntityTracker(BaseMod mod, Class entityClass, int id, int viewDistance, int updateFrequency, boolean trackMotion) {
-        if (entityClass == null) {
-            throw new IllegalArgumentException();
-        } else {
-            if (!Entity.class.isAssignableFrom(entityClass)) {
-                Exception exception = new Exception(entityClass.getCanonicalName() + " is not an entity.");
-                Log.trace(Constants.MODLOADER_LOG_CATEGORY, "ModLoader addEntityTracker", exception);
-                throwException(exception);
-            }
-
-            trackers.put(entityClass, new EntityTrackerNonliving(mod, entityClass, id, viewDistance, updateFrequency, trackMotion));
-        }
-    }
-
-    public static Map getTrackers() {
-        return Collections.unmodifiableMap(trackers);
     }
 
     public static int addAllFuel(int id, int metadata) {
@@ -646,8 +627,8 @@ public final class ModLoader {
                 logger.addHandler(logHandler);
             }
 
-            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.3.2 Initializing...");
-            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.3.2 Initializing...");
+            Log.debug(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.3.1 Initializing...");
+            Log.info(Constants.MODLOADER_LOG_CATEGORY, "ModLoader 1.3.1 Initializing...");
             addModsToClassPath();
             sortModList();
 
@@ -957,7 +938,7 @@ public final class ModLoader {
                 int x = stream.readInt();
                 int y = stream.readInt();
                 int z = stream.readInt();
-                int dim = (byte) stream.read();
+                int dim = stream.read();
                 class_481 player = instance.playerEntity;
                 if (player._dimension != dim) {
                     return;
@@ -1624,7 +1605,7 @@ public final class ModLoader {
         sb.append("Mods loaded: ");
         sb.append(getLoadedMods().size() + 1);
         sb.append('\n');
-        sb.append("ModLoader 1.3.2");
+        sb.append("ModLoader 1.3.1");
         sb.append('\n');
 
         for (Object o : getLoadedMods()) {
