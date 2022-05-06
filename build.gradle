@@ -30,7 +30,7 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 //	include(implementation('com.google.guava:guava:28.0-jre'))
 
-//	modImplementation(files("./jars/InvTweaks-1.43-1.3.2.zip"))
+	modImplementation(files("./forge-1.3.2-4.3.5.318-universal-intermediary.jar"))
 
 	if (System.getProperty("os.name").toLowerCase().contains("mac")) {
 		implementation 'org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209'
