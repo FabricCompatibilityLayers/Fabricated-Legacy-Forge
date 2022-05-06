@@ -1,13 +1,13 @@
 package modloader;
 
-import fr.catcore.fabricatedmodloader.mixin.modloader.client.BlockEntityRenderDispatcherAccessor;
-import fr.catcore.fabricatedmodloader.mixin.modloader.client.PlayerEntityRendererAccessor;
-import fr.catcore.fabricatedmodloader.mixin.modloader.client.class_534Accessor;
-import fr.catcore.fabricatedmodloader.mixin.modloader.common.*;
-import fr.catcore.fabricatedmodloader.utils.Constants;
-import fr.catcore.fabricatedmodloader.utils.FakeModManager;
-import fr.catcore.fabricatedmodloader.utils.SetBaseBiomesLayerData;
-import fr.catcore.fabricatedmodloader.utils.class_535Data;
+import fr.catcore.fabricatedforge.mixin.modloader.client.BlockEntityRenderDispatcherAccessor;
+import fr.catcore.fabricatedforge.mixin.modloader.client.PlayerEntityRendererAccessor;
+import fr.catcore.fabricatedforge.mixin.modloader.client.class_534Accessor;
+import fr.catcore.fabricatedforge.mixin.modloader.common.*;
+import fr.catcore.fabricatedforge.utils.Constants;
+import fr.catcore.fabricatedforge.utils.FakeModManager;
+import fr.catcore.fabricatedforge.utils.SetBaseBiomesLayerData;
+import fr.catcore.fabricatedforge.utils.class_535Data;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.impl.util.log.Log;
 import net.minecraft.advancement.Achievement;

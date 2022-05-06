@@ -1,0 +1,45 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "fr.catcore.fabricatedforge.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+  ],
+  "client": [
+    "modloader.client.class_469Mixin",
+    "modloader.client.class_535Mixin",
+    "modloader.client.EntityRenderDispatcherMixin",
+    "modloader.client.HeldItemRendererMixin",
+    "modloader.client.IntegratedServerMixin",
+    "modloader.client.ItemRendererMixin",
+    "modloader.client.PlayerEntityRendererAccessor",
+    "modloader.client.BlockEntityRenderDispatcherAccessor",
+    "modloader.client.class_534Accessor",
+
+    "modloader.common.BlockEntityAccessor",
+    "modloader.common.CraftingResultSlotMixin",
+    "modloader.common.CrashReportMixin",
+    "modloader.common.DimensionMixin",
+    "modloader.common.DispenserBlockMixin",
+    "modloader.common.EntityTrackerMixin",
+    "modloader.common.EntityTypeAccessor",
+    "modloader.common.FurnaceBlockEntityMixin",
+    "modloader.common.FurnaceOutputSlotMixin",
+    "modloader.common.ItemEntityMixin",
+    "modloader.common.LevelGeneratorTypeMixin",
+    "modloader.common.ServerChunkProviderMixin",
+    "modloader.common.ServerPacketListenerMixin",
+    "modloader.common.SetBaseBiomesLayerMixin",
+    "modloader.common.TrackedEntityInstanceMixin",
+    "modloader.common.VillagerEntityMixin",
+    "modloader.common.LanguageAccessor",
+    "modloader.common.AchievementAccessor",
+    "modloader.common.StatAccessor",
+    "modloader.common.RecipeDispatcherAccessor",
+    "modloader.common.WeightAccessor",
+    "modloader.common.StatsAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
