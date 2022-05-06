@@ -26,5 +26,5 @@ run/
 # macos
 *.DS_Store
 
-ModLoader*
+./ModLoader*
 jars/
