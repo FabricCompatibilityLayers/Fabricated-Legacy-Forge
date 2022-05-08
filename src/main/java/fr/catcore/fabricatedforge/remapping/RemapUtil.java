@@ -116,14 +116,14 @@ public class RemapUtil {
 
             mappings.add(toString("v1", "official", "intermediary", "named"));
 
-            mappings.add(makeLoaderLine("BaseMod", "modloader/BaseMod"));
-            mappings.add(makeLoaderLine("EntityRendererProxy", "modloader/EntityRendererProxy"));
-            mappings.add(makeLoaderLine("EntityTrackerNonliving", "modloader/EntityTrackerNonliving"));
-            mappings.add(makeLoaderLine("MLProp", "modloader/MLProp"));
-            mappings.add(makeLoaderLine("ModLoader", "modloader/ModLoader"));
-            mappings.add(makeLoaderLine("ModTextureAnimation", "modloader/ModTextureAnimation"));
-            mappings.add(makeLoaderLine("ModTextureStatic", "modloader/ModTextureStatic"));
-            mappings.add(makeLoaderLine("TradeEntry", "modloader/TradeEntry"));
+            mappings.add(makeLoaderLine("BaseMod", "net/minecraft/BaseMod"));
+            mappings.add(makeLoaderLine("EntityRendererProxy", "net/minecraft/EntityRendererProxy"));
+            mappings.add(makeLoaderLine("FMLRendererAccessLibrary", "net/minecraft/FMLRendererAccessLibrary"));
+            mappings.add(makeLoaderLine("MLProp", "net/minecraft/MLProp"));
+            mappings.add(makeLoaderLine("ModLoader", "net/minecraft/ModLoader"));
+            mappings.add(makeLoaderLine("ModTextureAnimation", "net/minecraft/ModTextureAnimation"));
+            mappings.add(makeLoaderLine("ModTextureStatic", "net/minecraft/ModTextureStatic"));
+            mappings.add(makeLoaderLine("TradeEntry", "net/minecraft/TradeEntry"));
 
             FileUtils.writeTextFile(mappings, Constants.MAPPINGS_FILE);
         }
