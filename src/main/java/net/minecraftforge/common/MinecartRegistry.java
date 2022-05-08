@@ -1,0 +1,128 @@
+package net.minecraftforge.common;
+
+import net.minecraft.entity.vehicle.AbstractMinecartEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+
+import java.util.*;
+
+public class MinecartRegistry {
+    private static Map<MinecartRegistry.MinecartKey, ItemStack> itemForMinecart = new HashMap();
+    private static Map<ItemStack, MinecartRegistry.MinecartKey> minecartForItem = new HashMap();
+
+    public MinecartRegistry() {
+    }
+
+    public static void registerMinecart(Class<? extends AbstractMinecartEntity> cart, ItemStack item) {
+        registerMinecart(cart, 0, item);
+    }
+
+    public static void registerMinecart(Class<? extends AbstractMinecartEntity> minecart, int type, ItemStack item) {
+        MinecartRegistry.MinecartKey key = new MinecartRegistry.MinecartKey(minecart, type);
+        itemForMinecart.put(key, item);
+        minecartForItem.put(item, key);
+    }
+
+    public static void removeMinecart(Class<? extends AbstractMinecartEntity> minecart, int type) {
+        MinecartRegistry.MinecartKey key = new MinecartRegistry.MinecartKey(minecart, type);
+        ItemStack item = (ItemStack)itemForMinecart.remove(key);
+        if (item != null) {
+            minecartForItem.remove(item);
+        }
+
+    }
+
+    public static ItemStack getItemForCart(Class<? extends AbstractMinecartEntity> minecart) {
+        return getItemForCart(minecart, 0);
+    }
+
+    public static ItemStack getItemForCart(Class<? extends AbstractMinecartEntity> minecart, int type) {
+        ItemStack item = (ItemStack)itemForMinecart.get(new MinecartRegistry.MinecartKey(minecart, type));
+        return item == null ? null : item.copy();
+    }
+
+    public static ItemStack getItemForCart(AbstractMinecartEntity cart) {
+        return getItemForCart(cart.getClass(), cart.getMinecartType());
+    }
+
+    public static Class<? extends AbstractMinecartEntity> getCartClassForItem(ItemStack item) {
+        MinecartKey key = null;
+        for (Map.Entry<ItemStack, MinecartKey> entry : minecartForItem.entrySet())
+        {
+            if (entry.getKey().equalsIgnoreNbt(item))
+            {
+                key = entry.getValue();
+                break;
+            }
+        }
+        if (key != null)
+        {
+            return key.minecart;
+        }
+        return null;
+    }
+
+    public static int getCartTypeForItem(ItemStack item) {
+        MinecartKey key = null;
+        for (Map.Entry<ItemStack, MinecartKey> entry : minecartForItem.entrySet())
+        {
+            if (entry.getKey().equalsIgnoreNbt(item))
+            {
+                key = entry.getValue();
+                break;
+            }
+        }
+        if (key != null)
+        {
+            return key.type;
+        }
+        return -1;
+    }
+
+    public static Set<ItemStack> getAllCartItems() {
+        Set<ItemStack> ret = new HashSet<ItemStack>();
+        for (ItemStack item : minecartForItem.keySet())
+        {
+            ret.add(item.copy());
+        }
+        return ret;
+    }
+
+    static {
+        registerMinecart(AbstractMinecartEntity.class, 0, new ItemStack(Item.MINECART));
+        registerMinecart(AbstractMinecartEntity.class, 1, new ItemStack(Item.MINECART_CHEST));
+        registerMinecart(AbstractMinecartEntity.class, 2, new ItemStack(Item.MINECART_FURNACE));
+    }
+
+    public static class MinecartKey {
+        public final Class<? extends AbstractMinecartEntity> minecart;
+        public final int type;
+
+        public MinecartKey(Class<? extends AbstractMinecartEntity> cls, int typtID) {
+            this.minecart = cls;
+            this.type = typtID;
+        }
+
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            } else if (this.getClass() != obj.getClass()) {
+                return false;
+            } else {
+                MinecartRegistry.MinecartKey other = (MinecartRegistry.MinecartKey)obj;
+                if (!Objects.equals(this.minecart, other.minecart)) {
+                    return false;
+                } else {
+                    return this.type == other.type;
+                }
+            }
+        }
+
+        public int hashCode() {
+            int hash = 7;
+            hash = 59 * hash + (this.minecart != null ? this.minecart.hashCode() : 0);
+            hash = 59 * hash + this.type;
+            return hash;
+        }
+    }
+}
