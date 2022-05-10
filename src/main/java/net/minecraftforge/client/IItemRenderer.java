@@ -3,11 +3,11 @@ package net.minecraftforge.client;
 import net.minecraft.item.ItemStack;
 
 public interface IItemRenderer {
-    boolean handleRenderType(ItemStack arg, net.minecraft.net.minecraftforge.client.IItemRenderer.ItemRenderType itemRenderType);
+    boolean handleRenderType(ItemStack arg, IItemRenderer.ItemRenderType itemRenderType);
 
-    boolean shouldUseRenderHelper(net.minecraft.net.minecraftforge.client.IItemRenderer.ItemRenderType itemRenderType, ItemStack arg, net.minecraft.net.minecraftforge.client.IItemRenderer.ItemRendererHelper itemRendererHelper);
+    boolean shouldUseRenderHelper(IItemRenderer.ItemRenderType itemRenderType, ItemStack arg, IItemRenderer.ItemRendererHelper itemRendererHelper);
 
-    void renderItem(net.minecraft.net.minecraftforge.client.IItemRenderer.ItemRenderType itemRenderType, ItemStack arg, Object... objects);
+    void renderItem(IItemRenderer.ItemRenderType itemRenderType, ItemStack arg, Object... objects);
 
     public static enum ItemRendererHelper {
         ENTITY_ROTATION,

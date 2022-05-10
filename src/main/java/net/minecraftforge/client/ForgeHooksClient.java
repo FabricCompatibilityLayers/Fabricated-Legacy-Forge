@@ -1,5 +1,6 @@
 package net.minecraftforge.client;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_534;
@@ -15,6 +16,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.client.event.DrawBlockHighlightEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.TextureLoadEvent;
+import net.minecraftforge.common.IArmorTextureProvider;
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
@@ -23,12 +29,12 @@ import java.util.Random;
 import java.util.TreeSet;
 
 public class ForgeHooksClient {
-    public static HashMap<net.minecraft.net.minecraftforge.client.ForgeHooksClient.TesKey, Tessellator> tessellators = new HashMap();
+    public static HashMap<ForgeHooksClient.TesKey, Tessellator> tessellators = new HashMap();
     public static HashMap<String, Integer> textures = new HashMap();
-    public static TreeSet<net.minecraft.net.minecraftforge.client.ForgeHooksClient.TesKey> renderTextures = new TreeSet();
+    public static TreeSet<ForgeHooksClient.TesKey> renderTextures = new TreeSet();
     public static Tessellator defaultTessellator = null;
     public static boolean inWorld = false;
-    public static HashMap<net.minecraft.net.minecraftforge.client.ForgeHooksClient.TesKey, IRenderContextHandler> renderHandlers = new HashMap();
+    public static HashMap<ForgeHooksClient.TesKey, IRenderContextHandler> renderHandlers = new HashMap();
     public static IRenderContextHandler unbindContext = null;
     static int renderPass = -1;
 
@@ -42,7 +48,7 @@ public class ForgeHooksClient {
             textures.put(texture, texID);
         }
 
-        renderHandlers.put(new net.minecraft.net.minecraftforge.client.ForgeHooksClient.TesKey(texID, subID), handler);
+        renderHandlers.put(new ForgeHooksClient.TesKey(texID, subID), handler);
     }
 
     static class_534 engine() {
@@ -69,7 +75,7 @@ public class ForgeHooksClient {
             }
 
             GL11.glBindTexture(3553, texID);
-            unbindContext = (IRenderContextHandler)renderHandlers.get(new net.minecraft.net.minecraftforge.client.ForgeHooksClient.TesKey(texID, subID));
+            unbindContext = (IRenderContextHandler)renderHandlers.get(new ForgeHooksClient.TesKey(texID, subID));
             if (unbindContext != null) {
                 unbindContext.beforeRenderContext();
             }
@@ -99,7 +105,7 @@ public class ForgeHooksClient {
     }
 
     protected static void bindTessellator(int texture, int subID) {
-        net.minecraft.net.minecraftforge.client.ForgeHooksClient.TesKey key = new net.minecraft.net.minecraftforge.client.ForgeHooksClient.TesKey(texture, subID);
+        ForgeHooksClient.TesKey key = new ForgeHooksClient.TesKey(texture, subID);
         Tessellator tess = (Tessellator)tessellators.get(key);
         if (tess == null) {
             tess = new Tessellator();
@@ -128,24 +134,24 @@ public class ForgeHooksClient {
     public static void afterRenderPass(int pass) {
         renderPass = -1;
         inWorld = false;
-        Iterator i$ = renderTextures.iterator();
-
-        while(i$.hasNext()) {
-            net.minecraft.net.minecraftforge.client.ForgeHooksClient.TesKey info = (net.minecraft.net.minecraftforge.client.ForgeHooksClient.TesKey)i$.next();
-            IRenderContextHandler handler = (IRenderContextHandler)renderHandlers.get(info);
-            GL11.glBindTexture(3553, info.texture);
-            Tessellator tess = (Tessellator)tessellators.get(info);
-            if (handler == null) {
+        for (TesKey info : renderTextures)
+        {
+            IRenderContextHandler handler = renderHandlers.get(info);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, info.texture);
+            Tessellator tess = tessellators.get(info);
+            if (handler == null)
+            {
                 tess.method_1396();
-            } else {
+            }
+            else
+            {
                 Tessellator.INSTANCE = tess;
                 handler.beforeRenderContext();
                 tess.method_1396();
                 handler.afterRenderContext();
             }
         }
-
-        GL11.glBindTexture(3553, engine().getTextureFromPath("/terrain.png"));
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, engine().getTextureFromPath("/terrain.png"));
         Tessellator.renderingWorldRenderer = false;
         Tessellator.INSTANCE = defaultTessellator;
     }
@@ -320,7 +326,7 @@ public class ForgeHooksClient {
 
     }
 
-    private static class TesKey implements Comparable<net.minecraft.net.minecraftforge.client.ForgeHooksClient.TesKey> {
+    private static class TesKey implements Comparable<ForgeHooksClient.TesKey> {
         public final int texture;
         public final int subid;
 
@@ -329,12 +335,12 @@ public class ForgeHooksClient {
             this.subid = subID;
         }
 
-        public int compareTo(net.minecraft.net.minecraftforge.client.ForgeHooksClient.TesKey key) {
+        public int compareTo(ForgeHooksClient.TesKey key) {
             return this.subid == key.subid ? this.texture - key.texture : this.subid - key.subid;
         }
 
         public boolean equals(Object obj) {
-            return this.compareTo((net.minecraft.net.minecraftforge.client.ForgeHooksClient.TesKey)obj) == 0;
+            return this.compareTo((ForgeHooksClient.TesKey)obj) == 0;
         }
 
         public int hashCode() {

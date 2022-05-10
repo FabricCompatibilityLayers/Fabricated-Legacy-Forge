@@ -62,23 +62,24 @@ public class ModCompatibilityClient {
     }
 
     private static void audioModWalkFolder(File base, File folder, SoundLoader pool) throws IOException {
-        if (folder.exists() || folder.mkdirs()) {
-            File[] arr$ = folder.listFiles();
-            int len$ = arr$.length;
-
-            for(int i$ = 0; i$ < len$; ++i$) {
-                File file = arr$[i$];
-                if (!file.getName().startsWith(".")) {
-                    if (file.isDirectory()) {
+        if (folder.exists() || folder.mkdirs())
+        {
+            for (File file : folder.listFiles())
+            {
+                if (!file.getName().startsWith("."))
+                {
+                    if (file.isDirectory())
+                    {
                         audioModWalkFolder(base, file, pool);
-                    } else if (file.isFile()) {
+                    }
+                    else if (file.isFile())
+                    {
                         String subpath = file.getPath().substring(base.getPath().length() + 1).replace('\\', '/');
                         pool.getSound(subpath, file);
                     }
                 }
             }
         }
-
     }
 
     public static void audioModAddCodecs() {
