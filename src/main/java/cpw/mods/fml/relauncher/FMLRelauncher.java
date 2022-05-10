@@ -84,7 +84,9 @@ public class FMLRelauncher {
         }
 
         try {
-            ReflectionHelper.findMethod(client, (Object) null, new String[]{"fmlReentry"}, new Class[]{ArgsWrapper.class}).invoke((Object) null, wrap);
+            Method clientMethod = ReflectionHelper.findMethod(client, (Object) null, new String[]{"fmlReentry"}, new Class[]{ArgsWrapper.class});
+            clientMethod.setAccessible(true);
+            clientMethod.invoke((Object) null, wrap);
         } catch (Exception var7) {
             var7.printStackTrace();
         }

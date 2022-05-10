@@ -1,11 +1,29 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "fr.catcore.fabricatedforge.mixin",
+  "package": "fr.catcore.fabricatedforge.mixin.forgefml",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
   ],
   "client": [
+    "client.ClientBrandRetrieverMixin",
+    "client.MinecraftAppletMixin",
+    "client.MinecraftAccessor",
+    "client.ResourceDownloadThreadMixin",
+    "client.MinecraftMixin",
+    "client.class_469Mixin",
+    "client.class_469Accessor",
+    "client.class_470Accessor",
+    "client.class_534Mixin",
+    "client.class_535Mixin",
+    "client.class_604Mixin",
+
+    "client.class_585Mixin",
+    "client.class_586Mixin",
+    "client.class_587Mixin",
+    "client.class_588Mixin",
+    "client.class_589Mixin",
+    "client.class_590Mixin"
   ],
   "injectors": {
     "defaultRequire": 1

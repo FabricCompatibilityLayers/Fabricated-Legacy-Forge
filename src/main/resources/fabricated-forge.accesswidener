@@ -103,18 +103,31 @@ accessible field net/minecraft/client/class_535 field_2006 F
 accessible field net/minecraft/client/class_535 field_2007 F
 
 accessible method net/minecraft/client/class_535 method_1487 (Lnet/minecraft/block/Block;III)Z
+extendable method net/minecraft/client/class_535 method_1487 (Lnet/minecraft/block/Block;III)Z
 accessible method net/minecraft/client/class_535 method_1488 (Lnet/minecraft/block/Block;III)Z
+extendable method net/minecraft/client/class_535 method_1488 (Lnet/minecraft/block/Block;III)Z
 accessible method net/minecraft/client/class_535 method_1435 (Lnet/minecraft/block/BrewingStandBlock;III)Z
+extendable method net/minecraft/client/class_535 method_1435 (Lnet/minecraft/block/BrewingStandBlock;III)Z
 accessible method net/minecraft/client/class_535 method_1436 (Lnet/minecraft/block/CauldronBlock;III)Z
+extendable method net/minecraft/client/class_535 method_1436 (Lnet/minecraft/block/CauldronBlock;III)Z
 accessible method net/minecraft/client/class_535 method_1489 (Lnet/minecraft/block/Block;III)Z
+extendable method net/minecraft/client/class_535 method_1489 (Lnet/minecraft/block/Block;III)Z
 accessible method net/minecraft/client/class_535 method_1459 (Lnet/minecraft/block/Block;IIIZ)Z
+extendable method net/minecraft/client/class_535 method_1459 (Lnet/minecraft/block/Block;IIIZ)Z
 accessible method net/minecraft/client/class_535 method_1432 (DDDDDDFD)V
+extendable method net/minecraft/client/class_535 method_1432 (DDDDDDFD)V
 accessible method net/minecraft/client/class_535 method_1454 (DDDDDDFD)V
+extendable method net/minecraft/client/class_535 method_1454 (DDDDDDFD)V
 accessible method net/minecraft/client/class_535 method_1460 (DDDDDDFD)V
+extendable method net/minecraft/client/class_535 method_1460 (DDDDDDFD)V
 accessible method net/minecraft/client/class_535 method_1464 (Lnet/minecraft/block/Block;IIIZ)Z
+extendable method net/minecraft/client/class_535 method_1464 (Lnet/minecraft/block/Block;IIIZ)Z
 accessible method net/minecraft/client/class_535 method_1434 (IIILnet/minecraft/block/Material;)F
+extendable method net/minecraft/client/class_535 method_1434 (IIILnet/minecraft/block/Material;)F
 accessible method net/minecraft/client/class_535 method_1433 (IIII)I
+extendable method net/minecraft/client/class_535 method_1433 (IIII)I
 accessible method net/minecraft/client/class_535 method_1437 (Lnet/minecraft/block/CocoaBlock;III)Z
+extendable method net/minecraft/client/class_535 method_1437 (Lnet/minecraft/block/CocoaBlock;III)Z
 
 accessible field net/minecraft/client/class_534 field_1978 Ljava/util/List;
 
@@ -274,3 +287,6 @@ accessible field net/minecraft/structure/class_49 field_89 [Lnet/minecraft/util/
 #field net/minecraft/world/chunk/ServerChunkProvider chunkWriter Lnet/minecraft/world/chunk/ChunkStorage;
 
 #method net/minecraft/server/PlayerWorldManager method_2107 (IIZ)Lnet/minecraft/server/class_793;
+
+### Fabricated Forge
+accessible class net/minecraft/client/class_470
