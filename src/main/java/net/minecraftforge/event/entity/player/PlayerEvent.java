@@ -2,6 +2,8 @@ package net.minecraftforge.event.entity.player;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.event.Cancelable;
+import net.minecraftforge.event.entity.living.LivingEvent;
 
 public class PlayerEvent extends LivingEvent {
     public final PlayerEntity entityPlayer;
@@ -12,7 +14,7 @@ public class PlayerEvent extends LivingEvent {
     }
 
     @Cancelable
-    public static class BreakSpeed extends net.minecraft.net.minecraftforge.event.entity.player.PlayerEvent {
+    public static class BreakSpeed extends PlayerEvent {
         public final Block block;
         public final int metadata;
         public final float originalSpeed;
@@ -27,7 +29,7 @@ public class PlayerEvent extends LivingEvent {
         }
     }
 
-    public static class HarvestCheck extends net.minecraft.net.minecraftforge.event.entity.player.PlayerEvent {
+    public static class HarvestCheck extends PlayerEvent {
         public final Block block;
         public boolean success;
 

@@ -1,6 +1,8 @@
 package net.minecraftforge.event.entity.living;
 
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraftforge.event.Cancelable;
+import net.minecraftforge.event.entity.EntityEvent;
 
 public class LivingEvent extends EntityEvent {
     public final MobEntity entityLiving;
@@ -10,14 +12,14 @@ public class LivingEvent extends EntityEvent {
         this.entityLiving = entity;
     }
 
-    public static class LivingJumpEvent extends net.minecraft.net.minecraftforge.event.entity.living.LivingEvent {
+    public static class LivingJumpEvent extends LivingEvent {
         public LivingJumpEvent(MobEntity e) {
             super(e);
         }
     }
 
     @Cancelable
-    public static class LivingUpdateEvent extends net.minecraft.net.minecraftforge.event.entity.living.LivingEvent {
+    public static class LivingUpdateEvent extends LivingEvent {
         public LivingUpdateEvent(MobEntity e) {
             super(e);
         }

@@ -2,6 +2,7 @@ package net.minecraftforge.event.entity.player;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
+import net.minecraftforge.event.Cancelable;
 
 @Cancelable
 public class BonemealEvent extends PlayerEvent {

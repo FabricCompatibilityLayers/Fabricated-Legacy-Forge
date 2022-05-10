@@ -8,6 +8,11 @@ import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
 
 import java.util.Iterator;
+import java.util.List;
+
+import static org.objectweb.asm.Opcodes.ACC_PROTECTED;
+import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
+import static org.objectweb.asm.Type.VOID_TYPE;
 
 public class EventTransformer implements IClassTransformer {
     public EventTransformer() {
@@ -46,20 +51,24 @@ public class EventTransformer implements IClassTransformer {
             boolean hasDefaultCtr = false;
             Class<?> listenerListClazz = Class.forName("net.minecraftforge.event.ListenerList", false, this.getClass().getClassLoader());
             Type tList = Type.getType(listenerListClazz);
-            Iterator i$ = classNode.methods.iterator();
 
-            MethodNode method;
-            while(i$.hasNext()) {
-                method = (MethodNode)i$.next();
-                if (method.name.equals("setup") && method.desc.equals(Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0])) && (method.access & 4) == 4) {
+            for (MethodNode method : (List<MethodNode>)classNode.methods)
+            {
+                if (method.name.equals("setup") &&
+                        method.desc.equals(Type.getMethodDescriptor(VOID_TYPE)) &&
+                        (method.access & ACC_PROTECTED) == ACC_PROTECTED)
+                {
                     hasSetup = true;
                 }
-
-                if (method.name.equals("getListenerList") && method.desc.equals(Type.getMethodDescriptor(tList, new Type[0])) && (method.access & 1) == 1) {
+                if (method.name.equals("getListenerList") &&
+                        method.desc.equals(Type.getMethodDescriptor(tList)) &&
+                        (method.access & ACC_PUBLIC) == ACC_PUBLIC)
+                {
                     hasGetListenerList = true;
                 }
-
-                if (method.name.equals("<init>") && method.desc.equals(Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]))) {
+                if (method.name.equals("<init>") &&
+                        method.desc.equals(Type.getMethodDescriptor(VOID_TYPE)))
+                {
                     hasDefaultCtr = true;
                 }
             }
@@ -73,17 +82,17 @@ public class EventTransformer implements IClassTransformer {
             } else {
                 Type tSuper = Type.getType(classNode.superName);
                 classNode.fields.add(new FieldNode(10, "LISTENER_LIST", tList.getDescriptor(), (String)null, (Object)null));
-                method = new MethodNode(262144, 1, "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]), (String)null, (String[])null);
+                MethodNode method = new MethodNode(262144, 1, "<init>", Type.getMethodDescriptor(VOID_TYPE, new Type[0]), (String)null, (String[])null);
                 method.instructions.add(new VarInsnNode(25, 0));
-                method.instructions.add(new MethodInsnNode(183, tSuper.getInternalName(), "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0])));
+                method.instructions.add(new MethodInsnNode(183, tSuper.getInternalName(), "<init>", Type.getMethodDescriptor(VOID_TYPE, new Type[0])));
                 method.instructions.add(new InsnNode(177));
                 if (!hasDefaultCtr) {
                     classNode.methods.add(method);
                 }
 
-                method = new MethodNode(262144, 4, "setup", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]), (String)null, (String[])null);
+                method = new MethodNode(262144, 4, "setup", Type.getMethodDescriptor(VOID_TYPE, new Type[0]), (String)null, (String[])null);
                 method.instructions.add(new VarInsnNode(25, 0));
-                method.instructions.add(new MethodInsnNode(183, tSuper.getInternalName(), "setup", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0])));
+                method.instructions.add(new MethodInsnNode(183, tSuper.getInternalName(), "setup", Type.getMethodDescriptor(VOID_TYPE, new Type[0])));
                 method.instructions.add(new FieldInsnNode(178, classNode.name, "LISTENER_LIST", tList.getDescriptor()));
                 LabelNode initLisitener = new LabelNode();
                 method.instructions.add(new JumpInsnNode(198, initLisitener));
@@ -94,7 +103,7 @@ public class EventTransformer implements IClassTransformer {
                 method.instructions.add(new InsnNode(89));
                 method.instructions.add(new VarInsnNode(25, 0));
                 method.instructions.add(new MethodInsnNode(183, tSuper.getInternalName(), "getListenerList", Type.getMethodDescriptor(tList, new Type[0])));
-                method.instructions.add(new MethodInsnNode(183, tList.getInternalName(), "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[]{tList})));
+                method.instructions.add(new MethodInsnNode(183, tList.getInternalName(), "<init>", Type.getMethodDescriptor(VOID_TYPE, new Type[]{tList})));
                 method.instructions.add(new FieldInsnNode(179, classNode.name, "LISTENER_LIST", tList.getDescriptor()));
                 method.instructions.add(new InsnNode(177));
                 classNode.methods.add(method);

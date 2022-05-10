@@ -4,6 +4,8 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.event.Cancelable;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 
 import java.util.ArrayList;
 

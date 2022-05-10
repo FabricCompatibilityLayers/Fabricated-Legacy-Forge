@@ -2,6 +2,7 @@ package net.minecraftforge.event.entity.player;
 
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.event.Cancelable;
 
 @Cancelable
 public class EntityItemPickupEvent extends PlayerEvent {

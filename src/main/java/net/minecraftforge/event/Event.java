@@ -10,7 +10,7 @@ public class Event {
         Class cls = this.getClass();
 
         boolean found;
-        for(found = false; cls != net.minecraft.net.minecraftforge.event.Event.class; cls = cls.getSuperclass()) {
+        for(found = false; cls != Event.class; cls = cls.getSuperclass()) {
             if (cls.isAnnotationPresent(Cancelable.class)) {
                 found = true;
                 break;

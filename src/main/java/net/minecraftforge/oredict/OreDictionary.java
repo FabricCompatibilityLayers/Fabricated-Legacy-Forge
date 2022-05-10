@@ -3,6 +3,8 @@ package net.minecraftforge.oredict;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.Event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,18 +31,14 @@ public class OreDictionary {
     }
 
     public static String getOreName(int id) {
-        Iterator i$ = oreIDs.entrySet().iterator();
-
-        Map.Entry entry;
-        do {
-            if (!i$.hasNext()) {
-                return "Unknown";
+        for (Map.Entry<String, Integer> entry : oreIDs.entrySet())
+        {
+            if (id == entry.getValue())
+            {
+                return entry.getKey();
             }
-
-            entry = (Map.Entry)i$.next();
-        } while(id != (Integer)entry.getValue());
-
-        return (String)entry.getKey();
+        }
+        return "Unknown";
     }
 
     public static ArrayList<ItemStack> getOres(String name) {
@@ -89,7 +87,7 @@ public class OreDictionary {
         ArrayList<ItemStack> ores = getOres(id);
         ore = ore.copy();
         ores.add(ore);
-        MinecraftForge.EVENT_BUS.post(new net.minecraft.net.minecraftforge.oredict.OreDictionary.OreRegisterEvent(name, ore));
+        MinecraftForge.EVENT_BUS.post(new OreDictionary.OreRegisterEvent(name, ore));
     }
 
     public static class OreRegisterEvent extends Event {

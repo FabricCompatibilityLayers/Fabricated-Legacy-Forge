@@ -2,6 +2,7 @@ package net.minecraftforge.event.entity.minecart;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
+import net.minecraftforge.event.Cancelable;
 
 @Cancelable
 public class MinecartInteractEvent extends MinecartEvent {

@@ -5,33 +5,32 @@ import java.util.Collection;
 import java.util.Iterator;
 
 public class ListenerList {
-    private static ArrayList<net.minecraft.net.minecraftforge.event.ListenerList> allLists = new ArrayList();
+    private static ArrayList<ListenerList> allLists = new ArrayList();
     private static int maxSize = 0;
-    private net.minecraft.net.minecraftforge.event.ListenerList parent;
-    private net.minecraft.net.minecraftforge.event.ListenerList.ListenerListInst[] lists = new net.minecraft.net.minecraftforge.event.ListenerList.ListenerListInst[0];
+    private ListenerList parent;
+    private ListenerList.ListenerListInst[] lists = new ListenerList.ListenerListInst[0];
 
     public ListenerList() {
         allLists.add(this);
         this.resizeLists(maxSize);
     }
 
-    public ListenerList(net.minecraft.net.minecraftforge.event.ListenerList parent) {
+    public ListenerList(ListenerList parent) {
         allLists.add(this);
         this.parent = parent;
         this.resizeLists(maxSize);
     }
 
     public static void resize(int max) {
-        if (max > maxSize) {
-            Iterator i$ = allLists.iterator();
-
-            while(i$.hasNext()) {
-                net.minecraft.net.minecraftforge.event.ListenerList list = (net.minecraft.net.minecraftforge.event.ListenerList)i$.next();
-                list.resizeLists(max);
-            }
-
-            maxSize = max;
+        if (max <= maxSize)
+        {
+            return;
         }
+        for (ListenerList list : allLists)
+        {
+            list.resizeLists(max);
+        }
+        maxSize = max;
     }
 
     public void resizeLists(int max) {
@@ -40,7 +39,7 @@ public class ListenerList {
         }
 
         if (this.lists.length < max) {
-            net.minecraft.net.minecraftforge.event.ListenerList.ListenerListInst[] newList = new net.minecraft.net.minecraftforge.event.ListenerList.ListenerListInst[max];
+            ListenerList.ListenerListInst[] newList = new ListenerList.ListenerListInst[max];
 
             int x;
             for(x = 0; x < this.lists.length; ++x) {
@@ -49,9 +48,9 @@ public class ListenerList {
 
             for(; x < max; ++x) {
                 if (this.parent != null) {
-                    newList[x] = new net.minecraft.net.minecraftforge.event.ListenerList.ListenerListInst(this.parent.getInstance(x));
+                    newList[x] = new ListenerList.ListenerListInst(this.parent.getInstance(x));
                 } else {
-                    newList[x] = new net.minecraft.net.minecraftforge.event.ListenerList.ListenerListInst();
+                    newList[x] = new ListenerList.ListenerListInst();
                 }
             }
 
@@ -60,78 +59,68 @@ public class ListenerList {
     }
 
     public static void clearBusID(int id) {
-        Iterator i$ = allLists.iterator();
-
-        while(i$.hasNext()) {
-            net.minecraft.net.minecraftforge.event.ListenerList list = (net.minecraft.net.minecraftforge.event.ListenerList)i$.next();
+        for (ListenerList list : allLists)
+        {
             list.lists[id].dispose();
         }
-
     }
 
-    protected net.minecraft.net.minecraftforge.event.ListenerList.ListenerListInst getInstance(int id) {
+    protected ListenerList.ListenerListInst getInstance(int id) {
         return this.lists[id];
     }
 
-    public net.minecraft.net.minecraftforge.event.IEventListener[] getListeners(int id) {
+    public IEventListener[] getListeners(int id) {
         return this.lists[id].getListeners();
     }
 
-    public void register(int id, EventPriority priority, net.minecraft.net.minecraftforge.event.IEventListener listener) {
+    public void register(int id, EventPriority priority, IEventListener listener) {
         this.lists[id].register(priority, listener);
     }
 
-    public void unregister(int id, net.minecraft.net.minecraftforge.event.IEventListener listener) {
+    public void unregister(int id, IEventListener listener) {
         this.lists[id].unregister(listener);
     }
 
-    public static void unregiterAll(int id, net.minecraft.net.minecraftforge.event.IEventListener listener) {
-        Iterator i$ = allLists.iterator();
-
-        while(i$.hasNext()) {
-            net.minecraft.net.minecraftforge.event.ListenerList list = (net.minecraft.net.minecraftforge.event.ListenerList)i$.next();
+    public static void unregiterAll(int id, IEventListener listener) {
+        for (ListenerList list : allLists)
+        {
             list.unregister(id, listener);
         }
-
     }
 
     private class ListenerListInst {
         private boolean rebuild;
-        private net.minecraft.net.minecraftforge.event.IEventListener[] listeners;
-        private ArrayList<ArrayList<net.minecraft.net.minecraftforge.event.IEventListener>> priorities;
-        private net.minecraft.net.minecraftforge.event.ListenerList.ListenerListInst parent;
+        private IEventListener[] listeners;
+        private ArrayList<ArrayList<IEventListener>> priorities;
+        private ListenerList.ListenerListInst parent;
 
         private ListenerListInst() {
-            this.rebuild = true;
             int count = EventPriority.values().length;
-            this.priorities = new ArrayList(count);
+            priorities = new ArrayList<ArrayList<IEventListener>>(count);
 
-            for(int x = 0; x < count; ++x) {
-                this.priorities.add(new ArrayList());
+            for (int x = 0; x < count; x++)
+            {
+                priorities.add(new ArrayList<IEventListener>());
             }
-
         }
 
         public void dispose() {
-            Iterator i$ = this.priorities.iterator();
-
-            while(i$.hasNext()) {
-                ArrayList<net.minecraft.net.minecraftforge.event.IEventListener> listeners = (ArrayList)i$.next();
+            for (ArrayList<IEventListener> listeners : priorities)
+            {
                 listeners.clear();
             }
-
-            this.priorities.clear();
-            this.parent = null;
-            this.listeners = null;
+            priorities.clear();
+            parent = null;
+            listeners = null;
         }
 
-        private ListenerListInst(net.minecraft.net.minecraftforge.event.ListenerList.ListenerListInst parent) {
+        private ListenerListInst(ListenerList.ListenerListInst parent) {
             this();
             this.parent = parent;
         }
 
-        public ArrayList<net.minecraft.net.minecraftforge.event.IEventListener> getListeners(EventPriority priority) {
-            ArrayList<net.minecraft.net.minecraftforge.event.IEventListener> ret = new ArrayList((Collection)this.priorities.get(priority.ordinal()));
+        public ArrayList<IEventListener> getListeners(EventPriority priority) {
+            ArrayList<IEventListener> ret = new ArrayList((Collection)this.priorities.get(priority.ordinal()));
             if (this.parent != null) {
                 ret.addAll(this.parent.getListeners(priority));
             }
@@ -139,7 +128,7 @@ public class ListenerList {
             return ret;
         }
 
-        public net.minecraft.net.minecraftforge.event.IEventListener[] getListeners() {
+        public IEventListener[] getListeners() {
             if (this.shouldRebuild()) {
                 this.buildCache();
             }
@@ -152,32 +141,25 @@ public class ListenerList {
         }
 
         private void buildCache() {
-            ArrayList<net.minecraft.net.minecraftforge.event.IEventListener> ret = new ArrayList();
-            EventPriority[] arr$ = EventPriority.values();
-            int len$ = arr$.length;
-
-            for(int i$ = 0; i$ < len$; ++i$) {
-                EventPriority value = arr$[i$];
-                ret.addAll(this.getListeners(value));
+            ArrayList<IEventListener> ret = new ArrayList<IEventListener>();
+            for (EventPriority value : EventPriority.values())
+            {
+                ret.addAll(getListeners(value));
             }
-
-            this.listeners = (net.minecraft.net.minecraftforge.event.IEventListener[])ret.toArray(new net.minecraft.net.minecraftforge.event.IEventListener[0]);
-            this.rebuild = false;
+            listeners = ret.toArray(new IEventListener[0]);
+            rebuild = false;
         }
 
-        public void register(EventPriority priority, net.minecraft.net.minecraftforge.event.IEventListener listener) {
-            ((ArrayList)this.priorities.get(priority.ordinal())).add(listener);
-            this.rebuild = true;
+        public void register(EventPriority priority, IEventListener listener) {
+            priorities.get(priority.ordinal()).add(listener);
+            rebuild = true;
         }
 
-        public void unregister(net.minecraft.net.minecraftforge.event.IEventListener listener) {
-            Iterator i$ = this.priorities.iterator();
-
-            while(i$.hasNext()) {
-                ArrayList<IEventListener> list = (ArrayList)i$.next();
+        public void unregister(IEventListener listener) {
+            for(ArrayList<IEventListener> list : priorities)
+            {
                 list.remove(listener);
             }
-
         }
     }
 }

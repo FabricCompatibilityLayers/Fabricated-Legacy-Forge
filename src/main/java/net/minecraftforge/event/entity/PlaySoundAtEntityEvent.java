@@ -1,8 +1,7 @@
 package net.minecraftforge.event.entity;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.net.minecraftforge.event.Cancelable;
-import net.minecraft.net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.Cancelable;
 
 @Cancelable
 public class PlaySoundAtEntityEvent extends EntityEvent {

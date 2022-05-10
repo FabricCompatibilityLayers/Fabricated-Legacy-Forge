@@ -6,17 +6,17 @@ import org.objectweb.asm.Type;
 
 import java.lang.reflect.Method;
 
-public class ASMEventHandler implements net.minecraft.net.minecraftforge.event.IEventListener {
+public class ASMEventHandler implements IEventListener {
     private static int IDs = 0;
-    private static final String HANDLER_DESC = Type.getInternalName(net.minecraft.net.minecraftforge.event.IEventListener.class);
-    private static final String HANDLER_FUNC_DESC = Type.getMethodDescriptor(net.minecraft.net.minecraftforge.event.IEventListener.class.getDeclaredMethods()[0]);
-    private static final net.minecraft.net.minecraftforge.event.ASMEventHandler.ASMClassLoader LOADER = new net.minecraft.net.minecraftforge.event.ASMEventHandler.ASMClassLoader();
-    private final net.minecraft.net.minecraftforge.event.IEventListener handler;
-    private final net.minecraft.net.minecraftforge.event.ForgeSubscribe subInfo;
+    private static final String HANDLER_DESC = Type.getInternalName(IEventListener.class);
+    private static final String HANDLER_FUNC_DESC = Type.getMethodDescriptor(IEventListener.class.getDeclaredMethods()[0]);
+    private static final ASMEventHandler.ASMClassLoader LOADER = new ASMEventHandler.ASMClassLoader();
+    private final IEventListener handler;
+    private final ForgeSubscribe subInfo;
 
     public ASMEventHandler(Object target, Method method) throws Exception {
         this.handler = (IEventListener)this.createWrapper(method).getConstructor(Object.class).newInstance(target);
-        this.subInfo = (net.minecraft.net.minecraftforge.event.ForgeSubscribe)method.getAnnotation(ForgeSubscribe.class);
+        this.subInfo = (ForgeSubscribe)method.getAnnotation(ForgeSubscribe.class);
     }
 
     public void invoke(Event event) {
@@ -70,7 +70,7 @@ public class ASMEventHandler implements net.minecraft.net.minecraftforge.event.I
 
     private static class ASMClassLoader extends ClassLoader {
         private ASMClassLoader() {
-            super(net.minecraft.net.minecraftforge.event.ASMEventHandler.ASMClassLoader.class.getClassLoader());
+            super(ASMEventHandler.ASMClassLoader.class.getClassLoader());
         }
 
         public Class<?> define(String name, byte[] data) {

@@ -1,6 +1,7 @@
 package net.minecraftforge.event.entity;
 
 import net.minecraft.entity.Entity;
+import net.minecraftforge.event.Event;
 
 public class EntityEvent extends Event {
     public final Entity entity;
@@ -9,7 +10,7 @@ public class EntityEvent extends Event {
         this.entity = entity;
     }
 
-    public static class EnteringChunk extends net.minecraft.net.minecraftforge.event.entity.EntityEvent {
+    public static class EnteringChunk extends EntityEvent {
         public int newChunkX;
         public int newChunkZ;
         public int oldChunkX;
@@ -24,7 +25,7 @@ public class EntityEvent extends Event {
         }
     }
 
-    public static class CanUpdate extends net.minecraft.net.minecraftforge.event.entity.EntityEvent {
+    public static class CanUpdate extends EntityEvent {
         public boolean canUpdate = false;
 
         public CanUpdate(Entity entity) {

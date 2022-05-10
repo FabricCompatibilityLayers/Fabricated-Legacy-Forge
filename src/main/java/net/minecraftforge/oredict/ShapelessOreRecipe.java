@@ -22,84 +22,94 @@ public class ShapelessOreRecipe implements RecipeType {
     }
 
     public ShapelessOreRecipe(ItemStack result, Object... recipe) {
-        this.output = null;
-        this.input = new ArrayList();
         this.output = result.copy();
-        Object[] arr$ = recipe;
-        int len$ = recipe.length;
-
-        for(int i$ = 0; i$ < len$; ++i$) {
-            Object in = arr$[i$];
-            if (in instanceof ItemStack) {
+        for (Object in : recipe)
+        {
+            if (in instanceof ItemStack)
+            {
                 this.input.add(((ItemStack)in).copy());
-            } else if (in instanceof Item) {
+            }
+            else if (in instanceof Item)
+            {
                 this.input.add(new ItemStack((Item)in));
-            } else if (in instanceof Block) {
+            }
+            else if (in instanceof Block)
+            {
                 this.input.add(new ItemStack((Block)in));
-            } else {
-                if (!(in instanceof String)) {
-                    String ret = "Invalid shapeless ore recipe: ";
-                    Object[] arr$ = recipe;
-                    int len$ = recipe.length;
-
-                    for(int i$ = 0; i$ < len$; ++i$) {
-                        Object tmp = arr$[i$];
-                        ret = ret + tmp + ", ";
-                    }
-
-                    ret = ret + this.output;
-                    throw new RuntimeException(ret);
-                }
-
+            }
+            else if (in instanceof String)
+            {
                 this.input.add(OreDictionary.getOres((String)in));
             }
+            else
+            {
+                String ret = "Invalid shapeless ore recipe: ";
+                for (Object tmp :  recipe)
+                {
+                    ret += tmp + ", ";
+                }
+                ret += this.output;
+                throw new RuntimeException(ret);
+            }
         }
-
     }
 
+    @Override
     public int getSize() {
         return this.input.size();
     }
 
+    @Override
     public ItemStack getOutput() {
         return this.output;
     }
 
+    @Override
     public ItemStack getResult(CraftingInventory var1) {
         return this.output.copy();
     }
 
+    @Override
     public boolean method_3500(CraftingInventory var1) {
         ArrayList required = new ArrayList(this.input);
 
-        for(int x = 0; x < var1.getInvSize(); ++x) {
+        for (int x = 0; x < var1.getInvSize(); x++)
+        {
             ItemStack slot = var1.getInvStack(x);
-            if (slot != null) {
+
+            if (slot != null)
+            {
                 boolean inRecipe = false;
                 Iterator req = required.iterator();
 
-                while(req.hasNext()) {
+                while (req.hasNext())
+                {
                     boolean match = false;
+
                     Object next = req.next();
-                    if (next instanceof ItemStack) {
+
+                    if (next instanceof ItemStack)
+                    {
                         match = this.checkItemEquals((ItemStack)next, slot);
-                    } else {
-                        ItemStack item;
-                        if (next instanceof ArrayList) {
-                            for(Iterator i$ = ((ArrayList)next).iterator(); i$.hasNext(); match = match || this.checkItemEquals(item, slot)) {
-                                item = (ItemStack)i$.next();
-                            }
+                    }
+                    else if (next instanceof ArrayList)
+                    {
+                        for (ItemStack item : (ArrayList<ItemStack>)next)
+                        {
+                            match = match || this.checkItemEquals(item, slot);
                         }
                     }
 
-                    if (match) {
+                    if (match)
+                    {
                         inRecipe = true;
                         required.remove(next);
                         break;
                     }
                 }
 
-                if (!inRecipe) {
+                if (!inRecipe)
+                {
                     return false;
                 }
             }
