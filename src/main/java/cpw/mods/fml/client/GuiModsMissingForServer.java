@@ -37,12 +37,11 @@ public class GuiModsMissingForServer extends Screen {
         offset += 10;
         this.drawCenteredString(this.textRenderer, "They are required to play on this server", this.width / 2, offset, 16777215);
         offset += 5;
-        Iterator i$ = this.modsMissing.getModList().iterator();
 
-        while(i$.hasNext()) {
-            ArtifactVersion v = (ArtifactVersion)i$.next();
+        for (ArtifactVersion v : modsMissing.getModList())
+        {
             offset += 10;
-            this.drawCenteredString(this.textRenderer, String.format("%s : %s", v.getLabel(), v.getRangeString()), this.width / 2, offset, 15658734);
+            this.drawCenteredString(this.textRenderer, String.format("%s : %s", v.getLabel(), v.getRangeString()), this.width / 2, offset, 0xEEEEEE);
         }
 
         super.render(par1, par2, par3);

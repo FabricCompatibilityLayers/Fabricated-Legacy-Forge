@@ -132,31 +132,30 @@ public class TextureFXManager {
     }
 
     public void onTexturePackChange(class_534 engine, ITexturePack texturepack, List<class_584> effects) {
-        this.pruneOldTextureFX(texturepack, effects);
-        Iterator i$ = effects.iterator();
+        pruneOldTextureFX(texturepack, effects);
 
-        while(i$.hasNext()) {
-            class_584 tex = (class_584)i$.next();
-            if (tex instanceof ITextureFX) {
-                ((ITextureFX)tex).onTexturePackChanged(engine, texturepack, this.getTextureDimensions(tex));
+        for (class_584 tex : effects)
+        {
+            if (tex instanceof ITextureFX)
+            {
+                ((ITextureFX)tex).onTexturePackChanged(engine, texturepack, getTextureDimensions(tex));
             }
         }
 
-        this.loadTextures(texturepack);
+        loadTextures(texturepack);
     }
 
     public void setTextureDimensions(int id, int width, int height, List<class_584> effects) {
         Dimension dim = new Dimension(width, height);
-        this.textureDims.put(id, dim);
-        Iterator i$ = effects.iterator();
+        textureDims.put(id, dim);
 
-        while(i$.hasNext()) {
-            class_584 tex = (class_584)i$.next();
-            if (this.getEffectTexture(tex) == id && tex instanceof ITextureFX) {
+        for (class_584 tex : effects)
+        {
+            if (getEffectTexture(tex) == id && tex instanceof ITextureFX)
+            {
                 ((ITextureFX)tex).onTextureDimensionsUpdate(width, height);
             }
         }
-
     }
 
     public Dimension getTextureDimensions(class_584 effect) {
@@ -184,36 +183,28 @@ public class TextureFXManager {
     }
 
     public void registerTextureOverrides(class_534 renderer) {
-        Iterator i$ = this.animationSet.iterator();
-
-        while(i$.hasNext()) {
-            OverrideInfo animationOverride = (OverrideInfo)i$.next();
+        for (OverrideInfo animationOverride : animationSet) {
             renderer.method_1416(animationOverride.textureFX);
-            this.addedTextureFX.add(animationOverride.textureFX);
+            addedTextureFX.add(animationOverride.textureFX);
             FMLCommonHandler.instance().getFMLLogger().finer(String.format("Registered texture override %d (%d) on %s (%d)", animationOverride.index, animationOverride.textureFX.field_2153, animationOverride.textureFX.getClass().getSimpleName(), animationOverride.textureFX.field_2157));
         }
 
-        i$ = this.overrideInfo.keySet().iterator();
-
-        while(i$.hasNext()) {
-            String fileToOverride = (String)i$.next();
-            Iterator i$ = this.overrideInfo.get(fileToOverride).iterator();
-
-            while(i$.hasNext()) {
-                OverrideInfo override = (OverrideInfo)i$.next();
-
-                try {
-                    BufferedImage image = this.loadImageFromTexturePack(renderer, override.override);
-                    ModTextureStatic mts = new ModTextureStatic(override.index, 1, override.texture, image);
+        for (String fileToOverride : overrideInfo.keySet()) {
+            for (OverrideInfo override : overrideInfo.get(fileToOverride)) {
+                try
+                {
+                    BufferedImage image=loadImageFromTexturePack(renderer, override.override);
+                    ModTextureStatic mts=new ModTextureStatic(override.index, 1, override.texture, image);
                     renderer.method_1416(mts);
-                    this.addedTextureFX.add(mts);
+                    addedTextureFX.add(mts);
                     FMLCommonHandler.instance().getFMLLogger().finer(String.format("Registered texture override %d (%d) on %s (%d)", override.index, mts.field_2153, override.texture, mts.field_2157));
-                } catch (IOException var8) {
-                    FMLCommonHandler.instance().getFMLLogger().throwing("FMLClientHandler", "registerTextureOverrides", var8);
+                }
+                catch (IOException e)
+                {
+                    FMLCommonHandler.instance().getFMLLogger().throwing("FMLClientHandler", "registerTextureOverrides", e);
                 }
             }
         }
-
     }
 
     protected void registerAnimatedTexturesFor(ModContainer mod) {

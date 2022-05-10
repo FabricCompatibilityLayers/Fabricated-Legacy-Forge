@@ -39,15 +39,10 @@ public class KeyBindingRegistry {
 
     public void uploadKeyBindingsToGame(GameOptions settings) {
         ArrayList<KeyBinding> harvestedBindings = Lists.newArrayList();
-        Iterator i$ = this.keyHandlers.iterator();
-
-        while(i$.hasNext()) {
-            KeyBindingRegistry.KeyHandler key = (KeyBindingRegistry.KeyHandler)i$.next();
-            KeyBinding[] arr$ = key.keyBindings;
-            int len$ = arr$.length;
-
-            for(int i$ = 0; i$ < len$; ++i$) {
-                KeyBinding kb = arr$[i$];
+        for (KeyHandler key : keyHandlers)
+        {
+            for (KeyBinding kb : key.keyBindings)
+            {
                 harvestedBindings.add(kb);
             }
         }

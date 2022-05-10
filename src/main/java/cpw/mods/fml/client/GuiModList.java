@@ -25,42 +25,33 @@ public class GuiModList extends Screen {
     private ArrayList<ModContainer> mods;
 
     public GuiModList(Screen mainMenu) {
-        this.mainMenu = mainMenu;
-        this.mods = new ArrayList();
-        FMLClientHandler.instance().addSpecialModEntries(this.mods);
-        Iterator i$ = Loader.instance().getModList().iterator();
-
-        while(true) {
-            while(i$.hasNext()) {
-                ModContainer mod = (ModContainer)i$.next();
-                if (mod.getMetadata() != null && !Strings.isNullOrEmpty(mod.getMetadata().parent)) {
-                    String parentMod = mod.getMetadata().parent;
-                    ModContainer parentContainer = (ModContainer)Loader.instance().getIndexedModList().get(parentMod);
-                    if (parentContainer != null) {
-                        mod.getMetadata().parentMod = parentContainer;
-                        parentContainer.getMetadata().childMods.add(mod);
-                        continue;
-                    }
+        this.mainMenu=mainMenu;
+        this.mods=new ArrayList<ModContainer>();
+        FMLClientHandler.instance().addSpecialModEntries(mods);
+        for (ModContainer mod : Loader.instance().getModList()) {
+            if (mod.getMetadata()!=null && !Strings.isNullOrEmpty(mod.getMetadata().parent)) {
+                String parentMod = mod.getMetadata().parent;
+                ModContainer parentContainer = Loader.instance().getIndexedModList().get(parentMod);
+                if (parentContainer != null)
+                {
+                    mod.getMetadata().parentMod = parentContainer;
+                    parentContainer.getMetadata().childMods.add(mod);
+                    continue;
                 }
-
-                this.mods.add(mod);
             }
-
-            return;
+            mods.add(mod);
         }
     }
 
     public void init() {
-        ModContainer mod;
-        for(Iterator i$ = this.mods.iterator(); i$.hasNext(); this.listWidth = Math.max(this.listWidth, this.getFontRenderer().getStringWidth(mod.getVersion()) + 10)) {
-            mod = (ModContainer)i$.next();
-            this.listWidth = Math.max(this.listWidth, this.getFontRenderer().getStringWidth(mod.getName()) + 10);
+        for (ModContainer mod : mods) {
+            listWidth=Math.max(listWidth,getFontRenderer().getStringWidth(mod.getName()) + 10);
+            listWidth=Math.max(listWidth,getFontRenderer().getStringWidth(mod.getVersion()) + 10);
         }
-
-        this.listWidth = Math.min(this.listWidth, 150);
+        listWidth=Math.min(listWidth, 150);
         Language translations = Language.getInstance();
         this.buttons.add(new OptionButtonWidget(6, this.width / 2 - 75, this.height - 38, translations.translate("gui.done")));
-        this.modList = new GuiSlotModList(this, this.mods, this.listWidth);
+        this.modList=new GuiSlotModList(this, mods, listWidth);
         this.modList.registerScrollButtons(this.buttons, 7, 8);
     }
 

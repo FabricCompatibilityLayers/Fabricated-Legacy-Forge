@@ -47,42 +47,53 @@ public class FMLClientHandler implements IFMLSidedHandler {
     }
 
     public void beginMinecraftLoading(Minecraft minecraft) {
-        if (minecraft.isDemo()) {
-            FMLLog.severe("DEMO MODE DETECTED, FML will not work. Finishing now.", new Object[0]);
-            this.haltGame("FML will not run in demo mode", new RuntimeException());
-        } else {
-            this.loading = true;
-            this.client = minecraft;
-            ObfuscationReflectionHelper.detectObfuscation(World.class);
-            TextureFXManager.instance().setClient(this.client);
-            FMLCommonHandler.instance().beginLoading(this);
-            new ModLoaderClientHelper(this.client);
+        if (minecraft.isDemo())
+        {
+            FMLLog.severe("DEMO MODE DETECTED, FML will not work. Finishing now.");
+            haltGame("FML will not run in demo mode", new RuntimeException());
+            return;
+        }
 
-            try {
-                Class<?> optifineConfig = Class.forName("Config", false, Loader.instance().getModClassLoader());
-                String optifineVersion = (String)optifineConfig.getField("VERSION").get((Object)null);
-                Map<String, Object> dummyOptifineMeta = ImmutableMap.builder().put("name", "Optifine").put("version", optifineVersion).build();
-                ModMetadata optifineMetadata = MetadataCollection.from(this.getClass().getResourceAsStream("optifinemod.info"), "optifine").getMetadataForId("optifine", dummyOptifineMeta);
-                this.optifineContainer = new DummyModContainer(optifineMetadata);
-                FMLLog.info("Forge Mod Loader has detected optifine %s, enabling compatibility features", new Object[]{this.optifineContainer.getVersion()});
-            } catch (Exception var10) {
-                this.optifineContainer = null;
-            }
-
-            try {
-                Loader.instance().loadMods();
-            } catch (WrongMinecraftVersionException var6) {
-                this.wrongMC = var6;
-            } catch (MissingModsException var7) {
-                this.modsMissing = var7;
-            } catch (CustomModLoadingErrorDisplayException var8) {
-                FMLLog.log(Level.SEVERE, var8, "A custom exception was thrown by a mod, the game will now halt", new Object[0]);
-                this.customError = var8;
-            } catch (LoaderException var9) {
-                this.haltGame("There was a severe problem during mod loading that has caused the game to fail", var9);
-                return;
-            }
-
+        loading = true;
+        client = minecraft;
+        ObfuscationReflectionHelper.detectObfuscation(World.class);
+        TextureFXManager.instance().setClient(client);
+        FMLCommonHandler.instance().beginLoading(this);
+        new ModLoaderClientHelper(client);
+        try
+        {
+            Class<?> optifineConfig = Class.forName("Config", false, Loader.instance().getModClassLoader());
+            String optifineVersion = (String) optifineConfig.getField("VERSION").get(null);
+            Map<String,Object> dummyOptifineMeta = ImmutableMap.<String,Object>builder().put("name", "Optifine").put("version", optifineVersion).build();
+            ModMetadata optifineMetadata = MetadataCollection.from(getClass().getResourceAsStream("optifinemod.info"),"optifine").getMetadataForId("optifine", dummyOptifineMeta);
+            optifineContainer = new DummyModContainer(optifineMetadata);
+            FMLLog.info("Forge Mod Loader has detected optifine %s, enabling compatibility features",optifineContainer.getVersion());
+        }
+        catch (Exception e)
+        {
+            optifineContainer = null;
+        }
+        try
+        {
+            Loader.instance().loadMods();
+        }
+        catch (WrongMinecraftVersionException wrong)
+        {
+            wrongMC = wrong;
+        }
+        catch (MissingModsException missing)
+        {
+            modsMissing = missing;
+        }
+        catch (CustomModLoadingErrorDisplayException custom)
+        {
+            FMLLog.log(Level.SEVERE, custom, "A custom exception was thrown by a mod, the game will now halt");
+            customError = custom;
+        }
+        catch (LoaderException le)
+        {
+            haltGame("There was a severe problem during mod loading that has caused the game to fail", le);
+            return;
         }
     }
 

@@ -89,14 +89,11 @@ public class RenderingRegistry {
     }
 
     public void loadEntityRenderers(Map<Class<? extends Entity>, EntityRenderer> rendererMap) {
-        Iterator i$ = this.entityRenderers.iterator();
-
-        while(i$.hasNext()) {
-            RenderingRegistry.EntityRendererInfo info = (RenderingRegistry.EntityRendererInfo)i$.next();
+        for (EntityRendererInfo info : entityRenderers)
+        {
             rendererMap.put(info.target, info.renderer);
             info.renderer.method_1528(EntityRenderDispatcher.field_2094);
         }
-
     }
 
     private static class EntityRendererInfo {
