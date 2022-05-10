@@ -46,60 +46,62 @@ public class RelaunchClassLoader extends URLClassLoader {
     }
 
     public Class<?> findClass(String name) throws ClassNotFoundException {
-        if (excludedPackages.length != 0) {
-            this.classLoaderExceptions.addAll(Arrays.asList(excludedPackages));
+        // NEI/CCC compatibility code
+        if (excludedPackages.length != 0)
+        {
+            classLoaderExceptions.addAll(Arrays.asList(excludedPackages));
             excludedPackages = new String[0];
         }
-
-        if (transformerExclusions.length != 0) {
-            this.transformerExceptions.addAll(Arrays.asList(transformerExclusions));
+        if (transformerExclusions.length != 0)
+        {
+            transformerExceptions.addAll(Arrays.asList(transformerExclusions));
             transformerExclusions = new String[0];
         }
 
-        Iterator i$ = this.classLoaderExceptions.iterator();
+        for (String st : classLoaderExceptions)
+        {
+            if (name.startsWith(st))
+            {
+                return parent.loadClass(name);
+            }
+        }
 
-        String pkgname;
-        do {
-            if (!i$.hasNext()) {
-                if (this.cachedClasses.containsKey(name)) {
-                    return (Class) this.cachedClasses.get(name);
-                }
+        if (cachedClasses.containsKey(name))
+        {
+            return cachedClasses.get(name);
+        }
 
-                i$ = this.transformerExceptions.iterator();
-
-                do {
-                    if (!i$.hasNext()) {
-                        try {
-                            int lastDot = name.lastIndexOf(46);
-                            if (lastDot > -1) {
-                                pkgname = name.substring(0, lastDot);
-                                if (this.getPackage(pkgname) == null) {
-                                    this.definePackage(pkgname, (String) null, (String) null, (String) null, (String) null, (String) null, (String) null, (URL) null);
-                                }
-                            }
-
-                            byte[] basicClass = this.getClassBytes(name);
-                            byte[] transformedClass = this.runTransformers(name, basicClass);
-                            Class<?> cl = this.defineClass(name, transformedClass, 0, transformedClass.length);
-                            this.cachedClasses.put(name, cl);
-                            return cl;
-                        } catch (Throwable var6) {
-                            throw new ClassNotFoundException(name, var6);
-                        }
-                    }
-
-                    pkgname = (String) i$.next();
-                } while (!name.startsWith(pkgname));
-
+        for (String st : transformerExceptions)
+        {
+            if (name.startsWith(st))
+            {
                 Class<?> cl = super.findClass(name);
-                this.cachedClasses.put(name, cl);
+                cachedClasses.put(name, cl);
                 return cl;
             }
+        }
 
-            pkgname = (String) i$.next();
-        } while (!name.startsWith(pkgname));
-
-        return this.parent.loadClass(name);
+        try
+        {
+            int lastDot = name.lastIndexOf('.');
+            if (lastDot > -1)
+            {
+                String pkgname = name.substring(0, lastDot);
+                if (getPackage(pkgname)==null)
+                {
+                    definePackage(pkgname, null, null, null, null, null, null, null);
+                }
+            }
+            byte[] basicClass = getClassBytes(name);
+            byte[] transformedClass = runTransformers(name, basicClass);
+            Class<?> cl = defineClass(name, transformedClass, 0, transformedClass.length);
+            cachedClasses.put(name, cl);
+            return cl;
+        }
+        catch (Throwable e)
+        {
+            throw new ClassNotFoundException(name, e);
+        }
     }
 
     public byte[] getClassBytes(String name) throws IOException {
@@ -129,11 +131,10 @@ public class RelaunchClassLoader extends URLClassLoader {
     }
 
     private byte[] runTransformers(String name, byte[] basicClass) {
-        IClassTransformer transformer;
-        for (Iterator i$ = this.transformers.iterator(); i$.hasNext(); basicClass = transformer.transform(name, basicClass)) {
-            transformer = (IClassTransformer) i$.next();
+        for (IClassTransformer transformer : transformers)
+        {
+            basicClass = transformer.transform(name, basicClass);
         }
-
         return basicClass;
     }
 

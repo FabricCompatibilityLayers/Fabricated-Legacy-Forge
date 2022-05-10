@@ -27,30 +27,24 @@ public class ModMissingPacket extends FMLPacket {
 
     public byte[] generatePacket(Object... data) {
         ByteArrayDataOutput dat = ByteStreams.newDataOutput();
-        List<String> missing = (List)data[0];
-        List<String> badVersion = (List)data[1];
+
+        List<String> missing = (List<String>) data[0];
+        List<String> badVersion = (List<String>) data[1];
+
         dat.writeInt(missing.size());
-        Iterator i$ = missing.iterator();
-
-        String bad;
-        ModContainer mc;
-        while(i$.hasNext()) {
-            bad = (String)i$.next();
-            mc = (ModContainer) Loader.instance().getIndexedModList().get(bad);
-            dat.writeUTF(bad);
+        for (String missed : missing)
+        {
+            ModContainer mc = Loader.instance().getIndexedModList().get(missed);
+            dat.writeUTF(missed);
             dat.writeUTF(mc.getVersion());
         }
-
         dat.writeInt(badVersion.size());
-        i$ = badVersion.iterator();
-
-        while(i$.hasNext()) {
-            bad = (String)i$.next();
-            mc = (ModContainer) Loader.instance().getIndexedModList().get(bad);
+        for (String bad : badVersion)
+        {
+            ModContainer mc = Loader.instance().getIndexedModList().get(bad);
             dat.writeUTF(bad);
             dat.writeUTF(mc.getVersion());
         }
-
         return dat.toByteArray();
     }
 
@@ -85,22 +79,15 @@ public class ModMissingPacket extends FMLPacket {
     }
 
     public List<ArtifactVersion> getModList() {
-        ImmutableList.Builder<ArtifactVersion> builder = ImmutableList.builder();
-        Iterator i$ = this.missing.iterator();
-
-        ModMissingPacket.ModData md;
-        while(i$.hasNext()) {
-            md = (ModMissingPacket.ModData)i$.next();
-            builder.add(new DefaultArtifactVersion(md.modId, VersionRange.createFromVersion(md.modVersion, (ArtifactVersion)null)));
+        ImmutableList.Builder<ArtifactVersion> builder = ImmutableList.<ArtifactVersion>builder();
+        for (ModData md : missing)
+        {
+            builder.add(new DefaultArtifactVersion(md.modId, VersionRange.createFromVersion(md.modVersion, null)));
         }
-
-        i$ = this.badVersion.iterator();
-
-        while(i$.hasNext()) {
-            md = (ModMissingPacket.ModData)i$.next();
-            builder.add(new DefaultArtifactVersion(md.modId, VersionRange.createFromVersion(md.modVersion, (ArtifactVersion)null)));
+        for (ModData md : badVersion)
+        {
+            builder.add(new DefaultArtifactVersion(md.modId, VersionRange.createFromVersion(md.modVersion, null)));
         }
-
         return builder.build();
     }
 

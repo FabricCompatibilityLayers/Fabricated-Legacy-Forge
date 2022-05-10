@@ -7,14 +7,14 @@ public class TopologicalSort {
     }
 
     public static <T> List<T> topologicalSort(TopologicalSort.DirectedGraph<T> graph) {
-        TopologicalSort.DirectedGraph<T> rGraph = reverse(graph);
-        List<T> sortedResult = new ArrayList();
-        Set<T> visitedNodes = new HashSet();
-        Set<T> expandedNodes = new HashSet();
-        Iterator i$ = rGraph.iterator();
+        DirectedGraph<T> rGraph = reverse(graph);
+        List<T> sortedResult = new ArrayList<T>();
+        Set<T> visitedNodes = new HashSet<T>();
+        // A list of "fully explored" nodes. Leftovers in here indicate cycles in the graph
+        Set<T> expandedNodes = new HashSet<T>();
 
-        while(i$.hasNext()) {
-            T node = (T) i$.next();
+        for (T node : rGraph)
+        {
             explore(node, rGraph, sortedResult, visitedNodes, expandedNodes);
         }
 
@@ -22,24 +22,18 @@ public class TopologicalSort {
     }
 
     public static <T> TopologicalSort.DirectedGraph<T> reverse(TopologicalSort.DirectedGraph<T> graph) {
-        TopologicalSort.DirectedGraph<T> result = new TopologicalSort.DirectedGraph();
-        Iterator i$ = graph.iterator();
+        DirectedGraph<T> result = new DirectedGraph<T>();
 
-        Object from;
-        while(i$.hasNext()) {
-            from = i$.next();
-            result.addNode((T) from);
+        for (T node : graph)
+        {
+            result.addNode(node);
         }
 
-        i$ = graph.iterator();
-
-        while(i$.hasNext()) {
-            from = i$.next();
-            Iterator i$ = graph.edgesFrom((T) from).iterator();
-
-            while(i$.hasNext()) {
-                T to = (T) i$.next();
-                result.addEdge(to, (T) from);
+        for (T from : graph)
+        {
+            for (T to : graph.edgesFrom(from))
+            {
+                result.addEdge(to, from);
             }
         }
 
@@ -47,23 +41,33 @@ public class TopologicalSort {
     }
 
     public static <T> void explore(T node, TopologicalSort.DirectedGraph<T> graph, List<T> sortedResult, Set<T> visitedNodes, Set<T> expandedNodes) {
-        if (visitedNodes.contains(node)) {
-            if (!expandedNodes.contains(node)) {
-                System.out.printf("%s: %s\n%s\n%s\n", node, sortedResult, visitedNodes, expandedNodes);
-                throw new ModSortingException("There was a cycle detected in the input graph, sorting is not possible", node, visitedNodes);
-            }
-        } else {
-            visitedNodes.add(node);
-            Iterator i$ = graph.edgesFrom(node).iterator();
-
-            while(i$.hasNext()) {
-                T inbound = (T) i$.next();
-                explore(inbound, graph, sortedResult, visitedNodes, expandedNodes);
+        // Have we been here before?
+        if (visitedNodes.contains(node))
+        {
+            // And have completed this node before
+            if (expandedNodes.contains(node))
+            {
+                // Then we're fine
+                return;
             }
 
-            sortedResult.add(node);
-            expandedNodes.add(node);
+            System.out.printf("%s: %s\n%s\n%s\n", node, sortedResult, visitedNodes, expandedNodes);
+            throw new ModSortingException("There was a cycle detected in the input graph, sorting is not possible", node, visitedNodes);
         }
+
+        // Visit this node
+        visitedNodes.add(node);
+
+        // Recursively explore inbound edges
+        for (T inbound : graph.edgesFrom(node))
+        {
+            explore(inbound, graph, sortedResult, visitedNodes, expandedNodes);
+        }
+
+        // Add ourselves now
+        sortedResult.add(node);
+        // And mark ourselves as explored
+        expandedNodes.add(node);
     }
 
     public static class DirectedGraph<T> implements Iterable<T> {

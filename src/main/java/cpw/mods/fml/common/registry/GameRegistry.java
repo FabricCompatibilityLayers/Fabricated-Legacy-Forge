@@ -46,16 +46,14 @@ public class GameRegistry {
     public static void generateWorld(int chunkX, int chunkZ, World world, ChunkProvider chunkGenerator, ChunkProvider chunkProvider) {
         long worldSeed = world.getSeed();
         Random fmlRandom = new Random(worldSeed);
-        long xSeed = fmlRandom.nextLong() >> 3;
-        long zSeed = fmlRandom.nextLong() >> 3;
-        fmlRandom.setSeed(xSeed * (long)chunkX + zSeed * (long)chunkZ ^ worldSeed);
-        Iterator i$ = worldGenerators.iterator();
+        long xSeed = fmlRandom.nextLong() >> 2 + 1L;
+        long zSeed = fmlRandom.nextLong() >> 2 + 1L;
+        fmlRandom.setSeed((xSeed * chunkX + zSeed * chunkZ) ^ worldSeed);
 
-        while(i$.hasNext()) {
-            IWorldGenerator generator = (IWorldGenerator)i$.next();
+        for (IWorldGenerator generator : worldGenerators)
+        {
             generator.generate(fmlRandom, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
         }
-
     }
 
     public static void registerDispenserHandler(IDispenserHandler handler) {
@@ -73,19 +71,15 @@ public class GameRegistry {
     }
 
     public static int tryDispense(World world, int x, int y, int z, int xVelocity, int zVelocity, ItemStack item, Random random, double entX, double entY, double entZ) {
-        Iterator i$ = dispenserHandlers.iterator();
-
-        int dispensed;
-        do {
-            if (!i$.hasNext()) {
-                return -1;
+        for (IDispenserHandler handler : dispenserHandlers)
+        {
+            int dispensed = handler.dispense(x, y, z, xVelocity, zVelocity, world, item, random, entX, entY, entZ);
+            if (dispensed>-1)
+            {
+                return dispensed;
             }
-
-            IDispenserHandler handler = (IDispenserHandler)i$.next();
-            dispensed = handler.dispense(x, y, z, xVelocity, zVelocity, world, item, random, entX, entY, entZ);
-        } while(dispensed <= -1);
-
-        return dispensed;
+        }
+        return -1;
     }
 
     public static Object buildBlock(ModContainer container, Class<?> type, Mod.Block annotation) throws Exception {
@@ -156,12 +150,10 @@ public class GameRegistry {
 
     public static int getFuelValue(ItemStack itemStack) {
         int fuelValue = 0;
-
-        IFuelHandler handler;
-        for(Iterator i$ = fuelHandlers.iterator(); i$.hasNext(); fuelValue = Math.max(fuelValue, handler.getBurnTime(itemStack))) {
-            handler = (IFuelHandler)i$.next();
+        for (IFuelHandler handler : fuelHandlers)
+        {
+            fuelValue = Math.max(fuelValue, handler.getBurnTime(itemStack));
         }
-
         return fuelValue;
     }
 
@@ -170,23 +162,17 @@ public class GameRegistry {
     }
 
     public static void onItemCrafted(PlayerEntity player, ItemStack item, Inventory craftMatrix) {
-        Iterator i$ = craftingHandlers.iterator();
-
-        while(i$.hasNext()) {
-            ICraftingHandler handler = (ICraftingHandler)i$.next();
+        for (ICraftingHandler handler : craftingHandlers)
+        {
             handler.onCrafting(player, item, craftMatrix);
         }
-
     }
 
     public static void onItemSmelted(PlayerEntity player, ItemStack item) {
-        Iterator i$ = craftingHandlers.iterator();
-
-        while(i$.hasNext()) {
-            ICraftingHandler handler = (ICraftingHandler)i$.next();
+        for (ICraftingHandler handler : craftingHandlers)
+        {
             handler.onSmelting(player, item);
         }
-
     }
 
     public static void registerPickupHandler(IPickupNotifier handler) {
@@ -194,13 +180,10 @@ public class GameRegistry {
     }
 
     public static void onPickupNotification(PlayerEntity player, ItemEntity item) {
-        Iterator i$ = pickupHandlers.iterator();
-
-        while(i$.hasNext()) {
-            IPickupNotifier notify = (IPickupNotifier)i$.next();
+        for (IPickupNotifier notify : pickupHandlers)
+        {
             notify.notifyPickup(item, player);
         }
-
     }
 
     public static void registerPlayerTracker(IPlayerTracker tracker) {
@@ -208,42 +191,22 @@ public class GameRegistry {
     }
 
     public static void onPlayerLogin(PlayerEntity player) {
-        Iterator i$ = playerTrackers.iterator();
-
-        while(i$.hasNext()) {
-            IPlayerTracker tracker = (IPlayerTracker)i$.next();
+        for(IPlayerTracker tracker : playerTrackers)
             tracker.onPlayerLogin(player);
-        }
-
     }
 
     public static void onPlayerLogout(PlayerEntity player) {
-        Iterator i$ = playerTrackers.iterator();
-
-        while(i$.hasNext()) {
-            IPlayerTracker tracker = (IPlayerTracker)i$.next();
+        for(IPlayerTracker tracker : playerTrackers)
             tracker.onPlayerLogout(player);
-        }
-
     }
 
     public static void onPlayerChangedDimension(PlayerEntity player) {
-        Iterator i$ = playerTrackers.iterator();
-
-        while(i$.hasNext()) {
-            IPlayerTracker tracker = (IPlayerTracker)i$.next();
+        for(IPlayerTracker tracker : playerTrackers)
             tracker.onPlayerChangedDimension(player);
-        }
-
     }
 
     public static void onPlayerRespawn(PlayerEntity player) {
-        Iterator i$ = playerTrackers.iterator();
-
-        while(i$.hasNext()) {
-            IPlayerTracker tracker = (IPlayerTracker)i$.next();
+        for(IPlayerTracker tracker : playerTrackers)
             tracker.onPlayerRespawn(player);
-        }
-
     }
 }

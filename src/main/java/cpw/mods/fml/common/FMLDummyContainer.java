@@ -1,5 +1,6 @@
 package cpw.mods.fml.common;
 
+import com.google.common.eventbus.EventBus;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -33,16 +34,13 @@ public class FMLDummyContainer extends DummyModContainer implements WorldAccessC
     public NbtCompound getDataForWriting(WorldSaveHandler handler, LevelProperties info) {
         NbtCompound fmlData = new NbtCompound();
         NbtList list = new NbtList();
-        Iterator i$ = Loader.instance().getActiveModList().iterator();
-
-        while(i$.hasNext()) {
-            ModContainer mc = (ModContainer)i$.next();
+        for (ModContainer mc : Loader.instance().getActiveModList())
+        {
             NbtCompound mod = new NbtCompound();
             mod.putString("ModId", mc.getModId());
             mod.putString("ModVersion", mc.getVersion());
             list.method_1217(mod);
         }
-
         fmlData.put("ModList", list);
         return fmlData;
     }

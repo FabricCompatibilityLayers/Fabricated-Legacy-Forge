@@ -64,24 +64,24 @@ public class ModMetadata {
 
     private <T extends Collection<ArtifactVersion>> T processReferences(Object refs, Class<? extends T> retType) {
         T res = null;
-
-        try {
-            res = (T) retType.newInstance();
-        } catch (Exception var6) {
+        try
+        {
+            res = retType.newInstance();
+        }
+        catch (Exception e)
+        {
+            // unpossible
         }
 
-        if (refs == null) {
-            return res;
-        } else {
-            Iterator i$ = ((List)refs).iterator();
-
-            while(i$.hasNext()) {
-                String ref = (String)i$.next();
-                res.add(VersionParser.parseVersionReference(ref));
-            }
-
+        if (refs == null)
+        {
             return res;
         }
+        for (String ref : ((List<String>)refs))
+        {
+            res.add(VersionParser.parseVersionReference(ref));
+        }
+        return res;
     }
 
     public String getChildModCountString() {

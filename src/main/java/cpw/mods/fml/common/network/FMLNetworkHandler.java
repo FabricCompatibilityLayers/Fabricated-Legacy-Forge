@@ -277,35 +277,33 @@ public class FMLNetworkHandler {
         InetAddress add = null;
         List<InetAddress> addresses = Lists.newArrayList();
         InetAddress localHost = InetAddress.getLocalHost();
-        Iterator i$ = Collections.list(NetworkInterface.getNetworkInterfaces()).iterator();
-
-        while(i$.hasNext()) {
-            NetworkInterface ni = (NetworkInterface)i$.next();
-            if (!ni.isLoopback() && ni.isUp()) {
+        for (NetworkInterface ni : Collections.list(NetworkInterface.getNetworkInterfaces()))
+        {
+            if (!ni.isLoopback() && ni.isUp())
+            {
                 addresses.addAll(Collections.list(ni.getInetAddresses()));
-                if (addresses.contains(localHost)) {
+                if (addresses.contains(localHost))
+                {
                     add = localHost;
                     break;
                 }
             }
         }
-
-        if (add == null && !addresses.isEmpty()) {
-            i$ = addresses.iterator();
-
-            while(i$.hasNext()) {
-                InetAddress addr = (InetAddress)i$.next();
-                if (addr.getAddress().length == 4) {
+        if (add == null && !addresses.isEmpty())
+        {
+            for (InetAddress addr: addresses)
+            {
+                if (addr.getAddress().length == 4)
+                {
                     add = addr;
                     break;
                 }
             }
         }
-
-        if (add == null) {
+        if (add == null)
+        {
             add = localHost;
         }
-
         return add;
     }
 

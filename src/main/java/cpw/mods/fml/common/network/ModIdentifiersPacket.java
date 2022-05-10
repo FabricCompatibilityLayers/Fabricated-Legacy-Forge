@@ -20,16 +20,16 @@ public class ModIdentifiersPacket extends FMLPacket {
 
     public byte[] generatePacket(Object... data) {
         ByteArrayDataOutput dat = ByteStreams.newDataOutput();
-        Collection<NetworkModHandler> networkMods = FMLNetworkHandler.instance().getNetworkIdMap().values();
-        dat.writeInt(networkMods.size());
-        Iterator i$ = networkMods.iterator();
+        Collection<NetworkModHandler >networkMods = FMLNetworkHandler.instance().getNetworkIdMap().values();
 
-        while(i$.hasNext()) {
-            NetworkModHandler handler = (NetworkModHandler)i$.next();
+        dat.writeInt(networkMods.size());
+        for (NetworkModHandler handler : networkMods)
+        {
             dat.writeUTF(handler.getContainer().getModId());
             dat.writeInt(handler.getNetworkId());
         }
 
+        // TODO send the other id maps as well
         return dat.toByteArray();
     }
 
@@ -47,12 +47,10 @@ public class ModIdentifiersPacket extends FMLPacket {
     }
 
     public void execute(Connection network, FMLNetworkHandler handler, PacketListener netHandler, String userName) {
-        Iterator i$ = this.modIds.entrySet().iterator();
-
-        while(i$.hasNext()) {
-            Map.Entry<String, Integer> idEntry = (Map.Entry)i$.next();
-            handler.bindNetworkId((String)idEntry.getKey(), (Integer)idEntry.getValue());
+        for (Map.Entry<String,Integer> idEntry : modIds.entrySet())
+        {
+            handler.bindNetworkId(idEntry.getKey(), idEntry.getValue());
         }
-
+        // TODO other id maps
     }
 }

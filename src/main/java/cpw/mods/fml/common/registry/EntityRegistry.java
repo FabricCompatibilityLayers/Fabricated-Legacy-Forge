@@ -31,13 +31,10 @@ public class EntityRegistry {
 
     private EntityRegistry() {
         this.availableIndicies.set(1, 255);
-        Iterator i$ = EntityType.ID_CLASS_MAP.keySet().iterator();
-
-        while(i$.hasNext()) {
-            Object id = i$.next();
-            this.availableIndicies.clear((Integer)id);
+        for (Object id : EntityType.ID_CLASS_MAP.keySet())
+        {
+            availableIndicies.clear((Integer)id);
         }
-
     }
 
     public static void registerModEntity(Class<? extends Entity> entityClass, String entityName, int id, Object mod, int trackingRange, int updateFrequency, boolean sendsVelocityUpdates) {
@@ -127,17 +124,16 @@ public class EntityRegistry {
     }
 
     public static void addSpawn(Class<? extends MobEntity> entityClass, int weightedProb, int min, int max, EntityCategory typeOfCreature, Biome... biomes) {
-        Biome[] arr$ = biomes;
-        int len$ = biomes.length;
-
-        for(int i$ = 0; i$ < len$; ++i$) {
-            Biome biome = arr$[i$];
+        for (Biome biome : biomes)
+        {
+            @SuppressWarnings("unchecked")
             List<SpawnEntry> spawns = biome.getSpawnEntries(typeOfCreature);
-            Iterator i$ = spawns.iterator();
 
-            while(i$.hasNext()) {
-                SpawnEntry entry = (SpawnEntry)i$.next();
-                if (entry.type == entityClass) {
+            for (SpawnEntry entry : spawns)
+            {
+                //Adjusting an existing spawn entry
+                if (entry.type == entityClass)
+                {
                     entry.weight = weightedProb;
                     entry.minGroupSize = min;
                     entry.maxGroupSize = max;
@@ -147,7 +143,6 @@ public class EntityRegistry {
 
             spawns.add(new SpawnEntry(entityClass, weightedProb, min, max));
         }
-
     }
 
     public static void addSpawn(String entityName, int weightedProb, int min, int max, EntityCategory spawnList, Biome... biomes) {
@@ -159,21 +154,20 @@ public class EntityRegistry {
     }
 
     public static void removeSpawn(Class<? extends MobEntity> entityClass, EntityCategory typeOfCreature, Biome... biomes) {
-        Biome[] arr$ = biomes;
-        int len$ = biomes.length;
-
-        for(int i$ = 0; i$ < len$; ++i$) {
-            Biome biome = arr$[i$];
+        for (Biome biome : biomes)
+        {
+            @SuppressWarnings("unchecked")
             Iterator<SpawnEntry> spawns = biome.getSpawnEntries(typeOfCreature).iterator();
 
-            while(spawns.hasNext()) {
-                SpawnEntry entry = (SpawnEntry)spawns.next();
-                if (entry.type == entityClass) {
+            while (spawns.hasNext())
+            {
+                SpawnEntry entry = spawns.next();
+                if (entry.type == entityClass)
+                {
                     spawns.remove();
                 }
             }
         }
-
     }
 
     public static void removeSpawn(String entityName, EntityCategory spawnList, Biome... biomes) {
@@ -210,18 +204,14 @@ public class EntityRegistry {
     }
 
     public EntityRegistry.EntityRegistration lookupModSpawn(ModContainer mc, int modEntityId) {
-        Iterator i$ = this.entityRegistrations.get(mc).iterator();
-
-        EntityRegistry.EntityRegistration er;
-        do {
-            if (!i$.hasNext()) {
-                return null;
+        for (EntityRegistration er : entityRegistrations.get(mc))
+        {
+            if (er.getModEntityId() == modEntityId)
+            {
+                return er;
             }
-
-            er = (EntityRegistry.EntityRegistration)i$.next();
-        } while(er.getModEntityId() != modEntityId);
-
-        return er;
+        }
+        return null;
     }
 
     public boolean tryTrackingEntity(EntityTracker entityTracker, Entity entity) {

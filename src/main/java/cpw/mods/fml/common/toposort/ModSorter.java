@@ -22,82 +22,83 @@ public class ModSorter {
     }
 
     private void buildGraph(List<ModContainer> modList, Map<String, ModContainer> nameLookup) {
-        this.modGraph = new TopologicalSort.DirectedGraph();
-        this.modGraph.addNode(this.beforeAll);
-        this.modGraph.addNode(this.before);
-        this.modGraph.addNode(this.afterAll);
-        this.modGraph.addNode(this.after);
-        this.modGraph.addEdge(this.before, this.after);
-        this.modGraph.addEdge(this.beforeAll, this.before);
-        this.modGraph.addEdge(this.after, this.afterAll);
-        Iterator i$ = modList.iterator();
+        modGraph = new TopologicalSort.DirectedGraph<ModContainer>();
+        modGraph.addNode(beforeAll);
+        modGraph.addNode(before);
+        modGraph.addNode(afterAll);
+        modGraph.addNode(after);
+        modGraph.addEdge(before, after);
+        modGraph.addEdge(beforeAll, before);
+        modGraph.addEdge(after, afterAll);
 
-        ModContainer mod;
-        while(i$.hasNext()) {
-            mod = (ModContainer)i$.next();
-            this.modGraph.addNode(mod);
+        for (ModContainer mod : modList)
+        {
+            modGraph.addNode(mod);
         }
 
-        i$ = modList.iterator();
+        for (ModContainer mod : modList)
+        {
+            if (mod.isImmutable())
+            {
+                // Immutable mods are always before everything
+                modGraph.addEdge(beforeAll, mod);
+                modGraph.addEdge(mod, before);
+                continue;
+            }
+            boolean preDepAdded = false;
+            boolean postDepAdded = false;
 
-        while(true) {
-            while(i$.hasNext()) {
-                mod = (ModContainer)i$.next();
-                if (mod.isImmutable()) {
-                    this.modGraph.addEdge(this.beforeAll, mod);
-                    this.modGraph.addEdge(mod, this.before);
-                } else {
-                    boolean preDepAdded = false;
-                    boolean postDepAdded = false;
-                    Iterator i$ = mod.getDependencies().iterator();
+            for (ArtifactVersion dep : mod.getDependencies())
+            {
+                preDepAdded = true;
 
-                    ArtifactVersion dep;
-                    String modid;
-                    while(i$.hasNext()) {
-                        dep = (ArtifactVersion)i$.next();
-                        preDepAdded = true;
-                        modid = dep.getLabel();
-                        if (modid.equals("*")) {
-                            this.modGraph.addEdge(mod, this.afterAll);
-                            this.modGraph.addEdge(this.after, mod);
-                            postDepAdded = true;
-                        } else {
-                            this.modGraph.addEdge(this.before, mod);
-                            if (Loader.isModLoaded(modid)) {
-                                this.modGraph.addEdge(nameLookup.get(modid), mod);
-                            }
-                        }
-                    }
-
-                    i$ = mod.getDependants().iterator();
-
-                    while(i$.hasNext()) {
-                        dep = (ArtifactVersion)i$.next();
-                        postDepAdded = true;
-                        modid = dep.getLabel();
-                        if (modid.equals("*")) {
-                            this.modGraph.addEdge(this.beforeAll, mod);
-                            this.modGraph.addEdge(mod, this.before);
-                            preDepAdded = true;
-                        } else {
-                            this.modGraph.addEdge(mod, this.after);
-                            if (Loader.isModLoaded(modid)) {
-                                this.modGraph.addEdge(mod, nameLookup.get(modid));
-                            }
-                        }
-                    }
-
-                    if (!preDepAdded) {
-                        this.modGraph.addEdge(this.before, mod);
-                    }
-
-                    if (!postDepAdded) {
-                        this.modGraph.addEdge(mod, this.after);
+                String modid = dep.getLabel();
+                if (modid.equals("*"))
+                {
+                    // We are "after" everything
+                    modGraph.addEdge(mod, afterAll);
+                    modGraph.addEdge(after, mod);
+                    postDepAdded = true;
+                }
+                else
+                {
+                    modGraph.addEdge(before, mod);
+                    if (Loader.isModLoaded(modid)) {
+                        modGraph.addEdge(nameLookup.get(modid), mod);
                     }
                 }
             }
 
-            return;
+            for (ArtifactVersion dep : mod.getDependants())
+            {
+                postDepAdded = true;
+
+                String modid = dep.getLabel();
+                if (modid.equals("*"))
+                {
+                    // We are "before" everything
+                    modGraph.addEdge(beforeAll, mod);
+                    modGraph.addEdge(mod, before);
+                    preDepAdded = true;
+                }
+                else
+                {
+                    modGraph.addEdge(mod, after);
+                    if (Loader.isModLoaded(modid)) {
+                        modGraph.addEdge(mod, nameLookup.get(modid));
+                    }
+                }
+            }
+
+            if (!preDepAdded)
+            {
+                modGraph.addEdge(before, mod);
+            }
+
+            if (!postDepAdded)
+            {
+                modGraph.addEdge(mod, after);
+            }
         }
     }
 

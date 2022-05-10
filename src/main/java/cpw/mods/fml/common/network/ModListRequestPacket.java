@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static cpw.mods.fml.common.network.FMLPacket.Type.MOD_LIST_RESPONSE;
+
 public class ModListRequestPacket extends FMLPacket {
     private List<String> sentModList;
     private byte compatibilityLevel;
@@ -29,13 +31,10 @@ public class ModListRequestPacket extends FMLPacket {
         ByteArrayDataOutput dat = ByteStreams.newDataOutput();
         Set<ModContainer> activeMods = FMLNetworkHandler.instance().getNetworkModList();
         dat.writeInt(activeMods.size());
-        Iterator i$ = activeMods.iterator();
-
-        while(i$.hasNext()) {
-            ModContainer mc = (ModContainer)i$.next();
+        for (ModContainer mc : activeMods)
+        {
             dat.writeUTF(mc.getModId());
         }
-
         dat.writeByte(FMLNetworkHandler.getCompatibilityLevel());
         return dat.toByteArray();
     }
@@ -60,37 +59,40 @@ public class ModListRequestPacket extends FMLPacket {
 
     public void execute(Connection mgr, FMLNetworkHandler handler, PacketListener netHandler, String userName) {
         List<String> missingMods = Lists.newArrayList();
-        Map<String, String> modVersions = Maps.newHashMap();
+        Map<String,String> modVersions = Maps.newHashMap();
         Map<String, ModContainer> indexedModList = Maps.newHashMap(Loader.instance().getIndexedModList());
-        Iterator i$ = this.sentModList.iterator();
 
-        while(i$.hasNext()) {
-            String m = (String)i$.next();
-            ModContainer mc = (ModContainer)indexedModList.get(m);
-            if (mc == null) {
+        for (String m : sentModList)
+        {
+            ModContainer mc = indexedModList.get(m);
+            if (mc == null)
+            {
                 missingMods.add(m);
-            } else {
-                indexedModList.remove(m);
-                modVersions.put(m, mc.getVersion());
+                continue;
             }
+            indexedModList.remove(m);
+            modVersions.put(m, mc.getVersion());
         }
 
-        if (indexedModList.size() > 0) {
-            i$ = indexedModList.entrySet().iterator();
-
-            while(i$.hasNext()) {
-                Map.Entry<String, ModContainer> e = (Map.Entry)i$.next();
-                if (((ModContainer)e.getValue()).isNetworkMod()) {
+        if (indexedModList.size()>0)
+        {
+            for (Map.Entry<String, ModContainer> e : indexedModList.entrySet())
+            {
+                if (e.getValue().isNetworkMod())
+                {
                     NetworkModHandler missingHandler = FMLNetworkHandler.instance().findNetworkModHandler(e.getValue());
-                    if (missingHandler.requiresServerSide()) {
-                        FMLLog.warning("The mod %s was not found on the server you connected to, but requested that the server side be present", new Object[]{e.getKey()});
+                    if (missingHandler.requiresServerSide())
+                    {
+                        // TODO : what should we do if a mod is marked "serverSideRequired"? Stop the connection?
+                        FMLLog.warning("The mod %s was not found on the server you connected to, but requested that the server side be present", e.getKey());
                     }
                 }
             }
         }
 
-        FMLLog.fine("The server has compatibility level %d", new Object[]{this.compatibilityLevel});
-        FMLCommonHandler.instance().getSidedDelegate().setClientCompatibilityLevel(this.compatibilityLevel);
-        mgr.send(PacketDispatcher.getPacket("FML", FMLPacket.makePacket(Type.MOD_LIST_RESPONSE, new Object[]{modVersions, missingMods})));
+        FMLLog.fine("The server has compatibility level %d", compatibilityLevel);
+        FMLCommonHandler.instance().getSidedDelegate().setClientCompatibilityLevel(compatibilityLevel);
+
+        mgr.send(PacketDispatcher.getPacket("FML", FMLPacket.makePacket(MOD_LIST_RESPONSE, modVersions, missingMods)));
     }
 }

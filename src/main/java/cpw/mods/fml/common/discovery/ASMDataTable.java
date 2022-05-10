@@ -18,20 +18,17 @@ public class ASMDataTable {
     }
 
     public SetMultimap<String, ASMDataTable.ASMData> getAnnotationsFor(ModContainer container) {
-        if (this.containerAnnotationData == null) {
-            ImmutableMap.Builder<ModContainer, SetMultimap<String, ASMDataTable.ASMData>> mapBuilder = ImmutableMap.builder();
-            Iterator i$ = this.containers.iterator();
-
-            while(i$.hasNext()) {
-                ModContainer cont = (ModContainer)i$.next();
-                Multimap<String, ASMDataTable.ASMData> values = Multimaps.filterValues(this.globalAnnotationData, new ASMDataTable.ModContainerPredicate(cont));
+        if (containerAnnotationData == null)
+        {
+            ImmutableMap.Builder<ModContainer, SetMultimap<String, ASMData>> mapBuilder = ImmutableMap.<ModContainer, SetMultimap<String,ASMData>>builder();
+            for (ModContainer cont : containers)
+            {
+                Multimap<String, ASMData> values = Multimaps.filterValues(globalAnnotationData, new ModContainerPredicate(cont));
                 mapBuilder.put(cont, ImmutableSetMultimap.copyOf(values));
             }
-
-            this.containerAnnotationData = mapBuilder.build();
+            containerAnnotationData = mapBuilder.build();
         }
-
-        return (SetMultimap)this.containerAnnotationData.get(container);
+        return containerAnnotationData.get(container);
     }
 
     public Set<ASMDataTable.ASMData> getAll(String annotation) {

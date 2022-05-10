@@ -9,24 +9,20 @@ public class ReflectionHelper {
 
     public static Field findField(Class<?> clazz, String... fieldNames) {
         Exception failed = null;
-        String[] arr$ = fieldNames;
-        int len$ = fieldNames.length;
-        int i$ = 0;
-
-        while (i$ < len$) {
-            String fieldName = arr$[i$];
-
-            try {
+        for (String fieldName : fieldNames)
+        {
+            try
+            {
                 Field f = clazz.getDeclaredField(fieldName);
                 f.setAccessible(true);
                 return f;
-            } catch (Exception var8) {
-                failed = var8;
-                ++i$;
+            }
+            catch (Exception e)
+            {
+                failed = e;
             }
         }
-
-        throw new ReflectionHelper.UnableToFindFieldException(fieldNames, failed);
+        throw new UnableToFindFieldException(fieldNames, failed);
     }
 
     public static <T, E> T getPrivateValue(Class<? super E> classToAccess, E instance, int fieldIndex) {
@@ -67,44 +63,37 @@ public class ReflectionHelper {
 
     public static Class<? super Object> getClass(ClassLoader loader, String... classNames) {
         Exception err = null;
-        String[] arr$ = classNames;
-        int len$ = classNames.length;
-        int i$ = 0;
-
-        while (i$ < len$) {
-            String className = arr$[i$];
-
-            try {
+        for (String className : classNames)
+        {
+            try
+            {
                 return (Class<? super Object>) Class.forName(className, false, loader);
-            } catch (Exception var8) {
-                err = var8;
-                ++i$;
+            }
+            catch (Exception e)
+            {
+                err = e;
             }
         }
 
-        throw new ReflectionHelper.UnableToFindClassException(classNames, err);
+        throw new UnableToFindClassException(classNames, err);
     }
 
     public static <E> Method findMethod(Class<? super E> clazz, E instance, String[] methodNames, Class<?>... methodTypes) {
         Exception failed = null;
-        String[] arr$ = methodNames;
-        int len$ = methodNames.length;
-        int i$ = 0;
-
-        while (i$ < len$) {
-            String methodName = arr$[i$];
-
-            try {
+        for (String methodName : methodNames)
+        {
+            try
+            {
                 Method m = clazz.getDeclaredMethod(methodName, methodTypes);
                 m.setAccessible(true);
                 return m;
-            } catch (Exception var10) {
-                failed = var10;
-                ++i$;
+            }
+            catch (Exception e)
+            {
+                failed = e;
             }
         }
-
-        throw new ReflectionHelper.UnableToFindMethodException(methodNames, failed);
+        throw new UnableToFindMethodException(methodNames, failed);
     }
 
     public static class UnableToFindFieldException extends RuntimeException {

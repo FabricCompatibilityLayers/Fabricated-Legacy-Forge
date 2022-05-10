@@ -24,70 +24,78 @@ public class DirectoryDiscoverer implements ITypeDiscoverer {
     public List<ModContainer> discover(ModCandidate candidate, ASMDataTable table) {
         this.table = table;
         List<ModContainer> found = Lists.newArrayList();
-        FMLLog.fine("Examining directory %s for potential mods", new Object[]{candidate.getModContainer().getName()});
-        this.exploreFileSystem("", candidate.getModContainer(), found, candidate, (MetadataCollection)null);
-        Iterator i$ = found.iterator();
-
-        while(i$.hasNext()) {
-            ModContainer mc = (ModContainer)i$.next();
+        FMLLog.fine("Examining directory %s for potential mods", candidate.getModContainer().getName());
+        exploreFileSystem("", candidate.getModContainer(), found, candidate, null);
+        for (ModContainer mc : found)
+        {
             table.addContainer(mc);
         }
-
         return found;
     }
 
     public void exploreFileSystem(String path, File modDir, List<ModContainer> harvestedMods, ModCandidate candidate, MetadataCollection mc) {
-        if (path.length() == 0) {
+        if (path.length() == 0)
+        {
             File metadata = new File(modDir, "mcmod.info");
-
-            try {
+            try
+            {
                 FileInputStream fis = new FileInputStream(metadata);
-                mc = MetadataCollection.from(fis, modDir.getName());
+                mc = MetadataCollection.from(fis,modDir.getName());
                 fis.close();
-                FMLLog.fine("Found an mcmod.info file in directory %s", new Object[]{modDir.getName()});
-            } catch (Exception var16) {
-                mc = MetadataCollection.from((InputStream)null, "");
-                FMLLog.fine("No mcmod.info file found in directory %s", new Object[]{modDir.getName()});
+                FMLLog.fine("Found an mcmod.info file in directory %s", modDir.getName());
+            }
+            catch (Exception e)
+            {
+                mc = MetadataCollection.from(null,"");
+                FMLLog.fine("No mcmod.info file found in directory %s", modDir.getName());
             }
         }
 
-        File[] content = modDir.listFiles(new DirectoryDiscoverer.ClassFilter());
+        File[] content = modDir.listFiles(new ClassFilter());
+
+        // Always sort our content
         Arrays.sort(content);
-        File[] arr$ = content;
-        int len$ = content.length;
+        for (File file : content)
+        {
+            if (file.isDirectory())
+            {
+                FMLLog.finest("Recursing into package %s", path + file.getName());
+                exploreFileSystem(path + file.getName() + ".", file, harvestedMods, candidate, mc);
+                continue;
+            }
+            Matcher match = classFile.matcher(file.getName());
 
-        for(int i$ = 0; i$ < len$; ++i$) {
-            File file = arr$[i$];
-            if (file.isDirectory()) {
-                FMLLog.finest("Recursing into package %s", new Object[]{path + file.getName()});
-                this.exploreFileSystem(path + file.getName() + ".", file, harvestedMods, candidate, mc);
-            } else {
-                Matcher match = classFile.matcher(file.getName());
-                if (match.matches()) {
-                    ASMModParser modParser = null;
+            if (match.matches())
+            {
+                ASMModParser modParser = null;
+                try
+                {
+                    FileInputStream fis = new FileInputStream(file);
+                    modParser = new ASMModParser(fis);
+                    fis.close();
+                }
+                catch (LoaderException e)
+                {
+                    FMLLog.log(Level.SEVERE, e, "There was a problem reading the file %s - probably this is a corrupt file", file.getPath());
+                    throw e;
+                }
+                catch (Exception e)
+                {
+                    Throwables.propagate(e);
+                }
 
-                    try {
-                        FileInputStream fis = new FileInputStream(file);
-                        modParser = new ASMModParser(fis);
-                        fis.close();
-                    } catch (LoaderException var14) {
-                        FMLLog.log(Level.SEVERE, var14, "There was a problem reading the file %s - probably this is a corrupt file", new Object[]{file.getPath()});
-                        throw var14;
-                    } catch (Exception var15) {
-                        Throwables.propagate(var15);
-                    }
-
-                    modParser.validate();
-                    modParser.sendToTable(this.table, candidate);
-                    ModContainer container = ModContainerFactory.instance().build(modParser, candidate.getModContainer(), candidate);
-                    if (container != null) {
-                        harvestedMods.add(container);
-                        container.bindMetadata(mc);
-                    }
+                modParser.validate();
+                modParser.sendToTable(table, candidate);
+                ModContainer container = ModContainerFactory.instance().build(modParser, candidate.getModContainer(), candidate);
+                if (container!=null)
+                {
+                    harvestedMods.add(container);
+                    container.bindMetadata(mc);
                 }
             }
-        }
 
+
+        }
     }
 
     private class ClassFilter implements FileFilter {

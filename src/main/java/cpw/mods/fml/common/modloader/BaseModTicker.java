@@ -55,25 +55,27 @@ public class BaseModTicker implements ITickHandler {
     }
 
     private void sendTick(EnumSet<TickType> types, boolean end, Object... tickData) {
-        Iterator i$ = types.iterator();
+        for (TickType type : types)
+        {
+            if (!ticks.contains(type))
+            {
+                continue;
+            }
 
-        while(i$.hasNext()) {
-            TickType type = (TickType)i$.next();
-            if (this.ticks.contains(type)) {
-                boolean keepTicking = true;
-                if (this.sendGuiTicks) {
-                    keepTicking = this.mod.doTickInGUI(type, end, tickData);
-                } else {
-                    keepTicking = this.mod.doTickInGame(type, end, tickData);
-                }
-
-                if (!keepTicking) {
-                    this.ticks.remove(type);
-                    this.ticks.removeAll(type.partnerTicks());
-                }
+            boolean keepTicking=true;
+            if (sendGuiTicks)
+            {
+                keepTicking = mod.doTickInGUI(type, end, tickData);
+            }
+            else
+            {
+                keepTicking = mod.doTickInGame(type, end, tickData);
+            }
+            if (!keepTicking) {
+                ticks.remove(type);
+                ticks.removeAll(type.partnerTicks());
             }
         }
-
     }
 
     public EnumSet<TickType> ticks() {

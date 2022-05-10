@@ -18,17 +18,17 @@ public class ModLoaderVillageTradeHandler implements VillagerRegistry.IVillageTr
     }
 
     public void manipulateTradesForVillager(VillagerEntity villager, TraderOfferList recipeList, Random random) {
-        Iterator i$ = this.trades.iterator();
-
-        while(i$.hasNext()) {
-            TradeEntry ent = (TradeEntry)i$.next();
-            if (ent.buying) {
+        for (TradeEntry ent : trades)
+        {
+            if (ent.buying)
+            {
                 VillagerRegistry.addEmeraldBuyRecipe(villager, recipeList, random, Item.ITEMS[ent.id], ent.chance, ent.min, ent.max);
-            } else {
+            }
+            else
+            {
                 VillagerRegistry.addEmeraldSellRecipe(villager, recipeList, random, Item.ITEMS[ent.id], ent.chance, ent.min, ent.max);
             }
         }
-
     }
 
     public void addTrade(TradeEntry entry) {

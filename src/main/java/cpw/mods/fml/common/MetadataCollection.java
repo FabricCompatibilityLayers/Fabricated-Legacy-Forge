@@ -53,14 +53,11 @@ public class MetadataCollection {
     }
 
     private void parseModMetadataList(JsonNode metadataList) {
-        Iterator i$ = metadataList.getElements().iterator();
-
-        while(i$.hasNext()) {
-            JsonNode node = (JsonNode)i$.next();
+        for (JsonNode node : metadataList.getElements())
+        {
             ModMetadata mmd = new ModMetadata(node);
-            this.metadatas.put(mmd.modId, mmd);
+            metadatas.put(mmd.modId, mmd);
         }
-
     }
 
     public ModMetadata getMetadataForId(String modId, Map<String, Object> extraData) {

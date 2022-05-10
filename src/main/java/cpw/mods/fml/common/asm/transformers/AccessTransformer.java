@@ -85,68 +85,67 @@ public class AccessTransformer implements IClassTransformer {
     }
 
     public byte[] transform(String name, byte[] bytes) {
-        if (!this.modifiers.containsKey(name)) {
-            return bytes;
-        } else {
-            ClassNode classNode = new ClassNode();
-            ClassReader classReader = new ClassReader(bytes);
-            classReader.accept(classNode, 0);
-            Collection<AccessTransformer.Modifier> mods = this.modifiers.get(name);
-            Iterator i$ = mods.iterator();
+        if (!modifiers.containsKey(name)) { return bytes; }
 
-            while(true) {
-                label61:
-                while(i$.hasNext()) {
-                    AccessTransformer.Modifier m = (AccessTransformer.Modifier)i$.next();
-                    if (m.modifyClassVisibility) {
-                        classNode.access = this.getFixedAccess(classNode.access, m);
-                    } else {
-                        Iterator i$;
-                        if (m.desc.isEmpty()) {
-                            i$ = classNode.fields.iterator();
+        ClassNode classNode = new ClassNode();
+        ClassReader classReader = new ClassReader(bytes);
+        classReader.accept(classNode, 0);
 
-                            while(true) {
-                                FieldNode n;
-                                do {
-                                    if (!i$.hasNext()) {
-                                        continue label61;
-                                    }
+        Collection<Modifier> mods = modifiers.get(name);
+        for (Modifier m : mods)
+        {
+            if (m.modifyClassVisibility)
+            {
+                classNode.access = getFixedAccess(classNode.access, m);
+                if (DEBUG)
+                {
+                    System.out.println(String.format("Class: %s %s -> %s", name, toBinary(m.oldAccess), toBinary(m.newAccess)));
+                }
+                continue;
+            }
+            if (m.desc.isEmpty())
+            {
+                for (FieldNode n : (List<FieldNode>) classNode.fields)
+                {
+                    if (n.name.equals(m.name) || m.name.equals("*"))
+                    {
+                        n.access = getFixedAccess(n.access, m);
+                        if (DEBUG)
+                        {
+                            System.out.println(String.format("Field: %s.%s %s -> %s", name, n.name, toBinary(m.oldAccess), toBinary(m.newAccess)));
+                        }
 
-                                    n = (FieldNode)i$.next();
-                                } while(!n.name.equals(m.name) && !m.name.equals("*"));
-
-                                n.access = this.getFixedAccess(n.access, m);
-                                if (!m.name.equals("*")) {
-                                    break;
-                                }
-                            }
-                        } else {
-                            i$ = classNode.methods.iterator();
-
-                            while(true) {
-                                MethodNode n;
-                                do {
-                                    if (!i$.hasNext()) {
-                                        continue label61;
-                                    }
-
-                                    n = (MethodNode)i$.next();
-                                } while((!n.name.equals(m.name) || !n.desc.equals(m.desc)) && !m.name.equals("*"));
-
-                                n.access = this.getFixedAccess(n.access, m);
-                                if (!m.name.equals("*")) {
-                                    break;
-                                }
-                            }
+                        if (!m.name.equals("*"))
+                        {
+                            break;
                         }
                     }
                 }
+            }
+            else
+            {
+                for (MethodNode n : (List<MethodNode>) classNode.methods)
+                {
+                    if ((n.name.equals(m.name) && n.desc.equals(m.desc)) || m.name.equals("*"))
+                    {
+                        n.access = getFixedAccess(n.access, m);
+                        if (DEBUG)
+                        {
+                            System.out.println(String.format("Method: %s.%s%s %s -> %s", name, n.name, n.desc, toBinary(m.oldAccess), toBinary(m.newAccess)));
+                        }
 
-                ClassWriter writer = new ClassWriter(1);
-                classNode.accept(writer);
-                return writer.toByteArray();
+                        if (!m.name.equals("*"))
+                        {
+                            break;
+                        }
+                    }
+                }
             }
         }
+
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        classNode.accept(writer);
+        return writer.toByteArray();
     }
 
     private String toBinary(int num) {
@@ -239,75 +238,94 @@ public class AccessTransformer implements IClassTransformer {
         ZipInputStream inJar = null;
         ZipOutputStream outJar = null;
 
-        try {
-            try {
+        try
+        {
+            try
+            {
                 inJar = new ZipInputStream(new BufferedInputStream(new FileInputStream(inFile)));
-            } catch (FileNotFoundException var30) {
-                throw new FileNotFoundException("Could not open input file: " + var30.getMessage());
+            }
+            catch (FileNotFoundException e)
+            {
+                throw new FileNotFoundException("Could not open input file: " + e.getMessage());
             }
 
-            try {
+            try
+            {
                 outJar = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outFile)));
-            } catch (FileNotFoundException var29) {
-                throw new FileNotFoundException("Could not open output file: " + var29.getMessage());
+            }
+            catch (FileNotFoundException e)
+            {
+                throw new FileNotFoundException("Could not open output file: " + e.getMessage());
             }
 
-            while(true) {
-                ZipEntry entry;
-                while((entry = inJar.getNextEntry()) != null) {
-                    if (entry.isDirectory()) {
-                        outJar.putNextEntry(entry);
-                    } else {
-                        byte[] data = new byte[4096];
-                        ByteArrayOutputStream entryBuffer = new ByteArrayOutputStream();
+            ZipEntry entry;
+            while ((entry = inJar.getNextEntry()) != null)
+            {
+                if (entry.isDirectory())
+                {
+                    outJar.putNextEntry(entry);
+                    continue;
+                }
 
-                        int len;
-                        do {
-                            len = inJar.read(data);
-                            if (len > 0) {
-                                entryBuffer.write(data, 0, len);
-                            }
-                        } while(len != -1);
+                byte[] data = new byte[4096];
+                ByteArrayOutputStream entryBuffer = new ByteArrayOutputStream();
 
-                        byte[] entryData = entryBuffer.toByteArray();
-                        String entryName = entry.getName();
-                        if (entryName.endsWith(".class") && !entryName.startsWith(".")) {
-                            ClassNode cls = new ClassNode();
-                            ClassReader rdr = new ClassReader(entryData);
-                            rdr.accept(cls, 0);
-                            String name = cls.name.replace('/', '.').replace('\\', '.');
-                            AccessTransformer[] arr$ = transformers;
-                            int len$ = transformers.length;
+                int len;
+                do
+                {
+                    len = inJar.read(data);
+                    if (len > 0)
+                    {
+                        entryBuffer.write(data, 0, len);
+                    }
+                }
+                while (len != -1);
 
-                            for(int i$ = 0; i$ < len$; ++i$) {
-                                AccessTransformer trans = arr$[i$];
-                                entryData = trans.transform(name, entryData);
-                            }
-                        }
+                byte[] entryData = entryBuffer.toByteArray();
 
-                        ZipEntry newEntry = new ZipEntry(entryName);
-                        outJar.putNextEntry(newEntry);
-                        outJar.write(entryData);
+                String entryName = entry.getName();
+
+                if (entryName.endsWith(".class") && !entryName.startsWith("."))
+                {
+                    ClassNode cls = new ClassNode();
+                    ClassReader rdr = new ClassReader(entryData);
+                    rdr.accept(cls, 0);
+                    String name = cls.name.replace('/', '.').replace('\\', '.');
+
+                    for (AccessTransformer trans : transformers)
+                    {
+                        entryData = trans.transform(name, entryData);
                     }
                 }
 
-                return;
+                ZipEntry newEntry = new ZipEntry(entryName);
+                outJar.putNextEntry(newEntry);
+                outJar.write(entryData);
             }
-        } finally {
-            if (outJar != null) {
-                try {
+        }
+        finally
+        {
+            if (outJar != null)
+            {
+                try
+                {
                     outJar.close();
-                } catch (IOException var28) {
+                }
+                catch (IOException e)
+                {
                 }
             }
 
-            if (inJar != null) {
-                try {
+            if (inJar != null)
+            {
+                try
+                {
                     inJar.close();
-                } catch (IOException var27) {
+                }
+                catch (IOException e)
+                {
                 }
             }
-
         }
     }
 

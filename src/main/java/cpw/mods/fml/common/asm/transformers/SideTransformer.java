@@ -53,31 +53,34 @@ public class SideTransformer implements IClassTransformer {
     }
 
     private boolean remove(List<AnnotationNode> anns, String side) {
-        if (anns == null) {
+        if (anns == null)
+        {
             return false;
-        } else {
-            Iterator i$ = anns.iterator();
-
-            while(true) {
-                AnnotationNode ann;
-                do {
-                    do {
-                        if (!i$.hasNext()) {
-                            return false;
+        }
+        for (AnnotationNode ann : anns)
+        {
+            if (ann.desc.equals(Type.getDescriptor(SideOnly.class)))
+            {
+                if (ann.values != null)
+                {
+                    for (int x = 0; x < ann.values.size() - 1; x += 2)
+                    {
+                        Object key = ann.values.get(x);
+                        Object value = ann.values.get(x+1);
+                        if (key instanceof String && key.equals("value"))
+                        {
+                            if (value instanceof String[] )
+                            {
+                                if (!((String[])value)[1].equals(side))
+                                {
+                                    return true;
+                                }
+                            }
                         }
-
-                        ann = (AnnotationNode)i$.next();
-                    } while(!ann.desc.equals(Type.getDescriptor(SideOnly.class)));
-                } while(ann.values == null);
-
-                for(int x = 0; x < ann.values.size() - 1; x += 2) {
-                    Object key = ann.values.get(x);
-                    Object value = ann.values.get(x + 1);
-                    if (key instanceof String && key.equals("value") && value instanceof String[] && !((String[])((String[])value))[1].equals(side)) {
-                        return true;
                     }
                 }
             }
         }
+        return false;
     }
 }

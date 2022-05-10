@@ -91,13 +91,10 @@ public class ASMModParser {
     }
 
     public void sendToTable(ASMDataTable table, ModCandidate candidate) {
-        Iterator i$ = this.annotations.iterator();
-
-        while(i$.hasNext()) {
-            ModAnnotation ma = (ModAnnotation)i$.next();
+        for (ModAnnotation ma : annotations)
+        {
             table.addASMData(candidate, ma.asmType.getClassName(), this.asmType.getClassName(), ma.member, ma.values);
         }
-
     }
 
     public void addAnnotationArray(String name) {

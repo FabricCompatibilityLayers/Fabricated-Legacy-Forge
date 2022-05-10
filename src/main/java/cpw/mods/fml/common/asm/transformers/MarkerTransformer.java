@@ -36,59 +36,60 @@ public class MarkerTransformer implements IClassTransformer {
     private void readMapFile(String rulesFile) throws IOException {
         File file = new File(rulesFile);
         URL rulesResource;
-        if (file.exists()) {
+        if (file.exists())
+        {
             rulesResource = file.toURI().toURL();
-        } else {
+        }
+        else
+        {
             rulesResource = Resources.getResource(rulesFile);
         }
-
-        Resources.readLines(rulesResource, Charsets.UTF_8, new LineProcessor<Void>() {
-            public Void getResult() {
+        Resources.readLines(rulesResource, Charsets.UTF_8, new LineProcessor<Void>()
+        {
+            @Override
+            public Void getResult()
+            {
                 return null;
             }
 
-            public boolean processLine(String input) throws IOException {
-                String line = ((String) Iterables.getFirst(Splitter.on('#').limit(2).split(input), "")).trim();
-                if (line.length() == 0) {
+            @Override
+            public boolean processLine(String input) throws IOException
+            {
+                String line = Iterables.getFirst(Splitter.on('#').limit(2).split(input), "").trim();
+                if (line.length()==0)
+                {
                     return true;
-                } else {
-                    List<String> parts = Lists.newArrayList(Splitter.on(" ").trimResults().split(line));
-                    if (parts.size() != 2) {
-                        throw new RuntimeException("Invalid config file line " + input);
-                    } else {
-                        List<String> markerInterfaces = Lists.newArrayList(Splitter.on(",").trimResults().split((CharSequence)parts.get(1)));
-                        Iterator i$ = markerInterfaces.iterator();
-
-                        while(i$.hasNext()) {
-                            String marker = (String)i$.next();
-                            MarkerTransformer.this.markers.put(parts.get(0), marker);
-                        }
-
-                        return true;
-                    }
                 }
+                List<String> parts = Lists.newArrayList(Splitter.on(" ").trimResults().split(line));
+                if (parts.size()!=2)
+                {
+                    throw new RuntimeException("Invalid config file line "+ input);
+                }
+                List<String> markerInterfaces = Lists.newArrayList(Splitter.on(",").trimResults().split(parts.get(1)));
+                for (String marker : markerInterfaces)
+                {
+                    markers.put(parts.get(0), marker);
+                }
+                return true;
             }
         });
     }
 
     public byte[] transform(String name, byte[] bytes) {
-        if (!this.markers.containsKey(name)) {
-            return bytes;
-        } else {
-            ClassNode classNode = new ClassNode();
-            ClassReader classReader = new ClassReader(bytes);
-            classReader.accept(classNode, 0);
-            Iterator i$ = this.markers.get(name).iterator();
+        if (!markers.containsKey(name)) { return bytes; }
 
-            while(i$.hasNext()) {
-                String marker = (String)i$.next();
-                classNode.interfaces.add(marker);
-            }
+        ClassNode classNode = new ClassNode();
+        ClassReader classReader = new ClassReader(bytes);
+        classReader.accept(classNode, 0);
 
-            ClassWriter writer = new ClassWriter(1);
-            classNode.accept(writer);
-            return writer.toByteArray();
+        for (String marker : markers.get(name))
+        {
+            classNode.interfaces.add(marker);
         }
+
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+        classNode.accept(writer);
+        return writer.toByteArray();
     }
 
     public static void main(String[] args) {
@@ -137,75 +138,94 @@ public class MarkerTransformer implements IClassTransformer {
         ZipInputStream inJar = null;
         ZipOutputStream outJar = null;
 
-        try {
-            try {
+        try
+        {
+            try
+            {
                 inJar = new ZipInputStream(new BufferedInputStream(new FileInputStream(inFile)));
-            } catch (FileNotFoundException var30) {
-                throw new FileNotFoundException("Could not open input file: " + var30.getMessage());
+            }
+            catch (FileNotFoundException e)
+            {
+                throw new FileNotFoundException("Could not open input file: " + e.getMessage());
             }
 
-            try {
+            try
+            {
                 outJar = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(outFile)));
-            } catch (FileNotFoundException var29) {
-                throw new FileNotFoundException("Could not open output file: " + var29.getMessage());
+            }
+            catch (FileNotFoundException e)
+            {
+                throw new FileNotFoundException("Could not open output file: " + e.getMessage());
             }
 
-            while(true) {
-                ZipEntry entry;
-                while((entry = inJar.getNextEntry()) != null) {
-                    if (entry.isDirectory()) {
-                        outJar.putNextEntry(entry);
-                    } else {
-                        byte[] data = new byte[4096];
-                        ByteArrayOutputStream entryBuffer = new ByteArrayOutputStream();
+            ZipEntry entry;
+            while ((entry = inJar.getNextEntry()) != null)
+            {
+                if (entry.isDirectory())
+                {
+                    outJar.putNextEntry(entry);
+                    continue;
+                }
 
-                        int len;
-                        do {
-                            len = inJar.read(data);
-                            if (len > 0) {
-                                entryBuffer.write(data, 0, len);
-                            }
-                        } while(len != -1);
+                byte[] data = new byte[4096];
+                ByteArrayOutputStream entryBuffer = new ByteArrayOutputStream();
 
-                        byte[] entryData = entryBuffer.toByteArray();
-                        String entryName = entry.getName();
-                        if (entryName.endsWith(".class") && !entryName.startsWith(".")) {
-                            ClassNode cls = new ClassNode();
-                            ClassReader rdr = new ClassReader(entryData);
-                            rdr.accept(cls, 0);
-                            String name = cls.name.replace('/', '.').replace('\\', '.');
-                            MarkerTransformer[] arr$ = transformers;
-                            int len$ = transformers.length;
+                int len;
+                do
+                {
+                    len = inJar.read(data);
+                    if (len > 0)
+                    {
+                        entryBuffer.write(data, 0, len);
+                    }
+                }
+                while (len != -1);
 
-                            for(int i$ = 0; i$ < len$; ++i$) {
-                                MarkerTransformer trans = arr$[i$];
-                                entryData = trans.transform(name, entryData);
-                            }
-                        }
+                byte[] entryData = entryBuffer.toByteArray();
 
-                        ZipEntry newEntry = new ZipEntry(entryName);
-                        outJar.putNextEntry(newEntry);
-                        outJar.write(entryData);
+                String entryName = entry.getName();
+
+                if (entryName.endsWith(".class") && !entryName.startsWith("."))
+                {
+                    ClassNode cls = new ClassNode();
+                    ClassReader rdr = new ClassReader(entryData);
+                    rdr.accept(cls, 0);
+                    String name = cls.name.replace('/', '.').replace('\\', '.');
+
+                    for (MarkerTransformer trans : transformers)
+                    {
+                        entryData = trans.transform(name, entryData);
                     }
                 }
 
-                return;
+                ZipEntry newEntry = new ZipEntry(entryName);
+                outJar.putNextEntry(newEntry);
+                outJar.write(entryData);
             }
-        } finally {
-            if (outJar != null) {
-                try {
+        }
+        finally
+        {
+            if (outJar != null)
+            {
+                try
+                {
                     outJar.close();
-                } catch (IOException var28) {
+                }
+                catch (IOException e)
+                {
                 }
             }
 
-            if (inJar != null) {
-                try {
+            if (inJar != null)
+            {
+                try
+                {
                     inJar.close();
-                } catch (IOException var27) {
+                }
+                catch (IOException e)
+                {
                 }
             }
-
         }
     }
 }

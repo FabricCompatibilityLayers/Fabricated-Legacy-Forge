@@ -5,6 +5,7 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.discovery.ASMDataTable;
@@ -65,153 +66,147 @@ public class ModLoaderModContainer implements ModContainer {
 
     private void configureMod(Class<? extends BaseModProxy> modClazz, ASMDataTable asmData) {
         File configDir = Loader.instance().getConfigDir();
-        File modConfig = new File(configDir, String.format("%s.cfg", this.getModId()));
+        File modConfig = new File(configDir, String.format("%s.cfg", getModId()));
         Properties props = new Properties();
+
         boolean existingConfigFound = false;
         boolean mlPropFound = false;
-        if (modConfig.exists()) {
-            try {
-                FMLLog.fine("Reading existing configuration file for %s : %s", new Object[]{this.getModId(), modConfig.getName()});
+
+        if (modConfig.exists())
+        {
+            try
+            {
+                FMLLog.fine("Reading existing configuration file for %s : %s", getModId(), modConfig.getName());
                 FileReader configReader = new FileReader(modConfig);
                 props.load(configReader);
                 configReader.close();
-            } catch (Exception var38) {
-                FMLLog.log(Level.SEVERE, var38, "Error occured reading mod configuration file %s", new Object[]{modConfig.getName()});
-                throw new LoaderException(var38);
             }
-
+            catch (Exception e)
+            {
+                FMLLog.log(Level.SEVERE, e, "Error occured reading mod configuration file %s", modConfig.getName());
+                throw new LoaderException(e);
+            }
             existingConfigFound = true;
         }
 
         StringBuffer comments = new StringBuffer();
         comments.append("MLProperties: name (type:default) min:max -- information\n");
-        ArrayList mlPropFields = Lists.newArrayList();
-        boolean var28 = false;
 
-        try {
-            var28 = true;
-            Iterator i$ = Sets.union(asmData.getAnnotationsFor(this).get("net.minecraft.src.MLProp"), asmData.getAnnotationsFor(this).get("MLProp")).iterator();
 
-            while(true) {
-                if (!i$.hasNext()) {
-                    i$ = mlPropFields.iterator();
-
-                    while(i$.hasNext()) {
-                        ModProperty property = (ModProperty)i$.next();
-                        if (!Modifier.isStatic(property.field().getModifiers())) {
-                            FMLLog.info("The MLProp field %s in mod %s appears not to be static", new Object[]{property.field().getName(), this.getModId()});
-                        } else {
-                            FMLLog.finest("Considering MLProp field %s", new Object[]{property.field().getName()});
-                            Field f = property.field();
-                            String propertyName = !Strings.nullToEmpty(property.name()).isEmpty() ? property.name() : f.getName();
-                            String propertyValue = null;
-                            Object defaultValue = null;
-
-                            try {
-                                defaultValue = f.get((Object)null);
-                                propertyValue = props.getProperty(propertyName, this.extractValue(defaultValue));
-                                Object currentValue = this.parseValue(propertyValue, property, f.getType(), propertyName);
-                                FMLLog.finest("Configuration for %s.%s found values default: %s, configured: %s, interpreted: %s", new Object[]{this.modClazzName, propertyName, defaultValue, propertyValue, currentValue});
-                                if (currentValue != null && !currentValue.equals(defaultValue)) {
-                                    FMLLog.finest("Configuration for %s.%s value set to: %s", new Object[]{this.modClazzName, propertyName, currentValue});
-                                    f.set((Object)null, currentValue);
-                                }
-                            } catch (Exception var40) {
-                                FMLLog.log(Level.SEVERE, var40, "Invalid configuration found for %s in %s", new Object[]{propertyName, modConfig.getName()});
-                                throw new LoaderException(var40);
-                            } finally {
-                                comments.append(String.format("MLProp : %s (%s:%s", propertyName, f.getType().getName(), defaultValue));
-                                if (property.min() != Double.MIN_VALUE) {
-                                    comments.append(",>=").append(String.format("%.1f", property.min()));
-                                }
-
-                                if (property.max() != Double.MAX_VALUE) {
-                                    comments.append(",<=").append(String.format("%.1f", property.max()));
-                                }
-
-                                comments.append(")");
-                                if (!Strings.nullToEmpty(property.info()).isEmpty()) {
-                                    comments.append(" -- ").append(property.info());
-                                }
-
-                                if (propertyValue != null) {
-                                    props.setProperty(propertyName, this.extractValue(propertyValue));
-                                }
-
-                                comments.append("\n");
-                            }
-
-                            mlPropFound = true;
-                        }
-                    }
-
-                    var28 = false;
-                    break;
-                }
-
-                ASMDataTable.ASMData dat = (ASMDataTable.ASMData)i$.next();
-                if (dat.getClassName().equals(this.modClazzName)) {
-                    try {
+        List<ModProperty> mlPropFields = Lists.newArrayList();
+        try
+        {
+            for (ASMDataTable.ASMData dat : Sets.union(asmData.getAnnotationsFor(this).get("net.minecraft.src.MLProp"), asmData.getAnnotationsFor(this).get("MLProp")))
+            {
+                if (dat.getClassName().equals(modClazzName))
+                {
+                    try
+                    {
                         mlPropFields.add(new ModProperty(modClazz.getDeclaredField(dat.getObjectName()), dat.getAnnotationInfo()));
-                        FMLLog.finest("Found an MLProp field %s in %s", new Object[]{dat.getObjectName(), this.getModId()});
-                    } catch (Exception var39) {
-                        FMLLog.log(Level.WARNING, var39, "An error occured trying to access field %s in mod %s", new Object[]{dat.getObjectName(), this.getModId()});
+                        FMLLog.finest("Found an MLProp field %s in %s", dat.getObjectName(), getModId());
+                    }
+                    catch (Exception e)
+                    {
+                        FMLLog.log(Level.WARNING, e, "An error occured trying to access field %s in mod %s", dat.getObjectName(), getModId());
                     }
                 }
             }
-        } finally {
-            if (var28) {
-                if (!mlPropFound && !existingConfigFound) {
-                    FMLLog.fine("No MLProp configuration for %s found or required. No file written", new Object[]{this.getModId()});
-                    return;
+            for (ModProperty property : mlPropFields)
+            {
+                if (!Modifier.isStatic(property.field().getModifiers()))
+                {
+                    FMLLog.info("The MLProp field %s in mod %s appears not to be static", property.field().getName(), getModId());
+                    continue;
                 }
+                FMLLog.finest("Considering MLProp field %s", property.field().getName());
+                Field f = property.field();
+                String propertyName = !Strings.nullToEmpty(property.name()).isEmpty() ? property.name() : f.getName();
+                String propertyValue = null;
+                Object defaultValue = null;
 
-                if (!mlPropFound && existingConfigFound) {
-                    File mlPropBackup = new File(modConfig.getParent(), modConfig.getName() + ".bak");
-                    FMLLog.fine("MLProp configuration file for %s found but not required. Attempting to rename file to %s", new Object[]{this.getModId(), mlPropBackup.getName()});
-                    boolean renamed = modConfig.renameTo(mlPropBackup);
-                    if (renamed) {
-                        FMLLog.fine("Unused MLProp configuration file for %s renamed successfully to %s", new Object[]{this.getModId(), mlPropBackup.getName()});
-                    } else {
-                        FMLLog.fine("Unused MLProp configuration file for %s renamed UNSUCCESSFULLY to %s", new Object[]{this.getModId(), mlPropBackup.getName()});
+                try
+                {
+                    defaultValue = f.get(null);
+                    propertyValue = props.getProperty(propertyName, extractValue(defaultValue));
+                    Object currentValue = parseValue(propertyValue, property, f.getType(), propertyName);
+                    FMLLog.finest("Configuration for %s.%s found values default: %s, configured: %s, interpreted: %s", modClazzName, propertyName, defaultValue, propertyValue, currentValue);
+
+                    if (currentValue != null && !currentValue.equals(defaultValue))
+                    {
+                        FMLLog.finest("Configuration for %s.%s value set to: %s", modClazzName, propertyName, currentValue);
+                        f.set(null, currentValue);
+                    }
+                }
+                catch (Exception e)
+                {
+                    FMLLog.log(Level.SEVERE, e, "Invalid configuration found for %s in %s", propertyName, modConfig.getName());
+                    throw new LoaderException(e);
+                }
+                finally
+                {
+                    comments.append(String.format("MLProp : %s (%s:%s", propertyName, f.getType().getName(), defaultValue));
+
+                    if (property.min() != Double.MIN_VALUE)
+                    {
+                        comments.append(",>=").append(String.format("%.1f", property.min()));
                     }
 
-                    return;
-                }
+                    if (property.max() != Double.MAX_VALUE)
+                    {
+                        comments.append(",<=").append(String.format("%.1f", property.max()));
+                    }
 
-                try {
-                    FileWriter configWriter = new FileWriter(modConfig);
-                    props.store(configWriter, comments.toString());
-                    configWriter.close();
-                    FMLLog.fine("Configuration for %s written to %s", new Object[]{this.getModId(), modConfig.getName()});
-                } catch (IOException var36) {
-                    FMLLog.log(Level.SEVERE, var36, "Error trying to write the config file %s", new Object[]{modConfig.getName()});
-                    throw new LoaderException(var36);
+                    comments.append(")");
+
+                    if (!Strings.nullToEmpty(property.info()).isEmpty())
+                    {
+                        comments.append(" -- ").append(property.info());
+                    }
+
+                    if (propertyValue != null)
+                    {
+                        props.setProperty(propertyName, extractValue(propertyValue));
+                    }
+                    comments.append("\n");
                 }
+                mlPropFound = true;
             }
         }
-
-        if (!mlPropFound && !existingConfigFound) {
-            FMLLog.fine("No MLProp configuration for %s found or required. No file written", new Object[]{this.getModId()});
-        } else if (!mlPropFound && existingConfigFound) {
-            File mlPropBackup = new File(modConfig.getParent(), modConfig.getName() + ".bak");
-            FMLLog.fine("MLProp configuration file for %s found but not required. Attempting to rename file to %s", new Object[]{this.getModId(), mlPropBackup.getName()});
-            boolean renamed = modConfig.renameTo(mlPropBackup);
-            if (renamed) {
-                FMLLog.fine("Unused MLProp configuration file for %s renamed successfully to %s", new Object[]{this.getModId(), mlPropBackup.getName()});
-            } else {
-                FMLLog.fine("Unused MLProp configuration file for %s renamed UNSUCCESSFULLY to %s", new Object[]{this.getModId(), mlPropBackup.getName()});
+        finally
+        {
+            if (!mlPropFound && !existingConfigFound)
+            {
+                FMLLog.fine("No MLProp configuration for %s found or required. No file written", getModId());
+                return;
             }
 
-        } else {
-            try {
+            if (!mlPropFound && existingConfigFound)
+            {
+                File mlPropBackup = new File(modConfig.getParent(),modConfig.getName()+".bak");
+                FMLLog.fine("MLProp configuration file for %s found but not required. Attempting to rename file to %s", getModId(), mlPropBackup.getName());
+                boolean renamed = modConfig.renameTo(mlPropBackup);
+                if (renamed)
+                {
+                    FMLLog.fine("Unused MLProp configuration file for %s renamed successfully to %s", getModId(), mlPropBackup.getName());
+                }
+                else
+                {
+                    FMLLog.fine("Unused MLProp configuration file for %s renamed UNSUCCESSFULLY to %s", getModId(), mlPropBackup.getName());
+                }
+
+                return;
+            }
+            try
+            {
                 FileWriter configWriter = new FileWriter(modConfig);
                 props.store(configWriter, comments.toString());
                 configWriter.close();
-                FMLLog.fine("Configuration for %s written to %s", new Object[]{this.getModId(), modConfig.getName()});
-            } catch (IOException var37) {
-                FMLLog.log(Level.SEVERE, var37, "Error trying to write the config file %s", new Object[]{modConfig.getName()});
-                throw new LoaderException(var37);
+                FMLLog.fine("Configuration for %s written to %s", getModId(), modConfig.getName());
+            }
+            catch (IOException e)
+            {
+                FMLLog.log(Level.SEVERE, e, "Error trying to write the config file %s", modConfig.getName());
+                throw new LoaderException(e);
             }
         }
     }
@@ -292,13 +287,13 @@ public class ModLoaderModContainer implements ModContainer {
     }
 
     public static <A extends BaseModProxy> List<A> findAll(Class<A> clazz) {
-        ArrayList<A> modList = new ArrayList();
-        Iterator i$ = Loader.instance().getActiveModList().iterator();
+        ArrayList<A> modList = new ArrayList<A>();
 
-        while(i$.hasNext()) {
-            ModContainer mc = (ModContainer)i$.next();
-            if (mc instanceof ModLoaderModContainer && mc.getMod() != null) {
-                modList.add(((ModLoaderModContainer)mc).mod);
+        for (ModContainer mc : Loader.instance().getActiveModList())
+        {
+            if (mc instanceof ModLoaderModContainer && mc.getMod()!=null)
+            {
+                modList.add((A)((ModLoaderModContainer)mc).mod);
             }
         }
 
@@ -350,9 +345,9 @@ public class ModLoaderModContainer implements ModContainer {
     }
 
     public void bindMetadata(MetadataCollection mc) {
-        Map<String, Object> dummyMetadata = ImmutableMap.builder().put("name", this.modId).put("version", "1.0").build();
-        this.metadata = mc.getMetadataForId(this.modId, dummyMetadata);
-        Loader.instance().computeDependencies(this.sortingProperties, this.getRequirements(), this.getDependencies(), this.getDependants());
+        Map<String, Object> dummyMetadata = ImmutableMap.<String,Object>builder().put("name", modId).put("version", "1.0").build();
+        this.metadata = mc.getMetadataForId(modId, dummyMetadata);
+        Loader.instance().computeDependencies(sortingProperties, getRequirements(), getDependencies(), getDependants());
     }
 
     public void setEnabledState(boolean enabled) {
@@ -454,13 +449,10 @@ public class ModLoaderModContainer implements ModContainer {
 
     @Subscribe
     public void serverStarting(FMLServerStartingEvent evt) {
-        Iterator i$ = this.serverCommands.iterator();
-
-        while(i$.hasNext()) {
-            Command cmd = (Command)i$.next();
+        for (Command cmd : serverCommands)
+        {
             evt.registerServerCommand(cmd);
         }
-
     }
 
     public ArtifactVersion getProcessedVersion() {

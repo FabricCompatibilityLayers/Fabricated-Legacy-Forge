@@ -51,24 +51,18 @@ public class VillagerRegistry {
     }
 
     public static void manageVillagerTrades(TraderOfferList recipeList, VillagerEntity villager, int villagerType, Random random) {
-        Iterator i$ = instance().tradeHandlers.get(villagerType).iterator();
-
-        while(i$.hasNext()) {
-            VillagerRegistry.IVillageTradeHandler handler = (VillagerRegistry.IVillageTradeHandler)i$.next();
+        for (IVillageTradeHandler handler : instance().tradeHandlers.get(villagerType))
+        {
             handler.manipulateTradesForVillager(villager, recipeList, random);
         }
-
     }
 
     public static void addExtraVillageComponents(ArrayList components, Random random, int i) {
         List<class_44> parts = components;
-        Iterator i$ = instance().villageCreationHandlers.values().iterator();
-
-        while(i$.hasNext()) {
-            VillagerRegistry.IVillageCreationHandler handler = (VillagerRegistry.IVillageCreationHandler)i$.next();
+        for (IVillageCreationHandler handler : instance().villageCreationHandlers.values())
+        {
             parts.add(handler.getVillagePieceWeight(random, i));
         }
-
     }
 
     public static Object getVillageComponent(class_44 villagePiece, class_50 startPiece, List pieces, Random random, int p1, int p2, int p3, int p4, int p5) {

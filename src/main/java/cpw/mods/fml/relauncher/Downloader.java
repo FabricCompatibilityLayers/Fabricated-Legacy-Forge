@@ -1,5 +1,7 @@
 package cpw.mods.fml.relauncher;
 
+import cpw.mods.fml.common.FMLLog;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;

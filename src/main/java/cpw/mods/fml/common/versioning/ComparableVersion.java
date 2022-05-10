@@ -14,49 +14,77 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
 
     public final void parseVersion(String version) {
         this.value = version;
-        this.items = new ComparableVersion.ListItem();
-        version = version.toLowerCase(Locale.ENGLISH);
-        ComparableVersion.ListItem list = this.items;
-        Stack<ComparableVersion.Item> stack = new Stack();
-        stack.push(list);
+
+        items = new ListItem();
+
+        version = version.toLowerCase( Locale.ENGLISH );
+
+        ListItem list = items;
+
+        Stack<Item> stack = new Stack<Item>();
+        stack.push( list );
+
         boolean isDigit = false;
+
         int startIndex = 0;
 
-        for(int i = 0; i < version.length(); ++i) {
-            char c = version.charAt(i);
-            if (c == '.') {
-                if (i == startIndex) {
-                    list.add(ComparableVersion.IntegerItem.ZERO);
-                } else {
-                    list.add(parseItem(isDigit, version.substring(startIndex, i)));
-                }
+        for ( int i = 0; i < version.length(); i++ )
+        {
+            char c = version.charAt( i );
 
-                startIndex = i + 1;
-            } else if (c == '-') {
-                if (i == startIndex) {
-                    list.add(ComparableVersion.IntegerItem.ZERO);
-                } else {
-                    list.add(parseItem(isDigit, version.substring(startIndex, i)));
+            if ( c == '.' )
+            {
+                if ( i == startIndex )
+                {
+                    list.add( IntegerItem.ZERO );
                 }
-
+                else
+                {
+                    list.add( parseItem( isDigit, version.substring( startIndex, i ) ) );
+                }
                 startIndex = i + 1;
-                if (isDigit) {
-                    list.normalize();
-                    if (i + 1 < version.length() && Character.isDigit(version.charAt(i + 1))) {
-                        list.add(list = new ComparableVersion.ListItem());
-                        stack.push(list);
+            }
+            else if ( c == '-' )
+            {
+                if ( i == startIndex )
+                {
+                    list.add( IntegerItem.ZERO );
+                }
+                else
+                {
+                    list.add( parseItem( isDigit, version.substring( startIndex, i ) ) );
+                }
+                startIndex = i + 1;
+
+                if ( isDigit )
+                {
+                    list.normalize(); // 1.0-* = 1-*
+
+                    if ( ( i + 1 < version.length() ) && Character.isDigit( version.charAt( i + 1 ) ) )
+                    {
+                        // new ListItem only if previous were digits and new char is a digit,
+                        // ie need to differentiate only 1.1 from 1-1
+                        list.add( list = new ListItem() );
+
+                        stack.push( list );
                     }
                 }
-            } else if (Character.isDigit(c)) {
-                if (!isDigit && i > startIndex) {
-                    list.add(new ComparableVersion.StringItem(version.substring(startIndex, i), true));
+            }
+            else if ( Character.isDigit( c ) )
+            {
+                if ( !isDigit && i > startIndex )
+                {
+                    list.add( new StringItem( version.substring( startIndex, i ), true ) );
                     startIndex = i;
                 }
 
                 isDigit = true;
-            } else {
-                if (isDigit && i > startIndex) {
-                    list.add(parseItem(true, version.substring(startIndex, i)));
+            }
+            else
+            {
+                if ( isDigit && i > startIndex )
+                {
+                    list.add( parseItem( true, version.substring( startIndex, i ) ) );
                     startIndex = i;
                 }
 
@@ -64,16 +92,18 @@ public class ComparableVersion implements Comparable<ComparableVersion> {
             }
         }
 
-        if (version.length() > startIndex) {
-            list.add(parseItem(isDigit, version.substring(startIndex)));
+        if ( version.length() > startIndex )
+        {
+            list.add( parseItem( isDigit, version.substring( startIndex ) ) );
         }
 
-        while(!stack.isEmpty()) {
-            list = (ComparableVersion.ListItem)stack.pop();
+        while ( !stack.isEmpty() )
+        {
+            list = (ListItem) stack.pop();
             list.normalize();
         }
 
-        this.canonical = this.items.toString();
+        canonical = items.toString();
     }
 
     private static ComparableVersion.Item parseItem(boolean isDigit, String buf) {

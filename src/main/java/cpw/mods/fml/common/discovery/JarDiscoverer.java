@@ -19,58 +19,69 @@ public class JarDiscoverer implements ITypeDiscoverer {
 
     public List<ModContainer> discover(ModCandidate candidate, ASMDataTable table) {
         List<ModContainer> foundMods = Lists.newArrayList();
-        FMLLog.fine("Examining file %s for potential mods", new Object[]{candidate.getModContainer().getName()});
+        FMLLog.fine("Examining file %s for potential mods", candidate.getModContainer().getName());
         ZipFile jar = null;
-
-        try {
+        try
+        {
             jar = new ZipFile(candidate.getModContainer());
+
             ZipEntry modInfo = jar.getEntry("mcmod.info");
             MetadataCollection mc = null;
-            if (modInfo != null) {
-                FMLLog.finer("Located mcmod.info file in file %s", new Object[]{candidate.getModContainer().getName()});
+            if (modInfo != null)
+            {
+                FMLLog.finer("Located mcmod.info file in file %s", candidate.getModContainer().getName());
                 mc = MetadataCollection.from(jar.getInputStream(modInfo), candidate.getModContainer().getName());
-            } else {
-                FMLLog.fine("The mod container %s appears to be missing an mcmod.info file", new Object[]{candidate.getModContainer().getName()});
-                mc = MetadataCollection.from((InputStream)null, "");
             }
-
-            Iterator i$ = Collections.list(jar.entries()).iterator();
-
-            while(i$.hasNext()) {
-                ZipEntry ze = (ZipEntry)i$.next();
+            else
+            {
+                FMLLog.fine("The mod container %s appears to be missing an mcmod.info file", candidate.getModContainer().getName());
+                mc = MetadataCollection.from(null, "");
+            }
+            for (ZipEntry ze : Collections.list(jar.entries()))
+            {
                 Matcher match = classFile.matcher(ze.getName());
-                if (match.matches()) {
+                if (match.matches())
+                {
                     ASMModParser modParser;
-                    try {
+                    try
+                    {
                         modParser = new ASMModParser(jar.getInputStream(ze));
-                    } catch (LoaderException var21) {
-                        FMLLog.log(Level.SEVERE, var21, "There was a problem reading the entry %s in the jar %s - probably a corrupt zip", new Object[]{ze.getName(), candidate.getModContainer().getPath()});
-                        jar.close();
-                        throw var21;
                     }
-
+                    catch (LoaderException e)
+                    {
+                        FMLLog.log(Level.SEVERE, e, "There was a problem reading the entry %s in the jar %s - probably a corrupt zip", ze.getName(), candidate.getModContainer().getPath());
+                        jar.close();
+                        throw e;
+                    }
                     modParser.validate();
                     modParser.sendToTable(table, candidate);
                     ModContainer container = ModContainerFactory.instance().build(modParser, candidate.getModContainer(), candidate);
-                    if (container != null) {
+                    if (container!=null)
+                    {
                         table.addContainer(container);
                         foundMods.add(container);
                         container.bindMetadata(mc);
                     }
                 }
             }
-        } catch (Exception var22) {
-            FMLLog.log(Level.WARNING, var22, "Zip file %s failed to read properly, it will be ignored", new Object[]{candidate.getModContainer().getName()});
-        } finally {
-            if (jar != null) {
-                try {
+        }
+        catch (Exception e)
+        {
+            FMLLog.log(Level.WARNING, e, "Zip file %s failed to read properly, it will be ignored", candidate.getModContainer().getName());
+        }
+        finally
+        {
+            if (jar != null)
+            {
+                try
+                {
                     jar.close();
-                } catch (Exception var20) {
+                }
+                catch (Exception e)
+                {
                 }
             }
-
         }
-
         return foundMods;
     }
 }

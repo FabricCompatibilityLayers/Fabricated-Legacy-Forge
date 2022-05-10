@@ -4,6 +4,7 @@ import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.base.Throwables;
 import com.google.common.collect.*;
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.event.*;
@@ -195,29 +196,28 @@ public class FMLModContainer implements ModContainer {
     }
 
     private Multimap<Class<? extends Annotation>, Object> gatherAnnotations(Class<?> clazz) throws Exception {
-        Multimap<Class<? extends Annotation>, Object> anns = ArrayListMultimap.create();
-        Method[] arr$ = clazz.getDeclaredMethods();
-        int len$ = arr$.length;
+        Multimap<Class<? extends Annotation>,Object> anns = ArrayListMultimap.create();
 
-        for(int i$ = 0; i$ < len$; ++i$) {
-            Method m = arr$[i$];
-            Annotation[] arr$ = m.getAnnotations();
-            int len$ = arr$.length;
+        for (Method m : clazz.getDeclaredMethods())
+        {
+            for (Annotation a : m.getAnnotations())
+            {
+                if (modTypeAnnotations.containsKey(a.annotationType()))
+                {
+                    Class<?>[] paramTypes = new Class[] { modTypeAnnotations.get(a.annotationType()) };
 
-            for(int i$ = 0; i$ < len$; ++i$) {
-                Annotation a = arr$[i$];
-                if (modTypeAnnotations.containsKey(a.annotationType())) {
-                    Class<?>[] paramTypes = new Class[]{(Class)modTypeAnnotations.get(a.annotationType())};
-                    if (Arrays.equals(m.getParameterTypes(), paramTypes)) {
+                    if (Arrays.equals(m.getParameterTypes(), paramTypes))
+                    {
                         m.setAccessible(true);
                         anns.put(a.annotationType(), m);
-                    } else {
-                        FMLLog.severe("The mod %s appears to have an invalid method annotation %s. This annotation can only apply to methods with argument types %s -it will not be called", new Object[]{this.getModId(), a.annotationType().getSimpleName(), Arrays.toString(paramTypes)});
+                    }
+                    else
+                    {
+                        FMLLog.severe("The mod %s appears to have an invalid method annotation %s. This annotation can only apply to methods with argument types %s -it will not be called", getModId(), a.annotationType().getSimpleName(), Arrays.toString(paramTypes));
                     }
                 }
             }
         }
-
         return anns;
     }
 
@@ -238,59 +238,53 @@ public class FMLModContainer implements ModContainer {
     private void parseSimpleFieldAnnotation(SetMultimap<String, ASMDataTable.ASMData> annotations, String annotationClassName, Function<ModContainer, Object> retreiver) throws IllegalAccessException {
         String[] annName = annotationClassName.split("\\.");
         String annotationName = annName[annName.length - 1];
-        Iterator i$ = annotations.get(annotationClassName).iterator();
-
-        while(true) {
-            while(true) {
-                ASMDataTable.ASMData targets;
-                Field f;
-                Object injectedMod;
-                Object mc;
-                boolean isStatic;
-                Class clz;
-                do {
-                    if (!i$.hasNext()) {
-                        return;
-                    }
-
-                    targets = (ASMDataTable.ASMData)i$.next();
-                    String targetMod = (String)targets.getAnnotationInfo().get("value");
-                    f = null;
-                    injectedMod = null;
-                    mc = this;
-                    isStatic = false;
-                    clz = this.modInstance.getClass();
-                    if (!Strings.isNullOrEmpty(targetMod)) {
-                        if (Loader.isModLoaded(targetMod)) {
-                            mc = (ModContainer)Loader.instance().getIndexedModList().get(targetMod);
-                        } else {
-                            mc = null;
-                        }
-                    }
-
-                    if (mc != null) {
-                        try {
-                            clz = Class.forName(targets.getClassName(), true, Loader.instance().getModClassLoader());
-                            f = clz.getDeclaredField(targets.getObjectName());
-                            f.setAccessible(true);
-                            isStatic = Modifier.isStatic(f.getModifiers());
-                            injectedMod = retreiver.apply(mc);
-                        } catch (Exception var15) {
-                            Throwables.propagateIfPossible(var15);
-                            FMLLog.log(Level.WARNING, var15, "Attempting to load @%s in class %s for %s and failing", new Object[]{annotationName, targets.getClassName(), ((ModContainer)mc).getModId()});
-                        }
-                    }
-                } while(f == null);
-
+        for (ASMDataTable.ASMData targets : annotations.get(annotationClassName))
+        {
+            String targetMod = (String) targets.getAnnotationInfo().get("value");
+            Field f = null;
+            Object injectedMod = null;
+            ModContainer mc = this;
+            boolean isStatic = false;
+            Class<?> clz = modInstance.getClass();
+            if (!Strings.isNullOrEmpty(targetMod))
+            {
+                if (Loader.isModLoaded(targetMod))
+                {
+                    mc = Loader.instance().getIndexedModList().get(targetMod);
+                }
+                else
+                {
+                    mc = null;
+                }
+            }
+            if (mc != null)
+            {
+                try
+                {
+                    clz = Class.forName(targets.getClassName(), true, Loader.instance().getModClassLoader());
+                    f = clz.getDeclaredField(targets.getObjectName());
+                    f.setAccessible(true);
+                    isStatic = Modifier.isStatic(f.getModifiers());
+                    injectedMod = retreiver.apply(mc);
+                }
+                catch (Exception e)
+                {
+                    Throwables.propagateIfPossible(e);
+                    FMLLog.log(Level.WARNING, e, "Attempting to load @%s in class %s for %s and failing", annotationName, targets.getClassName(), mc.getModId());
+                }
+            }
+            if (f != null)
+            {
                 Object target = null;
-                if (!isStatic) {
-                    target = this.modInstance;
-                    if (!this.modInstance.getClass().equals(clz)) {
-                        FMLLog.warning("Unable to inject @%s in non-static field %s.%s for %s as it is NOT the primary mod instance", new Object[]{annotationName, targets.getClassName(), targets.getObjectName(), ((ModContainer)mc).getModId()});
+                if (!isStatic)
+                {
+                    target = modInstance;
+                    if (!modInstance.getClass().equals(clz))
+                    {
+                        FMLLog.warning("Unable to inject @%s in non-static field %s.%s for %s as it is NOT the primary mod instance", annotationName, targets.getClassName(), targets.getObjectName(), mc.getModId());
                         continue;
                     }
                 }
-
                 f.set(target, injectedMod);
             }
         }
@@ -318,21 +312,23 @@ public class FMLModContainer implements ModContainer {
 
     @Subscribe
     public void handleModStateEvent(FMLStateEvent event) {
-        Class<? extends Annotation> annotation = (Class)modAnnotationTypes.get(event.getClass());
-        if (annotation != null) {
-            try {
-                Iterator i$ = this.annotations.get(annotation).iterator();
-
-                while(i$.hasNext()) {
-                    Object o = i$.next();
-                    Method m = (Method)o;
-                    m.invoke(this.modInstance, event);
-                }
-            } catch (Throwable var6) {
-                this.controller.errorOccurred(this, var6);
-                Throwables.propagateIfPossible(var6);
+        Class<? extends Annotation> annotation = modAnnotationTypes.get(event.getClass());
+        if (annotation == null)
+        {
+            return;
+        }
+        try
+        {
+            for (Object o : annotations.get(annotation))
+            {
+                Method m = (Method) o;
+                m.invoke(modInstance, event);
             }
-
+        }
+        catch (Throwable t)
+        {
+            controller.errorOccurred(this, t);
+            Throwables.propagateIfPossible(t);
         }
     }
 

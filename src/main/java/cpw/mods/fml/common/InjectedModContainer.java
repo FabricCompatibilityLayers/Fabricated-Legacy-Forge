@@ -1,6 +1,7 @@
 package cpw.mods.fml.common;
 
 
+import com.google.common.eventbus.EventBus;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.VersionRange;
 

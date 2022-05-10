@@ -91,72 +91,53 @@ public class NetworkRegistry {
     }
 
     void playerLoggedIn(ServerPlayerEntity player, ServerPacketListener netHandler, Connection manager) {
-        this.generateChannelRegistration(player, netHandler, manager);
-        Iterator i$ = this.connectionHandlers.iterator();
-
-        while(i$.hasNext()) {
-            IConnectionHandler handler = (IConnectionHandler)i$.next();
+        generateChannelRegistration(player, netHandler, manager);
+        for (IConnectionHandler handler : connectionHandlers)
+        {
             handler.playerLoggedIn((Player)player, netHandler, manager);
         }
-
     }
 
     String connectionReceived(PendingConnection netHandler, Connection manager) {
-        Iterator i$ = this.connectionHandlers.iterator();
-
-        String kick;
-        do {
-            if (!i$.hasNext()) {
-                return null;
+        for (IConnectionHandler handler : connectionHandlers)
+        {
+            String kick = handler.connectionReceived(netHandler, manager);
+            if (!Strings.isNullOrEmpty(kick))
+            {
+                return kick;
             }
-
-            IConnectionHandler handler = (IConnectionHandler)i$.next();
-            kick = handler.connectionReceived(netHandler, manager);
-        } while(Strings.isNullOrEmpty(kick));
-
-        return kick;
+        }
+        return null;
     }
 
     void connectionOpened(PacketListener netClientHandler, String server, int port, Connection networkManager) {
-        Iterator i$ = this.connectionHandlers.iterator();
-
-        while(i$.hasNext()) {
-            IConnectionHandler handler = (IConnectionHandler)i$.next();
+        for (IConnectionHandler handler : connectionHandlers)
+        {
             handler.connectionOpened(netClientHandler, server, port, networkManager);
         }
-
     }
 
     void connectionOpened(PacketListener netClientHandler, MinecraftServer server, Connection networkManager) {
-        Iterator i$ = this.connectionHandlers.iterator();
-
-        while(i$.hasNext()) {
-            IConnectionHandler handler = (IConnectionHandler)i$.next();
+        for (IConnectionHandler handler : connectionHandlers)
+        {
             handler.connectionOpened(netClientHandler, server, networkManager);
         }
-
     }
 
     void clientLoggedIn(PacketListener clientHandler, Connection manager, class_690 login) {
-        this.generateChannelRegistration(clientHandler.getPlayer(), clientHandler, manager);
-        Iterator i$ = this.connectionHandlers.iterator();
-
-        while(i$.hasNext()) {
-            IConnectionHandler handler = (IConnectionHandler)i$.next();
+        generateChannelRegistration(clientHandler.getPlayer(), clientHandler, manager);
+        for (IConnectionHandler handler : connectionHandlers)
+        {
             handler.clientLoggedIn(clientHandler, manager, login);
         }
-
     }
 
     void connectionClosed(Connection manager, PlayerEntity player) {
-        Iterator i$ = this.connectionHandlers.iterator();
-
-        while(i$.hasNext()) {
-            IConnectionHandler handler = (IConnectionHandler)i$.next();
+        for (IConnectionHandler handler : connectionHandlers)
+        {
             handler.connectionClosed(manager);
         }
-
-        this.activeChannels.removeAll(player);
+        activeChannels.removeAll(player);
     }
 
     void generateChannelRegistration(PlayerEntity player, PacketListener netHandler, Connection manager) {
@@ -180,35 +161,26 @@ public class NetworkRegistry {
 
     private void handlePacket(CustomPayloadC2SPacket packet, Connection network, Player player) {
         String channel = packet.channel;
-        Iterator i$ = Iterables.concat(this.universalPacketHandlers.get(channel), player instanceof ServerPlayerEntity ? this.serverPacketHandlers.get(channel) : this.clientPacketHandlers.get(channel)).iterator();
-
-        while(i$.hasNext()) {
-            IPacketHandler handler = (IPacketHandler)i$.next();
+        for (IPacketHandler handler : Iterables.concat(universalPacketHandlers.get(channel), player instanceof ServerPlayerEntity ? serverPacketHandlers.get(channel) : clientPacketHandlers.get(channel)))
+        {
             handler.onPacketData(network, packet, player);
         }
-
     }
 
     private void handleRegistrationPacket(CustomPayloadC2SPacket packet, Player player) {
-        List<String> channels = this.extractChannelList(packet);
-        Iterator i$ = channels.iterator();
-
-        while(i$.hasNext()) {
-            String channel = (String)i$.next();
-            this.activateChannel(player, channel);
+        List<String> channels = extractChannelList(packet);
+        for (String channel : channels)
+        {
+            activateChannel(player, channel);
         }
-
     }
 
     private void handleUnregistrationPacket(CustomPayloadC2SPacket packet, Player player) {
-        List<String> channels = this.extractChannelList(packet);
-        Iterator i$ = channels.iterator();
-
-        while(i$.hasNext()) {
-            String channel = (String)i$.next();
-            this.deactivateChannel(player, channel);
+        List<String> channels = extractChannelList(packet);
+        for (String channel : channels)
+        {
+            deactivateChannel(player, channel);
         }
-
     }
 
     private List<String> extractChannelList(CustomPayloadC2SPacket packet) {
@@ -263,13 +235,13 @@ public class NetworkRegistry {
 
     public ChatMessage_S2CPacket handleChat(PacketListener handler, ChatMessage_S2CPacket chat) {
         Side s = Side.CLIENT;
-        if (handler instanceof ServerPacketListener) {
+        if (handler instanceof ServerPacketListener)
+        {
             s = Side.SERVER;
         }
-
-        IChatListener listener;
-        for(Iterator i$ = this.chatListeners.iterator(); i$.hasNext(); chat = s.isClient() ? listener.clientChat(handler, chat) : listener.serverChat(handler, chat)) {
-            listener = (IChatListener)i$.next();
+        for (IChatListener listener : chatListeners)
+        {
+            chat = s.isClient() ? listener.clientChat(handler, chat) : listener.serverChat(handler, chat);
         }
 
         return chat;
