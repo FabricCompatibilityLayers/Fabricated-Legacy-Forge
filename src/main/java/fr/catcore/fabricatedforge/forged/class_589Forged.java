@@ -1,35 +1,22 @@
-package fr.catcore.fabricatedforge.mixin.forgefml.client;
+package fr.catcore.fabricatedforge.forged;
 
 import cpw.mods.fml.client.FMLTextureFX;
-import net.minecraft.client.class_589;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.block.Block;
 
-@Mixin(class_589.class) // TODO: make it somehow extend FMLTextureFX.
-public class class_589Mixin extends FMLTextureFX {
-    @Shadow protected float[] field_2171;
+public class class_589Forged extends FMLTextureFX {
+    protected float[] field_2171 = new float[256];
+    protected float[] field_2172 = new float[256];
+    protected float[] field_2173 = new float[256];
+    protected float[] field_2174 = new float[256];
+    private int field_2175 = 0;
 
-    @Shadow protected float[] field_2172;
-
-    @Shadow protected float[] field_2173;
-
-    @Shadow protected float[] field_2174;
-
-    @Shadow private int field_2175;
-
-    public class_589Mixin(int icon) {
-        super(icon);
-    }
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void setupInCTR(CallbackInfo ci) {
+    public class_589Forged() {
+        super(Block.field_334.field_439 + 1);
+        this.field_2156 = 2;
         this.setup();
     }
 
+    @Override
     public void setup() {
         super.setup();
         this.field_2171 = new float[this.tileSizeSquare];
@@ -39,10 +26,7 @@ public class class_589Mixin extends FMLTextureFX {
         this.field_2175 = 0;
     }
 
-    /**
-     * @author Minecraft Forge
-     */
-    @Overwrite
+    @Override
     public void method_1613() {
         ++this.field_2175;
 
@@ -116,6 +100,5 @@ public class class_589Mixin extends FMLTextureFX {
             this.field_2152[var2 * 4 + 2] = (byte)var7;
             this.field_2152[var2 * 4 + 3] = (byte)var8;
         }
-
     }
 }

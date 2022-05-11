@@ -1,35 +1,21 @@
-package fr.catcore.fabricatedforge.mixin.forgefml.client;
+package fr.catcore.fabricatedforge.forged;
 
 import cpw.mods.fml.client.FMLTextureFX;
-import net.minecraft.client.class_590;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.block.Block;
 
-@Mixin(class_590.class) // TODO: make it somehow extend FMLTextureFX.
-public class class_590Mixin extends FMLTextureFX {
-    @Shadow protected float[] field_2176;
+public class class_590Forged extends FMLTextureFX {
+    protected float[] field_2176 = new float[256];
+    protected float[] field_2177 = new float[256];
+    protected float[] field_2178 = new float[256];
+    protected float[] field_2179 = new float[256];
+    private int field_2180 = 0;
 
-    @Shadow protected float[] field_2177;
-
-    @Shadow protected float[] field_2178;
-
-    @Shadow protected float[] field_2179;
-
-    @Shadow private int field_2180;
-
-    public class_590Mixin(int icon) {
-        super(icon);
-    }
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void setupInCTR(CallbackInfo ci) {
+    public class_590Forged() {
+        super(Block.field_334.field_439);
         this.setup();
     }
 
+    @Override
     public void setup() {
         super.setup();
         this.field_2176 = new float[this.tileSizeSquare];
@@ -39,10 +25,7 @@ public class class_590Mixin extends FMLTextureFX {
         this.field_2180 = 0;
     }
 
-    /**
-     * @author Minecraft Forge
-     */
-    @Overwrite
+    @Override
     public void method_1613() {
         ++this.field_2180;
 
@@ -116,6 +99,5 @@ public class class_590Mixin extends FMLTextureFX {
             this.field_2152[var2 * 4 + 2] = (byte)var7;
             this.field_2152[var2 * 4 + 3] = (byte)var8;
         }
-
     }
 }

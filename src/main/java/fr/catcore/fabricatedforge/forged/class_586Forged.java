@@ -1,37 +1,23 @@
-package fr.catcore.fabricatedforge.mixin.forgefml.client;
+package fr.catcore.fabricatedforge.forged;
 
 import cpw.mods.fml.client.FMLTextureFX;
-import net.minecraft.client.class_586;
+import net.minecraft.block.Block;
 import net.minecraft.util.math.MathHelper;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(class_586.class) // TODO: make it somehow extend FMLTextureFX.
-public class class_586Mixin extends FMLTextureFX {
-    @Shadow protected float[] field_2160;
+public class class_586Forged extends FMLTextureFX {
+    protected float[] field_2160 = new float[256];
+    protected float[] field_2161 = new float[256];
+    protected float[] field_2162 = new float[256];
+    protected float[] field_2163 = new float[256];
+    int field_2164 = 0;
 
-    @Shadow protected float[] field_2161;
-
-    @Shadow protected float[] field_2162;
-
-    @Shadow protected float[] field_2163;
-
-    @Shadow
-    int field_2164;
-
-    public class_586Mixin(int icon) {
-        super(icon);
-    }
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void setupInCTR(CallbackInfo ci) {
+    public class_586Forged() {
+        super(Block.field_336.field_439 + 1);
+        this.field_2156 = 2;
         this.setup();
     }
 
+    @Override
     public void setup() {
         super.setup();
         this.field_2160 = new float[this.tileSizeSquare];
@@ -41,10 +27,7 @@ public class class_586Mixin extends FMLTextureFX {
         this.field_2164 = 0;
     }
 
-    /**
-     * @author Minecraft Forge
-     */
-    @Overwrite
+    @Override
     public void method_1613() {
         ++this.field_2164;
 
@@ -118,6 +101,5 @@ public class class_586Mixin extends FMLTextureFX {
             this.field_2152[var2 * 4 + 2] = (byte)var7;
             this.field_2152[var2 * 4 + 3] = -1;
         }
-
     }
 }

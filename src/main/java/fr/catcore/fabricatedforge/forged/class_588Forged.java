@@ -1,34 +1,21 @@
-package fr.catcore.fabricatedforge.mixin.forgefml.client;
+package fr.catcore.fabricatedforge.forged;
 
 import cpw.mods.fml.client.FMLTextureFX;
-import net.minecraft.client.class_588;
+import net.minecraft.block.Block;
 import net.minecraft.util.math.MathHelper;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
 
-@Mixin(class_588.class) // TODO: make it somehow extend FMLTextureFX.
-public class class_588Mixin extends FMLTextureFX  {
+public class class_588Forged extends FMLTextureFX {
+    private int field_2169 = 0;
+    private byte[][] field_2170 = new byte[32][1024];
 
-    @Shadow private byte[][] field_2170;
-
-    @Shadow private int field_2169;
-
-    public class_588Mixin(int icon) {
-        super(icon);
-    }
-
-    @Inject(method = "<init>", cancellable = true, at = @At(value = "NEW", target = "Ljava/util/Random;<init>(J)V"))
-    private void cancelCTR(CallbackInfo ci) {
+    public class_588Forged() {
+        super(Block.NETHER_PORTAL.field_439);
         this.setup();
-        ci.cancel();
     }
 
+    @Override
     public void setup() {
         super.setup();
         this.field_2170 = new byte[32][this.tileSizeSquare << 4];
@@ -84,10 +71,7 @@ public class class_588Mixin extends FMLTextureFX  {
 
     }
 
-    /**
-     * @author Minecraft Forge
-     */
-    @Overwrite
+    @Override
     public void method_1613() {
         ++this.field_2169;
         byte[] var1 = this.field_2170[this.field_2169 & 31];
@@ -111,6 +95,5 @@ public class class_588Mixin extends FMLTextureFX  {
             this.field_2152[var2 * 4 + 2] = (byte)var5;
             this.field_2152[var2 * 4 + 3] = (byte)var6;
         }
-
     }
 }

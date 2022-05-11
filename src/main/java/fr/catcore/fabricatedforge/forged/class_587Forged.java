@@ -1,34 +1,21 @@
-package fr.catcore.fabricatedforge.mixin.forgefml.client;
+package fr.catcore.fabricatedforge.forged;
 
 import cpw.mods.fml.client.FMLTextureFX;
-import net.minecraft.client.class_587;
+import net.minecraft.block.Block;
 import net.minecraft.util.math.MathHelper;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(class_587.class) // TODO: make it somehow extend FMLTextureFX.
-public class class_587Mixin extends FMLTextureFX {
-    @Shadow protected float[] field_2165;
+public class class_587Forged extends FMLTextureFX {
+    protected float[] field_2165 = new float[256];
+    protected float[] field_2166 = new float[256];
+    protected float[] field_2167 = new float[256];
+    protected float[] field_2168 = new float[256];
 
-    @Shadow protected float[] field_2166;
-
-    @Shadow protected float[] field_2167;
-
-    @Shadow protected float[] field_2168;
-
-    public class_587Mixin(int icon) {
-        super(icon);
-    }
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void setupInCTR(CallbackInfo ci) {
+    public class_587Forged() {
+        super(Block.field_336.field_439);
         this.setup();
     }
 
+    @Override
     public void setup() {
         super.setup();
         this.field_2165 = new float[this.tileSizeSquare];
@@ -37,10 +24,7 @@ public class class_587Mixin extends FMLTextureFX {
         this.field_2168 = new float[this.tileSizeSquare];
     }
 
-    /**
-     * @author Minecraft Forge
-     */
-    @Overwrite
+    @Override
     public void method_1613() {
         int var2;
         float var3;
@@ -112,6 +96,5 @@ public class class_587Mixin extends FMLTextureFX {
             this.field_2152[var2 * 4 + 2] = (byte)var7;
             this.field_2152[var2 * 4 + 3] = -1;
         }
-
     }
 }

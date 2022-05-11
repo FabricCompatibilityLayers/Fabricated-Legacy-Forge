@@ -116,6 +116,7 @@ public class RemapUtil {
 
             mappings.add(toString("v1", "official", "intermediary", "named"));
 
+            // ModLoader mappings
             mappings.add(makeLoaderLine("BaseMod", "net/minecraft/BaseMod"));
             mappings.add(makeLoaderLine("EntityRendererProxy", "net/minecraft/EntityRendererProxy"));
             mappings.add(makeLoaderLine("FMLRendererAccessLibrary", "net/minecraft/FMLRendererAccessLibrary"));
@@ -124,6 +125,14 @@ public class RemapUtil {
             mappings.add(makeLoaderLine("ModTextureAnimation", "net/minecraft/ModTextureAnimation"));
             mappings.add(makeLoaderLine("ModTextureStatic", "net/minecraft/ModTextureStatic"));
             mappings.add(makeLoaderLine("TradeEntry", "net/minecraft/TradeEntry"));
+
+            // Forge cursed overwrites mappings
+            mappings.add(makeLoaderLine("net/minecraft/class_585", "fr/catcore/fabricatedforge/forged/class_585Forged"));
+            mappings.add(makeLoaderLine("net/minecraft/class_586", "fr/catcore/fabricatedforge/forged/class_586Forged"));
+            mappings.add(makeLoaderLine("net/minecraft/class_587", "fr/catcore/fabricatedforge/forged/class_587Forged"));
+            mappings.add(makeLoaderLine("net/minecraft/class_588", "fr/catcore/fabricatedforge/forged/class_588Forged"));
+            mappings.add(makeLoaderLine("net/minecraft/class_589", "fr/catcore/fabricatedforge/forged/class_589Forged"));
+            mappings.add(makeLoaderLine("net/minecraft/class_590", "fr/catcore/fabricatedforge/forged/class_590Forged"));
 
             FileUtils.writeTextFile(mappings, Constants.MAPPINGS_FILE);
         }

@@ -16,14 +16,7 @@
     "client.class_470Accessor",
     "client.class_534Mixin",
     "client.class_535Mixin",
-    "client.class_604Mixin",
-
-    "client.class_585Mixin",
-    "client.class_586Mixin",
-    "client.class_587Mixin",
-    "client.class_588Mixin",
-    "client.class_589Mixin",
-    "client.class_590Mixin"
+    "client.class_604Mixin"
   ],
   "injectors": {
     "defaultRequire": 1
