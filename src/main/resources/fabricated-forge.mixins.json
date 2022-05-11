@@ -16,7 +16,20 @@
     "client.class_470Accessor",
     "client.class_534Mixin",
     "client.class_535Mixin",
-    "client.class_604Mixin"
+    "client.class_604Mixin",
+    "client.world.ClientWorldMixin",
+    "client.sound.SoundLoaderMixin",
+    "client.sound.SoundSystemMixin",
+    "client.render.BufferBuilderMixin",
+    "client.render.GameRendererMixin",
+    "client.render.TessellatorMixin",
+    "client.render.WorldRendererMixin",
+    "client.render.block.entity.BlockEntityRenderDispatcherMixin",
+    "client.render.block.entity.PistonBlockEntityRendererMixin",
+    "client.render.entity.BipedEntityRendererMixin",
+    "client.render.entity.EntityRenderDispatcherMixin",
+    "client.render.entity.PlayerEntityRendererMixin",
+    "client.render.entity.SnowGolemEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

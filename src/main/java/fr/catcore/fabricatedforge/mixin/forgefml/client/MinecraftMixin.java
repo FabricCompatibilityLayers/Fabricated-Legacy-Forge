@@ -28,8 +28,6 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.sound.SoundSystem;
-import net.minecraft.client.texture.ClockSprite;
-import net.minecraft.client.texture.CompassSprite;
 import net.minecraft.client.texture.TexturePackManager;
 import net.minecraft.client.util.Session;
 import net.minecraft.client.world.ClientWorld;
@@ -111,10 +109,6 @@ public abstract class MinecraftMixin {
     @Shadow protected abstract void setGlErrorMessage(String message);
 
     @Shadow public SoundSystem soundSystem;
-
-    @Shadow private class_587 field_3793;
-
-    @Shadow private class_590 field_3792;
 
     @Shadow public ClientWorld world;
 
@@ -309,8 +303,8 @@ public abstract class MinecraftMixin {
         this.field_3813.method_1416(new class_587Forged());
         this.field_3813.method_1416(new class_590Forged());
         this.field_3813.method_1416(new class_588Forged());
-        this.field_3813.method_1416(new CompassSprite((Minecraft)(Object) this));
-        this.field_3813.method_1416(new ClockSprite((Minecraft)(Object) this));
+        this.field_3813.method_1416(new CompassSpriteForged((Minecraft)(Object) this));
+        this.field_3813.method_1416(new ClockSpriteForged((Minecraft)(Object) this));
         this.field_3813.method_1416(new class_589Forged());
         this.field_3813.method_1416(new class_586Forged());
         this.field_3813.method_1416(new class_585Forged(0));

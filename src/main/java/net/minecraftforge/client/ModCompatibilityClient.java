@@ -2,6 +2,7 @@ package net.minecraftforge.client;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLLog;
+import fr.catcore.fabricatedforge.mixininterface.ISoundSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.sound.Sound;
 import net.minecraft.client.sound.SoundLoader;
@@ -43,8 +44,8 @@ public class ModCompatibilityClient {
         audioModLoadModAudio("resources/mod/streaming", mngr.bgmusicLoader);
         audioModLoadModAudio("resources/mod/music", mngr.musicLoader);
         audioModLoadModAudio("resources/mod/cavemusic", audioModSoundPoolCave);
-        if (SoundSystem.MUSIC_INTERVAL == 12000) {
-            SoundSystem.MUSIC_INTERVAL = 6000;
+        if (((ISoundSystem)mngr).getMUSIC_INTERVAL() == 12000) {
+            ((ISoundSystem)mngr).setMUSIC_INTERVAL(6000);
         }
 
     }

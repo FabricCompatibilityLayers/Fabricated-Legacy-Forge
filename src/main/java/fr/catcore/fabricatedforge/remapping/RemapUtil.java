@@ -133,6 +133,8 @@ public class RemapUtil {
             mappings.add(makeLoaderLine("net/minecraft/class_588", "fr/catcore/fabricatedforge/forged/class_588Forged"));
             mappings.add(makeLoaderLine("net/minecraft/class_589", "fr/catcore/fabricatedforge/forged/class_589Forged"));
             mappings.add(makeLoaderLine("net/minecraft/class_590", "fr/catcore/fabricatedforge/forged/class_590Forged"));
+            mappings.add(makeLoaderLine("net/minecraft/class_582", "fr/catcore/fabricatedforge/forged/ClockSpriteForged"));
+            mappings.add(makeLoaderLine("net/minecraft/class_583", "fr/catcore/fabricatedforge/forged/CompassSpriteForged"));
 
             FileUtils.writeTextFile(mappings, Constants.MAPPINGS_FILE);
         }
