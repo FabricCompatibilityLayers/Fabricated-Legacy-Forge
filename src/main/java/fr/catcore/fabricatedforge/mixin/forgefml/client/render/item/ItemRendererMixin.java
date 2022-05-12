@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render.item;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.class_534;
 import net.minecraft.client.class_535;
@@ -69,7 +70,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
             float var24;
             if (var10.getItem() instanceof BlockItem && class_535.method_1455(Block.BLOCKS[var10.id].getBlockType())) {
                 GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
-                this.method_1529(Block.BLOCKS[var10.id].getTextureFile());
+                this.method_1529(((IBlock)Block.BLOCKS[var10.id]).getTextureFile());
                 float var22 = 0.25F;
                 var16 = Block.BLOCKS[var10.id].getBlockType();
                 if (var16 == 1 || var16 == 19 || var16 == 12 || var16 == 2) {
@@ -144,7 +145,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
         float var11;
         float var12;
         if (Item.ITEMS[par3] instanceof BlockItem && class_535.method_1455(Block.BLOCKS[par3].getBlockType())) {
-            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(Block.BLOCKS[par3].getTextureFile()));
+            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(((IBlock)Block.BLOCKS[par3]).getTextureFile()));
             Block var15 = Block.BLOCKS[par3];
             GL11.glPushMatrix();
             GL11.glTranslatef((float)(par6 - 2), (float)(par7 + 3), -3.0F + this.zOffset);

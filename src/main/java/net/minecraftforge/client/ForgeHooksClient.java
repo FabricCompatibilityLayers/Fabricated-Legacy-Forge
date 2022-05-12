@@ -1,6 +1,7 @@
 package net.minecraftforge.client;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_534;
@@ -157,14 +158,14 @@ public class ForgeHooksClient {
     }
 
     public static void beforeBlockRender(Block block, class_535 render) {
-        if (!block.isDefaultTexture && render.field_2049 == -1) {
-            bindTexture(block.getTextureFile(), 0);
+        if (!((IBlock)block).isDefaultTexture() && render.field_2049 == -1) {
+            bindTexture(((IBlock)block).getTextureFile(), 0);
         }
 
     }
 
     public static void afterBlockRender(Block block, class_535 render) {
-        if (!block.isDefaultTexture && render.field_2049 == -1) {
+        if (!((IBlock)block).isDefaultTexture() && render.field_2049 == -1) {
             unbindTexture();
         }
 
@@ -293,8 +294,8 @@ public class ForgeHooksClient {
         int y = MathHelper.floor(entity.y);
         int z = MathHelper.floor(entity.z);
         Block block = Block.BLOCKS[mc.world.getBlock(x, y, z)];
-        if (block != null && block.isBed(mc.world, x, y, z, entity)) {
-            int var12 = block.getBedDirection(mc.world, x, y, z);
+        if (block != null && ((IBlock)block).isBed(mc.world, x, y, z, entity)) {
+            int var12 = ((IBlock)block).getBedDirection(mc.world, x, y, z);
             GL11.glRotatef((float)(var12 * 90), 0.0F, 1.0F, 0.0F);
         }
 

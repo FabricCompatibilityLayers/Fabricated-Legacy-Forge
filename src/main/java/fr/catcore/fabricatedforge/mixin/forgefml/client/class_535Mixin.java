@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.FMLRenderAccessLibrary;
 import net.minecraft.block.*;
 import net.minecraft.client.class_523;
@@ -344,8 +345,8 @@ public abstract class class_535Mixin {
     @Overwrite
     public boolean method_1488(Block par1Block, int par2, int par3, int par4) {
         Tessellator var5 = Tessellator.INSTANCE;
-        int var7 = par1Block.getBedDirection(this.field_2017, par2, par3, par4);
-        boolean var8 = par1Block.isBedFoot(this.field_2017, par2, par3, par4);
+        int var7 = ((IBlock)par1Block).getBedDirection(this.field_2017, par2, par3, par4);
+        boolean var8 = ((IBlock)par1Block).isBedFoot(this.field_2017, par2, par3, par4);
         float var9 = 0.5F;
         float var10 = 1.0F;
         float var11 = 0.8F;

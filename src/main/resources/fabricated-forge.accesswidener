@@ -235,7 +235,7 @@ accessible method net/minecraft/entity/vehicle/AbstractMinecartEntity method_306
 
 accessible method net/minecraft/block/Block <init> (ILnet/minecraft/block/Material;)V
 accessible method net/minecraft/block/Block <init> (IILnet/minecraft/block/Material;)V
-accessible method net/minecraft/block/Block method_472 ()Lnet/minecraft/block/Block;
+extendable method net/minecraft/block/Block method_472 ()Lnet/minecraft/block/Block;
 accessible method net/minecraft/block/Block setBlockSoundGroup (Lnet/minecraft/sound/BlockSoundGroup;)Lnet/minecraft/block/Block;
 accessible method net/minecraft/block/Block setResistance (F)Lnet/minecraft/block/Block;
 accessible method net/minecraft/block/Block setStrength (F)Lnet/minecraft/block/Block;
