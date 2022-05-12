@@ -2,6 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import cpw.mods.fml.common.registry.BlockProxy;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
+import fr.catcore.fabricatedforge.mixininterface.IBlockWithEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -301,7 +302,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     @Override
     public BlockEntity createTileEntity(World world, int metadata) {
-        return ((Block)(Object)this) instanceof BlockWithEntity ? ((BlockWithEntity)(Object)this).createNewTileEntity(world, metadata) : null;
+        return ((Block)(Object)this) instanceof BlockWithEntity ? ((IBlockWithEntity)(Object)this).createNewTileEntity(world, metadata) : null;
     }
 
     @Override
@@ -479,7 +480,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
             return true;
         } else if (plantID == SUGARCANE.id && this.id == SUGARCANE.id) {
             return true;
-        } else if (plant instanceof FlowerBlock && ((FlowerBlock)plant).method_283(this.id)) {
+        } else if (plant instanceof FlowerBlock && ((FlowerBlockAccessor)plant).method_283_invoker(this.id)) {
             return true;
         } else {
             switch (plantType) {

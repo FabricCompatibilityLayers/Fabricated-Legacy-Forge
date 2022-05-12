@@ -4,7 +4,21 @@
   "package": "fr.catcore.fabricatedforge.mixin.forgefml",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "block.BlockMixin"
+    "block.AbstractButtonBlockMixin",
+    "block.AttachedStemBlockMixin",
+    "block.BlockMixin",
+    "block.BlockWithEntityMixin",
+    "block.CactusBlockMixin",
+    "block.ChestBlockMixin",
+    "block.class_174Mixin",
+    "block.CropBlockMixin",
+    "block.DispenserBlockMixin",
+    "block.DoorBlockMixin",
+    "block.FarmlandBlockMixin",
+    "block.FireBlockMixin",
+    "block.FlowerBlockAccessor",
+    "block.FlowerBlockMixin",
+    "block.GrassBlockMixin"
   ],
   "client": [
     "client.class_469Accessor",
