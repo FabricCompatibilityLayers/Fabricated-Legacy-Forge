@@ -29,7 +29,21 @@
     "client.render.entity.BipedEntityRendererMixin",
     "client.render.entity.EntityRenderDispatcherMixin",
     "client.render.entity.PlayerEntityRendererMixin",
-    "client.render.entity.SnowGolemEntityRendererMixin"
+    "client.render.entity.SnowGolemEntityRendererMixin",
+    "client.render.item.HeldItemRendererMixin",
+    "client.render.item.ItemRendererMixin",
+    "client.particle.BlockDustParticleMixin",
+    "client.particle.ParticleManagerMixin",
+    "client.options.GameOptionsMixin",
+    "client.network.ClientPlayerInteractionManagerMixin",
+    "client.gui.hud.InGameHudMixin",
+    "client.gui.screen.AchievementsScreenMixin",
+    "client.gui.screen.FatalErrorScreenMixin",
+    "client.gui.screen.TitleScreenMixin",
+    "client.gui.screen.ingame.CreativeInventoryScreenMixin",
+    "client.gui.screen.options.ControlsOptionsScreenMixin",
+    "client.gui.screen.world.CreateWorldScreenMixin",
+    "client.gui.widget.ListWidgetMixin"
   ],
   "injectors": {
     "defaultRequire": 1

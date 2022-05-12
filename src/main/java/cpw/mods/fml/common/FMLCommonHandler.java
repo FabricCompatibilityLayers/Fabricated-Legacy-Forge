@@ -7,6 +7,7 @@ import cpw.mods.fml.common.network.EntitySpawnPacket;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.server.FMLServerHandler;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -145,6 +146,12 @@ public class FMLCommonHandler {
         if (this.brandings == null) {
             ImmutableList.Builder<String> brd = ImmutableList.builder();
             brd.add(Loader.instance().getMCVersionString());
+
+            brd.add("Fabric Loader " + FabricLoader.getInstance().getModContainer("fabricloader").get().getMetadata().getVersion().getFriendlyString()
+                + String.format(" (%s Mod%s)", FabricLoader.getInstance().getAllMods().size(), FabricLoader.getInstance().getAllMods().size() > 1 ? "" : "s")
+            );
+            brd.add("Fabricated Forge " + FabricLoader.getInstance().getModContainer("fabricated-forge").get().getMetadata().getVersion().getFriendlyString());
+
             brd.add("FML v"+Loader.instance().getFMLVersionString());
             String forgeBranding = (String) callForgeMethod("getBrandingVersion");
             if (!Strings.isNullOrEmpty(forgeBranding))
@@ -154,14 +161,14 @@ public class FMLCommonHandler {
             brd.addAll(sidedDelegate.getAdditionalBrandingInformation());
             try {
                 Properties props=new Properties();
-                props.load(getClass().getClassLoader().getResourceAsStream("fmlbranding.properties"));
+                props.load(getClass().getClassLoader().getResourceAsStream("/fmlbranding.properties"));
                 brd.add(props.getProperty("fmlbranding"));
             } catch (Exception ex) {
                 // Ignore - no branding file found
             }
             int tModCount = Loader.instance().getModList().size();
             int aModCount = Loader.instance().getActiveModList().size();
-            brd.add(String.format("%d mod%s loaded, %d mod%s active", tModCount, tModCount!=1 ? "s" :"", aModCount, aModCount!=1 ? "s" :"" ));
+            brd.add(String.format("%d  forge mod%s loaded, %d  forge mod%s active", tModCount, tModCount!=1 ? "s" :"", aModCount, aModCount!=1 ? "s" :"" ));
             brandings = brd.build();
         }
 
