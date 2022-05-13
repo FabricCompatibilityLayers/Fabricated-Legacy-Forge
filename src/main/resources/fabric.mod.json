@@ -27,5 +27,22 @@
   "depends": {
     "fabricloader": ">=0.13.0",
     "minecraft": "1.3.2"
+  },
+  "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/class_469": ["fr/catcore/fabricatedforge/mixininterface/Iclass_469"],
+      "net/minecraft/class_604": ["fr/catcore/fabricatedforge/mixininterface/Iclass_604"],
+      "net/minecraft/class_503": ["fr/catcore/fabricatedforge/mixininterface/IParticleManager"],
+      "net/minecraft/class_533": ["fr/catcore/fabricatedforge/mixininterface/ITessellator"],
+      "net/minecraft/class_530": ["fr/catcore/fabricatedforge/mixininterface/IWorldRenderer"],
+      "net/minecraft/class_623": ["fr/catcore/fabricatedforge/mixininterface/ISoundLoader"],
+      "net/minecraft/class_478": ["fr/catcore/fabricatedforge/mixininterface/IClientWorld"],
+
+      "net/minecraft/class_197": ["fr/catcore/fabricatedforge/mixininterface/IBlock"],
+      "net/minecraft/class_133": ["fr/catcore/fabricatedforge/mixininterface/IBlockWithEntity"],
+      "net/minecraft/class_112": ["net/minecraftforge/common/IPlantable"],
+      "net/minecraft/class_115": ["net/minecraftforge/common/IPlantable"],
+      "net/minecraft/class_137": ["fr/catcore/fabricatedforge/mixininterface/IFireBlock"]
+    }
   }
 }

@@ -57,14 +57,14 @@ public abstract class TitleScreenMixin extends Screen {
         GL11.glBindTexture(3553, this.field_1229.field_3813.getTextureFromPath("/title/mclogo.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         if ((double)this.minceraftRandomNumber < 1.0E-4) {
-            this.drawTexture(var6 + 0, var7 + 0, 0, 0, 99, 44);
-            this.drawTexture(var6 + 99, var7 + 0, 129, 0, 27, 44);
-            this.drawTexture(var6 + 99 + 26, var7 + 0, 126, 0, 3, 44);
-            this.drawTexture(var6 + 99 + 26 + 3, var7 + 0, 99, 0, 26, 44);
-            this.drawTexture(var6 + 155, var7 + 0, 0, 45, 155, 44);
+            this.drawTexture(var6, var7, 0, 0, 99, 44);
+            this.drawTexture(var6 + 99, var7, 129, 0, 27, 44);
+            this.drawTexture(var6 + 99 + 26, var7, 126, 0, 3, 44);
+            this.drawTexture(var6 + 99 + 26 + 3, var7, 99, 0, 26, 44);
+            this.drawTexture(var6 + 155, var7, 0, 45, 155, 44);
         } else {
-            this.drawTexture(var6 + 0, var7 + 0, 0, 0, 155, 44);
-            this.drawTexture(var6 + 155, var7 + 0, 0, 45, 155, 44);
+            this.drawTexture(var6, var7, 0, 0, 155, 44);
+            this.drawTexture(var6 + 155, var7, 0, 45, 155, 44);
         }
 
         var4.method_1413(16777215);
@@ -84,7 +84,7 @@ public abstract class TitleScreenMixin extends Screen {
         List<String> brandings = Lists.reverse(FMLCommonHandler.instance().getBrandings());
 
         for(int i = 0; i < brandings.size(); ++i) {
-            String brd = (String)brandings.get(i);
+            String brd = brandings.get(i);
             if (!Strings.isNullOrEmpty(brd)) {
                 this.drawWithShadow(this.textRenderer, brd, 2, this.height - (10 + i * (this.textRenderer.fontHeight + 1)), 16777215);
             }

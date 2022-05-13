@@ -330,7 +330,6 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
         if (this.field_1166.isDemo()) {
             this.field_1166.profiler.push("demo");
-            var36 = "";
             if (this.field_1166.world.getTimeOfDay() >= 120500L) {
                 var36 = CommonI18n.translate("demo.demoExpired");
             } else {
@@ -441,7 +440,6 @@ public abstract class InGameHudMixin extends DrawableHelper {
                     var8.method_956(var46.field_1679, var20, var47, 16777215);
                     this.field_1166.field_3813.method_1426(this.field_1166.field_3813.getTextureFromPath("/gui/icons.png"));
                     byte var51 = 0;
-                    boolean var49 = false;
                     byte var50;
                     if (var46.field_1680 < 0) {
                         var50 = 5;

@@ -39,7 +39,7 @@ public abstract class BlockEntityRenderDispatcherMixin {
             int var3 = this.world.method_3778(par1TileEntity.x, par1TileEntity.y, par1TileEntity.z, 0);
             int var4 = var3 % 65536;
             int var5 = var3 / 65536;
-            GLX.gl13MultiTexCoord2f(GLX.lightmapTextureUnit, (float)var4 / 1.0F, (float)var5 / 1.0F);
+            GLX.gl13MultiTexCoord2f(GLX.lightmapTextureUnit, (float) var4, (float) var5);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             this.renderBlockEntity(par1TileEntity, (double)par1TileEntity.x - CAMERA_X, (double)par1TileEntity.y - CAMERA_Y, (double)par1TileEntity.z - CAMERA_Z, par2);
         }

@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import java.util.ArrayList;
 
 @Mixin(CropBlock.class)
-public abstract class CropBlockMixin extends FlowerBlock implements IBlock {
+public abstract class CropBlockMixin extends FlowerBlock {
 
     protected CropBlockMixin(int i, int j, Material material) {
         super(i, j, material);
@@ -43,9 +43,9 @@ public abstract class CropBlockMixin extends FlowerBlock implements IBlock {
             for(int var18 = par4 - 1; var18 <= par4 + 1; ++var18) {
                 int var19 = par1World.getBlock(var17, par3 - 1, var18);
                 float var20 = 0.0F;
-                if (BLOCKS[var19] != null && ((IBlock)BLOCKS[var19]).canSustainPlant(par1World, var17, par3 - 1, var18, ForgeDirection.UP, (IPlantable) this)) {
+                if (BLOCKS[var19] != null && BLOCKS[var19].canSustainPlant(par1World, var17, par3 - 1, var18, ForgeDirection.UP, this)) {
                     var20 = 1.0F;
-                    if (((IBlock)BLOCKS[var19]).isFertile(par1World, var17, par3 - 1, var18)) {
+                    if (BLOCKS[var19].isFertile(par1World, var17, par3 - 1, var18)) {
                         var20 = 3.0F;
                     }
                 }

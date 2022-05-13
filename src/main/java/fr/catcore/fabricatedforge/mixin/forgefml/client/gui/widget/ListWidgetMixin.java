@@ -1,6 +1,5 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.gui.widget;
 
-import fr.catcore.fabricatedforge.mixininterface.IListWidget;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.ListWidget;
 import net.minecraft.client.render.Tessellator;
@@ -9,7 +8,7 @@ import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.*;
 
 @Mixin(ListWidget.class)
-public abstract class ListWidgetMixin implements IListWidget {
+public abstract class ListWidgetMixin /*implements IListWidget*/ {
 
     @Shadow protected int lastMouseX;
     @Shadow protected int lastMouseY;
@@ -279,8 +278,8 @@ public abstract class ListWidgetMixin implements IListWidget {
         var5.method_1396();
     }
 
-    @Override
-    public void drawContainerBackground(Tessellator tess) {
+    @Unique
+    protected void drawContainerBackground(Tessellator tess) {
         GL11.glBindTexture(3553, this.field_1241.field_3813.getTextureFromPath(this.BACKGROUND_IMAGE));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         float height = 32.0F;

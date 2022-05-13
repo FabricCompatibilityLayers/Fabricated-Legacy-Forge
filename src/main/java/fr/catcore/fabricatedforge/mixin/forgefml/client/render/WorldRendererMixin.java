@@ -1,6 +1,5 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render;
 
-import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import fr.catcore.fabricatedforge.mixininterface.IWorldRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
@@ -339,7 +338,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
      */
     @Overwrite
     public void method_1365(float par1) {
-        SkyProvider skyProvider = null;
+        SkyProvider skyProvider;
         if ((skyProvider = this.field_1918.world.dimension.getSkyProvider()) != null) {
             skyProvider.render(par1, this.world, this.field_1918);
         } else {
@@ -768,13 +767,13 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
             Particle var21 = null;
             Object effectObject = null;
             if (par1Str.equals("hugeexplosion")) {
-                this.field_1918.particleManager.method_1295((Particle)(var21 = new ExplosionEmitterParticle(this.world, par2, par4, par6, par8, par10, par12)));
+                this.field_1918.particleManager.method_1295(var21 = new ExplosionEmitterParticle(this.world, par2, par4, par6, par8, par10, par12));
             } else if (par1Str.equals("largeexplode")) {
-                this.field_1918.particleManager.method_1295((Particle)(var21 = new LargeExplosionParticle(this.field_1910, this.world, par2, par4, par6, par8, par10, par12)));
+                this.field_1918.particleManager.method_1295(var21 = new LargeExplosionParticle(this.field_1910, this.world, par2, par4, par6, par8, par10, par12));
             }
 
             if (var21 != null) {
-                return (Particle)var21;
+                return var21;
             } else {
                 double var22 = 16.0;
                 if (var15 * var15 + var17 * var17 + var19 * var19 > var22 * var22) {
@@ -794,13 +793,13 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                         var21 = new LargeFireSmokeParticle(this.world, par2, par4, par6, par8, par10, par12);
                     } else if (par1Str.equals("magicCrit")) {
                         var21 = new LargeFireSmokeParticle(this.world, par2, par4, par6, par8, par10, par12);
-                        ((Particle)var21).setColor(((Particle)var21).getRed() * 0.3F, ((Particle)var21).getGreen() * 0.8F, ((Particle)var21).getBlue());
-                        ((Particle)var21).setMiscTexture(((Particle)var21).method_1291() + 1);
+                        var21.setColor(var21.getRed() * 0.3F, var21.getGreen() * 0.8F, var21.getBlue());
+                        var21.setMiscTexture(var21.method_1291() + 1);
                     } else if (par1Str.equals("smoke")) {
                         var21 = new FireSmokeParticle(this.world, par2, par4, par6, par8, par10, par12);
                     } else if (par1Str.equals("mobSpell")) {
                         var21 = new SpellParticle(this.world, par2, par4, par6, 0.0, 0.0, 0.0);
-                        ((Particle)var21).setColor((float)par8, (float)par10, (float)par12);
+                        var21.setColor((float)par8, (float)par10, (float)par12);
                     } else if (par1Str.equals("spell")) {
                         var21 = new SpellParticle(this.world, par2, par4, par6, par8, par10, par12);
                     } else if (par1Str.equals("instantSpell")) {
@@ -843,23 +842,21 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                     } else if (par1Str.equals("heart")) {
                         var21 = new EmotionParticle(this.world, par2, par4, par6, par8, par10, par12);
                     } else {
-                        int var24;
+                        int var24 = Integer.parseInt(par1Str.substring(par1Str.indexOf("_") + 1));
                         if (par1Str.startsWith("iconcrack_")) {
-                            var24 = Integer.parseInt(par1Str.substring(par1Str.indexOf("_") + 1));
                             var21 = new SnowballParticle(this.world, par2, par4, par6, par8, par10, par12, Item.ITEMS[var24]);
                             effectObject = Item.ITEMS[var24];
                         } else if (par1Str.startsWith("tilecrack_")) {
-                            var24 = Integer.parseInt(par1Str.substring(par1Str.indexOf("_") + 1));
                             var21 = new BlockDustParticle(this.world, par2, par4, par6, par8, par10, par12, Block.BLOCKS[var24], 0, 0);
                             effectObject = Block.BLOCKS[var24];
                         }
                     }
 
                     if (var21 != null) {
-                        ((IParticleManager) this.field_1918.particleManager).addEffect((Particle)var21, effectObject);
+                        this.field_1918.particleManager.addEffect(var21, effectObject);
                     }
 
-                    return (Particle)var21;
+                    return var21;
                 }
             }
         } else {

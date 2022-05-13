@@ -41,7 +41,7 @@ public class class_604Mixin extends PacketListenerManager implements Iclass_604 
             }
 
             try {
-                this.field_2216 = new ListenThread((class_604)(Object) this, (InetAddress)null, var1);
+                this.field_2216 = new ListenThread((class_604)(Object) this, null, var1);
                 this.field_2216.start();
             } catch (IOException var3) {
                 throw var3;

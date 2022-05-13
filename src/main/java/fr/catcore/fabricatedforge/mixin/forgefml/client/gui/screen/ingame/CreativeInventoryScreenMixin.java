@@ -264,7 +264,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
         ItemGroup var5 = ItemGroup.itemGroups[selectedTab];
         int var6 = this.field_1229.field_3813.getTextureFromPath("/gui/creative_inv/" + var5.getTexture());
         ItemGroup[] var7 = ItemGroup.itemGroups;
-        int var8 = var7.length;
+        int var8;
         int start = this.tabPage * 10;
         var8 = Math.min(var7.length, (this.tabPage + 1) * 10 + 2);
         if (this.tabPage != 0) {

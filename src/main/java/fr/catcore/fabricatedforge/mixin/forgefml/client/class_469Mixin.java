@@ -110,7 +110,7 @@ public abstract class class_469Mixin implements Iclass_469 {
         if (this.field_1623.world.isPosLoaded(par1Packet132TileEntityData.x, par1Packet132TileEntityData.y, par1Packet132TileEntityData.z)) {
             BlockEntity var2 = this.field_1623.world.method_3781(par1Packet132TileEntityData.x, par1Packet132TileEntityData.y, par1Packet132TileEntityData.z);
             if (var2 != null && par1Packet132TileEntityData.type == 1 && var2 instanceof MobSpawnerBlockEntity) {
-                ((MobSpawnerBlockEntity)var2).fromNbt(par1Packet132TileEntityData.nbt);
+                var2.fromNbt(par1Packet132TileEntityData.nbt);
             } else if (var2 != null) {
                 var2.onDataPacket(this.connection, par1Packet132TileEntityData);
             }

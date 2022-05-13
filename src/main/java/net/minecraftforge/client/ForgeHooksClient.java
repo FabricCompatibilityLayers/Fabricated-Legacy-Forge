@@ -1,7 +1,7 @@
 package net.minecraftforge.client;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import fr.catcore.fabricatedforge.mixininterface.IBlock;
+import fr.catcore.fabricatedforge.mixin.forgefml.client.render.TessellatorAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_534;
@@ -25,17 +25,16 @@ import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Random;
 import java.util.TreeSet;
 
 public class ForgeHooksClient {
-    public static HashMap<ForgeHooksClient.TesKey, Tessellator> tessellators = new HashMap();
-    public static HashMap<String, Integer> textures = new HashMap();
-    public static TreeSet<ForgeHooksClient.TesKey> renderTextures = new TreeSet();
+    public static HashMap<ForgeHooksClient.TesKey, Tessellator> tessellators = new HashMap<>();
+    public static HashMap<String, Integer> textures = new HashMap<>();
+    public static TreeSet<ForgeHooksClient.TesKey> renderTextures = new TreeSet<>();
     public static Tessellator defaultTessellator = null;
     public static boolean inWorld = false;
-    public static HashMap<ForgeHooksClient.TesKey, IRenderContextHandler> renderHandlers = new HashMap();
+    public static HashMap<ForgeHooksClient.TesKey, IRenderContextHandler> renderHandlers = new HashMap<>();
     public static IRenderContextHandler unbindContext = null;
     static int renderPass = -1;
 
@@ -43,7 +42,7 @@ public class ForgeHooksClient {
     }
 
     protected static void registerRenderContextHandler(String texture, int subID, IRenderContextHandler handler) {
-        Integer texID = (Integer)textures.get(texture);
+        Integer texID = textures.get(texture);
         if (texID == null) {
             texID = engine().getTextureFromPath(texture);
             textures.put(texture, texID);
@@ -57,7 +56,7 @@ public class ForgeHooksClient {
     }
 
     public static void bindTexture(String texture, int subID) {
-        Integer texID = (Integer)textures.get(texture);
+        Integer texID = textures.get(texture);
         if (texID == null) {
             texID = engine().getTextureFromPath(texture);
             textures.put(texture, texID);
@@ -76,7 +75,7 @@ public class ForgeHooksClient {
             }
 
             GL11.glBindTexture(3553, texID);
-            unbindContext = (IRenderContextHandler)renderHandlers.get(new ForgeHooksClient.TesKey(texID, subID));
+            unbindContext = renderHandlers.get(new TesKey(texID, subID));
             if (unbindContext != null) {
                 unbindContext.beforeRenderContext();
             }
@@ -107,10 +106,10 @@ public class ForgeHooksClient {
 
     protected static void bindTessellator(int texture, int subID) {
         ForgeHooksClient.TesKey key = new ForgeHooksClient.TesKey(texture, subID);
-        Tessellator tess = (Tessellator)tessellators.get(key);
+        Tessellator tess = tessellators.get(key);
         if (tess == null) {
-            tess = new Tessellator();
-            tess.textureID = texture;
+            tess = TessellatorAccessor.newInstance(0);
+            tess.setTextureID(texture);
             tessellators.put(key, tess);
         }
 
@@ -126,7 +125,7 @@ public class ForgeHooksClient {
     public static void beforeRenderPass(int pass) {
         renderPass = pass;
         defaultTessellator = Tessellator.INSTANCE;
-        Tessellator.renderingWorldRenderer = true;
+        Tessellator.INSTANCE.renderingWorldRenderer(true);
         GL11.glBindTexture(3553, engine().getTextureFromPath("/terrain.png"));
         renderTextures.clear();
         inWorld = true;
@@ -153,19 +152,19 @@ public class ForgeHooksClient {
             }
         }
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, engine().getTextureFromPath("/terrain.png"));
-        Tessellator.renderingWorldRenderer = false;
+        Tessellator.INSTANCE.renderingWorldRenderer(false);
         Tessellator.INSTANCE = defaultTessellator;
     }
 
     public static void beforeBlockRender(Block block, class_535 render) {
-        if (!((IBlock)block).isDefaultTexture() && render.field_2049 == -1) {
-            bindTexture(((IBlock)block).getTextureFile(), 0);
+        if (!block.isDefaultTexture() && render.field_2049 == -1) {
+            bindTexture(block.getTextureFile(), 0);
         }
 
     }
 
     public static void afterBlockRender(Block block, class_535 render) {
-        if (!((IBlock)block).isDefaultTexture() && render.field_2049 == -1) {
+        if (!block.isDefaultTexture() && render.field_2049 == -1) {
             unbindTexture();
         }
 
@@ -192,7 +191,7 @@ public class ForgeHooksClient {
             if (!(item.getItem() instanceof BlockItem) || !is3D && !class_535.method_1455(Block.BLOCKS[item.id].getBlockType())) {
                 engine.method_1426(engine.getTextureFromPath(item.getItem().getTextureFile()));
                 GL11.glScalef(0.5F, 0.5F, 0.5F);
-                customRenderer.renderItem(IItemRenderer.ItemRenderType.ENTITY, item, new Object[]{renderBlocks, entity});
+                customRenderer.renderItem(IItemRenderer.ItemRenderType.ENTITY, item, renderBlocks, entity);
             } else {
                 engine.method_1426(engine.getTextureFromPath(item.getItem().getTextureFile()));
                 int renderType = Block.BLOCKS[item.id].getBlockType();
@@ -207,7 +206,7 @@ public class ForgeHooksClient {
                         GL11.glTranslatef((random.nextFloat() * 2.0F - 1.0F) * 0.2F / 0.5F, (random.nextFloat() * 2.0F - 1.0F) * 0.2F / 0.5F, (random.nextFloat() * 2.0F - 1.0F) * 0.2F / 0.5F);
                     }
 
-                    customRenderer.renderItem(IItemRenderer.ItemRenderType.ENTITY, item, new Object[]{renderBlocks, entity});
+                    customRenderer.renderItem(IItemRenderer.ItemRenderType.ENTITY, item, renderBlocks, entity);
                     GL11.glPopMatrix();
                 }
             }
@@ -244,7 +243,7 @@ public class ForgeHooksClient {
 
                 GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
                 renderBlocks.field_2048 = inColor;
-                customRenderer.renderItem(IItemRenderer.ItemRenderType.INVENTORY, item, new Object[]{renderBlocks});
+                customRenderer.renderItem(IItemRenderer.ItemRenderType.INVENTORY, item, renderBlocks);
                 renderBlocks.field_2048 = true;
                 GL11.glPopMatrix();
             } else {
@@ -259,7 +258,7 @@ public class ForgeHooksClient {
                     GL11.glColor4f(r, g, b, 1.0F);
                 }
 
-                customRenderer.renderItem(IItemRenderer.ItemRenderType.INVENTORY, item, new Object[]{renderBlocks});
+                customRenderer.renderItem(IItemRenderer.ItemRenderType.INVENTORY, item, renderBlocks);
                 GL11.glPopMatrix();
                 GL11.glEnable(2896);
             }
@@ -272,7 +271,7 @@ public class ForgeHooksClient {
         if (customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.EQUIPPED, item, IItemRenderer.ItemRendererHelper.EQUIPPED_BLOCK)) {
             GL11.glPushMatrix();
             GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-            customRenderer.renderItem(IItemRenderer.ItemRenderType.EQUIPPED, item, new Object[]{renderBlocks, entity});
+            customRenderer.renderItem(IItemRenderer.ItemRenderType.EQUIPPED, item, renderBlocks, entity);
             GL11.glPopMatrix();
         } else {
             GL11.glPushMatrix();
@@ -282,7 +281,7 @@ public class ForgeHooksClient {
             GL11.glRotatef(50.0F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(335.0F, 0.0F, 0.0F, 1.0F);
             GL11.glTranslatef(-0.9375F, -0.0625F, 0.0F);
-            customRenderer.renderItem(IItemRenderer.ItemRenderType.EQUIPPED, item, new Object[]{renderBlocks, entity});
+            customRenderer.renderItem(IItemRenderer.ItemRenderType.EQUIPPED, item, renderBlocks, entity);
             GL11.glDisable(32826);
             GL11.glPopMatrix();
         }
@@ -294,8 +293,8 @@ public class ForgeHooksClient {
         int y = MathHelper.floor(entity.y);
         int z = MathHelper.floor(entity.z);
         Block block = Block.BLOCKS[mc.world.getBlock(x, y, z)];
-        if (block != null && ((IBlock)block).isBed(mc.world, x, y, z, entity)) {
-            int var12 = ((IBlock)block).getBedDirection(mc.world, x, y, z);
+        if (block != null && block.isBed(mc.world, x, y, z, entity)) {
+            int var12 = block.getBedDirection(mc.world, x, y, z);
             GL11.glRotatef((float)(var12 * 90), 0.0F, 1.0F, 0.0F);
         }
 
@@ -314,7 +313,7 @@ public class ForgeHooksClient {
     }
 
     public static void onTextureLoadPre(String texture) {
-        if (Tessellator.renderingWorldRenderer) {
+        if (Tessellator.INSTANCE.renderingWorldRenderer()) {
             String msg = String.format("Warning: Texture %s not preloaded, will cause render glitches!", texture);
             System.out.println(msg);
             if (Tessellator.class.getPackage() != null && Tessellator.class.getPackage().equals("net.minecraft.src")) {

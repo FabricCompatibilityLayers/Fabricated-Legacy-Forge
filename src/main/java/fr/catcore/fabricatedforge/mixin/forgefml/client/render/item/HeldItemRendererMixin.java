@@ -226,7 +226,7 @@ public abstract class HeldItemRendererMixin {
         int var18 = this.field_1876.world.method_3778(MathHelper.floor(var3.x), MathHelper.floor(var3.y), MathHelper.floor(var3.z), 0);
         int var8 = var18 % 65536;
         int var9 = var18 / 65536;
-        GLX.gl13MultiTexCoord2f(GLX.lightmapTextureUnit, (float)var8 / 1.0F, (float)var9 / 1.0F);
+        GLX.gl13MultiTexCoord2f(GLX.lightmapTextureUnit, (float) var8, (float) var9);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         float var10;
         float var21;
@@ -304,10 +304,10 @@ public abstract class HeldItemRendererMixin {
             GL11.glNormal3f(0.0F, 0.0F, -1.0F);
             var28.method_1405();
             byte var27 = 7;
-            var28.method_1399((double)(0 - var27), (double)(128 + var27), 0.0, 0.0, 1.0);
+            var28.method_1399((double)(-var27), (double)(128 + var27), 0.0, 0.0, 1.0);
             var28.method_1399((double)(128 + var27), (double)(128 + var27), 0.0, 1.0, 1.0);
-            var28.method_1399((double)(128 + var27), (double)(0 - var27), 0.0, 1.0, 0.0);
-            var28.method_1399((double)(0 - var27), (double)(0 - var27), 0.0, 0.0, 0.0);
+            var28.method_1399((double)(128 + var27), (double)(-var27), 0.0, 1.0, 0.0);
+            var28.method_1399((double)(-var27), (double)(-var27), 0.0, 0.0, 0.0);
             var28.method_1396();
             MapState var16 = ((FilledMapItem)var17.getItem()).getMapState(var17, this.field_1876.world);
             if (custom == null) {

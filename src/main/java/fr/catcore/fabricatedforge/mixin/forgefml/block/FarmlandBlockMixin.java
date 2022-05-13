@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 @Mixin(FarmlandBlock.class)
-public abstract class FarmlandBlockMixin extends Block implements IBlock {
+public abstract class FarmlandBlockMixin extends Block {
 
     public FarmlandBlockMixin(int id, Material material) {
         super(id, material);

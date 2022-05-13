@@ -484,7 +484,7 @@ public abstract class MinecraftMixin {
                 int var5 = this.result.z;
                 this.interactionManager.method_1239(var3, var4, var5, this.result.side);
                 if (this.playerEntity.method_3204(var3, var4, var5)) {
-                    ((IParticleManager) this.particleManager).addBlockHitEffects(var3, var4, var5, this.result);
+                    this.particleManager.addBlockHitEffects(var3, var4, var5, this.result);
                     this.playerEntity.method_3207();
                 }
             } else {
@@ -593,12 +593,12 @@ public abstract class MinecraftMixin {
 
         if (this.currentScreen == null && this.playerEntity != null) {
             if (this.playerEntity.method_2600() <= 0) {
-                this.openScreen((Screen)null);
+                this.openScreen(null);
             } else if (this.playerEntity.method_2641() && this.world != null) {
                 this.openScreen(new SleepingChatScreen());
             }
         } else if (this.currentScreen != null && this.currentScreen instanceof SleepingChatScreen && !this.playerEntity.method_2641()) {
-            this.openScreen((Screen)null);
+            this.openScreen(null);
         }
 
         if (this.currentScreen != null) {
@@ -892,11 +892,11 @@ public abstract class MinecraftMixin {
                 this.texturePackManager.method_1685();
             }
 
-            this.setCurrentServerEntry((ServerInfo)null);
+            this.setCurrentServerEntry(null);
             this.isIntegratedServerRunning = false;
         }
 
-        this.soundSystem.playBackgroundMusic((String)null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+        this.soundSystem.playBackgroundMusic(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
         this.world = par1WorldClient;
         if (par1WorldClient != null) {
             if (this.worldRenderer != null) {
@@ -987,7 +987,7 @@ public abstract class MinecraftMixin {
         var11.setPreferredSize(new Dimension(854, 480));
         var12.add(var11, "Center");
         var12.pack();
-        var12.setLocationRelativeTo((Component)null);
+        var12.setLocationRelativeTo(null);
         var12.setVisible(true);
         var12.addWindowListener(new MinecraftWindowEventListener());
         var10000 = new MinecraftAppletStub(var1);

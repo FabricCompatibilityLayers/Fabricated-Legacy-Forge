@@ -131,7 +131,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
     @Overwrite
     public void method_1294(int par1, int par2, int par3, int par4, int par5) {
         Block var6 = Block.BLOCKS[par4];
-        if (var6 != null && !((IBlock)var6).addBlockDestroyEffects(this.world, par1, par2, par3, par5, (ParticleManager)(Object) this)) {
+        if (var6 != null && !var6.addBlockDestroyEffects(this.world, par1, par2, par3, par5, (ParticleManager)(Object) this)) {
             byte var7 = 4;
 
             for(int var8 = 0; var8 < var7; ++var8) {
@@ -232,7 +232,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
     @Override
     public void addBlockHitEffects(int x, int y, int z, HitResult target) {
         Block block = Block.BLOCKS[this.world.getBlock(x, y, z)];
-        if (block != null && !((IBlock)block).addBlockHitEffects(this.world, target, (ParticleManager)(Object) this)) {
+        if (block != null && !block.addBlockHitEffects(this.world, target, (ParticleManager)(Object) this)) {
             this.method_1293(x, y, z, target.side);
         }
 

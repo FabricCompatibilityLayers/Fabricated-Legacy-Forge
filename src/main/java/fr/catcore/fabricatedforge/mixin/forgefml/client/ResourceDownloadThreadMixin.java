@@ -14,6 +14,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
 
 @Mixin(ResourceDownloadThread.class)
 public abstract class ResourceDownloadThreadMixin {
@@ -73,7 +74,7 @@ public abstract class ResourceDownloadThreadMixin {
         con.setConnectTimeout(60000);
         con.setReadTimeout(60000);
         DataInputStream var6 = new DataInputStream(con.getInputStream());
-        DataOutputStream var7 = new DataOutputStream(new FileOutputStream(par2File));
+        DataOutputStream var7 = new DataOutputStream(Files.newOutputStream(par2File.toPath()));
         boolean var8 = false;
 
         int var9;

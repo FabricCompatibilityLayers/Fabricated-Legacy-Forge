@@ -33,14 +33,12 @@ public class BlockDustParticleMixin extends Particle {
      */
     @Overwrite
     public BlockDustParticle method_1301(int par1, int par2, int par3) {
-        if (this.field_1752 == Block.GRASS_BLOCK && this.side != 1) {
-            return (BlockDustParticle)(Object) this;
-        } else {
+        if (this.field_1752 != Block.GRASS_BLOCK || this.side == 1) {
             int var4 = this.field_1752.method_438(this.world, par1, par2, par3);
-            this.red *= (float)(var4 >> 16 & 255) / 255.0F;
-            this.green *= (float)(var4 >> 8 & 255) / 255.0F;
-            this.blue *= (float)(var4 & 255) / 255.0F;
-            return (BlockDustParticle)(Object) this;
+            this.red *= (float) (var4 >> 16 & 255) / 255.0F;
+            this.green *= (float) (var4 >> 8 & 255) / 255.0F;
+            this.blue *= (float) (var4 & 255) / 255.0F;
         }
+        return (BlockDustParticle)(Object) this;
     }
 }

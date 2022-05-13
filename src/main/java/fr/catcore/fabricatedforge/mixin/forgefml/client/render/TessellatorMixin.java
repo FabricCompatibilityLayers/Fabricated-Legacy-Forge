@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render;
 
 import com.mojang.blaze3d.platform.GLX;
+import fr.catcore.fabricatedforge.mixininterface.ITessellator;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.util.GlAllocationUtils;
 import org.lwjgl.opengl.ARBVertexBufferObject;
@@ -21,7 +22,7 @@ import java.nio.ShortBuffer;
 import java.util.Arrays;
 
 @Mixin(Tessellator.class)
-public abstract class TessellatorMixin {
+public abstract class TessellatorMixin implements ITessellator {
     @Shadow public boolean field_1970;
     @Shadow private int field_1953;
     @Shadow public int field_1965;
@@ -278,5 +279,30 @@ public abstract class TessellatorMixin {
             ((TessellatorMixin)(Object)INSTANCE).field_1941 = GlAllocationUtils.allocateIntBuffer(((TessellatorMixin)(Object)INSTANCE).field_1943);
             ARBVertexBufferObject.glGenBuffersARB(((TessellatorMixin)(Object)INSTANCE).field_1941);
         }
+    }
+
+    @Override
+    public boolean defaultTexture() {
+        return this.defaultTexture;
+    }
+
+    @Override
+    public boolean renderingWorldRenderer() {
+        return renderingWorldRenderer;
+    }
+
+    @Override
+    public void renderingWorldRenderer(boolean bool) {
+        renderingWorldRenderer = bool;
+    }
+
+    @Override
+    public void setTextureID(int textureID) {
+        this.textureID = textureID;
+    }
+
+    @Override
+    public int getTextureID() {
+        return this.textureID;
     }
 }

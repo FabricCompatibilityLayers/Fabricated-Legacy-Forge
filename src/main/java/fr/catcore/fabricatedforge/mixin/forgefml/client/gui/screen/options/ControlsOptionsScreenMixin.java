@@ -15,8 +15,6 @@ public abstract class ControlsOptionsScreenMixin extends Screen {
 
     @Shadow private GameOptions options;
 
-    @Shadow protected abstract int method_912();
-
     @Shadow protected String title;
     @Shadow private Screen parent;
     private GuiControlsScrollPanel scrollPane;
@@ -28,7 +26,6 @@ public abstract class ControlsOptionsScreenMixin extends Screen {
     public void init() {
         this.scrollPane = new GuiControlsScrollPanel((ControlsOptionsScreen)(Object) this, this.options, this.field_1229);
         Language var1 = Language.getInstance();
-        int var2 = this.method_912();
         this.buttons.add(new ButtonWidget(200, this.width / 2 - 100, this.height - 28, var1.translate("gui.done")));
         this.scrollPane.method_1059(this.buttons, 7, 8);
         this.title = var1.translate("controls.title");

@@ -72,7 +72,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
             } else {
                 var5.playSound(2001, par1, par2, par3, var6.id + (var5.getBlockData(par1, par2, par3) << 12));
                 int var7 = var5.getBlockData(par1, par2, par3);
-                boolean var8 = ((IBlock)var6).removeBlockByPlayer(var5, this.field_1646.playerEntity, par1, par2, par3);
+                boolean var8 = var6.removeBlockByPlayer(var5, this.field_1646.playerEntity, par1, par2, par3);
                 if (var8) {
                     var6.method_451(var5, par1, par2, par3, var7);
                 }

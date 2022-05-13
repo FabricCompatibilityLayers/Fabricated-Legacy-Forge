@@ -37,7 +37,7 @@ public class EntityRenderDispatcherMixin {
     @Shadow public double field_2107;
 
     /**
-     * @author
+     * @author Minecraft Forge
      */
     @Overwrite
     public void method_1523(World par1World, class_534 par2RenderEngine, TextRenderer par3FontRenderer, MobEntity par4EntityLiving, GameOptions par5GameSettings, float par6) {
@@ -51,8 +51,8 @@ public class EntityRenderDispatcherMixin {
             int y = MathHelper.floor(par4EntityLiving.y);
             int z = MathHelper.floor(par4EntityLiving.z);
             Block block = Block.BLOCKS[par1World.getBlock(x, y, z)];
-            if (block != null && ((IBlock)block).isBed(par1World, x, y, z, par4EntityLiving)) {
-                int var9 = ((IBlock)block).getBedDirection(par1World, x, y, z);
+            if (block != null && block.isBed(par1World, x, y, z, par4EntityLiving)) {
+                int var9 = block.getBedDirection(par1World, x, y, z);
                 this.yaw = (float)(var9 * 90 + 180);
                 this.pitch = 0.0F;
             }

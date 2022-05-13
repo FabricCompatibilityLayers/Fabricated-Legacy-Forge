@@ -94,7 +94,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
         }
 
         float var6;
-        if (par1EntityPlayer.username.equals("deadmau5") && this.method_1530(par1EntityPlayer.skinUrl, (String)null)) {
+        if (par1EntityPlayer.username.equals("deadmau5") && this.method_1530(par1EntityPlayer.skinUrl, null)) {
             for(int var19 = 0; var19 < 2; ++var19) {
                 var5 = par1EntityPlayer.prevYaw + (par1EntityPlayer.yaw - par1EntityPlayer.prevYaw) * par2 - (par1EntityPlayer.field_3314 + (par1EntityPlayer.field_3313 - par1EntityPlayer.field_3314) * par2);
                 var6 = par1EntityPlayer.prevPitch + (par1EntityPlayer.pitch - par1EntityPlayer.prevPitch) * par2;
@@ -113,7 +113,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
         }
 
         float var10;
-        if (this.method_1530(par1EntityPlayer.field_4008, (String)null)) {
+        if (this.method_1530(par1EntityPlayer.field_4008, null)) {
             GL11.glPushMatrix();
             GL11.glTranslatef(0.0F, 0.0F, 0.125F);
             double var22 = par1EntityPlayer.capeX + (par1EntityPlayer.prevCapeX - par1EntityPlayer.capeX) * (double)par2 - (par1EntityPlayer.prevX + (par1EntityPlayer.x - par1EntityPlayer.prevX) * (double)par2);

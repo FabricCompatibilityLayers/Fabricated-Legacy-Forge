@@ -18,7 +18,8 @@
     "block.FireBlockMixin",
     "block.FlowerBlockAccessor",
     "block.FlowerBlockMixin",
-    "block.GrassBlockMixin"
+    "block.GrassBlockMixin",
+    "block.LadderBlockMixin"
   ],
   "client": [
     "client.class_469Accessor",
@@ -28,6 +29,7 @@
     "client.class_535Mixin",
     "client.class_604Mixin",
     "client.ClientBrandRetrieverMixin",
+    "client.render.TessellatorAccessor",
     "client.MinecraftAccessor",
     "client.MinecraftAppletMixin",
     "client.MinecraftMixin",
