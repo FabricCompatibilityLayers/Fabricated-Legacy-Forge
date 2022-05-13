@@ -42,7 +42,15 @@
       "net/minecraft/class_133": ["fr/catcore/fabricatedforge/mixininterface/IBlockWithEntity"],
       "net/minecraft/class_112": ["net/minecraftforge/common/IPlantable"],
       "net/minecraft/class_115": ["net/minecraftforge/common/IPlantable"],
-      "net/minecraft/class_137": ["fr/catcore/fabricatedforge/mixininterface/IFireBlock"]
+      "net/minecraft/class_137": ["fr/catcore/fabricatedforge/mixininterface/IFireBlock"],
+      "net/minecraft/class_150": ["net/minecraftforge/common/IShearable"],
+      "net/minecraft/class_173": ["fr/catcore/fabricatedforge/mixininterface/IRailBlock"],
+      "net/minecraft/class_180": ["net/minecraftforge/common/IPlantable"],
+      "net/minecraft/class_193": ["net/minecraftforge/common/IShearable"],
+      "net/minecraft/class_209": ["net/minecraftforge/common/IShearable"],
+      "net/minecraft/class_226": ["fr/catcore/fabricatedforge/mixininterface/IBlockEntity"],
+      "net/minecraft/class_215": ["net/minecraftforge/common/ISidedInventory"],
+      "net/minecraft/class_221": ["net/minecraftforge/common/ISidedInventory"]
     }
   }
 }
