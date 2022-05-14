@@ -50,7 +50,11 @@
       "net/minecraft/class_209": ["net/minecraftforge/common/IShearable"],
       "net/minecraft/class_226": ["fr/catcore/fabricatedforge/mixininterface/IBlockEntity"],
       "net/minecraft/class_215": ["net/minecraftforge/common/ISidedInventory"],
-      "net/minecraft/class_221": ["net/minecraftforge/common/ISidedInventory"]
+      "net/minecraft/class_221": ["net/minecraftforge/common/ISidedInventory"],
+      "net/minecraft/class_1127": ["fr/catcore/fabricatedforge/mixininterface/IEnchantment"],
+      "net/minecraft/class_864": ["fr/catcore/fabricatedforge/mixininterface/IEntity"],
+      "net/minecraft/class_861": ["fr/catcore/fabricatedforge/mixininterface/IStatusEffectInstance"],
+      "net/minecraft/class_871": ["fr/catcore/fabricatedforge/mixininterface/IMobEntity"]
     }
   }
 }

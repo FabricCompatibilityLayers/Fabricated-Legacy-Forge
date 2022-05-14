@@ -38,7 +38,19 @@
     "block.VineBlockMixin",
     "block.entity.BlockEntityMixin",
     "block.entity.BrewingStandBlockEntityMixin",
-    "block.entity.FurnaceBlockEntityMixin"
+    "block.entity.FurnaceBlockEntityMixin",
+    "enchantment.EnchantmentHelperMixin",
+    "enchantment.EnchantmentMixin",
+    "entity.EntityMixin",
+    "entity.EntityTrackerMixin",
+    "entity.ItemEntityMixin",
+    "entity.MobSpawnerHelperMixin",
+    "entity.TrackedEntityInstanceMixin",
+    "entity.ai.goal.VillagerMatingGoalMixin",
+    "entity.boss.dragon.EnderDragonEntityMixin",
+    "entity.effect.StatusEffectInstanceMixin",
+    "entity.mob.MobEntityMixin",
+    "entity.mob.SlimeEntityMixin"
   ],
   "client": [
     "client.class_469Accessor",

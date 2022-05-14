@@ -19,12 +19,12 @@ import net.minecraftforge.event.entity.living.*;
 import java.util.*;
 
 public class ForgeHooks {
-    static final List<ForgeHooks.GrassEntry> grassList = new ArrayList();
-    static final List<ForgeHooks.SeedEntry> seedList = new ArrayList();
+    static final List<ForgeHooks.GrassEntry> grassList = new ArrayList<>();
+    static final List<ForgeHooks.SeedEntry> seedList = new ArrayList<>();
     private static boolean toolInit = false;
-    static HashMap<Item, List> toolClasses = new HashMap();
-    static HashMap<List, Integer> toolHarvestLevels = new HashMap();
-    static HashSet<List> toolEffectiveness = new HashSet();
+    static HashMap<Item, List> toolClasses = new HashMap<>();
+    static HashMap<List, Integer> toolHarvestLevels = new HashMap<>();
+    static HashSet<List> toolEffectiveness = new HashSet<>();
 
     public ForgeHooks() {
     }
@@ -247,10 +247,10 @@ public class ForgeHooks {
     }
 
     public static ItemEntity onPlayerTossEvent(PlayerEntity player, ItemStack item) {
-        player.captureDrops = true;
+        player.captureDrops(true);
         ItemEntity ret = player.dropStack(item, false);
-        player.capturedDrops.clear();
-        player.captureDrops = false;
+        player.getCapturedDrops().clear();
+        player.captureDrops(false);
         ItemTossEvent event = new ItemTossEvent(ret, player);
         if (MinecraftForge.EVENT_BUS.post(event)) {
             return null;
