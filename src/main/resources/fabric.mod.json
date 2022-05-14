@@ -54,7 +54,11 @@
       "net/minecraft/class_1127": ["fr/catcore/fabricatedforge/mixininterface/IEnchantment"],
       "net/minecraft/class_864": ["fr/catcore/fabricatedforge/mixininterface/IEntity"],
       "net/minecraft/class_861": ["fr/catcore/fabricatedforge/mixininterface/IStatusEffectInstance"],
-      "net/minecraft/class_871": ["fr/catcore/fabricatedforge/mixininterface/IMobEntity"]
+      "net/minecraft/class_871": ["fr/catcore/fabricatedforge/mixininterface/IMobEntity"],
+      "net/minecraft/class_946": ["net/minecraftforge/common/IShearable"],
+      "net/minecraft/class_949": ["net/minecraftforge/common/IShearable"],
+      "net/minecraft/class_988": ["fr/catcore/fabricatedforge/mixininterface/IPlayerEntity"],
+      "net/minecraft/class_965": ["fr/catcore/fabricatedforge/mixininterface/IAbstractMinecartEntity"]
     }
   }
 }

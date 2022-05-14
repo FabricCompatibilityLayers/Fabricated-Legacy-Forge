@@ -50,7 +50,14 @@
     "entity.boss.dragon.EnderDragonEntityMixin",
     "entity.effect.StatusEffectInstanceMixin",
     "entity.mob.MobEntityMixin",
-    "entity.mob.SlimeEntityMixin"
+    "entity.mob.SlimeEntityMixin",
+    "entity.passive.MooshroomEntityMixin",
+    "entity.passive.OcelotEntityMixin",
+    "entity.passive.SheepEntityMixin",
+    "entity.passive.VillagerEntityMixin",
+    "entity.player.PlayerEntityMixin",
+    "entity.player.ServerPlayerEntityMixin",
+    "entity.vehicle.AbstractMinecartEntityMixin"
   ],
   "client": [
     "client.class_469Accessor",
