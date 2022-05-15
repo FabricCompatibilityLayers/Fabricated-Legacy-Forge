@@ -292,5 +292,6 @@ accessible field net/minecraft/structure/class_49 field_89 [Lnet/minecraft/util/
 accessible class net/minecraft/client/class_470
 accessible class net/minecraft/client/class_416
 accessible class net/minecraft/client/class_417
+accessible class net/minecraft/server/class_793
 
 extendable method net/minecraft/client/gui/widget/ListWidget renderHoleBackground (IIII)V

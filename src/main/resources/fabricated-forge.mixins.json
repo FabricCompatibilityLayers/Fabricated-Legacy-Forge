@@ -84,7 +84,13 @@
     "network.packet.s2c.play.ChunkUpdateS2CPacketMixin",
     "network.packet.s2c.play.class_687Mixin",
     "recipe.RecipeDispatcherMixin",
-    "recipe.SmeltingRecipeRegistryMixin"
+    "recipe.SmeltingRecipeRegistryMixin",
+    "screen.FurnaceScreenHandlerMixin",
+    "server.class_793Mixin",
+    "server.ListenThreadMixin",
+    "server.MinecraftServerMixin",
+    "server.PlayerManagerMixin",
+    "server.ServerPacketListenerMixin"
   ],
   "client": [
     "client.class_469Accessor",

@@ -66,7 +66,8 @@
       "net/minecraft/class_89": ["fr/catcore/fabricatedforge/mixininterface/IMapState"],
       "net/minecraft/class_701": ["fr/catcore/fabricatedforge/mixininterface/IPacketListener"],
       "net/minecraft/class_801": ["fr/catcore/fabricatedforge/mixininterface/IPendingConnection"],
-      "net/minecraft/class_1110": ["fr/catcore/fabricatedforge/mixininterface/ISmeltingRecipeRegistry"]
+      "net/minecraft/class_1110": ["fr/catcore/fabricatedforge/mixininterface/ISmeltingRecipeRegistry"],
+      "net/minecraft/class_743": ["fr/catcore/fabricatedforge/mixininterface/IPlayerManager"]
     }
   }
 }
