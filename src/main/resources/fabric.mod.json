@@ -63,7 +63,10 @@
       "net/minecraft/class_1096": ["fr/catcore/fabricatedforge/mixininterface/IBlockItem"],
       "net/minecraft/class_1087": ["net/minecraftforge/common/IPlantable"],
       "net/minecraft/class_1041": ["fr/catcore/fabricatedforge/mixininterface/IItemGroup"],
-      "net/minecraft/class_89": ["fr/catcore/fabricatedforge/mixininterface/IMapState"]
+      "net/minecraft/class_89": ["fr/catcore/fabricatedforge/mixininterface/IMapState"],
+      "net/minecraft/class_701": ["fr/catcore/fabricatedforge/mixininterface/IPacketListener"],
+      "net/minecraft/class_801": ["fr/catcore/fabricatedforge/mixininterface/IPendingConnection"],
+      "net/minecraft/class_1110": ["fr/catcore/fabricatedforge/mixininterface/ISmeltingRecipeRegistry"]
     }
   }
 }

@@ -19,6 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.network.Connection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.class_690;
+import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.c2s.login.LoginKeyC2SPacket;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdate_S2CPacket;
@@ -43,7 +44,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 @Mixin(class_469.class)
-public abstract class class_469Mixin implements Iclass_469 {
+public abstract class class_469Mixin extends PacketListener implements Iclass_469 {
 
     @Shadow private Connection connection;
 

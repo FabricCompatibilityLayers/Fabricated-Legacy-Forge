@@ -73,7 +73,18 @@
     "item.SpawnEggItemMixin",
     "item.ToolItemMixin",
     "item.itemgroup.ItemGroupMixin",
-    "item.map.MapStateMixin"
+    "item.map.MapStateMixin",
+    "nbt.NbtIoMixin",
+    "network.class_690Mixin",
+    "network.IntegratedConnectionMixin",
+    "network.OutboundConnectionMixin",
+    "network.PacketMixin",
+    "network.PendingConnectionMixin",
+    "network.listener.PacketListenerMixin",
+    "network.packet.s2c.play.ChunkUpdateS2CPacketMixin",
+    "network.packet.s2c.play.class_687Mixin",
+    "recipe.RecipeDispatcherMixin",
+    "recipe.SmeltingRecipeRegistryMixin"
   ],
   "client": [
     "client.class_469Accessor",
