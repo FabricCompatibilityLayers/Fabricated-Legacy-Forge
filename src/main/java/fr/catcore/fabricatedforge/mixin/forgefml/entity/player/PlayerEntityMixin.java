@@ -128,7 +128,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         if (this.useItem != null) {
             ItemStack var1 = this.inventory.getMainHandStack();
             if (var1 == this.useItem) {
-                this.useItem.getItem().onUsingItemTick(this.useItem, this, this.itemUseTicks);
+                this.useItem.getItem().onUsingItemTick(this.useItem, (PlayerEntity)(Object) this, this.itemUseTicks);
                 if (this.itemUseTicks <= 25 && this.itemUseTicks % 4 == 0) {
                     this.drink(var1, 5);
                 }
@@ -267,7 +267,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         if (stack == null) {
             return null;
         } else {
-            return stack.getItem().onDroppedByPlayer(stack, this) ? ForgeHooks.onPlayerTossEvent((PlayerEntity)(Object) this, this.inventory.takeInvStack(this.inventory.selectedSlot, 1)) : null;
+            return stack.getItem().onDroppedByPlayer(stack, (PlayerEntity)(Object) this) ? ForgeHooks.onPlayerTossEvent((PlayerEntity)(Object) this, this.inventory.takeInvStack(this.inventory.selectedSlot, 1)) : null;
         }
     }
 
@@ -440,7 +440,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     public void method_3216(Entity par1Entity) {
         if (!MinecraftForge.EVENT_BUS.post(new AttackEntityEvent((PlayerEntity)(Object) this, par1Entity))) {
             ItemStack stack = this.getMainHandStack();
-            if (stack == null || !stack.getItem().onLeftClickEntity(stack, this, par1Entity)) {
+            if (stack == null || !stack.getItem().onLeftClickEntity(stack, (PlayerEntity)(Object) this, par1Entity)) {
                 if (par1Entity.isAttackable()) {
                     int var2 = this.inventory.method_3127(par1Entity);
                     if (this.method_2581(StatusEffect.STRENGTH)) {
@@ -722,7 +722,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
                 }
             }
 
-            var3 = par1ItemStack.getItem().getIconIndex(par1ItemStack, par2, this, this.useItem, this.itemUseTicks);
+            var3 = par1ItemStack.getItem().getIconIndex(par1ItemStack, par2, (PlayerEntity)(Object) this, this.useItem, this.itemUseTicks);
         }
 
         return var3;

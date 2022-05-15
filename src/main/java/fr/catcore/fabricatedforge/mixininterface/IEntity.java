@@ -6,6 +6,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.hit.HitResult;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.UUID;
 
 public interface IEntity {
@@ -24,4 +25,7 @@ public interface IEntity {
     boolean captureDrops();
 
     ArrayList<ItemEntity> getCapturedDrops();
+
+    // Non Forge APIs
+    Random getRandom();
 }

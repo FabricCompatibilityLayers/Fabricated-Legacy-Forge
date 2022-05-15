@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.UUID;
 
 @Mixin(Entity.class)
@@ -73,6 +74,7 @@ public abstract class EntityMixin implements IEntity {
 
     @Shadow protected abstract boolean getFlag(int index);
 
+    @Shadow protected Random random;
     @Unique
     private NbtCompound customEntityData;
     @Unique
@@ -253,5 +255,10 @@ public abstract class EntityMixin implements IEntity {
     @Override
     public ArrayList<ItemEntity> getCapturedDrops() {
         return this.capturedDrops;
+    }
+
+    @Override
+    public Random getRandom() {
+        return this.random;
     }
 }

@@ -58,7 +58,12 @@
       "net/minecraft/class_946": ["net/minecraftforge/common/IShearable"],
       "net/minecraft/class_949": ["net/minecraftforge/common/IShearable"],
       "net/minecraft/class_988": ["fr/catcore/fabricatedforge/mixininterface/IPlayerEntity"],
-      "net/minecraft/class_965": ["fr/catcore/fabricatedforge/mixininterface/IAbstractMinecartEntity"]
+      "net/minecraft/class_965": ["fr/catcore/fabricatedforge/mixininterface/IAbstractMinecartEntity"],
+      "net/minecraft/class_1069": ["fr/catcore/fabricatedforge/mixininterface/IItem"],
+      "net/minecraft/class_1096": ["fr/catcore/fabricatedforge/mixininterface/IBlockItem"],
+      "net/minecraft/class_1087": ["net/minecraftforge/common/IPlantable"],
+      "net/minecraft/class_1041": ["fr/catcore/fabricatedforge/mixininterface/IItemGroup"],
+      "net/minecraft/class_89": ["fr/catcore/fabricatedforge/mixininterface/IMapState"]
     }
   }
 }
