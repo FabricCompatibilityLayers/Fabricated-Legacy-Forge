@@ -9,7 +9,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeDirection;
 
-public interface IWorld {
+public interface IWorld extends IWorldView {
     Biome getBiomeGenForCoordsBody(int par1, int par2);
 
     @Environment(EnvType.CLIENT)
@@ -33,8 +33,6 @@ public interface IWorld {
     boolean canSnowAtBody(int par1, int par2, int par3);
 
     boolean canMineBlockBody(PlayerEntity par1EntityPlayer, int par2, int par3, int par4);
-
-    int getMaxBuildHeight();
 
     void addTileEntity(BlockEntity entity);
 

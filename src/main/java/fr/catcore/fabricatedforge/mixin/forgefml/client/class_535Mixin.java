@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
+import fr.catcore.fabricatedforge.mixininterface.IWorldView;
 import net.minecraft.FMLRenderAccessLibrary;
 import net.minecraft.block.*;
 import net.minecraft.client.class_523;
@@ -673,7 +674,7 @@ public abstract class class_535Mixin {
      */
     @Overwrite
     public boolean method_1442(PaneBlock par1BlockPane, int par2, int par3, int par4) {
-        int var5 = this.field_2017.getMaxBuildHeight();
+        int var5 = ((IWorldView)this.field_2017).getMaxBuildHeight();
         Tessellator var6 = Tessellator.INSTANCE;
         var6.method_1411(par1BlockPane.method_455(this.field_2017, par2, par3, par4));
         float var7 = 1.0F;
