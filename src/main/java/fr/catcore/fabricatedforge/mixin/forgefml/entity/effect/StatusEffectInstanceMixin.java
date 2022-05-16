@@ -27,7 +27,7 @@ public class StatusEffectInstanceMixin implements IStatusEffectInstance {
 
     @Inject(method = "<init>(Lnet/minecraft/entity/effect/StatusEffectInstance;)V", at = @At("RETURN"))
     private void fmlCtr(StatusEffectInstance par1PotionEffect, CallbackInfo ci) {
-        this.curativeItems = par1PotionEffect.getCurativeItems();
+        this.curativeItems = ((IStatusEffectInstance)par1PotionEffect).getCurativeItems();
     }
 
     @Override

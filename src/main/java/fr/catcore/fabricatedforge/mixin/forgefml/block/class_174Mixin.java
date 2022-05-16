@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
+import fr.catcore.fabricatedforge.mixininterface.IRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.RailBlock;
 import net.minecraft.block.class_174;
@@ -47,8 +48,8 @@ public abstract class class_174Mixin {
     @Inject(method = "<init>", cancellable = true, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlock(III)I"))
     private void overwriteCtr(RailBlock par1BlockRail, World par2World, int par3, int par4, int par5, CallbackInfo ci) {
         int var6 = par2World.getBlock(par3, par4, par5);
-        RailBlock target = (RailBlock) Block.BLOCKS[var6];
-        int var7 = target.getBasicRailMetadata(par2World, (AbstractMinecartEntity)null, par3, par4, par5);
+        IRailBlock target = (IRailBlock) Block.BLOCKS[var6];
+        int var7 = target.getBasicRailMetadata(par2World, null, par3, par4, par5);
         this.field_310 = !target.isFlexibleRail(par2World, par3, par4, par5);
         this.canMakeSlopes = target.canMakeSlopes(par2World, par3, par4, par5);
         this.method_358(var7);
@@ -57,6 +58,7 @@ public abstract class class_174Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private class_174 method_361(Vec3i par1ChunkPosition) {
@@ -65,6 +67,7 @@ public abstract class class_174Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void method_368(class_174 par1RailLogic) {
@@ -134,6 +137,7 @@ public abstract class class_174Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_362(boolean par1, boolean par2) {
@@ -259,13 +263,5 @@ public abstract class class_174Mixin {
                 }
             }
         }
-    }
-
-    /**
-     * @author Minecraft Forge
-     */
-    @Overwrite
-    public static int method_360(class_174 par0RailLogic) {
-        return ((class_174Mixin)(Object)par0RailLogic).method_363();
     }
 }

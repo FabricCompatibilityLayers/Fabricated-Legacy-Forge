@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.recipe;
 
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,7 @@ public class RecipeDispatcherMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public ItemStack method_3494(CraftingInventory par1InventoryCrafting) {
@@ -41,7 +43,7 @@ public class RecipeDispatcherMixin {
             }
         }
 
-        if (var2 == 2 && var3.id == var4.id && var3.count == 1 && var4.count == 1 && Item.ITEMS[var3.id].isRepairable()) {
+        if (var2 == 2 && var3.id == var4.id && var3.count == 1 && var4.count == 1 && ((IItem)Item.ITEMS[var3.id]).isRepairable()) {
             Item var10 = Item.ITEMS[var3.id];
             int var12 = var10.getMaxDamage() - var3.getDamage();
             int var7 = var10.getMaxDamage() - var4.getDamage();

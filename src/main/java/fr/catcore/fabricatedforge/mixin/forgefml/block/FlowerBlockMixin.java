@@ -20,6 +20,7 @@ public abstract class FlowerBlockMixin extends Block implements IPlantable {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_434(World par1World, int par2, int par3, int par4) {
@@ -28,11 +29,12 @@ public abstract class FlowerBlockMixin extends Block implements IPlantable {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_450(World par1World, int par2, int par3, int par4) {
         Block soil = BLOCKS[par1World.getBlock(par2, par3 - 1, par4)];
-        return (par1World.method_3718(par2, par3, par4) >= 8 || par1World.method_3716(par2, par3, par4)) && soil != null && soil.canSustainPlant(par1World, par2, par3 - 1, par4, ForgeDirection.UP, this);
+        return (par1World.method_3718(par2, par3, par4) >= 8 || par1World.method_3716(par2, par3, par4)) && soil != null && ((IBlock)soil).canSustainPlant(par1World, par2, par3 - 1, par4, ForgeDirection.UP, this);
     }
 
     @Override

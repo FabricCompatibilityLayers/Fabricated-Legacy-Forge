@@ -17,6 +17,7 @@ public abstract class SugarCaneBlockMixin extends Block implements IPlantable {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_434(World par1World, int par2, int par3, int par4) {

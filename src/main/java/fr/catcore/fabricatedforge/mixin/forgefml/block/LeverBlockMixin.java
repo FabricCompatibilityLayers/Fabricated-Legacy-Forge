@@ -19,6 +19,7 @@ public abstract class LeverBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_428(World par1World, int par2, int par3, int par4, int par5) {
@@ -28,6 +29,7 @@ public abstract class LeverBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_434(World par1World, int par2, int par3, int par4) {
@@ -36,6 +38,7 @@ public abstract class LeverBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_409(World par1World, int par2, int par3, int par4, int par5, float par6, float par7, float par8) {
@@ -78,6 +81,7 @@ public abstract class LeverBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_408(World par1World, int par2, int par3, int par4, int par5) {

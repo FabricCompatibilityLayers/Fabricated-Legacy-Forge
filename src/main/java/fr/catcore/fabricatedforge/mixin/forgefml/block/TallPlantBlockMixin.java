@@ -22,6 +22,7 @@ public abstract class TallPlantBlockMixin extends FlowerBlock implements ISheara
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int method_398(int par1, Random par2Random, int par3) {
@@ -30,6 +31,7 @@ public abstract class TallPlantBlockMixin extends FlowerBlock implements ISheara
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_424(World par1World, PlayerEntity par2EntityPlayer, int par3, int par4, int par5, int par6) {

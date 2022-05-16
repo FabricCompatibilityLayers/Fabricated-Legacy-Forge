@@ -27,6 +27,7 @@ public abstract class class_19Mixin extends class_31 {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean generate(World par1World, Random par2Random, BlockBox par3StructureBoundingBox) {
@@ -38,7 +39,7 @@ public abstract class class_19Mixin extends class_31 {
                 var4 = 6;
             }
 
-            this.method_64(par1World, par3StructureBoundingBox, 0, 0, 0, 13, var4 - 1, 14, true, par2Random, StrongholdPieces.method_21());
+            this.method_64(par1World, par3StructureBoundingBox, 0, 0, 0, 13, var4 - 1, 14, true, par2Random, StrongholdPiecesAccessor.getField_25());
             this.method_41(par1World, par2Random, par3StructureBoundingBox, this.field_37, 4, 1, 0);
             this.method_66(par1World, par3StructureBoundingBox, par2Random, 0.07F, 2, 1, 1, 11, 4, 13, Block.COBWEB.id, Block.COBWEB.id, false);
 

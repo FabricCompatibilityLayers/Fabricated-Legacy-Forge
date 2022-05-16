@@ -13,6 +13,8 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.common.registry.IThrowableEntity;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import fr.catcore.fabricatedforge.mixin.forgefml.client.class_469Accessor;
+import fr.catcore.fabricatedforge.mixininterface.Iclass_469;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_469;
 import net.minecraft.client.gui.screen.Screen;
@@ -93,7 +95,6 @@ public class FMLClientHandler implements IFMLSidedHandler {
         catch (LoaderException le)
         {
             haltGame("There was a severe problem during mod loading that has caused the game to fail", le);
-            return;
         }
     }
 
@@ -107,7 +108,7 @@ public class FMLClientHandler implements IFMLSidedHandler {
             try {
                 Loader.instance().initializeMods();
             } catch (CustomModLoadingErrorDisplayException var2) {
-                FMLLog.log(Level.SEVERE, var2, "A custom exception was thrown by a mod, the game will now halt", new Object[0]);
+                FMLLog.log(Level.SEVERE, var2, "A custom exception was thrown by a mod, the game will now halt");
                 this.customError = var2;
                 return;
             } catch (LoaderException var3) {
@@ -162,7 +163,7 @@ public class FMLClientHandler implements IFMLSidedHandler {
     }
 
     public List<String> getAdditionalBrandingInformation() {
-        return this.optifineContainer != null ? Arrays.asList(String.format("Optifine %s", this.optifineContainer.getVersion())) : Collections.emptyList();
+        return this.optifineContainer != null ? Collections.singletonList(String.format("Optifine %s", this.optifineContainer.getVersion())) : Collections.emptyList();
     }
 
     public Side getSide() {
@@ -200,15 +201,15 @@ public class FMLClientHandler implements IFMLSidedHandler {
             entity.trackedZ = packet.rawZ;
             if (entity instanceof IThrowableEntity) {
                 Entity thrower = this.client.playerEntity.id == packet.throwerId ? this.client.playerEntity : wc.method_1250(packet.throwerId);
-                ((IThrowableEntity)entity).setThrower((Entity)thrower);
+                ((IThrowableEntity)entity).setThrower(thrower);
             }
 
             Entity[] parts = entity.getParts();
             if (parts != null) {
                 int i = packet.entityId - entity.id;
 
-                for(int j = 0; j < parts.length; ++j) {
-                    parts[j].id += i;
+                for (Entity part : parts) {
+                    part.id += i;
                 }
             }
 
@@ -227,7 +228,7 @@ public class FMLClientHandler implements IFMLSidedHandler {
             wc.method_1253(packet.entityId, entity);
             return entity;
         } catch (Exception var9) {
-            FMLLog.log(Level.SEVERE, var9, "A severe problem occurred during the spawning of an entity", new Object[0]);
+            FMLLog.log(Level.SEVERE, var9, "A severe problem occurred during the spawning of an entity");
             throw Throwables.propagate(var9);
         }
     }
@@ -239,7 +240,7 @@ public class FMLClientHandler implements IFMLSidedHandler {
             ent.trackedY = packet.serverY;
             ent.trackedZ = packet.serverZ;
         } else {
-            FMLLog.fine("Attempted to adjust the position of entity %d which is not present on the client", new Object[]{packet.entityId});
+            FMLLog.fine("Attempted to adjust the position of entity %d which is not present on the client", packet.entityId);
         }
 
     }
@@ -270,14 +271,14 @@ public class FMLClientHandler implements IFMLSidedHandler {
     }
 
     public void handleTinyPacket(PacketListener handler, MapUpdate_S2CPacket mapData) {
-        ((class_469)handler).fmlPacket131Callback(mapData);
+        ((Iclass_469)handler).fmlPacket131Callback(mapData);
     }
 
     public void setClientCompatibilityLevel(byte compatibilityLevel) {
-        class_469.setConnectionCompatibilityLevel(compatibilityLevel);
+        class_469Accessor.setConnectionCompatibilityLevel(compatibilityLevel);
     }
 
     public byte getClientCompatibilityLevel() {
-        return class_469.getConnectionCompatibilityLevel();
+        return class_469Accessor.getConnectionCompatibilityLevel();
     }
 }

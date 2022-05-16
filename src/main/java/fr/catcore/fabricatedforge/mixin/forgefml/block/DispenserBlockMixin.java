@@ -30,6 +30,7 @@ public abstract class DispenserBlockMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private static int method_298(DispenserBlockEntity par0TileEntityDispenser, World par1World, ItemStack par2ItemStack, Random par3Random, int par4, int par5, int par6, int par7, int par8, double par9, double par11, double par13) {

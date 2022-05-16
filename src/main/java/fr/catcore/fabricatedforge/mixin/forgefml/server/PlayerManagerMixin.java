@@ -3,6 +3,8 @@ package fr.catcore.fabricatedforge.mixin.forgefml.server;
 import cpw.mods.fml.common.network.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import fr.catcore.fabricatedforge.mixininterface.IPlayerManager;
+import fr.catcore.fabricatedforge.mixininterface.IServerChunkProvider;
+import fr.catcore.fabricatedforge.mixininterface.IWorldView;
 import net.minecraft.entity.PortalTeleporter;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.player.PlayerEntity;
@@ -57,6 +59,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onPlayerConnect(Connection par1NetworkManager, ServerPlayerEntity par2EntityPlayerMP) {
@@ -73,7 +76,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
         BlockPos var5 = var4.getWorldSpawnPos();
         this.setGameMode(par2EntityPlayerMP, (ServerPlayerEntity)null, var4);
         ServerPacketListener var6 = new ServerPacketListener(this.server, par1NetworkManager, par2EntityPlayerMP);
-        var6.sendPacket(new class_690(par2EntityPlayerMP.id, var4.getLevelProperties().getGeneratorType(), par2EntityPlayerMP.interactionManager.getgamemode(), var4.getLevelProperties().isHardcore(), var4.dimension.dimensionType, var4.field_4556, var4.getMaxBuildHeight(), this.getMaxPlayerCount()));
+        var6.sendPacket(new class_690(par2EntityPlayerMP.id, var4.getLevelProperties().getGeneratorType(), par2EntityPlayerMP.interactionManager.getgamemode(), var4.getLevelProperties().isHardcore(), var4.dimension.dimensionType, var4.field_4556, ((IWorldView)var4).getMaxBuildHeight(), this.getMaxPlayerCount()));
         var6.sendPacket(new PlayerSpawnPositionChangeS2CPacket(var5.x, var5.y, var5.z));
         var6.sendPacket(new PlayerAbilities_S2CPacket(par2EntityPlayerMP.abilities));
         this.sendWorldInfo(par2EntityPlayerMP, var4);
@@ -97,6 +100,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1986(ServerPlayerEntity par1EntityPlayerMP, ServerWorld par2WorldServer) {
@@ -106,11 +110,12 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
         }
 
         var3.getPlayerWorldManager().method_2109(par1EntityPlayerMP);
-        var3.chunkCache.getOrGenerateChunk((int)par1EntityPlayerMP.x >> 4, (int)par1EntityPlayerMP.z >> 4);
+        ((IServerChunkProvider)var3.chunkCache).getOrGenerateChunk((int)par1EntityPlayerMP.x >> 4, (int)par1EntityPlayerMP.z >> 4);
     }
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void remove(ServerPlayerEntity par1EntityPlayerMP) {
@@ -125,6 +130,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public ServerPlayerEntity respawnPlayer(ServerPlayerEntity par1EntityPlayerMP, int par2, boolean par3) {
@@ -165,7 +171,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
             }
         }
 
-        var7.chunkCache.getOrGenerateChunk((int)var6.x >> 4, (int)var6.z >> 4);
+        ((IServerChunkProvider)var7.chunkCache).getOrGenerateChunk((int)var6.x >> 4, (int)var6.z >> 4);
 
         while(!var7.doesBoxCollide(var6, var6.boundingBox).isEmpty()) {
             var6.updatePosition(var6.x, var6.y + 1.0, var6.z);
@@ -186,6 +192,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void teleportToDimension(ServerPlayerEntity par1EntityPlayerMP, int par2) {
@@ -198,7 +205,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
         ServerWorld var4 = this.server.getWorld(par1EntityPlayerMP._dimension);
         par1EntityPlayerMP._dimension = par2;
         ServerWorld var5 = this.server.getWorld(par1EntityPlayerMP._dimension);
-        par1EntityPlayerMP.field_2823.sendPacket(new PlayerRespawn_S2CPacket(par1EntityPlayerMP._dimension, (byte)par1EntityPlayerMP.world.field_4556, var5.getLevelProperties().getGeneratorType(), var5.getMaxBuildHeight(), par1EntityPlayerMP.interactionManager.getgamemode()));
+        par1EntityPlayerMP.field_2823.sendPacket(new PlayerRespawn_S2CPacket(par1EntityPlayerMP._dimension, (byte)par1EntityPlayerMP.world.field_4556, var5.getLevelProperties().getGeneratorType(), ((IWorldView)var5).getMaxBuildHeight(), par1EntityPlayerMP.interactionManager.getgamemode()));
         var4.method_3700(par1EntityPlayerMP);
         par1EntityPlayerMP.removed = false;
         Dimension pOld = DimensionManager.getProvider(var3);
@@ -245,6 +252,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public ServerPlayerEntity getPlayer(String par1Str) {

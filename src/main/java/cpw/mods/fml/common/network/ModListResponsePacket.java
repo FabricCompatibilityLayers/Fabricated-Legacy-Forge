@@ -8,6 +8,7 @@ import com.google.common.io.ByteStreams;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
+import fr.catcore.fabricatedforge.mixininterface.IPendingConnection;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PendingConnection;
 import net.minecraft.network.listener.PacketListener;
@@ -114,6 +115,6 @@ public class ModListResponsePacket extends FMLPacket {
         pkt.field_2454 = pkt.field_2455.length;
         network.send(pkt);
         // reset the continuation flag - we have completed extra negotiation and the login should complete now
-        PendingConnection.method_2189((PendingConnection) netHandler, true);
+        ((IPendingConnection) netHandler).method_2189_fabric(true);
     }
 }

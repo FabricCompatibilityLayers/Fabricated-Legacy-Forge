@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.block.TorchBlock;
@@ -19,6 +20,7 @@ public abstract class TorchBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private boolean method_489(World par1World, int par2, int par3, int par4) {
@@ -26,12 +28,13 @@ public abstract class TorchBlockMixin extends Block {
             return true;
         } else {
             int var5 = par1World.getBlock(par2, par3, par4);
-            return Block.BLOCKS[var5] != null && Block.BLOCKS[var5].canPlaceTorchOnTop(par1World, par2, par3, par4);
+            return Block.BLOCKS[var5] != null && ((IBlock)Block.BLOCKS[var5]).canPlaceTorchOnTop(par1World, par2, par3, par4);
         }
     }
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_434(World par1World, int par2, int par3, int par4) {
@@ -40,6 +43,7 @@ public abstract class TorchBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_409(World par1World, int par2, int par3, int par4, int par5, float par6, float par7, float par8) {
@@ -69,6 +73,7 @@ public abstract class TorchBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_460(World par1World, int par2, int par3, int par4) {
@@ -89,6 +94,7 @@ public abstract class TorchBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_408(World par1World, int par2, int par3, int par4, int par5) {

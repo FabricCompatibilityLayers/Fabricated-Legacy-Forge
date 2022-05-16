@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block.entity;
 
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BrewingStandBlockEntity;
 import net.minecraft.inventory.Inventory;
@@ -25,6 +26,7 @@ public abstract class BrewingStandBlockEntityMixin extends BlockEntity implement
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void method_509() {
@@ -48,7 +50,7 @@ public abstract class BrewingStandBlockEntityMixin extends BlockEntity implement
             }
 
             if (Item.ITEMS[var1.id].isFood()) {
-                this.field_513[3] = Item.ITEMS[var1.id].getContainerItemStack(this.field_513[3]);
+                this.field_513[3] = ((IItem)Item.ITEMS[var1.id]).getContainerItemStack(this.field_513[3]);
             } else {
                 --this.field_513[3].count;
                 if (this.field_513[3].count <= 0) {

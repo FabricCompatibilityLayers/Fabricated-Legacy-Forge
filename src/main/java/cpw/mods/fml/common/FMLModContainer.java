@@ -40,7 +40,7 @@ public class FMLModContainer implements ModContainer {
     private Multimap<Class<? extends Annotation>, Object> annotations;
     private DefaultArtifactVersion processedVersion;
     private boolean isNetworkMod;
-    private static final BiMap<Class<? extends FMLStateEvent>, Class<? extends Annotation>> modAnnotationTypes = ImmutableBiMap.builder().put(FMLPreInitializationEvent.class, Mod.PreInit.class).put(FMLInitializationEvent.class, Mod.Init.class).put(FMLPostInitializationEvent.class, Mod.PostInit.class).put(FMLServerStartingEvent.class, Mod.ServerStarting.class).put(FMLServerStartedEvent.class, Mod.ServerStarted.class).put(FMLServerStoppingEvent.class, Mod.ServerStopping.class).build();
+    private static final BiMap<Class<? extends FMLStateEvent>, Class<? extends Annotation>> modAnnotationTypes = ImmutableBiMap.<Class<? extends FMLStateEvent>, Class<? extends Annotation>>builder().put(FMLPreInitializationEvent.class, Mod.PreInit.class).put(FMLInitializationEvent.class, Mod.Init.class).put(FMLPostInitializationEvent.class, Mod.PostInit.class).put(FMLServerStartingEvent.class, Mod.ServerStarting.class).put(FMLServerStartedEvent.class, Mod.ServerStarted.class).put(FMLServerStoppingEvent.class, Mod.ServerStopping.class).build();
     private static final BiMap<Class<? extends Annotation>, Class<? extends FMLStateEvent>> modTypeAnnotations;
     private String annotationDependencies;
     private VersionRange minecraftAccepted;
@@ -78,7 +78,7 @@ public class FMLModContainer implements ModContainer {
         }
 
         if (!this.overridesMetadata && this.modMetadata.useDependencyInformation) {
-            FMLLog.finest("Using mcmod dependency info : %s %s %s", new Object[]{this.modMetadata.requiredMods, this.modMetadata.dependencies, this.modMetadata.dependants});
+            FMLLog.finest("Using mcmod dependency info : %s %s %s", this.modMetadata.requiredMods, this.modMetadata.dependencies, this.modMetadata.dependants);
         } else {
             Set<ArtifactVersion> requirements = Sets.newHashSet();
             List<ArtifactVersion> dependencies = Lists.newArrayList();
@@ -88,11 +88,11 @@ public class FMLModContainer implements ModContainer {
             this.modMetadata.requiredMods = requirements;
             this.modMetadata.dependencies = dependencies;
             this.modMetadata.dependants = dependants;
-            FMLLog.finest("Parsed dependency info : %s %s %s", new Object[]{requirements, dependencies, dependants});
+            FMLLog.finest("Parsed dependency info : %s %s %s", requirements, dependencies, dependants);
         }
 
         if (Strings.isNullOrEmpty(this.modMetadata.name)) {
-            FMLLog.info("Mod %s is missing the required element 'name'. Substituting %s", new Object[]{this.getModId(), this.getModId()});
+            FMLLog.info("Mod %s is missing the required element 'name'. Substituting %s", this.getModId(), this.getModId());
             this.modMetadata.name = this.getModId();
         }
 
@@ -101,17 +101,17 @@ public class FMLModContainer implements ModContainer {
             Properties versionProps = this.searchForVersionProperties();
             if (versionProps != null) {
                 this.internalVersion = versionProps.getProperty(this.getModId() + ".version");
-                FMLLog.fine("Found version %s for mod %s in version.properties, using", new Object[]{this.internalVersion, this.getModId()});
+                FMLLog.fine("Found version %s for mod %s in version.properties, using", this.internalVersion, this.getModId());
             }
         }
 
         if (Strings.isNullOrEmpty(this.internalVersion) && !Strings.isNullOrEmpty(this.modMetadata.version)) {
-            FMLLog.warning("Mod %s is missing the required element 'version' and a version.properties file could not be found. Falling back to metadata version %s", new Object[]{this.getModId(), this.modMetadata.version});
+            FMLLog.warning("Mod %s is missing the required element 'version' and a version.properties file could not be found. Falling back to metadata version %s", this.getModId(), this.modMetadata.version);
             this.internalVersion = this.modMetadata.version;
         }
 
         if (Strings.isNullOrEmpty(this.internalVersion)) {
-            FMLLog.warning("Mod %s is missing the required element 'version' and no fallback can be found. Substituting '1.0'.", new Object[]{this.getModId()});
+            FMLLog.warning("Mod %s is missing the required element 'version' and no fallback can be found. Substituting '1.0'.", this.getModId());
             this.modMetadata.version = this.internalVersion = "1.0";
         }
 
@@ -126,7 +126,7 @@ public class FMLModContainer implements ModContainer {
 
     public Properties searchForVersionProperties() {
         try {
-            FMLLog.fine("Attempting to load the file version.properties from %s to locate a version number for %s", new Object[]{this.getSource().getName(), this.getModId()});
+            FMLLog.fine("Attempting to load the file version.properties from %s to locate a version number for %s", this.getSource().getName(), this.getModId());
             Properties version = null;
             if (this.getSource().isFile()) {
                 ZipFile source = new ZipFile(this.getSource());
@@ -150,7 +150,7 @@ public class FMLModContainer implements ModContainer {
             return version;
         } catch (Exception var4) {
             Throwables.propagateIfPossible(var4);
-            FMLLog.fine("Failed to find a usable version.properties file", new Object[0]);
+            FMLLog.fine("Failed to find a usable version.properties file");
             return null;
         }
     }
@@ -185,7 +185,7 @@ public class FMLModContainer implements ModContainer {
 
     public boolean registerBus(EventBus bus, LoadController controller) {
         if (this.enabled) {
-            FMLLog.fine("Enabling mod %s", new Object[]{this.getModId()});
+            FMLLog.fine("Enabling mod %s", this.getModId());
             this.eventBus = bus;
             this.controller = controller;
             this.eventBus.register(this);
@@ -223,16 +223,8 @@ public class FMLModContainer implements ModContainer {
 
     private void processFieldAnnotations(ASMDataTable asmDataTable) throws Exception {
         SetMultimap<String, ASMDataTable.ASMData> annotations = asmDataTable.getAnnotationsFor(this);
-        this.parseSimpleFieldAnnotation(annotations, Mod.Instance.class.getName(), new Function<ModContainer, Object>() {
-            public Object apply(ModContainer mc) {
-                return mc.getMod();
-            }
-        });
-        this.parseSimpleFieldAnnotation(annotations, Mod.Metadata.class.getName(), new Function<ModContainer, Object>() {
-            public Object apply(ModContainer mc) {
-                return mc.getMetadata();
-            }
-        });
+        this.parseSimpleFieldAnnotation(annotations, Mod.Instance.class.getName(), ModContainer::getMod);
+        this.parseSimpleFieldAnnotation(annotations, Mod.Metadata.class.getName(), ModContainer::getMetadata);
     }
 
     private void parseSimpleFieldAnnotation(SetMultimap<String, ASMDataTable.ASMData> annotations, String annotationClassName, Function<ModContainer, Object> retreiver) throws IllegalAccessException {

@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.explosion;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -41,6 +42,7 @@ public class ExplosionMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void collectBlocksAndDamageEntities() {
@@ -75,7 +77,7 @@ public class ExplosionMixin {
                             int var24 = MathHelper.floor(var19);
                             int var25 = this.world.getBlock(var22, var23, var24);
                             if (var25 > 0) {
-                                var14 -= (Block.BLOCKS[var25].getExplosionResistance(this.causingEntity, this.world, var22, var23, var24, this.x, this.y, this.z) + 0.3F) * var21;
+                                var14 -= (((IBlock)Block.BLOCKS[var25]).getExplosionResistance(this.causingEntity, this.world, var22, var23, var24, this.x, this.y, this.z) + 0.3F) * var21;
                             }
 
                             if (var14 > 0.0F) {

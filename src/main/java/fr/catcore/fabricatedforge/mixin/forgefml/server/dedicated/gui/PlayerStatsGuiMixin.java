@@ -30,6 +30,7 @@ public abstract class PlayerStatsGuiMixin extends JComponent {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void method_2086() {

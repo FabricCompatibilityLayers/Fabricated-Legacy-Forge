@@ -64,9 +64,9 @@ public class Loader {
     }
 
     private Loader() {
-        String actualMCVersion = (new MinecraftVersionProvider((CrashReport)null)).call();
+        String actualMCVersion = (new MinecraftVersionProvider(null)).call();
         if (!mccversion.equals(actualMCVersion)) {
-            FMLLog.severe("This version of FML is built for Minecraft %s, we have detected Minecraft %s in your minecraft jar file", new Object[]{mccversion, actualMCVersion});
+            FMLLog.severe("This version of FML is built for Minecraft %s, we have detected Minecraft %s in your minecraft jar file", mccversion, actualMCVersion);
             throw new LoaderException();
         } else {
             this.minecraft = new MinecraftDummyContainer(actualMCVersion);
@@ -90,13 +90,7 @@ public class Loader {
                     FMLLog.severe("The mod %s does not wish to run in Minecraft version %s. You will have to remove it to play.", mod.getModId(), getMCVersionString());
                     throw new WrongMinecraftVersionException(mod);
                 }
-                Map<String,ArtifactVersion> names = Maps.uniqueIndex(mod.getRequirements(), new Function<ArtifactVersion, String>()
-                {
-                    public String apply(ArtifactVersion v)
-                    {
-                        return v.getLabel();
-                    }
-                });
+                Map<String,ArtifactVersion> names = Maps.uniqueIndex(mod.getRequirements(), ArtifactVersion::getLabel);
                 Set<ArtifactVersion> versionMissingMods = Sets.newHashSet();
                 Set<String> missingMods = Sets.difference(names.keySet(), modVersions.keySet());
                 if (!missingMods.isEmpty())
@@ -237,38 +231,38 @@ public class Loader {
             this.canonicalConfigDir = configDir.getCanonicalFile();
             this.canonicalModsDir = modsDir.getCanonicalFile();
         } catch (IOException var6) {
-            FMLLog.log(Level.SEVERE, var6, "Failed to resolve loader directories: mods : %s ; config %s", new Object[]{this.canonicalModsDir.getAbsolutePath(), configDir.getAbsolutePath()});
+            FMLLog.log(Level.SEVERE, var6, "Failed to resolve loader directories: mods : %s ; config %s", this.canonicalModsDir.getAbsolutePath(), configDir.getAbsolutePath());
             throw new LoaderException(var6);
         }
 
         boolean dirMade;
         if (!this.canonicalModsDir.exists()) {
-            FMLLog.info("No mod directory found, creating one: %s", new Object[]{canonicalModsPath});
+            FMLLog.info("No mod directory found, creating one: %s", canonicalModsPath);
             dirMade = this.canonicalModsDir.mkdir();
             if (!dirMade) {
-                FMLLog.severe("Unable to create the mod directory %s", new Object[]{canonicalModsPath});
+                FMLLog.severe("Unable to create the mod directory %s", canonicalModsPath);
                 throw new LoaderException();
             }
 
-            FMLLog.info("Mod directory created successfully", new Object[0]);
+            FMLLog.info("Mod directory created successfully");
         }
 
         if (!this.canonicalConfigDir.exists()) {
-            FMLLog.fine("No config directory found, creating one: %s", new Object[]{canonicalConfigPath});
+            FMLLog.fine("No config directory found, creating one: %s", canonicalConfigPath);
             dirMade = this.canonicalConfigDir.mkdir();
             if (!dirMade) {
-                FMLLog.severe("Unable to create the config directory %s", new Object[]{canonicalConfigPath});
+                FMLLog.severe("Unable to create the config directory %s", canonicalConfigPath);
                 throw new LoaderException();
             }
 
-            FMLLog.info("Config directory created successfully", new Object[0]);
+            FMLLog.info("Config directory created successfully");
         }
 
         if (!this.canonicalModsDir.isDirectory()) {
-            FMLLog.severe("Attempting to load mods from %s, which is not a directory", new Object[]{canonicalModsPath});
+            FMLLog.severe("Attempting to load mods from %s, which is not a directory", canonicalModsPath);
             throw new LoaderException();
         } else if (!configDir.isDirectory()) {
-            FMLLog.severe("Attempting to load configuration from %s, which is not a directory", new Object[]{canonicalConfigPath});
+            FMLLog.severe("Attempting to load configuration from %s, which is not a directory", canonicalConfigPath);
             throw new LoaderException();
         }
     }
@@ -338,13 +332,7 @@ public class Loader {
         modStates.putAll(sysPropertyStateList);
         FMLLog.fine("After merging, found state information for %d mods", modStates.size());
 
-        Map<String, Boolean> isEnabled = Maps.transformValues(modStates, new Function<String, Boolean>()
-        {
-            public Boolean apply(String input)
-            {
-                return Boolean.parseBoolean(input);
-            }
-        });
+        Map<String, Boolean> isEnabled = Maps.transformValues(modStates, Boolean::parseBoolean);
 
         for (Map.Entry<String, Boolean> entry : isEnabled.entrySet())
         {
@@ -357,7 +345,7 @@ public class Loader {
     }
 
     public static boolean isModLoaded(String modname) {
-        return instance().namedMods.containsKey(modname) && instance().modController.getModState((ModContainer)instance.namedMods.get(modname)) != LoaderState.ModState.DISABLED;
+        return instance().namedMods.containsKey(modname) && instance().modController.getModState(instance.namedMods.get(modname)) != LoaderState.ModState.DISABLED;
     }
 
     public File getConfigDir() {
@@ -460,12 +448,12 @@ public class Loader {
     }
 
     public void initializeMods() {
-        this.modController.distributeStateMessage(LoaderState.INITIALIZATION, new Object[0]);
+        this.modController.distributeStateMessage(LoaderState.INITIALIZATION);
         this.modController.transition(LoaderState.POSTINITIALIZATION);
-        this.modController.distributeStateMessage(LoaderState.POSTINITIALIZATION, new Object[0]);
+        this.modController.distributeStateMessage(LoaderState.POSTINITIALIZATION);
         this.modController.transition(LoaderState.AVAILABLE);
-        this.modController.distributeStateMessage(LoaderState.AVAILABLE, new Object[0]);
-        FMLLog.info("Forge Mod Loader has successfully loaded %d mod%s", new Object[]{this.mods.size(), this.mods.size() == 1 ? "" : "s"});
+        this.modController.distributeStateMessage(LoaderState.AVAILABLE);
+        FMLLog.info("Forge Mod Loader has successfully loaded %d mod%s", this.mods.size(), this.mods.size() == 1 ? "" : "s");
     }
 
     public ICrashCallable getCallableCrashInformation() {
@@ -481,7 +469,7 @@ public class Loader {
     }
 
     public List<ModContainer> getActiveModList() {
-        return (List)(this.modController != null ? this.modController.getActiveModList() : ImmutableList.of());
+        return this.modController != null ? this.modController.getActiveModList() : ImmutableList.of();
     }
 
     public LoaderState.ModState getModState(ModContainer selectedMod) {
@@ -493,17 +481,17 @@ public class Loader {
     }
 
     public void serverStarting(Object server) {
-        this.modController.distributeStateMessage(LoaderState.SERVER_STARTING, new Object[]{server});
+        this.modController.distributeStateMessage(LoaderState.SERVER_STARTING, server);
         this.modController.transition(LoaderState.SERVER_STARTING);
     }
 
     public void serverStarted() {
-        this.modController.distributeStateMessage(LoaderState.SERVER_STARTED, new Object[0]);
+        this.modController.distributeStateMessage(LoaderState.SERVER_STARTED);
         this.modController.transition(LoaderState.SERVER_STARTED);
     }
 
     public void serverStopping() {
-        this.modController.distributeStateMessage(LoaderState.SERVER_STOPPING, new Object[0]);
+        this.modController.distributeStateMessage(LoaderState.SERVER_STOPPING);
         this.modController.transition(LoaderState.SERVER_STOPPING);
         this.modController.transition(LoaderState.AVAILABLE);
     }
@@ -528,7 +516,7 @@ public class Loader {
         return this.minecraft;
     }
 
-    private class ModIdComparator implements Comparator<ModContainer> {
+    private static class ModIdComparator implements Comparator<ModContainer> {
         private ModIdComparator() {
         }
 

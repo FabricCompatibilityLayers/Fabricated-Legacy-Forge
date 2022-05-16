@@ -68,7 +68,7 @@ public class EntitySpawnPacket extends FMLPacket {
 
         try {
             ent.getDataTracker().method_2696(dos);
-        } catch (IOException var17) {
+        } catch (Exception var17) {
         }
 
         dat.write(bos.toByteArray());
@@ -136,7 +136,7 @@ public class EntitySpawnPacket extends FMLPacket {
 
         try {
             this.metadata = DataTracker.method_2695(dis);
-        } catch (IOException var6) {
+        } catch (Exception var6) {
         }
 
         dat.skipBytes(data.length - bis.available() - 27);
@@ -157,7 +157,7 @@ public class EntitySpawnPacket extends FMLPacket {
         EntityRegistry.EntityRegistration registration = EntityRegistry.instance().lookupModSpawn(mc, this.modEntityId);
         Class<? extends Entity> cls = registration.getEntityClass();
         if (cls == null) {
-            FMLLog.log(Level.WARNING, "Missing mod entity information for %s : %d", new Object[]{mc.getModId(), this.modEntityId});
+            FMLLog.log(Level.WARNING, "Missing mod entity information for %s : %d", mc.getModId(), this.modEntityId);
         } else {
             FMLCommonHandler.instance().spawnEntityIntoClientWorld(registration, this);
         }

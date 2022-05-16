@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity.vehicle;
 
 import fr.catcore.fabricatedforge.mixininterface.IAbstractMinecartEntity;
+import fr.catcore.fabricatedforge.mixininterface.IRailBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -138,6 +139,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public Box getHardCollisionBox(Entity par1Entity) {
@@ -146,6 +148,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public Box getBox() {
@@ -154,6 +157,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean isPushable() {
@@ -162,6 +166,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean damage(DamageSource par1DamageSource, int par2) {
@@ -189,6 +194,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void tick() {
@@ -240,7 +246,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
             int var8 = this.world.getBlock(var1, var2, var3);
             if (this.canUseRail() && RailBlock.method_354(var8)) {
                 Vec3d var9 = this.snapPositionToRail(this.x, this.y, this.z);
-                int var10 = ((RailBlock) Block.BLOCKS[var8]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var1, var2, var3);
+                int var10 = ((IRailBlock) Block.BLOCKS[var8]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var1, var2, var3);
                 this.y = (double)var2;
                 boolean var11 = false;
                 boolean var12 = false;
@@ -348,7 +354,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
                 this.updatePushForces();
                 if (this.shouldDoRailFunctions()) {
-                    ((RailBlock)Block.BLOCKS[var8]).onMinecartPass(this.world, (AbstractMinecartEntity)(Object) this, var1, var2, var3);
+                    ((IRailBlock)Block.BLOCKS[var8]).onMinecartPass(this.world, (AbstractMinecartEntity)(Object) this, var1, var2, var3);
                 }
 
                 if (var11 && this.shouldDoRailFunctions()) {
@@ -427,6 +433,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -442,7 +449,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
         if (!RailBlock.method_354(var12)) {
             return null;
         } else {
-            int var13 = ((RailBlock)Block.BLOCKS[var12]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var9, var10, var11);
+            int var13 = ((IRailBlock)Block.BLOCKS[var12]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var9, var10, var11);
             par3 = (double)var10;
             if (var13 >= 2 && var13 <= 5) {
                 par3 = (double)(var10 + 1);
@@ -468,6 +475,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public Vec3d snapPositionToRail(double par1, double par3, double par5) {
@@ -480,7 +488,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
         int var10 = this.world.getBlock(var7, var8, var9);
         if (RailBlock.method_354(var10)) {
-            int var11 = ((RailBlock)Block.BLOCKS[var10]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var7, var8, var9);
+            int var11 = ((IRailBlock)Block.BLOCKS[var10]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var7, var8, var9);
             par3 = (double)var8;
             if (var11 >= 2 && var11 <= 5) {
                 par3 = (double)(var8 + 1);
@@ -528,6 +536,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void writeCustomDataToNbt(NbtCompound par1NBTTagCompound) {
@@ -557,6 +566,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void readCustomDataFromNbt(NbtCompound par1NBTTagCompound) {
@@ -589,6 +599,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void pushAwayFrom(Entity par1Entity) {
@@ -633,13 +644,13 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
                         double var18 = par1Entity.velocityX + this.velocityX;
                         double var20 = par1Entity.velocityZ + this.velocityZ;
-                        if (((AbstractMinecartEntity)par1Entity).isPoweredCart() && !this.isPoweredCart()) {
+                        if (((IAbstractMinecartEntity)par1Entity).isPoweredCart() && !this.isPoweredCart()) {
                             this.velocityX *= 0.20000000298023224;
                             this.velocityZ *= 0.20000000298023224;
                             this.addVelocity(par1Entity.velocityX - var2, 0.0, par1Entity.velocityZ - var4);
                             par1Entity.velocityX *= 0.949999988079071;
                             par1Entity.velocityZ *= 0.949999988079071;
-                        } else if (!((AbstractMinecartEntity)par1Entity).isPoweredCart() && this.isPoweredCart()) {
+                        } else if (!((IAbstractMinecartEntity)par1Entity).isPoweredCart() && this.isPoweredCart()) {
                             par1Entity.velocityX *= 0.20000000298023224;
                             par1Entity.velocityZ *= 0.20000000298023224;
                             par1Entity.addVelocity(this.velocityX + var2, 0.0, this.velocityZ + var4);
@@ -667,6 +678,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int getInvSize() {
@@ -675,6 +687,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_2537(PlayerEntity par1EntityPlayer) {
@@ -832,7 +845,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
     protected void moveMinecartOnRail(int i, int j, int k) {
         int id = this.world.getBlock(i, j, k);
         if (RailBlock.method_354(id)) {
-            float railMaxSpeed = ((RailBlock)Block.BLOCKS[id]).getRailMaxSpeed(this.world, (AbstractMinecartEntity)(Object) this, i, j, k);
+            float railMaxSpeed = ((IRailBlock)Block.BLOCKS[id]).getRailMaxSpeed(this.world, (AbstractMinecartEntity)(Object) this, i, j, k);
             double maxSpeed = (double)Math.min(railMaxSpeed, this.getMaxSpeedRail());
             double mX = this.velocityX;
             double mZ = this.velocityZ;

@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity.boss.dragon;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
@@ -70,6 +71,7 @@ public abstract class EnderDragonEntityMixin extends class_956 {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_2651() {
@@ -283,6 +285,7 @@ public abstract class EnderDragonEntityMixin extends class_956 {
 
     /**
      * @author Miencraft Forge
+     * @reason none
      */
     @Overwrite
     private boolean destroyBlocks(Box par1AxisAlignedBB) {
@@ -301,7 +304,7 @@ public abstract class EnderDragonEntityMixin extends class_956 {
                     int var13 = this.world.getBlock(var10, var11, var12);
                     Block block = Block.BLOCKS[var13];
                     if (block != null) {
-                        if (block.canDragonDestroy(this.world, var10, var11, var12)) {
+                        if (((IBlock)block).canDragonDestroy(this.world, var10, var11, var12)) {
                             var9 = true;
                             this.world.method_3690(var10, var11, var12, 0);
                         } else {

@@ -7,6 +7,7 @@ import cpw.mods.fml.common.network.EntitySpawnPacket;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.server.FMLServerHandler;
+import fr.catcore.fabricatedforge.mixininterface.ILevelProperties;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,7 +36,7 @@ public class FMLCommonHandler {
     private Class<?> forge;
     private boolean noForge;
     private List<String> brandings;
-    private List<ICrashCallable> crashCallables = Lists.newArrayList(new ICrashCallable[]{Loader.instance().getCallableCrashInformation()});
+    private List<ICrashCallable> crashCallables = Lists.newArrayList(Loader.instance().getCallableCrashInformation());
     private Set<WorldSaveHandler> handlerSet = Sets.newSetFromMap((new MapMaker()).weakKeys().makeMap());
 
     public FMLCommonHandler() {
@@ -43,10 +44,10 @@ public class FMLCommonHandler {
 
     public void beginLoading(IFMLSidedHandler handler) {
         this.sidedDelegate = handler;
-        FMLLog.info("Attempting early MinecraftForge initialization", new Object[0]);
+        FMLLog.info("Attempting early MinecraftForge initialization");
         this.callForgeMethod("initialize");
         this.callForgeMethod("registerCrashCallable");
-        FMLLog.info("Completed early MinecraftForge initialization", new Object[0]);
+        FMLLog.info("Completed early MinecraftForge initialization");
     }
 
     public void rescheduleTicks(Side side) {
@@ -94,7 +95,7 @@ public class FMLCommonHandler {
     }
 
     public ModContainer findContainerFor(Object mod) {
-        return (ModContainer)Loader.instance().getReversedModObjectList().get(mod);
+        return Loader.instance().getReversedModObjectList().get(mod);
     }
 
     public Logger getFMLLogger() {
@@ -314,7 +315,7 @@ public class FMLCommonHandler {
         }
         handlerSet.add(handler);
         Map<String,NbtElement> additionalProperties = Maps.newHashMap();
-        worldInfo.setAdditionalProperties(additionalProperties);
+        ((ILevelProperties)worldInfo).setAdditionalProperties(additionalProperties);
         for (ModContainer mc : Loader.instance().getModList())
         {
             if (mc instanceof InjectedModContainer)

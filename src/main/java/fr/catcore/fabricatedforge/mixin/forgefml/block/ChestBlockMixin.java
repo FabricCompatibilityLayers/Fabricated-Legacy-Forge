@@ -25,10 +25,11 @@ public abstract class ChestBlockMixin extends BlockWithEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_421(World par1World, int par2, int par3, int par4, PlayerEntity par5EntityPlayer, int par6, float par7, float par8, float par9) {
-        Object var10 = (ChestBlockEntity)par1World.method_3781(par2, par3, par4);
+        Object var10 = par1World.method_3781(par2, par3, par4);
         if (var10 == null) {
             return true;
         } else if (par1World.isBlockSolidOnSide(par2, par3 + 1, par4, ForgeDirection.DOWN)) {
@@ -69,13 +70,12 @@ public abstract class ChestBlockMixin extends BlockWithEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static boolean method_289(World par0World, int par1, int par2, int par3) {
-        Iterator var4 = par0World.getEntitiesInBox(OcelotEntity.class, Box.getLocalPool().getOrCreate((double)par1, (double)(par2 + 1), (double)par3, (double)(par1 + 1), (double)(par2 + 2), (double)(par3 + 1))).iterator();
-
-        while(var4.hasNext()) {
-            OcelotEntity var5 = (OcelotEntity)var4.next();
+        for (Object o : par0World.getEntitiesInBox(OcelotEntity.class, Box.getLocalPool().getOrCreate((double) par1, (double) (par2 + 1), (double) par3, (double) (par1 + 1), (double) (par2 + 2), (double) (par3 + 1)))) {
+            OcelotEntity var5 = (OcelotEntity) o;
             if (var5.isSitting()) {
                 return true;
             }

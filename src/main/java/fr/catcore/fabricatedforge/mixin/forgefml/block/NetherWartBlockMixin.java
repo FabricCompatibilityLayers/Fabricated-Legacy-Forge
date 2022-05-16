@@ -19,6 +19,7 @@ public class NetherWartBlockMixin extends FlowerBlock {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_410(World par1World, int par2, int par3, int par4, int par5, float par6, int par7) {

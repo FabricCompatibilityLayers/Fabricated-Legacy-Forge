@@ -122,6 +122,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean hasBlockEntity() {
@@ -130,6 +131,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -139,6 +141,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -148,6 +151,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -157,6 +161,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -166,6 +171,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public float method_405(PlayerEntity par1EntityPlayer, World par2World, int par3, int par4, int par5) {
@@ -174,6 +180,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_410(World par1World, int par2, int par3, int par4, int par5, float par6, int par7) {
@@ -190,6 +197,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_424(World par1World, PlayerEntity par2EntityPlayer, int par3, int par4, int par5, int par6) {

@@ -1,6 +1,9 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world;
 
 import com.google.common.collect.SetMultimap;
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
+import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
+import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import fr.catcore.fabricatedforge.mixininterface.IWorld;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -132,6 +135,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public Biome method_3773(int par1, int par2) {
@@ -209,25 +213,28 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean isAir(int par1, int par2, int par3) {
         int id = this.getBlock(par1, par2, par3);
-        return id == 0 || Block.BLOCKS[id] == null || Block.BLOCKS[id].isAirBlock((World)(Object) this, par1, par2, par3);
+        return id == 0 || Block.BLOCKS[id] == null || ((IBlock)Block.BLOCKS[id]).isAirBlock((World)(Object) this, par1, par2, par3);
     }
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean hasBlockEntity(int par1, int par2, int par3) {
         int var4 = this.getBlock(par1, par2, par3);
         int meta = this.getBlockData(par1, par2, par3);
-        return Block.BLOCKS[var4] != null && Block.BLOCKS[var4].hasTileEntity(meta);
+        return Block.BLOCKS[var4] != null && ((IBlock)Block.BLOCKS[var4]).hasTileEntity(meta);
     }
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean isDay() {
@@ -236,6 +243,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public HitResult rayTrace(Vec3d par1Vec3, Vec3d par2Vec3, boolean par3, boolean par4) {
@@ -391,6 +399,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void playSound(Entity par1Entity, String par2Str, float par3, float par4) {
@@ -409,6 +418,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean spawnEntity(Entity par1Entity) {
@@ -438,6 +448,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -506,6 +517,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -557,6 +569,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int method_3708(int par1, int par2) {
@@ -566,7 +579,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
         for(par2 &= 15; var4 > 0; --var4) {
             int var5 = var3.method_3879(par1, var4, par2);
-            if (var5 != 0 && Block.BLOCKS[var5].material.blocksMovement() && Block.BLOCKS[var5].material != Material.FOILAGE && !Block.BLOCKS[var5].isBlockFoliage(this, par1, var4, par2)) {
+            if (var5 != 0 && Block.BLOCKS[var5].material.blocksMovement() && Block.BLOCKS[var5].material != Material.FOILAGE && !((IBlock)Block.BLOCKS[var5]).isBlockFoliage((World)(Object) this, par1, var4, par2)) {
                 return var4 + 1;
             }
         }
@@ -576,6 +589,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -601,6 +615,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void tickEntities() {
@@ -689,7 +704,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
                 if (this.isChunkLoaded(var6.x >> 4, var6.z >> 4)) {
                     Chunk var8 = this.getChunk(var6.x >> 4, var6.z >> 4);
                     if (var8 != null) {
-                        var8.cleanChunkBlockTileEntity(var6.x & 15, var6.y, var6.z & 15);
+                        ((IChunk)var8).cleanChunkBlockTileEntity(var6.x & 15, var6.y, var6.z & 15);
                     }
                 }
             }
@@ -702,7 +717,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
             while(var7.hasNext()) {
                 Object tile = var7.next();
-                ((BlockEntity)tile).onChunkUnload();
+                ((IBlockEntity)tile).onChunkUnload();
             }
 
             this.blockEntities.removeAll(this.unloadedBlockEntities);
@@ -736,13 +751,14 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void addBlockEntities(Collection par1Collection) {
         List dest = this.iteratingTickingBlockEntities ? this.pendingBlockEntities : this.blockEntities;
 
         for (Object entity : par1Collection) {
-            if (((BlockEntity) entity).canUpdate()) {
+            if (((IBlockEntity) entity).canUpdate()) {
                 dest.add(entity);
             }
         }
@@ -750,6 +766,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void checkChunk(Entity par1Entity, boolean par2) {
@@ -830,6 +847,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean containsFireSource(Box par1AxisAlignedBB) {
@@ -849,7 +867,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
                         }
 
                         Block block = Block.BLOCKS[var11];
-                        if (block != null && block.isBlockBurning((World)(Object) this, var8, var9, var10)) {
+                        if (block != null && ((IBlock)block).isBlockBurning((World)(Object) this, var8, var9, var10)) {
                             return true;
                         }
                     }
@@ -862,11 +880,12 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3603(int par1, int par2, int par3, BlockEntity par4TileEntity) {
         if (par4TileEntity != null && !par4TileEntity.isRemoved()) {
-            if (par4TileEntity.canUpdate()) {
+            if (((IBlockEntity)par4TileEntity).canUpdate()) {
                 List dest = this.iteratingTickingBlockEntities ? this.pendingBlockEntities : this.blockEntities;
                 dest.add(par4TileEntity);
             }
@@ -881,6 +900,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3725(int par1, int par2, int par3) {
@@ -893,15 +913,17 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3783(int par1, int par2, int par3) {
         Block block = Block.BLOCKS[this.getBlock(par1, par2, par3)];
-        return block != null && block.isBlockNormalCube((World)(Object) this, par1, par2, par3);
+        return block != null && ((IBlock)block).isBlockNormalCube((World)(Object) this, par1, par2, par3);
     }
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3784(int par1, int par2, int par3) {
@@ -910,6 +932,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3656(int par1, int par2, int par3, boolean par4) {
@@ -928,6 +951,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3645(boolean par1, boolean par2) {
@@ -936,6 +960,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void initWeatherGradients() {
@@ -955,6 +980,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void tickWeather() {
@@ -1033,6 +1059,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3733() {
@@ -1041,6 +1068,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void updateLighting() {
@@ -1086,6 +1114,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3675(int par1, int par2, int par3, boolean par4) {
@@ -1131,6 +1160,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3734(int par1, int par2, int par3) {
@@ -1154,10 +1184,11 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private int method_3699(int par1, int par2, int par3, int par4, int par5, int par6) {
-        int var7 = par5 != 0 && Block.BLOCKS[par5] != null ? Block.BLOCKS[par5].getLightValue(this, par2, par3, par4) : 0;
+        int var7 = par5 != 0 && Block.BLOCKS[par5] != null ? ((IBlock)Block.BLOCKS[par5]).getLightValue(this, par2, par3, par4) : 0;
         int var8 = this.method_3667(LightType.BLOCK, par2 - 1, par3, par4) - par6;
         int var9 = this.method_3667(LightType.BLOCK, par2 + 1, par3, par4) - par6;
         int var10 = this.method_3667(LightType.BLOCK, par2, par3 - 1, par4) - par6;
@@ -1193,6 +1224,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3678(LightType par1EnumSkyBlock, int par2, int par3, int par4) {
@@ -1363,6 +1395,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public List getEntitiesIn(Entity par1Entity, Box par2AxisAlignedBB) {
@@ -1385,6 +1418,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public List getEntitiesInBox(Class par1Class, Box par2AxisAlignedBB) {
@@ -1407,6 +1441,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3625(List par1List) {
@@ -1422,6 +1457,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3602(int par1, int par2, int par3, int par4, boolean par5, int par6, Entity par7Entity) {
@@ -1440,7 +1476,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
                 var9 = null;
             }
 
-            if (var9 != null && var9.isBlockReplaceable((World)(Object) this, par2, par3, par4)) {
+            if (var9 != null && ((IBlock)var9).isBlockReplaceable((World)(Object) this, par2, par3, par4)) {
                 var9 = null;
             }
 
@@ -1450,6 +1486,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void setTimeOfDay(long par1) {
@@ -1458,6 +1495,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public long getSeed() {
@@ -1466,6 +1504,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public long getTimeOfDay() {
@@ -1474,6 +1513,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public BlockPos getWorldSpawnPos() {
@@ -1482,6 +1522,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -1491,6 +1532,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -1513,6 +1555,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3637(PlayerEntity par1EntityPlayer, int par2, int par3, int par4) {
@@ -1526,6 +1569,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3582(int par1, int par2, int par3) {
@@ -1534,6 +1578,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int method_3771() {
@@ -1547,6 +1592,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int getEffectiveHeight() {
@@ -1555,6 +1601,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -1565,7 +1612,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
     @Override
     public void addTileEntity(BlockEntity entity) {
         List dest = this.iteratingTickingBlockEntities ? this.pendingBlockEntities : this.blockEntities;
-        if (entity.canUpdate()) {
+        if (((IBlockEntity)entity).canUpdate()) {
             dest.add(entity);
         }
 
@@ -1582,7 +1629,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
             Chunk var5 = this.chunkProvider.getChunk(X >> 4, Z >> 4);
             if (var5 != null && !var5.isEmpty()) {
                 Block block = Block.BLOCKS[this.getBlock(X, Y, Z)];
-                return block != null && block.isBlockSolidOnSide((World) (Object) this, X, Y, Z, side);
+                return block != null && ((IBlock)block).isBlockSolidOnSide((World) (Object) this, X, Y, Z, side);
             } else {
                 return _default;
             }
@@ -1591,7 +1638,8 @@ public abstract class WorldMixin implements WorldView, IWorld {
         }
     }
 
-    SetMultimap<ChunkPos, ForgeChunkManager.Ticket> getPersistentChunks() {
+    @Override
+    public SetMultimap<ChunkPos, ForgeChunkManager.Ticket> getPersistentChunks() {
         return ForgeChunkManager.getPersistentChunksFor((World)(Object) this);
     }
 }

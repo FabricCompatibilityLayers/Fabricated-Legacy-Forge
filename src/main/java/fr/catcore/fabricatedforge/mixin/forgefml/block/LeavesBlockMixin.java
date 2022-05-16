@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.BaseLeavesBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.LeavesBlock;
@@ -29,6 +30,7 @@ public abstract class LeavesBlockMixin extends BaseLeavesBlock implements IShear
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_411(World par1World, int par2, int par3, int par4, int par5, int par6) {
@@ -40,7 +42,7 @@ public abstract class LeavesBlockMixin extends BaseLeavesBlock implements IShear
                     for(int var11 = -var7; var11 <= var7; ++var11) {
                         int var12 = par1World.getBlock(par2 + var9, par3 + var10, par4 + var11);
                         if (Block.BLOCKS[var12] != null) {
-                            Block.BLOCKS[var12].beginLeavesDecay(par1World, par2 + var9, par3 + var10, par4 + var11);
+                            ((IBlock)Block.BLOCKS[var12]).beginLeavesDecay(par1World, par2 + var9, par3 + var10, par4 + var11);
                         }
                     }
                 }
@@ -51,6 +53,7 @@ public abstract class LeavesBlockMixin extends BaseLeavesBlock implements IShear
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_436(World par1World, int par2, int par3, int par4, Random par5Random) {
@@ -122,7 +125,7 @@ public abstract class LeavesBlockMixin extends BaseLeavesBlock implements IShear
                         for(var13 = -var7; var13 <= var7; ++var13) {
                             for(var14 = -var7; var14 <= var7; ++var14) {
                                 var15 = par1World.getBlock(par2 + var12, par3 + var13, par4 + var14);
-                                Block block = Block.BLOCKS[var15];
+                                IBlock block = (IBlock) Block.BLOCKS[var15];
                                 if (block != null && block.canSustainLeaves(par1World, par2 + var12, par3 + var13, par4 + var14)) {
                                     this.field_287[(var12 + var11) * var10 + (var13 + var11) * var9 + var14 + var11] = 0;
                                 } else if (block != null && block.isLeaves(par1World, par2 + var12, par3 + var13, par4 + var14)) {
@@ -150,6 +153,7 @@ public abstract class LeavesBlockMixin extends BaseLeavesBlock implements IShear
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_424(World par1World, PlayerEntity par2EntityPlayer, int par3, int par4, int par5, int par6) {
@@ -163,7 +167,7 @@ public abstract class LeavesBlockMixin extends BaseLeavesBlock implements IShear
 
     @Override
     public ArrayList<ItemStack> onSheared(ItemStack item, World world, int x, int y, int z, int fortune) {
-        ArrayList<ItemStack> ret = new ArrayList();
+        ArrayList<ItemStack> ret = new ArrayList<>();
         ret.add(new ItemStack(this, 1, world.getBlockData(x, y, z) & 3));
         return ret;
     }

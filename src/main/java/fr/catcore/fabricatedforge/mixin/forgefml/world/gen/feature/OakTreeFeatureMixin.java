@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.world.World;
@@ -18,6 +19,7 @@ public abstract class OakTreeFeatureMixin extends Feature {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_4028(World par1World, Random par2Random, int par3, int par4, int par5) {
@@ -46,7 +48,7 @@ public abstract class OakTreeFeatureMixin extends Feature {
                     for(var11 = par5 - var13; var11 <= par5 + var13 && var7; ++var11) {
                         if (var8 >= 0 && var8 < 128) {
                             var12 = par1World.getBlock(var10, var8, var11);
-                            if (var12 != 0 && Block.BLOCKS[var12] != null && !Block.BLOCKS[var12].isLeaves(par1World, var10, var8, var11)) {
+                            if (var12 != 0 && Block.BLOCKS[var12] != null && !((IBlock)Block.BLOCKS[var12]).isLeaves(par1World, var10, var8, var11)) {
                                 if (var12 != Block.WATER.id && var12 != Block.field_334.id) {
                                     var7 = false;
                                 } else if (var8 > par4) {
@@ -78,7 +80,7 @@ public abstract class OakTreeFeatureMixin extends Feature {
                             for(int var14 = par5 - var11; var14 <= par5 + var11; ++var14) {
                                 int var15 = var14 - par5;
                                 Block block = Block.BLOCKS[par1World.getBlock(var12, var16, var14)];
-                                if ((Math.abs(var13) != var11 || Math.abs(var15) != var11 || par2Random.nextInt(2) != 0 && var10 != 0) && (block == null || block.canBeReplacedByLeaves(par1World, var12, var16, var14))) {
+                                if ((Math.abs(var13) != var11 || Math.abs(var15) != var11 || par2Random.nextInt(2) != 0 && var10 != 0) && (block == null || ((IBlock)block).canBeReplacedByLeaves(par1World, var12, var16, var14))) {
                                     this.method_4026(par1World, var12, var16, var14, Block.LEAVES.id);
                                 }
                             }
@@ -89,7 +91,7 @@ public abstract class OakTreeFeatureMixin extends Feature {
                     for(var16 = 0; var16 < var6; ++var16) {
                         var10 = par1World.getBlock(par3, par4 + var16, par5);
                         block = Block.BLOCKS[var10];
-                        if (var10 == 0 || block != null && block.isLeaves(par1World, par3, par4 + var16, par5) || var10 == Block.field_334.id || var10 == Block.WATER.id) {
+                        if (var10 == 0 || block != null && ((IBlock)block).isLeaves(par1World, par3, par4 + var16, par5) || var10 == Block.field_334.id || var10 == Block.WATER.id) {
                             this.method_4026(par1World, par3, par4 + var16, par5, Block.LOG.id);
                         }
                     }
@@ -101,7 +103,7 @@ public abstract class OakTreeFeatureMixin extends Feature {
                         for(var12 = par3 - var11; var12 <= par3 + var11; ++var12) {
                             for(var13 = par5 - var11; var13 <= par5 + var11; ++var13) {
                                 block = Block.BLOCKS[par1World.getBlock(var12, var16, var13)];
-                                if (block != null && block.isLeaves(par1World, var12, var16, var13)) {
+                                if (block != null && ((IBlock)block).isLeaves(par1World, var12, var16, var13)) {
                                     if (par2Random.nextInt(4) == 0 && par1World.getBlock(var12 - 1, var16, var13) == 0) {
                                         this.method_4032(par1World, var12 - 1, var16, var13, 8);
                                     }

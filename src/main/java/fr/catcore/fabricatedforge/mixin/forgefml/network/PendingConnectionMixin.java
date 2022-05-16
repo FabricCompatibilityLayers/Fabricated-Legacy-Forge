@@ -91,4 +91,9 @@ public abstract class PendingConnectionMixin extends PacketListener implements I
     public PlayerEntity getPlayer() {
         return null;
     }
+
+    @Override
+    public void method_2189_fabric(boolean bol) {
+        this.field_2889 = bol;
+    }
 }

@@ -22,6 +22,7 @@ public abstract class MooshroomEntityMixin extends CowEntity implements IShearab
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_2537(PlayerEntity par1EntityPlayer) {

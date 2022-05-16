@@ -43,6 +43,7 @@ public abstract class ThreadedAnvilChunkStorageMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public Chunk loadChunk(World par1World, int par2, int par3) throws IOException {
@@ -77,6 +78,7 @@ public abstract class ThreadedAnvilChunkStorageMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected Chunk validateChunk(World par1World, int par2, int par3, NbtCompound par4NBTTagCompound) {
@@ -102,6 +104,7 @@ public abstract class ThreadedAnvilChunkStorageMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void writeChunk(World par1World, Chunk par2Chunk) throws WorldSaveException, IOException {
@@ -122,6 +125,7 @@ public abstract class ThreadedAnvilChunkStorageMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void registerChunkChecker(ChunkPos par1ChunkCoordIntPair, NbtCompound par2NBTTagCompound) {
@@ -144,6 +148,7 @@ public abstract class ThreadedAnvilChunkStorageMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean saveNextChunk() {

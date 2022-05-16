@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.entity.EntityCategory;
@@ -40,6 +41,7 @@ public abstract class MobSpawnerHelperMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static final int method_3796(ServerWorld par0WorldServer, boolean par1, boolean par2) {
@@ -170,6 +172,7 @@ public abstract class MobSpawnerHelperMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static boolean method_3798(EntityCategory par0EnumCreatureType, World par1World, int par2, int par3, int par4) {
@@ -179,13 +182,14 @@ public abstract class MobSpawnerHelperMixin {
             return false;
         } else {
             int var5 = par1World.getBlock(par2, par3 - 1, par4);
-            boolean spawnBlock = Block.BLOCKS[var5] != null && Block.BLOCKS[var5].canCreatureSpawn(par0EnumCreatureType, par1World, par2, par3 - 1, par4);
+            boolean spawnBlock = Block.BLOCKS[var5] != null && ((IBlock)Block.BLOCKS[var5]).canCreatureSpawn(par0EnumCreatureType, par1World, par2, par3 - 1, par4);
             return spawnBlock && var5 != Block.BEDROCK.id && !par1World.method_3783(par2, par3, par4) && !par1World.getMaterial(par2, par3, par4).isFluid() && !par1World.method_3783(par2, par3 + 1, par4);
         }
     }
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private static void method_3797(MobEntity par0EntityLiving, World par1World, float par2, float par3, float par4) {

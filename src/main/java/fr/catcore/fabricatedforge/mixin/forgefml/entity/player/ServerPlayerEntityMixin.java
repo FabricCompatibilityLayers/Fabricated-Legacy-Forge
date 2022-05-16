@@ -77,6 +77,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void tick() {
@@ -135,6 +136,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void dropInventory(DamageSource par1DamageSource) {

@@ -163,6 +163,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void tick() {
@@ -270,6 +271,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean damage(DamageSource par1DamageSource, int par2) {
@@ -359,6 +361,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void method_2653(DamageSource par1DamageSource, int par2) {
@@ -372,6 +375,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void dropInventory(DamageSource par1DamageSource) {
@@ -419,6 +423,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void method_2490(float par1) {
@@ -446,6 +451,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_2657(float par1, float par2) {
@@ -560,6 +566,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_2660() {
@@ -572,6 +579,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_2651() {
@@ -665,6 +673,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void method_2612() {

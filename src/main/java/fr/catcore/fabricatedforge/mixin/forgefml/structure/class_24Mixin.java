@@ -27,13 +27,14 @@ public abstract class class_24Mixin extends class_31 {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean generate(World par1World, Random par2Random, BlockBox par3StructureBoundingBox) {
         if (this.isTouchingLiquid(par1World, par3StructureBoundingBox)) {
             return false;
         } else {
-            this.method_64(par1World, par3StructureBoundingBox, 0, 0, 0, 10, 6, 10, true, par2Random, StrongholdPieces.method_21());
+            this.method_64(par1World, par3StructureBoundingBox, 0, 0, 0, 10, 6, 10, true, par2Random, StrongholdPiecesAccessor.getField_25());
             this.method_41(par1World, par2Random, par3StructureBoundingBox, this.field_46, 4, 1, 0);
             this.method_62(par1World, par3StructureBoundingBox, 4, 1, 10, 6, 3, 10, 0, 0, false);
             this.method_62(par1World, par3StructureBoundingBox, 0, 1, 4, 0, 3, 6, 0, 0, false);

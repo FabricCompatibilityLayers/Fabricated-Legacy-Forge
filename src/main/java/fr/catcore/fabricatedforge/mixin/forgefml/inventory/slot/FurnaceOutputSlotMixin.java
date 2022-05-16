@@ -28,6 +28,7 @@ public class FurnaceOutputSlotMixin extends Slot {
 
     /**
      * @author Minecraft
+     * @reason none
      */
     @Overwrite
     protected void onCrafted(ItemStack par1ItemStack) {

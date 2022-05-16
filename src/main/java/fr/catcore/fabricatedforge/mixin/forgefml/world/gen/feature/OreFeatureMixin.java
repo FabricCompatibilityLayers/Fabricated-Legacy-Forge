@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -22,6 +23,7 @@ public abstract class OreFeatureMixin extends Feature {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_4028(World par1World, Random par2Random, int par3, int par4, int par5) {
@@ -56,7 +58,7 @@ public abstract class OreFeatureMixin extends Feature {
                             for(int var44 = var34; var44 <= var37; ++var44) {
                                 double var45 = ((double)var44 + 0.5 - var24) / (var28 / 2.0);
                                 Block block = Block.BLOCKS[par1World.getBlock(var38, var41, var44)];
-                                if (var39 * var39 + var42 * var42 + var45 * var45 < 1.0 && block != null && block.isGenMineableReplaceable(par1World, var38, var41, var44)) {
+                                if (var39 * var39 + var42 * var42 + var45 * var45 < 1.0 && block != null && ((IBlock)block).isGenMineableReplaceable(par1World, var38, var41, var44)) {
                                     par1World.method_3673(var38, var41, var44, this.field_4892, this.minableBlockMeta);
                                 }
                             }

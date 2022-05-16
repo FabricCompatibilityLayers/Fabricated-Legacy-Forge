@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockWithEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWithEntity;
@@ -21,11 +22,12 @@ public abstract class BlockWithEntityMixin extends Block implements IBlockWithEn
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_460(World par1World, int par2, int par3, int par4) {
         super.method_460(par1World, par2, par3, par4);
-        par1World.method_3603(par2, par3, par4, this.createTileEntity(par1World, par1World.getBlockData(par2, par3, par4)));
+        par1World.method_3603(par2, par3, par4, ((IBlock)this).createTileEntity(par1World, par1World.getBlockData(par2, par3, par4)));
     }
 
     @Override

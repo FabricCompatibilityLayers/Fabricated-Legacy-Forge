@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.advancement.AchievementsAndCriterions;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
@@ -44,11 +45,12 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Inject(method = "<init>(Lnet/minecraft/world/World;DDDLnet/minecraft/item/ItemStack;)V", at = @At("RETURN"))
     private void fmlCtr(World par1World, double par2, double par4, double par6, ItemStack par8ItemStack, CallbackInfo ci) {
-        this.lifespan = par8ItemStack.getItem() == null ? 6000 : par8ItemStack.getItem().getEntityLifespan(par8ItemStack, par1World);
+        this.lifespan = par8ItemStack.getItem() == null ? 6000 : ((IItem)par8ItemStack.getItem()).getEntityLifespan(par8ItemStack, par1World);
     }
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void tick() {
@@ -98,7 +100,7 @@ public abstract class ItemEntityMixin extends Entity {
 
         ++this.age;
         if (this.age >= this.lifespan) {
-            ItemExpireEvent event = new ItemExpireEvent((ItemEntity)(Object) this, this.stack.getItem() == null ? 6000 : this.stack.getItem().getEntityLifespan(this.stack, this.world));
+            ItemExpireEvent event = new ItemExpireEvent((ItemEntity)(Object) this, this.stack.getItem() == null ? 6000 : ((IItem)this.stack.getItem()).getEntityLifespan(this.stack, this.world));
             if (MinecraftForge.EVENT_BUS.post(event)) {
                 this.lifespan += event.extraLife;
             } else {
@@ -114,6 +116,7 @@ public abstract class ItemEntityMixin extends Entity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void writeCustomDataToNbt(NbtCompound par1NBTTagCompound) {
@@ -127,6 +130,7 @@ public abstract class ItemEntityMixin extends Entity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void readCustomDataFromNbt(NbtCompound par1NBTTagCompound) {
@@ -146,6 +150,7 @@ public abstract class ItemEntityMixin extends Entity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onPlayerCollision(PlayerEntity par1EntityPlayer) {

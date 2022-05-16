@@ -33,6 +33,7 @@ public abstract class PistonBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int method_396(int par1, int par2) {
@@ -42,6 +43,7 @@ public abstract class PistonBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private boolean method_557(World par1World, int par2, int par3, int par4, int par5) {
@@ -50,6 +52,7 @@ public abstract class PistonBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static int method_555(World par0World, int par1, int par2, int par3, PlayerEntity par4EntityPlayer) {
@@ -70,6 +73,7 @@ public abstract class PistonBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private static boolean method_554(int par0, World par1World, int par2, int par3, int par4, boolean par5) {
@@ -98,6 +102,7 @@ public abstract class PistonBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private boolean method_560(World par1World, int par2, int par3, int par4, int par5) {

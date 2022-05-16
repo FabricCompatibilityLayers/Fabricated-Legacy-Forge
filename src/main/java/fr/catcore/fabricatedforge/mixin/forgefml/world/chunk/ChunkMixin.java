@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -121,6 +122,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -146,17 +148,19 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int getBlockOpacityAtPos(int par1, int par2, int par3) {
         int x = (this.chunkX << 4) + par1;
         int z = (this.chunkZ << 4) + par3;
         Block block = Block.BLOCKS[this.method_3879(par1, par2, par3)];
-        return block == null ? 0 : block.getLightOpacity(this.world, x, par2, z);
+        return block == null ? 0 : ((IBlock)block).getLightOpacity(this.world, x, par2, z);
     }
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int method_3879(int par1, int par2, int par3) {
@@ -170,6 +174,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int getBlockData(int par1, int par2, int par3) {
@@ -183,6 +188,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3881(int par1, int par2, int par3, int par4, int par5) {
@@ -218,7 +224,7 @@ public abstract class ChunkMixin implements IChunk {
             if (var8 != 0) {
                 if (!this.world.isClient) {
                     Block.BLOCKS[var8].method_411(this.world, var12, par2, var13, var8, var9);
-                } else if (Block.BLOCKS[var8] != null && Block.BLOCKS[var8].hasTileEntity(var9)) {
+                } else if (Block.BLOCKS[var8] != null && ((IBlock)Block.BLOCKS[var8]).hasTileEntity(var9)) {
                     this.world.method_3725(var12, par2, var13);
                 }
             }
@@ -246,10 +252,10 @@ public abstract class ChunkMixin implements IChunk {
                         Block.BLOCKS[par4].method_460(this.world, var12, par2, var13);
                     }
 
-                    if (Block.BLOCKS[par4] != null && Block.BLOCKS[par4].hasTileEntity(par5)) {
+                    if (Block.BLOCKS[par4] != null && ((IBlock)Block.BLOCKS[par4]).hasTileEntity(par5)) {
                         BlockEntity var14 = this.method_3912(par1, par2, par3);
                         if (var14 == null) {
-                            var14 = Block.BLOCKS[par4].createTileEntity(this.world, par5);
+                            var14 = ((IBlock)Block.BLOCKS[par4]).createTileEntity(this.world, par5);
                             this.world.method_3603(var12, par2, var13, var14);
                         }
 
@@ -270,6 +276,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3900(int par1, int par2, int par3, int par4) {
@@ -284,7 +291,7 @@ public abstract class ChunkMixin implements IChunk {
                 this.modified = true;
                 var5.method_3932(par1, par2 & 15, par3, par4);
                 int var7 = var5.method_3926(par1, par2 & 15, par3);
-                if (var7 > 0 && Block.BLOCKS[var7] != null && Block.BLOCKS[var7].hasTileEntity(par4)) {
+                if (var7 > 0 && Block.BLOCKS[var7] != null && ((IBlock)Block.BLOCKS[var7]).hasTileEntity(par4)) {
                     BlockEntity var8 = this.method_3912(par1, par2, par3);
                     if (var8 != null) {
                         var8.resetBlock();
@@ -299,6 +306,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int method_3890(LightType par1EnumSkyBlock, int par2, int par3, int par4) {
@@ -308,6 +316,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3891(LightType par1EnumSkyBlock, int par2, int par3, int par4, int par5) {
@@ -332,6 +341,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int method_3905(int par1, int par2, int par3, int par4) {
@@ -356,6 +366,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void addEntity(Entity par1Entity) {
@@ -386,6 +397,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public BlockEntity method_3912(int par1, int par2, int par3) {
@@ -399,12 +411,12 @@ public abstract class ChunkMixin implements IChunk {
         if (var5 == null) {
             int var6 = this.method_3879(par1, par2, par3);
             int meta = this.getBlockData(par1, par2, par3);
-            if (var6 <= 0 || !Block.BLOCKS[var6].hasTileEntity(meta)) {
+            if (var6 <= 0 || !((IBlock)Block.BLOCKS[var6]).hasTileEntity(meta)) {
                 return null;
             }
 
             if (var5 == null) {
-                var5 = Block.BLOCKS[var6].createTileEntity(this.world, meta);
+                var5 = ((IBlock)Block.BLOCKS[var6]).createTileEntity(this.world, meta);
                 this.world.method_3603(this.chunkX * 16 + par1, par2, this.chunkZ * 16 + par3, var5);
             }
 
@@ -416,6 +428,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void addBlockEntity(BlockEntity par1TileEntity) {
@@ -431,6 +444,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3882(int par1, int par2, int par3, BlockEntity par4TileEntity) {
@@ -440,7 +454,7 @@ public abstract class ChunkMixin implements IChunk {
         par4TileEntity.y = par2;
         par4TileEntity.z = this.chunkZ * 16 + par3;
         Block block = Block.BLOCKS[this.method_3879(par1, par2, par3)];
-        if (block != null && block.hasTileEntity(this.getBlockData(par1, par2, par3))) {
+        if (block != null && ((IBlock)block).hasTileEntity(this.getBlockData(par1, par2, par3))) {
             BlockEntity old = (BlockEntity)this.blockEntities.get(var5);
             if (old != null) {
                 old.markRemoved();
@@ -454,6 +468,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void loadToWorld() {
@@ -472,6 +487,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void unloadFromWorld() {
@@ -496,6 +512,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3889(Entity par1Entity, Box par2AxisAlignedBB, List par3List) {
@@ -545,6 +562,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3886(Class par1Class, Box par2AxisAlignedBB, List par3List) {
@@ -578,6 +596,7 @@ public abstract class ChunkMixin implements IChunk {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite

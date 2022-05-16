@@ -121,6 +121,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void tick() {
@@ -223,6 +224,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void dropInventory(DamageSource par1DamageSource) {
@@ -260,6 +262,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public ItemEntity dropSelectedStack() {
@@ -273,6 +276,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public ItemEntity dropStack(ItemStack par1ItemStack) {
@@ -281,6 +285,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public ItemEntity dropStack(ItemStack par1ItemStack, boolean par2) {
@@ -318,6 +323,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void spawnItemEntity(ItemEntity par1EntityItem) {
@@ -330,6 +336,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public float method_3153(Block par1Block) {
@@ -367,6 +374,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean isUsingEffectiveTool(Block par1Block) {
@@ -375,6 +383,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void method_2653(DamageSource par1DamageSource, int par2) {
@@ -396,6 +405,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3215(Entity par1Entity) {
@@ -425,6 +435,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void removeSelectedSlotItem() {
@@ -435,6 +446,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3216(Entity par1Entity) {
@@ -523,6 +535,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public CanSleepEnum method_3152(int par1, int par2, int par3) {
@@ -602,6 +615,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void awaken(boolean par1, boolean par2, boolean par3) {
@@ -639,6 +653,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private boolean method_3213() {
@@ -649,6 +664,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static BlockPos method_3169(World par0World, BlockPos par1ChunkCoordinates) {
@@ -667,6 +683,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -694,6 +711,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite

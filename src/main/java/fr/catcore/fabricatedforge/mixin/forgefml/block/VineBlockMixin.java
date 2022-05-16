@@ -20,6 +20,7 @@ public abstract class VineBlockMixin extends Block implements IShearable {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_424(World par1World, PlayerEntity par2EntityPlayer, int par3, int par4, int par5, int par6) {

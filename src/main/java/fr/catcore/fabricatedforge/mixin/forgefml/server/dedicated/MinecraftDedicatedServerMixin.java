@@ -43,6 +43,7 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected boolean setupServer() {

@@ -19,6 +19,7 @@ public abstract class DungeonFeatureMixin extends Feature {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_4028(World par1World, Random par2Random, int par3, int par4, int par5) {

@@ -34,6 +34,7 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static final boolean method_355(World par0World, int par1, int par2, int par3) {
@@ -43,6 +44,7 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static final boolean method_354(int par0) {
@@ -51,6 +53,7 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int getBlockType() {
@@ -59,6 +62,7 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_434(World par1World, int par2, int par3, int par4) {
@@ -67,6 +71,7 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_408(World par1World, int par2, int par3, int par4, int par5) {
@@ -119,19 +124,11 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
                         par1World.method_3710(par2, par3 + 1, par4, this.id);
                     }
                 }
-            } else if (par5 > 0 && Block.BLOCKS[par5].emitsRedstonePower() && !this.field_304 && class_174.method_360(new class_174(this, par1World, par2, par3, par4)) == 3) {
+            } else if (par5 > 0 && Block.BLOCKS[par5].emitsRedstonePower() && !this.field_304 && class_174.method_360(new class_174((RailBlock)(Object) this, par1World, par2, par3, par4)) == 3) {
                 this.method_352(par1World, par2, par3, par4, false);
             }
         }
 
-    }
-
-    /**
-     * @author Minecraft Forge
-     */
-    @Overwrite
-    static boolean method_350(RailBlock par0BlockRail) {
-        return ((RailBlockMixin)(Object)par0BlockRail).field_304;
     }
 
     @Override

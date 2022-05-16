@@ -31,6 +31,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void method_2995(String par1Str, String par2Str, long par3, LevelGeneratorType par5WorldType) {
@@ -55,6 +56,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected boolean setupServer() {

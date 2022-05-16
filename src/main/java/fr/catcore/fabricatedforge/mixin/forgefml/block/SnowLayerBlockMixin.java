@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.block.SnowLayerBlock;
@@ -20,16 +21,18 @@ public class SnowLayerBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_434(World par1World, int par2, int par3, int par4) {
         int var5 = par1World.getBlock(par2, par3 - 1, par4);
         Block block = Block.BLOCKS[var5];
-        return block != null && (block.isLeaves(par1World, par2, par3 - 1, par4) || block.hasTransperancy()) && par1World.getMaterial(par2, par3 - 1, par4).blocksMovement();
+        return block != null && (((IBlock)block).isLeaves(par1World, par2, par3 - 1, par4) || block.hasTransperancy()) && par1World.getMaterial(par2, par3 - 1, par4).blocksMovement();
     }
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private boolean method_488(World par1World, int par2, int par3, int par4) {
@@ -43,6 +46,7 @@ public class SnowLayerBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_424(World par1World, PlayerEntity par2EntityPlayer, int par3, int par4, int par5, int par6) {
@@ -52,6 +56,7 @@ public class SnowLayerBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int getDropCount(Random par1Random) {
@@ -60,6 +65,7 @@ public class SnowLayerBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_436(World par1World, int par2, int par3, int par4, Random par5Random) {

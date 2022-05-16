@@ -25,6 +25,7 @@ public abstract class class_49Mixin extends class_53 {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean generate(World par1World, Random par2Random, BlockBox par3StructureBoundingBox) {

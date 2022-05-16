@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import cpw.mods.fml.common.*;
+import fr.catcore.fabricatedforge.mixininterface.ILevelGeneratorType;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
@@ -137,11 +138,11 @@ public class GameRegistry {
     }
 
     public static void addBiome(Biome biome) {
-        LevelGeneratorType.DEFAULT.addNewBiome(biome);
+        ((ILevelGeneratorType)LevelGeneratorType.DEFAULT).addNewBiome(biome);
     }
 
     public static void removeBiome(Biome biome) {
-        LevelGeneratorType.DEFAULT.removeBiome(biome);
+        ((ILevelGeneratorType)LevelGeneratorType.DEFAULT).removeBiome(biome);
     }
 
     public static void registerFuelHandler(IFuelHandler handler) {

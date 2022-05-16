@@ -21,6 +21,7 @@ public abstract class DoorBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_421(World par1World, int par2, int par3, int par4, PlayerEntity par5EntityPlayer, int par6, float par7, float par8, float par9) {

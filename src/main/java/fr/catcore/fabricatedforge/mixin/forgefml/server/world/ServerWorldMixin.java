@@ -71,6 +71,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void resetWeather() {
@@ -79,6 +80,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean isReady() {
@@ -98,6 +100,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void tickBlocks() {
@@ -199,6 +202,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3599(int par1, int par2, int par3, int par4, int par5) {
@@ -227,6 +231,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void tickEntities() {
@@ -243,6 +248,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3644(boolean par1) {
@@ -278,6 +284,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public List method_2134(int par1, int par2, int par3, int par4, int par5, int par6) {
@@ -302,6 +309,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3637(PlayerEntity par1EntityPlayer, int par2, int par3, int par4) {
@@ -321,6 +329,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void placeBonusChest() {
@@ -339,6 +348,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_2138(boolean par1, ProgressListener par2IProgressUpdate) {
@@ -360,6 +370,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3654(int par1, int par2, int par3, int par4, int par5, int par6) {

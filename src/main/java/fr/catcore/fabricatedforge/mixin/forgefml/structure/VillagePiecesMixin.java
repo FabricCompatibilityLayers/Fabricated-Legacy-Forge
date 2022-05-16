@@ -27,6 +27,7 @@ public abstract class VillagePiecesMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static ArrayList method_89(Random par0Random, int par1) {
@@ -49,6 +50,7 @@ public abstract class VillagePiecesMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private static class_53 method_86(class_50 par0ComponentVillageStartPiece, class_44 par1StructureVillagePieceWeight, List par2List, Random par3Random, int par4, int par5, int par6, int par7, int par8) {
@@ -77,21 +79,5 @@ public abstract class VillagePiecesMixin {
         }
 
         return (class_53)var10;
-    }
-
-    /**
-     * @author Minecraft Forge
-     */
-    @Overwrite
-    static StructurePiece method_87(class_50 par0ComponentVillageStartPiece, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7) {
-        return method_92(par0ComponentVillageStartPiece, par1List, par2Random, par3, par4, par5, par6, par7);
-    }
-
-    /**
-     * @author Minecraft Forge
-     */
-    @Overwrite
-    static StructurePiece method_90(class_50 par0ComponentVillageStartPiece, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7) {
-        return method_93(par0ComponentVillageStartPiece, par1List, par2Random, par3, par4, par5, par6, par7);
     }
 }

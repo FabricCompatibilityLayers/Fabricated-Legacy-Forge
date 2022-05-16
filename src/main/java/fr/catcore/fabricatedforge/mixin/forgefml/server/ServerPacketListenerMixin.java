@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server;
 
 import cpw.mods.fml.common.network.FMLNetworkHandler;
+import fr.catcore.fabricatedforge.mixininterface.IServerPlayerInteractionManager;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.slot.Slot;
 import net.minecraft.item.Item;
@@ -72,6 +73,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onPlayerMove(PlayerMove_C2SPacket par1Packet10Flying) {
@@ -274,6 +276,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onPlayerAction(PlayerAction_C2SPacket par1Packet14BlockDig) {
@@ -301,7 +304,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 double var10 = this.player.y - ((double)var6 + 0.5) + 1.5;
                 double var12 = this.player.z - ((double)var7 + 0.5);
                 double var14 = var8 * var8 + var10 * var10 + var12 * var12;
-                double dist = this.player.interactionManager.getBlockReachDistance() + 1.0;
+                double dist = ((IServerPlayerInteractionManager)this.player.interactionManager).getBlockReachDistance() + 1.0;
                 dist *= dist;
                 if (var14 > dist) {
                     return;
@@ -353,6 +356,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onPlayerInteractBlock(PlayerInteractBlockC2SPacket par1Packet15Place) {
@@ -384,7 +388,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 var12 = var11;
             }
 
-            double dist = this.player.interactionManager.getBlockReachDistance() + 1.0;
+            double dist = ((IServerPlayerInteractionManager)this.player.interactionManager).getBlockReachDistance() + 1.0;
             dist *= dist;
             if (this.field_2910 && this.player.squaredDistanceTo((double)var5 + 0.5, (double)var6 + 0.5, (double)var7 + 0.5) < dist && (var12 > this.server.spawnProtectionSize || var9)) {
                 this.player.interactionManager.method_2170(this.player, var2, var3, var5, var6, var7, var8, par1Packet15Place.method_1949(), par1Packet15Place.method_1950(), par1Packet15Place.method_1951());
@@ -444,6 +448,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onChatMessage(ChatMessage_S2CPacket par1Packet3Chat) {
@@ -488,6 +493,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onClientStatus(ClientStatus_C2SPacket par1Packet205ClientCommand) {

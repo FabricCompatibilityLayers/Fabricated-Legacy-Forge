@@ -22,6 +22,7 @@ public class WorldSaveHandlerMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public LevelProperties getLevelProperties() {
@@ -59,6 +60,7 @@ public class WorldSaveHandlerMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void saveWorld(LevelProperties par1WorldInfo, NbtCompound par2NBTTagCompound) {
@@ -93,6 +95,7 @@ public class WorldSaveHandlerMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void saveWorld(LevelProperties par1WorldInfo) {

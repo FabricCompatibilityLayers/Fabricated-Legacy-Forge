@@ -57,6 +57,7 @@ public abstract class TrackedEntityInstanceMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_2184(ServerPlayerEntity par1EntityPlayerMP) {
@@ -119,6 +120,7 @@ public abstract class TrackedEntityInstanceMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private Packet method_2182() {

@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity;
 
+import fr.catcore.fabricatedforge.mixininterface.IAbstractMinecartEntity;
 import fr.catcore.fabricatedforge.mixininterface.IEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -86,6 +87,7 @@ public abstract class EntityMixin implements IEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -110,6 +112,7 @@ public abstract class EntityMixin implements IEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void writePlayerData(NbtCompound par1NBTTagCompound) {
@@ -134,6 +137,7 @@ public abstract class EntityMixin implements IEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void fromNbt(NbtCompound par1NBTTagCompound) {
@@ -179,6 +183,7 @@ public abstract class EntityMixin implements IEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public ItemEntity dropItem(ItemStack par1ItemStack, float par2) {
@@ -195,6 +200,7 @@ public abstract class EntityMixin implements IEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -221,7 +227,7 @@ public abstract class EntityMixin implements IEntity {
         if ((Object)this instanceof PaintingEntity) {
             return new ItemStack(Item.PAINTING);
         } else if ((Object)this instanceof AbstractMinecartEntity) {
-            return ((AbstractMinecartEntity)(Object)this).getCartItem();
+            return ((IAbstractMinecartEntity) this).getCartItem();
         } else if ((Object)this instanceof BoatEntity) {
             return new ItemStack(Item.BOAT);
         } else {

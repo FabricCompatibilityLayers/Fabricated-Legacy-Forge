@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.LogBlock;
 import net.minecraft.block.Material;
@@ -15,6 +16,7 @@ public class LogBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_411(World par1World, int par2, int par3, int par4, int par5, int par6) {
@@ -26,7 +28,7 @@ public class LogBlockMixin extends Block {
                     for(int var11 = -var7; var11 <= var7; ++var11) {
                         int var12 = par1World.getBlock(par2 + var9, par3 + var10, par4 + var11);
                         if (Block.BLOCKS[var12] != null) {
-                            Block.BLOCKS[var12].beginLeavesDecay(par1World, par2 + var9, par3 + var10, par4 + var11);
+                            ((IBlock)Block.BLOCKS[var12]).beginLeavesDecay(par1World, par2 + var9, par3 + var10, par4 + var11);
                         }
                     }
                 }
@@ -36,6 +38,7 @@ public class LogBlockMixin extends Block {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int method_396(int par1, int par2) {

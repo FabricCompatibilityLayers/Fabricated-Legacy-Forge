@@ -1,6 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block.entity;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import fr.catcore.fabricatedforge.mixininterface.IItem;
+import fr.catcore.fabricatedforge.mixininterface.ISmeltingRecipeRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.FurnaceBlock;
 import net.minecraft.block.Material;
@@ -31,6 +33,7 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_545() {
@@ -48,7 +51,7 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
                     if (this.stacks[1] != null) {
                         --this.stacks[1].count;
                         if (this.stacks[1].count == 0) {
-                            this.stacks[1] = this.stacks[1].getItem().getContainerItemStack(this.stacks[1]);
+                            this.stacks[1] = ((IItem)this.stacks[1].getItem()).getContainerItemStack(this.stacks[1]);
                         }
                     }
                 }
@@ -79,13 +82,14 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private boolean method_525() {
         if (this.stacks[0] == null) {
             return false;
         } else {
-            ItemStack var1 = SmeltingRecipeRegistry.getInstance().getSmeltingResult(this.stacks[0]);
+            ItemStack var1 = ((ISmeltingRecipeRegistry)SmeltingRecipeRegistry.getInstance()).getSmeltingResult(this.stacks[0]);
             if (var1 == null) {
                 return false;
             } else if (this.stacks[2] == null) {
@@ -101,11 +105,12 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_524() {
         if (this.method_525()) {
-            ItemStack var1 = SmeltingRecipeRegistry.getInstance().getSmeltingResult(this.stacks[0]);
+            ItemStack var1 = ((ISmeltingRecipeRegistry)SmeltingRecipeRegistry.getInstance()).getSmeltingResult(this.stacks[0]);
             if (this.stacks[2] == null) {
                 this.stacks[2] = var1.copy();
             } else if (this.stacks[2].equalsIgnoreNbt(var1)) {
@@ -123,6 +128,7 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static int getBurnTime(ItemStack par0ItemStack) {

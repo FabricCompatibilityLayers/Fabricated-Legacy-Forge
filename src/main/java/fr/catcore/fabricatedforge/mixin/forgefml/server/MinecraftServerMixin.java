@@ -4,6 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.relauncher.ArgsWrapper;
 import cpw.mods.fml.relauncher.FMLRelauncher;
+import fr.catcore.fabricatedforge.mixininterface.IServerChunkProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.command.CommandSource;
@@ -136,6 +137,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void method_2995(String par1Str, String par2Str, long par3, LevelGeneratorType par5WorldType) {
@@ -174,6 +176,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void prepareWorlds() {
@@ -200,7 +203,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
                         var2 = var9;
                     }
 
-                    var5.chunkCache.getOrGenerateChunk(var6.x + var7 >> 4, var6.z + var8 >> 4);
+                    ((IServerChunkProvider)var5.chunkCache).getOrGenerateChunk(var6.x + var7 >> 4, var6.z + var8 >> 4);
 
                     while(var5.method_3592() && this.isRunning()) {
                     }
@@ -213,6 +216,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void stopServer() {
@@ -246,6 +250,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void run() {
@@ -322,6 +327,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void setupWorld() {
@@ -373,6 +379,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void tick() {
@@ -427,6 +434,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public ServerWorld getWorld(int par1) {
@@ -441,6 +449,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public String getServerModName() {
@@ -449,6 +458,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_2980() {
@@ -468,6 +478,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.SERVER)
     @Overwrite

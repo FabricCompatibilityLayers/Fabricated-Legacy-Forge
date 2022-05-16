@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.BirchTreeFeature;
@@ -14,6 +15,7 @@ public abstract class BirchTreeFeatureMixin extends Feature {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_4028(World par1World, Random par2Random, int par3, int par4, int par5) {
@@ -41,7 +43,7 @@ public abstract class BirchTreeFeatureMixin extends Feature {
                         if (var8 >= 0 && var8 < 256) {
                             var12 = par1World.getBlock(var10, var8, var11);
                             block = Block.BLOCKS[var12];
-                            if (var12 != 0 && block != null && !block.isLeaves(par1World, var10, var8, var11)) {
+                            if (var12 != 0 && block != null && !((IBlock)block).isLeaves(par1World, var10, var8, var11)) {
                                 var7 = false;
                             }
                         } else {
@@ -68,7 +70,7 @@ public abstract class BirchTreeFeatureMixin extends Feature {
                             for(int var14 = par5 - var11; var14 <= par5 + var11; ++var14) {
                                 int var15 = var14 - par5;
                                 block = Block.BLOCKS[par1World.getBlock(var12, var16, var14)];
-                                if ((Math.abs(var13) != var11 || Math.abs(var15) != var11 || par2Random.nextInt(2) != 0 && var10 != 0) && (block == null || block.canBeReplacedByLeaves(par1World, var12, var16, var14))) {
+                                if ((Math.abs(var13) != var11 || Math.abs(var15) != var11 || par2Random.nextInt(2) != 0 && var10 != 0) && (block == null || ((IBlock)block).canBeReplacedByLeaves(par1World, var12, var16, var14))) {
                                     this.method_4027(par1World, var12, var16, var14, Block.LEAVES.id, 2);
                                 }
                             }
@@ -78,7 +80,7 @@ public abstract class BirchTreeFeatureMixin extends Feature {
                     for(var16 = 0; var16 < var6; ++var16) {
                         var10 = par1World.getBlock(par3, par4 + var16, par5);
                         block = Block.BLOCKS[var10];
-                        if (var10 == 0 || block == null || block.isLeaves(par1World, par3, par4 + var16, par5)) {
+                        if (var10 == 0 || block == null || ((IBlock)block).isLeaves(par1World, par3, par4 + var16, par5)) {
                             this.method_4027(par1World, par3, par4 + var16, par5, Block.LOG.id, 2);
                         }
                     }

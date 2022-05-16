@@ -22,6 +22,7 @@ public abstract class ChunkCacheMixin implements WorldView, IWorldView {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public BlockEntity method_3781(int par1, int par2, int par3) {
@@ -37,6 +38,7 @@ public abstract class ChunkCacheMixin implements WorldView, IWorldView {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int getBlockData(int par1, int par2, int par3) {
@@ -64,6 +66,7 @@ public abstract class ChunkCacheMixin implements WorldView, IWorldView {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite

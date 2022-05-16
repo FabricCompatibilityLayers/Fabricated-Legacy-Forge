@@ -30,6 +30,7 @@ public abstract class class_1254Mixin extends StructurePiece {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean generate(World par1World, Random par2Random, BlockBox par3StructureBoundingBox) {

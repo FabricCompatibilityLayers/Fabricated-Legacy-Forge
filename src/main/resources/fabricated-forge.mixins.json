@@ -107,6 +107,7 @@
     "structure.class_49Mixin",
     "structure.class_5Mixin",
     "structure.class_6Mixin",
+    "structure.StrongholdPiecesAccessor",
     "structure.VillagePiecesMixin",
     "util.LanguageMixin",
     "util.LogFileWriterMixin",

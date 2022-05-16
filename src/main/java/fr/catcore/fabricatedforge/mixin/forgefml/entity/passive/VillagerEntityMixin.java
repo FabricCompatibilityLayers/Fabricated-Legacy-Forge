@@ -39,6 +39,7 @@ public abstract class VillagerEntityMixin extends AgeableEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -61,6 +62,7 @@ public abstract class VillagerEntityMixin extends AgeableEntity {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void method_3111(int par1) {

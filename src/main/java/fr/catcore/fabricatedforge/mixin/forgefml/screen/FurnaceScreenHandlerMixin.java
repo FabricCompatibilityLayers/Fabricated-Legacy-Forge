@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.screen;
 
+import fr.catcore.fabricatedforge.mixininterface.ISmeltingRecipeRegistry;
 import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.inventory.slot.Slot;
 import net.minecraft.item.ItemStack;
@@ -14,6 +15,7 @@ public abstract class FurnaceScreenHandlerMixin extends ScreenHandler {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public ItemStack method_3265(int par1) {
@@ -29,7 +31,7 @@ public abstract class FurnaceScreenHandlerMixin extends ScreenHandler {
 
                 var3.onStackChanged(var4, var2);
             } else if (par1 != 1 && par1 != 0) {
-                if (SmeltingRecipeRegistry.getInstance().getSmeltingResult(var4) != null) {
+                if (((ISmeltingRecipeRegistry)SmeltingRecipeRegistry.getInstance()).getSmeltingResult(var4) != null) {
                     if (!this.insertItem(var4, 0, 1, false)) {
                         return null;
                     }

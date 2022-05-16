@@ -2,6 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import fr.catcore.fabricatedforge.mixininterface.IServerChunkProvider;
+import fr.catcore.fabricatedforge.mixininterface.IWorld;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.collection.LongObjectStorage;
@@ -47,6 +48,7 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void scheduleUnload(int par1, int par2) {
@@ -97,6 +99,7 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public Chunk method_3871(int i, int j) {
@@ -105,6 +108,7 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public Chunk getChunk(int par1, int par2) {
@@ -114,6 +118,7 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void decorateChunk(ChunkProvider par1IChunkProvider, int par2, int par3) {
@@ -131,11 +136,12 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean tickChunks() {
         if (!this.world.savingDisabled) {
-            Iterator i$ = this.world.getPersistentChunks().keySet().iterator();
+            Iterator i$ = ((IWorld)this.world).getPersistentChunks().keySet().iterator();
 
             while(i$.hasNext()) {
                 ChunkPos forced = (ChunkPos)i$.next();

@@ -27,6 +27,7 @@ public abstract class SheepEntityMixin extends AnimalEntity implements IShearabl
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_2537(PlayerEntity par1EntityPlayer) {
