@@ -293,5 +293,13 @@ accessible class net/minecraft/client/class_470
 accessible class net/minecraft/client/class_416
 accessible class net/minecraft/client/class_417
 accessible class net/minecraft/server/class_793
+accessible class net/minecraft/server/dedicated/class_772
+accessible class net/minecraft/util/class_797
 
 extendable method net/minecraft/client/gui/widget/ListWidget renderHoleBackground (IIII)V
+
+accessible method net/minecraft/server/dedicated/MinecraftDedicatedServer populateCrashReport (Lnet/minecraft/util/crash/CrashReport;)Lnet/minecraft/util/crash/CrashReport;
+accessible method net/minecraft/server/dedicated/MinecraftDedicatedServer tick ()V
+
+accessible method net/minecraft/server/integrated/IntegratedServer setupWorld ()V
+accessible method net/minecraft/server/integrated/IntegratedServer populateCrashReport (Lnet/minecraft/util/crash/CrashReport;)Lnet/minecraft/util/crash/CrashReport;

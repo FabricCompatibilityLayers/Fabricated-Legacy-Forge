@@ -1,6 +1,5 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.world;
 
-import fr.catcore.fabricatedforge.mixininterface.IClientWorld;
 import net.minecraft.client.class_469;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.profiler.Profiler;
@@ -21,7 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Set;
 
 @Mixin(ClientWorld.class)
-public abstract class ClientWorldMixin extends World implements IClientWorld {
+public abstract class ClientWorldMixin extends World {
 
     @Shadow private ClientChunkProvider clientChunkCache;
 

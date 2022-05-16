@@ -36,7 +36,6 @@
       "net/minecraft/class_533": ["fr/catcore/fabricatedforge/mixininterface/ITessellator"],
       "net/minecraft/class_530": ["fr/catcore/fabricatedforge/mixininterface/IWorldRenderer"],
       "net/minecraft/class_623": ["fr/catcore/fabricatedforge/mixininterface/ISoundLoader"],
-      "net/minecraft/class_478": ["fr/catcore/fabricatedforge/mixininterface/IClientWorld"],
 
       "net/minecraft/class_197": ["fr/catcore/fabricatedforge/mixininterface/IBlock"],
       "net/minecraft/class_133": ["fr/catcore/fabricatedforge/mixininterface/IBlockWithEntity"],
@@ -67,7 +66,10 @@
       "net/minecraft/class_701": ["fr/catcore/fabricatedforge/mixininterface/IPacketListener"],
       "net/minecraft/class_801": ["fr/catcore/fabricatedforge/mixininterface/IPendingConnection"],
       "net/minecraft/class_1110": ["fr/catcore/fabricatedforge/mixininterface/ISmeltingRecipeRegistry"],
-      "net/minecraft/class_743": ["fr/catcore/fabricatedforge/mixininterface/IPlayerManager"]
+      "net/minecraft/class_743": ["fr/catcore/fabricatedforge/mixininterface/IPlayerManager"],
+      "net/minecraft/class_1150": ["fr/catcore/fabricatedforge/mixininterface/IWorld"],
+      "net/minecraft/class_799": ["fr/catcore/fabricatedforge/mixininterface/IServerPlayerInteractionManager"],
+      "net/minecraft/class_795": ["fr/catcore/fabricatedforge/mixininterface/IServerWorld"]
     }
   }
 }

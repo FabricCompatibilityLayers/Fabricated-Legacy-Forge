@@ -90,7 +90,16 @@
     "server.ListenThreadMixin",
     "server.MinecraftServerMixin",
     "server.PlayerManagerMixin",
-    "server.ServerPacketListenerMixin"
+    "server.ServerPacketListenerMixin",
+    "server.command.CommandRegistryMixin",
+    "server.dedicated.class_772Accessor",
+    "server.dedicated.MinecraftDedicatedServerMixin",
+    "server.dedicated.gui.PlayerStatsGuiMixin",
+    "server.integrated.IntegratedServerMixin",
+    "server.network.PacketListenerManagerMixin",
+    "server.network.ServerPlayerInteractionManagerMixin",
+    "server.world.ServerWorldMixin",
+    "world.WorldMixin"
   ],
   "client": [
     "client.class_469Accessor",
