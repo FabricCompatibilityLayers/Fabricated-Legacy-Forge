@@ -22,7 +22,7 @@ public class RelaunchClassLoader extends URLClassLoader {
 
     public RelaunchClassLoader() {
         super(new URL[0], FabricLauncherBase.getLauncher().getTargetClassLoader());
-        this.sources = new ArrayList(Arrays.asList(new URL[0]));
+        this.sources = new ArrayList(Arrays.asList());
         this.parent = this.getClass().getClassLoader();
         this.cachedClasses = new HashMap(1000);
         this.transformers = new ArrayList(2);
@@ -42,7 +42,7 @@ public class RelaunchClassLoader extends URLClassLoader {
         try {
             this.transformers.add((IClassTransformer) this.loadClass(transformerClassName).newInstance());
         } catch (Exception var3) {
-            FMLRelaunchLog.log(Level.SEVERE, var3, "A critical problem occured registering the ASM transformer class %s", new Object[]{transformerClassName});
+            FMLRelaunchLog.log(Level.SEVERE, var3, "A critical problem occured registering the ASM transformer class %s", transformerClassName);
         }
 
     }

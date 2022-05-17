@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
 import cpw.mods.fml.relauncher.FMLRelauncher;
+import fr.catcore.fabricatedforge.mixininterface.IMinecraftApplet;
 import net.minecraft.client.AppletMinecraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MinecraftApplet;
@@ -15,7 +16,7 @@ import java.applet.Applet;
 import java.awt.*;
 
 @Mixin(MinecraftApplet.class)
-public class MinecraftAppletMixin extends Applet {
+public class MinecraftAppletMixin extends Applet implements IMinecraftApplet {
 
     @Shadow private Canvas canvas;
 
@@ -28,6 +29,19 @@ public class MinecraftAppletMixin extends Applet {
     @Overwrite
     public void init() {
         FMLRelauncher.appletEntry((MinecraftApplet)(Object)this);
+    }
+
+    @Unique
+    private boolean relaunched = false;
+
+    @Override
+    public void setRelaunched(boolean relaunched) {
+        this.relaunched = relaunched;
+    }
+
+    @Override
+    public boolean isRelaunched() {
+        return relaunched;
     }
 
     @Unique

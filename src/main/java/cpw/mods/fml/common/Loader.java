@@ -219,7 +219,7 @@ public class Loader {
     }
 
     private void initializeLoader() {
-        File modsDir = new File(minecraftDir, "mods");
+        File modsDir = new File(minecraftDir, "modz");
         File configDir = new File(minecraftDir, "config");
 
         String canonicalModsPath;
