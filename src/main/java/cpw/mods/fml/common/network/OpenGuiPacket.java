@@ -3,6 +3,7 @@ package cpw.mods.fml.common.network;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.Connection;
 import net.minecraft.network.listener.PacketListener;
@@ -42,7 +43,7 @@ public class OpenGuiPacket extends FMLPacket {
     }
 
     public void execute(Connection network, FMLNetworkHandler handler, PacketListener netHandler, String userName) {
-        PlayerEntity player = netHandler.getPlayer();
+        PlayerEntity player = ((IPacketListener)netHandler).getPlayer();
         player.openGui(this.networkId, this.modGuiId, player.world, this.x, this.y, this.z);
         player.openScreenHandler.syncId = this.windowId;
     }

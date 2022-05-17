@@ -2,6 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.server;
 
 import cpw.mods.fml.common.network.FMLNetworkHandler;
 import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
+import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
 import fr.catcore.fabricatedforge.mixininterface.IServerPlayerInteractionManager;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.slot.Slot;
@@ -40,7 +41,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 @Mixin(ServerPacketListener.class)
-public abstract class ServerPacketListenerMixin extends PacketListener {
+public abstract class ServerPacketListenerMixin extends PacketListener implements IPacketListener {
 
     @Shadow private MinecraftServer server;
 

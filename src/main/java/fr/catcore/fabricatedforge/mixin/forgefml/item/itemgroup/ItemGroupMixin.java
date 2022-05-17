@@ -21,8 +21,8 @@ public abstract class ItemGroupMixin implements IItemGroup {
 
     @Shadow public abstract Item method_3320();
 
-    @Inject(method = "<init>", at = @At("HEAD"))
-    private static void fmlCtr(int par1, String par2, CallbackInfo ci) {
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void fmlCtr(int par1, String par2, CallbackInfo ci) {
         if (par1 >= itemGroups.length) {
             ItemGroup[] tmp = new ItemGroup[par1 + 1];
 
@@ -63,10 +63,10 @@ public abstract class ItemGroupMixin implements IItemGroup {
         return this.index > 11 ? (this.index - 12) / 10 + 1 : 0;
     }
 
-    // Public
-    private static int getNextID() {
-        return itemGroups.length;
-    }
+//    // Public
+//    private static int getNextID() {
+//        return itemGroups.length;
+//    }
 
     @Override
     public ItemStack getIconItemStack() {

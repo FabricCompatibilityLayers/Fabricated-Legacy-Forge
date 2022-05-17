@@ -64,7 +64,7 @@ public abstract class ItemMixin implements ItemProxy, IItem {
      * @reason none
      */
     @Overwrite
-    protected HitResult onHit(World par1World, PlayerEntity par2EntityPlayer, boolean par3) {
+    public HitResult onHit(World par1World, PlayerEntity par2EntityPlayer, boolean par3) {
         float var4 = 1.0F;
         float var5 = par2EntityPlayer.prevPitch + (par2EntityPlayer.pitch - par2EntityPlayer.prevPitch) * var4;
         float var6 = par2EntityPlayer.prevYaw + (par2EntityPlayer.yaw - par2EntityPlayer.prevYaw) * var4;

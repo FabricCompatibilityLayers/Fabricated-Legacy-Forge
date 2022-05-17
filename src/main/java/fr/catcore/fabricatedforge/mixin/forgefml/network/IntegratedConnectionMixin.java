@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.network;
 
 import cpw.mods.fml.common.network.FMLNetworkHandler;
+import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
 import net.minecraft.network.Connection;
 import net.minecraft.network.IntegratedConnection;
 import net.minecraft.network.Packet;
@@ -44,7 +45,7 @@ public abstract class IntegratedConnectionMixin implements Connection {
 
         if (this.disconnected && this.packetQueue.isEmpty()) {
             this.packetListener.onDisconnected(this.disconnectReason, this.field_2310);
-            FMLNetworkHandler.onConnectionClosed(this, this.packetListener.getPlayer());
+            FMLNetworkHandler.onConnectionClosed(this, ((IPacketListener)this.packetListener).getPlayer());
         }
 
     }

@@ -29,7 +29,7 @@ public class FMLInjectionData {
             try {
                 properties.load(stream);
             } catch (IOException var5) {
-                FMLRelaunchLog.log(Level.SEVERE, var5, "Could not get FML version information - corrupted installation detected!", new Object[0]);
+                FMLRelaunchLog.log(Level.SEVERE, var5, "Could not get FML version information - corrupted installation detected!");
             }
         }
 

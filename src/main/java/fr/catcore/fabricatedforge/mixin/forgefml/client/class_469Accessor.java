@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Pseudo
-@Mixin(targets = {"net/minecraft/client/class_469", "net/minecraft/class_469"}, remap = false)
+@Mixin(targets = {"net/minecraft/class_469"}, remap = false)
 public interface class_469Accessor {
 
     @Accessor(value = "connectionCompatibilityLevel", remap = false)

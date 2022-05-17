@@ -6,11 +6,11 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Pseudo
-@Mixin(targets = {"net/minecraft/block/Block", "net/minecraft/class_197"})
+@Mixin(targets = {"net/minecraft/class_197"}, priority = 500, remap = false)
 public interface BlockAccessor {
 
     @Invoker(value = "setBurnProperties(III)V", remap = false)
-    static void setBurnProperties_invoker(int id, int encouragement, int flammability) {
+    static void invokeSetBurnProperties(int id, int encouragement, int flammability) {
 
     }
 

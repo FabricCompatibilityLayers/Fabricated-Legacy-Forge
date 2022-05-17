@@ -11,6 +11,7 @@ import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.util.*;
 import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 

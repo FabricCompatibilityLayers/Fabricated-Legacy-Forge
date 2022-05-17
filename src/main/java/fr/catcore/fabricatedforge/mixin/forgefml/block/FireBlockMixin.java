@@ -61,7 +61,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
      */
     @Overwrite
     private void method_315(int par1, int par2, int par3) {
-        BlockAccessor.setBurnProperties_invoker(par1, par2, par3);
+//        BlockAccessor.invokeSetBurnProperties(par1, par2, par3);
     }
 
     /**

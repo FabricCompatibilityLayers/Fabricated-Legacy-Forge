@@ -65,10 +65,10 @@ public abstract class TessellatorMixin implements ITessellator {
 
     public TessellatorMixin() {}
 
-    @Inject(method = "<init>", cancellable = true, at = @At("HEAD"))
-    private static void cancelCTR(int par1, CallbackInfo ci) {
-        ci.cancel();
-    }
+//    @Inject(method = "<init>", cancellable = true, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/GlAllocationUtils;allocateByteBuffer(I)Ljava/nio/ByteBuffer;"))
+//    private void cancelCTR(int par1, CallbackInfo ci) {
+//        ci.cancel();
+//    }
 
     /**
      * @author Minecraft Forge

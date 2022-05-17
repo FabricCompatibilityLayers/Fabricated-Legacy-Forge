@@ -101,9 +101,9 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
     @Shadow @Final public static Block OBSIDIAN;
     @Shadow @Final public static Block END_STONE;
     @Unique
-    protected static int[] blockFireSpreadSpeed = new int[4096];
+    private static int[] blockFireSpreadSpeed = new int[4096];
     @Unique
-    protected static int[] blockFlammability = new int[4096];
+    private static int[] blockFlammability = new int[4096];
     @Unique
     protected String currentTexture;
     @Unique

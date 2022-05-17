@@ -143,7 +143,7 @@ public class FMLRelauncher {
             ReflectionHelper.setPrivateValue(mcMaster, (Object) null, new File(str), "gameFolder", "field_3798", "am");
         }
 
-        Method setupHome = ReflectionHelper.findMethod(mcMaster, (Object) null, new String[]{"getMinecraftDir", "getGameFolder", "b"});
+        Method setupHome = ReflectionHelper.findMethod(mcMaster, (Object) null, new String[]{"getGameFolder", "method_2937", "b"});
 
         try {
             setupHome.invoke((Object) null);

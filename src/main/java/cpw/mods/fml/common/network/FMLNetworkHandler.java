@@ -10,6 +10,7 @@ import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
 import fr.catcore.fabricatedforge.mixininterface.IPendingConnection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -54,7 +55,7 @@ public class FMLNetworkHandler {
     public static void handlePacket250Packet(CustomPayloadC2SPacket packet, Connection network, PacketListener handler) {
         String target = packet.channel;
         if (target.startsWith("MC|")) {
-            handler.handleVanilla250Packet(packet);
+            ((IPacketListener)handler).handleVanilla250Packet(packet);
         }
 
         if (target.equals("FML")) {
@@ -75,7 +76,7 @@ public class FMLNetworkHandler {
         if (netHandler instanceof PendingConnection) {
             userName = ((PendingConnection)netHandler).username;
         } else {
-            PlayerEntity pl = netHandler.getPlayer();
+            PlayerEntity pl = ((IPacketListener)netHandler).getPlayer();
             if (pl != null) {
                 userName = pl.getUsername();
             }

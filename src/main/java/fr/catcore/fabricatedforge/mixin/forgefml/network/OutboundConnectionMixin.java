@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.network;
 
 import cpw.mods.fml.common.network.FMLNetworkHandler;
+import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
 import net.minecraft.network.Connection;
 import net.minecraft.network.OutboundConnection;
 import net.minecraft.network.Packet;
@@ -127,7 +128,7 @@ public abstract class OutboundConnectionMixin implements Connection {
         this.wakeThreads();
         if (this.ignoreExceptions && this.field_2328.isEmpty()) {
             this.packetListener.onDisconnected(this.disconnectReason, this.args);
-            FMLNetworkHandler.onConnectionClosed(this, this.packetListener.getPlayer());
+            FMLNetworkHandler.onConnectionClosed(this, ((IPacketListener)this.packetListener).getPlayer());
         }
 
     }

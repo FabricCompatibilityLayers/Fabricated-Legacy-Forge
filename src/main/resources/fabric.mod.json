@@ -30,13 +30,6 @@
   },
   "custom": {
     "loom:injected_interfaces": {
-      "net/minecraft/class_469": ["fr/catcore/fabricatedforge/mixininterface/Iclass_469"],
-      "net/minecraft/class_604": ["fr/catcore/fabricatedforge/mixininterface/Iclass_604"],
-      "net/minecraft/class_503": ["fr/catcore/fabricatedforge/mixininterface/IParticleManager"],
-      "net/minecraft/class_533": ["fr/catcore/fabricatedforge/mixininterface/ITessellator"],
-      "net/minecraft/class_530": ["fr/catcore/fabricatedforge/mixininterface/IWorldRenderer"],
-      "net/minecraft/class_623": ["fr/catcore/fabricatedforge/mixininterface/ISoundLoader"],
-
       "net/minecraft/class_197": ["fr/catcore/fabricatedforge/mixininterface/IBlock"],
       "net/minecraft/class_133": ["fr/catcore/fabricatedforge/mixininterface/IBlockWithEntity"],
       "net/minecraft/class_112": ["net/minecraftforge/common/IPlantable"],
@@ -63,8 +56,6 @@
       "net/minecraft/class_1087": ["net/minecraftforge/common/IPlantable"],
       "net/minecraft/class_1041": ["fr/catcore/fabricatedforge/mixininterface/IItemGroup"],
       "net/minecraft/class_89": ["fr/catcore/fabricatedforge/mixininterface/IMapState"],
-      "net/minecraft/class_701": ["fr/catcore/fabricatedforge/mixininterface/IPacketListener"],
-      "net/minecraft/class_801": ["fr/catcore/fabricatedforge/mixininterface/IPendingConnection"],
       "net/minecraft/class_1110": ["fr/catcore/fabricatedforge/mixininterface/ISmeltingRecipeRegistry"],
       "net/minecraft/class_743": ["fr/catcore/fabricatedforge/mixininterface/IPlayerManager"],
       "net/minecraft/class_1150": ["fr/catcore/fabricatedforge/mixininterface/IWorld"],

@@ -2,6 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
 import cpw.mods.fml.common.network.FMLNetworkHandler;
 import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
+import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
 import fr.catcore.fabricatedforge.mixininterface.Iclass_469;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
@@ -45,7 +46,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 @Mixin(class_469.class)
-public abstract class class_469Mixin extends PacketListener implements Iclass_469 {
+public abstract class class_469Mixin extends PacketListener implements Iclass_469, IPacketListener {
 
     @Shadow private Connection connection;
 

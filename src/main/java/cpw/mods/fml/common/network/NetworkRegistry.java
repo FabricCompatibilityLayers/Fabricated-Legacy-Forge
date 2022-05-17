@@ -6,6 +6,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.*;
 import cpw.mods.fml.common.*;
+import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.Connection;
@@ -125,7 +126,7 @@ public class NetworkRegistry {
     }
 
     void clientLoggedIn(PacketListener clientHandler, Connection manager, class_690 login) {
-        generateChannelRegistration(clientHandler.getPlayer(), clientHandler, manager);
+        generateChannelRegistration(((IPacketListener)clientHandler).getPlayer(), clientHandler, manager);
         for (IConnectionHandler handler : connectionHandlers)
         {
             handler.clientLoggedIn(clientHandler, manager, login);
@@ -150,11 +151,11 @@ public class NetworkRegistry {
 
     void handleCustomPacket(CustomPayloadC2SPacket packet, Connection network, PacketListener handler) {
         if ("REGISTER".equals(packet.channel)) {
-            this.handleRegistrationPacket(packet, (Player)handler.getPlayer());
+            this.handleRegistrationPacket(packet, (Player)((IPacketListener)handler).getPlayer());
         } else if ("UNREGISTER".equals(packet.channel)) {
-            this.handleUnregistrationPacket(packet, (Player)handler.getPlayer());
+            this.handleUnregistrationPacket(packet, (Player)((IPacketListener)handler).getPlayer());
         } else {
-            this.handlePacket(packet, network, (Player)handler.getPlayer());
+            this.handlePacket(packet, network, (Player)((IPacketListener)handler).getPlayer());
         }
 
     }
