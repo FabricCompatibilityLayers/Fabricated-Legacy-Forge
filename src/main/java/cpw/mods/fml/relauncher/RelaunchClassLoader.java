@@ -1,5 +1,7 @@
 package cpw.mods.fml.relauncher;
 
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,9 +20,9 @@ public class RelaunchClassLoader extends URLClassLoader {
     private Set<String> classLoaderExceptions = new HashSet();
     private Set<String> transformerExceptions = new HashSet();
 
-    public RelaunchClassLoader(URL[] sources) {
-        super(sources, (ClassLoader) null);
-        this.sources = new ArrayList(Arrays.asList(sources));
+    public RelaunchClassLoader() {
+        super(new URL[0], FabricLauncherBase.getLauncher().getTargetClassLoader());
+        this.sources = new ArrayList(Arrays.asList(new URL[0]));
         this.parent = this.getClass().getClassLoader();
         this.cachedClasses = new HashMap(1000);
         this.transformers = new ArrayList(2);

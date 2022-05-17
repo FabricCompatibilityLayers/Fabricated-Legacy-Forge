@@ -21,7 +21,7 @@ public class FMLInjectionData {
     public FMLInjectionData() {
     }
 
-    static void build(File mcHome, RelaunchClassLoader classLoader) {
+    static void build(File mcHome, ClassLoader classLoader) {
         minecraftHome = mcHome;
         InputStream stream = classLoader.getResourceAsStream("fmlversion.properties");
         Properties properties = new Properties();

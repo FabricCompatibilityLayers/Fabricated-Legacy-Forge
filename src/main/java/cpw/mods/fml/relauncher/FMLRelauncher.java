@@ -1,5 +1,7 @@
 package cpw.mods.fml.relauncher;
 
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
+
 import javax.swing.*;
 import java.applet.Applet;
 import java.io.File;
@@ -36,8 +38,10 @@ public class FMLRelauncher {
     }
 
     private FMLRelauncher() {
-        URLClassLoader ucl = (URLClassLoader) this.getClass().getClassLoader();
-        this.classLoader = new RelaunchClassLoader(ucl.getURLs());
+//        URLClassLoader ucl = (URLClassLoader) this.getClass().getClassLoader();
+//        this.classLoader = new RelaunchClassLoader(ucl.getURLs());
+//        this.classLoader = FabricLauncherBase.getLauncher().getTargetClassLoader();
+        this.classLoader = new RelaunchClassLoader();
     }
 
     private void showWindow(boolean showIt) {
