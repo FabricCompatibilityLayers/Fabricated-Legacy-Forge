@@ -6,6 +6,4 @@ public interface IMobEntity {
     void method_2674(int par1);
 
     void curePotionEffects(ItemStack curativeItem);
-
-    boolean shouldDropHead();
 }

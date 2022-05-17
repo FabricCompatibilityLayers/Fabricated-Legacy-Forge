@@ -7,13 +7,13 @@ public class CoreFMLLibraries implements ILibrarySet {
     @Override
     public String[] getLibraries()
     {
-        return libraries;
+        return new String[0];
     }
 
     @Override
     public String[] getHashes()
     {
-        return checksums;
+        return new String[0];
     }
 
     @Override

@@ -83,6 +83,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     @Shadow public int field_4554;
     @Shadow private long cloudColor;
+    @Mutable
     @Shadow @Final public Profiler profiler;
     @Shadow public List entities;
     @Shadow protected List unloadedEntities;
@@ -128,6 +129,9 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     @Shadow protected boolean spawnAnimals;
     @Shadow protected boolean spawnMonsters;
+    @Shadow public boolean isClient;
+    @Mutable
+    @Shadow @Final protected SaveHandler saveHandler;
     @Unique // Public
     private static double MAX_ENTITY_RADIUS = WorldUtils.MAX_ENTITY_RADIUS;
 
@@ -157,11 +161,20 @@ public abstract class WorldMixin implements WorldView, IWorld {
         return this.dimension.biomeSource.method_3853(par1, par2);
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/world/SaveHandler;Ljava/lang/String;Lnet/minecraft/world/dimension/Dimension;Lnet/minecraft/world/level/LevelInfo;Lnet/minecraft/util/profiler/Profiler;)V",
-    cancellable = true, at = @At(value = "NEW", target = "Lnet/minecraft/world/PersistentStateManager;<init>(Lnet/minecraft/world/SaveHandler;)V"))
-    private void fmlCtr(SaveHandler string, String dimension, Dimension levelInfo, LevelInfo profiler, Profiler par5, CallbackInfo ci) {
-        ci.cancel();
-    }
+//    @Environment(EnvType.CLIENT)
+//    @Inject(method = "<init>(Lnet/minecraft/world/SaveHandler;Ljava/lang/String;Lnet/minecraft/world/dimension/Dimension;Lnet/minecraft/world/level/LevelInfo;Lnet/minecraft/util/profiler/Profiler;)V",
+//    cancellable = true, at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/Random;nextInt(I)I", remap = false))
+//    private void fmlCtr(SaveHandler par1ISaveHandler, String par2Str, Dimension par3WorldProvider, LevelInfo par4WorldSettings, Profiler par5Profiler, CallbackInfo ci) {
+////        this.field_4534 = this.random.nextInt(12000);
+//        this.updateLightBlocks = new int['耀'];
+//        this.field_4535 = new ArrayList<>();
+//        this.isClient = false;
+//        this.saveHandler = par1ISaveHandler;
+//        this.profiler = par5Profiler;
+//        this.levelProperties = new LevelProperties(par4WorldSettings, par2Str);
+//        this.dimension = par3WorldProvider;
+//        ci.cancel();
+//    }
 
     @Environment(EnvType.CLIENT)
     @Override
@@ -182,37 +195,37 @@ public abstract class WorldMixin implements WorldView, IWorld {
         return s_mapStorage;
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/world/SaveHandler;Ljava/lang/String;Lnet/minecraft/world/level/LevelInfo;Lnet/minecraft/world/dimension/Dimension;Lnet/minecraft/util/profiler/Profiler;)V",
-            cancellable = true, at = @At(value = "NEW", target = "Lnet/minecraft/world/PersistentStateManager;<init>(Lnet/minecraft/world/SaveHandler;)V"))
-    private void fmlCtr(SaveHandler par1ISaveHandler, String par2Str, LevelInfo par3WorldSettings, Dimension par4WorldProvider, Profiler par5Profiler, CallbackInfo ci) {
-        this.persistentStateManager = this.getMapStorage(par1ISaveHandler);
-        this.levelProperties = par1ISaveHandler.getLevelProperties();
-        if (par4WorldProvider != null) {
-            this.dimension = par4WorldProvider;
-        } else if (this.levelProperties != null && this.levelProperties.method_225() != 0) {
-            this.dimension = Dimension.getById(this.levelProperties.method_225());
-        } else {
-            this.dimension = Dimension.getById(0);
-        }
-
-        if (this.levelProperties == null) {
-            this.levelProperties = new LevelProperties(par3WorldSettings, par2Str);
-        } else {
-            this.levelProperties.setLevelName(par2Str);
-        }
-
-        this.dimension.copyFromWorls((World)(Object) this);
-        this.chunkProvider = this.getChunkCache();
-        if (!this.levelProperties.isInitialized()) {
-            this.setPropertiesInitialized(par3WorldSettings);
-            this.levelProperties.setInitialized(true);
-        }
-
-        this.calculateAmbientDarkness();
-        this.initWeatherGradients();
-
-        ci.cancel();
-    }
+//    @Inject(method = "<init>(Lnet/minecraft/world/SaveHandler;Ljava/lang/String;Lnet/minecraft/world/level/LevelInfo;Lnet/minecraft/world/dimension/Dimension;Lnet/minecraft/util/profiler/Profiler;)V",
+//            cancellable = true, at = @At(value = "NEW", target = "Lnet/minecraft/world/PersistentStateManager;<init>(Lnet/minecraft/world/SaveHandler;)V"))
+//    private void fmlCtr(SaveHandler par1ISaveHandler, String par2Str, LevelInfo par3WorldSettings, Dimension par4WorldProvider, Profiler par5Profiler, CallbackInfo ci) {
+//        this.persistentStateManager = this.getMapStorage(par1ISaveHandler);
+//        this.levelProperties = par1ISaveHandler.getLevelProperties();
+//        if (par4WorldProvider != null) {
+//            this.dimension = par4WorldProvider;
+//        } else if (this.levelProperties != null && this.levelProperties.method_225() != 0) {
+//            this.dimension = Dimension.getById(this.levelProperties.method_225());
+//        } else {
+//            this.dimension = Dimension.getById(0);
+//        }
+//
+//        if (this.levelProperties == null) {
+//            this.levelProperties = new LevelProperties(par3WorldSettings, par2Str);
+//        } else {
+//            this.levelProperties.setLevelName(par2Str);
+//        }
+//
+//        this.dimension.copyFromWorls((World)(Object) this);
+//        this.chunkProvider = this.getChunkCache();
+//        if (!this.levelProperties.isInitialized()) {
+//            this.setPropertiesInitialized(par3WorldSettings);
+//            this.levelProperties.setInitialized(true);
+//        }
+//
+//        this.calculateAmbientDarkness();
+//        this.initWeatherGradients();
+//
+//        ci.cancel();
+//    }
 
     /**
      * @author Minecraft Forge
@@ -986,7 +999,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
      * @reason none
      */
     @Overwrite
-    protected void tickWeather() {
+    public void tickWeather() {
         this.dimension.updateWeather();
     }
 
@@ -1074,7 +1087,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
      * @reason none
      */
     @Overwrite
-    protected void updateLighting() {
+    public void updateLighting() {
         this.field_4530.clear();
         this.field_4530.addAll(this.getPersistentChunks().keySet());
         this.profiler.push("buildList");

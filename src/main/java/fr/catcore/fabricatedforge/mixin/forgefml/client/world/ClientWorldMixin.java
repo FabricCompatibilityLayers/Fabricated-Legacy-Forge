@@ -39,10 +39,9 @@ public abstract class ClientWorldMixin extends World {
         this.finishSetup();
     }
 
-    @Inject(method = "<init>", cancellable = true, at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/world/ClientWorld;method_3578(III)V"))
+    @Inject(method = "<init>", at = @At(value = "RETURN"))
     private void ctrFix2(class_469 par1NetClientHandler, LevelInfo par2WorldSettings, int par3, int par4, Profiler par5Profiler, CallbackInfo ci) {
         MinecraftForge.EVENT_BUS.post(new WorldEvent.Load(this));
-        ci.cancel();
     }
 
     /**
@@ -68,7 +67,7 @@ public abstract class ClientWorldMixin extends World {
      * @reason none
      */
     @Overwrite
-    protected void tickWeather() {
+    public void tickWeather() {
         super.tickWeather();
     }
 

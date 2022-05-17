@@ -45,7 +45,7 @@ public class SoundSystemMixin implements ISoundSystem {
         MinecraftForge.EVENT_BUS.post(new SoundLoadEvent((SoundSystem)(Object) this));
     }
 
-    @Inject(method = "startSoundSystem", at = @At(value = "NEW", remap = false, target = "Lpaulscode/sound/SoundSystem;<init>()V"))
+    @Inject(method = "startSoundSystem", at = @At(value = "NEW", remap = false, target = "paulscode/sound/SoundSystem"))
     private void audioModLoadCodecs(CallbackInfo ci) {
         ModCompatibilityClient.audioModAddCodecs();
         MinecraftForge.EVENT_BUS.post(new SoundSetupEvent((SoundSystem)(Object) this));

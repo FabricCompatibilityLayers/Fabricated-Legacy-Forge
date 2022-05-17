@@ -205,7 +205,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
             this.field_3318 += (var8 - this.field_3318) * 0.3F;
             this.world.profiler.push("headTurn");
-            if (this.shouldDropHead()) {
+            if (this.method_2608()) {
                 this.bodyControl.tick();
             } else {
                 float var9 = MathHelper.wrapDegrees(var6 - this.field_3313);
@@ -365,7 +365,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
      * @reason none
      */
     @Overwrite
-    protected void method_2653(DamageSource par1DamageSource, int par2) {
+    public void method_2653(DamageSource par1DamageSource, int par2) {
         par2 = ForgeHooks.onLivingHurt((MobEntity)(Object) this, par1DamageSource, par2);
         if (par2 > 0) {
             par2 = this.method_2626(par1DamageSource, par2);
@@ -427,7 +427,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
      * @reason none
      */
     @Overwrite
-    protected void method_2490(float par1) {
+    public void method_2490(float par1) {
         par1 = ForgeHooks.onLivingFall((MobEntity)(Object) this, par1);
         if (!(par1 <= 0.0F)) {
             super.method_2490(par1);
@@ -460,7 +460,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
         float var5;
         if (this.isTouchingWater() && (!((Object)this instanceof PlayerEntity) || !((PlayerEntity)(Object)this).abilities.flying)) {
             var9 = this.y;
-            this.updateVelocity(par1, par2, this.shouldDropHead() ? 0.04F : 0.02F);
+            this.updateVelocity(par1, par2, this.method_2608() ? 0.04F : 0.02F);
             this.move(this.velocityX, this.velocityY, this.velocityZ);
             this.velocityX *= 0.800000011920929;
             this.velocityY *= 0.800000011920929;
@@ -492,7 +492,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
             float var8 = 0.16277136F / (var3 * var3 * var3);
             if (this.onGround) {
-                if (this.shouldDropHead()) {
+                if (this.method_2608()) {
                     var5 = this.method_2622();
                 } else {
                     var5 = this.field_3289;
@@ -619,7 +619,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
             this.field_3348 = 0.0F;
             this.field_3349 = 0.0F;
         } else if (this.method_2609()) {
-            if (this.shouldDropHead()) {
+            if (this.method_2608()) {
                 this.world.profiler.push("newAi");
                 this.mobTick();
                 this.world.profiler.pop();
@@ -677,7 +677,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
      * @reason none
      */
     @Overwrite
-    protected void method_2612() {
+    public void method_2612() {
         this.velocityY = 0.41999998688697815;
         if (this.method_2581(StatusEffect.JUMP_BOOST)) {
             this.velocityY += (double)((float)(this.method_2627(StatusEffect.JUMP_BOOST).getAmplifier() + 1) * 0.1F);
@@ -712,10 +712,5 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
             }
 
         }
-    }
-
-    @Override
-    public boolean shouldDropHead() {
-        return this.method_2608();
     }
 }

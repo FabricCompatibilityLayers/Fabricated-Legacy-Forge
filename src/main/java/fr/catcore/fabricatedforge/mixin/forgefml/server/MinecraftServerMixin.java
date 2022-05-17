@@ -139,7 +139,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
      * @reason none
      */
     @Overwrite
-    protected void method_2995(String par1Str, String par2Str, long par3, LevelGeneratorType par5WorldType) {
+    public void method_2995(String par1Str, String par2Str, long par3, LevelGeneratorType par5WorldType) {
         this.upgradeWorld(par1Str);
         this.setServerOperation("menu.loadingLevel");
         SaveHandler var6 = this.saveStorage.createSaveHandler(par1Str, true);
@@ -178,7 +178,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
      * @reason none
      */
     @Overwrite
-    protected void prepareWorlds() {
+    public void prepareWorlds() {
         short var1 = 196;
         long var2 = System.currentTimeMillis();
         this.setServerOperation("menu.generatingTerrain");

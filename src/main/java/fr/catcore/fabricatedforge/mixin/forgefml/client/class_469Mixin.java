@@ -88,9 +88,9 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
         this.field_1623.openScreen(new DisconnectedScreen("disconnect.disconnected", "disconnect.genericReason", par1Packet255KickDisconnect.reason));
     }
 
-    @Inject(method = "sendPacketAndDisconnect", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/network/Connection;scheduleDisconnect()V"))
+    @Inject(method = "sendPacketAndDisconnect", at = @At(value = "RETURN"))
     private void FMLOnConnectionClosed(Packet par1, CallbackInfo ci) {
-        FMLNetworkHandler.onConnectionClosed(this.connection, this.getPlayer());
+        if (!this.disconnected) FMLNetworkHandler.onConnectionClosed(this.connection, this.getPlayer());
     }
 
     /**
