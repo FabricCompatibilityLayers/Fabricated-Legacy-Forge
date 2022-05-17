@@ -2,11 +2,12 @@ package cpw.mods.fml.client;
 
 import cpw.mods.fml.common.MissingModsException;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
+import fr.catcore.fabricatedforge.forged.FatalErrorScreenForged;
 import net.minecraft.client.gui.screen.FatalErrorScreen;
 
 import java.util.Iterator;
 
-public class GuiModsMissing extends FatalErrorScreen {
+public class GuiModsMissing extends FatalErrorScreenForged {
     private MissingModsException modsMissing;
 
     public GuiModsMissing(MissingModsException modsMissing) {

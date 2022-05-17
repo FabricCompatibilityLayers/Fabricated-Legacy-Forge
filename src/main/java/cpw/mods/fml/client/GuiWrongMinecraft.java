@@ -2,9 +2,10 @@ package cpw.mods.fml.client;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.WrongMinecraftVersionException;
+import fr.catcore.fabricatedforge.forged.FatalErrorScreenForged;
 import net.minecraft.client.gui.screen.FatalErrorScreen;
 
-public class GuiWrongMinecraft extends FatalErrorScreen {
+public class GuiWrongMinecraft extends FatalErrorScreenForged {
     private WrongMinecraftVersionException wrongMC;
 
     public GuiWrongMinecraft(WrongMinecraftVersionException wrongMC) {

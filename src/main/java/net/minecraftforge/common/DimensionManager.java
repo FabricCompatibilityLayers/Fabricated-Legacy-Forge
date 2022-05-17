@@ -200,7 +200,7 @@ public class DimensionManager {
         for (int id : unloadQueue) {
             try {
                 worlds.get(id).method_2138(true, null);
-            } catch (WorldSaveException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(worlds.get(id)));

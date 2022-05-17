@@ -61,6 +61,9 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.PixelFormat;
 import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -215,6 +218,13 @@ public abstract class MinecraftMixin {
     @Shadow public abstract void setCurrentServerEntry(ServerInfo info);
 
     @Shadow private boolean isIntegratedServerRunning;
+
+    @Inject(method = "openScreen", at = @At("HEAD"), cancellable = true)
+    private void fix_openScreen(Screen par1, CallbackInfo ci) {
+        if (par1 instanceof FatalErrorScreenForged) {
+            ci.cancel();
+        }
+    }
 
     /**
      * @author Minecraft Forge

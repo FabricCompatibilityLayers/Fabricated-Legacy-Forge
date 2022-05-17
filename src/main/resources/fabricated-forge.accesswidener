@@ -302,9 +302,6 @@ accessible class net/minecraft/structure/class_25
 accessible class net/minecraft/util/LogFormatter
 accessible class net/minecraft/world/chunk/class_1206
 
-accessible class net/minecraft/client/gui/screen/FatalErrorScreen
-extendable class net/minecraft/client/gui/screen/FatalErrorScreen
-
 extendable method net/minecraft/client/gui/widget/ListWidget renderHoleBackground (IIII)V
 
 accessible method net/minecraft/server/dedicated/MinecraftDedicatedServer populateCrashReport (Lnet/minecraft/util/crash/CrashReport;)Lnet/minecraft/util/crash/CrashReport;

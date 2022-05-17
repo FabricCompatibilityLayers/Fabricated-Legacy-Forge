@@ -17,6 +17,7 @@ import fr.catcore.fabricatedforge.mixin.forgefml.client.class_469Accessor;
 import fr.catcore.fabricatedforge.mixininterface.Iclass_469;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_469;
+import net.minecraft.client.gui.screen.FatalErrorScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.world.ClientWorld;
