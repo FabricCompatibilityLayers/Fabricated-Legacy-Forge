@@ -47,11 +47,12 @@ public abstract class ClientWorldMixin extends World {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1252(int par1, int par2, boolean par3) {
         if (par3) {
-            this.clientChunkCache.getOrGenerateChunk(par1, par2);
+            this.clientChunkCache.method_3871(par1, par2);
         } else {
             this.clientChunkCache.unloadChunk(par1, par2);
         }
@@ -64,6 +65,7 @@ public abstract class ClientWorldMixin extends World {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void tickWeather() {
@@ -108,21 +110,5 @@ public abstract class ClientWorldMixin extends World {
             }
         }
 
-    }
-
-    /**
-     * @author Minecraft Forge
-     */
-    @Overwrite
-    static Set method_1254(ClientWorld par0WorldClient) {
-        return ((ClientWorldMixin)(Object)par0WorldClient).world;
-    }
-
-    /**
-     * @author Minecraft Forge
-     */
-    @Overwrite
-    static Set method_1256(ClientWorld par0WorldClient) {
-        return ((ClientWorldMixin)(Object)par0WorldClient).field_1658;
     }
 }

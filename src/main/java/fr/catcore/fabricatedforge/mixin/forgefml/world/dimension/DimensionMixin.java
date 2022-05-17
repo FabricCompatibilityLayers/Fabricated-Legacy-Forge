@@ -185,8 +185,8 @@ public class DimensionMixin implements IDimension {
 
     @Override
     public void setAllowedSpawnTypes(boolean allowHostile, boolean allowPeaceful) {
-        this.world.spawnAnimals = allowHostile;
-        this.world.spawnMonsters = allowPeaceful;
+        this.world.setSpawnAnimals(allowHostile);
+        this.world.setSpawnMonsters(allowPeaceful);
     }
 
     @Override
@@ -201,7 +201,7 @@ public class DimensionMixin implements IDimension {
 
     @Override
     public void toggleRain() {
-        this.world.levelProperties.setRainTime(1);
+        this.world.getLevelProperties().setRainTime(1);
     }
 
     @Override
@@ -216,28 +216,28 @@ public class DimensionMixin implements IDimension {
 
     @Override
     public void setWorldTime(long time) {
-        this.world.levelProperties.setDayTime(time);
+        this.world.getLevelProperties().setDayTime(time);
     }
 
     @Override
     public long getSeed() {
-        return this.world.levelProperties.getSeed();
+        return this.world.getLevelProperties().getSeed();
     }
 
     @Override
     public long getWorldTime() {
-        return this.world.levelProperties.getTimeOfDay();
+        return this.world.getLevelProperties().getTimeOfDay();
     }
 
     @Override
     public BlockPos getSpawnPoint() {
-        LevelProperties info = this.world.levelProperties;
+        LevelProperties info = this.world.getLevelProperties();
         return new BlockPos(info.getSpawnX(), info.getSpawnY(), info.getSpawnZ());
     }
 
     @Override
     public void setSpawnPoint(int x, int y, int z) {
-        this.world.levelProperties.method_203(x, y, z);
+        this.world.getLevelProperties().method_203(x, y, z);
     }
 
     @Override
@@ -262,15 +262,15 @@ public class DimensionMixin implements IDimension {
 
     @Override
     public double getHorizon() {
-        return ((ILevelGeneratorType)this.world.levelProperties.getGeneratorType()).getHorizon(this.world);
+        return ((ILevelGeneratorType)this.world.getLevelProperties().getGeneratorType()).getHorizon(this.world);
     }
 
     @Override
     public void resetRainAndThunder() {
-        this.world.levelProperties.setRainTime(0);
-        this.world.levelProperties.setRaining(false);
-        this.world.levelProperties.setThunderTime(0);
-        this.world.levelProperties.setThundering(false);
+        this.world.getLevelProperties().setRainTime(0);
+        this.world.getLevelProperties().setRaining(false);
+        this.world.getLevelProperties().setThunderTime(0);
+        this.world.getLevelProperties().setThundering(false);
     }
 
     @Override

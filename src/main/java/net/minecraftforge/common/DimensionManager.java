@@ -4,6 +4,7 @@ import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Maps;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
+import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.ServerWorld;
@@ -99,11 +100,11 @@ public class DimensionManager {
     public static void setWorld(int id, ServerWorld world) {
         if (world != null) {
             worlds.put(id, world);
-            MinecraftServer.getServer().worldTickTimes.put(id, new long[100]);
+            ((IMinecraftServer)MinecraftServer.getServer()).getWorldTickTimes().put(id, new long[100]);
             FMLLog.info("Loading dimension %d (%s) (%s)", new Object[]{id, world.getLevelProperties().getLevelName(), world.getServer()});
         } else {
             worlds.remove(id);
-            MinecraftServer.getServer().worldTickTimes.remove(id);
+            ((IMinecraftServer)MinecraftServer.getServer()).getWorldTickTimes().remove(id);
             FMLLog.info("Unloading dimension %d", new Object[]{id});
         }
 

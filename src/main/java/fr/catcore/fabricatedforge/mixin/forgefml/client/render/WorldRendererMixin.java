@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render;
 
+import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import fr.catcore.fabricatedforge.mixininterface.IWorldRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
@@ -111,6 +112,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void reload() {
@@ -191,6 +193,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int method_1374(MobEntity par1EntityLiving, int par2, double par3) {
@@ -335,6 +338,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1365(float par1) {
@@ -562,6 +566,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_1375(MobEntity par1EntityLiving, boolean par2) {
@@ -694,6 +699,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1372(Tessellator par1Tessellator, PlayerEntity par2EntityPlayer, float par3) {
@@ -752,6 +758,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public Particle method_1379(String par1Str, double par2, double par4, double par6, double par8, double par10, double par12) {
@@ -853,7 +860,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                     }
 
                     if (var21 != null) {
-                        this.field_1918.particleManager.addEffect(var21, effectObject);
+                        ((IParticleManager)this.field_1918.particleManager).addEffect(var21, effectObject);
                     }
 
                     return var21;
@@ -866,6 +873,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_3750(PlayerEntity par1EntityPlayer, int par2, int par3, int par4, int par5, int par6) {

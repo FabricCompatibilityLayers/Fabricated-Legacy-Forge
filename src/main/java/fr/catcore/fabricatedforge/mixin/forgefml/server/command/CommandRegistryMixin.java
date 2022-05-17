@@ -23,6 +23,7 @@ public abstract class CommandRegistryMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void executeCommand(CommandSource par1ICommandSender, String par2Str) {

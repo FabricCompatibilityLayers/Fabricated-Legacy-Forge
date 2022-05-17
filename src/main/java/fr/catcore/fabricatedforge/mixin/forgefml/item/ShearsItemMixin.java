@@ -27,6 +27,7 @@ public class ShearsItemMixin extends Item {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3356(ItemStack par1ItemStack, World par2World, int par3, int par4, int par5, int par6, MobEntity par7EntityLiving) {

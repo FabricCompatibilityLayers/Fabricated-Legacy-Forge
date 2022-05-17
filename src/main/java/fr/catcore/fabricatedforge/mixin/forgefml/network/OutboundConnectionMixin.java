@@ -40,6 +40,7 @@ public abstract class OutboundConnectionMixin implements Connection {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void send(Packet par1Packet) {
@@ -59,6 +60,7 @@ public abstract class OutboundConnectionMixin implements Connection {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private Packet pollPacket(boolean par1) {
@@ -80,6 +82,7 @@ public abstract class OutboundConnectionMixin implements Connection {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private boolean isRedundant(Packet par1Packet, boolean par2) {
@@ -98,6 +101,7 @@ public abstract class OutboundConnectionMixin implements Connection {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void applyQueuedPackets() {

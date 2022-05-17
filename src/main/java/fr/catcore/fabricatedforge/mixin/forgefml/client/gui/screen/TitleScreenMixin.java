@@ -44,6 +44,7 @@ public abstract class TitleScreenMixin extends Screen {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void render(int par1, int par2, float par3) {

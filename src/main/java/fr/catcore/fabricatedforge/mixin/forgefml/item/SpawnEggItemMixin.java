@@ -19,6 +19,7 @@ public class SpawnEggItemMixin extends Item {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static boolean method_3456(World par0World, int par1, double par2, double par4, double par6) {

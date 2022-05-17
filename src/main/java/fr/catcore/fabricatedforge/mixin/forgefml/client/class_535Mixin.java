@@ -1,7 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
-import fr.catcore.fabricatedforge.mixininterface.IWorldView;
+import fr.catcore.fabricatedforge.mixininterface.IFireBlock;
+import fr.catcore.fabricatedforge.mixininterface.ITessellator;
 import net.minecraft.FMLRenderAccessLibrary;
 import net.minecraft.block.*;
 import net.minecraft.client.class_523;
@@ -266,6 +267,7 @@ public abstract class class_535Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_1458(Block par1Block, int par2, int par3, int par4) {
@@ -342,12 +344,13 @@ public abstract class class_535Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_1488(Block par1Block, int par2, int par3, int par4) {
         Tessellator var5 = Tessellator.INSTANCE;
-        int var7 = par1Block.getBedDirection(this.field_2017, par2, par3, par4);
-        boolean var8 = par1Block.isBedFoot(this.field_2017, par2, par3, par4);
+        int var7 = ((IBlock)par1Block).getBedDirection(this.field_2017, par2, par3, par4);
+        boolean var8 = ((IBlock)par1Block).isBedFoot(this.field_2017, par2, par3, par4);
         float var9 = 0.5F;
         float var10 = 1.0F;
         float var11 = 0.8F;
@@ -479,6 +482,7 @@ public abstract class class_535Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_1473(Block par1Block, int par2, int par3, int par4) {
@@ -504,7 +508,7 @@ public abstract class class_535Mixin {
         double var26;
         double var28;
         double var30;
-        if (!this.field_2017.method_3784(par2, par3 - 1, par4) && !Block.FIRE.canBlockCatchFire(this.field_2017, par2, par3 - 1, par4, ForgeDirection.UP)) {
+        if (!this.field_2017.method_3784(par2, par3 - 1, par4) && !((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2, par3 - 1, par4, ForgeDirection.UP)) {
             float var36 = 0.2F;
             float var19 = 0.0625F;
             if ((par2 + par3 + par4 & 1) == 1) {
@@ -520,7 +524,7 @@ public abstract class class_535Mixin {
                 var9 = var20;
             }
 
-            if (Block.FIRE.canBlockCatchFire(this.field_2017, par2 - 1, par3, par4, ForgeDirection.EAST)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2 - 1, par3, par4, ForgeDirection.EAST)) {
                 var5.method_1399((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
                 var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
                 var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
@@ -531,7 +535,7 @@ public abstract class class_535Mixin {
                 var5.method_1399((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
             }
 
-            if (Block.FIRE.canBlockCatchFire(this.field_2017, par2 + 1, par3, par4, ForgeDirection.WEST)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2 + 1, par3, par4, ForgeDirection.WEST)) {
                 var5.method_1399((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
                 var5.method_1399((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
                 var5.method_1399((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
@@ -542,7 +546,7 @@ public abstract class class_535Mixin {
                 var5.method_1399((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
             }
 
-            if (Block.FIRE.canBlockCatchFire(this.field_2017, par2, par3, par4 - 1, ForgeDirection.SOUTH)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2, par3, par4 - 1, ForgeDirection.SOUTH)) {
                 var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var11, var13);
                 var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var11, var15);
                 var5.method_1399((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
@@ -553,7 +557,7 @@ public abstract class class_535Mixin {
                 var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var11, var13);
             }
 
-            if (Block.FIRE.canBlockCatchFire(this.field_2017, par2, par3, par4 + 1, ForgeDirection.NORTH)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2, par3, par4 + 1, ForgeDirection.NORTH)) {
                 var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var9, var13);
                 var5.method_1399((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var9, var15);
                 var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var11, var15);
@@ -564,7 +568,7 @@ public abstract class class_535Mixin {
                 var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var9, var13);
             }
 
-            if (Block.FIRE.canBlockCatchFire(this.field_2017, par2, par3 + 1, par4, ForgeDirection.DOWN)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2, par3 + 1, par4, ForgeDirection.DOWN)) {
                 var20 = (double)par2 + 0.5 + 0.5;
                 var22 = (double)par2 + 0.5 - 0.5;
                 var24 = (double)par4 + 0.5 + 0.5;
@@ -671,10 +675,11 @@ public abstract class class_535Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_1442(PaneBlock par1BlockPane, int par2, int par3, int par4) {
-        int var5 = ((IWorldView)this.field_2017).getMaxBuildHeight();
+        int var5 = this.field_2017.method_3771();
         Tessellator var6 = Tessellator.INSTANCE;
         var6.method_1411(par1BlockPane.method_455(this.field_2017, par2, par3, par4));
         float var7 = 1.0F;
@@ -1061,6 +1066,7 @@ public abstract class class_535Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_1481(Block par1Block, int par2, int par3, int par4) {
@@ -1224,6 +1230,7 @@ public abstract class class_535Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_1450(Block par1Block, int par2, int par3, int par4, float par5, float par6, float par7) {
@@ -1561,7 +1568,7 @@ public abstract class class_535Mixin {
             this.field_2007 *= var12;
             var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 2);
             this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, var27);
-            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
+            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
                 this.field_2038 *= par5;
                 this.field_2039 *= par5;
                 this.field_2040 *= par5;
@@ -1663,7 +1670,7 @@ public abstract class class_535Mixin {
             this.field_2007 *= var12;
             var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 3);
             this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 3));
-            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
+            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
                 this.field_2038 *= par5;
                 this.field_2039 *= par5;
                 this.field_2040 *= par5;
@@ -1765,7 +1772,7 @@ public abstract class class_535Mixin {
             this.field_2007 *= var12;
             var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 4);
             this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, var27);
-            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
+            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
                 this.field_2038 *= par5;
                 this.field_2039 *= par5;
                 this.field_2040 *= par5;
@@ -1867,7 +1874,7 @@ public abstract class class_535Mixin {
             this.field_2007 *= var12;
             var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 5);
             this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, var27);
-            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
+            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
                 this.field_2038 *= par5;
                 this.field_2039 *= par5;
                 this.field_2040 *= par5;
@@ -1892,6 +1899,7 @@ public abstract class class_535Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_1463(Block par1Block, int par2, int par3, int par4, float par5, float par6, float par7) {
@@ -1947,7 +1955,7 @@ public abstract class class_535Mixin {
             var8.method_1400(var18, var21, var24);
             var28 = par1Block.method_439(this.field_2017, par2, par3, par4, 2);
             this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, var28);
-            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
+            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
                 var8.method_1400(var18 * par5, var21 * par6, var24 * par7);
                 this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, 38);
             }
@@ -1960,7 +1968,7 @@ public abstract class class_535Mixin {
             var8.method_1400(var18, var21, var24);
             var28 = par1Block.method_439(this.field_2017, par2, par3, par4, 3);
             this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, var28);
-            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
+            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
                 var8.method_1400(var18 * par5, var21 * par6, var24 * par7);
                 this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, 38);
             }
@@ -1973,7 +1981,7 @@ public abstract class class_535Mixin {
             var8.method_1400(var19, var22, var25);
             var28 = par1Block.method_439(this.field_2017, par2, par3, par4, 4);
             this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, var28);
-            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
+            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
                 var8.method_1400(var19 * par5, var22 * par6, var25 * par7);
                 this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, 38);
             }
@@ -1986,7 +1994,7 @@ public abstract class class_535Mixin {
             var8.method_1400(var19, var22, var25);
             var28 = par1Block.method_439(this.field_2017, par2, par3, par4, 5);
             this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, var28);
-            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
+            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
                 var8.method_1400(var19 * par5, var22 * par6, var25 * par7);
                 this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, 38);
             }
@@ -1999,6 +2007,7 @@ public abstract class class_535Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1447(Block par1Block, int par2, float par3) {
@@ -2342,6 +2351,7 @@ public abstract class class_535Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static boolean method_1455(int par0) {

@@ -27,6 +27,7 @@ public abstract class IntegratedConnectionMixin implements Connection {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void applyQueuedPackets() {

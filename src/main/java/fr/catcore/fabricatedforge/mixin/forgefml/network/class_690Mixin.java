@@ -43,6 +43,7 @@ public abstract class class_690Mixin extends Packet {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void readFrom(DataInputStream par1DataInputStream) {
@@ -74,6 +75,7 @@ public abstract class class_690Mixin extends Packet {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void writeTo(DataOutputStream par1DataOutputStream) {
@@ -102,6 +104,7 @@ public abstract class class_690Mixin extends Packet {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int getSize() {

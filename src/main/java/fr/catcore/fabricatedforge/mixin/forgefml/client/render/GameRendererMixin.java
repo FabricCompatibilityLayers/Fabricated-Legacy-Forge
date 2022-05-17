@@ -93,6 +93,7 @@ public abstract class GameRendererMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void updateMovementFovMultiplier() {
@@ -109,6 +110,7 @@ public abstract class GameRendererMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private float getFov(float par1, boolean par2) {
@@ -138,6 +140,7 @@ public abstract class GameRendererMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void transformCamera(float par1) {
@@ -220,6 +223,7 @@ public abstract class GameRendererMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void setupCamera(float par1, int par2) {
@@ -297,6 +301,7 @@ public abstract class GameRendererMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void renderWorld(float par1, long par2) {
@@ -455,7 +460,7 @@ public abstract class GameRendererMixin {
             this.field_1860.profiler.swap("destroyProgress");
             GL11.glEnable(3042);
             GL11.glBlendFunc(770, 1);
-            var5.drawBlockDamageTexture(Tessellator.INSTANCE, var4, par1);
+            ((IWorldRenderer)var5).drawBlockDamageTexture(Tessellator.INSTANCE, var4, par1);
             GL11.glDisable(3042);
             this.field_1860.profiler.swap("weather");
             this.renderWeather(par1);

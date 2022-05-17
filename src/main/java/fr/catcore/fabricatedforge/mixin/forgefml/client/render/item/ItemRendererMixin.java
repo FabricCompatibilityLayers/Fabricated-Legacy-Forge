@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render.item;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.class_534;
 import net.minecraft.client.class_535;
@@ -40,6 +41,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void render(ItemEntity par1EntityItem, double par2, double par4, double par6, float par8, float par9) {
@@ -70,7 +72,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
             float var24;
             if (var10.getItem() instanceof BlockItem && class_535.method_1455(Block.BLOCKS[var10.id].getBlockType())) {
                 GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
-                this.method_1529(Block.BLOCKS[var10.id].getTextureFile());
+                this.method_1529(((IItem)Block.BLOCKS[var10.id]).getTextureFile());
                 float var22 = 0.25F;
                 var16 = Block.BLOCKS[var10.id].getBlockType();
                 if (var16 == 1 || var16 == 19 || var16 == 12 || var16 == 2) {
@@ -97,9 +99,9 @@ public abstract class ItemRendererMixin extends EntityRenderer {
                 float var17;
                 if (var10.getItem().method_3397()) {
                     GL11.glScalef(0.5F, 0.5F, 0.5F);
-                    this.method_1529(Item.ITEMS[var10.id].getTextureFile());
+                    this.method_1529(((IItem)Item.ITEMS[var10.id]).getTextureFile());
 
-                    for(var15 = 0; var15 <= var10.getItem().getRenderPasses(var10.getMeta()); ++var15) {
+                    for(var15 = 0; var15 <= ((IItem)var10.getItem()).getRenderPasses(var10.getMeta()); ++var15) {
                         this.field_2126.setSeed(187L);
                         var16 = var10.getItem().method_3369(var10.getMeta(), var15);
                         var17 = 1.0F;
@@ -116,7 +118,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
                 } else {
                     GL11.glScalef(0.5F, 0.5F, 0.5F);
                     var15 = var10.method_3429();
-                    this.method_1529(var10.getItem().getTextureFile());
+                    this.method_1529(((IItem)var10.getItem()).getTextureFile());
                     if (this.field_2123) {
                         var16 = Item.ITEMS[var10.id].method_3344(var10.getMeta(), 0);
                         var17 = (float)(var16 >> 16 & 255) / 255.0F;
@@ -137,6 +139,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1545(TextRenderer par1FontRenderer, class_534 par2RenderEngine, int par3, int par4, int par5, int par6, int par7) {
@@ -145,7 +148,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
         float var11;
         float var12;
         if (Item.ITEMS[par3] instanceof BlockItem && class_535.method_1455(Block.BLOCKS[par3].getBlockType())) {
-            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(Block.BLOCKS[par3].getTextureFile()));
+            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(((IBlock)Block.BLOCKS[par3]).getTextureFile()));
             Block var15 = Block.BLOCKS[par3];
             GL11.glPushMatrix();
             GL11.glTranslatef((float)(par6 - 2), (float)(par7 + 3), -3.0F + this.zOffset);
@@ -171,9 +174,9 @@ public abstract class ItemRendererMixin extends EntityRenderer {
             int var8;
             if (Item.ITEMS[par3].method_3397()) {
                 GL11.glDisable(2896);
-                par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(Item.ITEMS[par3].getTextureFile()));
+                par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(((IItem)Item.ITEMS[par3]).getTextureFile()));
 
-                for(var8 = 0; var8 <= Item.ITEMS[par3].getRenderPasses(par4); ++var8) {
+                for(var8 = 0; var8 <= ((IItem)Item.ITEMS[par3]).getRenderPasses(par4); ++var8) {
                     var9 = Item.ITEMS[par3].method_3369(par4, var8);
                     int var10 = Item.ITEMS[par3].method_3344(par4, var8);
                     var11 = (float)(var10 >> 16 & 255) / 255.0F;
@@ -189,7 +192,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
                 GL11.glEnable(2896);
             } else if (par5 >= 0) {
                 GL11.glDisable(2896);
-                par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(Item.ITEMS[par3].getTextureFile()));
+                par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(((IItem)Item.ITEMS[par3]).getTextureFile()));
                 var8 = Item.ITEMS[par3].method_3344(par4, 0);
                 float var14 = (float)(var8 >> 16 & 255) / 255.0F;
                 var16 = (float)(var8 >> 8 & 255) / 255.0F;
@@ -208,6 +211,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1546(TextRenderer par1FontRenderer, class_534 par2RenderEngine, ItemStack par3ItemStack, int par4, int par5) {

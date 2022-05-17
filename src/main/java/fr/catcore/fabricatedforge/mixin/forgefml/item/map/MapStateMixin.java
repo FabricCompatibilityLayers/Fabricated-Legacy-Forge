@@ -46,6 +46,7 @@ public abstract class MapStateMixin extends PersistentState implements IMapState
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void fromNbt(NbtCompound par1NBTTagCompound) {
@@ -94,6 +95,7 @@ public abstract class MapStateMixin extends PersistentState implements IMapState
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_191(NbtCompound par1NBTTagCompound) {
@@ -108,6 +110,7 @@ public abstract class MapStateMixin extends PersistentState implements IMapState
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void update(PlayerEntity par1EntityPlayer, ItemStack par2ItemStack) {

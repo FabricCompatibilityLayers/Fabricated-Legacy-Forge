@@ -30,6 +30,7 @@ public abstract class class_687Mixin extends Packet {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void readFrom(DataInputStream par1DataInputStream) {

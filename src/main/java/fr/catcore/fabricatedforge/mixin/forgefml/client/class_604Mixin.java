@@ -25,6 +25,7 @@ public class class_604Mixin extends PacketListenerManager implements Iclass_604 
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public String method_1642() throws IOException {
@@ -33,7 +34,7 @@ public class class_604Mixin extends PacketListenerManager implements Iclass_604 
 
             try {
                 var1 = NetworkUtils.getFreePort();
-            } catch (IOException var4) {
+            } catch (Exception var4) {
             }
 
             if (var1 <= 0) {
@@ -43,7 +44,7 @@ public class class_604Mixin extends PacketListenerManager implements Iclass_604 
             try {
                 this.field_2216 = new ListenThread((class_604)(Object) this, null, var1);
                 this.field_2216.start();
-            } catch (IOException var3) {
+            } catch (Exception var3) {
                 throw var3;
             }
         }

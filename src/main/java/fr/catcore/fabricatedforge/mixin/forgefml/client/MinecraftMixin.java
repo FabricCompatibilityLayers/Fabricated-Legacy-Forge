@@ -218,6 +218,7 @@ public abstract class MinecraftMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void initializeGame() throws LWJGLException {
@@ -339,6 +340,7 @@ public abstract class MinecraftMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void runGameLoop() {
@@ -470,6 +472,7 @@ public abstract class MinecraftMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void method_2925(int par1, boolean par2) {
@@ -484,7 +487,7 @@ public abstract class MinecraftMixin {
                 int var5 = this.result.z;
                 this.interactionManager.method_1239(var3, var4, var5, this.result.side);
                 if (this.playerEntity.method_3204(var3, var4, var5)) {
-                    this.particleManager.addBlockHitEffects(var3, var4, var5, this.result);
+                    ((IParticleManager)this.particleManager).addBlockHitEffects(var3, var4, var5, this.result);
                     this.playerEntity.method_3207();
                 }
             } else {
@@ -496,6 +499,7 @@ public abstract class MinecraftMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void method_2941(int par1) {
@@ -562,6 +566,7 @@ public abstract class MinecraftMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void tick() {
@@ -849,6 +854,7 @@ public abstract class MinecraftMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void connect(ClientWorld par1WorldClient, String par2Str) {
@@ -928,6 +934,7 @@ public abstract class MinecraftMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static void main(String[] par0ArrayOfStr) {
@@ -1007,6 +1014,7 @@ public abstract class MinecraftMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void doPick() {

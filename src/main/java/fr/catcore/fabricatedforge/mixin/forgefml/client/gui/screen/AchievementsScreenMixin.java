@@ -76,6 +76,7 @@ public class AchievementsScreenMixin extends Screen {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void method_1095(int par1, int par2, float par3) {

@@ -36,6 +36,7 @@ public abstract class ItemGroupMixin implements IItemGroup {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -45,6 +46,7 @@ public abstract class ItemGroupMixin implements IItemGroup {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite

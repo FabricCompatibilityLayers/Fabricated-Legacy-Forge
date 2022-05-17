@@ -53,6 +53,7 @@ public class SoundSystemMixin implements ISoundSystem {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1717() {
@@ -77,6 +78,7 @@ public class SoundSystemMixin implements ISoundSystem {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void playBackgroundMusic(String par1Str, float par2, float par3, float par4, float par5, float par6) {
@@ -107,6 +109,7 @@ public class SoundSystemMixin implements ISoundSystem {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void playSound(String par1Str, float par2, float par3, float par4, float par5, float par6) {
@@ -137,6 +140,7 @@ public class SoundSystemMixin implements ISoundSystem {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void playSound(String par1Str, float par2, float par3) {

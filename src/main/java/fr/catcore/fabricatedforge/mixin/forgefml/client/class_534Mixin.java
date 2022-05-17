@@ -62,6 +62,7 @@ public abstract class class_534Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int[] method_1421(String par1Str) {
@@ -108,6 +109,7 @@ public abstract class class_534Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int getTextureFromPath(String par1Str) {
@@ -163,6 +165,7 @@ public abstract class class_534Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1418(BufferedImage par1BufferedImage, int par2) {
@@ -222,6 +225,7 @@ public abstract class class_534Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1414() {
@@ -262,6 +266,7 @@ public abstract class class_534Mixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void updateAnaglyph3D() {

@@ -1,6 +1,9 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server.world;
 
+import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
+import fr.catcore.fabricatedforge.mixininterface.IServerChunkProvider;
 import fr.catcore.fabricatedforge.mixininterface.IServerWorld;
+import fr.catcore.fabricatedforge.mixininterface.IThreadedAnvilChunkStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LightningBoltEntity;
@@ -324,7 +327,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
             var6 = var5;
         }
 
-        return var6 > this.server.spawnProtectionSize || this.server.getPlayerManager().canCheat(par1EntityPlayer.username) || this.server.isSinglePlayer();
+        return var6 > ((IMinecraftServer)this.server).getSpawnProtectionSize() || this.server.getPlayerManager().canCheat(par1EntityPlayer.username) || this.server.isSinglePlayer();
     }
 
     /**
@@ -388,6 +391,6 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     @Override
     public File getChunkSaveLocation() {
-        return ((ThreadedAnvilChunkStorage)this.chunkCache.chunkWriter).saveLocation;
+        return ((IThreadedAnvilChunkStorage)((IServerChunkProvider)this.chunkCache).getChunkWriter()).getSaveLocation();
     }
 }

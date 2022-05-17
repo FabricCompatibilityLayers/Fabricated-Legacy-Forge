@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
 import cpw.mods.fml.common.network.FMLNetworkHandler;
+import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import fr.catcore.fabricatedforge.mixininterface.Iclass_469;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
@@ -77,6 +78,7 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onDisconnect(Disconnect_S2CPacket par1Packet255KickDisconnect) {
@@ -93,6 +95,7 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onChatMessage(ChatMessage_S2CPacket par1Packet3Chat) {
@@ -105,6 +108,7 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onBlockEntityUpdate(BlockEntityUpdate_S2CPacket par1Packet132TileEntityData) {
@@ -113,13 +117,14 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
             if (var2 != null && par1Packet132TileEntityData.type == 1 && var2 instanceof MobSpawnerBlockEntity) {
                 var2.fromNbt(par1Packet132TileEntityData.nbt);
             } else if (var2 != null) {
-                var2.onDataPacket(this.connection, par1Packet132TileEntityData);
+                ((IBlockEntity)var2).onDataPacket(this.connection, par1Packet132TileEntityData);
             }
         }
     }
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onMapUpdate(MapUpdate_S2CPacket par1Packet131MapData) {
@@ -138,6 +143,7 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onCustomPayload(CustomPayloadC2SPacket par1Packet250CustomPayload) {

@@ -18,6 +18,7 @@ public class LogFileWriterMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static void method_1974() {

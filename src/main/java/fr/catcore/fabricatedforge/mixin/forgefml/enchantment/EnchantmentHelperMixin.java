@@ -16,6 +16,7 @@ public class EnchantmentHelperMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static Map method_3528(int par0, ItemStack par1ItemStack) {

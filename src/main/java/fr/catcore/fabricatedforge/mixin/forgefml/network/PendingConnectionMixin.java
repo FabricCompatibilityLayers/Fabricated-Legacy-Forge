@@ -33,6 +33,7 @@ public abstract class PendingConnectionMixin extends PacketListener implements I
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void tick() {
@@ -50,6 +51,7 @@ public abstract class PendingConnectionMixin extends PacketListener implements I
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onGameJoin(class_690 par1Packet1Login) {
@@ -58,6 +60,7 @@ public abstract class PendingConnectionMixin extends PacketListener implements I
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_2194() {

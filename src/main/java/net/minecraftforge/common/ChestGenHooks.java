@@ -1,5 +1,6 @@
 package net.minecraftforge.common;
 
+import fr.catcore.fabricatedforge.mixininterface.IWeightedRandomChestContent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.*;
@@ -125,7 +126,7 @@ public class ChestGenHooks {
                 }
 
                 cont = (WeightedRandomChestContent)itr.next();
-            } while(!item.equalsIgnoreNbt(cont.itemStack) && (item.getMeta() != -1 || item.id != cont.itemStack.id));
+            } while(!item.equalsIgnoreNbt(((IWeightedRandomChestContent)cont).getItemStack()) && (item.getMeta() != -1 || item.id != ((IWeightedRandomChestContent)cont).getItemStack().id));
 
             itr.remove();
         }

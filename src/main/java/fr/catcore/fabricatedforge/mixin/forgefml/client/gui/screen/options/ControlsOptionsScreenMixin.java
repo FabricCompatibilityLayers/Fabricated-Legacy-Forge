@@ -21,6 +21,7 @@ public abstract class ControlsOptionsScreenMixin extends Screen {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void init() {
@@ -33,6 +34,7 @@ public abstract class ControlsOptionsScreenMixin extends Screen {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void buttonClicked(ButtonWidget par1GuiButton) {
@@ -43,6 +45,7 @@ public abstract class ControlsOptionsScreenMixin extends Screen {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void mouseClicked(int par1, int par2, int par3) {
@@ -51,6 +54,7 @@ public abstract class ControlsOptionsScreenMixin extends Screen {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void keyPressed(char par1, int par2) {
@@ -61,6 +65,7 @@ public abstract class ControlsOptionsScreenMixin extends Screen {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void render(int par1, int par2, float par3) {

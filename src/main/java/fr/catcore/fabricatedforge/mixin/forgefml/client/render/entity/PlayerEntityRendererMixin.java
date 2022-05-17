@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render.entity;
 
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.class_535;
 import net.minecraft.client.render.entity.MobEntityRenderer;
@@ -40,6 +41,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected int method_1564(PlayerEntity par1EntityPlayer, int par2, float par3) {
@@ -71,6 +73,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void method_1569(PlayerEntity par1EntityPlayer, float par2) {
@@ -209,7 +212,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
             }
 
             if (var21.getItem().method_3397()) {
-                for(int var25 = 0; var25 < var21.getItem().getRenderPasses(var21.getMeta()); ++var25) {
+                for(int var25 = 0; var25 < ((IItem)var21.getItem()).getRenderPasses(var21.getMeta()); ++var25) {
                     int var24 = var21.getItem().method_3344(var21.getMeta(), var25);
                     float var26 = (float)(var24 >> 16 & 255) / 255.0F;
                     float var9 = (float)(var24 >> 8 & 255) / 255.0F;
@@ -224,13 +227,5 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
             GL11.glPopMatrix();
         }
 
-    }
-
-    /**
-     * @author Minecraft Forge
-     */
-    @Overwrite
-    protected void method_1569(MobEntity par1EntityLiving, float par2) {
-        this.method_1569((PlayerEntity)par1EntityLiving, par2);
     }
 }

@@ -1,6 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.item;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockItem;
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -29,18 +31,19 @@ public abstract class BlockItemMixin extends Item implements IBlockItem {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void fmlCtr(int par1, CallbackInfo ci) {
-        this.isDefaultTexture(Block.BLOCKS[par1 + 256].isDefaultTexture());
+        ((IItem)this).isDefaultTexture(((IBlock)Block.BLOCKS[par1 + 256]).isDefaultTexture());
     }
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public boolean method_3355(ItemStack par1ItemStack, PlayerEntity par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
         int var11 = par3World.getBlock(par4, par5, par6);
         if (var11 == Block.SNOW_LAYER.id) {
             par7 = 1;
-        } else if (var11 != Block.VINE.id && var11 != Block.TALLGRASS.id && var11 != Block.DEADBUSH.id && (Block.BLOCKS[var11] == null || !Block.BLOCKS[var11].isBlockReplaceable(par3World, par4, par5, par6))) {
+        } else if (var11 != Block.VINE.id && var11 != Block.TALLGRASS.id && var11 != Block.DEADBUSH.id && (Block.BLOCKS[var11] == null || !((IBlock)Block.BLOCKS[var11]).isBlockReplaceable(par3World, par4, par5, par6))) {
             if (par7 == 0) {
                 --par5;
             }
@@ -87,6 +90,7 @@ public abstract class BlockItemMixin extends Item implements IBlockItem {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -94,7 +98,7 @@ public abstract class BlockItemMixin extends Item implements IBlockItem {
         int var8 = par1World.getBlock(par2, par3, par4);
         if (var8 == Block.SNOW_LAYER.id) {
             par5 = 1;
-        } else if (var8 != Block.VINE.id && var8 != Block.TALLGRASS.id && var8 != Block.DEADBUSH.id && (Block.BLOCKS[var8] == null || !Block.BLOCKS[var8].isBlockReplaceable(par1World, par2, par3, par4))) {
+        } else if (var8 != Block.VINE.id && var8 != Block.TALLGRASS.id && var8 != Block.DEADBUSH.id && (Block.BLOCKS[var8] == null || !((IBlock)Block.BLOCKS[var8]).isBlockReplaceable(par1World, par2, par3, par4))) {
             if (par5 == 0) {
                 --par3;
             }

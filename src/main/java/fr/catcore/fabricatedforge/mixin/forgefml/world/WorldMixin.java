@@ -5,6 +5,7 @@ import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import fr.catcore.fabricatedforge.mixininterface.IWorld;
+import fr.catcore.fabricatedforge.utils.WorldUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -125,8 +126,10 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     @Shadow public abstract boolean hasEntityIn(Box box, Entity exclusion);
 
+    @Shadow protected boolean spawnAnimals;
+    @Shadow protected boolean spawnMonsters;
     @Unique // Public
-    private static double MAX_ENTITY_RADIUS = 2.0;
+    private static double MAX_ENTITY_RADIUS = WorldUtils.MAX_ENTITY_RADIUS;
 
     @Unique
     private static PersistentStateManager s_mapStorage;
@@ -1582,11 +1585,6 @@ public abstract class WorldMixin implements WorldView, IWorld {
      */
     @Overwrite
     public int method_3771() {
-        return this.getMaxBuildHeight();
-    }
-
-    @Override
-    public int getMaxBuildHeight() {
         return this.dimension.getHeight();
     }
 
@@ -1641,5 +1639,20 @@ public abstract class WorldMixin implements WorldView, IWorld {
     @Override
     public SetMultimap<ChunkPos, ForgeChunkManager.Ticket> getPersistentChunks() {
         return ForgeChunkManager.getPersistentChunksFor((World)(Object) this);
+    }
+
+    @Override
+    public LevelProperties getLevelProperties() {
+        return this.levelProperties;
+    }
+
+    @Override
+    public void setSpawnAnimals(boolean bool) {
+        this.spawnAnimals = bool;
+    }
+
+    @Override
+    public void setSpawnMonsters(boolean bool) {
+        this.spawnMonsters = bool;
     }
 }

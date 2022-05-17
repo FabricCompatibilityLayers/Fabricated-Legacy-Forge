@@ -16,6 +16,7 @@ public class MilkBucketItemMixin extends Item {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public ItemStack onFinishUse(ItemStack par1ItemStack, World par2World, PlayerEntity par3EntityPlayer) {

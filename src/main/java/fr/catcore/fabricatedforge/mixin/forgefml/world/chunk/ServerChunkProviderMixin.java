@@ -66,8 +66,12 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
 
     }
 
-    @Override
-    public Chunk getOrGenerateChunk(int par1, int par2) {
+    /**
+     * @author Minecraft Forge
+     * @reason none
+     */
+    @Overwrite
+    public Chunk method_3871(int par1, int par2) {
         long var3 = ChunkPos.getIdFromCoords(par1, par2);
         this.chunksToUnload.remove(var3);
         Chunk var5 = (Chunk)this.chunkMap.get(var3);
@@ -102,18 +106,9 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
      * @reason none
      */
     @Overwrite
-    public Chunk method_3871(int i, int j) {
-        return this.getOrGenerateChunk(i, j);
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Overwrite
     public Chunk getChunk(int par1, int par2) {
         Chunk var3 = (Chunk)this.chunkMap.get(ChunkPos.getIdFromCoords(par1, par2));
-        return var3 == null ? (!this.world.field_4523 && !this.canGenerateChunks ? this.empty : this.getOrGenerateChunk(par1, par2)) : var3;
+        return var3 == null ? (!this.world.field_4523 && !this.canGenerateChunks ? this.empty : this.method_3871(par1, par2)) : var3;
     }
 
     /**
@@ -172,5 +167,10 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
         }
 
         return this.chunkGenerator.tickChunks();
+    }
+
+    @Override
+    public ChunkStorage getChunkWriter() {
+        return this.chunkWriter;
     }
 }

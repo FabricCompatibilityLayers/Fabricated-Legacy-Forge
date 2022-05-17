@@ -15,6 +15,8 @@ import net.fabricmc.mapping.tree.*;
 import net.fabricmc.tinyremapper.IMappingProvider;
 import net.fabricmc.tinyremapper.OutputConsumerPath;
 import net.fabricmc.tinyremapper.TinyRemapper;
+import net.fabricmc.tinyremapper.api.TrClass;
+import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Type;
 
 import java.io.*;
@@ -79,7 +81,7 @@ public class RemapUtil {
             if (file.endsWith(".class")) classes.add(file.replace(".class", ""));
         }
 
-        classes.forEach(cl -> MOD_MAPPINGS.put(cl, "net/minecraft/" + cl));
+        classes.forEach(cl -> MOD_MAPPINGS.put(cl, (cl.contains("/") ? "" : "net/minecraft/") + cl));
 
         return files;
     }
@@ -195,6 +197,13 @@ public class RemapUtil {
         for (TinyTree tree : trees) {
             builder.withMappings(createProvider(tree));
         }
+
+        builder.extraPostApplyVisitor(new TinyRemapper.ApplyVisitorProvider() {
+            @Override
+            public ClassVisitor insertApplyVisitor(TrClass cls, ClassVisitor next) {
+                return next;
+            }
+        });
 
         TinyRemapper remapper = builder.build();
         remapper.readClassPath((Path) FabricLoader.getInstance().getObjectShare().get("fabric-loader:inputGameJar"));

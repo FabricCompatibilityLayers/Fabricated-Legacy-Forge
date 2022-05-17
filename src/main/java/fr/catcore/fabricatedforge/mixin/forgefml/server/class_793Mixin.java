@@ -13,7 +13,7 @@ public abstract class class_793Mixin {
 
     @Inject(method = "<init>", cancellable = true, at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerWorldManager;getWorld()Lnet/minecraft/server/world/ServerWorld;"))
     private void fmlCtr(PlayerWorldManager par1PlayerManager, int par2, int par3, CallbackInfo ci) {
-        par1PlayerManager.getWorld().chunkCache.getOrGenerateChunk(par2, par3);
+        par1PlayerManager.getWorld().chunkCache.method_3871(par2, par3);
 
         ci.cancel();
     }

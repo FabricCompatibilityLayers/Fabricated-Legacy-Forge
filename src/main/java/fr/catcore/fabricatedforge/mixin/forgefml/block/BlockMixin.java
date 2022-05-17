@@ -298,6 +298,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
         }
     }
 
+    @Unique
     private static void setBurnProperties(int id, int encouragement, int flammability) {
         blockFireSpreadSpeed[id] = encouragement;
         blockFlammability[id] = flammability;

@@ -1,6 +1,5 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 
-import fr.catcore.fabricatedforge.mixininterface.IWorldView;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
@@ -12,7 +11,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ChunkCache.class)
-public abstract class ChunkCacheMixin implements WorldView, IWorldView {
+public abstract class ChunkCacheMixin implements WorldView {
 
     @Shadow private int minX;
 
@@ -58,12 +57,6 @@ public abstract class ChunkCacheMixin implements WorldView, IWorldView {
         }
     }
 
-    @Environment(EnvType.CLIENT)
-    @Override
-    public int getMaxBuildHeight() {
-        return 256;
-    }
-
     /**
      * @author Minecraft Forge
      * @reason none
@@ -71,6 +64,6 @@ public abstract class ChunkCacheMixin implements WorldView, IWorldView {
     @Environment(EnvType.CLIENT)
     @Overwrite
     public int method_3771() {
-        return this.getMaxBuildHeight();
+        return 256;
     }
 }

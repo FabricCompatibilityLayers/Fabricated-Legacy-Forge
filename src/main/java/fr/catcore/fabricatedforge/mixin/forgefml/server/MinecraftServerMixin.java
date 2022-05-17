@@ -4,7 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.relauncher.ArgsWrapper;
 import cpw.mods.fml.relauncher.FMLRelauncher;
-import fr.catcore.fabricatedforge.mixininterface.IServerChunkProvider;
+import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.command.CommandSource;
@@ -42,13 +42,12 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Mixin(MinecraftServer.class)
-public abstract class MinecraftServerMixin implements Runnable, Snoopable, CommandSource {
+public abstract class MinecraftServerMixin implements Runnable, Snoopable, CommandSource, IMinecraftServer {
 
     @Shadow protected abstract void upgradeWorld(String name);
 
@@ -203,7 +202,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
                         var2 = var9;
                     }
 
-                    ((IServerChunkProvider)var5.chunkCache).getOrGenerateChunk(var6.x + var7 >> 4, var6.z + var8 >> 4);
+                    var5.chunkCache.method_3871(var6.x + var7 >> 4, var6.z + var8 >> 4);
 
                     while(var5.method_3592() && this.isRunning()) {
                     }
@@ -566,5 +565,20 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
             field_3848.log(Level.SEVERE, "Failed to start the minecraft server", var15);
         }
 
+    }
+
+    @Override
+    public int getSpawnProtectionSize() {
+        return this.spawnProtectionSize;
+    }
+
+    @Override
+    public void setSpawnProtectionSize(int spawnProtectionSize) {
+        this.spawnProtectionSize = spawnProtectionSize;
+    }
+
+    @Override
+    public Hashtable<Integer, long[]> getWorldTickTimes() {
+        return this.worldTickTimes;
     }
 }

@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render.block.entity;
 
 import com.mojang.blaze3d.platform.GLX;
+import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.world.World;
@@ -30,10 +31,11 @@ public abstract class BlockEntityRenderDispatcherMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1626(BlockEntity par1TileEntity, float par2) {
-        double dist = par1TileEntity.getRenderDistance();
+        double dist = ((IBlockEntity)par1TileEntity).getRenderDistance();
         dist *= dist;
         if (par1TileEntity.getSquaredDistance(this.cameraX, this.cameraY, this.cameraZ) < dist) {
             int var3 = this.world.method_3778(par1TileEntity.x, par1TileEntity.y, par1TileEntity.z, 0);

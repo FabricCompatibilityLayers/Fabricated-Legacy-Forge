@@ -27,6 +27,7 @@ public class SoundLoaderMixin implements ISoundLoader {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public Sound getSound(String par1Str, File par2File) {

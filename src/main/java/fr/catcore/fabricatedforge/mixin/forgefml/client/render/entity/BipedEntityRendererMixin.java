@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render.entity;
 
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.class_535;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
@@ -28,6 +29,7 @@ public class BipedEntityRendererMixin extends MobEntityRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void method_1569(MobEntity par1EntityLiving, float par2) {
@@ -71,7 +73,7 @@ public class BipedEntityRendererMixin extends MobEntityRenderer {
 
             this.dispatcher.field_2099.method_1357(par1EntityLiving, var3, 0);
             if (var3.getItem().method_3397()) {
-                for(int x = 1; x < var3.getItem().getRenderPasses(var3.getMeta()); ++x) {
+                for(int x = 1; x < ((IItem)var3.getItem()).getRenderPasses(var3.getMeta()); ++x) {
                     this.dispatcher.field_2099.method_1357(par1EntityLiving, var3, x);
                 }
             }

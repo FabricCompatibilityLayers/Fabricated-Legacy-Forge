@@ -72,6 +72,7 @@ public abstract class TessellatorMixin implements ITessellator {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public int method_1396() {
@@ -193,6 +194,7 @@ public abstract class TessellatorMixin implements ITessellator {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1398(double par1, double par3, double par5) {
@@ -257,6 +259,7 @@ public abstract class TessellatorMixin implements ITessellator {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1410(float par1, float par2, float par3) {

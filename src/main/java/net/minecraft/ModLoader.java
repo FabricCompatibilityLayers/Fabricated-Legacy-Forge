@@ -16,6 +16,8 @@ import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import fr.catcore.fabricatedforge.mixin.forgefml.world.level.LevelGeneratorTypeAccessor;
+import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
 import net.minecraft.advancement.Achievement;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
@@ -143,7 +145,7 @@ public class ModLoader {
     }
 
     public static void addSpawn(Class<? extends MobEntity> entityClass, int weightedProb, int min, int max, EntityCategory spawnList) {
-        EntityRegistry.addSpawn(entityClass, weightedProb, min, max, spawnList, LevelGeneratorType.base12Biomes);
+        EntityRegistry.addSpawn(entityClass, weightedProb, min, max, spawnList, LevelGeneratorTypeAccessor.getBase12Biomes());
     }
 
     public static void addSpawn(Class<? extends MobEntity> entityClass, int weightedProb, int min, int max, EntityCategory spawnList, Biome... biomes) {
@@ -151,7 +153,7 @@ public class ModLoader {
     }
 
     public static void addSpawn(String entityName, int weightedProb, int min, int max, EntityCategory spawnList) {
-        EntityRegistry.addSpawn(entityName, weightedProb, min, max, spawnList, LevelGeneratorType.base12Biomes);
+        EntityRegistry.addSpawn(entityName, weightedProb, min, max, spawnList, LevelGeneratorTypeAccessor.getBase12Biomes());
     }
 
     public static void addSpawn(String entityName, int weightedProb, int min, int max, EntityCategory spawnList, Biome... biomes) {
@@ -319,7 +321,7 @@ public class ModLoader {
     }
 
     public static void removeSpawn(Class<? extends MobEntity> entityClass, EntityCategory spawnList) {
-        EntityRegistry.removeSpawn(entityClass, spawnList, LevelGeneratorType.base12Biomes);
+        EntityRegistry.removeSpawn(entityClass, spawnList, LevelGeneratorTypeAccessor.getBase12Biomes());
     }
 
     public static void removeSpawn(Class<? extends MobEntity> entityClass, EntityCategory spawnList, Biome... biomes) {
@@ -327,7 +329,7 @@ public class ModLoader {
     }
 
     public static void removeSpawn(String entityName, EntityCategory spawnList) {
-        EntityRegistry.removeSpawn(entityName, spawnList, LevelGeneratorType.base12Biomes);
+        EntityRegistry.removeSpawn(entityName, spawnList, LevelGeneratorTypeAccessor.getBase12Biomes());
     }
 
     public static void removeSpawn(String entityName, EntityCategory spawnList, Biome... biomes) {
@@ -377,7 +379,7 @@ public class ModLoader {
 
     public static void serverSendPacket(ServerPacketListener handler, Packet packet) {
         if (handler != null) {
-            PacketDispatcher.sendPacketToPlayer(packet, (Player)handler.getPlayer());
+            PacketDispatcher.sendPacketToPlayer(packet, (Player)((IPacketListener)handler).getPlayer());
         }
 
     }

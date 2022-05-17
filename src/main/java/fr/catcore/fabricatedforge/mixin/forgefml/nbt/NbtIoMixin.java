@@ -22,6 +22,7 @@ public abstract class NbtIoMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static void write(NbtCompound par0NBTTagCompound, File par1File) throws IOException {
@@ -37,6 +38,7 @@ public abstract class NbtIoMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static NbtCompound method_1349(File par0File) throws IOException {

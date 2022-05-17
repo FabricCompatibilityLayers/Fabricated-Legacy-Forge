@@ -22,6 +22,7 @@ public class BowItemMixin extends Item {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onUseStopped(ItemStack par1ItemStack, World par2World, PlayerEntity par3EntityPlayer, int par4) {
@@ -79,6 +80,7 @@ public class BowItemMixin extends Item {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public ItemStack onStartUse(ItemStack par1ItemStack, World par2World, PlayerEntity par3EntityPlayer) {

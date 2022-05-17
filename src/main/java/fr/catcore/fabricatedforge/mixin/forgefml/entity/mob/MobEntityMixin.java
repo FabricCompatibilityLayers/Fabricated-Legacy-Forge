@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity.mob;
 
 import fr.catcore.fabricatedforge.mixininterface.IMobEntity;
+import fr.catcore.fabricatedforge.mixininterface.IStatusEffectInstance;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -704,7 +705,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
             while(potionKey.hasNext()) {
                 Integer key = (Integer)potionKey.next();
                 StatusEffectInstance effect = (StatusEffectInstance)this.field_3335.get(key);
-                if (effect.isCurativeItem(curativeItem)) {
+                if (((IStatusEffectInstance)effect).isCurativeItem(curativeItem)) {
                     potionKey.remove();
                     this.method_2649(effect);
                 }

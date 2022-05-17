@@ -21,6 +21,7 @@ public class PacketListenerManagerMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void handlePackets() {

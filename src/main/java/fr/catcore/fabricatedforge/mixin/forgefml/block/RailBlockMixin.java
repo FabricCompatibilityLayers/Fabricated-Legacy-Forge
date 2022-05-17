@@ -124,7 +124,7 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
                         par1World.method_3710(par2, par3 + 1, par4, this.id);
                     }
                 }
-            } else if (par5 > 0 && Block.BLOCKS[par5].emitsRedstonePower() && !this.field_304 && class_174.method_360(new class_174((RailBlock)(Object) this, par1World, par2, par3, par4)) == 3) {
+            } else if (par5 > 0 && Block.BLOCKS[par5].emitsRedstonePower() && !this.field_304 && ((class_174Accessor)new class_174((RailBlock)(Object) this, par1World, par2, par3, par4)).method_363_invoker() == 3) {
                 this.method_352(par1World, par2, par3, par4, false);
             }
         }

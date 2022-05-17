@@ -1,5 +1,6 @@
 package net.minecraftforge.common;
 
+import fr.catcore.fabricatedforge.mixininterface.IAbstractMinecartEntity;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -42,7 +43,7 @@ public class MinecartRegistry {
     }
 
     public static ItemStack getItemForCart(AbstractMinecartEntity cart) {
-        return getItemForCart(cart.getClass(), cart.getMinecartType());
+        return getItemForCart(cart.getClass(), ((IAbstractMinecartEntity)cart).getMinecartType());
     }
 
     public static Class<? extends AbstractMinecartEntity> getCartClassForItem(ItemStack item) {

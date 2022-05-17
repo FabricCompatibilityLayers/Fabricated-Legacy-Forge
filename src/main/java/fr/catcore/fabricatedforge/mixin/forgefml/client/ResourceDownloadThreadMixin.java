@@ -29,6 +29,7 @@ public abstract class ResourceDownloadThreadMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void run() {
@@ -66,6 +67,7 @@ public abstract class ResourceDownloadThreadMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void method_801(URL par1URL, File par2File, long par3) throws IOException {

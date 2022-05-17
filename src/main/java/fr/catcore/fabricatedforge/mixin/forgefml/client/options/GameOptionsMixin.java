@@ -106,6 +106,7 @@ public abstract class GameOptionsMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public float getFLoatOption(GameOption par1EnumOptions) {
@@ -114,6 +115,7 @@ public abstract class GameOptionsMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public String getStringOption(GameOption par1EnumOptions) {
@@ -132,6 +134,7 @@ public abstract class GameOptionsMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void save() {

@@ -250,15 +250,13 @@ public abstract class class_174Mixin {
 
         if (par2 || this.field_306.getBlockData(this.field_307, this.field_308, this.field_309) != var8) {
             this.field_306.method_3672(this.field_307, this.field_308, this.field_309, var8);
-            Iterator var9 = this.field_311.iterator();
-
-            while(var9.hasNext()) {
-                Vec3i var10 = (Vec3i)var9.next();
+            for (Object o : this.field_311) {
+                Vec3i var10 = (Vec3i) o;
                 class_174 var11 = this.method_361(var10);
                 if (var11 != null) {
-                    ((class_174Mixin)(Object)var11).method_357();
-                    if (((class_174Mixin)(Object)var11).method_367((class_174)(Object) this)) {
-                        ((class_174Mixin)(Object)var11).method_368((class_174)(Object) this);
+                    ((class_174Mixin) (Object) var11).method_357();
+                    if (((class_174Mixin) (Object) var11).method_367((class_174) (Object) this)) {
+                        ((class_174Mixin) (Object) var11).method_368((class_174) (Object) this);
                     }
                 }
             }

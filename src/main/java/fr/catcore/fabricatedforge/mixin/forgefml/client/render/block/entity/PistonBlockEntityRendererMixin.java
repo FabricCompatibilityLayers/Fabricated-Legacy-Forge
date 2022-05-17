@@ -22,6 +22,7 @@ public abstract class PistonBlockEntityRendererMixin extends BlockEntityRenderer
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1631(PistonBlockEntity par1TileEntityPiston, double par2, double par4, double par6, float par8) {

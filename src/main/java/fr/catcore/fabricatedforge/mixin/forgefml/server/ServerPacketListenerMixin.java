@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server;
 
 import cpw.mods.fml.common.network.FMLNetworkHandler;
+import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
 import fr.catcore.fabricatedforge.mixininterface.IServerPlayerInteractionManager;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.slot.Slot;
@@ -323,7 +324,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
             }
 
             if (par1Packet14BlockDig.action == 0) {
-                if (var20 <= this.server.spawnProtectionSize && !var3) {
+                if (var20 <= ((IMinecraftServer)this.server).getSpawnProtectionSize() && !var3) {
                     ForgeEventFactory.onPlayerInteract(this.player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, var5, var6, var7, 0);
                     this.player.field_2823.sendPacket(new BlockUpdate_S2CPacket(var5, var6, var7, var2));
                 } else {
@@ -390,7 +391,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
 
             double dist = ((IServerPlayerInteractionManager)this.player.interactionManager).getBlockReachDistance() + 1.0;
             dist *= dist;
-            if (this.field_2910 && this.player.squaredDistanceTo((double)var5 + 0.5, (double)var6 + 0.5, (double)var7 + 0.5) < dist && (var12 > this.server.spawnProtectionSize || var9)) {
+            if (this.field_2910 && this.player.squaredDistanceTo((double)var5 + 0.5, (double)var6 + 0.5, (double)var7 + 0.5) < dist && (var12 > ((IMinecraftServer)this.server).getSpawnProtectionSize() || var9)) {
                 this.player.interactionManager.method_2170(this.player, var2, var3, var5, var6, var7, var8, par1Packet15Place.method_1949(), par1Packet15Place.method_1950(), par1Packet15Place.method_1951());
             }
 

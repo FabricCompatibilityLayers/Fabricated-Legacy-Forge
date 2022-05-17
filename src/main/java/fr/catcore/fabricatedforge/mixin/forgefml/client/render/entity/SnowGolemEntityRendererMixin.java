@@ -27,6 +27,7 @@ public class SnowGolemEntityRendererMixin extends MobEntityRenderer {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     protected void method_1569(SnowGolemEntity par1EntitySnowman, float par2) {
@@ -48,13 +49,5 @@ public class SnowGolemEntityRendererMixin extends MobEntityRenderer {
             GL11.glPopMatrix();
         }
 
-    }
-
-    /**
-     * @author Minecraft Forge
-     */
-    @Overwrite
-    protected void method_1569(MobEntity par1EntityLiving, float par2) {
-        this.method_1569((SnowGolemEntity)par1EntityLiving, par2);
     }
 }

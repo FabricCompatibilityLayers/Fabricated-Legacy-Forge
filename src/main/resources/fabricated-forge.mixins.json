@@ -6,10 +6,12 @@
   "mixins": [
     "block.AbstractButtonBlockMixin",
     "block.AttachedStemBlockMixin",
+    "block.BlockAccessor",
     "block.BlockMixin",
     "block.BlockWithEntityMixin",
     "block.CactusBlockMixin",
     "block.ChestBlockMixin",
+    "block.class_174Accessor",
     "block.class_174Mixin",
     "block.CropBlockMixin",
     "block.DispenserBlockMixin",
@@ -137,6 +139,7 @@
     "world.gen.feature.PineTreeFeatureMixin",
     "world.gen.feature.SpruceTreeFeatureMixin",
     "world.gen.feature.TallGrassFeatureMixin",
+    "world.level.LevelGeneratorTypeAccessor",
     "world.level.LevelGeneratorTypeMixin",
     "world.level.LevelPropertiesMixin"
   ],

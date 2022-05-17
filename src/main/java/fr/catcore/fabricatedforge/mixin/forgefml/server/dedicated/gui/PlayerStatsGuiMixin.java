@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server.dedicated.gui;
 
+import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
 import net.minecraft.network.OutboundConnection;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.gui.PlayerStatsGui;
@@ -48,7 +49,7 @@ public abstract class PlayerStatsGuiMixin extends JComponent {
             int len$ = arr$.length;
 
             for (Integer id : arr$) {
-                this.lines[5 + x] = "Lvl " + id + " tick: " + AVG_TICK_FORMAT.format(this.average((long[]) this.server.worldTickTimes.get(id)) * 1.0E-6) + " ms";
+                this.lines[5 + x] = "Lvl " + id + " tick: " + AVG_TICK_FORMAT.format(this.average((long[]) ((IMinecraftServer)this.server).getWorldTickTimes().get(id)) * 1.0E-6) + " ms";
                 ServerWorld world = DimensionManager.getWorld(id);
                 if (world != null && world.chunkCache != null) {
                     this.lines[5 + x] = this.lines[5 + x] + ", " + world.chunkCache.getChunkProviderName();

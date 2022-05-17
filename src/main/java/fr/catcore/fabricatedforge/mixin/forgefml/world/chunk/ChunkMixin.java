@@ -2,6 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
+import fr.catcore.fabricatedforge.utils.WorldUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -516,8 +517,8 @@ public abstract class ChunkMixin implements IChunk {
      */
     @Overwrite
     public void method_3889(Entity par1Entity, Box par2AxisAlignedBB, List par3List) {
-        int var4 = MathHelper.floor((par2AxisAlignedBB.minY - World.MAX_ENTITY_RADIUS) / 16.0);
-        int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + World.MAX_ENTITY_RADIUS) / 16.0);
+        int var4 = MathHelper.floor((par2AxisAlignedBB.minY - WorldUtils.MAX_ENTITY_RADIUS) / 16.0);
+        int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + WorldUtils.MAX_ENTITY_RADIUS) / 16.0);
         if (var4 < 0) {
             var4 = 0;
         }
@@ -566,8 +567,8 @@ public abstract class ChunkMixin implements IChunk {
      */
     @Overwrite
     public void method_3886(Class par1Class, Box par2AxisAlignedBB, List par3List) {
-        int var4 = MathHelper.floor((par2AxisAlignedBB.minY - World.MAX_ENTITY_RADIUS) / 16.0);
-        int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + World.MAX_ENTITY_RADIUS) / 16.0);
+        int var4 = MathHelper.floor((par2AxisAlignedBB.minY - WorldUtils.MAX_ENTITY_RADIUS) / 16.0);
+        int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + WorldUtils.MAX_ENTITY_RADIUS) / 16.0);
         if (var4 < 0) {
             var4 = 0;
         } else if (var4 >= this.field_4733.length) {
@@ -582,10 +583,9 @@ public abstract class ChunkMixin implements IChunk {
 
         for(int var6 = var4; var6 <= var5; ++var6) {
             List var7 = this.field_4733[var6];
-            Iterator var8 = var7.iterator();
 
-            while(var8.hasNext()) {
-                Entity var9 = (Entity)var8.next();
+            for (Object o : var7) {
+                Entity var9 = (Entity) o;
                 if (par1Class.isAssignableFrom(var9.getClass()) && var9.boundingBox.intersects(par2AxisAlignedBB)) {
                     par3List.add(var9);
                 }

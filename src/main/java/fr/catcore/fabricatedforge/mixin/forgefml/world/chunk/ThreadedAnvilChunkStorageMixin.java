@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 
+import fr.catcore.fabricatedforge.mixininterface.IThreadedAnvilChunkStorage;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.util.FileIoThread;
@@ -25,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 @Mixin(ThreadedAnvilChunkStorage.class)
-public abstract class ThreadedAnvilChunkStorageMixin {
+public abstract class ThreadedAnvilChunkStorageMixin implements IThreadedAnvilChunkStorage {
 
     @Shadow private Object field_4781;
 
@@ -172,5 +173,10 @@ public abstract class ThreadedAnvilChunkStorageMixin {
         }
 
         return true;
+    }
+
+    @Override
+    public File getSaveLocation() {
+        return this.saveLocation;
     }
 }

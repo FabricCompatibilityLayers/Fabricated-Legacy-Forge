@@ -1,6 +1,7 @@
 package net.minecraftforge.common;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -139,7 +140,7 @@ public class ForgeHooks {
 
     public static String getTexture(String _default, Object obj) {
         if (obj instanceof Item) {
-            return ((Item)obj).getTextureFile();
+            return ((IItem)obj).getTextureFile();
         } else {
             return obj instanceof Block ? ((IBlock)obj).getTextureFile() : _default;
         }

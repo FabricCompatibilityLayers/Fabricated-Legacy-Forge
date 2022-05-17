@@ -32,6 +32,7 @@ public abstract class ChunkUpdateS2CPacketMixin extends Packet {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void readFrom(DataInputStream par1DataInputStream) {

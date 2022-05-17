@@ -22,6 +22,7 @@ public abstract class StatsMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private static Stat[] method_2271(String par0Str, int par1) {

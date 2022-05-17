@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server.dedicated;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
 import net.minecraft.network.NetworkEncryptionUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.dedicated.*;
@@ -73,7 +74,7 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
             this.setFlightEnabled(this.abstractPropertiesHandler.getBooleanOrDefault("allow-flight", false));
             this.method_3043(this.abstractPropertiesHandler.getOrDefault("texture-pack", ""));
             this.setMotd(this.abstractPropertiesHandler.getOrDefault("motd", "A Minecraft Server"));
-            this.spawnProtectionSize = this.abstractPropertiesHandler.getIntOrDefault("spawn-protection-size", 16);
+            ((IMinecraftServer)this).setSpawnProtectionSize(this.abstractPropertiesHandler.getIntOrDefault("spawn-protection-size", 16));
             this.shouldGenerateStructures = this.abstractPropertiesHandler.getBooleanOrDefault("generate-structures", true);
             int var2 = this.abstractPropertiesHandler.getIntOrDefault("gamemode", GameMode.SURVIVAL.getGameModeId());
             this.field_2736 = LevelInfo.method_3754(var2);

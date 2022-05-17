@@ -2,6 +2,8 @@ package fr.catcore.fabricatedforge.mixin.forgefml.entity.player;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.FMLNetworkHandler;
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import fr.catcore.fabricatedforge.mixininterface.IPlayerEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -129,7 +131,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         if (this.useItem != null) {
             ItemStack var1 = this.inventory.getMainHandStack();
             if (var1 == this.useItem) {
-                this.useItem.getItem().onUsingItemTick(this.useItem, (PlayerEntity)(Object) this, this.itemUseTicks);
+                ((IItem)this.useItem.getItem()).onUsingItemTick(this.useItem, (PlayerEntity)(Object) this, this.itemUseTicks);
                 if (this.itemUseTicks <= 25 && this.itemUseTicks % 4 == 0) {
                     this.drink(var1, 5);
                 }
@@ -270,7 +272,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         if (stack == null) {
             return null;
         } else {
-            return stack.getItem().onDroppedByPlayer(stack, (PlayerEntity)(Object) this) ? ForgeHooks.onPlayerTossEvent((PlayerEntity)(Object) this, this.inventory.takeInvStack(this.inventory.selectedSlot, 1)) : null;
+            return ((IItem)stack.getItem()).onDroppedByPlayer(stack, (PlayerEntity)(Object) this) ? ForgeHooks.onPlayerTossEvent((PlayerEntity)(Object) this, this.inventory.takeInvStack(this.inventory.selectedSlot, 1)) : null;
         }
     }
 
@@ -346,7 +348,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     @Override
     public float getCurrentPlayerStrVsBlock(Block par1Block, int meta) {
         ItemStack stack = this.inventory.getMainHandStack();
-        float var2 = stack == null ? 1.0F : stack.getItem().getStrVsBlock(stack, par1Block, meta);
+        float var2 = stack == null ? 1.0F : ((IItem)stack.getItem()).getStrVsBlock(stack, par1Block, meta);
         int var3 = EnchantmentHelper.method_3530(this.inventory);
         if (var3 > 0 && ForgeHooks.canHarvestBlock(par1Block, (PlayerEntity)(Object) this, meta)) {
             var2 += (float)(var3 * var3 + 1);
@@ -452,7 +454,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     public void method_3216(Entity par1Entity) {
         if (!MinecraftForge.EVENT_BUS.post(new AttackEntityEvent((PlayerEntity)(Object) this, par1Entity))) {
             ItemStack stack = this.getMainHandStack();
-            if (stack == null || !stack.getItem().onLeftClickEntity(stack, (PlayerEntity)(Object) this, par1Entity)) {
+            if (stack == null || !((IItem)stack.getItem()).onLeftClickEntity(stack, (PlayerEntity)(Object) this, par1Entity)) {
                 if (par1Entity.isAttackable()) {
                     int var2 = this.inventory.method_3127(par1Entity);
                     if (this.method_2581(StatusEffect.STRENGTH)) {
@@ -576,7 +578,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
                 int var5 = BedBlock.method_297(var9);
                 Block block = Block.BLOCKS[this.world.getBlock(par1, par2, par3)];
                 if (block != null) {
-                    var5 = block.getBedDirection(this.world, par1, par2, par3);
+                    var5 = ((IBlock)block).getBedDirection(this.world, par1, par2, par3);
                 }
 
                 float var10 = 0.5F;
@@ -624,9 +626,9 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         BlockPos var4 = this.field_3992;
         BlockPos var5 = this.field_3992;
         Block block = var4 == null ? null : Block.BLOCKS[this.world.getBlock(var4.x, var4.y, var4.z)];
-        if (var4 != null && block != null && block.isBed(this.world, var4.x, var4.y, var4.z, this)) {
-            block.setBedOccupied(this.world, var4.x, var4.y, var4.z, (PlayerEntity)(Object) this, false);
-            var5 = block.getBedSpawnPosition(this.world, var4.x, var4.y, var4.z, (PlayerEntity)(Object) this);
+        if (var4 != null && block != null && ((IBlock)block).isBed(this.world, var4.x, var4.y, var4.z, this)) {
+            ((IBlock)block).setBedOccupied(this.world, var4.x, var4.y, var4.z, (PlayerEntity)(Object) this, false);
+            var5 = ((IBlock)block).getBedSpawnPosition(this.world, var4.x, var4.y, var4.z, (PlayerEntity)(Object) this);
             if (var5 == null) {
                 var5 = new BlockPos(var4.x, var4.y + 1, var4.z);
             }
@@ -659,7 +661,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     private boolean method_3213() {
         BlockPos c = this.field_3992;
         int blockID = this.world.getBlock(c.x, c.y, c.z);
-        return Block.BLOCKS[blockID] != null && Block.BLOCKS[blockID].isBed(this.world, c.x, c.y, c.z, this);
+        return Block.BLOCKS[blockID] != null && ((IBlock)Block.BLOCKS[blockID]).isBed(this.world, c.x, c.y, c.z, this);
     }
 
     /**
@@ -669,13 +671,13 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     @Overwrite
     public static BlockPos method_3169(World par0World, BlockPos par1ChunkCoordinates) {
         ChunkProvider var2 = par0World.getChunkProvider();
-        var2.getOrGenerateChunk(par1ChunkCoordinates.x - 3 >> 4, par1ChunkCoordinates.z - 3 >> 4);
-        var2.getOrGenerateChunk(par1ChunkCoordinates.x + 3 >> 4, par1ChunkCoordinates.z - 3 >> 4);
-        var2.getOrGenerateChunk(par1ChunkCoordinates.x - 3 >> 4, par1ChunkCoordinates.z + 3 >> 4);
-        var2.getOrGenerateChunk(par1ChunkCoordinates.x + 3 >> 4, par1ChunkCoordinates.z + 3 >> 4);
+        var2.method_3871(par1ChunkCoordinates.x - 3 >> 4, par1ChunkCoordinates.z - 3 >> 4);
+        var2.method_3871(par1ChunkCoordinates.x + 3 >> 4, par1ChunkCoordinates.z - 3 >> 4);
+        var2.method_3871(par1ChunkCoordinates.x - 3 >> 4, par1ChunkCoordinates.z + 3 >> 4);
+        var2.method_3871(par1ChunkCoordinates.x + 3 >> 4, par1ChunkCoordinates.z + 3 >> 4);
         Block block = Block.BLOCKS[par0World.getBlock(par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z)];
-        if (block != null && block.isBed(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, (MobEntity)null)) {
-            return block.getBedSpawnPosition(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, (PlayerEntity)null);
+        if (block != null && ((IBlock)block).isBed(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, (MobEntity)null)) {
+            return ((IBlock)block).getBedSpawnPosition(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, (PlayerEntity)null);
         } else {
             return null;
         }
@@ -693,7 +695,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
             int y = this.field_3992.y;
             int z = this.field_3992.z;
             Block block = Block.BLOCKS[this.world.getBlock(x, y, z)];
-            int var2 = block == null ? 0 : block.getBedDirection(this.world, x, y, z);
+            int var2 = block == null ? 0 : ((IBlock)block).getBedDirection(this.world, x, y, z);
             switch (var2) {
                 case 0:
                     return 90.0F;
@@ -740,7 +742,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
                 }
             }
 
-            var3 = par1ItemStack.getItem().getIconIndex(par1ItemStack, par2, (PlayerEntity)(Object) this, this.useItem, this.itemUseTicks);
+            var3 = ((IItem)par1ItemStack.getItem()).getIconIndex(par1ItemStack, par2, (PlayerEntity)(Object) this, this.useItem, this.itemUseTicks);
         }
 
         return var3;

@@ -23,6 +23,7 @@ public class MinecraftAppletMixin extends Applet {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void init() {
@@ -60,6 +61,7 @@ public class MinecraftAppletMixin extends Applet {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void start() {

@@ -30,6 +30,7 @@ public class BlockDustParticleMixin extends Particle {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public BlockDustParticle method_1301(int par1, int par2, int par3) {

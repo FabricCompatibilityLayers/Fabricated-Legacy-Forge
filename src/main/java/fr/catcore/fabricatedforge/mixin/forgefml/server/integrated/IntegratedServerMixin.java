@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server.integrated;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
 import net.minecraft.network.NetworkEncryptionUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.integrated.IntegratedServer;
@@ -71,7 +72,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
         this.method_2995(this.getLevelName(), this.getServerName(), this.levelInfo.getSeed(), this.levelInfo.getGeneratorType());
         this.setMotd(this.getUserName() + " - " + this.worlds[0].getLevelProperties().getLevelName());
         FMLCommonHandler.instance().handleServerStarting(this);
-        this.spawnProtectionSize = 0;
+        ((IMinecraftServer)this).setSpawnProtectionSize(0);
         return true;
     }
 }

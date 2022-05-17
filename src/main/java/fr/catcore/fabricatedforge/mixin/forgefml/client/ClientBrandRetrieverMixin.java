@@ -9,6 +9,7 @@ public class ClientBrandRetrieverMixin {
 
     /**
      * @author CatCore
+     * @reason none
      */
     @Overwrite
     public static String getClientModName() {

@@ -9,10 +9,11 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.level.LevelProperties;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeDirection;
 
-public interface IWorld extends IWorldView {
+public interface IWorld {
     Biome getBiomeGenForCoordsBody(int par1, int par2);
 
     @Environment(EnvType.CLIENT)
@@ -44,4 +45,9 @@ public interface IWorld extends IWorldView {
     boolean isBlockSolidOnSide(int X, int Y, int Z, ForgeDirection side, boolean _default);
 
     SetMultimap<ChunkPos, ForgeChunkManager.Ticket> getPersistentChunks();
+
+    LevelProperties getLevelProperties();
+
+    void setSpawnAnimals(boolean bool);
+    void setSpawnMonsters(boolean bool);
 }

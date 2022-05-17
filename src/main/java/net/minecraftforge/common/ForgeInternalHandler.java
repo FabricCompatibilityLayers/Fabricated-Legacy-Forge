@@ -1,5 +1,6 @@
 package net.minecraftforge.common;
 
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -27,8 +28,8 @@ public class ForgeInternalHandler {
         Entity entity = event.entity;
         if (entity.getClass().equals(ItemEntity.class)) {
             ItemStack item = ((ItemEntity)entity).stack;
-            if (item != null && item.getItem().hasCustomEntity(item)) {
-                Entity newEntity = item.getItem().createEntity(event.world, entity, item);
+            if (item != null && ((IItem)item.getItem()).hasCustomEntity(item)) {
+                Entity newEntity = ((IItem)item.getItem()).createEntity(event.world, entity, item);
                 if (newEntity != null) {
                     entity.remove();
                     event.setCanceled(true);

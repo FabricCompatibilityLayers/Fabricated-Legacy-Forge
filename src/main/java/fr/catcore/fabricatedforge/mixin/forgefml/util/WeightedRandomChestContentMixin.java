@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.util;
 
+import fr.catcore.fabricatedforge.mixininterface.IWeightedRandomChestContent;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.item.ItemStack;
@@ -8,6 +9,7 @@ import net.minecraft.util.collection.Weighting;
 import net.minecraftforge.common.ChestGenHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -16,8 +18,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Random;
 
 @Mixin(WeightedRandomChestContent.class)
-public class WeightedRandomChestContentMixin {
+public class WeightedRandomChestContentMixin implements IWeightedRandomChestContent {
 
+    @Shadow private int minCount;
     @Unique
     public ItemStack itemStack;
 
@@ -28,12 +31,13 @@ public class WeightedRandomChestContentMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static void method_2379(Random par0Random, WeightedRandomChestContent[] par1ArrayOfWeightedRandomChestContent, ChestBlockEntity par2TileEntityChest, int par3) {
         for(int var4 = 0; var4 < par3; ++var4) {
             WeightedRandomChestContent var5 = (WeightedRandomChestContent) Weighting.getRandom(par0Random, par1ArrayOfWeightedRandomChestContent);
-            ItemStack[] stacks = ChestGenHooks.generateStacks(par0Random, var5.itemStack, var5.minCount, var5.minCount);
+            ItemStack[] stacks = ChestGenHooks.generateStacks(par0Random, ((IWeightedRandomChestContent)var5).getItemStack(), ((IWeightedRandomChestContent)var5).getMinCount(), ((IWeightedRandomChestContent)var5).getMinCount());
             ItemStack[] arr$ = stacks;
             int len$ = stacks.length;
 
@@ -47,17 +51,28 @@ public class WeightedRandomChestContentMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public static void generateLoot(Random par0Random, WeightedRandomChestContent[] par1ArrayOfWeightedRandomChestContent, DispenserBlockEntity par2TileEntityDispenser, int par3) {
         for(int var4 = 0; var4 < par3; ++var4) {
             WeightedRandomChestContent var5 = (WeightedRandomChestContent)Weighting.getRandom(par0Random, par1ArrayOfWeightedRandomChestContent);
-            ItemStack[] stacks = ChestGenHooks.generateStacks(par0Random, var5.itemStack, var5.minCount, var5.minCount);
+            ItemStack[] stacks = ChestGenHooks.generateStacks(par0Random, ((IWeightedRandomChestContent)var5).getItemStack(), ((IWeightedRandomChestContent)var5).getMinCount(), ((IWeightedRandomChestContent)var5).getMinCount());
 
             for (ItemStack item : stacks) {
                 par2TileEntityDispenser.setInvStack(par0Random.nextInt(par2TileEntityDispenser.getInvSize()), item);
             }
         }
 
+    }
+
+    @Override
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
+
+    @Override
+    public int getMinCount() {
+        return minCount;
     }
 }

@@ -2,6 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render.item;
 
 import com.mojang.blaze3d.platform.GLX;
 import cpw.mods.fml.client.TextureFXManager;
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_535;
@@ -47,19 +48,20 @@ public abstract class HeldItemRendererMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void method_1357(MobEntity par1EntityLiving, ItemStack par2ItemStack, int par3) {
         GL11.glPushMatrix();
         IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(par2ItemStack, IItemRenderer.ItemRenderType.EQUIPPED);
         if (customRenderer != null) {
-            GL11.glBindTexture(3553, this.field_1876.field_3813.getTextureFromPath(par2ItemStack.getItem().getTextureFile()));
+            GL11.glBindTexture(3553, this.field_1876.field_3813.getTextureFromPath(((IItem)par2ItemStack.getItem()).getTextureFile()));
             ForgeHooksClient.renderEquippedItem(customRenderer, this.field_1880, par1EntityLiving, par2ItemStack);
         } else if (par2ItemStack.getItem() instanceof BlockItem && class_535.method_1455(Block.BLOCKS[par2ItemStack.id].getBlockType())) {
-            GL11.glBindTexture(3553, this.field_1876.field_3813.getTextureFromPath(par2ItemStack.getItem().getTextureFile()));
+            GL11.glBindTexture(3553, this.field_1876.field_3813.getTextureFromPath(((IItem)par2ItemStack.getItem()).getTextureFile()));
             this.field_1880.method_1447(Block.BLOCKS[par2ItemStack.id], par2ItemStack.getMeta(), 1.0F);
         } else {
-            GL11.glBindTexture(3553, this.field_1876.field_3813.getTextureFromPath(par2ItemStack.getItem().getTextureFile()));
+            GL11.glBindTexture(3553, this.field_1876.field_3813.getTextureFromPath(((IItem)par2ItemStack.getItem()).getTextureFile()));
             Tessellator var5 = Tessellator.INSTANCE;
             int var6 = par1EntityLiving.method_2630(par2ItemStack, par3);
             float var7 = ((float)(var6 % 16 * 16) + 0.0F) / 256.0F;
@@ -114,6 +116,7 @@ public abstract class HeldItemRendererMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     private void method_1356(Tessellator par1Tessellator, float par2, float par3, float par4, float par5) {
@@ -200,6 +203,7 @@ public abstract class HeldItemRendererMixin {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void renderArmHoldingItem(float par1) {
@@ -398,7 +402,7 @@ public abstract class HeldItemRendererMixin {
             if (var17.getItem().method_3397()) {
                 this.method_1357(var3, var17, 0);
 
-                for(int x = 1; x < var17.getItem().getRenderPasses(var17.getMeta()); ++x) {
+                for(int x = 1; x < ((IItem)var17.getItem()).getRenderPasses(var17.getMeta()); ++x) {
                     int var25 = Item.ITEMS[var17.id].method_3344(var17.getMeta(), x);
                     var13 = (float)(var25 >> 16 & 255) / 255.0F;
                     var14 = (float)(var25 >> 8 & 255) / 255.0F;

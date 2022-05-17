@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.item;
 
+import fr.catcore.fabricatedforge.mixininterface.IMapState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -24,6 +25,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
@@ -41,6 +43,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public MapState getMapState(ItemStack par1ItemStack, World par2World) {
@@ -52,7 +55,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
             var4.xCenter = par2World.getLevelProperties().getSpawnX();
             var4.zCenter = par2World.getLevelProperties().getSpawnZ();
             var4.scale = 3;
-            var4.setC(par2World.dimension.dimensionType);
+            ((IMapState)var4).setC(par2World.dimension.dimensionType);
             var4.markDirty();
             par2World.setItemData(var3, var4);
         }
@@ -62,10 +65,11 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void updateColors(World par1World, Entity par2Entity, MapState par3MapData) {
-        if (par1World.dimension.dimensionType == par3MapData.getC()) {
+        if (par1World.dimension.dimensionType == ((IMapState)par3MapData).getC()) {
             short var4 = 128;
             short var5 = 128;
             int var6 = 1 << par3MapData.scale;
@@ -238,6 +242,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
 
     /**
      * @author Minecraft Forge
+     * @reason none
      */
     @Overwrite
     public void onCraft(ItemStack par1ItemStack, World par2World, PlayerEntity par3EntityPlayer) {
@@ -248,7 +253,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
         var5.xCenter = MathHelper.floor(par3EntityPlayer.x);
         var5.zCenter = MathHelper.floor(par3EntityPlayer.z);
         var5.scale = 3;
-        var5.setC(par2World.dimension.dimensionType);
+        ((IMapState)var5).setC(par2World.dimension.dimensionType);
         var5.markDirty();
     }
 }

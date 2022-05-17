@@ -168,11 +168,6 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
         }
     }
 
-    // Public
-    private static boolean isFuel(ItemStack par0ItemStack) {
-        return getBurnTime(par0ItemStack) > 0;
-    }
-
     @Override
     public boolean canPlayerUseInv(PlayerEntity par1EntityPlayer) {
         return this.world.method_3781(this.x, this.y, this.z) != this ? false : par1EntityPlayer.squaredDistanceTo((double)this.x + 0.5, (double)this.y + 0.5, (double)this.z + 0.5) <= 64.0;
