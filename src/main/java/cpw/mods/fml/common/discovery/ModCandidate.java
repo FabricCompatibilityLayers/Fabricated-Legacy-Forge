@@ -46,7 +46,7 @@ public class ModCandidate {
     public List<ModContainer> explore(ASMDataTable table) {
         List<ModContainer> mods = this.sourceType.findMods(this, table);
         if (!this.baseModCandidateTypes.isEmpty()) {
-            FMLLog.info("Attempting to reparse the mod container %s", new Object[]{this.getModContainer().getName()});
+            FMLLog.info("Attempting to reparse the mod container %s", this.getModContainer().getName());
             return this.sourceType.findMods(this, table);
         } else {
             return mods;

@@ -12,6 +12,7 @@ import cpw.mods.fml.common.toposort.ModSorter;
 import cpw.mods.fml.common.toposort.ModSortingException;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.VersionParser;
+import fr.catcore.fabricatedforge.utils.Constants;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.provider.MinecraftVersionProvider;
 
@@ -219,7 +220,7 @@ public class Loader {
     }
 
     private void initializeLoader() {
-        File modsDir = new File(minecraftDir, "modz");
+        File modsDir = Constants.REMAPPED_FOLDER;
         File configDir = new File(minecraftDir, "config");
 
         String canonicalModsPath;

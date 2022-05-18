@@ -20,7 +20,7 @@ public class FakeModManager {
 
     private static Method createBuiltin;
 
-    private static final List<MLModEntry> MODS = new ArrayList<>();
+    private static final List<ModEntry> MODS = new ArrayList<>();
 
     private static boolean loaded = false;
     private static boolean loading = false;
@@ -32,7 +32,7 @@ public class FakeModManager {
                 createBuiltin = ModCandidate.class.getDeclaredMethod("createBuiltin", GameProvider.BuiltinMod.class);
                 createBuiltin.setAccessible(true);
 
-                MLModDiscoverer.init();
+                ModDiscoverer.init();
                 loading = false;
                 loaded = true;
             } catch (NoSuchMethodException e) {
@@ -41,7 +41,7 @@ public class FakeModManager {
         }
     }
 
-    protected static void addModEntry(MLModEntry modEntry) {
+    protected static void addModEntry(ModEntry modEntry) {
         try {
             ModCandidate candidate = (ModCandidate) createBuiltin.invoke(null, new GameProvider.BuiltinMod(Collections.emptyList(), new MLModMetadata(modEntry.modId, modEntry.modName)));
             ModContainer container = new ModContainerImpl(candidate);
@@ -58,7 +58,7 @@ public class FakeModManager {
         }
     }
 
-    public static List<MLModEntry> getMods() {
+    public static List<ModEntry> getMods() {
         return MODS;
     }
 
