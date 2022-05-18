@@ -68,7 +68,7 @@ public class MinecraftForge {
 
     public static void initialize() {
         System.out.printf("MinecraftForge v%s Initialized\n", ForgeVersion.getVersion());
-        FMLLog.info("MinecraftForge v%s Initialized", new Object[]{ForgeVersion.getVersion()});
+        FMLLog.info("MinecraftForge v%s Initialized", ForgeVersion.getVersion());
         Block filler = new Block(0, Material.AIR);
         Block.BLOCKS[0] = null;
         Block.field_493[0] = false;
