@@ -73,7 +73,7 @@ public class EventBus {
 
             others.add(listener);
         } catch (Exception var8) {
-            var8.printStackTrace();
+//            var8.printStackTrace();
         }
 
     }

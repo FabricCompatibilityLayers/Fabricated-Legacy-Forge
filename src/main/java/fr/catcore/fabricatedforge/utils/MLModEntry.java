@@ -16,4 +16,9 @@ public class MLModEntry extends ModEntry {
     LoaderModMetadata createModMetadata() {
         return new MLModMetadata(modId, modName);
     }
+
+    @Override
+    String getType() {
+        return "ModLoader";
+    }
 }

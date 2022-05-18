@@ -8,7 +8,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.LanguageButton;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.util.Language;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +20,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.awt.image.BufferedImage;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Mixin(TitleScreen.class)
@@ -29,10 +34,47 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Shadow private String splashText;
 
-    @Inject(method = "init", at = @At(value = "INVOKE_ASSIGN", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", ordinal = 0))
-    private void fmlAddModsButton(CallbackInfo ci) {
-        int var4 = this.height / 4 + 48;
-        this.buttons.add(new ButtonWidget(6, this.width / 2 + 2, var4 + 48, 98, 20, "Mods"));
+    @Shadow private int field_2278;
+
+    @Shadow protected abstract void method_1726(int i, int j, Language language);
+
+    @Shadow protected abstract void method_1724(int i, int j, Language language);
+
+    /**
+     * @author Minecraft Forge
+     * @reason none
+     */
+    @Overwrite
+    public void init() {
+        this.field_2278 = this.field_1229.field_3813.method_1417(new BufferedImage(256, 256, 2));
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        if (calendar.get(Calendar.MONTH) + 1 == 11 && calendar.get(Calendar.DATE) == 9) {
+            this.splashText = "Happy birthday, ez!";
+        } else if (calendar.get(Calendar.MONTH) + 1 == 6 && calendar.get(Calendar.DATE) == 1) {
+            this.splashText = "Happy birthday, Notch!";
+        } else if (calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) == 24) {
+            this.splashText = "Merry X-mas!";
+        } else if (calendar.get(Calendar.MONTH) + 1 == 1 && calendar.get(Calendar.DATE) == 1) {
+            this.splashText = "Happy new year!";
+        }
+        Language language = Language.getInstance();
+        int n = this.height / 4 + 48;
+        if (this.field_1229.isDemo()) {
+            this.method_1726(n, 24, language);
+        } else {
+            this.method_1724(n, 24, language);
+        }
+
+        this.buttons.add(new ButtonWidget(6, this.width / 2 + 2, n + 48, 98, 20, "Mods"));
+        this.buttons.add(new ButtonWidget(3, this.width / 2 - 100, n + 48, 98, 20, language.translate("menu.mods")));
+        if (this.field_1229.isApplet) {
+            this.buttons.add(new ButtonWidget(0, this.width / 2 - 100, n + 72, language.translate("menu.options")));
+        } else {
+            this.buttons.add(new ButtonWidget(0, this.width / 2 - 100, n + 72 + 12, 98, 20, language.translate("menu.options")));
+            this.buttons.add(new ButtonWidget(4, this.width / 2 + 2, n + 72 + 12, 98, 20, language.translate("menu.quit")));
+        }
+        this.buttons.add(new LanguageButton(5, this.width / 2 - 124, n + 72 + 12));
     }
 
     @Inject(method = "buttonClicked", at = @At("RETURN"))
@@ -77,10 +119,6 @@ public abstract class TitleScreenMixin extends Screen {
         GL11.glScalef(var8, var8, var8);
         this.drawCenteredString(this.textRenderer, this.splashText, 0, -8, 16776960);
         GL11.glPopMatrix();
-        String var9 = "Minecraft 1.3.2";
-        if (this.field_1229.isDemo()) {
-            var9 = var9 + " Demo";
-        }
 
         List<String> brandings = Lists.reverse(FMLCommonHandler.instance().getBrandings());
 

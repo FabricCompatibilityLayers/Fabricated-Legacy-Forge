@@ -190,4 +190,9 @@ public class ForgeModEntry extends ModEntry {
     LoaderModMetadata createModMetadata() {
         return new ForgeModMetadata(modId, modName, modVersion, modDescription, modLogoFile);
     }
+
+    @Override
+    String getType() {
+        return "Forge";
+    }
 }

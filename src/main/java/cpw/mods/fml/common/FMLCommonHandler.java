@@ -149,7 +149,7 @@ public class FMLCommonHandler {
             brd.add(Loader.instance().getMCVersionString());
 
             brd.add("Fabric Loader " + FabricLoader.getInstance().getModContainer("fabricloader").get().getMetadata().getVersion().getFriendlyString()
-                + String.format(" (%s Mod%s)", FabricLoader.getInstance().getAllMods().size(), FabricLoader.getInstance().getAllMods().size() > 1 ? "" : "s")
+                + String.format(" (%s Mod%s)", FabricLoader.getInstance().getAllMods().size(), FabricLoader.getInstance().getAllMods().size() > 1 ? "s" : "")
             );
             brd.add("Fabricated Forge " + FabricLoader.getInstance().getModContainer("fabricated-forge").get().getMetadata().getVersion().getFriendlyString());
 

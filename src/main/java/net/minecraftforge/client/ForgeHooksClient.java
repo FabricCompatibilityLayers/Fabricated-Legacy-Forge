@@ -111,7 +111,7 @@ public class ForgeHooksClient {
         ForgeHooksClient.TesKey key = new ForgeHooksClient.TesKey(texture, subID);
         Tessellator tess = tessellators.get(key);
         if (tess == null) {
-            tess = TessellatorAccessor.newInstance(0);
+            tess = TessellatorAccessor.newInstance(0x200000);
             ((ITessellator)tess).setTextureID(texture);
             tessellators.put(key, tess);
         }

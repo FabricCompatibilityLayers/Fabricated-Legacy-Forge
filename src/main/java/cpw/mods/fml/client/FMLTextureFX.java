@@ -21,18 +21,22 @@ public class FMLTextureFX extends class_584 implements ITextureFX {
         super(icon);
     }
 
+    @Override
     public void setErrored(boolean err) {
         this.errored = err;
     }
 
+    @Override
     public boolean getErrored() {
         return this.errored;
     }
 
+    @Override
     public void onTexturePackChanged(class_534 engine, ITexturePack texturepack, Dimension dimensions) {
         this.onTextureDimensionsUpdate(dimensions.width, dimensions.height);
     }
 
+    @Override
     public void onTextureDimensionsUpdate(int width, int height) {
         this.tileSizeBase = width >> 4;
         this.tileSizeSquare = this.tileSizeBase * this.tileSizeBase;

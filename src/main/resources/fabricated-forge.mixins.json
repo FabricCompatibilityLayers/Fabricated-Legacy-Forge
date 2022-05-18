@@ -3,6 +3,9 @@
   "minVersion": "0.8",
   "package": "fr.catcore.fabricatedforge.mixin.forgefml",
   "compatibilityLevel": "JAVA_8",
+  "server": [
+    "server.dedicated.gui.PlayerStatsGuiMixin"
+  ],
   "mixins": [
     "block.AbstractButtonBlockMixin",
     "block.AttachedStemBlockMixin",
@@ -95,7 +98,6 @@
     "server.command.CommandRegistryMixin",
     "server.dedicated.class_772Accessor",
     "server.dedicated.MinecraftDedicatedServerMixin",
-    "server.dedicated.gui.PlayerStatsGuiMixin",
     "server.integrated.IntegratedServerMixin",
     "server.network.PacketListenerManagerMixin",
     "server.network.ServerPlayerInteractionManagerMixin",
@@ -154,7 +156,6 @@
     "client.ResourceDownloadThreadMixin",
     "client.gui.hud.InGameHudMixin",
     "client.gui.screen.AchievementsScreenMixin",
-    "client.gui.screen.FatalErrorScreenMixin",
     "client.gui.screen.TitleScreenMixin",
     "client.gui.screen.ingame.CreativeInventoryScreenMixin",
     "client.gui.screen.options.ControlsOptionsScreenMixin",

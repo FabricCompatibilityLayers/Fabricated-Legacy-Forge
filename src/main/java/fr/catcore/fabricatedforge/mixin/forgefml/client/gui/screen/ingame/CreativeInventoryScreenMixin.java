@@ -129,7 +129,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
                     this.slots = var3.slots;
                 }
 
-                var3.slots = new ArrayList();
+                var3.slots = new ArrayList<>();
 
                 for(int var5 = 0; var5 < var4.slots.size(); ++var5) {
                     class_417 var6 = new class_417((CreativeInventoryScreen)(Object) this, (Slot)var4.slots.get(var5), var5);

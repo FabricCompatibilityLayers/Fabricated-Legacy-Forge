@@ -13,6 +13,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.nio.ByteBuffer;
@@ -55,20 +56,25 @@ public abstract class TessellatorMixin implements ITessellator {
     @Shadow public double field_1968;
     @Shadow public static Tessellator INSTANCE;
     @Shadow private static boolean field_1947;
-    private static int nativeBufferSize = 2097152;
+    @Shadow private int field_1944;
+    private static int nativeBufferSize = 0x200000;
     private static int trivertsInBuffer = nativeBufferSize / 48 * 6;
     // Should be public
     private static boolean renderingWorldRenderer = false;
     public boolean defaultTexture = false;
     private int rawBufferSize = 0;
     public int textureID = 0;
+    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/GlAllocationUtils;allocateByteBuffer(I)Ljava/nio/ByteBuffer;"))
+    private void ctr(int par1, CallbackInfo ci) {
+        this.defaultTexture = true;
+        this.field_1943 = 10;
+        this.field_1940 = false;
+    }
 
-    public TessellatorMixin() {}
-
-//    @Inject(method = "<init>", cancellable = true, at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/GlAllocationUtils;allocateByteBuffer(I)Ljava/nio/ByteBuffer;"))
-//    private void cancelCTR(int par1, CallbackInfo ci) {
-//        ci.cancel();
-//    }
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void ctr2(int par1, CallbackInfo ci) {
+        this.field_1952 = null;
+    }
 
     /**
      * @author Minecraft Forge
@@ -270,18 +276,7 @@ public abstract class TessellatorMixin implements ITessellator {
 
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void classInit(CallbackInfo ci) {
-        ((TessellatorMixin)(Object)INSTANCE).field_1948 = GlAllocationUtils.allocateByteBuffer(nativeBufferSize * 4);
-        ((TessellatorMixin)(Object)INSTANCE).field_1949 = ((TessellatorMixin)(Object)INSTANCE).field_1948.asIntBuffer();
-        ((TessellatorMixin)(Object)INSTANCE).field_1950 = ((TessellatorMixin)(Object)INSTANCE).field_1948.asFloatBuffer();
-        ((TessellatorMixin)(Object)INSTANCE).field_1951 = ((TessellatorMixin)(Object)INSTANCE).field_1948.asShortBuffer();
-        ((TessellatorMixin)(Object)INSTANCE).field_1940 = false;
-        ((TessellatorMixin)(Object)INSTANCE).field_1943 = 10;
-        ((TessellatorMixin)(Object)INSTANCE).defaultTexture = true;
-        ((TessellatorMixin)(Object)INSTANCE).field_1940 = field_1947 && GLContext.getCapabilities().GL_ARB_vertex_buffer_object;
-        if (((TessellatorMixin)(Object)INSTANCE).field_1940) {
-            ((TessellatorMixin)(Object)INSTANCE).field_1941 = GlAllocationUtils.allocateIntBuffer(((TessellatorMixin)(Object)INSTANCE).field_1943);
-            ARBVertexBufferObject.glGenBuffersARB(((TessellatorMixin)(Object)INSTANCE).field_1941);
-        }
+
     }
 
     @Override

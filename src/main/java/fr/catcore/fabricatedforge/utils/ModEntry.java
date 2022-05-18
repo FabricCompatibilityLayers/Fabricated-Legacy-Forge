@@ -19,4 +19,6 @@ public abstract class ModEntry {
     }
 
     abstract LoaderModMetadata createModMetadata();
+
+    abstract String getType();
 }

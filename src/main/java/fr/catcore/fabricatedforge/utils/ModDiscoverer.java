@@ -78,20 +78,22 @@ public class ModDiscoverer {
                             }
 
                             String s1 = zipentry.getName();
+                            String[] ss = s1.split("/");
+                            String s2 = ss[ss.length - 1];
                             if (!zipentry.isDirectory()) {
-                                if (s1.equals("fabric.mod.json")) {
+                                if (s2.equals("fabric.mod.json")) {
                                     modName.clear();
                                     break;
-                                } else if (s1.startsWith("mod_") && s1.endsWith(".class")) {
-                                    String mName = s1.replace("mod_", "").replace(".class", "");
+                                } else if (s2.startsWith("mod_") && s2.endsWith(".class")) {
+                                    String mName = s2.replace("mod_", "").replace(".class", "");
                                     modName.add(new MLModEntry(
                                             mName,
                                             mName.toLowerCase(Locale.ENGLISH),
-                                            "net/minecraft/" + s1,
+                                            s1.contains("/") ? s1 : "net/minecraft/" + s1,
                                             remappedFile,
                                             modName.isEmpty() ? file : null
                                     ));
-                                } else if (s1.equals("mcmod.info")) {
+                                } else if (s2.equals("mcmod.info")) {
                                     modName.clear();
                                     try (ZipFile zipFile = new ZipFile(file)) {
                                         modName.addAll(ForgeModEntry.parseModInfoFile(zipFile.getInputStream(zipentry), remappedFile, file));
