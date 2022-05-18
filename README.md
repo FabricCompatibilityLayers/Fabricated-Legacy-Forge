@@ -9,27 +9,27 @@ Supported Minecraft versions: 1.3.2.
 |-----------------------|-------|
 | BlockHelper           | ✔     |
 | Rei's Minimap         | ✔     |
-| Forestry              | x     |
+| Forestry              | ❌     |
 | Thermal Expansion     | ⚠     |
-| Weapon Mod            | x     |
-| NEI                   | x     |
-| IC2                   | x     |
-| Friendsss             | x     |
-| CakeIsALie            | x     |
+| Weapon Mod            | ❌     |
+| NEI                   | ❌     |
+| IC2                   | ❌     |
+| Friendsss             | ❌     |
+| CakeIsALie            | ❌     |
 | Timber                | ✔     |
-| Advanced Machines     | x     |
-| Advanced Solar Panels | x     |
-| Glowstone seeds       | x     |
+| Advanced Machines     | ❌     |
+| Advanced Solar Panels | ❌     |
+| Glowstone seeds       | ❌     |
 | Inventory Tweaks      | ⚠     |
 | ComputerCraft         | ⚠     |
-| Smart Moving          | x     |
+| Smart Moving          | ❌     |
 | Mystcraft             | ⚠     |
-| AliensVsPredators     | x     |
-| DivineRPG             | x     |
-| TwilightForest        | x     |
-| BuildCraft            | x     |
-| More Pistons          | x     |
-| Portal Gun            | x     |
-| MineFactory Reloaded  | x     |
+| AliensVsPredators     | ❌     |
+| DivineRPG             | ❌     |
+| TwilightForest        | ❌     |
+| BuildCraft            | ❌     |
+| More Pistons          | ❌     |
+| Portal Gun            | ❌     |
+| MineFactory Reloaded  | ❌     |
 | Too Many Items        | ⚠     |
 | Fog Key               | ✔     |
