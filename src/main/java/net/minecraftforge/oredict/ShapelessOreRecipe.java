@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 public class ShapelessOreRecipe implements RecipeType {
     private ItemStack output;
-    private ArrayList input;
+    private ArrayList input = new ArrayList();
 
     public ShapelessOreRecipe(Block result, Object... recipe) {
         this(new ItemStack(result), recipe);
