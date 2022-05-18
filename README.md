@@ -20,8 +20,16 @@ Supported Minecraft versions: 1.3.2.
 | Advanced Machines     | x     |
 | Advanced Solar Panels | x     |
 | Glowstone seeds       | x     |
-| Inventory Tweaks      | ✔     |
+| Inventory Tweaks      | ⚠     |
 | ComputerCraft         | ⚠     |
 | Smart Moving          | x     |
 | Mystcraft             | ⚠     |
 | AliensVsPredators     | x     |
+| DivineRPG             | x     |
+| TwilightForest        | x     |
+| BuildCraft            | x     |
+| More Pistons          | x     |
+| Portal Gun            | x     |
+| MineFactory Reloaded  | x     |
+| Too Many Items        | ⚠     |
+| Fog Key               | ✔     |
