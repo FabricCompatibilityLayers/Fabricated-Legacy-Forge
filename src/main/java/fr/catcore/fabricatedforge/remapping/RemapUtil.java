@@ -129,15 +129,15 @@ public class RemapUtil {
             mappings.add(makeLoaderLine("TradeEntry", "net/minecraft/TradeEntry"));
 
             // Forge cursed overwrites mappings
-            mappings.add(makeLoaderLine("net/minecraft/class_585", "fr/catcore/fabricatedforge/forged/class_585Forged"));
-            mappings.add(makeLoaderLine("net/minecraft/class_586", "fr/catcore/fabricatedforge/forged/class_586Forged"));
-            mappings.add(makeLoaderLine("net/minecraft/class_587", "fr/catcore/fabricatedforge/forged/class_587Forged"));
-            mappings.add(makeLoaderLine("net/minecraft/class_588", "fr/catcore/fabricatedforge/forged/class_588Forged"));
-            mappings.add(makeLoaderLine("net/minecraft/class_589", "fr/catcore/fabricatedforge/forged/class_589Forged"));
-            mappings.add(makeLoaderLine("net/minecraft/class_590", "fr/catcore/fabricatedforge/forged/class_590Forged"));
-            mappings.add(makeLoaderLine("net/minecraft/class_582", "fr/catcore/fabricatedforge/forged/ClockSpriteForged"));
-            mappings.add(makeLoaderLine("net/minecraft/class_583", "fr/catcore/fabricatedforge/forged/CompassSpriteForged"));
-            mappings.add(makeLoaderLine("net/minecraft/class_1041", "fr/catcore/fabricatedforge/forged/ItemGroupForged"));
+//            mappings.add(makeLoaderLine("net/minecraft/class_585", "fr/catcore/fabricatedforge/forged/class_585Forged"));
+//            mappings.add(makeLoaderLine("net/minecraft/class_586", "fr/catcore/fabricatedforge/forged/class_586Forged"));
+//            mappings.add(makeLoaderLine("net/minecraft/class_587", "fr/catcore/fabricatedforge/forged/class_587Forged"));
+//            mappings.add(makeLoaderLine("net/minecraft/class_588", "fr/catcore/fabricatedforge/forged/class_588Forged"));
+//            mappings.add(makeLoaderLine("net/minecraft/class_589", "fr/catcore/fabricatedforge/forged/class_589Forged"));
+//            mappings.add(makeLoaderLine("net/minecraft/class_590", "fr/catcore/fabricatedforge/forged/class_590Forged"));
+//            mappings.add(makeLoaderLine("net/minecraft/class_582", "fr/catcore/fabricatedforge/forged/ClockSpriteForged"));
+//            mappings.add(makeLoaderLine("net/minecraft/class_583", "fr/catcore/fabricatedforge/forged/CompassSpriteForged"));
+//            mappings.add(makeLoaderLine("net/minecraft/class_1041", "fr/catcore/fabricatedforge/forged/ItemGroupForged"));
 
             FileUtils.writeTextFile(mappings, Constants.MAPPINGS_FILE);
         }
