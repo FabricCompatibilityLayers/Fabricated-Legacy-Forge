@@ -88,10 +88,12 @@ public class EventBus {
 
     public boolean post(Event event) {
         IEventListener[] listeners = event.getListenerList().getListeners(busID);
+        if (listeners == null) return false;
+
         for (IEventListener listener : listeners)
         {
-            listener.invoke(event);
+            if (listener != null) listener.invoke(event);
         }
-        return (event.isCancelable() ? event.isCanceled() : false);
+        return event.isCancelable() && event.isCanceled();
     }
 }

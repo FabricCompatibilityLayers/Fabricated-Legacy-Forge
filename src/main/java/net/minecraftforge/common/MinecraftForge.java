@@ -82,9 +82,7 @@ public class MinecraftForge {
 
         boolean[] temp = new boolean[4096];
 
-        for(int x = 0; x < EndermanEntity.field_3919.length; ++x) {
-            temp[x] = EndermanEntity.field_3919[x];
-        }
+        System.arraycopy(EndermanEntity.field_3919, 0, temp, 0, EndermanEntity.field_3919.length);
 
         EndermanEntity.field_3919 = temp;
         EVENT_BUS.register(INTERNAL_HANDLER);
