@@ -58,9 +58,9 @@ public class ModDiscoverer {
                         }
                     }
 
-                    if (!modName.isEmpty() && EXCLUDED.containsKey(modName.get(0))) {
+                    if (!modName.isEmpty() && EXCLUDED.containsKey(modName.get(0).modName)) {
                         for (String excluded :
-                                EXCLUDED.get(modName.get(0))) {
+                                EXCLUDED.get(modName.get(0).modName)) {
                             File excludedFile = new File(file, excluded);
                             excludedFile.delete();
                         }
@@ -104,7 +104,7 @@ public class ModDiscoverer {
                         }
 
                         if (!modName.isEmpty()) {
-                            if (EXCLUDED.containsKey(modName.get(0))) {
+                            if (EXCLUDED.containsKey(modName.get(0).modName)) {
                                 File tempFile = new File(file.getAbsolutePath() + ".tmp");
                                 tempFile.delete();
                                 tempFile.deleteOnExit();
@@ -122,7 +122,7 @@ public class ModDiscoverer {
 
                                 while (entry != null) {
                                     String zipEntryName = entry.getName();
-                                    boolean toBeDeleted = EXCLUDED.get(modName.get(0)).contains(zipEntryName);
+                                    boolean toBeDeleted = EXCLUDED.get(modName.get(0).modName).contains(zipEntryName);
 
                                     if (!toBeDeleted) {
                                         zout.putNextEntry(new ZipEntry(zipEntryName));
@@ -168,9 +168,9 @@ public class ModDiscoverer {
             FakeModManager.addModEntry(entry);
         }
 
-//        FakeModManager.getMods().forEach(modEntry -> {
-//            if (modEntry.original != null) FabricLauncherBase.getLauncher().addToClassPath(modEntry.file.toPath());
-//        });
+        FakeModManager.getMods().forEach(modEntry -> {
+            if (modEntry.original != null) FabricLauncherBase.getLauncher().addToClassPath(modEntry.file.toPath());
+        });
     }
 
     static {

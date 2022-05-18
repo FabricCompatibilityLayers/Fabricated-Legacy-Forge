@@ -6,6 +6,8 @@
   "mixins": [
   ],
   "client": [
+    "invtweaks.FixInvTweaksLocalization",
+    "invtweaks.FixInvTweaksReflection"
   ],
   "injectors": {
     "defaultRequire": 1

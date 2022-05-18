@@ -244,7 +244,7 @@ public class RemapUtil {
         builder.extraPostApplyVisitor(new TinyRemapper.ApplyVisitorProvider() {
             @Override
             public ClassVisitor insertApplyVisitor(TrClass cls, ClassVisitor next) {
-                return next;
+                return new ReflectionClassVisitor(next);
             }
         });
 
