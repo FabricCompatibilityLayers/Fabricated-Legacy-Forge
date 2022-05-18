@@ -54,8 +54,6 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
 
     @Shadow private boolean disconnected;
     @Shadow private Minecraft field_1623;
-    @Unique
-    private static byte connectionCompatibilityLevel;
 
     @Inject(method = "<init>(Lnet/minecraft/client/Minecraft;Ljava/lang/String;I)V", at = @At("RETURN"))
     private void FMLOnClientConnectionToRemoteServer(Minecraft par1Minecraft, String par2Str, int par3, CallbackInfo ci) {

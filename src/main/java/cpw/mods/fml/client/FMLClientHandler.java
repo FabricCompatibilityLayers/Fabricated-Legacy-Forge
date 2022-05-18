@@ -13,8 +13,8 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.common.registry.IThrowableEntity;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import fr.catcore.fabricatedforge.mixin.forgefml.client.class_469Accessor;
 import fr.catcore.fabricatedforge.mixininterface.Iclass_469;
+import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
@@ -274,10 +274,10 @@ public class FMLClientHandler implements IFMLSidedHandler {
     }
 
     public void setClientCompatibilityLevel(byte compatibilityLevel) {
-        class_469Accessor.setConnectionCompatibilityLevel(compatibilityLevel);
+        ReflectionUtils.class_469_connectionCompatibilityLevel = compatibilityLevel;
     }
 
     public byte getClientCompatibilityLevel() {
-        return class_469Accessor.getConnectionCompatibilityLevel();
+        return ReflectionUtils.class_469_connectionCompatibilityLevel;
     }
 }

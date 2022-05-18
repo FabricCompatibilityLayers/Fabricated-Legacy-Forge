@@ -2,7 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
-import fr.catcore.fabricatedforge.utils.ReflectionUtils;
+import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;

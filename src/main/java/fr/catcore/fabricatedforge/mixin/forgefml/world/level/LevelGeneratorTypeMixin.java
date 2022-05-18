@@ -1,9 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.level;
 
-import com.google.common.collect.ObjectArrays;
 import com.google.common.collect.Sets;
 import fr.catcore.fabricatedforge.mixininterface.ILevelGeneratorType;
-import fr.catcore.fabricatedforge.utils.ReflectionUtils;
+import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.minecraft.world.LayeredBiomeSource;
 import net.minecraft.world.SingletonBiomeSource;
 import net.minecraft.world.World;

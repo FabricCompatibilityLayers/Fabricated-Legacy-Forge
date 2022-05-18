@@ -2,6 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IFireBlock;
+import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -36,8 +37,8 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
      */
     @Overwrite
     public void method_477() {
-        this.field_279 = BlockAccessor.getBlockFlammability();
-        this.field_278 = BlockAccessor.getBlockFireSpreadSpeed();
+        this.field_279 = ReflectionUtils.Block_blockFlammability;
+        this.field_278 = ReflectionUtils.Block_blockFireSpreadSpeed;
         this.method_315(Block.PLANKS.id, 5, 20);
         this.method_315(Block.DOUBLE_WOODEN_SLAB.id, 5, 20);
         this.method_315(Block.WOODEN_SLAB.id, 5, 20);
@@ -61,7 +62,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
      */
     @Overwrite
     private void method_315(int par1, int par2, int par3) {
-//        BlockAccessor.invokeSetBurnProperties(par1, par2, par3);
+        ReflectionUtils.Block_setBurnProperties(par1, par2, par3);
     }
 
     /**

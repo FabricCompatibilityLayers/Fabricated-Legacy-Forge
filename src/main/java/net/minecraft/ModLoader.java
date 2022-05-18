@@ -17,7 +17,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
-import fr.catcore.fabricatedforge.utils.ReflectionUtils;
+import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.minecraft.advancement.Achievement;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
@@ -45,7 +45,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkProvider;
-import net.minecraft.world.level.LevelGeneratorType;
 
 import java.awt.image.BufferedImage;
 import java.util.Collections;

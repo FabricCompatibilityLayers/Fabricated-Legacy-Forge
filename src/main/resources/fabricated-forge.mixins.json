@@ -6,7 +6,6 @@
   "mixins": [
     "block.AbstractButtonBlockMixin",
     "block.AttachedStemBlockMixin",
-    "block.BlockAccessor",
     "block.BlockMixin",
     "block.BlockWithEntityMixin",
     "block.CactusBlockMixin",
@@ -143,7 +142,6 @@
     "world.level.LevelPropertiesMixin"
   ],
   "client": [
-    "client.class_469Accessor",
     "client.class_469Mixin",
     "client.class_470Accessor",
     "client.class_534Mixin",
