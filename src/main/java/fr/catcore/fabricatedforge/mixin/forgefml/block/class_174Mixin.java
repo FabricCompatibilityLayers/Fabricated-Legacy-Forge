@@ -45,7 +45,7 @@ public abstract class class_174Mixin {
     @Unique // final
     private boolean canMakeSlopes;
 
-    @Inject(method = "<init>", cancellable = true, at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getBlock(III)I"))
+    @Inject(method = "<init>", at = @At(value = "RETURN"))
     private void overwriteCtr(RailBlock par1BlockRail, World par2World, int par3, int par4, int par5, CallbackInfo ci) {
         int var6 = par2World.getBlock(par3, par4, par5);
         IRailBlock target = (IRailBlock) Block.BLOCKS[var6];
@@ -53,7 +53,6 @@ public abstract class class_174Mixin {
         this.field_310 = !target.isFlexibleRail(par2World, par3, par4, par5);
         this.canMakeSlopes = target.canMakeSlopes(par2World, par3, par4, par5);
         this.method_358(var7);
-        ci.cancel();
     }
 
     /**

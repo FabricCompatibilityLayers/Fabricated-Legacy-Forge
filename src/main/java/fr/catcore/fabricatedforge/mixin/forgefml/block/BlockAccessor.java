@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Pseudo
-@Mixin(targets = {"net/minecraft/class_197"}, priority = 500, remap = false)
+@Mixin(targets = {"net/minecraft/class_197"}, remap = false)
 public interface BlockAccessor {
 
     @Invoker(value = "setBurnProperties(III)V", remap = false)

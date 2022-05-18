@@ -50,14 +50,16 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
         super(screenHandler);
     }
 
-    @Inject(method = "init", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/gui/screen/ingame/CreativeInventoryScreen;setSelectedTab(Lnet/minecraft/item/itemgroup/ItemGroup;)V"))
+    @Inject(method = "init", at = @At(value = "RETURN"))
     private void fmlAddChangeButton(CallbackInfo ci) {
-        int tabCount = ItemGroup.itemGroups.length;
-        if (tabCount > 12) {
-            this.buttons.add(new ButtonWidget(101, this.x, this.y - 50, 20, 20, "<"));
-            this.buttons.add(new ButtonWidget(102, this.x + this.backgroundWidth - 20, this.y - 50, 20, 20, ">"));
-            this.tabPage = 0;
-            this.maxPages = (tabCount - 12) / 10 + 1;
+        if (this.field_1229.interactionManager.hasCreativeInventory()) {
+            int tabCount = ItemGroup.itemGroups.length;
+            if (tabCount > 12) {
+                this.buttons.add(new ButtonWidget(101, this.x, this.y - 50, 20, 20, "<"));
+                this.buttons.add(new ButtonWidget(102, this.x + this.backgroundWidth - 20, this.y - 50, 20, 20, ">"));
+                this.tabPage = 0;
+                this.maxPages = (tabCount - 12) / 10 + 1;
+            }
         }
     }
 

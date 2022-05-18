@@ -72,7 +72,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
             float var24;
             if (var10.getItem() instanceof BlockItem && class_535.method_1455(Block.BLOCKS[var10.id].getBlockType())) {
                 GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
-                this.method_1529(((IItem)Block.BLOCKS[var10.id]).getTextureFile());
+                this.method_1529(((IBlock)Block.BLOCKS[var10.id]).getTextureFile());
                 float var22 = 0.25F;
                 var16 = Block.BLOCKS[var10.id].getBlockType();
                 if (var16 == 1 || var16 == 19 || var16 == 12 || var16 == 2) {

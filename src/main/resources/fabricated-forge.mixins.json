@@ -139,7 +139,6 @@
     "world.gen.feature.PineTreeFeatureMixin",
     "world.gen.feature.SpruceTreeFeatureMixin",
     "world.gen.feature.TallGrassFeatureMixin",
-    "world.level.LevelGeneratorTypeAccessor",
     "world.level.LevelGeneratorTypeMixin",
     "world.level.LevelPropertiesMixin"
   ],

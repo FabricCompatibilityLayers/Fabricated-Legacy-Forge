@@ -2,6 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.entity.player;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.FMLNetworkHandler;
+import cpw.mods.fml.common.network.Player;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import fr.catcore.fabricatedforge.mixininterface.IPlayerEntity;
@@ -48,7 +49,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.List;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin extends MobEntity implements CommandSource, IPlayerEntity {
+public abstract class PlayerEntityMixin extends MobEntity implements CommandSource, IPlayerEntity, Player {
     @Shadow private ItemStack useItem;
 
     @Shadow public PlayerInventory inventory;

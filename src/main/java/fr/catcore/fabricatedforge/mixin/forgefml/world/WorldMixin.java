@@ -5,7 +5,7 @@ import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import fr.catcore.fabricatedforge.mixininterface.IWorld;
-import fr.catcore.fabricatedforge.utils.WorldUtils;
+import fr.catcore.fabricatedforge.utils.ReflectionUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -34,9 +34,6 @@ import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
 import org.spongepowered.asm.mixin.*;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
 
@@ -133,7 +130,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
     @Mutable
     @Shadow @Final protected SaveHandler saveHandler;
     @Unique // Public
-    private static double MAX_ENTITY_RADIUS = WorldUtils.MAX_ENTITY_RADIUS;
+    private static double MAX_ENTITY_RADIUS = ReflectionUtils.World_MAX_ENTITY_RADIUS;
 
     @Unique
     private static PersistentStateManager s_mapStorage;

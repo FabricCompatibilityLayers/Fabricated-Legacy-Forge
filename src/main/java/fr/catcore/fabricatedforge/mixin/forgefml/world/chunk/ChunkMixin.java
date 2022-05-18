@@ -2,7 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
-import fr.catcore.fabricatedforge.utils.WorldUtils;
+import fr.catcore.fabricatedforge.utils.ReflectionUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -23,9 +23,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -71,28 +68,28 @@ public abstract class ChunkMixin implements IChunk {
 
     @Shadow private byte[] biomeArray;
 
-    @Inject(cancellable = true, method = "<init>(Lnet/minecraft/world/World;[BII)V", at = @At(value = "CONSTANT", args = "intValue=256"))
-    private void fmlCtr(World par1World, byte[] par2ArrayOfByte, int par3, int par4, CallbackInfo ci) {
-        int var5 = par2ArrayOfByte.length / 256;
-
-        for(int var6 = 0; var6 < 16; ++var6) {
-            for(int var7 = 0; var7 < 16; ++var7) {
-                for(int var8 = 0; var8 < var5; ++var8) {
-                    int var9 = par2ArrayOfByte[var6 << 11 | var7 << 7 | var8] & 255;
-                    if (var9 != 0) {
-                        int var10 = var8 >> 4;
-                        if (this.chunkSections[var10] == null) {
-                            this.chunkSections[var10] = new ChunkSection(var10 << 4);
-                        }
-
-                        this.chunkSections[var10].method_3927(var6, var8 & 15, var7, var9);
-                    }
-                }
-            }
-        }
-
-        ci.cancel();
-    }
+//    @Inject(cancellable = true, method = "<init>(Lnet/minecraft/world/World;[BII)V", at = @At(value = "CONSTANT", args = "intValue=256"))
+//    private void fmlCtr(World par1World, byte[] par2ArrayOfByte, int par3, int par4, CallbackInfo ci) {
+//        int var5 = par2ArrayOfByte.length / 256;
+//
+//        for(int var6 = 0; var6 < 16; ++var6) {
+//            for(int var7 = 0; var7 < 16; ++var7) {
+//                for(int var8 = 0; var8 < var5; ++var8) {
+//                    int var9 = par2ArrayOfByte[var6 << 11 | var7 << 7 | var8] & 255;
+//                    if (var9 != 0) {
+//                        int var10 = var8 >> 4;
+//                        if (this.chunkSections[var10] == null) {
+//                            this.chunkSections[var10] = new ChunkSection(var10 << 4);
+//                        }
+//
+//                        this.chunkSections[var10].method_3927(var6, var8 & 15, var7, var9);
+//                    }
+//                }
+//            }
+//        }
+//
+//        ci.cancel();
+//    }
 
     /*Todo: HOW
     public Chunk(World world, byte[] ids, byte[] metadata, int chunkX, int chunkZ) {
@@ -517,8 +514,8 @@ public abstract class ChunkMixin implements IChunk {
      */
     @Overwrite
     public void method_3889(Entity par1Entity, Box par2AxisAlignedBB, List par3List) {
-        int var4 = MathHelper.floor((par2AxisAlignedBB.minY - WorldUtils.MAX_ENTITY_RADIUS) / 16.0);
-        int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + WorldUtils.MAX_ENTITY_RADIUS) / 16.0);
+        int var4 = MathHelper.floor((par2AxisAlignedBB.minY - ReflectionUtils.World_MAX_ENTITY_RADIUS) / 16.0);
+        int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + ReflectionUtils.World_MAX_ENTITY_RADIUS) / 16.0);
         if (var4 < 0) {
             var4 = 0;
         }
@@ -567,8 +564,8 @@ public abstract class ChunkMixin implements IChunk {
      */
     @Overwrite
     public void method_3886(Class par1Class, Box par2AxisAlignedBB, List par3List) {
-        int var4 = MathHelper.floor((par2AxisAlignedBB.minY - WorldUtils.MAX_ENTITY_RADIUS) / 16.0);
-        int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + WorldUtils.MAX_ENTITY_RADIUS) / 16.0);
+        int var4 = MathHelper.floor((par2AxisAlignedBB.minY - ReflectionUtils.World_MAX_ENTITY_RADIUS) / 16.0);
+        int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + ReflectionUtils.World_MAX_ENTITY_RADIUS) / 16.0);
         if (var4 < 0) {
             var4 = 0;
         } else if (var4 >= this.field_4733.length) {

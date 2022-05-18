@@ -3,6 +3,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world.level;
 import com.google.common.collect.ObjectArrays;
 import com.google.common.collect.Sets;
 import fr.catcore.fabricatedforge.mixininterface.ILevelGeneratorType;
+import fr.catcore.fabricatedforge.utils.ReflectionUtils;
 import net.minecraft.world.LayeredBiomeSource;
 import net.minecraft.world.SingletonBiomeSource;
 import net.minecraft.world.World;
@@ -26,10 +27,6 @@ import java.util.Set;
 @Mixin(LevelGeneratorType.class)
 public class LevelGeneratorTypeMixin implements ILevelGeneratorType {
     @Shadow @Final public static LevelGeneratorType FLAT;
-    @Unique
-    private static final Biome[] base11Biomes = new Biome[]{Biome.DESERT, Biome.FOREST, Biome.EXTREME_HILLS, Biome.SWAMPLAND, Biome.PLAINS, Biome.TAIGA};
-    @Unique
-    private static final Biome[] base12Biomes = ObjectArrays.concat(base11Biomes, Biome.JUNGLE);
 
     @Unique
     protected Biome[] biomesForWorldType;
@@ -38,10 +35,10 @@ public class LevelGeneratorTypeMixin implements ILevelGeneratorType {
     private void fmlCtr(int par1, String par2Str, int par3, CallbackInfo ci) {
         switch (par1) {
             case 8:
-                this.biomesForWorldType = base11Biomes;
+                this.biomesForWorldType = ReflectionUtils.LevelGeneratorType_base11Biomes;
                 break;
             default:
-                this.biomesForWorldType = base12Biomes;
+                this.biomesForWorldType = ReflectionUtils.LevelGeneratorType_base12Biomes;
         }
     }
 

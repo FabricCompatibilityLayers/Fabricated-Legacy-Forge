@@ -60,7 +60,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
         super(world);
     }
 
-    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;getWorldSpawnPos()Lnet/minecraft/util/BlockPos;"), cancellable = true)
+    @Inject(method = "<init>", at = @At(value = "RETURN"))
     private void fmlCtr(MinecraftServer par1MinecraftServer, World par2World, String par3Str, ServerPlayerInteractionManager par4ItemInWorldManager, CallbackInfo ci) {
         BlockPos var5 = par2World.dimension.getRandomizedSpawnPoint();
         int var6 = var5.x;
@@ -71,8 +71,6 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
         this.stepHeight = 0.0F;
         this.username = par3Str;
         this.heightOffset = 0.0F;
-
-        ci.cancel();
     }
 
     /**
