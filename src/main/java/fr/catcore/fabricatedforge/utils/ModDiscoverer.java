@@ -168,9 +168,9 @@ public class ModDiscoverer {
             FakeModManager.addModEntry(entry);
         }
 
-        FakeModManager.getMods().forEach(modEntry -> {
-            if (modEntry.original != null) FabricLauncherBase.getLauncher().addToClassPath(modEntry.file.toPath());
-        });
+//        FakeModManager.getMods().forEach(modEntry -> {
+//            if (modEntry.original != null) FabricLauncherBase.getLauncher().addToClassPath(modEntry.file.toPath());
+//        });
     }
 
     static {

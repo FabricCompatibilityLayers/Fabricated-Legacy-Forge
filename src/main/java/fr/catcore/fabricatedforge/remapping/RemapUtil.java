@@ -16,8 +16,7 @@ import net.fabricmc.tinyremapper.IMappingProvider;
 import net.fabricmc.tinyremapper.OutputConsumerPath;
 import net.fabricmc.tinyremapper.TinyRemapper;
 import net.fabricmc.tinyremapper.api.TrClass;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.Type;
+import org.objectweb.asm.*;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -244,7 +243,45 @@ public class RemapUtil {
         builder.extraPostApplyVisitor(new TinyRemapper.ApplyVisitorProvider() {
             @Override
             public ClassVisitor insertApplyVisitor(TrClass cls, ClassVisitor next) {
-                return new ReflectionClassVisitor(next);
+                return new ClassVisitor(Opcodes.ASM9, next) {
+                    @Override
+                    public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
+                        return new MethodVisitor(Opcodes.ASM9, super.visitMethod(access, name, descriptor, signature, exceptions)) {
+                            @Override
+                            public void visitMethodInsn(int opcode, String methodOwner, String methodName, String methodDescriptor, boolean isInterface) {
+                                for (Map.Entry<Entry, Entry> entry : METHOD_OVERWRITES.entrySet()) {
+                                    Entry original = entry.getKey();
+                                    Entry newEntry = entry.getValue();
+
+                                    if (original.name.equals(methodName) && original.descriptor.equals(methodDescriptor) && original.owner.equals(methodOwner)) {
+                                        methodName = newEntry.name;
+                                        methodDescriptor = newEntry.descriptor;
+                                        methodOwner = newEntry.owner;
+                                        break;
+                                    }
+                                }
+
+                                super.visitMethodInsn(opcode, methodOwner, methodName, methodDescriptor, isInterface);
+                            }
+
+                            @Override
+                            public void visitLdcInsn(Object value) {
+                                if (cls.getName().equals("InvTweaksLocalization")
+                                        && name.equals("load")
+                                        && value instanceof String
+                                        && ((String)value).startsWith("invtweaks")
+                                ) {
+                                    value = "/" + ((String) value);
+                                } else if (cls.getName().equals("InvTweaksObfuscation") && value instanceof String) {
+                                    String string = (String) value;
+                                    if (string.equals("b")) value = "field_1386";
+                                    else if (string.equals("k")) value = "field_1981";
+                                }
+                                super.visitLdcInsn(value);
+                            }
+                        };
+                    }
+                };
             }
         });
 
@@ -441,5 +478,31 @@ public class RemapUtil {
                 return Collections2.transform(mappings.getClasses(), this::wrap);
             }
         };
+    }
+
+    private static final Map<Entry, Entry> METHOD_OVERWRITES = new HashMap<>();
+
+    static {
+        METHOD_OVERWRITES.put(new Entry(
+                "setBurnProperties",
+                "(III)V",
+                "net/minecraft/class_197"
+        ), new Entry(
+                "Block_setBurnProperties",
+                "(III)V",
+                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+        ));
+    }
+
+    public static class Entry {
+        public final String name;
+        public final String descriptor;
+        public final String owner;
+
+        public Entry(String name, String descriptor, String owner) {
+            this.name = name;
+            this.descriptor = descriptor;
+            this.owner = owner;
+        }
     }
 }

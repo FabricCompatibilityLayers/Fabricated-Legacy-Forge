@@ -20,7 +20,7 @@ Supported Minecraft versions: 1.3.2.
 | Advanced Machines     | ❌                    |
 | Advanced Solar Panels | ❌                    |
 | Glowstone seeds       | ❌                    |
-| Inventory Tweaks      | ⚠                    |
+| Inventory Tweaks      | ✔                    |
 | ComputerCraft         | ✔                    |
 | Smart Moving          | ❌                    |
 | Mystcraft             | ⚠ Can't create Ages  |
