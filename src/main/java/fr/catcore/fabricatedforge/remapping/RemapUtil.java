@@ -86,10 +86,14 @@ public class RemapUtil {
     }
 
     public static void generateModMappings() {
-        List<String> mappings = new ArrayList<>();
-        mappings.add(toString("v1", "official", "intermediary", "named"));
-        MOD_MAPPINGS.forEach((cl, remapped) -> mappings.add(makeLoaderLineClass(cl, remapped)));
-        FileUtils.writeTextFile(mappings, Constants.MOD_MAPPINGS_FILE);
+        MappingList mappings = new MappingList();
+        MOD_MAPPINGS.forEach(mappings::add);
+
+        List<String> lines = new ArrayList<>();
+        lines.add(toString("v1", "official", "intermediary", "named"));
+        mappings.forEach(mappingBuilder -> lines.addAll(mappingBuilder.build()));
+
+        FileUtils.writeTextFile(lines, Constants.MOD_MAPPINGS_FILE);
 
         MODS_TREE = makeTree(Constants.MOD_MAPPINGS_FILE);
     }
@@ -111,73 +115,111 @@ public class RemapUtil {
         return list;
     }
 
+    protected static class MappingList extends ArrayList<MappingBuilder> {
+        public MappingList() {
+            super();
+        }
+
+        public MappingBuilder add(String obfuscated, String intermediary) {
+            MappingBuilder builder = MappingBuilder.create(obfuscated, intermediary);
+            this.add(builder);
+            return builder;
+        }
+
+        public MappingBuilder add(String name) {
+            MappingBuilder builder = MappingBuilder.create(name);
+            this.add(builder);
+            return builder;
+        }
+    }
+
     private static void generateMappings() {
         if (!Constants.MAPPINGS_FILE.exists()) {
-            List<String> mappings = new ArrayList<>();
-
-            mappings.add(toString("v1", "official", "intermediary", "named"));
+            MappingList mappings = new MappingList();
 
             // ModLoader mappings
-            mappings.add(makeLoaderLineClass("BaseMod", "net/minecraft/BaseMod"));
-            mappings.add(makeLoaderLineClass("EntityRendererProxy", "net/minecraft/EntityRendererProxy"));
-            mappings.add(makeLoaderLineClass("FMLRendererAccessLibrary", "net/minecraft/FMLRendererAccessLibrary"));
-            mappings.add(makeLoaderLineClass("MLProp", "net/minecraft/MLProp"));
-            mappings.add(makeLoaderLineClass("ModLoader", "net/minecraft/ModLoader"));
-            mappings.add(makeLoaderLineClass("ModTextureAnimation", "net/minecraft/ModTextureAnimation"));
-            mappings.add(makeLoaderLineClass("ModTextureStatic", "net/minecraft/ModTextureStatic"));
-            mappings.add(makeLoaderLineClass("TradeEntry", "net/minecraft/TradeEntry"));
+            mappings.add("BaseMod", "net/minecraft/BaseMod");
+            mappings.add("EntityRendererProxy", "net/minecraft/EntityRendererProxy");
+            mappings.add("FMLRendererAccessLibrary", "net/minecraft/FMLRendererAccessLibrary");
+            mappings.add("MLProp", "net/minecraft/MLProp");
+            mappings.add("ModLoader", "net/minecraft/ModLoader");
+            mappings.add("ModTextureAnimation", "net/minecraft/ModTextureAnimation");
+            mappings.add("ModTextureStatic", "net/minecraft/ModTextureStatic");
+            mappings.add("TradeEntry", "net/minecraft/TradeEntry");
 
             // Forge cursed overwrites mappings
-            mappings.add(makeLoaderLineClass("axf", "fr/catcore/fabricatedforge/forged/class_585Forged"));
-            mappings.add(makeLoaderLineField("g", "field_2158", "axf", "[F"));
-            mappings.add(makeLoaderLineField("h", "field_2159", "axf", "[F"));
+            mappings.add("axf", "fr/catcore/fabricatedforge/forged/class_585Forged")
+                    .field("g", "field_2158", "[F")
+                    .field("h", "field_2159", "[F");
 
-            mappings.add(makeLoaderLineClass("axg", "fr/catcore/fabricatedforge/forged/class_586Forged"));
-            mappings.add(makeLoaderLineField("g", "field_2160", "axg", "[F"));
-            mappings.add(makeLoaderLineField("h", "field_2161", "axg", "[F"));
-            mappings.add(makeLoaderLineField("i", "field_2162", "axg", "[F"));
-            mappings.add(makeLoaderLineField("j", "field_2163", "axg", "[F"));
-            mappings.add(makeLoaderLineField("k", "field_2164", "axg", "I"));
+            mappings.add("axg", "fr/catcore/fabricatedforge/forged/class_586Forged")
+                    .field("g", "field_2160", "[F")
+                    .field("h", "field_2161", "[F")
+                    .field("i", "field_2162", "[F")
+                    .field("j", "field_2163", "[F")
+                    .field("k", "field_2164", "I");
 
-            mappings.add(makeLoaderLineClass("axh", "fr/catcore/fabricatedforge/forged/class_587Forged"));
-            mappings.add(makeLoaderLineField("g", "field_2165", "axh", "[F"));
-            mappings.add(makeLoaderLineField("h", "field_2166", "axh", "[F"));
-            mappings.add(makeLoaderLineField("i", "field_2167", "axh", "[F"));
-            mappings.add(makeLoaderLineField("j", "field_2168", "axh", "[F"));
+            mappings.add("axh", "fr/catcore/fabricatedforge/forged/class_587Forged")
+                    .field("g", "field_2165", "[F")
+                    .field("h", "field_2166", "[F")
+                    .field("i", "field_2167", "[F")
+                    .field("j", "field_2168", "[F");
 
-            mappings.add(makeLoaderLineClass("axi", "fr/catcore/fabricatedforge/forged/class_588Forged"));
-            mappings.add(makeLoaderLineField("g", "field_2169", "axi", "I"));
-            mappings.add(makeLoaderLineField("h", "field_2170", "axi", "[[B"));
+            mappings.add("axi", "fr/catcore/fabricatedforge/forged/class_588Forged")
+                    .field("g", "field_2169", "I")
+                    .field("h", "field_2170", "[[B");
 
-            mappings.add(makeLoaderLineClass("axj", "fr/catcore/fabricatedforge/forged/class_589Forged"));
-            mappings.add(makeLoaderLineField("g", "field_2171", "axj", "[F"));
-            mappings.add(makeLoaderLineField("h", "field_2172", "axj", "[F"));
-            mappings.add(makeLoaderLineField("i", "field_2173", "axj", "[F"));
-            mappings.add(makeLoaderLineField("j", "field_2174", "axj", "[F"));
-            mappings.add(makeLoaderLineField("k", "field_2175", "axj", "I"));
+            mappings.add("axj", "fr/catcore/fabricatedforge/forged/class_589Forged")
+                    .field("g", "field_2171", "[F")
+                    .field("h", "field_2172", "[F")
+                    .field("i", "field_2173", "[F")
+                    .field("j", "field_2174", "[F")
+                    .field("k", "field_2175", "I");
 
-            mappings.add(makeLoaderLineClass("axk", "fr/catcore/fabricatedforge/forged/class_590Forged"));
-            mappings.add(makeLoaderLineField("g", "field_2176", "axk", "[F"));
-            mappings.add(makeLoaderLineField("h", "field_2177", "axk", "[F"));
-            mappings.add(makeLoaderLineField("i", "field_2178", "axk", "[F"));
-            mappings.add(makeLoaderLineField("j", "field_2179", "axk", "[F"));
-            mappings.add(makeLoaderLineField("k", "field_2180", "axk", "I"));
+            mappings.add("axk", "fr/catcore/fabricatedforge/forged/class_590Forged")
+                    .field("g", "field_2176", "[F")
+                    .field("h", "field_2177", "[F")
+                    .field("i", "field_2178", "[F")
+                    .field("j", "field_2179", "[F")
+                    .field("k", "field_2180", "I");
 
-            mappings.add(makeLoaderLineClass("axc", "fr/catcore/fabricatedforge/forged/ClockSpriteForged"));
-            mappings.add(makeLoaderLineField("g", "field_2143", "axc", "Lnet/minecraft/client/Minecraft;"));
-            mappings.add(makeLoaderLineField("h", "field_2144", "axc", "[I"));
-            mappings.add(makeLoaderLineField("i", "field_2145", "axc", "[I"));
-            mappings.add(makeLoaderLineField("j", "field_2146", "axc", "D"));
-            mappings.add(makeLoaderLineField("k", "field_2147", "axc", "D"));
+            mappings.add("axc", "fr/catcore/fabricatedforge/forged/ClockSpriteForged")
+                    .field("g", "field_2143", "Lnet/minecraft/client/Minecraft;")
+                    .field("h", "field_2144", "[I")
+                    .field("i", "field_2145", "[I")
+                    .field("j", "field_2146", "D")
+                    .field("k", "field_2147", "D");
 
-            mappings.add(makeLoaderLineClass("axd", "fr/catcore/fabricatedforge/forged/CompassSpriteForged"));
-            mappings.add(makeLoaderLineField("g", "field_2148", "axd", "Lnet/minecraft/client/Minecraft;"));
-            mappings.add(makeLoaderLineField("h", "field_2149", "axd", "[I"));
-            mappings.add(makeLoaderLineField("i", "field_2150", "axd", "D"));
-            mappings.add(makeLoaderLineField("j", "field_2151", "axd", "D"));
-//            mappings.add(makeLoaderLineClass("net/minecraft/class_1041", "fr/catcore/fabricatedforge/forged/ItemGroupForged"));
+            mappings.add("axd", "fr/catcore/fabricatedforge/forged/CompassSpriteForged")
+                    .field("g", "field_2148", "Lnet/minecraft/client/Minecraft;")
+                    .field("h", "field_2149", "[I")
+                    .field("i", "field_2150", "D")
+                    .field("j", "field_2151", "D");
 
-            FileUtils.writeTextFile(mappings, Constants.MAPPINGS_FILE);
+            mappings.add("cpw/mods/fml/client/ITextureFX")
+                    .method("setErrored", "(Z)V")
+                    .method("getErrored", "()Z")
+                    .method("onTexturePackChanged", "(Lavf;Layi;Lxc;)V")
+                    .method("onTextureDimensionsUpdate", "(II)V");
+
+            mappings.add("cpw/mods/fml/client/FMLTextureFX")
+                    .field("tileSizeBase", "I")
+                    .field("tileSizeSquare", "I")
+                    .field("tileSizeMask", "I")
+                    .field("tileSizeSquareMask", "I")
+                    .field("errored", "Z")
+                    .field("log", "Ljava/util/logging/Logger;")
+                    .method("<init>", "(I)V")
+                    .method("setup", "()V")
+                    .method("unregister", "(Lavf;Ljava/util/List;)Z");
+
+            List<String> lines = new ArrayList<>();
+
+            lines.add(toString("v1", "official", "intermediary", "named"));
+
+            mappings.forEach(mappingBuilder -> lines.addAll(mappingBuilder.build()));
+
+            FileUtils.writeTextFile(lines, Constants.MAPPINGS_FILE);
         }
     }
 
@@ -193,14 +235,6 @@ public class RemapUtil {
             builder.append(line[j]);
         }
         return builder.toString();
-    }
-
-    private static String makeLoaderLineClass(String from, String to) {
-        return toString("CLASS", from, to, to);
-    }
-
-    private static String makeLoaderLineField(String from, String to, String clas, String desc) {
-        return toString("FIELD", clas, desc, from, to, to);
     }
 
     /**
@@ -265,7 +299,35 @@ public class RemapUtil {
                             }
 
                             @Override
+                            public void visitFieldInsn(int opcode, String fieldOwner, String fieldName, String fieldDescriptor) {
+                                switch (fieldOwner) {
+                                    case "forestry/core/render/TextureHabitatLocatorFX":
+                                        if (fieldName.equals("f")) fieldName = "field_2157";
+                                        else if (fieldName.equals("b")) fieldName = "field_2153";
+                                        break;
+                                    case "powercrystals/minefactoryreloaded/client/TextureFrameAnimFX":
+                                        if (fieldName.equals("a")) fieldName = "field_2152";
+                                        break;
+                                    case "powercrystals/minefactoryreloaded/client/TextureLiquidFX":
+                                        if (fieldName.equals("e")) fieldName = "field_2156";
+                                        else if (fieldName.equals("a")) fieldName = "field_2152";
+                                        break;
+                                    case "buildcraft/energy/render/TextureOilFlowFX":
+                                        if (fieldName.equals("e")) fieldName = "field_2156";
+                                        break;
+                                    case "xcompwiz/mystcraft/Mystcraft":
+                                        if (fieldName.equals("registeredDims")) {
+                                            fieldOwner = "fr/catcore/fabricatedforge/compat/MystcraftCompat";
+                                        }
+                                        break;
+                                }
+
+                                super.visitFieldInsn(opcode, fieldOwner, fieldName, fieldDescriptor);
+                            }
+
+                            @Override
                             public void visitLdcInsn(Object value) {
+
                                 if (cls.getName().equals("InvTweaksLocalization")
                                         && name.equals("load")
                                         && value instanceof String
@@ -277,6 +339,7 @@ public class RemapUtil {
                                     if (string.equals("b")) value = "field_1386";
                                     else if (string.equals("k")) value = "field_1981";
                                 }
+
                                 super.visitLdcInsn(value);
                             }
                         };
@@ -491,6 +554,16 @@ public class RemapUtil {
                 "Block_setBurnProperties",
                 "(III)V",
                 "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+        ));
+
+        METHOD_OVERWRITES.put(new Entry(
+                "<init>",
+                "java/lang/String",
+                "net/minecraft/class_1041"
+        ), new Entry(
+                "<init>",
+                "java/lang/String",
+                "fr/catcore/fabricatedforge/forged/ItemGroupForged"
         ));
     }
 

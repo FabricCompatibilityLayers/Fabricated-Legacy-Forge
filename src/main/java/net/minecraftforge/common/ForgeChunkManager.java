@@ -216,7 +216,7 @@ public class ForgeChunkManager {
                 throw new RuntimeException("Invalid ticket request");
             } else {
                 int allowedCount = ticketConstraints.containsKey(modId) ? ticketConstraints.get(modId) : defaultMaxCount;
-                if (tickets.get(world).get(modId).size() >= allowedCount) {
+                if (tickets.computeIfAbsent(world, (world1) -> ArrayListMultimap.create()).get(modId).size() >= allowedCount) {
                     FMLLog.info("The mod %s has attempted to allocate a chunkloading ticket beyond it's currently allocated maximum : %d", modId, allowedCount);
                     return null;
                 } else {
@@ -270,7 +270,8 @@ public class ForgeChunkManager {
             return;
         }
         ticket.requestedChunks.add(chunk);
-        ImmutableSetMultimap<ChunkPos, Ticket> newMap = ImmutableSetMultimap.<ChunkPos,Ticket>builder().putAll(forcedChunks.get(ticket.world)).put(chunk, ticket).build();
+        ImmutableSetMultimap<ChunkPos, Ticket> oldMap = forcedChunks.get(ticket.world);
+        ImmutableSetMultimap<ChunkPos, Ticket> newMap = ImmutableSetMultimap.<ChunkPos,Ticket>builder().putAll(oldMap == null ? ImmutableSetMultimap.<ChunkPos,Ticket>builder().build() : oldMap).put(chunk, ticket).build();
         forcedChunks.put(ticket.world, newMap);
         if (ticket.maxDepth > 0 && ticket.requestedChunks.size() > ticket.maxDepth)
         {
