@@ -168,6 +168,24 @@ public class ModDiscoverer {
             FakeModManager.addModEntry(entry);
         }
 
+        List<String> modFileNames = new ArrayList<>();
+        for (ModEntry entry : FakeModManager.getMods()) {
+            modFileNames.add(entry.file.getName());
+        }
+
+        List<String> modFileCandidates = new ArrayList<>();
+        for (File file : Constants.REMAPPED_FOLDER.listFiles()) {
+            modFileCandidates.add(file.getName());
+        }
+
+        while (modFileCandidates.size() > 0) {
+            String fileName = modFileCandidates.remove(0);
+            if (!modFileNames.contains(fileName)) {
+                File toDelete = new File(Constants.REMAPPED_FOLDER, fileName);
+                toDelete.delete();
+            }
+        }
+
 //        FakeModManager.getMods().forEach(modEntry -> {
 //            if (modEntry.original != null) FabricLauncherBase.getLauncher().addToClassPath(modEntry.file.toPath());
 //        });
