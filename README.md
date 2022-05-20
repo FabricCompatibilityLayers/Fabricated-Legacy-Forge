@@ -5,7 +5,7 @@ Load Forge/ModLoader mods as if they were Fabric Loader mods.
 Supported Minecraft versions: 1.3.2.
 
 ### Tested Mods
-| Mod                   | State                          |
+| Mod                   | 1.3.2                          |
 |-----------------------|--------------------------------|
 | BlockHelper           | ✔                              |
 | Rei's Minimap         | ✔                              |
@@ -33,3 +33,27 @@ Supported Minecraft versions: 1.3.2.
 | MineFactory Reloaded  | ✔                              |
 | Too Many Items        | ❌                              |
 | Fog Key               | ✔                              |
+| Animal Bikes          | ✔                              |
+| Cooper Tools          | ❌                              |
+| Coral Reef            | ✔                              |
+| Multipage Chest       | ❌                              |
+| Whole Tree Axe        | ❌                              |
+| Tree Capitator        | ✔ Use FML version              |
+| Floating Ruins        | ✔                              |
+| Toggle Sneak/Sprint   | ✔                              |
+| Essentials            | ✔                              |
+| Extended Workbench    | ❌                              |
+| Hunting Traps Mod     | ✔                              |
+| Iron Chests           | ✔                              |
+| LegoMod               | ✔                              |
+| Millénaire            | ❌                              |
+| Minegicka             | ✔                              |
+| MineVideo             | ❌                              |
+| Pillow Mod            | ✔                              |
+| Portals++             | ✔                              |
+| Socialite             | ✔                              |
+| StoneStick            | ❌                              |
+| Frames                | ✔                              |
+| SuperSlopes           | ✔                              |
+| Wallpaper             | ✔                              |
+| TooManyPlants         | ❌                              |
