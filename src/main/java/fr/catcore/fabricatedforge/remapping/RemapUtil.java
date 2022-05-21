@@ -347,17 +347,27 @@ public class RemapUtil {
 
                             @Override
                             public void visitLdcInsn(Object value) {
+                                if (value instanceof String) {
+                                    String stringValue = (String) value;
 
-                                if (cls.getName().equals("InvTweaksLocalization")
-                                        && name.equals("load")
-                                        && value instanceof String
-                                        && ((String)value).startsWith("invtweaks")
-                                ) {
-                                    value = "/" + ((String) value);
-                                } else if (cls.getName().equals("InvTweaksObfuscation") && value instanceof String) {
-                                    String string = (String) value;
-                                    if (string.equals("b")) value = "field_1386";
-                                    else if (string.equals("k")) value = "field_1981";
+                                    switch (cls.getName()) {
+                                        case "InvTweaksLocalization":
+                                            if (name.equals("load") && stringValue.startsWith("invtweaks")) {
+                                                value = "/" + stringValue;
+                                            }
+                                            break;
+
+                                        case "InvTweaksObfuscation":
+                                            if (stringValue.equals("b")) value = "field_1386";
+                                            else if (stringValue.equals("k")) value = "field_1981";
+                                            break;
+
+                                        case "peterix/friendsss/Friendsss":
+                                            if (stringValue.equals("d")) {
+                                                value = "field_3919";
+                                            }
+                                            break;
+                                    }
                                 }
 
                                 super.visitLdcInsn(value);

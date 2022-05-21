@@ -16,7 +16,7 @@ Supported Minecraft versions: 1.3.2.
 | Not Enough Items       | ⚠ Load but doesn't do anything |
 | Ender Storage          | ❌                              |
 | IC2                    | ✔ (Require Java 8)             |
-| Friendsss              | ❌                              |
+| Friendsss              | ⚠ Load but doesn't do anything |
 | CakeIsALie             | ✔                              |
 | Timber                 | ✔                              |
 | Advanced Machines      | ✔                              |
