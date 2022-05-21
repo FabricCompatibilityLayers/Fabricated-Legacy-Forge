@@ -219,5 +219,11 @@ public class ModDiscoverer {
         EXCLUDED.put("ReiMinimap", new BArrayList<>());
         EXCLUDED.get("ReiMinimap")
                 .put("aow.class");
+
+        EXCLUDED.put("GlowstoneSeeds", new BArrayList<>());
+        EXCLUDED.get("GlowstoneSeeds")
+                .put("__MACOSX/glowstone seeds 1.3.2/._.DS_Store")
+                .put("__MACOSX/glowstone seeds 1.3.2/._glowstoneseed.png")
+                .put("glowstone seeds 1.3.2/.DS_Store");
     }
 }

@@ -18,10 +18,10 @@ Supported Minecraft versions: 1.3.2.
 | IC2                    | ✔ (Require Java 8)             |
 | Friendsss              | ⚠ Load but doesn't do anything |
 | CakeIsALie             | ✔                              |
-| Timber                 | ✔                              |
+| Timber!                | ✔                              |
 | Advanced Machines      | ✔                              |
 | Advanced Solar Panels  | ✔                              |
-| Glowstone seeds        | ❌                              |
+| Glowstone seeds        | ✔                              |
 | Inventory Tweaks       | ✔                              |
 | ComputerCraft          | ✔                              |
 | Smart Moving           | ❌                              |

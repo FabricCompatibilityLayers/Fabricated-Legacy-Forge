@@ -243,6 +243,7 @@ accessible method net/minecraft/block/Block method_462 (I)Lnet/minecraft/block/B
 accessible method net/minecraft/block/Block method_393 (F)Lnet/minecraft/block/Block;
 accessible method net/minecraft/block/Block setUnbreakable ()Lnet/minecraft/block/Block;
 accessible method net/minecraft/block/Block setTickRandomly (Z)Lnet/minecraft/block/Block;
+accessible method net/minecraft/block/Block disableStats ()Lnet/minecraft/block/Block;
 
 accessible field net/minecraft/server/ServerPacketListener floatingTicks I
 

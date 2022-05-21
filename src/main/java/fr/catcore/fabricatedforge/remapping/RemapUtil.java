@@ -367,6 +367,12 @@ public class RemapUtil {
                                                 value = "field_3919";
                                             }
                                             break;
+
+                                        case "mod_GlowstoneSeeds":
+                                            if (stringValue.equals("glowstoneseed.png")) {
+                                                value = "/glowstone seeds 1.3.2/glowstoneseed.png";
+                                            }
+                                            break;
                                     }
                                 }
 
