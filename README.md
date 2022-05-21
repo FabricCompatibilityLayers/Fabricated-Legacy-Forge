@@ -12,7 +12,9 @@ Supported Minecraft versions: 1.3.2.
 | Forestry               | ✔                              |
 | Thermal Expansion      | ✔                              |
 | Weapon Mod             | ❌                              |
-| NEI                    | ❌                              |
+| CodeChickenCore        | ⚠ Load but doesn't do anything |
+| Not Enough Items       | ⚠ Load but doesn't do anything |
+| Ender Storage          | ❌                              |
 | IC2                    | ✔ (Require Java 8)             |
 | Friendsss              | ❌                              |
 | CakeIsALie             | ✔                              |
@@ -24,7 +26,6 @@ Supported Minecraft versions: 1.3.2.
 | ComputerCraft          | ✔                              |
 | Smart Moving           | ❌                              |
 | Mystcraft              | ✔                              |
-| AliensVsPredators      | ❌                              |
 | DivineRPG              | ✔ (Require Java 8)             |
 | TwilightForest         | ✔                              |
 | BuildCraft             | ⚠ Grass and Water don't render |
