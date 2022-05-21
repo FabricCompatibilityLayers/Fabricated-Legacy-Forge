@@ -6,4 +6,6 @@ public interface IWeightedRandomChestContent {
     ItemStack getItemStack();
 
     int getMinCount();
+
+    void setItemStack(ItemStack stack);
 }

@@ -299,6 +299,26 @@ public class RemapUtil {
                             }
 
                             @Override
+                            public void visitTypeInsn(int opcode, String type) {
+                                switch (opcode) {
+                                    case Opcodes.NEW:
+
+                                        switch (type) {
+                                            case "net/minecraft/class_1041":
+                                                type = "fr/catcore/fabricatedforge/forged/ItemGroupForged";
+                                                break;
+                                            case "net/minecraft/class_847":
+                                                type = "fr/catcore/fabricatedforge/forged/WeightedRandomChestContentForged";
+                                                break;
+                                        }
+
+                                        break;
+                                }
+
+                                super.visitTypeInsn(opcode, type);
+                            }
+
+                            @Override
                             public void visitFieldInsn(int opcode, String fieldOwner, String fieldName, String fieldDescriptor) {
                                 switch (fieldOwner) {
                                     case "forestry/core/render/TextureHabitatLocatorFX":
@@ -558,12 +578,40 @@ public class RemapUtil {
 
         METHOD_OVERWRITES.put(new Entry(
                 "<init>",
-                "java/lang/String",
+                "(Ljava/lang/String;)V",
                 "net/minecraft/class_1041"
         ), new Entry(
                 "<init>",
-                "java/lang/String",
+                "(Ljava/lang/String;)V",
                 "fr/catcore/fabricatedforge/forged/ItemGroupForged"
+        ));
+        METHOD_OVERWRITES.put(new Entry(
+                "<init>",
+                "(ILjava/lang/String;)V",
+                "net/minecraft/class_1041"
+        ), new Entry(
+                "<init>",
+                "(ILjava/lang/String;)V",
+                "fr/catcore/fabricatedforge/forged/ItemGroupForged"
+        ));
+
+        METHOD_OVERWRITES.put(new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1071;III)V",
+                "net/minecraft/class_847"
+        ), new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1071;III)V",
+                "fr/catcore/fabricatedforge/forged/WeightedRandomChestContentForged"
+        ));
+        METHOD_OVERWRITES.put(new Entry(
+                "<init>",
+                "(IIIII)V",
+                "net/minecraft/class_847"
+        ), new Entry(
+                "<init>",
+                "(IIIII)V",
+                "fr/catcore/fabricatedforge/forged/WeightedRandomChestContentForged"
         ));
     }
 

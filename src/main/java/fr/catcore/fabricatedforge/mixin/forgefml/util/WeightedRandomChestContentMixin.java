@@ -75,4 +75,9 @@ public class WeightedRandomChestContentMixin implements IWeightedRandomChestCont
     public int getMinCount() {
         return minCount;
     }
+
+    @Override
+    public void setItemStack(ItemStack stack) {
+        this.itemStack = stack;
+    }
 }
