@@ -1,7 +1,6 @@
 package cpw.mods.fml.common;
 
 import com.google.common.base.CharMatcher;
-import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.*;
@@ -13,7 +12,6 @@ import cpw.mods.fml.common.toposort.ModSortingException;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.VersionParser;
 import fr.catcore.fabricatedforge.utils.Constants;
-import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.provider.MinecraftVersionProvider;
 
 import java.io.File;
@@ -186,8 +184,8 @@ public class Loader {
         discoverer.findClasspathMods(modClassLoader);
         FMLLog.fine("Minecraft jar mods loaded successfully");
 
-        FMLLog.info("Searching %s for mods", canonicalModsDir.getAbsolutePath());
-        discoverer.findModDirMods(canonicalModsDir);
+        FMLLog.info("Searching %s for mods", Constants.REMAPPED_MODS_FOLDER);
+        discoverer.findModDirMods(Constants.REMAPPED_MODS_FOLDER);
 
         mods.addAll(discoverer.identifyMods());
         identifyDuplicates(mods);
@@ -220,7 +218,7 @@ public class Loader {
     }
 
     private void initializeLoader() {
-        File modsDir = Constants.REMAPPED_FOLDER;
+        File modsDir = new File(minecraftDir, "mods");
         File configDir = new File(minecraftDir, "config");
 
         String canonicalModsPath;
@@ -232,14 +230,14 @@ public class Loader {
             this.canonicalConfigDir = configDir.getCanonicalFile();
             this.canonicalModsDir = modsDir.getCanonicalFile();
         } catch (IOException var6) {
-            FMLLog.log(Level.SEVERE, var6, "Failed to resolve loader directories: mods : %s ; config %s", this.canonicalModsDir.getAbsolutePath(), configDir.getAbsolutePath());
+            FMLLog.log(Level.SEVERE, var6, "Failed to resolve loader directories: mods : %s ; config %s", Constants.REMAPPED_MODS_FOLDER, configDir.getAbsolutePath());
             throw new LoaderException(var6);
         }
 
         boolean dirMade;
-        if (!this.canonicalModsDir.exists()) {
+        if (!Constants.REMAPPED_MODS_FOLDER.exists()) {
             FMLLog.info("No mod directory found, creating one: %s", canonicalModsPath);
-            dirMade = this.canonicalModsDir.mkdir();
+            dirMade = Constants.REMAPPED_MODS_FOLDER.mkdir();
             if (!dirMade) {
                 FMLLog.severe("Unable to create the mod directory %s", canonicalModsPath);
                 throw new LoaderException();
@@ -259,7 +257,7 @@ public class Loader {
             FMLLog.info("Config directory created successfully");
         }
 
-        if (!this.canonicalModsDir.isDirectory()) {
+        if (!Constants.REMAPPED_MODS_FOLDER.isDirectory()) {
             FMLLog.severe("Attempting to load mods from %s, which is not a directory", canonicalModsPath);
             throw new LoaderException();
         } else if (!configDir.isDirectory()) {

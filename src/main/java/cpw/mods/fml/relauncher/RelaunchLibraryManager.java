@@ -1,5 +1,7 @@
 package cpw.mods.fml.relauncher;
 
+import fr.catcore.fabricatedforge.utils.Constants;
+
 import java.io.*;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -338,6 +340,7 @@ public class RelaunchLibraryManager {
 //            {
 //                // didn't find it, good
 //            }
+
             try
             {
                 classLoader.addURL(coreMod.toURI().toURL());
@@ -424,7 +427,7 @@ public class RelaunchLibraryManager {
             throw new RuntimeException(String.format("Found a coremod file in %s that's not a directory", mcDir.getName()));
         }
 
-        return coreModDir;
+        return Constants.REMAPPED_COREMODS_FOLDER;
     }
 
     private static void downloadFile(File libFile, String rootUrl, String realFilePath, String hash) {

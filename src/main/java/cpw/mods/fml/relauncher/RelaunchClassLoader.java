@@ -1,7 +1,6 @@
 package cpw.mods.fml.relauncher;
 
-import java.net.JarURLConnection;
-import java.net.URLConnection;
+import java.net.*;
 import java.security.CodeSigner;
 import java.security.CodeSource;
 import java.util.jar.Attributes;
@@ -9,12 +8,11 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
+import net.fabricmc.loader.impl.util.UrlUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -27,7 +25,7 @@ public class RelaunchClassLoader extends URLClassLoader {
     private static String[] transformerExclusions = new String[0];
     private List<URL> sources;
     private ClassLoader parent;
-    private List<IClassTransformer> transformers;
+    public static List<IClassTransformer> transformers;
     private Map<String, Class> cachedClasses;
     private Set<String> classLoaderExceptions = new HashSet<>();
     private Set<String> transformerExceptions = new HashSet<>();
@@ -220,6 +218,13 @@ public class RelaunchClassLoader extends URLClassLoader {
 
     public void addURL(URL url) {
         super.addURL(url);
+
+        try {
+            FabricLauncherBase.getLauncher().addToClassPath(UrlUtil.asPath(url));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+
         this.sources.add(url);
     }
 

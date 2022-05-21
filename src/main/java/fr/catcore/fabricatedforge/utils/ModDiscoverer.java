@@ -2,7 +2,6 @@ package fr.catcore.fabricatedforge.utils;
 
 import fr.catcore.fabricatedforge.remapping.RemapUtil;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +16,7 @@ import java.util.zip.ZipOutputStream;
 public class ModDiscoverer {
 
     private static final File modDir = new File(FabricLoader.getInstance().getGameDir().toFile(), "/mods/");
+    private static final File coreModDir = new File(FabricLoader.getInstance().getGameDir().toFile(), "/coremods/");
 
     private static final Map<String, BArrayList<String>> EXCLUDED = new HashMap<>();
 
@@ -25,15 +25,27 @@ public class ModDiscoverer {
 
         List<ModEntry> mods = new ArrayList<>();
 
+        for (File file : coreModDir.listFiles()) {
+            if (file.isFile()) {
+                String fileName = file.getName();
+                File remappedFile = new File(Constants.REMAPPED_COREMODS_FOLDER, fileName);
+                mods.add(new CoreModEntry(
+                        fileName.replace(".zip", "").replace(".jar", ""),
+                        remappedFile,
+                        file
+                ));
+            }
+        }
+
         for (File file : modDir.listFiles()) {
             String name = file.getName();
             if (file.isDirectory() || (file.isFile() && (name.endsWith(".jar") || name.endsWith(".zip")))) {
-                File remappedFile = new File(Constants.REMAPPED_FOLDER, name);
+                File remappedFile = new File(Constants.REMAPPED_MODS_FOLDER, name);
 
                 List<ModEntry> modName = new ArrayList<>();
 
                 if (file.isDirectory()) {
-                    remappedFile = new File(Constants.REMAPPED_FOLDER, name + ".zip");
+                    remappedFile = new File(Constants.REMAPPED_MODS_FOLDER, name + ".zip");
                     for (File subFile : file.listFiles()) {
                         String subName = subFile.getName();
                         if (subFile.isFile()) {
@@ -174,14 +186,26 @@ public class ModDiscoverer {
         }
 
         List<String> modFileCandidates = new ArrayList<>();
-        for (File file : Constants.REMAPPED_FOLDER.listFiles()) {
+        for (File file : Constants.REMAPPED_COREMODS_FOLDER.listFiles()) {
             modFileCandidates.add(file.getName());
         }
 
         while (modFileCandidates.size() > 0) {
             String fileName = modFileCandidates.remove(0);
             if (!modFileNames.contains(fileName)) {
-                File toDelete = new File(Constants.REMAPPED_FOLDER, fileName);
+                File toDelete = new File(Constants.REMAPPED_COREMODS_FOLDER, fileName);
+                toDelete.delete();
+            }
+        }
+
+        for (File file : Constants.REMAPPED_MODS_FOLDER.listFiles()) {
+            modFileCandidates.add(file.getName());
+        }
+
+        while (modFileCandidates.size() > 0) {
+            String fileName = modFileCandidates.remove(0);
+            if (!modFileNames.contains(fileName)) {
+                File toDelete = new File(Constants.REMAPPED_MODS_FOLDER, fileName);
                 toDelete.delete();
             }
         }

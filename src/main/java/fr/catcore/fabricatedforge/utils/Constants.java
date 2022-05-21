@@ -14,7 +14,8 @@ public class Constants {
     );
     public static final File MAPPINGS_FILE = new File(VERSIONED_FOLDER, "mappings.tiny");
     public static final File MOD_MAPPINGS_FILE = new File(VERSIONED_FOLDER, "mods_mappings.tiny");
-    public static final File REMAPPED_FOLDER = new File(VERSIONED_FOLDER, "mods");
+    public static final File REMAPPED_MODS_FOLDER = new File(VERSIONED_FOLDER, "mods");
+    public static final File REMAPPED_COREMODS_FOLDER = new File(VERSIONED_FOLDER, "coremods");
 
     public static final LogCategory LOG_CATEGORY = new LogCategory("Mod", "FabricatedForge");
     public static final LogCategory MODLOADER_LOG_CATEGORY = new LogCategory("Mod", "FabricatedForge", "Forge");
@@ -22,6 +23,7 @@ public class Constants {
     static {
         MAIN_FOLDER.mkdirs();
         VERSIONED_FOLDER.mkdirs();
-        REMAPPED_FOLDER.mkdirs();
+        REMAPPED_MODS_FOLDER.mkdirs();
+        REMAPPED_COREMODS_FOLDER.mkdirs();
     }
 }
