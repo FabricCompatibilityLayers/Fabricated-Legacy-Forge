@@ -4,6 +4,7 @@
   "package": "fr.catcore.fabricatedforge.mixin.playerapi",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ServerPlayerEntityMixin"
   ],
   "client": [
     "ClientPlayerEntityMixin"

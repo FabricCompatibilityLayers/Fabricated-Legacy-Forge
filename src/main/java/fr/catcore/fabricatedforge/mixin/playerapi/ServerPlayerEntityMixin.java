@@ -37,6 +37,7 @@ import net.minecraft.network.*;
 import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.screen.*;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerManager;
 import net.minecraft.server.ServerPacketListener;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.server.world.ServerWorld;
@@ -50,6 +51,9 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerDropsEvent;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -859,8 +863,21 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
 
     @Override
     public final void localOnDeath(DamageSource arg) {
-        this.server.getPlayerManager().sendToAll(new ChatMessage_S2CPacket(arg.method_2420(this)));
-        this.inventory.dropAll();
+        if (!ForgeHooks.onLivingDeath(this, arg)) {
+            this.server.getPlayerManager().sendToAll(new ChatMessage_S2CPacket(arg.method_2420(this)));
+            this.server.getPlayerManager();
+            PlayerManager._LOGGER.info(arg.method_2420(this));
+            this.captureDrops(true);
+            this.getCapturedDrops().clear();
+            this.inventory.dropAll();
+            this.captureDrops(false);
+            PlayerDropsEvent event = new PlayerDropsEvent(this, arg, this.getCapturedDrops(), this.field_3332 > 0);
+            if (!MinecraftForge.EVENT_BUS.post(event)) {
+                for (ItemEntity item : this.getCapturedDrops()) {
+                    this.spawnItemEntity(item);
+                }
+            }
+        }
     }
 
     @Override
@@ -937,26 +954,25 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
             }
         }
 
+        Iterator var9;
         if (!this.loadedChunks.isEmpty()) {
-            ArrayList var6 = new ArrayList();
-            Iterator var7 = this.loadedChunks.iterator();
-            ArrayList var3 = new ArrayList();
+            ArrayList var6 = new ArrayList<>();
+            var9 = this.loadedChunks.iterator();
+            ArrayList var3 = new ArrayList<>();
 
-            while(var7.hasNext() && var6.size() < 5) {
-                ChunkPos var4 = (ChunkPos)var7.next();
-                var7.remove();
+            while(var9.hasNext() && var6.size() < 5) {
+                ChunkPos var4 = (ChunkPos)var9.next();
+                var9.remove();
                 if (var4 != null && this.world.isPosLoaded(var4.x << 4, 0, var4.z << 4)) {
                     var6.add(this.world.getChunk(var4.x, var4.z));
-                    var3.addAll(((ServerWorld)this.world).method_2134(var4.x * 16, 0, var4.z * 16, var4.x * 16 + 16, 256, var4.z * 16 + 16));
+                    var3.addAll(((ServerWorld)this.world).method_2134(var4.x * 16, 0, var4.z * 16, var4.x * 16 + 15, 256, var4.z * 16 + 15));
                 }
             }
 
             if (!var6.isEmpty()) {
                 this.field_2823.sendPacket(new class_687(var6));
-                Iterator var10 = var3.iterator();
-
-                while(var10.hasNext()) {
-                    BlockEntity var5 = (BlockEntity)var10.next();
+                for (Object o : var3) {
+                    BlockEntity var5 = (BlockEntity) o;
                     this.updateBlockEntity(var5);
                 }
             }
@@ -965,7 +981,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
         if (!this.removedEntities.isEmpty()) {
             var1 = Math.min(this.removedEntities.size(), 127);
             int[] var8 = new int[var1];
-            Iterator var9 = this.removedEntities.iterator();
+            var9 = this.removedEntities.iterator();
             int var11 = 0;
 
             while(var9.hasNext() && var11 < var1) {
@@ -975,7 +991,6 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
 
             this.field_2823.sendPacket(new DestroyEntityS2CPacket(var8));
         }
-
     }
 
     /**
