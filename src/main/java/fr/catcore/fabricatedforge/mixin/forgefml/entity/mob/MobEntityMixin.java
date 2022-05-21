@@ -153,6 +153,8 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
     @Shadow protected abstract boolean method_2608();
 
+    @Shadow private float field_3344;
+
     public MobEntityMixin(World world) {
         super(world);
     }
@@ -712,5 +714,15 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
             }
 
         }
+    }
+
+    @Override
+    public float getField_3344() {
+        return this.field_3344;
+    }
+
+    @Override
+    public void setField_3344(float field_3344) {
+        this.field_3344 = field_3344;
     }
 }

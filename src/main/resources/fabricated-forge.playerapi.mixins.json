@@ -1,14 +1,14 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "fr.catcore.fabricatedforge.mixin.compat",
+  "package": "fr.catcore.fabricatedforge.mixin.playerapi",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
   ],
   "client": [
+    "ClientPlayerEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "plugin": "fr.catcore.fabricatedforge.mixin.compat.ModCompatMixinPlugin"
+  }
 }

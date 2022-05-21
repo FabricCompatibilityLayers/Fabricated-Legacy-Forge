@@ -196,6 +196,16 @@ public class RemapUtil {
                     .field("i", "field_2150", "D")
                     .field("j", "field_2151", "D");
 
+            // Player API
+            mappings.add("PlayerAPI", "net/minecraft/PlayerAPI");
+            mappings.add("PlayerBase", "net/minecraft/PlayerBase");
+            mappings.add("PlayerBaseSorter", "net/minecraft/PlayerBaseSorter");
+            mappings.add("PlayerBaseSorting", "net/minecraft/PlayerBaseSorting");
+            mappings.add("ServerPlayerAPI", "net/minecraft/ServerPlayerAPI");
+            mappings.add("ServerPlayerBase", "net/minecraft/ServerPlayerBase");
+            mappings.add("ServerPlayerBaseSorter", "net/minecraft/ServerPlayerBaseSorter");
+            mappings.add("ServerPlayerBaseSorting", "net/minecraft/ServerPlayerBaseSorting");
+
             mappings.add("cpw/mods/fml/client/ITextureFX")
                     .method("setErrored", "(Z)V")
                     .method("getErrored", "()Z")
@@ -371,6 +381,12 @@ public class RemapUtil {
                                         case "mod_GlowstoneSeeds":
                                             if (stringValue.equals("glowstoneseed.png")) {
                                                 value = "/glowstone seeds 1.3.2/glowstoneseed.png";
+                                            }
+                                            break;
+
+                                        case "mod_SmartMoving":
+                                            if (name.equals("<init>") && stringValue.equals("e")) {
+                                                value = "field_2897";
                                             }
                                             break;
                                     }
