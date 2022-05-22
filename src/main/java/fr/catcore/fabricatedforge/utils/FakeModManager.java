@@ -52,7 +52,7 @@ public class FakeModManager {
 //            getModMap(loader).put(modEntry.modId, container);
 
             MODS.add(modEntry);
-            Log.info(Constants.LOG_CATEGORY, "Added " + modEntry.getType() + " mod " + modEntry.modName + " to mod list.");
+            Constants.MAIN_LOGGER.info("Added " + modEntry.getType() + " mod " + modEntry.modName + " to mod list.");
 //        } catch (IllegalAccessException | InvocationTargetException e) {
 //            throw new RuntimeException(e);
 //        }

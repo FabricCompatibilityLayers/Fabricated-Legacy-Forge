@@ -39,10 +39,10 @@ public class RemapUtil {
 
     public static void remapMod(Path from, Path to) {
         if (to.toFile().exists()) return;
-        Log.info(Constants.LOG_CATEGORY, "Remapping mod " + from.getFileName());
+        Constants.MAIN_LOGGER.info("Remapping mod " + from.getFileName());
         TinyRemapper remapper = makeRemapper(MINECRAFT_TREE, LOADER_TREE, MODS_TREE);
         remapFile(remapper, from, to);
-        Log.info(Constants.LOG_CATEGORY, "Remapped mod " + from.getFileName());
+        Constants.MAIN_LOGGER.info("Remapped mod " + from.getFileName());
     }
 
     public static List<String> makeModMappings(Path modPath) {

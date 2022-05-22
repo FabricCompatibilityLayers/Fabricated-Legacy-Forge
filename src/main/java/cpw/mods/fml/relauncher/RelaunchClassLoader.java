@@ -219,11 +219,7 @@ public class RelaunchClassLoader extends URLClassLoader {
     public void addURL(URL url) {
         super.addURL(url);
 
-        try {
-            FabricLauncherBase.getLauncher().addToClassPath(UrlUtil.asPath(url));
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        FabricLauncherBase.getLauncher().addToClassPath(UrlUtil.asPath(url));
 
         this.sources.add(url);
     }

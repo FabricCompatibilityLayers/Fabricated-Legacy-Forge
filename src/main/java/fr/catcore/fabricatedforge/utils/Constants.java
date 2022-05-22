@@ -1,7 +1,7 @@
 package fr.catcore.fabricatedforge.utils;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.impl.util.log.LogCategory;
+import net.legacyfabric.fabric.api.logger.v1.Logger;
 
 import java.io.File;
 
@@ -17,8 +17,8 @@ public class Constants {
     public static final File REMAPPED_MODS_FOLDER = new File(VERSIONED_FOLDER, "mods");
     public static final File REMAPPED_COREMODS_FOLDER = new File(VERSIONED_FOLDER, "coremods");
 
-    public static final LogCategory LOG_CATEGORY = new LogCategory("Mod", "FabricatedForge");
-    public static final LogCategory MODLOADER_LOG_CATEGORY = new LogCategory("Mod", "FabricatedForge", "Forge");
+    public static final Logger MAIN_LOGGER = Logger.get("FabricatedForge");
+    public static final Logger FORGE_LOGGER = Logger.get("FabricatedForge", "Forge");
 
     static {
         MAIN_FOLDER.mkdirs();

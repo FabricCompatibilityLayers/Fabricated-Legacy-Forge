@@ -35,11 +35,7 @@ public class ModClassLoader extends URLClassLoader {
 
     @Override
     protected void addURL(URL url) {
-        try {
-            FabricLauncherBase.getLauncher().addToClassPath(UrlUtil.asPath(url));
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        FabricLauncherBase.getLauncher().addToClassPath(UrlUtil.asPath(url));
 
         URL[] newLocalUrls = new URL[localUrls.length + 1];
         System.arraycopy(localUrls, 0, newLocalUrls, 0, localUrls.length);
