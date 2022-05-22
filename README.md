@@ -4,6 +4,44 @@ Load Forge/ModLoader mods as if they were Fabric Loader mods.
 
 Supported Minecraft versions: 1.3.2.
 
+## Credits
+### MinecraftForge
+- Eloraam
+- FlowerChild
+- Hawkye
+- MALfunction84
+- Scokeev9
+- SpaceToad
+- LexManos
+
+### Forge Mod Loader (FML)
+- cpw
+- Risugami, author of ModLoader
+- LexManos
+
+### Paulscode IBXM Library
+- IBXM
+- Martin Cameron
+
+### Paulscode SoundSystem CodecIBXM
+- Paul Lamb
+- IBXM
+- Martin Cameron
+
+### Player API
+- Divisor
+
+### ClassLoaderFixer
+- ThexXTURBOXx
+
+### Most of the base of the mod remapper
+- paulevsGitch's mod BetaLoader
+
+### Fabricated Forge itself
+- CatCore (aka. arthubambou)
+- Contributors
+
+
 ### Tested Mods
 | Mod                    | 1.3.2                          |
 |------------------------|--------------------------------|
