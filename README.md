@@ -42,7 +42,7 @@ Supported Minecraft versions: 1.3.2.
 - Contributors
 
 
-### Tested Mods
+## Tested Mods
 | Mod                    | 1.3.2                          |
 |------------------------|--------------------------------|
 | BlockHelper            | ✔                              |
