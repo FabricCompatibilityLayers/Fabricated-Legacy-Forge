@@ -44,6 +44,9 @@ public class ModDiscoverer {
 
                 List<ModEntry> modName = new ArrayList<>();
 
+                boolean hasClass = false;
+                boolean fabric = false;
+
                 if (file.isDirectory()) {
                     remappedFile = new File(Constants.REMAPPED_MODS_FOLDER, name + ".zip");
                     for (File subFile : file.listFiles()) {
@@ -66,8 +69,18 @@ public class ModDiscoverer {
                                     e.printStackTrace();
                                 }
                                 break;
+                            } else if (subName.endsWith(".class")) {
+                                hasClass = true;
                             }
                         }
+                    }
+
+                    if (modName.isEmpty() && hasClass) {
+                        modName.add(new PossibleModEntry(
+                                name.replace(".zip", "").replace(".jar", ""),
+                                remappedFile,
+                                file
+                        ));
                     }
 
                     if (!modName.isEmpty() && EXCLUDED.containsKey(modName.get(0).modName)) {
@@ -95,6 +108,7 @@ public class ModDiscoverer {
                             if (!zipentry.isDirectory()) {
                                 if (s2.equals("fabric.mod.json")) {
                                     modName.clear();
+                                    fabric = true;
                                     break;
                                 } else if (s2.startsWith("mod_") && s2.endsWith(".class")) {
                                     String mName = s2.replace("mod_", "").replace(".class", "");
@@ -111,8 +125,18 @@ public class ModDiscoverer {
                                         modName.addAll(ForgeModEntry.parseModInfoFile(zipFile.getInputStream(zipentry), remappedFile, file));
                                     }
                                     break;
+                                } else if (s2.endsWith(".class")) {
+                                    hasClass = true;
                                 }
                             }
+                        }
+
+                        if (modName.isEmpty() && hasClass && !fabric) {
+                            modName.add(new PossibleModEntry(
+                                    name.replace(".zip", "").replace(".jar", ""),
+                                    remappedFile,
+                                    file
+                            ));
                         }
 
                         if (!modName.isEmpty()) {

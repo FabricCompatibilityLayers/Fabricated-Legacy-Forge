@@ -69,7 +69,7 @@ Supported Minecraft versions: 1.3.2.
 | TwilightForest         | ✔                              |
 | BuildCraft             | ⚠ Grass and Water don't render |
 | More Pistons           | ❌                              |
-| Portal Gun             | ❌                              |
+| Portal Gun             | ✔                              |
 | MineFactory Reloaded   | ✔                              |
 | Too Many Items         | ❌                              |
 | Fog Key                | ✔                              |
@@ -97,9 +97,9 @@ Supported Minecraft versions: 1.3.2.
 | SuperSlopes            | ✔                              |
 | Wallpaper              | ✔                              |
 | TooManyPlants          | ❌                              |
-| CustomMobSpawner       | ❌                              |
-| GuiAPI                 | ❌                              |
-| MoCreatures            | ❌                              |
+| CustomMobSpawner       | ✔                              |
+| GuiAPI                 | ✔                              |
+| MoCreatures            | ✔                              |
 | CraftTweaker           | ❌                              |
 | CustomNPCs             | ✔                              |
 | CraftPresence          | ❌                              |

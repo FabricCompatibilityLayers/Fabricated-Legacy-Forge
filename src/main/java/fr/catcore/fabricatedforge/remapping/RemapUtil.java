@@ -363,6 +363,7 @@ public class RemapUtil {
                                     String stringValue = (String) value;
 
                                     switch (cls.getName()) {
+                                        // Inventory Tweaks
                                         case "InvTweaksLocalization":
                                             if (name.equals("load") && stringValue.startsWith("invtweaks")) {
                                                 value = "/" + stringValue;
@@ -374,18 +375,21 @@ public class RemapUtil {
                                             else if (stringValue.equals("k")) value = "field_1981";
                                             break;
 
+                                        // Friendssss
                                         case "peterix/friendsss/Friendsss":
                                             if (stringValue.equals("d")) {
                                                 value = "field_3919";
                                             }
                                             break;
 
+                                        // Glowstone Seeds
                                         case "mod_GlowstoneSeeds":
                                             if (stringValue.equals("glowstoneseed.png")) {
                                                 value = "/glowstone seeds 1.3.2/glowstoneseed.png";
                                             }
                                             break;
 
+                                        // Smart Moving
                                         case "mod_SmartMoving":
                                             if (name.equals("<init>") && stringValue.equals("e")) {
                                                 value = "field_2897";
@@ -467,6 +471,54 @@ public class RemapUtil {
                                         case "net/smart/moving/config/SmartMovingOptions":
                                             if (name.equals("<clinit>") && stringValue.equals("k")) {
                                                 value = "field_1656";
+                                            }
+                                            break;
+
+                                        // Portal Gun
+                                        case "portalgun/client/core/TickHandlerClient":
+                                            if (name.equals("renderTick")) {
+                                                switch (stringValue) {
+                                                    case "equippedProgress":
+                                                        value = "field_1878";
+                                                        break;
+                                                    case "prevEquippedProgress":
+                                                        value = "field_1879";
+                                                        break;
+                                                    case "itemToRender":
+                                                        value = "field_1877";
+                                                        break;
+                                                    case "equippedItemSlot":
+                                                        value = "field_1882";
+                                                        break;
+                                                }
+                                            }
+                                            break;
+
+                                        case "portalgun/common/core/CommonProxy":
+                                            if (name.equals("getWorldDir") && stringValue.equals("chunkSaveLocation")) {
+                                                value = "field_4782";
+                                            }
+                                            break;
+
+                                        case "portalgun/client/render/TileRendererPortalMod":
+                                            if (name.equals("updateTexture")) {
+                                                switch (stringValue) {
+                                                    case "camRoll":
+                                                        value = "field_1826";
+                                                        break;
+                                                    case "prevCamRoll":
+                                                        value = "field_1827";
+                                                        break;
+                                                    case "fovModifierHand":
+                                                        value = "field_1829";
+                                                        break;
+                                                    case "fovModifierHandPrev":
+                                                        value = "field_1830";
+                                                        break;
+                                                    case "cameraZoom":
+                                                        value = "field_1833";
+                                                        break;
+                                                }
                                             }
                                             break;
                                     }
