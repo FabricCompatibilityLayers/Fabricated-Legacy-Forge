@@ -23,11 +23,11 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Mixin(Chunk.class)
 public abstract class ChunkMixin implements IChunk {
@@ -68,55 +68,36 @@ public abstract class ChunkMixin implements IChunk {
 
     @Shadow private byte[] biomeArray;
 
-//    @Inject(cancellable = true, method = "<init>(Lnet/minecraft/world/World;[BII)V", at = @At(value = "CONSTANT", args = "intValue=256"))
-//    private void fmlCtr(World par1World, byte[] par2ArrayOfByte, int par3, int par4, CallbackInfo ci) {
-//        int var5 = par2ArrayOfByte.length / 256;
-//
-//        for(int var6 = 0; var6 < 16; ++var6) {
-//            for(int var7 = 0; var7 < 16; ++var7) {
-//                for(int var8 = 0; var8 < var5; ++var8) {
-//                    int var9 = par2ArrayOfByte[var6 << 11 | var7 << 7 | var8] & 255;
-//                    if (var9 != 0) {
-//                        int var10 = var8 >> 4;
-//                        if (this.chunkSections[var10] == null) {
-//                            this.chunkSections[var10] = new ChunkSection(var10 << 4);
-//                        }
-//
-//                        this.chunkSections[var10].method_3927(var6, var8 & 15, var7, var9);
-//                    }
-//                }
-//            }
-//        }
-//
-//        ci.cancel();
-//    }
+    private byte[] par2ArrayOfByteCache;
 
-    /*Todo: HOW
-    public Chunk(World world, byte[] ids, byte[] metadata, int chunkX, int chunkZ) {
-        this(world, chunkX, chunkZ);
-        int var5 = ids.length / 256;
+    @Inject(method = "<init>(Lnet/minecraft/world/World;[BII)V", at = @At(value = "CONSTANT", args = "intValue=256"))
+    private void fmlCtrTop(World bs, byte[] i, int j, int par4, CallbackInfo ci) {
+        this.par2ArrayOfByteCache = new byte[i.length];
+        System.arraycopy(i, 0, this.par2ArrayOfByteCache, 0, i.length);
+        Arrays.fill(i, (byte) 0);
+    }
 
-        for(int x = 0; x < 16; ++x) {
-            for(int z = 0; z < 16; ++z) {
-                for(int y = 0; y < var5; ++y) {
-                    int idx = x << 11 | z << 7 | y;
-                    int id = ids[idx] & 255;
-                    int meta = metadata[idx];
-                    if (id != 0) {
-                        int var10 = y >> 4;
+    @Inject(method = "<init>(Lnet/minecraft/world/World;[BII)V", at = @At("RETURN"))
+    private void fmlCtrBottom(World par1World, byte[] par2ArrayOfByte, int par3, int par4, CallbackInfo ci) {
+        par2ArrayOfByte = this.par2ArrayOfByteCache;
+        int var5 = par2ArrayOfByte.length / 256;
+
+        for(int var6 = 0; var6 < 16; ++var6) {
+            for(int var7 = 0; var7 < 16; ++var7) {
+                for(int var8 = 0; var8 < var5; ++var8) {
+                    int var9 = par2ArrayOfByte[var6 << 11 | var7 << 7 | var8] & 255;
+                    if (var9 != 0) {
+                        int var10 = var8 >> 4;
                         if (this.chunkSections[var10] == null) {
                             this.chunkSections[var10] = new ChunkSection(var10 << 4);
                         }
 
-                        this.chunkSections[var10].method_3927(x, y & 15, z, id);
-                        this.chunkSections[var10].method_3932(x, y & 15, z, meta);
+                        this.chunkSections[var10].method_3927(var6, var8 & 15, var7, var9);
                     }
                 }
             }
         }
-
     }
-     */
 
     /**
      * @author Minecraft Forge
@@ -707,5 +688,15 @@ public abstract class ChunkMixin implements IChunk {
             }
         }
 
+    }
+
+    @Override
+    public ChunkSection getChunkSection(int index) {
+        return this.chunkSections[index];
+    }
+
+    @Override
+    public void setChunkSection(int index, ChunkSection section) {
+        this.chunkSections[index] = section;
     }
 }

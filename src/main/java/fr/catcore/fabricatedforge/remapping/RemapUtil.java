@@ -319,6 +319,9 @@ public class RemapUtil {
                                             case "net/minecraft/class_847":
                                                 type = "fr/catcore/fabricatedforge/forged/WeightedRandomChestContentForged";
                                                 break;
+                                            case "net/minecraft/class_1196":
+                                                type = "fr/catcore/fabricatedforge/forged/ChunkForged";
+                                                break;
                                         }
 
                                         break;
@@ -731,6 +734,98 @@ public class RemapUtil {
                 "method_442",
                 "(F)Lnet/minecraft/class_197;",
                 "gregtechmod/common/blocks/BlockFixedITNT"
+        ));
+
+        METHOD_OVERWRITES.put(new Entry(
+                "setBurnProperties",
+                "(III)V",
+                "extrabiomes/module/summa/block/BlockCustomTallGrass"
+        ), new Entry(
+                "Block_setBurnProperties",
+                "(III)V",
+                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+        ));
+        METHOD_OVERWRITES.put(new Entry(
+                "setBurnProperties",
+                "(III)V",
+                "extrabiomes/module/summa/block/BlockCustomLog"
+        ), new Entry(
+                "Block_setBurnProperties",
+                "(III)V",
+                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+        ));
+        METHOD_OVERWRITES.put(new Entry(
+                "setBurnProperties",
+                "(III)V",
+                "extrabiomes/module/summa/block/BlockQuarterLog"
+        ), new Entry(
+                "Block_setBurnProperties",
+                "(III)V",
+                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+        ));
+        METHOD_OVERWRITES.put(new Entry(
+                "setBurnProperties",
+                "(III)V",
+                "extrabiomes/module/fabrica/block/BlockCustomWood"
+        ), new Entry(
+                "Block_setBurnProperties",
+                "(III)V",
+                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+        ));
+        METHOD_OVERWRITES.put(new Entry(
+                "setBurnProperties",
+                "(III)V",
+                "extrabiomes/module/fabrica/block/BlockCustomWoodSlab"
+        ), new Entry(
+                "Block_setBurnProperties",
+                "(III)V",
+                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+        ));
+        METHOD_OVERWRITES.put(new Entry(
+                "setBurnProperties",
+                "(III)V",
+                "extrabiomes/module/fabrica/block/BlockWoodStairs"
+        ), new Entry(
+                "Block_setBurnProperties",
+                "(III)V",
+                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+        ));
+
+        METHOD_OVERWRITES.put(new Entry(
+                "<init>",
+                "(Lup;II)V",
+                "net/minecraft/class_1196"
+        ), new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1071;III)V",
+                "fr/catcore/fabricatedforge/forged/ChunkForged"
+        ));
+        METHOD_OVERWRITES.put(new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1150;II)V",
+                "net/minecraft/class_1196"
+        ), new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1150;II)V",
+                "fr/catcore/fabricatedforge/forged/ChunkForged"
+        ));
+        METHOD_OVERWRITES.put(new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1150;[BII)V",
+                "net/minecraft/class_1196"
+        ), new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1150;[BII)V",
+                "fr/catcore/fabricatedforge/forged/ChunkForged"
+        ));
+        METHOD_OVERWRITES.put(new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1150;[B[BII)V",
+                "net/minecraft/class_1196"
+        ), new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1150;[B[BII)V",
+                "fr/catcore/fabricatedforge/forged/ChunkForged"
         ));
     }
 

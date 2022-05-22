@@ -116,3 +116,4 @@ Supported Minecraft versions: 1.3.2.
 | AssassinCraft          | ❌                              |
 | EatTheAnimal           | ✔                              |
 | SimpleNotice           | ❌                              |
+| ExtraBiomesXL          | ✔                              |
