@@ -697,6 +697,16 @@ public class RemapUtil {
                 "(IIIII)V",
                 "fr/catcore/fabricatedforge/forged/WeightedRandomChestContentForged"
         ));
+
+        METHOD_OVERWRITES.put(new Entry(
+                "c",
+                "(F)Lnet/minecraft/class_197;",
+                "gregtechmod/common/blocks/BlockFixedITNT"
+        ), new Entry(
+                "method_442",
+                "(F)Lnet/minecraft/class_197;",
+                "gregtechmod/common/blocks/BlockFixedITNT"
+        ));
     }
 
     public static class Entry {

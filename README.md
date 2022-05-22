@@ -16,6 +16,7 @@ Supported Minecraft versions: 1.3.2.
 | Not Enough Items       | ⚠ Load but doesn't do anything |
 | Ender Storage          | ❌                              |
 | IC2                    | ✔ (Require Java 8)             |
+| GregTech               | ✔                              |
 | Friendsss              | ⚠ Load but doesn't do anything |
 | CakeIsALie             | ✔                              |
 | Timber!                | ✔                              |
@@ -24,7 +25,7 @@ Supported Minecraft versions: 1.3.2.
 | Glowstone seeds        | ✔                              |
 | Inventory Tweaks       | ✔                              |
 | ComputerCraft          | ✔                              |
-| Smart Moving           | ❌                              |
+| Smart Moving           | ⚠ Only old version is tested   |
 | Mystcraft              | ✔                              |
 | DivineRPG              | ✔ (Require Java 8)             |
 | TwilightForest         | ✔                              |
