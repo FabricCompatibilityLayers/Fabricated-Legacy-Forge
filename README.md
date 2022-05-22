@@ -63,7 +63,7 @@ Supported Minecraft versions: 1.3.2.
 | Glowstone seeds        | ✔                              |
 | Inventory Tweaks       | ✔                              |
 | ComputerCraft          | ✔                              |
-| Smart Moving           | ⚠ Only old version is tested   |
+| Smart Moving           | ✔                              |
 | Mystcraft              | ✔                              |
 | DivineRPG              | ✔ (Require Java 8)             |
 | TwilightForest         | ✔                              |

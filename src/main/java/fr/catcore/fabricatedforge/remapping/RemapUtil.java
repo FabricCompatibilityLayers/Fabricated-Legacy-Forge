@@ -52,7 +52,6 @@ public class RemapUtil {
             try {
                 FileInputStream fileinputstream = new FileInputStream(path);
                 ZipInputStream zipinputstream = new ZipInputStream(fileinputstream);
-                Object obj = null;
 
                 while (true) {
                     ZipEntry zipentry = zipinputstream.getNextEntry();
@@ -391,6 +390,8 @@ public class RemapUtil {
                                             break;
 
                                         case "net/minecraft/move/SmartMovingContext":
+                                        case "net/smart/moving/SmartMovingContext":
+                                        case "net/smart/render/SmartRenderContext":
                                             if (name.equals("<clinit>") && stringValue.equals("P")) {
                                                 value = "field_3774";
                                             } else if (name.equals("registerAnimation") && stringValue.equals("o")) {
@@ -401,44 +402,68 @@ public class RemapUtil {
                                             break;
 
                                         case "net/minecraft/move/render/ModelRotationRenderer":
+                                        case "net/smart/moving/render/ModelRotationRenderer":
+                                        case "net/smart/render/ModelRotationRenderer":
                                             if (name.equals("<clinit>")) {
-                                                if (stringValue.equals("q")) {
-                                                    value = "field_1611";
-                                                } else if (stringValue.equals("d")) {
-                                                    value = "method_1196";
-                                                } else if (stringValue.equals("r")) {
-                                                    value = "field_1612";
+                                                switch (stringValue) {
+                                                    case "q":
+                                                        value = "field_1611";
+                                                        break;
+                                                    case "d":
+                                                        value = "method_1196";
+                                                        break;
+                                                    case "r":
+                                                        value = "field_1612";
+                                                        break;
                                                 }
                                             }
                                             break;
 
                                         case "net/minecraft/move/render/RenderPlayer":
+                                        case "net/smart/moving/render/RenderPlayer":
                                             if (name.equals("initialize")) {
-                                                if (stringValue.equals("a")) {
-                                                    value = "field_2133";
-                                                } else if (stringValue.equals("b")) {
-                                                    value = "field_2134";
-                                                } else if (stringValue.equals("i")) {
-                                                    value = "field_2135";
+                                                switch (stringValue) {
+                                                    case "a":
+                                                        value = "field_2133";
+                                                        break;
+                                                    case "b":
+                                                        value = "field_2134";
+                                                        break;
+                                                    case "i":
+                                                        value = "field_2135";
+                                                        break;
                                                 }
                                             }
                                             break;
 
                                         case "net/minecraft/move/playerapi/NetServerHandler":
+                                        case "net/smart/moving/playerapi/NetServerHandler":
                                             if (name.equals("<clinit>")) {
-                                                if (stringValue.equals("e")) {
-                                                    value = "field_2897";
-                                                } else if (stringValue.equals("d")) {
-                                                    value = "field_2896";
-                                                } else if (stringValue.equals("connections")) {
-                                                    value = "field_2923";
+                                                switch (stringValue) {
+                                                    case "e":
+                                                        value = "field_2897";
+                                                        break;
+                                                    case "d":
+                                                        value = "field_2896";
+                                                        break;
+                                                    case "connections":
+                                                        value = "field_2923";
+                                                        break;
                                                 }
                                             }
                                             break;
 
                                         case "net/minecraft/move/SmartMovingSelf":
+                                        case "net/smart/moving/SmartMovingSelf":
                                             if (name.equals("<clinit>") && stringValue.equals("c")) {
                                                 value = "field_1059";
+                                            }
+                                            break;
+
+                                        case "net/minecraft/move/config/SmartMovingOptions":
+                                        case "net/smart/moving/config/SmartMovingOptions":
+                                            if (name.equals("<clinit>") && stringValue.equals("k")) {
+                                                value = "field_1656";
                                             }
                                             break;
                                     }
