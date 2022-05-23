@@ -67,7 +67,7 @@ Supported Minecraft versions: 1.3.2.
 | Mystcraft              | ✔                              |
 | DivineRPG              | ✔ (Require Java 8)             |
 | TwilightForest         | ✔                              |
-| BuildCraft             | ⚠ Grass and Water don't render |
+| BuildCraft             | ✔                              |
 | More Pistons           | ❌                              |
 | Portal Gun             | ✔                              |
 | MineFactory Reloaded   | ✔                              |

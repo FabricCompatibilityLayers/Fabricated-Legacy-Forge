@@ -289,7 +289,27 @@ public class RemapUtil {
                 return new ClassVisitor(Opcodes.ASM9, next) {
                     @Override
                     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-                        return new MethodVisitor(Opcodes.ASM9, super.visitMethod(access, name, descriptor, signature, exceptions)) {
+                        switch (cls.getName()) {
+                            // Custom FX for Forestry, MineFactoryReloaded, Buildcraft and Mystcraft
+                            case "forestry/core/render/TextureHabitatLocatorFX":
+                            case "forestry/core/render/TextureLiquidsFX":
+                            case "powercrystals/minefactoryreloaded/client/TextureFrameAnimFX":
+                            case "powercrystals/minefactoryreloaded/client/TextureLiquidFX":
+                            case "buildcraft/core/render/TextureLiquidsFX":
+                            case "buildcraft/energy/render/TextureOilFlowFX":
+                            case "xcompwiz/mystcraft/client/TexturePortalFX":
+                                if (name.equals("a")) {
+                                    if (descriptor.equals("()V")) {
+                                        name = "method_1613";
+                                    } else if (descriptor.equals("(Lnet/minecraft/class_534;)V") || descriptor.equals("(Lavf;)V")) {
+                                        name = "method_1614";
+                                    }
+                                }
+                                break;
+                        }
+
+                        String finalName = name;
+                        return new MethodVisitor(Opcodes.ASM9, super.visitMethod(access, finalName, descriptor, signature, exceptions)) {
                             @Override
                             public void visitMethodInsn(int opcode, String methodOwner, String methodName, String methodDescriptor, boolean isInterface) {
                                 for (Map.Entry<Entry, Entry> entry : METHOD_OVERWRITES.entrySet()) {
@@ -313,6 +333,7 @@ public class RemapUtil {
                                     case Opcodes.NEW:
 
                                         switch (type) {
+                                            // Forge
                                             case "net/minecraft/class_1041":
                                                 type = "fr/catcore/fabricatedforge/forged/ItemGroupForged";
                                                 break;
@@ -333,20 +354,34 @@ public class RemapUtil {
                             @Override
                             public void visitFieldInsn(int opcode, String fieldOwner, String fieldName, String fieldDescriptor) {
                                 switch (fieldOwner) {
+                                    // Custom FX for Forestry, MineFactoryReloaded, Buildcraft and Mystcraft
                                     case "forestry/core/render/TextureHabitatLocatorFX":
-                                        if (fieldName.equals("f")) fieldName = "field_2157";
-                                        else if (fieldName.equals("b")) fieldName = "field_2153";
-                                        break;
+                                    case "forestry/core/render/TextureLiquidsFX":
                                     case "powercrystals/minefactoryreloaded/client/TextureFrameAnimFX":
-                                        if (fieldName.equals("a")) fieldName = "field_2152";
-                                        break;
                                     case "powercrystals/minefactoryreloaded/client/TextureLiquidFX":
-                                        if (fieldName.equals("e")) fieldName = "field_2156";
-                                        else if (fieldName.equals("a")) fieldName = "field_2152";
-                                        break;
                                     case "buildcraft/energy/render/TextureOilFlowFX":
-                                        if (fieldName.equals("e")) fieldName = "field_2156";
+                                    case "buildcraft/core/render/TextureLiquidsFX":
+                                    case "xcompwiz/mystcraft/client/TexturePortalFX":
+                                        switch (fieldName) {
+                                            case "e":
+                                                fieldName = "field_2156";
+                                                break;
+                                            case "c":
+                                                fieldName = "field_2154";
+                                                break;
+                                            case "a":
+                                                fieldName = "field_2152";
+                                                break;
+                                            case "b":
+                                                fieldName = "field_2153";
+                                                break;
+                                            case "f":
+                                                fieldName = "field_2157";
+                                                break;
+                                        }
                                         break;
+
+                                    // Mystcraft
                                     case "xcompwiz/mystcraft/Mystcraft":
                                         if (fieldName.equals("registeredDims")) {
                                             fieldOwner = "fr/catcore/fabricatedforge/compat/MystcraftCompat";
@@ -365,7 +400,7 @@ public class RemapUtil {
                                     switch (cls.getName()) {
                                         // Inventory Tweaks
                                         case "InvTweaksLocalization":
-                                            if (name.equals("load") && stringValue.startsWith("invtweaks")) {
+                                            if (finalName.equals("load") && stringValue.startsWith("invtweaks")) {
                                                 value = "/" + stringValue;
                                             }
                                             break;
@@ -391,7 +426,7 @@ public class RemapUtil {
 
                                         // Smart Moving
                                         case "mod_SmartMoving":
-                                            if (name.equals("<init>") && stringValue.equals("e")) {
+                                            if (finalName.equals("<init>") && stringValue.equals("e")) {
                                                 value = "field_2897";
                                             }
                                             break;
@@ -399,11 +434,11 @@ public class RemapUtil {
                                         case "net/minecraft/move/SmartMovingContext":
                                         case "net/smart/moving/SmartMovingContext":
                                         case "net/smart/render/SmartRenderContext":
-                                            if (name.equals("<clinit>") && stringValue.equals("P")) {
+                                            if (finalName.equals("<clinit>") && stringValue.equals("P")) {
                                                 value = "field_3774";
-                                            } else if (name.equals("registerAnimation") && stringValue.equals("o")) {
+                                            } else if (finalName.equals("registerAnimation") && stringValue.equals("o")) {
                                                 value = "field_2108";
-                                            } else if (name.equals("TranslateIfNecessary") && stringValue.equals("b")) {
+                                            } else if (finalName.equals("TranslateIfNecessary") && stringValue.equals("b")) {
                                                 value = "field_618";
                                             }
                                             break;
@@ -411,7 +446,7 @@ public class RemapUtil {
                                         case "net/minecraft/move/render/ModelRotationRenderer":
                                         case "net/smart/moving/render/ModelRotationRenderer":
                                         case "net/smart/render/ModelRotationRenderer":
-                                            if (name.equals("<clinit>")) {
+                                            if (finalName.equals("<clinit>")) {
                                                 switch (stringValue) {
                                                     case "q":
                                                         value = "field_1611";
@@ -428,7 +463,7 @@ public class RemapUtil {
 
                                         case "net/minecraft/move/render/RenderPlayer":
                                         case "net/smart/moving/render/RenderPlayer":
-                                            if (name.equals("initialize")) {
+                                            if (finalName.equals("initialize")) {
                                                 switch (stringValue) {
                                                     case "a":
                                                         value = "field_2133";
@@ -445,7 +480,7 @@ public class RemapUtil {
 
                                         case "net/minecraft/move/playerapi/NetServerHandler":
                                         case "net/smart/moving/playerapi/NetServerHandler":
-                                            if (name.equals("<clinit>")) {
+                                            if (finalName.equals("<clinit>")) {
                                                 switch (stringValue) {
                                                     case "e":
                                                         value = "field_2897";
@@ -462,21 +497,21 @@ public class RemapUtil {
 
                                         case "net/minecraft/move/SmartMovingSelf":
                                         case "net/smart/moving/SmartMovingSelf":
-                                            if (name.equals("<clinit>") && stringValue.equals("c")) {
+                                            if (finalName.equals("<clinit>") && stringValue.equals("c")) {
                                                 value = "field_1059";
                                             }
                                             break;
 
                                         case "net/minecraft/move/config/SmartMovingOptions":
                                         case "net/smart/moving/config/SmartMovingOptions":
-                                            if (name.equals("<clinit>") && stringValue.equals("k")) {
+                                            if (finalName.equals("<clinit>") && stringValue.equals("k")) {
                                                 value = "field_1656";
                                             }
                                             break;
 
                                         // Portal Gun
                                         case "portalgun/client/core/TickHandlerClient":
-                                            if (name.equals("renderTick")) {
+                                            if (finalName.equals("renderTick")) {
                                                 switch (stringValue) {
                                                     case "equippedProgress":
                                                         value = "field_1878";
@@ -495,13 +530,13 @@ public class RemapUtil {
                                             break;
 
                                         case "portalgun/common/core/CommonProxy":
-                                            if (name.equals("getWorldDir") && stringValue.equals("chunkSaveLocation")) {
+                                            if (finalName.equals("getWorldDir") && stringValue.equals("chunkSaveLocation")) {
                                                 value = "field_4782";
                                             }
                                             break;
 
                                         case "portalgun/client/render/TileRendererPortalMod":
-                                            if (name.equals("updateTexture")) {
+                                            if (finalName.equals("updateTexture")) {
                                                 switch (stringValue) {
                                                     case "camRoll":
                                                         value = "field_1826";
@@ -730,6 +765,7 @@ public class RemapUtil {
     private static final Map<Entry, Entry> METHOD_OVERWRITES = new HashMap<>();
 
     static {
+        // Forge
         METHOD_OVERWRITES.put(new Entry(
                 "setBurnProperties",
                 "(III)V",
@@ -739,7 +775,6 @@ public class RemapUtil {
                 "(III)V",
                 "fr/catcore/fabricatedforge/forged/ReflectionUtils"
         ));
-
         METHOD_OVERWRITES.put(new Entry(
                 "<init>",
                 "(Ljava/lang/String;)V",
@@ -758,7 +793,6 @@ public class RemapUtil {
                 "(ILjava/lang/String;)V",
                 "fr/catcore/fabricatedforge/forged/ItemGroupForged"
         ));
-
         METHOD_OVERWRITES.put(new Entry(
                 "<init>",
                 "(Lnet/minecraft/class_1071;III)V",
@@ -777,7 +811,35 @@ public class RemapUtil {
                 "(IIIII)V",
                 "fr/catcore/fabricatedforge/forged/WeightedRandomChestContentForged"
         ));
+        METHOD_OVERWRITES.put(new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1150;II)V",
+                "net/minecraft/class_1196"
+        ), new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1150;II)V",
+                "fr/catcore/fabricatedforge/forged/ChunkForged"
+        ));
+        METHOD_OVERWRITES.put(new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1150;[BII)V",
+                "net/minecraft/class_1196"
+        ), new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1150;[BII)V",
+                "fr/catcore/fabricatedforge/forged/ChunkForged"
+        ));
+        METHOD_OVERWRITES.put(new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1150;[B[BII)V",
+                "net/minecraft/class_1196"
+        ), new Entry(
+                "<init>",
+                "(Lnet/minecraft/class_1150;[B[BII)V",
+                "fr/catcore/fabricatedforge/forged/ChunkForged"
+        ));
 
+        // GregTech
         METHOD_OVERWRITES.put(new Entry(
                 "c",
                 "(F)Lnet/minecraft/class_197;",
@@ -788,6 +850,7 @@ public class RemapUtil {
                 "gregtechmod/common/blocks/BlockFixedITNT"
         ));
 
+        // ExtraBiomesXL
         METHOD_OVERWRITES.put(new Entry(
                 "setBurnProperties",
                 "(III)V",
@@ -841,43 +904,6 @@ public class RemapUtil {
                 "Block_setBurnProperties",
                 "(III)V",
                 "fr/catcore/fabricatedforge/forged/ReflectionUtils"
-        ));
-
-        METHOD_OVERWRITES.put(new Entry(
-                "<init>",
-                "(Lup;II)V",
-                "net/minecraft/class_1196"
-        ), new Entry(
-                "<init>",
-                "(Lnet/minecraft/class_1071;III)V",
-                "fr/catcore/fabricatedforge/forged/ChunkForged"
-        ));
-        METHOD_OVERWRITES.put(new Entry(
-                "<init>",
-                "(Lnet/minecraft/class_1150;II)V",
-                "net/minecraft/class_1196"
-        ), new Entry(
-                "<init>",
-                "(Lnet/minecraft/class_1150;II)V",
-                "fr/catcore/fabricatedforge/forged/ChunkForged"
-        ));
-        METHOD_OVERWRITES.put(new Entry(
-                "<init>",
-                "(Lnet/minecraft/class_1150;[BII)V",
-                "net/minecraft/class_1196"
-        ), new Entry(
-                "<init>",
-                "(Lnet/minecraft/class_1150;[BII)V",
-                "fr/catcore/fabricatedforge/forged/ChunkForged"
-        ));
-        METHOD_OVERWRITES.put(new Entry(
-                "<init>",
-                "(Lnet/minecraft/class_1150;[B[BII)V",
-                "net/minecraft/class_1196"
-        ), new Entry(
-                "<init>",
-                "(Lnet/minecraft/class_1150;[B[BII)V",
-                "fr/catcore/fabricatedforge/forged/ChunkForged"
         ));
     }
 
