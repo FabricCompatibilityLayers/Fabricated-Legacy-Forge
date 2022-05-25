@@ -290,7 +290,7 @@ public class RemapUtil {
                     @Override
                     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
                         switch (cls.getName()) {
-                            // Custom FX for Forestry, MineFactoryReloaded, Buildcraft and Mystcraft
+                            // Custom FX for Forestry, MineFactoryReloaded, Buildcraft, Mystcraft and IC2
                             case "forestry/core/render/TextureHabitatLocatorFX":
                             case "forestry/core/render/TextureLiquidsFX":
                             case "powercrystals/minefactoryreloaded/client/TextureFrameAnimFX":
@@ -298,6 +298,7 @@ public class RemapUtil {
                             case "buildcraft/core/render/TextureLiquidsFX":
                             case "buildcraft/energy/render/TextureOilFlowFX":
                             case "xcompwiz/mystcraft/client/TexturePortalFX":
+                            case "ic2/common/TextureLiquidFX":
                                 if (name.equals("a")) {
                                     if (descriptor.equals("()V")) {
                                         name = "method_1613";
@@ -354,7 +355,7 @@ public class RemapUtil {
                             @Override
                             public void visitFieldInsn(int opcode, String fieldOwner, String fieldName, String fieldDescriptor) {
                                 switch (fieldOwner) {
-                                    // Custom FX for Forestry, MineFactoryReloaded, Buildcraft and Mystcraft
+                                    // Custom FX for Forestry, MineFactoryReloaded, Buildcraft, Mystcraft and IC2
                                     case "forestry/core/render/TextureHabitatLocatorFX":
                                     case "forestry/core/render/TextureLiquidsFX":
                                     case "powercrystals/minefactoryreloaded/client/TextureFrameAnimFX":
@@ -362,6 +363,7 @@ public class RemapUtil {
                                     case "buildcraft/energy/render/TextureOilFlowFX":
                                     case "buildcraft/core/render/TextureLiquidsFX":
                                     case "xcompwiz/mystcraft/client/TexturePortalFX":
+                                    case "ic2/common/TextureLiquidFX":
                                         switch (fieldName) {
                                             case "e":
                                                 fieldName = "field_2156";
