@@ -8,12 +8,18 @@ assignees: arthurbambou
 ---
 
 Minecraft version: 1.3.2
+
 Fabricated-Forge version:
+
 Fabric Loader version:
+
 Java version:
 
+
 Mod name: 
+
 Mod download link (needed for testing):
+
 
 Description of the bug:
 
