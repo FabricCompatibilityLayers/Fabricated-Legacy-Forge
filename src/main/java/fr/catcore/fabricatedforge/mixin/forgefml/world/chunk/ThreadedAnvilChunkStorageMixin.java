@@ -82,7 +82,7 @@ public abstract class ThreadedAnvilChunkStorageMixin implements IThreadedAnvilCh
      * @reason none
      */
     @Overwrite
-    protected Chunk validateChunk(World par1World, int par2, int par3, NbtCompound par4NBTTagCompound) {
+    public Chunk validateChunk(World par1World, int par2, int par3, NbtCompound par4NBTTagCompound) {
         if (!par4NBTTagCompound.contains("Level")) {
             System.out.println("Chunk file at " + par2 + "," + par3 + " is missing level data, skipping");
             return null;
@@ -129,7 +129,7 @@ public abstract class ThreadedAnvilChunkStorageMixin implements IThreadedAnvilCh
      * @reason none
      */
     @Overwrite
-    protected void registerChunkChecker(ChunkPos par1ChunkCoordIntPair, NbtCompound par2NBTTagCompound) {
+    public void registerChunkChecker(ChunkPos par1ChunkCoordIntPair, NbtCompound par2NBTTagCompound) {
         Object var3 = this.field_4781;
         synchronized(this.field_4781) {
             if (this.chunksBeingSaved.contains(par1ChunkCoordIntPair)) {

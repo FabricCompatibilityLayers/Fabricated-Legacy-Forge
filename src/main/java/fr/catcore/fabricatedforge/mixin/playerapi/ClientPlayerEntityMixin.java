@@ -1447,7 +1447,7 @@ public abstract class ClientPlayerEntityMixin extends PlayerEntity implements IP
      * @reason none
      */
     @Overwrite
-    protected boolean pushOutOfBlocks(double d, double e, double f) {
+    public boolean pushOutOfBlocks(double d, double e, double f) {
         boolean var7;
         if (this.playerAPI != null && this.playerAPI.isPushOutOfBlocksModded) {
             var7 = PlayerAPI.pushOutOfBlocks((ClientPlayerEntity)(Object) this, d, e, f);

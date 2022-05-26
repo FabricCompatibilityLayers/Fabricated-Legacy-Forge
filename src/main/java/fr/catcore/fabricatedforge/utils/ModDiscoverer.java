@@ -25,6 +25,8 @@ public class ModDiscoverer {
 
         List<ModEntry> mods = new ArrayList<>();
 
+        coreModDir.mkdirs();
+
         for (File file : coreModDir.listFiles()) {
             if (file.isFile()) {
                 String fileName = file.getName();

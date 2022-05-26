@@ -32,7 +32,7 @@ public class BipedEntityRendererMixin extends MobEntityRenderer {
      * @reason none
      */
     @Overwrite
-    protected void method_1569(MobEntity par1EntityLiving, float par2) {
+    public void method_1569(MobEntity par1EntityLiving, float par2) {
         super.method_1569(par1EntityLiving, par2);
         ItemStack var3 = par1EntityLiving.method_2640();
         if (var3 != null) {
