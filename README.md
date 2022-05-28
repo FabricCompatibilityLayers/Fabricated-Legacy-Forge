@@ -76,7 +76,7 @@ Supported Minecraft versions: 1.3.2.
 | Animal Bikes           | ✔                              |
 | Cooper Tools           | ❌                              |
 | Coral Reef             | ✔                              |
-| Multipage Chest        | ❌                              |
+| Multipage Chest        | ✔                              |
 | Whole Tree Axe         | ❌                              |
 | Tree Capitator         | ✔ Use FML version              |
 | Floating Ruins         | ✔                              |
@@ -100,7 +100,7 @@ Supported Minecraft versions: 1.3.2.
 | CustomMobSpawner       | ✔                              |
 | GuiAPI                 | ✔                              |
 | MoCreatures            | ✔                              |
-| CraftTweaker           | ❌                              |
+| CraftTweaker           | ✔                              |
 | CustomNPCs             | ✔                              |
 | CraftPresence          | ❌                              |
 | MorePlayerModels       | ✔                              |
