@@ -584,6 +584,30 @@ public class RemapUtil {
                                                 }
                                             }
                                             break;
+
+                                        // GregTech
+                                        case "gregtechmod/common/gui/GT_GUIContainer_AESU":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_Centrifuge":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_ChargeOMat":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_ComputerCube":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_Destructopack":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_ECraftingtable":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_ElectricBufferLarge":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_ElectricBufferSmall":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_Fusionreactor":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_IDSU":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_LESU":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_Matterfabricator":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_Quantumchest":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_Sonictron":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_Translocator":
+                                        case "gregtechmod/common/gui/GT_GUIContainer_UUMAssembler":
+                                        case "gregtechmod/common/gui/GT_GUIContainerMetaID_Machine":
+                                        case "gregtechmod/common/gui/GT_GUIContainerMetaTile_Machine":
+                                            if (stringValue.startsWith("gregtechmod/")) {
+                                                value = "/" + stringValue;
+                                            }
+                                            break;
                                     }
                                 }
 
@@ -877,60 +901,60 @@ public class RemapUtil {
         ));
 
         // ExtraBiomesXL
-        METHOD_OVERWRITES.put(new Entry(
-                "setBurnProperties",
-                "(III)V",
-                "extrabiomes/module/summa/block/BlockCustomTallGrass"
-        ), new Entry(
-                "Block_setBurnProperties",
-                "(III)V",
-                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
-        ));
-        METHOD_OVERWRITES.put(new Entry(
-                "setBurnProperties",
-                "(III)V",
-                "extrabiomes/module/summa/block/BlockCustomLog"
-        ), new Entry(
-                "Block_setBurnProperties",
-                "(III)V",
-                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
-        ));
-        METHOD_OVERWRITES.put(new Entry(
-                "setBurnProperties",
-                "(III)V",
-                "extrabiomes/module/summa/block/BlockQuarterLog"
-        ), new Entry(
-                "Block_setBurnProperties",
-                "(III)V",
-                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
-        ));
-        METHOD_OVERWRITES.put(new Entry(
-                "setBurnProperties",
-                "(III)V",
-                "extrabiomes/module/fabrica/block/BlockCustomWood"
-        ), new Entry(
-                "Block_setBurnProperties",
-                "(III)V",
-                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
-        ));
-        METHOD_OVERWRITES.put(new Entry(
-                "setBurnProperties",
-                "(III)V",
-                "extrabiomes/module/fabrica/block/BlockCustomWoodSlab"
-        ), new Entry(
-                "Block_setBurnProperties",
-                "(III)V",
-                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
-        ));
-        METHOD_OVERWRITES.put(new Entry(
-                "setBurnProperties",
-                "(III)V",
-                "extrabiomes/module/fabrica/block/BlockWoodStairs"
-        ), new Entry(
-                "Block_setBurnProperties",
-                "(III)V",
-                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
-        ));
+//        METHOD_OVERWRITES.put(new Entry(
+//                "setBurnProperties",
+//                "(III)V",
+//                "extrabiomes/module/summa/block/BlockCustomTallGrass"
+//        ), new Entry(
+//                "Block_setBurnProperties",
+//                "(III)V",
+//                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+//        ));
+//        METHOD_OVERWRITES.put(new Entry(
+//                "setBurnProperties",
+//                "(III)V",
+//                "extrabiomes/module/summa/block/BlockCustomLog"
+//        ), new Entry(
+//                "Block_setBurnProperties",
+//                "(III)V",
+//                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+//        ));
+//        METHOD_OVERWRITES.put(new Entry(
+//                "setBurnProperties",
+//                "(III)V",
+//                "extrabiomes/module/summa/block/BlockQuarterLog"
+//        ), new Entry(
+//                "Block_setBurnProperties",
+//                "(III)V",
+//                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+//        ));
+//        METHOD_OVERWRITES.put(new Entry(
+//                "setBurnProperties",
+//                "(III)V",
+//                "extrabiomes/module/fabrica/block/BlockCustomWood"
+//        ), new Entry(
+//                "Block_setBurnProperties",
+//                "(III)V",
+//                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+//        ));
+//        METHOD_OVERWRITES.put(new Entry(
+//                "setBurnProperties",
+//                "(III)V",
+//                "extrabiomes/module/fabrica/block/BlockCustomWoodSlab"
+//        ), new Entry(
+//                "Block_setBurnProperties",
+//                "(III)V",
+//                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+//        ));
+//        METHOD_OVERWRITES.put(new Entry(
+//                "setBurnProperties",
+//                "(III)V",
+//                "extrabiomes/module/fabrica/block/BlockWoodStairs"
+//        ), new Entry(
+//                "Block_setBurnProperties",
+//                "(III)V",
+//                "fr/catcore/fabricatedforge/forged/ReflectionUtils"
+//        ));
 
         FORGE_EXCLUDED.put("a")
                 .put("aad")
