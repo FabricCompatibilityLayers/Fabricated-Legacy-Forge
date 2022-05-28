@@ -3,27 +3,27 @@ package fr.catcore.fabricatedforge.remapping;
 import com.google.common.base.Strings;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Maps;
+import fr.catcore.fabricatedforge.utils.BArrayList;
 import fr.catcore.fabricatedforge.utils.Constants;
 import fr.catcore.fabricatedforge.utils.FileUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.impl.launch.FabricLauncher;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
-import net.fabricmc.loader.impl.util.log.Log;
 import net.fabricmc.loader.impl.util.mappings.TinyRemapperMappingsHelper;
 import net.fabricmc.mapping.reader.v2.TinyMetadata;
 import net.fabricmc.mapping.tree.*;
-import net.fabricmc.tinyremapper.IMappingProvider;
-import net.fabricmc.tinyremapper.OutputConsumerPath;
-import net.fabricmc.tinyremapper.TinyRemapper;
+import net.fabricmc.tinyremapper.*;
 import net.fabricmc.tinyremapper.api.TrClass;
 import org.objectweb.asm.*;
 
 import java.io.*;
+import java.net.URL;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 public class RemapUtil {
     private static TinyTree LOADER_TREE;
@@ -32,18 +32,87 @@ public class RemapUtil {
 
     private static final Map<String, String> MOD_MAPPINGS = new HashMap<>();
 
+    private static final BArrayList<String> FORGE_EXCLUDED = new BArrayList<>();
+
     public static void init() {
+        downloadForgeAndPatchIt();
         generateMappings();
         LOADER_TREE = makeTree(Constants.MAPPINGS_FILE);
         MINECRAFT_TREE = FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings();
     }
 
-    public static void remapMod(Path from, Path to) {
-        if (to.toFile().exists()) return;
-        Constants.MAIN_LOGGER.info("Remapping mod " + from.getFileName());
+    private static void downloadForgeAndPatchIt() {
+        try {
+            if (!Constants.FORGE_FILE.exists()) {
+                try (BufferedInputStream inputStream = new BufferedInputStream(new URL(Constants.FORGE_URL).openStream())) {
+                    try (BufferedOutputStream outputStream = new BufferedOutputStream(Files.newOutputStream(Constants.FORGE_FILE.toPath()))) {
+                        byte[] buffer = new byte[2048];
+
+                        // Increments file size
+                        int length;
+                        int downloaded = 0;
+
+                        // Looping until server finishes
+                        while ((length = inputStream.read(buffer)) != -1) {
+                            // Writing data
+                            outputStream.write(buffer, 0, length);
+                            downloaded += length;
+                            //System.out.println("Downlad Status: " + (downloaded * 100) / (contentLength * 1.0) + "%");
+                        }
+
+                        outputStream.close();
+                        inputStream.close();
+                    }
+                }
+
+                File file = Constants.FORGE_FILE;
+
+                File tempFile = new File(file.getAbsolutePath() + ".tmp");
+                tempFile.delete();
+                tempFile.deleteOnExit();
+
+                boolean renameOk = file.renameTo(tempFile);
+                if (!renameOk) {
+                    throw new RuntimeException("could not rename the file " + file.getAbsolutePath() + " to " + tempFile.getAbsolutePath());
+                }
+
+                ZipInputStream zin = new ZipInputStream(Files.newInputStream(tempFile.toPath()));
+                ZipOutputStream zout = new ZipOutputStream(Files.newOutputStream(file.toPath()));
+
+                ZipEntry entry = zin.getNextEntry();
+                byte[] buf = new byte[1024];
+
+                while (entry != null) {
+                    String zipEntryName = entry.getName();
+                    boolean toBeDeleted = FORGE_EXCLUDED.contains(zipEntryName.replace(".class", ""));
+
+                    if (!toBeDeleted) {
+                        zout.putNextEntry(new ZipEntry(zipEntryName));
+                        // Transfer bytes from the ZIP file to the output file
+                        int len;
+                        while ((len = zin.read(buf)) > 0) {
+                            zout.write(buf, 0, len);
+                        }
+                    }
+
+                    entry = zin.getNextEntry();
+                }
+
+                // Close the streams
+                zin.close();
+                // Compress the files
+                // Complete the ZIP file
+                zout.close();
+                tempFile.delete();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void remapMods(Map<Path, Path> pathMap) {
         TinyRemapper remapper = makeRemapper(MINECRAFT_TREE, LOADER_TREE, MODS_TREE);
-        remapFile(remapper, from, to);
-        Constants.MAIN_LOGGER.info("Remapped mod " + from.getFileName());
+        remapFiles(remapper, pathMap);
     }
 
     public static List<String> makeModMappings(Path modPath) {
@@ -225,19 +294,7 @@ public class RemapUtil {
 
             mappings.add("net/minecraftforge/common/ISidedInventory")
                     .method("getStartInventorySide", "(Lnet/minecraftforge/common/ForgeDirection;)I")
-                    .method("getSizeInventorySide", "(Lnet/minecraftforge/common/ForgeDirection;)I")
-                    // Inventory mappings
-                    .method("k_", "method_2390", "()V")
-                    .method("a", "method_2381", "(I)Lrj;")
-                    .method("a", "method_2384", "(Log;)Z")
-                    .method("f", "method_2387", "()V")
-                    .method("a", "method_2383", "(ILrj;)V")
-                    .method("a", "method_2382", "(II)Lrj;")
-                    .method("d", "method_543", "()V")
-                    .method("b", "method_2385", "()Ljava/lang/String;")
-                    .method("j_", "method_2389", "()I")
-                    .method("i_", "method_2388", "()I")
-                    .method("b", "method_2386", "(I)Lrj;");
+                    .method("getSizeInventorySide", "(Lnet/minecraftforge/common/ForgeDirection;)I");
 
             List<String> lines = new ArrayList<>();
 
@@ -300,344 +357,246 @@ public class RemapUtil {
             builder.withMappings(createProvider(tree));
         }
 
-//        builder.extraPostApplyVisitor(new TinyRemapper.ApplyVisitorProvider() {
-//            @Override
-//            public ClassVisitor insertApplyVisitor(TrClass cls, ClassVisitor next) {
-//                return new ClassVisitor(Opcodes.ASM9, next) {
-//                    @Override
-//                    public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-//                        switch (cls.getName()) {
-//                            // Custom FX for Forestry, MineFactoryReloaded, Buildcraft, Mystcraft and IC2
-//                            case "forestry/core/render/TextureHabitatLocatorFX":
-//                            case "forestry/core/render/TextureLiquidsFX":
-//                            case "powercrystals/minefactoryreloaded/client/TextureFrameAnimFX":
-//                            case "powercrystals/minefactoryreloaded/client/TextureLiquidFX":
-//                            case "buildcraft/core/render/TextureLiquidsFX":
-//                            case "buildcraft/energy/render/TextureOilFlowFX":
-//                            case "xcompwiz/mystcraft/client/TexturePortalFX":
-//                            case "ic2/common/TextureLiquidFX":
-//                            case "gregtechmod/common/GT_Animated_Texturerenderer":
-//                                if (name.equals("a")) {
-//                                    if (descriptor.equals("()V")) {
-//                                        name = "method_1613";
-//                                    } else if (descriptor.equals("(Lnet/minecraft/class_534;)V") || descriptor.equals("(Lavf;)V")) {
-//                                        name = "method_1614";
-//                                    }
-//                                }
-//                                break;
-//
-////                            case "gregtechmod/api/BaseMetaTileEntity":
-////                            case "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine":
-////                                switch (name) {
-////                                    case "i_":
-////                                        name = "method_2388";
-////                                        break;
-////                                    case "a":
-////                                        switch (descriptor) {
-////                                            case "(I)Lnet/minecraft/class_1071;":
-////                                            case "(I)Lrj;":
-////                                                name = "method_2381";
-////                                                break;
-////                                            case "(ILnet/minecraft/class_1071;)V":
-////                                            case "(ILrj;)V":
-////                                                name = "method_2383";
-////                                                break;
-////                                            case "(Lnet/minecraft/class_988;)Z":
-////                                            case "(Log;)Z":
-////                                                name = "method_2384";
-////                                                break;
-////                                            case "(II)Lnet/minecraft/class_1071;":
-////                                            case "(II)Lrj;":
-////                                                name = "method_2382";
-////                                                break;
-////                                        }
-////                                        break;
-////                                    case "b":
-////                                        if (descriptor.equals("()Ljava/lang/String;")) {
-////                                            name = "method_2385";
-////                                        } else if (descriptor.equals("(I)Lnet/minecraft/class_1071;") || descriptor.equals("(I)Lrj;")) {
-////                                            name = "method_2386";
-////                                        }
-////                                        break;
-////                                    case "j_":
-////                                        name = "method_2389";
-////                                        break;
-////                                    case "k_":
-////                                        name = "method_2390";
-////                                        break;
-////                                    case "f":
-////                                        name = "method_2387";
-////                                        break;
-////                                }
-////                                break;
-//                        }
-//
-//                        String finalName = name;
-//                        return new MethodVisitor(Opcodes.ASM9, super.visitMethod(access, finalName, descriptor, signature, exceptions)) {
-//                            @Override
-//                            public void visitMethodInsn(int opcode, String methodOwner, String methodName, String methodDescriptor, boolean isInterface) {
-//                                for (Map.Entry<Entry, Entry> entry : METHOD_OVERWRITES.entrySet()) {
-//                                    Entry original = entry.getKey();
-//                                    Entry newEntry = entry.getValue();
-//
-//                                    if (original.name.equals(methodName) && original.descriptor.equals(methodDescriptor) && original.owner.equals(methodOwner)) {
-//                                        methodName = newEntry.name;
-//                                        methodDescriptor = newEntry.descriptor;
-//                                        methodOwner = newEntry.owner;
-//                                        break;
-//                                    }
-//                                }
-//
-//                                super.visitMethodInsn(opcode, methodOwner, methodName, methodDescriptor, isInterface);
-//                            }
-//
-//                            @Override
-//                            public void visitTypeInsn(int opcode, String type) {
-//                                switch (opcode) {
-//                                    case Opcodes.NEW:
-//
-//                                        switch (type) {
-//                                            // Forge
-//                                            case "net/minecraft/class_1041":
-//                                                type = "fr/catcore/fabricatedforge/forged/ItemGroupForged";
-//                                                break;
-//                                            case "net/minecraft/class_847":
-//                                                type = "fr/catcore/fabricatedforge/forged/WeightedRandomChestContentForged";
-//                                                break;
-//                                            case "net/minecraft/class_1196":
-//                                                type = "fr/catcore/fabricatedforge/forged/ChunkForged";
-//                                                break;
-//                                        }
-//
-//                                        break;
-//                                }
-//
-//                                super.visitTypeInsn(opcode, type);
-//                            }
-//
-//                            @Override
-//                            public void visitFieldInsn(int opcode, String fieldOwner, String fieldName, String fieldDescriptor) {
-//                                switch (fieldOwner) {
-//                                    // Custom FX for Forestry, MineFactoryReloaded, Buildcraft, Mystcraft and IC2
-//                                    case "forestry/core/render/TextureHabitatLocatorFX":
-//                                    case "forestry/core/render/TextureLiquidsFX":
-//                                    case "powercrystals/minefactoryreloaded/client/TextureFrameAnimFX":
-//                                    case "powercrystals/minefactoryreloaded/client/TextureLiquidFX":
-//                                    case "buildcraft/energy/render/TextureOilFlowFX":
-//                                    case "buildcraft/core/render/TextureLiquidsFX":
-//                                    case "xcompwiz/mystcraft/client/TexturePortalFX":
-//                                    case "ic2/common/TextureLiquidFX":
-//                                    case "gregtechmod/common/GT_Animated_Texturerenderer":
-//                                        switch (fieldName) {
-//                                            case "e":
-//                                                fieldName = "field_2156";
-//                                                break;
-//                                            case "c":
-//                                                fieldName = "field_2154";
-//                                                break;
-//                                            case "a":
-//                                                fieldName = "field_2152";
-//                                                break;
-//                                            case "b":
-//                                                fieldName = "field_2153";
-//                                                break;
-//                                            case "f":
-//                                                fieldName = "field_2157";
-//                                                break;
-//                                        }
-//                                        break;
-//
-//                                    // Mystcraft
-//                                    case "xcompwiz/mystcraft/Mystcraft":
-//                                        if (fieldName.equals("registeredDims")) {
-//                                            fieldOwner = "fr/catcore/fabricatedforge/compat/MystcraftCompat";
-//                                        }
-//                                        break;
-//                                }
-//
-//                                super.visitFieldInsn(opcode, fieldOwner, fieldName, fieldDescriptor);
-//                            }
-//
-//                            @Override
-//                            public void visitLdcInsn(Object value) {
-//                                if (value instanceof String) {
-//                                    String stringValue = (String) value;
-//
-//                                    switch (cls.getName()) {
-//                                        // Inventory Tweaks
-//                                        case "InvTweaksLocalization":
-//                                            if (finalName.equals("load") && stringValue.startsWith("invtweaks")) {
-//                                                value = "/" + stringValue;
-//                                            }
-//                                            break;
-//
-//                                        case "InvTweaksObfuscation":
-//                                            if (stringValue.equals("b")) value = "field_1386";
-//                                            else if (stringValue.equals("k")) value = "field_1981";
-//                                            break;
-//
-//                                        // Friendssss
-//                                        case "peterix/friendsss/Friendsss":
-//                                            if (stringValue.equals("d")) {
-//                                                value = "field_3919";
-//                                            }
-//                                            break;
-//
-//                                        // Glowstone Seeds
-//                                        case "mod_GlowstoneSeeds":
-//                                            if (stringValue.equals("glowstoneseed.png")) {
-//                                                value = "/glowstone seeds 1.3.2/glowstoneseed.png";
-//                                            }
-//                                            break;
-//
-//                                        // Smart Moving
-//                                        case "mod_SmartMoving":
-//                                            if (finalName.equals("<init>") && stringValue.equals("e")) {
-//                                                value = "field_2897";
-//                                            }
-//                                            break;
-//
-//                                        case "net/minecraft/move/SmartMovingContext":
-//                                        case "net/smart/moving/SmartMovingContext":
-//                                        case "net/smart/render/SmartRenderContext":
-//                                            if (finalName.equals("<clinit>") && stringValue.equals("P")) {
-//                                                value = "field_3774";
-//                                            } else if (finalName.equals("registerAnimation") && stringValue.equals("o")) {
-//                                                value = "field_2108";
-//                                            } else if (finalName.equals("TranslateIfNecessary") && stringValue.equals("b")) {
-//                                                value = "field_618";
-//                                            }
-//                                            break;
-//
-//                                        case "net/minecraft/move/render/ModelRotationRenderer":
-//                                        case "net/smart/moving/render/ModelRotationRenderer":
-//                                        case "net/smart/render/ModelRotationRenderer":
-//                                            if (finalName.equals("<clinit>")) {
-//                                                switch (stringValue) {
-//                                                    case "q":
-//                                                        value = "field_1611";
-//                                                        break;
-//                                                    case "d":
-//                                                        value = "method_1196";
-//                                                        break;
-//                                                    case "r":
-//                                                        value = "field_1612";
-//                                                        break;
-//                                                }
-//                                            }
-//                                            break;
-//
-//                                        case "net/minecraft/move/render/RenderPlayer":
-//                                        case "net/smart/moving/render/RenderPlayer":
-//                                            if (finalName.equals("initialize")) {
-//                                                switch (stringValue) {
-//                                                    case "a":
-//                                                        value = "field_2133";
-//                                                        break;
-//                                                    case "b":
-//                                                        value = "field_2134";
-//                                                        break;
-//                                                    case "i":
-//                                                        value = "field_2135";
-//                                                        break;
-//                                                }
-//                                            }
-//                                            break;
-//
-//                                        case "net/minecraft/move/playerapi/NetServerHandler":
-//                                        case "net/smart/moving/playerapi/NetServerHandler":
-//                                            if (finalName.equals("<clinit>")) {
-//                                                switch (stringValue) {
-//                                                    case "e":
-//                                                        value = "field_2897";
-//                                                        break;
-//                                                    case "d":
-//                                                        value = "field_2896";
-//                                                        break;
-//                                                    case "connections":
-//                                                        value = "field_2923";
-//                                                        break;
-//                                                }
-//                                            }
-//                                            break;
-//
-//                                        case "net/minecraft/move/SmartMovingSelf":
-//                                        case "net/smart/moving/SmartMovingSelf":
-//                                            if (finalName.equals("<clinit>") && stringValue.equals("c")) {
-//                                                value = "field_1059";
-//                                            }
-//                                            break;
-//
-//                                        case "net/minecraft/move/config/SmartMovingOptions":
-//                                        case "net/smart/moving/config/SmartMovingOptions":
-//                                            if (finalName.equals("<clinit>") && stringValue.equals("k")) {
-//                                                value = "field_1656";
-//                                            }
-//                                            break;
-//
-//                                        // Portal Gun
-//                                        case "portalgun/client/core/TickHandlerClient":
-//                                            if (finalName.equals("renderTick")) {
-//                                                switch (stringValue) {
-//                                                    case "equippedProgress":
-//                                                        value = "field_1878";
-//                                                        break;
-//                                                    case "prevEquippedProgress":
-//                                                        value = "field_1879";
-//                                                        break;
-//                                                    case "itemToRender":
-//                                                        value = "field_1877";
-//                                                        break;
-//                                                    case "equippedItemSlot":
-//                                                        value = "field_1882";
-//                                                        break;
-//                                                }
-//                                            }
-//                                            break;
-//
-//                                        case "portalgun/common/core/CommonProxy":
-//                                            if (finalName.equals("getWorldDir") && stringValue.equals("chunkSaveLocation")) {
-//                                                value = "field_4782";
-//                                            }
-//                                            break;
-//
-//                                        case "portalgun/client/render/TileRendererPortalMod":
-//                                            if (finalName.equals("updateTexture")) {
-//                                                switch (stringValue) {
-//                                                    case "camRoll":
-//                                                        value = "field_1826";
-//                                                        break;
-//                                                    case "prevCamRoll":
-//                                                        value = "field_1827";
-//                                                        break;
-//                                                    case "fovModifierHand":
-//                                                        value = "field_1829";
-//                                                        break;
-//                                                    case "fovModifierHandPrev":
-//                                                        value = "field_1830";
-//                                                        break;
-//                                                    case "cameraZoom":
-//                                                        value = "field_1833";
-//                                                        break;
-//                                                }
-//                                            }
-//                                            break;
-//                                    }
-//                                }
-//
-//                                super.visitLdcInsn(value);
-//                            }
-//                        };
-//                    }
-//                };
-//            }
-//        });
+        builder.extraPostApplyVisitor(new TinyRemapper.ApplyVisitorProvider() {
+            @Override
+            public ClassVisitor insertApplyVisitor(TrClass cls, ClassVisitor next) {
+                return new ClassVisitor(Opcodes.ASM9, next) {
+                    @Override
+                    public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
+                        String finalName = name;
+                        return new MethodVisitor(Opcodes.ASM9, super.visitMethod(access, finalName, descriptor, signature, exceptions)) {
+                            @Override
+                            public void visitMethodInsn(int opcode, String methodOwner, String methodName, String methodDescriptor, boolean isInterface) {
+                                for (Map.Entry<Entry, Entry> entry : METHOD_OVERWRITES.entrySet()) {
+                                    Entry original = entry.getKey();
+                                    Entry newEntry = entry.getValue();
+
+                                    if (original.name.equals(methodName) && original.descriptor.equals(methodDescriptor) && original.owner.equals(methodOwner)) {
+                                        methodName = newEntry.name;
+                                        methodDescriptor = newEntry.descriptor;
+                                        methodOwner = newEntry.owner;
+                                        break;
+                                    }
+                                }
+
+                                super.visitMethodInsn(opcode, methodOwner, methodName, methodDescriptor, isInterface);
+                            }
+
+                            @Override
+                            public void visitTypeInsn(int opcode, String type) {
+                                switch (opcode) {
+                                    case Opcodes.NEW:
+
+                                        switch (type) {
+                                            // Forge
+                                            case "net/minecraft/class_1041":
+                                                type = "fr/catcore/fabricatedforge/forged/ItemGroupForged";
+                                                break;
+                                            case "net/minecraft/class_847":
+                                                type = "fr/catcore/fabricatedforge/forged/WeightedRandomChestContentForged";
+                                                break;
+                                            case "net/minecraft/class_1196":
+                                                type = "fr/catcore/fabricatedforge/forged/ChunkForged";
+                                                break;
+                                        }
+
+                                        break;
+                                }
+
+                                super.visitTypeInsn(opcode, type);
+                            }
+
+                            @Override
+                            public void visitFieldInsn(int opcode, String fieldOwner, String fieldName, String fieldDescriptor) {
+                                switch (fieldOwner) {
+                                    // Mystcraft
+                                    case "xcompwiz/mystcraft/Mystcraft":
+                                        if (fieldName.equals("registeredDims")) {
+                                            fieldOwner = "fr/catcore/fabricatedforge/compat/MystcraftCompat";
+                                        }
+                                        break;
+                                }
+
+                                super.visitFieldInsn(opcode, fieldOwner, fieldName, fieldDescriptor);
+                            }
+
+                            @Override
+                            public void visitLdcInsn(Object value) {
+                                if (value instanceof String) {
+                                    String stringValue = (String) value;
+
+                                    switch (cls.getName()) {
+                                        // Inventory Tweaks
+                                        case "InvTweaksLocalization":
+                                            if (finalName.equals("load") && stringValue.startsWith("invtweaks")) {
+                                                value = "/" + stringValue;
+                                            }
+                                            break;
+
+                                        case "InvTweaksObfuscation":
+                                            if (stringValue.equals("b")) value = "field_1386";
+                                            else if (stringValue.equals("k")) value = "field_1981";
+                                            break;
+
+                                        // Friendssss
+                                        case "peterix/friendsss/Friendsss":
+                                            if (stringValue.equals("d")) {
+                                                value = "field_3919";
+                                            }
+                                            break;
+
+                                        // Glowstone Seeds
+                                        case "mod_GlowstoneSeeds":
+                                            if (stringValue.equals("glowstoneseed.png")) {
+                                                value = "/glowstone seeds 1.3.2/glowstoneseed.png";
+                                            }
+                                            break;
+
+                                        // Smart Moving
+                                        case "mod_SmartMoving":
+                                            if (finalName.equals("<init>") && stringValue.equals("e")) {
+                                                value = "field_2897";
+                                            }
+                                            break;
+
+                                        case "net/minecraft/move/SmartMovingContext":
+                                        case "net/smart/moving/SmartMovingContext":
+                                        case "net/smart/render/SmartRenderContext":
+                                            if (finalName.equals("<clinit>") && stringValue.equals("P")) {
+                                                value = "field_3774";
+                                            } else if (finalName.equals("registerAnimation") && stringValue.equals("o")) {
+                                                value = "field_2108";
+                                            } else if (finalName.equals("TranslateIfNecessary") && stringValue.equals("b")) {
+                                                value = "field_618";
+                                            }
+                                            break;
+
+                                        case "net/minecraft/move/render/ModelRotationRenderer":
+                                        case "net/smart/moving/render/ModelRotationRenderer":
+                                        case "net/smart/render/ModelRotationRenderer":
+                                            if (finalName.equals("<clinit>")) {
+                                                switch (stringValue) {
+                                                    case "q":
+                                                        value = "field_1611";
+                                                        break;
+                                                    case "d":
+                                                        value = "method_1196";
+                                                        break;
+                                                    case "r":
+                                                        value = "field_1612";
+                                                        break;
+                                                }
+                                            }
+                                            break;
+
+                                        case "net/minecraft/move/render/RenderPlayer":
+                                        case "net/smart/moving/render/RenderPlayer":
+                                            if (finalName.equals("initialize")) {
+                                                switch (stringValue) {
+                                                    case "a":
+                                                        value = "field_2133";
+                                                        break;
+                                                    case "b":
+                                                        value = "field_2134";
+                                                        break;
+                                                    case "i":
+                                                        value = "field_2135";
+                                                        break;
+                                                }
+                                            }
+                                            break;
+
+                                        case "net/minecraft/move/playerapi/NetServerHandler":
+                                        case "net/smart/moving/playerapi/NetServerHandler":
+                                            if (finalName.equals("<clinit>")) {
+                                                switch (stringValue) {
+                                                    case "e":
+                                                        value = "field_2897";
+                                                        break;
+                                                    case "d":
+                                                        value = "field_2896";
+                                                        break;
+                                                    case "connections":
+                                                        value = "field_2923";
+                                                        break;
+                                                }
+                                            }
+                                            break;
+
+                                        case "net/minecraft/move/SmartMovingSelf":
+                                        case "net/smart/moving/SmartMovingSelf":
+                                            if (finalName.equals("<clinit>") && stringValue.equals("c")) {
+                                                value = "field_1059";
+                                            }
+                                            break;
+
+                                        case "net/minecraft/move/config/SmartMovingOptions":
+                                        case "net/smart/moving/config/SmartMovingOptions":
+                                            if (finalName.equals("<clinit>") && stringValue.equals("k")) {
+                                                value = "field_1656";
+                                            }
+                                            break;
+
+                                        // Portal Gun
+                                        case "portalgun/client/core/TickHandlerClient":
+                                            if (finalName.equals("renderTick")) {
+                                                switch (stringValue) {
+                                                    case "equippedProgress":
+                                                        value = "field_1878";
+                                                        break;
+                                                    case "prevEquippedProgress":
+                                                        value = "field_1879";
+                                                        break;
+                                                    case "itemToRender":
+                                                        value = "field_1877";
+                                                        break;
+                                                    case "equippedItemSlot":
+                                                        value = "field_1882";
+                                                        break;
+                                                }
+                                            }
+                                            break;
+
+                                        case "portalgun/common/core/CommonProxy":
+                                            if (finalName.equals("getWorldDir") && stringValue.equals("chunkSaveLocation")) {
+                                                value = "field_4782";
+                                            }
+                                            break;
+
+                                        case "portalgun/client/render/TileRendererPortalMod":
+                                            if (finalName.equals("updateTexture")) {
+                                                switch (stringValue) {
+                                                    case "camRoll":
+                                                        value = "field_1826";
+                                                        break;
+                                                    case "prevCamRoll":
+                                                        value = "field_1827";
+                                                        break;
+                                                    case "fovModifierHand":
+                                                        value = "field_1829";
+                                                        break;
+                                                    case "fovModifierHandPrev":
+                                                        value = "field_1830";
+                                                        break;
+                                                    case "cameraZoom":
+                                                        value = "field_1833";
+                                                        break;
+                                                }
+                                            }
+                                            break;
+                                    }
+                                }
+
+                                super.visitLdcInsn(value);
+                            }
+                        };
+                    }
+                };
+            }
+        });
 
         TinyRemapper remapper = builder.build();
-        remapper.readClassPath((Path) FabricLoader.getInstance().getObjectShare().get("fabric-loader:inputGameJar"));
-        for (Path modPath : FabricLoader.getInstance().getModContainer("fabricated-forge").get().getRootPaths()) {
-            remapper.readClassPath(modPath.toAbsolutePath());
-        }
+        remapper.readClassPath((Path) FabricLoader.getInstance().getObjectShare().get("fabric-loader:inputGameJar"), Constants.FORGE_FILE.toPath());
         return remapper;
     }
 
@@ -653,19 +612,28 @@ public class RemapUtil {
      * Will remap file with specified remapper and store it into output.
      *
      * @param remapper {@link TinyRemapper} to remap with.
-     * @param input    {@link Path} for the input file.
-     * @param output   {@link Path} for the output file.
      */
-    private static void remapFile(TinyRemapper remapper, Path input, Path output) {
+    private static void remapFiles(TinyRemapper remapper, Map<Path, Path> paths) {
         try {
-            OutputConsumerPath outputConsumer = new OutputConsumerPath.Builder(output).assumeArchive(true).build();
-            outputConsumer.addNonClassFiles(input);
+            Map<Path, InputTag> tagMap = new HashMap<>();
 
-            remapper.readInputs(input);
-            remapper.apply(outputConsumer);
+            for (Path input : paths.keySet()) {
+                InputTag tag = remapper.createInputTag();
+                tagMap.put(input, tag);
+                remapper.readInputs(tag, input);
+            }
+
+
+            for (Map.Entry<Path, Path> entry : paths.entrySet()) {
+                OutputConsumerPath outputConsumer = new OutputConsumerPath.Builder(entry.getValue()).build();
+
+                outputConsumer.addNonClassFiles(entry.getKey(), NonClassCopyMode.UNCHANGED, remapper);
+
+                remapper.apply(outputConsumer, tagMap.get(entry.getKey()));
+                outputConsumer.close();
+            }
+
             remapper.finish();
-
-            outputConsumer.close();
         } catch (Exception e) {
             remapper.finish();
             throw new RuntimeException("Failed to remap jar", e);
@@ -908,197 +876,6 @@ public class RemapUtil {
                 "fr/catcore/fabricatedforge/forged/ChunkForged"
         ));
 
-        // GregTech
-        METHOD_OVERWRITES.put(new Entry(
-                "c",
-                "(F)Lnet/minecraft/class_197;",
-                "gregtechmod/common/blocks/BlockFixedITNT"
-        ), new Entry(
-                "method_442",
-                "(F)Lnet/minecraft/class_197;",
-                "gregtechmod/common/blocks/BlockFixedITNT"
-        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "i_",
-//                "()I",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ), new Entry(
-//                "method_2388",
-//                "()I",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "a",
-//                "(I)Lnet/minecraft/class_1071;",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ), new Entry(
-//                "method_2381",
-//                "(I)Lnet/minecraft/class_1071;",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "a",
-//                "(ILnet/minecraft/class_1071;)V",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ), new Entry(
-//                "method_2383",
-//                "(ILnet/minecraft/class_1071;)V",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "a",
-//                "(Lnet/minecraft/class_988;)Z",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ), new Entry(
-//                "method_2384",
-//                "(Lnet/minecraft/class_988;)Z",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "a",
-//                "(II)Lnet/minecraft/class_1071;",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ), new Entry(
-//                "method_2382",
-//                "(II)Lnet/minecraft/class_1071;",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "b",
-//                "()Ljava/lang/String;",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ), new Entry(
-//                "method_2385",
-//                "()Ljava/lang/String;",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "b",
-//                "(I)Lnet/minecraft/class_1071;",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ), new Entry(
-//                "method_2386",
-//                "(I)Lnet/minecraft/class_1071;",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "j_",
-//                "()I",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ), new Entry(
-//                "method_2389",
-//                "()I",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "k_",
-//                "()V",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ), new Entry(
-//                "method_2390",
-//                "()V",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "f",
-//                "()V",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ), new Entry(
-//                "method_2387",
-//                "()V",
-//                "gregtechmod/api/BaseMetaTileEntity"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "i_",
-//                "()I",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ), new Entry(
-//                "method_2388",
-//                "()I",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "a",
-//                "(I)Lnet/minecraft/class_1071;",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ), new Entry(
-//                "method_2381",
-//                "(I)Lnet/minecraft/class_1071;",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "a",
-//                "(ILnet/minecraft/class_1071;)V",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ), new Entry(
-//                "method_2383",
-//                "(ILnet/minecraft/class_1071;)V",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "a",
-//                "(Lnet/minecraft/class_988;)Z",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ), new Entry(
-//                "method_2384",
-//                "(Lnet/minecraft/class_988;)Z",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "a",
-//                "(II)Lnet/minecraft/class_1071;",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ), new Entry(
-//                "method_2382",
-//                "(II)Lnet/minecraft/class_1071;",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "b",
-//                "()Ljava/lang/String;",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ), new Entry(
-//                "method_2385",
-//                "()Ljava/lang/String;",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "b",
-//                "(I)Lnet/minecraft/class_1071;",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ), new Entry(
-//                "method_2386",
-//                "(I)Lnet/minecraft/class_1071;",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "j_",
-//                "()I",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ), new Entry(
-//                "method_2389",
-//                "()I",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "k_",
-//                "()V",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ), new Entry(
-//                "method_2390",
-//                "()V",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ));
-//        METHOD_OVERWRITES.put(new Entry(
-//                "f",
-//                "()V",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ), new Entry(
-//                "method_2387",
-//                "()V",
-//                "gregtechmod/common/tileentities/GT_TileEntityMetaID_Machine"
-//        ));
-
         // ExtraBiomesXL
         METHOD_OVERWRITES.put(new Entry(
                 "setBurnProperties",
@@ -1154,6 +931,183 @@ public class RemapUtil {
                 "(III)V",
                 "fr/catcore/fabricatedforge/forged/ReflectionUtils"
         ));
+
+        FORGE_EXCLUDED.put("a")
+                .put("aad")
+                .put("aae")
+                .put("aan")
+                .put("aar")
+                .put("aaw")
+                .put("abk")
+                .put("abu")
+                .put("acv")
+                .put("adt")
+                .put("adx")
+                .put("aeb")
+                .put("aed")
+                .put("aez")
+                .put("afa")
+                .put("afb")
+                .put("afe")
+                .put("afj")
+                .put("afp")
+                .put("afq")
+                .put("afu")
+                .put("afv")
+                .put("afy")
+                .put("agb")
+                .put("agj")
+                .put("agk")
+                .put("agm")
+                .put("agv")
+                .put("agx")
+                .put("agy")
+                .put("ahh")
+                .put("ahi")
+                .put("ahl")
+                .put("aho")
+                .put("ahy")
+                .put("aic")
+                .put("aig")
+                .put("aig$1")
+                .put("ail")
+                .put("aim")
+                .put("aio")
+                .put("aip")
+                .put("aiq")
+                .put("ais")
+                .put("aiy")
+                .put("ajd")
+                .put("aji")
+                .put("ajj")
+                .put("ajq")
+                .put("ak")
+                .put("amx")
+                .put("anz")
+                .put("aon")
+                .put("aoo")
+                .put("aou")
+                .put("aow")
+                .put("app")
+                .put("apz")
+                .put("aqn")
+                .put("art")
+                .put("arw")
+                .put("ash")
+                .put("aso")
+                .put("ast")
+                .put("asv")
+                .put("atc")
+                .put("atd")
+                .put("aub")
+                .put("aum")
+                .put("aus")
+                .put("auw")
+                .put("av")
+                .put("ava")
+                .put("avb")
+                .put("ave")
+                .put("avf")
+                .put("avg")
+                .put("avy")
+                .put("awg")
+                .put("awh")
+                .put("awr")
+                .put("awv")
+                .put("axc")
+                .put("axd")
+                .put("axf")
+                .put("axg")
+                .put("axh")
+                .put("axi")
+                .put("axj")
+                .put("axk")
+                .put("axp")
+                .put("axs")
+                .put("axv")
+                .put("axy")
+                .put("ayq")
+                .put("ayr")
+                .put("ays")
+                .put("ba")
+                .put("bb")
+                .put("cn")
+                .put("cp")
+                .put("cs")
+                .put("db")
+                .put("dc")
+                .put("el")
+                .put("et")
+                .put("ft")
+                .put("fy")
+                .put("ge")
+                .put("gm")
+                .put("gp")
+                .put("gq")
+                .put("gr")
+                .put("gu")
+                .put("gv")
+                .put("gw")
+                .put("gx")
+                .put("gz")
+                .put("ha")
+                .put("hu")
+                .put("it")
+                .put("jj")
+                .put("jn")
+                .put("jw")
+                .put("lc")
+                .put("mr")
+                .put("ms")
+                .put("mu")
+                .put("nd")
+                .put("nj")
+                .put("nk")
+                .put("ny")
+                .put("o")
+                .put("od")
+                .put("og")
+                .put("pg")
+                .put("ph")
+                .put("pq")
+                .put("pz")
+                .put("qb")
+                .put("qg")
+                .put("qt")
+                .put("qv")
+                .put("rg")
+                .put("rh")
+                .put("rl")
+                .put("rm")
+                .put("ro")
+                .put("rz")
+                .put("sa")
+                .put("si")
+                .put("tb")
+                .put("td")
+                .put("ts")
+                .put("tu")
+                .put("um")
+                .put("up")
+                .put("va")
+                .put("vc")
+                .put("ve")
+                .put("wl")
+                .put("wy")
+                .put("xc")
+                .put("xr")
+                .put("xw")
+                .put("ya")
+                .put("yf")
+                .put("yi")
+                .put("yj")
+                .put("yk")
+                .put("yl")
+                .put("yr")
+                .put("ys")
+                .put("yt")
+                .put("yu")
+                .put("za");
     }
 
     public static class Entry {

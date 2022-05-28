@@ -103,7 +103,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
      * @reason none
      */
     @Overwrite
-    public boolean hasScrollbar() {
+    private boolean hasScrollbar() {
         if (ItemGroup.itemGroups[selectedTab] == null) {
             return false;
         } else {
@@ -116,7 +116,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
      * @reason none
      */
     @Overwrite
-    public void setSelectedTab(ItemGroup par1CreativeTabs) {
+    private void setSelectedTab(ItemGroup par1CreativeTabs) {
         if (par1CreativeTabs != null) {
             int var2 = selectedTab;
             selectedTab = par1CreativeTabs.getIndex();

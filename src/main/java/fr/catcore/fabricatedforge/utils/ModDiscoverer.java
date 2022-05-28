@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -200,11 +201,15 @@ public class ModDiscoverer {
 
         RemapUtil.generateModMappings();
 
+        Map<Path, Path> modPaths = new HashMap<>();
+
         for (ModEntry entry : mods) {
-            if (entry.original != null) RemapUtil.remapMod(entry.original.toPath(), entry.file.toPath());
+            if (entry.original != null) modPaths.put(entry.original.toPath(), entry.file.toPath());
 
             FakeModManager.addModEntry(entry);
         }
+
+        RemapUtil.remapMods(modPaths);
 
         List<String> modFileNames = new ArrayList<>();
         for (ModEntry entry : FakeModManager.getMods()) {
