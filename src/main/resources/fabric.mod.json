@@ -29,8 +29,7 @@
     ]
   },
   "mixins": [
-    "fabricated-forge.forge.mixins.json",
-    "fabricated-forge.playerapi.mixins.json"
+    "fabricated-forge.forge.mixins.json"
   ],
   "depends": {
     "fabricloader": ">0.14.3",

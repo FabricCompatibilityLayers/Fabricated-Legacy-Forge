@@ -4,6 +4,8 @@ Load Forge/ModLoader mods as if they were Fabric Loader mods.
 
 Supported Minecraft versions: 1.3.2.
 
+This mod requires [Mod-Remapping-API](https://modrinth.com/mod/mod-remapping-api).
+
 ## Credits
 ### MinecraftForge
 - Eloraam
@@ -28,14 +30,11 @@ Supported Minecraft versions: 1.3.2.
 - IBXM
 - Martin Cameron
 
-### Player API
+### Player API (2.0.0>)
 - Divisor
 
 ### ClassLoaderFixer
 - ThexXTURBOXx
-
-### Most of the base of the mod remapper
-- paulevsGitch's mod BetaLoader
 
 ### Fabricated Forge itself
 - CatCore (aka. arthubambou)
@@ -63,7 +62,7 @@ Supported Minecraft versions: 1.3.2.
 | Glowstone seeds        | ✔                              |
 | Inventory Tweaks       | ✔                              |
 | ComputerCraft          | ✔                              |
-| Smart Moving           | ✔                              |
+| Smart Moving           | ❌                              |
 | Mystcraft              | ✔                              |
 | DivineRPG              | ✔ (Require Java 8)             |
 | TwilightForest         | ✔                              |
