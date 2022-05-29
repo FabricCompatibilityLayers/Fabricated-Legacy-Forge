@@ -101,37 +101,6 @@ public class ForgeModRemapper implements ModRemapper {
                 .field("h", "field_2149", "[I")
                 .field("i", "field_2150", "D")
                 .field("j", "field_2151", "D");
-
-        // Player API
-        mappings.add("PlayerAPI", "net/minecraft/PlayerAPI");
-        mappings.add("PlayerBase", "net/minecraft/PlayerBase");
-        mappings.add("PlayerBaseSorter", "net/minecraft/PlayerBaseSorter");
-        mappings.add("PlayerBaseSorting", "net/minecraft/PlayerBaseSorting");
-        mappings.add("ServerPlayerAPI", "net/minecraft/ServerPlayerAPI");
-        mappings.add("ServerPlayerBase", "net/minecraft/ServerPlayerBase");
-        mappings.add("ServerPlayerBaseSorter", "net/minecraft/ServerPlayerBaseSorter");
-        mappings.add("ServerPlayerBaseSorting", "net/minecraft/ServerPlayerBaseSorting");
-
-        mappings.add("cpw/mods/fml/client/ITextureFX")
-                .method("setErrored", "(Z)V")
-                .method("getErrored", "()Z")
-                .method("onTexturePackChanged", "(Lavf;Layi;Lxc;)V")
-                .method("onTextureDimensionsUpdate", "(II)V");
-
-        mappings.add("cpw/mods/fml/client/FMLTextureFX")
-                .field("tileSizeBase", "I")
-                .field("tileSizeSquare", "I")
-                .field("tileSizeMask", "I")
-                .field("tileSizeSquareMask", "I")
-                .field("errored", "Z")
-                .field("log", "Ljava/util/logging/Logger;")
-                .method("<init>", "(I)V")
-                .method("setup", "()V")
-                .method("unregister", "(Lavf;Ljava/util/List;)Z");
-
-        mappings.add("net/minecraftforge/common/ISidedInventory")
-                .method("getStartInventorySide", "(Lnet/minecraftforge/common/ForgeDirection;)I")
-                .method("getSizeInventorySide", "(Lnet/minecraftforge/common/ForgeDirection;)I");
     }
 
     @Override
