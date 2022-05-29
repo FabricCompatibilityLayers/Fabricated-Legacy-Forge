@@ -1,6 +1,6 @@
 package cpw.mods.fml.relauncher;
 
-import fr.catcore.fabricatedforge.utils.Constants;
+import fr.catcore.fabricatedforge.Constants;
 
 import java.io.*;
 import java.lang.reflect.Method;
@@ -13,7 +13,6 @@ import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.util.*;
 import java.util.jar.Attributes;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 
@@ -413,7 +412,7 @@ public class RelaunchLibraryManager {
     }
 
     private static File setupCoreModDir(File mcDir) {
-        File coreModDir = new File(mcDir, "coremods");
+        File coreModDir = Constants.COREMODS_FOLDER;
 
         try {
             coreModDir = coreModDir.getCanonicalFile();
@@ -427,7 +426,7 @@ public class RelaunchLibraryManager {
             throw new RuntimeException(String.format("Found a coremod file in %s that's not a directory", mcDir.getName()));
         }
 
-        return Constants.REMAPPED_COREMODS_FOLDER;
+        return coreModDir;
     }
 
     private static void downloadFile(File libFile, String rootUrl, String realFilePath, String hash) {

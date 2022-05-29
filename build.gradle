@@ -6,7 +6,7 @@ plugins {
 sourceCompatibility = JavaVersion.VERSION_1_8
 targetCompatibility = JavaVersion.VERSION_1_8
 
-archivesBaseName = project.archives_base_name + "+" + project.minecraft_version
+archivesBaseName = project.archives_base_name + "-" + project.minecraft_version
 version = project.mod_version
 group = project.maven_group
 
@@ -14,6 +14,13 @@ repositories {
 	maven {
 		name = "legacy-fabric"
 		url = "https://maven.legacyfabric.net"
+	}
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
 	}
 	flatDir {
 		dirs "./lib"
@@ -37,8 +44,9 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modImplementation(include("net.legacyfabric.legacy-fabric-api:legacy-fabric-logger-api-v1:1.0.3+509c77a039"))
-//	modImplementation(include("net.legacyfabric.legacy-fabric-api:legacy-fabric-api:1.5.3+1.8.9"))
+	modApi("maven.modrinth:mod-remapping-api:1.0.0")
+
+	modImplementation("net.legacyfabric.legacy-fabric-api:legacy-fabric-logger-api-v1:1.0.3+509c77a039")
 
 	implementation(include(group: "local", name: "argo", version: "2.25"))
 	implementation(include(group: "local", name: "guava", version: "12.0.1"))

@@ -12,12 +12,10 @@
     "Forge Mod Loader (FML):\n- cpw\n- Risugami, author of ModLoader\n- LexManos",
     "Paulscode IBXM Library:\n- IBXM\n- Martin Cameron",
     "Paulscode SoundSystem CodecIBXM:\n- Paul Lamb\n- IBXM\n- Martin Cameron",
-    "Player API:\n- Divisor",
-    "ClassLoaderFixer:\n- ThexXTURBOXx",
-    "Most of the base of the mod remapper:\n- paulevsGitch's mod BetaLoader"
+    "ClassLoaderFixer:\n- ThexXTURBOXx"
   ],
   "contact": {
-    "homepage": "https://github.com/arthurbambou/Fabricated-Legacy-Forge",
+    "homepage": "https://modrinth.com/mod/fabricated-forge",
     "sources": "https://github.com/arthurbambou/Fabricated-Legacy-Forge",
     "issues": "https://github.com/arthurbambou/Fabricated-Legacy-Forge/issues"
   },
@@ -26,8 +24,8 @@
   "environment": "*",
   "accessWidener": "fabricated-forge.accesswidener",
   "entrypoints": {
-    "preLaunch": [
-      "fr.catcore.fabricatedforge.FabricatedForge"
+    "mod-remapper-api:modremapper": [
+      "fr.catcore.fabricatedforge.ForgeModRemapper"
     ]
   },
   "mixins": [
@@ -36,7 +34,8 @@
   ],
   "depends": {
     "fabricloader": ">0.14.3",
-    "minecraft": "1.3.2"
+    "minecraft": "1.3.2",
+    "mod-remapping-api": "*"
   },
   "custom": {
     "loom:injected_interfaces": {
