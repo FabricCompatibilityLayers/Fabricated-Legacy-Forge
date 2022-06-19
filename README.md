@@ -6,6 +6,8 @@ Supported Minecraft versions: 1.3.2.
 
 This mod requires [Mod-Remapping-API](https://modrinth.com/mod/mod-remapping-api).
 
+[Discord Server](https://discord.gg/dy4tgDAmeR)
+
 ## Credits
 ### MinecraftForge
 - Eloraam
