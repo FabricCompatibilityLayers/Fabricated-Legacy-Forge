@@ -22,8 +22,8 @@ import net.minecraft.network.PendingConnection;
 import net.minecraft.network.class_690;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.network.packet.s2c.play.ChatMessage_S2CPacket;
-import net.minecraft.network.packet.s2c.play.MapUpdate_S2CPacket;
+import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
+import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.ServerPacketListener;
@@ -309,11 +309,11 @@ public class FMLNetworkHandler {
         return add;
     }
 
-    public static ChatMessage_S2CPacket handleChatMessage(PacketListener handler, ChatMessage_S2CPacket chat) {
+    public static ChatMessageS2CPacket handleChatMessage(PacketListener handler, ChatMessageS2CPacket chat) {
         return NetworkRegistry.instance().handleChat(handler, chat);
     }
 
-    public static void handlePacket131Packet(PacketListener handler, MapUpdate_S2CPacket mapData) {
+    public static void handlePacket131Packet(PacketListener handler, MapUpdateS2CPacket mapData) {
         if (!(handler instanceof ServerPacketListener) && mapData.item == Item.MAP.id) {
             FMLCommonHandler.instance().handleTinyPacket(handler, mapData);
         } else {

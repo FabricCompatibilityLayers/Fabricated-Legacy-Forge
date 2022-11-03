@@ -36,7 +36,7 @@ public abstract class ChunkMixin implements IChunk {
 
     @Shadow public abstract int getHighestNonEmptySectionYOffset();
 
-    @Shadow public int[] field_4725;
+    @Shadow public int[] surfaceCache;
 
     @Shadow public int[] heightmap;
 
@@ -54,13 +54,13 @@ public abstract class ChunkMixin implements IChunk {
 
     @Shadow protected abstract void method_3911(int x, int z);
 
-    @Shadow public abstract boolean method_3908(int i, int j, int k);
+    @Shadow public abstract boolean isAboveHighestBlock(int i, int j, int k);
 
     @Shadow public static boolean field_4724;
 
     @Shadow public boolean containsEntities;
 
-    @Shadow public List[] field_4733;
+    @Shadow public List[] entities;
 
     @Shadow public Map blockEntities;
 
@@ -92,7 +92,7 @@ public abstract class ChunkMixin implements IChunk {
                             this.chunkSections[var10] = new ChunkSection(var10 << 4);
                         }
 
-                        this.chunkSections[var10].method_3927(var6, var8 & 15, var7, var9);
+                        this.chunkSections[var10].setBlock(var6, var8 & 15, var7, var9);
                     }
                 }
             }
@@ -105,16 +105,16 @@ public abstract class ChunkMixin implements IChunk {
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
-    public void method_3877() {
+    public void generateHeightmap() {
         int var1 = this.getHighestNonEmptySectionYOffset();
 
         for(int var2 = 0; var2 < 16; ++var2) {
             for(int var3 = 0; var3 < 16; ++var3) {
-                this.field_4725[var2 + (var3 << 4)] = -999;
+                this.surfaceCache[var2 + (var3 << 4)] = -999;
 
                 for(int var4 = var1 + 16 - 1; var4 > 0; --var4) {
-                    this.method_3879(var2, var4 - 1, var3);
-                    if (this.getBlockOpacityAtPos(var2, var4 - 1, var3) != 0) {
+                    this.getBlock(var2, var4 - 1, var3);
+                    if (this.getBlockOpacity(var2, var4 - 1, var3) != 0) {
                         this.heightmap[var3 << 4 | var2] = var4;
                         break;
                     }
@@ -130,10 +130,10 @@ public abstract class ChunkMixin implements IChunk {
      * @reason none
      */
     @Overwrite
-    public int getBlockOpacityAtPos(int par1, int par2, int par3) {
+    public int getBlockOpacity(int par1, int par2, int par3) {
         int x = (this.chunkX << 4) + par1;
         int z = (this.chunkZ << 4) + par3;
-        Block block = Block.BLOCKS[this.method_3879(par1, par2, par3)];
+        Block block = Block.BLOCKS[this.getBlock(par1, par2, par3)];
         return block == null ? 0 : ((IBlock)block).getLightOpacity(this.world, x, par2, z);
     }
 
@@ -142,10 +142,10 @@ public abstract class ChunkMixin implements IChunk {
      * @reason none
      */
     @Overwrite
-    public int method_3879(int par1, int par2, int par3) {
+    public int getBlock(int par1, int par2, int par3) {
         if (par2 >> 4 < this.chunkSections.length && par2 >> 4 >= 0) {
             ChunkSection var4 = this.chunkSections[par2 >> 4];
-            return var4 != null ? var4.method_3926(par1, par2 & 15, par3) : 0;
+            return var4 != null ? var4.getBlock(par1, par2 & 15, par3) : 0;
         } else {
             return 0;
         }
@@ -172,12 +172,12 @@ public abstract class ChunkMixin implements IChunk {
     @Overwrite
     public boolean method_3881(int par1, int par2, int par3, int par4, int par5) {
         int var6 = par3 << 4 | par1;
-        if (par2 >= this.field_4725[var6] - 1) {
-            this.field_4725[var6] = -999;
+        if (par2 >= this.surfaceCache[var6] - 1) {
+            this.surfaceCache[var6] = -999;
         }
 
         int var7 = this.heightmap[var6];
-        int var8 = this.method_3879(par1, par2, par3);
+        int var8 = this.getBlock(par1, par2, par3);
         int var9 = this.getBlockData(par1, par2, par3);
         if (var8 == par4 && var9 == par5) {
             return false;
@@ -199,7 +199,7 @@ public abstract class ChunkMixin implements IChunk {
                 Block.BLOCKS[var8].method_464(this.world, var12, par2, var13, var9);
             }
 
-            var10.method_3927(par1, par2 & 15, par3, par4);
+            var10.setBlock(par1, par2 & 15, par3, par4);
             if (var8 != 0) {
                 if (!this.world.isClient) {
                     Block.BLOCKS[var8].method_411(this.world, var12, par2, var13, var8, var9);
@@ -208,14 +208,14 @@ public abstract class ChunkMixin implements IChunk {
                 }
             }
 
-            if (var10.method_3926(par1, par2 & 15, par3) != par4) {
+            if (var10.getBlock(par1, par2 & 15, par3) != par4) {
                 return false;
             } else {
-                var10.method_3932(par1, par2 & 15, par3, par5);
+                var10.setBlockData(par1, par2 & 15, par3, par5);
                 if (var11) {
                     this.calculateSkyLight();
                 } else {
-                    if (this.getBlockOpacityAtPos(par1, par2, par3) > 0) {
+                    if (this.getBlockOpacity(par1, par2, par3) > 0) {
                         if (par2 >= var7) {
                             this.method_3917(par1, par2 + 1, par3);
                         }
@@ -228,11 +228,11 @@ public abstract class ChunkMixin implements IChunk {
 
                 if (par4 != 0) {
                     if (!this.world.isClient) {
-                        Block.BLOCKS[par4].method_460(this.world, var12, par2, var13);
+                        Block.BLOCKS[par4].breakNaturally(this.world, var12, par2, var13);
                     }
 
                     if (Block.BLOCKS[par4] != null && ((IBlock)Block.BLOCKS[par4]).hasTileEntity(par5)) {
-                        BlockEntity var14 = this.method_3912(par1, par2, par3);
+                        BlockEntity var14 = this.getBlockEntity(par1, par2, par3);
                         if (var14 == null) {
                             var14 = ((IBlock)Block.BLOCKS[par4]).createTileEntity(this.world, par5);
                             this.world.method_3603(var12, par2, var13, var14);
@@ -268,10 +268,10 @@ public abstract class ChunkMixin implements IChunk {
                 return false;
             } else {
                 this.modified = true;
-                var5.method_3932(par1, par2 & 15, par3, par4);
-                int var7 = var5.method_3926(par1, par2 & 15, par3);
+                var5.setBlockData(par1, par2 & 15, par3, par4);
+                int var7 = var5.getBlock(par1, par2 & 15, par3);
                 if (var7 > 0 && Block.BLOCKS[var7] != null && ((IBlock)Block.BLOCKS[var7]).hasTileEntity(par4)) {
-                    BlockEntity var8 = this.method_3912(par1, par2, par3);
+                    BlockEntity var8 = this.getBlockEntity(par1, par2, par3);
                     if (var8 != null) {
                         var8.resetBlock();
                         var8.dataValue = par4;
@@ -290,7 +290,7 @@ public abstract class ChunkMixin implements IChunk {
     @Overwrite
     public int method_3890(LightType par1EnumSkyBlock, int par2, int par3, int par4) {
         ChunkSection var5 = par3 >> 4 < this.chunkSections.length && par3 >> 4 >= 0 ? this.chunkSections[par3 >> 4] : null;
-        return var5 == null ? (this.method_3908(par2, par3, par4) ? par1EnumSkyBlock.defaultValue : 0) : (par1EnumSkyBlock == LightType.SKY ? var5.getSkyLight(par2, par3 & 15, par4) : (par1EnumSkyBlock == LightType.BLOCK ? var5.getBlockLight(par2, par3 & 15, par4) : par1EnumSkyBlock.defaultValue));
+        return var5 == null ? (this.isAboveHighestBlock(par2, par3, par4) ? par1EnumSkyBlock.defaultValue : 0) : (par1EnumSkyBlock == LightType.SKY ? var5.getSkyLight(par2, par3 & 15, par4) : (par1EnumSkyBlock == LightType.BLOCK ? var5.getBlockLight(par2, par3 & 15, par4) : par1EnumSkyBlock.defaultValue));
     }
 
     /**
@@ -362,8 +362,8 @@ public abstract class ChunkMixin implements IChunk {
             var4 = 0;
         }
 
-        if (var4 >= this.field_4733.length) {
-            var4 = this.field_4733.length - 1;
+        if (var4 >= this.entities.length) {
+            var4 = this.entities.length - 1;
         }
 
         MinecraftForge.EVENT_BUS.post(new EntityEvent.EnteringChunk(par1Entity, this.chunkX, this.chunkZ, par1Entity.chunkX, par1Entity.chunkZ));
@@ -371,7 +371,7 @@ public abstract class ChunkMixin implements IChunk {
         par1Entity.chunkX = this.chunkX;
         par1Entity.chunkY = var4;
         par1Entity.chunkZ = this.chunkZ;
-        this.field_4733[var4].add(par1Entity);
+        this.entities[var4].add(par1Entity);
     }
 
     /**
@@ -379,7 +379,7 @@ public abstract class ChunkMixin implements IChunk {
      * @reason none
      */
     @Overwrite
-    public BlockEntity method_3912(int par1, int par2, int par3) {
+    public BlockEntity getBlockEntity(int par1, int par2, int par3) {
         Vec3i var4 = new Vec3i(par1, par2, par3);
         BlockEntity var5 = (BlockEntity)this.blockEntities.get(var4);
         if (var5 != null && var5.isRemoved()) {
@@ -388,7 +388,7 @@ public abstract class ChunkMixin implements IChunk {
         }
 
         if (var5 == null) {
-            int var6 = this.method_3879(par1, par2, par3);
+            int var6 = this.getBlock(par1, par2, par3);
             int meta = this.getBlockData(par1, par2, par3);
             if (var6 <= 0 || !((IBlock)Block.BLOCKS[var6]).hasTileEntity(meta)) {
                 return null;
@@ -414,7 +414,7 @@ public abstract class ChunkMixin implements IChunk {
         int var2 = par1TileEntity.x - this.chunkX * 16;
         int var3 = par1TileEntity.y;
         int var4 = par1TileEntity.z - this.chunkZ * 16;
-        this.method_3882(var2, var3, var4, par1TileEntity);
+        this.addBlockEntity(var2, var3, var4, par1TileEntity);
         if (this.loaded) {
             this.world.addTileEntity(par1TileEntity);
         }
@@ -426,13 +426,13 @@ public abstract class ChunkMixin implements IChunk {
      * @reason none
      */
     @Overwrite
-    public void method_3882(int par1, int par2, int par3, BlockEntity par4TileEntity) {
+    public void addBlockEntity(int par1, int par2, int par3, BlockEntity par4TileEntity) {
         Vec3i var5 = new Vec3i(par1, par2, par3);
         par4TileEntity.setWorld(this.world);
         par4TileEntity.x = this.chunkX * 16 + par1;
         par4TileEntity.y = par2;
         par4TileEntity.z = this.chunkZ * 16 + par3;
-        Block block = Block.BLOCKS[this.method_3879(par1, par2, par3)];
+        Block block = Block.BLOCKS[this.getBlock(par1, par2, par3)];
         if (block != null && ((IBlock)block).hasTileEntity(this.getBlockData(par1, par2, par3))) {
             BlockEntity old = (BlockEntity)this.blockEntities.get(var5);
             if (old != null) {
@@ -453,12 +453,12 @@ public abstract class ChunkMixin implements IChunk {
     public void loadToWorld() {
         this.loaded = true;
         this.world.addBlockEntities(this.blockEntities.values());
-        List[] var1 = this.field_4733;
+        List[] var1 = this.entities;
         int var2 = var1.length;
 
         for(int var3 = 0; var3 < var2; ++var3) {
             List var4 = var1[var3];
-            this.world.method_3625(var4);
+            this.world.loadEntities(var4);
         }
 
         MinecraftForge.EVENT_BUS.post(new ChunkEvent.Load((Chunk)(Object) this));
@@ -478,12 +478,12 @@ public abstract class ChunkMixin implements IChunk {
             this.world.queueBlockEntity(var2);
         }
 
-        List[] var5 = this.field_4733;
+        List[] var5 = this.entities;
         int var6 = var5.length;
 
         for(int var3 = 0; var3 < var6; ++var3) {
             List var4 = var5[var3];
-            this.world.method_3662(var4);
+            this.world.unloadEntities(var4);
         }
 
         MinecraftForge.EVENT_BUS.post(new ChunkEvent.Unload((Chunk)(Object) this));
@@ -501,13 +501,13 @@ public abstract class ChunkMixin implements IChunk {
             var4 = 0;
         }
 
-        if (var5 >= this.field_4733.length) {
-            var5 = this.field_4733.length - 1;
+        if (var5 >= this.entities.length) {
+            var5 = this.entities.length - 1;
         }
 
         label56:
         for(int var6 = var4; var6 <= var5; ++var6) {
-            List var7 = this.field_4733[var6];
+            List var7 = this.entities[var6];
             Iterator var8 = var7.iterator();
 
             while(true) {
@@ -549,18 +549,18 @@ public abstract class ChunkMixin implements IChunk {
         int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + ReflectionUtils.World_MAX_ENTITY_RADIUS) / 16.0);
         if (var4 < 0) {
             var4 = 0;
-        } else if (var4 >= this.field_4733.length) {
-            var4 = this.field_4733.length - 1;
+        } else if (var4 >= this.entities.length) {
+            var4 = this.entities.length - 1;
         }
 
-        if (var5 >= this.field_4733.length) {
-            var5 = this.field_4733.length - 1;
+        if (var5 >= this.entities.length) {
+            var5 = this.entities.length - 1;
         } else if (var5 < 0) {
             var5 = 0;
         }
 
         for(int var6 = var4; var6 <= var5; ++var6) {
-            List var7 = this.field_4733[var6];
+            List var7 = this.entities[var6];
 
             for (Object o : var7) {
                 Entity var9 = (Entity) o;
@@ -595,7 +595,7 @@ public abstract class ChunkMixin implements IChunk {
                     this.chunkSections[var6] = new ChunkSection(var6 << 4);
                 }
 
-                byte[] var7 = this.chunkSections[var6].method_3942();
+                byte[] var7 = this.chunkSections[var6].getBlocks();
                 System.arraycopy(par1ArrayOfByte, var5, var7, 0, var7.length);
                 var5 += var7.length;
             } else if (par4 && this.chunkSections[var6] != null) {
@@ -606,7 +606,7 @@ public abstract class ChunkMixin implements IChunk {
         ChunkNibbleArray var8;
         for(var6 = 0; var6 < this.chunkSections.length; ++var6) {
             if ((par2 & 1 << var6) != 0 && this.chunkSections[var6] != null) {
-                var8 = this.chunkSections[var6].method_3945();
+                var8 = this.chunkSections[var6].getBlockData();
                 System.arraycopy(par1ArrayOfByte, var5, var8.bytes, 0, var8.bytes.length);
                 var5 += var8.bytes.length;
             }
@@ -657,7 +657,7 @@ public abstract class ChunkMixin implements IChunk {
             }
         }
 
-        this.method_3877();
+        this.generateHeightmap();
         List<BlockEntity> invalidList = new ArrayList<>();
 
         BlockEntity tileEntity;
@@ -667,7 +667,7 @@ public abstract class ChunkMixin implements IChunk {
             int y = tileEntity.y;
             int z = tileEntity.z & 15;
             Block block = tileEntity.getBlock();
-            if (block == null || block.id != this.method_3879(x, y, z) || tileEntity.getDataValue() != this.getBlockData(x, y, z)) {
+            if (block == null || block.id != this.getBlock(x, y, z) || tileEntity.getDataValue() != this.getBlockData(x, y, z)) {
                 invalidList.add(tileEntity);
             }
         }

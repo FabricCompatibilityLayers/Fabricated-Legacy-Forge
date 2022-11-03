@@ -4,8 +4,8 @@ import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.AbstractGiantTreeFeature;
 import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.class_1237;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Random;
 
-@Mixin(class_1237.class)
-public abstract class class_1237Mixin extends Feature {
+@Mixin(AbstractGiantTreeFeature.class)
+public abstract class AbstractGiantTreeFeatureMixin extends Feature {
 
-    @Shadow @Final private int field_4889;
+    @Shadow @Final private int baseHeight;
 
     @Shadow @Final private int field_4890;
 
@@ -28,7 +28,7 @@ public abstract class class_1237Mixin extends Feature {
      */
     @Overwrite
     public boolean method_4028(World par1World, Random par2Random, int par3, int par4, int par5) {
-        int var6 = par2Random.nextInt(3) + this.field_4889;
+        int var6 = par2Random.nextInt(3) + this.baseHeight;
         boolean var7 = true;
         if (par4 >= 1 && par4 + var6 + 1 <= 256) {
             int var8;

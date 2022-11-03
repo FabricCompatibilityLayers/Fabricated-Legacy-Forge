@@ -2,10 +2,10 @@ package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.DoorBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(DoorBlock.class)
 public abstract class DoorBlockMixin extends Block {
 
-    @Shadow public abstract int method_304(WorldView worldView, int i, int j, int k);
+    @Shadow public abstract int method_304(BlockView worldView, int i, int j, int k);
 
     public DoorBlockMixin(int id, Material material) {
         super(id, material);
@@ -24,7 +24,7 @@ public abstract class DoorBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public boolean method_421(World par1World, int par2, int par3, int par4, PlayerEntity par5EntityPlayer, int par6, float par7, float par8, float par9) {
+    public boolean onActivated(World par1World, int par2, int par3, int par4, PlayerEntity par5EntityPlayer, int par6, float par7, float par8, float par9) {
         if (this.material == Material.IRON) {
             return false;
         } else {
@@ -39,7 +39,7 @@ public abstract class DoorBlockMixin extends Block {
                 par1World.onRenderRegionUpdate(par2, par3 - 1, par4, par2, par3, par4);
             }
 
-            par1World.method_3639(par5EntityPlayer, 1003, par2, par3, par4, 0);
+            par1World.dispatchEvent(par5EntityPlayer, 1003, par2, par3, par4, 0);
             return true;
         }
     }

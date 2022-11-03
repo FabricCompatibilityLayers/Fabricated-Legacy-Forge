@@ -11,7 +11,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.advancement.AchievementsAndCriterions;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.command.CommandSource;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -30,8 +30,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.CanSleepEnum;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -342,7 +342,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
      * @reason none
      */
     @Overwrite
-    public float method_3153(Block par1Block) {
+    public float getMiningSpeed(Block par1Block) {
         return this.getCurrentPlayerStrVsBlock(par1Block, 0);
     }
 
@@ -452,7 +452,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
      * @reason none
      */
     @Overwrite
-    public void method_3216(Entity par1Entity) {
+    public void attack(Entity par1Entity) {
         if (!MinecraftForge.EVENT_BUS.post(new AttackEntityEvent((PlayerEntity)(Object) this, par1Entity))) {
             ItemStack stack = this.getMainHandStack();
             if (stack == null || !((IItem)stack.getItem()).onLeftClickEntity(stack, (PlayerEntity)(Object) this, par1Entity)) {
@@ -576,7 +576,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
             this.heightOffset = 0.2F;
             if (this.world.isPosLoaded(par1, par2, par3)) {
                 int var9 = this.world.getBlockData(par1, par2, par3);
-                int var5 = BedBlock.method_297(var9);
+                int var5 = BedBlock.getRotation(var9);
                 Block block = Block.BLOCKS[this.world.getBlock(par1, par2, par3)];
                 if (block != null) {
                     var5 = ((IBlock)block).getBedDirection(this.world, par1, par2, par3);
@@ -609,7 +609,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
             this.field_3992 = new BlockPos(par1, par2, par3);
             this.velocityX = this.velocityZ = this.velocityY = 0.0;
             if (!this.world.isClient) {
-                this.world.method_3669();
+                this.world.updateSleepingStatus();
             }
 
             return CanSleepEnum.OK;
@@ -639,7 +639,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
         this.inBed = false;
         if (!this.world.isClient && par2) {
-            this.world.method_3669();
+            this.world.updateSleepingStatus();
         }
 
         if (par1) {
@@ -672,10 +672,10 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     @Overwrite
     public static BlockPos method_3169(World par0World, BlockPos par1ChunkCoordinates) {
         ChunkProvider var2 = par0World.getChunkProvider();
-        var2.method_3871(par1ChunkCoordinates.x - 3 >> 4, par1ChunkCoordinates.z - 3 >> 4);
-        var2.method_3871(par1ChunkCoordinates.x + 3 >> 4, par1ChunkCoordinates.z - 3 >> 4);
-        var2.method_3871(par1ChunkCoordinates.x - 3 >> 4, par1ChunkCoordinates.z + 3 >> 4);
-        var2.method_3871(par1ChunkCoordinates.x + 3 >> 4, par1ChunkCoordinates.z + 3 >> 4);
+        var2.getOrGenerateChunk(par1ChunkCoordinates.x - 3 >> 4, par1ChunkCoordinates.z - 3 >> 4);
+        var2.getOrGenerateChunk(par1ChunkCoordinates.x + 3 >> 4, par1ChunkCoordinates.z - 3 >> 4);
+        var2.getOrGenerateChunk(par1ChunkCoordinates.x - 3 >> 4, par1ChunkCoordinates.z + 3 >> 4);
+        var2.getOrGenerateChunk(par1ChunkCoordinates.x + 3 >> 4, par1ChunkCoordinates.z + 3 >> 4);
         Block block = Block.BLOCKS[par0World.getBlock(par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z)];
         if (block != null && ((IBlock)block).isBed(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, (MobEntity)null)) {
             return ((IBlock)block).getBedSpawnPosition(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, (PlayerEntity)null);

@@ -3,16 +3,16 @@ package fr.catcore.fabricatedforge.mixin.forgefml.block;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowerBlock;
-import net.minecraft.block.Material;
-import net.minecraft.block.MushroomBlock;
+import net.minecraft.block.MushroomPlantBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
-@Mixin(MushroomBlock.class)
-public class MushroomBlockMixin extends FlowerBlock {
-    protected MushroomBlockMixin(int i, int j, Material material) {
+@Mixin(MushroomPlantBlock.class)
+public class MushroomPlantBlockMixin extends FlowerBlock {
+    protected MushroomPlantBlockMixin(int i, int j, Material material) {
         super(i, j, material);
     }
 
@@ -21,7 +21,7 @@ public class MushroomBlockMixin extends FlowerBlock {
      * @reason none
      */
     @Overwrite
-    public boolean method_450(World par1World, int par2, int par3, int par4) {
+    public boolean canStayPlaced(World par1World, int par2, int par3, int par4) {
         if (par3 >= 0 && par3 < 256) {
             int var5 = par1World.getBlock(par2, par3 - 1, par4);
             Block soil = Block.BLOCKS[var5];

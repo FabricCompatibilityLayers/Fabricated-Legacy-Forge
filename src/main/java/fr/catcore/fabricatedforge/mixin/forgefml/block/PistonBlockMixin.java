@@ -1,9 +1,9 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.block.PistonBlock;
 import net.minecraft.block.PistonExtensionBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.class_830;
 import net.minecraft.util.math.MathHelper;
@@ -25,7 +25,7 @@ public abstract class PistonBlockMixin extends Block {
         return false;
     }
 
-    @Shadow private boolean isSticky;
+    @Shadow private boolean sticky;
 
     public PistonBlockMixin(int id, Material material) {
         super(id, material);
@@ -132,7 +132,7 @@ public abstract class PistonBlockMixin extends Block {
                         continue;
                     }
 
-                    Block.BLOCKS[var10].method_445(par1World, var6, var7, var8, par1World.getBlockData(var6, var7, var8), 0);
+                    Block.BLOCKS[var10].canStayPlaced(par1World, var6, var7, var8, par1World.getBlockData(var6, var7, var8), 0);
                     par1World.method_3690(var6, var7, var8, 0);
                 }
                 break;
@@ -148,8 +148,8 @@ public abstract class PistonBlockMixin extends Block {
             int var12 = par1World.getBlock(var9, var10, var11);
             int var13 = par1World.getBlockData(var9, var10, var11);
             if (var12 == this.id && var9 == par2 && var10 == par3 && var11 == par4) {
-                par1World.method_3601(var6, var7, var8, Block.PISTON_EXTENSION.id, par5 | (this.isSticky ? 8 : 0), false);
-                par1World.method_3603(var6, var7, var8, PistonExtensionBlock.method_566(Block.PISTON_HEAD.id, par5 | (this.isSticky ? 8 : 0), par5, true, false));
+                par1World.method_3601(var6, var7, var8, Block.PISTON_EXTENSION.id, par5 | (this.sticky ? 8 : 0), false);
+                par1World.method_3603(var6, var7, var8, PistonExtensionBlock.method_566(Block.PISTON_HEAD.id, par5 | (this.sticky ? 8 : 0), par5, true, false));
             } else {
                 par1World.method_3601(var6, var7, var8, Block.PISTON_EXTENSION.id, var13, false);
                 par1World.method_3603(var6, var7, var8, PistonExtensionBlock.method_566(var12, var13, par5, true, false));

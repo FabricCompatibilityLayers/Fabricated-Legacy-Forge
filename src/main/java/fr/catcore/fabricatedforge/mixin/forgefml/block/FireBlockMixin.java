@@ -7,9 +7,9 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.FireBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 import net.minecraftforge.common.ForgeDirection;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -29,7 +29,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
         super(id, material);
     }
 
-    @Shadow public abstract boolean method_434(World world, int i, int j, int k);
+    @Shadow public abstract boolean canPlaceBlockAt(World world, int i, int j, int k);
 
     /**
      * @author Minecraft Forge
@@ -70,14 +70,14 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
      * @reason none
      */
     @Overwrite
-    public void method_436(World par1World, int par2, int par3, int par4, Random par5Random) {
+    public void onTick(World par1World, int par2, int par3, int par4, Random par5Random) {
         Block base = Block.BLOCKS[par1World.getBlock(par2, par3 - 1, par4)];
         boolean var6 = base != null && ((IBlock)base).isFireSource(par1World, par2, par3 - 1, par4, par1World.getBlockData(par2, par3 - 1, par4), ForgeDirection.UP);
-        if (!this.method_434(par1World, par2, par3, par4)) {
+        if (!this.canPlaceBlockAt(par1World, par2, par3, par4)) {
             par1World.method_3690(par2, par3, par4, 0);
         }
 
-        if (!var6 && par1World.isRaining() && (par1World.method_3580(par2, par3, par4) || par1World.method_3580(par2 - 1, par3, par4) || par1World.method_3580(par2 + 1, par3, par4) || par1World.method_3580(par2, par3, par4 - 1) || par1World.method_3580(par2, par3, par4 + 1))) {
+        if (!var6 && par1World.isRaining() && (par1World.isBeingRainedOn(par2, par3, par4) || par1World.isBeingRainedOn(par2 - 1, par3, par4) || par1World.isBeingRainedOn(par2 + 1, par3, par4) || par1World.isBeingRainedOn(par2, par3, par4 - 1) || par1World.isBeingRainedOn(par2, par3, par4 + 1))) {
             par1World.method_3690(par2, par3, par4, 0);
         } else {
             int var7 = par1World.getBlockData(par2, par3, par4);
@@ -87,13 +87,13 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
 
             par1World.method_3599(par2, par3, par4, this.id, this.method_473() + par5Random.nextInt(10));
             if (!var6 && !this.method_319(par1World, par2, par3, par4)) {
-                if (!par1World.method_3784(par2, par3 - 1, par4) || var7 > 3) {
+                if (!par1World.isTopSolid(par2, par3 - 1, par4) || var7 > 3) {
                     par1World.method_3690(par2, par3, par4, 0);
                 }
             } else if (!var6 && !this.canBlockCatchFire(par1World, par2, par3 - 1, par4, ForgeDirection.UP) && var7 == 15 && par5Random.nextInt(4) == 0) {
                 par1World.method_3690(par2, par3, par4, 0);
             } else {
-                boolean var8 = par1World.method_3582(par2, par3, par4);
+                boolean var8 = par1World.isHighHumidity(par2, par3, par4);
                 byte var9 = 0;
                 if (var8) {
                     var9 = -50;
@@ -122,7 +122,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
                                         var15 /= 2;
                                     }
 
-                                    if (var15 > 0 && par5Random.nextInt(var13) <= var15 && (!par1World.isRaining() || !par1World.method_3580(var10, var12, var11)) && !par1World.method_3580(var10 - 1, var12, par4) && !par1World.method_3580(var10 + 1, var12, var11) && !par1World.method_3580(var10, var12, var11 - 1) && !par1World.method_3580(var10, var12, var11 + 1)) {
+                                    if (var15 > 0 && par5Random.nextInt(var13) <= var15 && (!par1World.isRaining() || !par1World.isBeingRainedOn(var10, var12, var11)) && !par1World.isBeingRainedOn(var10 - 1, var12, par4) && !par1World.isBeingRainedOn(var10 + 1, var12, var11) && !par1World.isBeingRainedOn(var10, var12, var11 - 1) && !par1World.isBeingRainedOn(var10, var12, var11 + 1)) {
                                         int var16 = var7 + par5Random.nextInt(5) / 4;
                                         if (var16 > 15) {
                                             var16 = 15;
@@ -159,7 +159,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
 
         if (par6Random.nextInt(par5) < var8) {
             boolean var9 = par1World.getBlock(par2, par3, par4) == Block.TNT.id;
-            if (par6Random.nextInt(par7 + 10) < 5 && !par1World.method_3580(par2, par3, par4)) {
+            if (par6Random.nextInt(par7 + 10) < 5 && !par1World.isBeingRainedOn(par2, par3, par4)) {
                 int var10 = par7 + par6Random.nextInt(5) / 4;
                 if (var10 > 15) {
                     var10 = 15;
@@ -171,7 +171,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
             }
 
             if (var9) {
-                Block.TNT.method_451(par1World, par2, par3, par4, 1);
+                Block.TNT.onDestroyed(par1World, par2, par3, par4, 1);
             }
         }
     }
@@ -210,7 +210,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
      * @reason none
      */
     @Overwrite
-    public boolean method_317(WorldView par1IBlockAccess, int par2, int par3, int par4) {
+    public boolean method_317(BlockView par1IBlockAccess, int par2, int par3, int par4) {
         return this.canBlockCatchFire(par1IBlockAccess, par2, par3, par4, ForgeDirection.UP);
     }
 
@@ -229,7 +229,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
-    public void method_415(World par1World, int par2, int par3, int par4, Random par5Random) {
+    public void spawnParticles(World par1World, int par2, int par3, int par4, Random par5Random) {
         if (par5Random.nextInt(24) == 0) {
             par1World.method_3648((double)((float)par2 + 0.5F), (double)((float)par3 + 0.5F), (double)((float)par4 + 0.5F), "fire.fire", 1.0F + par5Random.nextFloat(), par5Random.nextFloat() * 0.7F + 0.3F);
         }
@@ -238,13 +238,13 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
         float var7;
         float var8;
         float var9;
-        if (!par1World.method_3784(par2, par3 - 1, par4) && !((IFireBlock)Block.FIRE).canBlockCatchFire(par1World, par2, par3 - 1, par4, ForgeDirection.UP)) {
+        if (!par1World.isTopSolid(par2, par3 - 1, par4) && !((IFireBlock)Block.FIRE).canBlockCatchFire(par1World, par2, par3 - 1, par4, ForgeDirection.UP)) {
             if (((IFireBlock)Block.FIRE).canBlockCatchFire(par1World, par2 - 1, par3, par4, ForgeDirection.EAST)) {
                 for(var6 = 0; var6 < 2; ++var6) {
                     var7 = (float)par2 + par5Random.nextFloat() * 0.1F;
                     var8 = (float)par3 + par5Random.nextFloat();
                     var9 = (float)par4 + par5Random.nextFloat();
-                    par1World.method_3621("largesmoke", (double)var7, (double)var8, (double)var9, 0.0, 0.0, 0.0);
+                    par1World.spawnParticle("largesmoke", (double)var7, (double)var8, (double)var9, 0.0, 0.0, 0.0);
                 }
             }
 
@@ -253,7 +253,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
                     var7 = (float)(par2 + 1) - par5Random.nextFloat() * 0.1F;
                     var8 = (float)par3 + par5Random.nextFloat();
                     var9 = (float)par4 + par5Random.nextFloat();
-                    par1World.method_3621("largesmoke", (double)var7, (double)var8, (double)var9, 0.0, 0.0, 0.0);
+                    par1World.spawnParticle("largesmoke", (double)var7, (double)var8, (double)var9, 0.0, 0.0, 0.0);
                 }
             }
 
@@ -262,7 +262,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
                     var7 = (float)par2 + par5Random.nextFloat();
                     var8 = (float)par3 + par5Random.nextFloat();
                     var9 = (float)par4 + par5Random.nextFloat() * 0.1F;
-                    par1World.method_3621("largesmoke", (double)var7, (double)var8, (double)var9, 0.0, 0.0, 0.0);
+                    par1World.spawnParticle("largesmoke", (double)var7, (double)var8, (double)var9, 0.0, 0.0, 0.0);
                 }
             }
 
@@ -271,7 +271,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
                     var7 = (float)par2 + par5Random.nextFloat();
                     var8 = (float)par3 + par5Random.nextFloat();
                     var9 = (float)(par4 + 1) - par5Random.nextFloat() * 0.1F;
-                    par1World.method_3621("largesmoke", (double)var7, (double)var8, (double)var9, 0.0, 0.0, 0.0);
+                    par1World.spawnParticle("largesmoke", (double)var7, (double)var8, (double)var9, 0.0, 0.0, 0.0);
                 }
             }
 
@@ -280,7 +280,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
                     var7 = (float)par2 + par5Random.nextFloat();
                     var8 = (float)(par3 + 1) - par5Random.nextFloat() * 0.1F;
                     var9 = (float)par4 + par5Random.nextFloat();
-                    par1World.method_3621("largesmoke", (double)var7, (double)var8, (double)var9, 0.0, 0.0, 0.0);
+                    par1World.spawnParticle("largesmoke", (double)var7, (double)var8, (double)var9, 0.0, 0.0, 0.0);
                 }
             }
         } else {
@@ -288,14 +288,14 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
                 var7 = (float)par2 + par5Random.nextFloat();
                 var8 = (float)par3 + par5Random.nextFloat() * 0.5F + 0.5F;
                 var9 = (float)par4 + par5Random.nextFloat();
-                par1World.method_3621("largesmoke", (double)var7, (double)var8, (double)var9, 0.0, 0.0, 0.0);
+                par1World.spawnParticle("largesmoke", (double)var7, (double)var8, (double)var9, 0.0, 0.0, 0.0);
             }
         }
 
     }
 
     @Override
-    public boolean canBlockCatchFire(WorldView world, int x, int y, int z, ForgeDirection face) {
+    public boolean canBlockCatchFire(BlockView world, int x, int y, int z, ForgeDirection face) {
         Block block = Block.BLOCKS[world.getBlock(x, y, z)];
         return block != null && ((IBlock)block).isFlammable(world, x, y, z, world.getBlockData(x, y, z), face);
     }

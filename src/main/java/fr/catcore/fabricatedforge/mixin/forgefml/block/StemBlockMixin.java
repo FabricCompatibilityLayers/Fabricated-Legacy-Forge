@@ -1,15 +1,14 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
-import net.minecraft.block.AttachedStemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowerBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.StemBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.IPlantable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,12 +16,12 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.ArrayList;
 import java.util.Random;
 
-@Mixin(AttachedStemBlock.class)
-public abstract class AttachedStemBlockMixin extends FlowerBlock {
+@Mixin(StemBlock.class)
+public abstract class StemBlockMixin extends FlowerBlock {
 
     @Shadow private Block mainBlock;
 
-    protected AttachedStemBlockMixin(int i, int j, Material material) {
+    protected StemBlockMixin(int i, int j, Material material) {
         super(i, j, material);
     }
 
@@ -31,8 +30,8 @@ public abstract class AttachedStemBlockMixin extends FlowerBlock {
      * @reason none
      */
     @Overwrite
-    public void method_436(World par1World, int par2, int par3, int par4, Random par5Random) {
-        super.method_436(par1World, par2, par3, par4, par5Random);
+    public void onTick(World par1World, int par2, int par3, int par4, Random par5Random) {
+        super.onTick(par1World, par2, par3, par4, par5Random);
         if (par1World.method_3720(par2, par3 + 1, par4) >= 9) {
             float var6 = this.method_386(par1World, par2, par3, par4);
             if (par5Random.nextInt((int)(25.0F / var6) + 1) == 0) {
@@ -142,7 +141,7 @@ public abstract class AttachedStemBlockMixin extends FlowerBlock {
 
     @Override
     public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune) {
-        ArrayList<ItemStack> ret = new ArrayList();
+        ArrayList<ItemStack> ret = new ArrayList<>();
 
         for(int i = 0; i < 3; ++i) {
             if (world.random.nextInt(15) <= metadata) {

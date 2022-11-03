@@ -2,7 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.entity;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.MobSpawnerHelper;
 import net.minecraft.entity.SpawnEntry;
@@ -13,7 +13,7 @@ import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
@@ -35,7 +35,7 @@ public abstract class MobSpawnerHelperMixin {
     @Shadow private static HashMap field_4593;
 
     @Shadow
-    protected static Vec3i method_3799(World world, int i, int j) {
+    protected static Vec3i getRandomPosInChunk(World world, int i, int j) {
         return null;
     }
 
@@ -81,8 +81,8 @@ public abstract class MobSpawnerHelperMixin {
             label120:
             for(var7 = 0; var7 < var6; ++var7) {
                 EntityCategory var34 = var32[var7];
-                if ((!var34.isHostile() || par2) && (var34.isHostile() || par1) && par0WorldServer.method_3616(var34.getCategoryClass()) <= var34.getSpawnCap() * field_4593.size() / 256) {
-                    ArrayList<ChunkPos> tmp = new ArrayList(field_4593.keySet());
+                if ((!var34.isHostile() || par2) && (var34.isHostile() || par1) && par0WorldServer.getPersistentEntityCount(var34.getCategoryClass()) <= var34.getSpawnCap() * field_4593.size() / 256) {
+                    ArrayList<ChunkPos> tmp = new ArrayList<>(field_4593.keySet());
                     Collections.shuffle(tmp);
                     Iterator<ChunkPos> var35 = tmp.iterator();
 
@@ -101,11 +101,11 @@ public abstract class MobSpawnerHelperMixin {
                                     var37 = (ChunkPos)var35.next();
                                 } while((Boolean)field_4593.get(var37));
 
-                                Vec3i var36 = method_3799(par0WorldServer, var37.x, var37.z);
-                                var12 = var36.field_4613;
-                                var13 = var36.field_4614;
-                                var14 = var36.field_4615;
-                            } while(par0WorldServer.method_3783(var12, var13, var14));
+                                Vec3i var36 = getRandomPosInChunk(par0WorldServer, var37.x, var37.z);
+                                var12 = var36.x;
+                                var13 = var36.y;
+                                var14 = var36.z;
+                            } while(par0WorldServer.isBlockSolid(var12, var13, var14));
                         } while(par0WorldServer.getMaterial(var12, var13, var14) != var34.getMaterial());
 
                         int var15 = 0;
@@ -121,7 +121,7 @@ public abstract class MobSpawnerHelperMixin {
                                 var17 += par0WorldServer.random.nextInt(var20) - par0WorldServer.random.nextInt(var20);
                                 var18 += par0WorldServer.random.nextInt(1) - par0WorldServer.random.nextInt(1);
                                 var19 += par0WorldServer.random.nextInt(var20) - par0WorldServer.random.nextInt(var20);
-                                if (method_3798(var34, par0WorldServer, var17, var18, var19)) {
+                                if (canSpawnAt(var34, par0WorldServer, var17, var18, var19)) {
                                     float var23 = (float)var17 + 0.5F;
                                     float var24 = (float)var18;
                                     float var25 = (float)var19 + 0.5F;
@@ -175,15 +175,15 @@ public abstract class MobSpawnerHelperMixin {
      * @reason none
      */
     @Overwrite
-    public static boolean method_3798(EntityCategory par0EnumCreatureType, World par1World, int par2, int par3, int par4) {
+    public static boolean canSpawnAt(EntityCategory par0EnumCreatureType, World par1World, int par2, int par3, int par4) {
         if (par0EnumCreatureType.getMaterial() == Material.WATER) {
-            return par1World.getMaterial(par2, par3, par4).isFluid() && !par1World.method_3783(par2, par3 + 1, par4);
-        } else if (!par1World.method_3784(par2, par3 - 1, par4)) {
+            return par1World.getMaterial(par2, par3, par4).isFluid() && !par1World.isBlockSolid(par2, par3 + 1, par4);
+        } else if (!par1World.isTopSolid(par2, par3 - 1, par4)) {
             return false;
         } else {
             int var5 = par1World.getBlock(par2, par3 - 1, par4);
             boolean spawnBlock = Block.BLOCKS[var5] != null && ((IBlock)Block.BLOCKS[var5]).canCreatureSpawn(par0EnumCreatureType, par1World, par2, par3 - 1, par4);
-            return spawnBlock && var5 != Block.BEDROCK.id && !par1World.method_3783(par2, par3, par4) && !par1World.getMaterial(par2, par3, par4).isFluid() && !par1World.method_3783(par2, par3 + 1, par4);
+            return spawnBlock && var5 != Block.BEDROCK.id && !par1World.isBlockSolid(par2, par3, par4) && !par1World.getMaterial(par2, par3, par4).isFluid() && !par1World.isBlockSolid(par2, par3 + 1, par4);
         }
     }
 
