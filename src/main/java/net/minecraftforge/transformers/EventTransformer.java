@@ -19,7 +19,8 @@ public class EventTransformer implements IClassTransformer {
     }
 
     public byte[] transform(String name, byte[] bytes) {
-        if (!name.equals("net.minecraftforge.event.Event") && !name.startsWith("net.minecraft.") && name.indexOf(46) != -1) {
+        if (!name.equals("net.minecraftforge.event.Event") && !name.startsWith("net.minecraft.class_")
+                && !name.startsWith("net.minecraft.client.") && name.indexOf(46) != -1) {
             ClassReader cr = new ClassReader(bytes);
             ClassNode classNode = new ClassNode();
             cr.accept(classNode, 0);
