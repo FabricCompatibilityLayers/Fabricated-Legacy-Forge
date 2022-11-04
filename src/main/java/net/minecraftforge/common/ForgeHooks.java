@@ -10,7 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.util.collection.Weight;
 import net.minecraft.util.collection.Weighting;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResultType;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -32,7 +32,7 @@ public class ForgeHooks {
 
     public static void plantGrass(World world, int x, int y, int z) {
         ForgeHooks.GrassEntry grass = (ForgeHooks.GrassEntry) Weighting.getRandom(world.random, grassList);
-        if (grass != null && grass.block != null && grass.block.method_450(world, x, y, z)) {
+        if (grass != null && grass.block != null && grass.block.canStayPlaced(world, x, y, z)) {
             world.method_3683(x, y, z, grass.block.id, grass.metadata);
         }
     }
@@ -161,7 +161,7 @@ public class ForgeHooks {
         return ret;
     }
 
-    public static boolean onPickBlock(HitResult target, PlayerEntity player, World world) {
+    public static boolean onPickBlock(BlockHitResult target, PlayerEntity player, World world) {
         ItemStack result = null;
         boolean isCreative = player.abilities.creativeMode;
         int slot;
@@ -197,7 +197,7 @@ public class ForgeHooks {
             if (!isCreative) {
                 return false;
             } else {
-                slot = player.inventory.method_3146();
+                slot = player.inventory.getEmptySlot();
                 if (slot < 0 || slot >= 9) {
                     slot = player.inventory.selectedSlot;
                 }

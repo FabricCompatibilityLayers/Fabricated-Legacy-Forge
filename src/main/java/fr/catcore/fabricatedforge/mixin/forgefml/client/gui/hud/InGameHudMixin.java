@@ -1,7 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.gui.hud;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_469;
 import net.minecraft.client.class_482;
@@ -367,7 +367,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
             var23 = MathHelper.floor(this.field_1166.playerEntity.z);
             if (this.field_1166.world != null && this.field_1166.world.isPosLoaded(var47, var22, var23)) {
                 Chunk var48 = this.field_1166.world.getChunkFromPos(var47, var23);
-                this.drawWithShadow(var8, "lc: " + (var48.getHighestNonEmptySectionYOffset() + 15) + " b: " + var48.method_3883(var47 & 15, var23 & 15, this.field_1166.world.getBiomeSource()).name + " bl: " + var48.method_3890(LightType.BLOCK, var47 & 15, var22, var23 & 15) + " sl: " + var48.method_3890(LightType.SKY, var47 & 15, var22, var23 & 15) + " rl: " + var48.method_3905(var47 & 15, var22, var23 & 15, 0), 2, 96, 14737632);
+                this.drawWithShadow(var8, "lc: " + (var48.getHighestNonEmptySectionYOffset() + 15) + " b: " + var48.getBiome(var47 & 15, var23 & 15, this.field_1166.world.getBiomeSource()).name + " bl: " + var48.method_3890(LightType.BLOCK, var47 & 15, var22, var23 & 15) + " sl: " + var48.method_3890(LightType.SKY, var47 & 15, var22, var23 & 15) + " rl: " + var48.method_3905(var47 & 15, var22, var23 & 15, 0), 2, 96, 14737632);
             }
 
             this.drawWithShadow(var8, String.format("ws: %.3f, fs: %.3f, g: %b", this.field_1166.playerEntity.abilities.getWalkSpeed(), this.field_1166.playerEntity.abilities.getFlySpeed(), this.field_1166.playerEntity.onGround), 2, 104, 14737632);

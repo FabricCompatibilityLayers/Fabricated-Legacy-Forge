@@ -2,7 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.LadderBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +20,7 @@ public abstract class LadderBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public boolean method_434(World par1World, int par2, int par3, int par4) {
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4) {
         return par1World.isBlockSolidOnSide(par2 - 1, par3, par4, ForgeDirection.EAST) || par1World.isBlockSolidOnSide(par2 + 1, par3, par4, ForgeDirection.WEST) || par1World.isBlockSolidOnSide(par2, par3, par4 - 1, ForgeDirection.SOUTH) || par1World.isBlockSolidOnSide(par2, par3, par4 + 1, ForgeDirection.NORTH);
     }
 
@@ -55,7 +55,7 @@ public abstract class LadderBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public void method_408(World par1World, int par2, int par3, int par4, int par5) {
+    public void onNeighborUpdate(World par1World, int par2, int par3, int par4, int par5) {
         int var6 = par1World.getBlockData(par2, par3, par4);
         boolean var7 = false;
         if (var6 == 2 && par1World.isBlockSolidOnSide(par2, par3, par4 + 1, ForgeDirection.NORTH)) {
@@ -75,11 +75,11 @@ public abstract class LadderBlockMixin extends Block {
         }
 
         if (!var7) {
-            this.method_445(par1World, par2, par3, par4, var6, 0);
+            this.canStayPlaced(par1World, par2, par3, par4, var6, 0);
             par1World.method_3690(par2, par3, par4, 0);
         }
 
-        super.method_408(par1World, par2, par3, par4, par5);
+        super.onNeighborUpdate(par1World, par2, par3, par4, par5);
     }
 
     @Override

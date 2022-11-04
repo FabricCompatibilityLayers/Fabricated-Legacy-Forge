@@ -41,8 +41,8 @@ import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerPacketListener;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkProvider;
 
@@ -352,7 +352,7 @@ public class ModLoader {
     /** @deprecated */
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public static boolean renderWorldBlock(class_535 renderer, WorldView world, int x, int y, int z, Block block, int modelID) {
+    public static boolean renderWorldBlock(class_535 renderer, BlockView world, int x, int y, int z, Block block, int modelID) {
         return RenderingRegistry.instance().renderWorldBlock(renderer, world, x, y, z, block, modelID);
     }
 

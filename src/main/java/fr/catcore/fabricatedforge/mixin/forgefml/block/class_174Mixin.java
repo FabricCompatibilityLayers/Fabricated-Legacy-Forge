@@ -61,7 +61,7 @@ public abstract class class_174Mixin {
      */
     @Overwrite
     private class_174 method_361(Vec3i par1ChunkPosition) {
-        return RailBlock.method_355(this.field_306, par1ChunkPosition.field_4613, par1ChunkPosition.field_4614, par1ChunkPosition.field_4615) ? new class_174(this.field_305, this.field_306, par1ChunkPosition.field_4613, par1ChunkPosition.field_4614, par1ChunkPosition.field_4615) : (RailBlock.method_355(this.field_306, par1ChunkPosition.field_4613, par1ChunkPosition.field_4614 + 1, par1ChunkPosition.field_4615) ? new class_174(this.field_305, this.field_306, par1ChunkPosition.field_4613, par1ChunkPosition.field_4614 + 1, par1ChunkPosition.field_4615) : (RailBlock.method_355(this.field_306, par1ChunkPosition.field_4613, par1ChunkPosition.field_4614 - 1, par1ChunkPosition.field_4615) ? new class_174(this.field_305, this.field_306, par1ChunkPosition.field_4613, par1ChunkPosition.field_4614 - 1, par1ChunkPosition.field_4615) : null));
+        return RailBlock.method_355(this.field_306, par1ChunkPosition.x, par1ChunkPosition.y, par1ChunkPosition.z) ? new class_174(this.field_305, this.field_306, par1ChunkPosition.x, par1ChunkPosition.y, par1ChunkPosition.z) : (RailBlock.method_355(this.field_306, par1ChunkPosition.x, par1ChunkPosition.y + 1, par1ChunkPosition.z) ? new class_174(this.field_305, this.field_306, par1ChunkPosition.x, par1ChunkPosition.y + 1, par1ChunkPosition.z) : (RailBlock.method_355(this.field_306, par1ChunkPosition.x, par1ChunkPosition.y - 1, par1ChunkPosition.z) ? new class_174(this.field_305, this.field_306, par1ChunkPosition.x, par1ChunkPosition.y - 1, par1ChunkPosition.z) : null));
     }
 
     /**

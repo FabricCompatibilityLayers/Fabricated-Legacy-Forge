@@ -8,7 +8,7 @@ import net.minecraft.client.sound.Sound;
 import net.minecraft.client.sound.SoundLoader;
 import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.entity.Entity;
-import net.minecraft.network.packet.s2c.play.OpenScreen_S2CPacket;
+import net.minecraft.network.packet.s2c.play.OpenScreenS2CPacket;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import paulscode.sound.SoundSystemConfig;
@@ -31,9 +31,13 @@ public class ModCompatibilityClient {
             return Class.forName(name);
         } catch (Exception var4) {
             try {
-                return Class.forName("net.minecraft.src." + name);
+                return Class.forName("net.minecraft." + name);
             } catch (Exception var3) {
-                return null;
+                try {
+                    return Class.forName("net.minecraft.src." + name);
+                } catch (Exception var5) {
+                    return null;
+                }
             }
         }
     }
@@ -96,7 +100,7 @@ public class ModCompatibilityClient {
             int x = MathHelper.fastFloor(ent.x);
             int y = MathHelper.fastFloor(ent.y);
             int z = MathHelper.fastFloor(ent.z);
-            return mc.world.method_3716(x, y, z) ? current : audioModSoundPoolCave.getSoundRandom();
+            return mc.world.isAboveHighestBlock(x, y, z) ? current : audioModSoundPoolCave.getSoundRandom();
         } else {
             return current;
         }
@@ -144,11 +148,11 @@ public class ModCompatibilityClient {
         }
     }
 
-    public static void mlmpOpenWindow(OpenScreen_S2CPacket pkt) {
+    public static void mlmpOpenWindow(OpenScreenS2CPacket pkt) {
         Class mlmp = getClass("ModLoaderMp");
         if (isMLMPInstalled() && mlmp != null) {
             try {
-                mlmp.getDeclaredMethod("handleGUI", OpenScreen_S2CPacket.class).invoke((Object)null, pkt);
+                mlmp.getDeclaredMethod("handleGUI", OpenScreenS2CPacket.class).invoke((Object)null, pkt);
             } catch (Exception var3) {
                 var3.printStackTrace();
             }

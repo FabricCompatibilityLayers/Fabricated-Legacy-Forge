@@ -14,18 +14,18 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.c2s.play.*;
-import net.minecraft.network.packet.s2c.play.BlockUpdate_S2CPacket;
-import net.minecraft.network.packet.s2c.play.ChatMessage_S2CPacket;
-import net.minecraft.network.packet.s2c.play.MapUpdate_S2CPacket;
-import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdate_S2CPacket;
+import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
+import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.VillagerScreenHandler;
 import net.minecraft.server.BanEntry;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerPacketListener;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.SharedConstants;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.event.Event;
@@ -78,8 +78,8 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
      * @reason none
      */
     @Overwrite
-    public void onPlayerMove(PlayerMove_C2SPacket par1Packet10Flying) {
-        ServerWorld var2 = this.server.getWorld(this.player._dimension);
+    public void onPlayerMove(PlayerMoveC2SPacket par1Packet10Flying) {
+        ServerWorld var2 = this.server.getWorld(this.player.dimension);
         this.hasMoved = true;
         if (!this.player.killedEnderdragon) {
             double var3;
@@ -145,14 +145,14 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
                     this.lastTickX = this.player.x;
                     this.lastTickY = this.player.y;
                     this.lastTickZ = this.player.z;
-                    var2.method_3705(this.player);
+                    var2.checkChunk(this.player);
                     return;
                 }
 
                 if (this.player.method_2641()) {
                     this.player.tickPlayer();
                     this.player.updatePositionAndAngles(this.lastTickX, this.lastTickY, this.lastTickZ, this.player.yaw, this.player.pitch);
-                    var2.method_3705(this.player);
+                    var2.checkChunk(this.player);
                     return;
                 }
 
@@ -281,8 +281,8 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
      * @reason none
      */
     @Overwrite
-    public void onPlayerAction(PlayerAction_C2SPacket par1Packet14BlockDig) {
-        ServerWorld var2 = this.server.getWorld(this.player._dimension);
+    public void onPlayerAction(PlayerActionC2SPacket par1Packet14BlockDig) {
+        ServerWorld var2 = this.server.getWorld(this.player.dimension);
         if (par1Packet14BlockDig.action == 4) {
             this.player.dropSelectedStack();
         } else if (par1Packet14BlockDig.action == 5) {
@@ -327,19 +327,19 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
             if (par1Packet14BlockDig.action == 0) {
                 if (var20 <= ((IMinecraftServer)this.server).getSpawnProtectionSize() && !var3) {
                     ForgeEventFactory.onPlayerInteract(this.player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, var5, var6, var7, 0);
-                    this.player.field_2823.sendPacket(new BlockUpdate_S2CPacket(var5, var6, var7, var2));
+                    this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var5, var6, var7, var2));
                 } else {
                     this.player.interactionManager.method_2167(var5, var6, var7, par1Packet14BlockDig.side);
                 }
             } else if (par1Packet14BlockDig.action == 2) {
                 this.player.interactionManager.method_2166(var5, var6, var7);
                 if (var2.getBlock(var5, var6, var7) != 0) {
-                    this.player.field_2823.sendPacket(new BlockUpdate_S2CPacket(var5, var6, var7, var2));
+                    this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var5, var6, var7, var2));
                 }
             } else if (par1Packet14BlockDig.action == 1) {
                 this.player.interactionManager.method_2175(var5, var6, var7);
                 if (var2.getBlock(var5, var6, var7) != 0) {
-                    this.player.field_2823.sendPacket(new BlockUpdate_S2CPacket(var5, var6, var7, var2));
+                    this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var5, var6, var7, var2));
                 }
             } else if (par1Packet14BlockDig.action == 3) {
                 double var11 = this.player.x - ((double)var5 + 0.5);
@@ -347,7 +347,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
                 double var15 = this.player.z - ((double)var7 + 0.5);
                 double var17 = var11 * var11 + var13 * var13 + var15 * var15;
                 if (var17 < 256.0) {
-                    this.player.field_2823.sendPacket(new BlockUpdate_S2CPacket(var5, var6, var7, var2));
+                    this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var5, var6, var7, var2));
                 }
             }
 
@@ -362,7 +362,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
      */
     @Overwrite
     public void onPlayerInteractBlock(PlayerInteractBlockC2SPacket par1Packet15Place) {
-        ServerWorld var2 = this.server.getWorld(this.player._dimension);
+        ServerWorld var2 = this.server.getWorld(this.player.dimension);
         ItemStack var3 = this.player.inventory.getMainHandStack();
         boolean var4 = false;
         int var5 = par1Packet15Place.getX();
@@ -380,7 +380,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
                 this.player.interactionManager.interactItem(this.player, var2, var3);
             }
         } else if (par1Packet15Place.getY() >= this.server.getWorldHeight() - 1 && (par1Packet15Place.getSide() == 1 || par1Packet15Place.getY() >= this.server.getWorldHeight())) {
-            this.player.field_2823.sendPacket(new ChatMessage_S2CPacket("§7Height limit for building is " + this.server.getWorldHeight()));
+            this.player.field_2823.sendPacket(new ChatMessageS2CPacket("§7Height limit for building is " + this.server.getWorldHeight()));
             var4 = true;
         } else {
             BlockPos var10 = var2.getWorldSpawnPos();
@@ -400,7 +400,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
         }
 
         if (var4) {
-            this.player.field_2823.sendPacket(new BlockUpdate_S2CPacket(var5, var6, var7, var2));
+            this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var5, var6, var7, var2));
             if (var8 == 0) {
                 --var6;
             }
@@ -425,7 +425,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
                 ++var5;
             }
 
-            this.player.field_2823.sendPacket(new BlockUpdate_S2CPacket(var5, var6, var7, var2));
+            this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var5, var6, var7, var2));
         }
 
         var3 = this.player.inventory.getMainHandStack();
@@ -437,11 +437,11 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
         if (var3 == null || var3.getMaxUseTime() == 0) {
             this.player.skipPacketSlotUpdates = true;
             this.player.inventory.main[this.player.inventory.selectedSlot] = ItemStack.copyOf(this.player.inventory.main[this.player.inventory.selectedSlot]);
-            Slot var13 = this.player.openScreenHandler.method_3255(this.player.inventory, this.player.inventory.selectedSlot);
+            Slot var13 = this.player.openScreenHandler.getSlot(this.player.inventory, this.player.inventory.selectedSlot);
             this.player.openScreenHandler.sendContentUpdates();
             this.player.skipPacketSlotUpdates = false;
             if (!ItemStack.equalsAll(this.player.inventory.getMainHandStack(), par1Packet15Place.getStack())) {
-                this.sendPacket(new ScreenHandlerSlotUpdate_S2CPacket(this.player.openScreenHandler.syncId, var13.id, this.player.inventory.getMainHandStack()));
+                this.sendPacket(new ScreenHandlerSlotUpdateS2CPacket(this.player.openScreenHandler.syncId, var13.id, this.player.inventory.getMainHandStack()));
             }
         }
 
@@ -453,10 +453,10 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
      * @reason none
      */
     @Overwrite
-    public void onChatMessage(ChatMessage_S2CPacket par1Packet3Chat) {
+    public void onChatMessage(ChatMessageS2CPacket par1Packet3Chat) {
         par1Packet3Chat = FMLNetworkHandler.handleChatMessage(this, par1Packet3Chat);
         if (this.player.getChatFilterLevel() == 2) {
-            this.sendPacket(new ChatMessage_S2CPacket("Cannot send chat message."));
+            this.sendPacket(new ChatMessageS2CPacket("Cannot send chat message."));
         } else {
             String var2 = par1Packet3Chat.message;
             if (var2.length() > 100) {
@@ -475,13 +475,13 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
                     this.executeCommand(var2);
                 } else {
                     if (this.player.getChatFilterLevel() == 1) {
-                        this.sendPacket(new ChatMessage_S2CPacket("Cannot send chat message."));
+                        this.sendPacket(new ChatMessageS2CPacket("Cannot send chat message."));
                         return;
                     }
 
                     var2 = "<" + this.player.username + "> " + var2;
                     LOGGER.info(var2);
-                    this.server.getPlayerManager().sendToAll(new ChatMessage_S2CPacket(var2, false));
+                    this.server.getPlayerManager().sendToAll(new ChatMessageS2CPacket(var2, false));
                 }
 
                 this.messageCooldown += 20;
@@ -498,7 +498,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
      * @reason none
      */
     @Overwrite
-    public void onClientStatus(ClientStatus_C2SPacket par1Packet205ClientCommand) {
+    public void onClientStatus(ClientStatusC2SPacket par1Packet205ClientCommand) {
         if (par1Packet205ClientCommand.mode == 1) {
             if (this.player.killedEnderdragon) {
                 this.player = this.server.getPlayerManager().respawnPlayer(this.player, 0, true);
@@ -517,7 +517,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
                     return;
                 }
 
-                this.player = this.server.getPlayerManager().respawnPlayer(this.player, this.player._dimension, false);
+                this.player = this.server.getPlayerManager().respawnPlayer(this.player, this.player.dimension, false);
             }
         }
 
@@ -580,7 +580,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener implement
     }
 
     @Override
-    public void onMapUpdate(MapUpdate_S2CPacket par1Packet131MapData) {
+    public void onMapUpdate(MapUpdateS2CPacket par1Packet131MapData) {
         FMLNetworkHandler.handlePacket131Packet(this, par1Packet131MapData);
     }
 

@@ -4,7 +4,7 @@ import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.RedstoneWireBlock;
 import net.minecraft.util.math.Axis;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
@@ -16,7 +16,7 @@ public class RedstoneWireBlockMixin {
      * @reason none
      */
     @Overwrite
-    public static boolean method_373(WorldView par0IBlockAccess, int par1, int par2, int par3, int par4) {
+    public static boolean method_373(BlockView par0IBlockAccess, int par1, int par2, int par3, int par4) {
         int var5 = par0IBlockAccess.getBlock(par1, par2, par3);
         if (var5 == Block.field_408.id) {
             return true;

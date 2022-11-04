@@ -11,9 +11,8 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.entity.Entity;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.BlockView;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +66,7 @@ public class RenderingRegistry {
         return INSTANCE;
     }
 
-    public boolean renderWorldBlock(class_535 renderer, WorldView world, int x, int y, int z, Block block, int modelId) {
+    public boolean renderWorldBlock(class_535 renderer, BlockView world, int x, int y, int z, Block block, int modelId) {
         if (!this.blockRenderers.containsKey(modelId)) {
             return false;
         } else {

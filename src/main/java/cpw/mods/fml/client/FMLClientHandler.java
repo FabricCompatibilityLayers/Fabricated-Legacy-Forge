@@ -24,7 +24,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.PacketListener;
-import net.minecraft.network.packet.s2c.play.MapUpdate_S2CPacket;
+import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.world.World;
@@ -269,7 +269,7 @@ public class FMLClientHandler implements IFMLSidedHandler {
         return this.loading;
     }
 
-    public void handleTinyPacket(PacketListener handler, MapUpdate_S2CPacket mapData) {
+    public void handleTinyPacket(PacketListener handler, MapUpdateS2CPacket mapData) {
         ((Iclass_469)handler).fmlPacket131Callback(mapData);
     }
 

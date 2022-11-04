@@ -3,7 +3,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkCache;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ChunkCache.class)
-public abstract class ChunkCacheMixin implements WorldView {
+public abstract class ChunkCacheMixin implements BlockView {
 
     @Shadow private int minX;
 
@@ -24,12 +24,12 @@ public abstract class ChunkCacheMixin implements WorldView {
      * @reason none
      */
     @Overwrite
-    public BlockEntity method_3781(int par1, int par2, int par3) {
+    public BlockEntity getBlockEntity(int par1, int par2, int par3) {
         int var4 = (par1 >> 4) - this.minX;
         int var5 = (par3 >> 4) - this.minZ;
         if (var4 >= 0 && var4 < this.chunks.length && var5 >= 0 && var5 < this.chunks[var4].length) {
             Chunk var6 = this.chunks[var4][var5];
-            return var6 == null ? null : var6.method_3912(par1 & 15, par2, par3 & 15);
+            return var6 == null ? null : var6.getBlockEntity(par1 & 15, par2, par3 & 15);
         } else {
             return null;
         }
@@ -63,7 +63,7 @@ public abstract class ChunkCacheMixin implements WorldView {
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
-    public int method_3771() {
+    public int getMaxBuildHeight() {
         return 256;
     }
 }

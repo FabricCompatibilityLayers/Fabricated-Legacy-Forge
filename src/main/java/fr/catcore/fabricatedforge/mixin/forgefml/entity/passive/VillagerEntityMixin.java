@@ -5,7 +5,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.passive.AgeableEntity;
+import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Random;
 
 @Mixin(VillagerEntity.class)
-public abstract class VillagerEntityMixin extends AgeableEntity {
+public abstract class VillagerEntityMixin extends PassiveEntity {
     @Shadow public abstract int profession();
 
     @Shadow

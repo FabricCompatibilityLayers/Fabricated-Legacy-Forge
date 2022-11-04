@@ -1,12 +1,9 @@
 package fr.catcore.fabricatedforge;
 
-import fr.catcore.fabricatedforge.Constants;
 import fr.catcore.modremapperapi.api.ModRemapper;
 import fr.catcore.modremapperapi.api.RemapLibrary;
 import fr.catcore.modremapperapi.remapping.RemapUtil;
-import fr.catcore.modremapperapi.utils.BArrayList;
-import net.fabricmc.tinyremapper.TinyRemapper;
-import net.fabricmc.tinyremapper.api.TrClass;
+import fr.catcore.modremapperapi.remapping.VisitorInfos;
 
 import java.util.HashMap;
 import java.util.List;
@@ -104,8 +101,13 @@ public class ForgeModRemapper implements ModRemapper {
     }
 
     @Override
-    public Optional<TinyRemapper.ApplyVisitorProvider> getPostRemappingVisitor() {
-        return Optional.of(POST_VISITOR);
+    public void registerVisitors(VisitorInfos infos) {
+
+    }
+
+    @Override
+    public Optional<String> getDefaultPackage() {
+        return Optional.of("net/minecraft/");
     }
     
     static {

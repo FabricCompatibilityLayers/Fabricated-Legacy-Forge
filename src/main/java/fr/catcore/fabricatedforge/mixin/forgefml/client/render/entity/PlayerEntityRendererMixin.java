@@ -82,7 +82,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
         float var5;
         if (var3 != null && var3.getItem() instanceof BlockItem) {
             GL11.glPushMatrix();
-            this.field_2133.head.method_1195(0.0625F);
+            this.field_2133.head.preRender(0.0625F);
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(var3, IItemRenderer.ItemRenderType.EQUIPPED);
             boolean is3D = customRenderer != null && customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.EQUIPPED, var3, IItemRenderer.ItemRendererHelper.BLOCK_3D);
             if (is3D || class_535.method_1455(Block.BLOCKS[var3.id].getBlockType())) {
@@ -157,7 +157,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
         ItemStack var21 = par1EntityPlayer.inventory.getMainHandStack();
         if (var21 != null) {
             GL11.glPushMatrix();
-            this.field_2133.field_1476.method_1195(0.0625F);
+            this.field_2133.field_1476.preRender(0.0625F);
             GL11.glTranslatef(-0.0625F, 0.4375F, 0.0625F);
             if (par1EntityPlayer.fishHook != null) {
                 var21 = new ItemStack(Item.STICK);

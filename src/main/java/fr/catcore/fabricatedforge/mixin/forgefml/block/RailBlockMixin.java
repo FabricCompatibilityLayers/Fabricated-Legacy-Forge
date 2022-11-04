@@ -2,12 +2,12 @@ package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import fr.catcore.fabricatedforge.mixininterface.IRailBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.block.RailBlock;
 import net.minecraft.block.class_174;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
 import net.minecraftforge.common.ForgeDirection;
 import org.spongepowered.asm.mixin.*;
 
@@ -65,7 +65,7 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
      * @reason none
      */
     @Overwrite
-    public boolean method_434(World par1World, int par2, int par3, int par4) {
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4) {
         return par1World.isBlockSolidOnSide(par2, par3 - 1, par4, ForgeDirection.UP);
     }
 
@@ -74,7 +74,7 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
      * @reason none
      */
     @Overwrite
-    public void method_408(World par1World, int par2, int par3, int par4, int par5) {
+    public void onNeighborUpdate(World par1World, int par2, int par3, int par4, int par5) {
         if (!par1World.isClient) {
             int var6 = par1World.getBlockData(par2, par3, par4);
             int var7 = var6;
@@ -104,10 +104,10 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
             }
 
             if (var8) {
-                this.method_445(par1World, par2, par3, par4, par1World.getBlockData(par2, par3, par4), 0);
+                this.canStayPlaced(par1World, par2, par3, par4, par1World.getBlockData(par2, par3, par4), 0);
                 par1World.method_3690(par2, par3, par4, 0);
             } else if (this.id == Block.POWERED_RAIL.id) {
-                boolean var9 = par1World.method_3739(par2, par3, par4);
+                boolean var9 = par1World.isAnyFacePowered(par2, par3, par4);
                 var9 = var9 || this.method_351(par1World, par2, par3, par4, var6, true, 0) || this.method_351(par1World, par2, par3, par4, var6, false, 0);
                 boolean var10 = false;
                 if (var9 && (var6 & 8) == 0) {
@@ -119,9 +119,9 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
                 }
 
                 if (var10) {
-                    par1World.method_3710(par2, par3 - 1, par4, this.id);
+                    par1World.updateNeighbors(par2, par3 - 1, par4, this.id);
                     if (var7 == 2 || var7 == 3 || var7 == 4 || var7 == 5) {
-                        par1World.method_3710(par2, par3 + 1, par4, this.id);
+                        par1World.updateNeighbors(par2, par3 + 1, par4, this.id);
                     }
                 }
             } else if (par5 > 0 && Block.BLOCKS[par5].emitsRedstonePower() && !this.field_304 && ((class_174Accessor)new class_174((RailBlock)(Object) this, par1World, par2, par3, par4)).method_363_invoker() == 3) {
@@ -142,7 +142,7 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
     }
 
     @Override
-    public int getBasicRailMetadata(WorldView world, AbstractMinecartEntity cart, int x, int y, int z) {
+    public int getBasicRailMetadata(BlockView world, AbstractMinecartEntity cart, int x, int y, int z) {
         int meta = world.getBlockData(x, y, z);
         if (this.field_304) {
             meta &= 7;

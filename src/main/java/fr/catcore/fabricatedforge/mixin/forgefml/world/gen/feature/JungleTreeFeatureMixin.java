@@ -16,13 +16,13 @@ import java.util.Random;
 @Mixin(JungleTreeFeature.class)
 public abstract class JungleTreeFeatureMixin extends Feature {
 
-    @Shadow @Final private int field_4900;
+    @Shadow @Final private int baseHeight;
 
     @Shadow @Final private int field_4903;
 
     @Shadow @Final private int field_4902;
 
-    @Shadow @Final private boolean field_4901;
+    @Shadow @Final private boolean generateFeatures;
 
     @Shadow protected abstract void method_4033(World world, int i, int j, int k, int l);
 
@@ -32,7 +32,7 @@ public abstract class JungleTreeFeatureMixin extends Feature {
      */
     @Overwrite
     public boolean method_4028(World par1World, Random par2Random, int par3, int par4, int par5) {
-        int var6 = par2Random.nextInt(3) + this.field_4900;
+        int var6 = par2Random.nextInt(3) + this.baseHeight;
         boolean var7 = true;
         if (par4 >= 1 && par4 + var6 + 1 <= 256) {
             int var8;
@@ -99,7 +99,7 @@ public abstract class JungleTreeFeatureMixin extends Feature {
                         block = Block.BLOCKS[var12];
                         if (var12 == 0 || block == null || ((IBlock)block).isLeaves(par1World, par3, par4 + var11, par5)) {
                             this.method_4027(par1World, par3, par4 + var11, par5, Block.LOG.id, this.field_4902);
-                            if (this.field_4901 && var11 > 0) {
+                            if (this.generateFeatures && var11 > 0) {
                                 if (par2Random.nextInt(3) > 0 && par1World.isAir(par3 - 1, par4 + var11, par5)) {
                                     this.method_4027(par1World, par3 - 1, par4 + var11, par5, Block.VINE.id, 8);
                                 }
@@ -119,7 +119,7 @@ public abstract class JungleTreeFeatureMixin extends Feature {
                         }
                     }
 
-                    if (this.field_4901) {
+                    if (this.generateFeatures) {
                         for(var11 = par4 - 3 + var6; var11 <= par4 + var6; ++var11) {
                             var12 = var11 - (par4 + var6);
                             var13 = 2 - var12 / 2;

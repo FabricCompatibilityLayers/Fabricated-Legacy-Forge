@@ -3,7 +3,7 @@ package fr.catcore.fabricatedforge.forged;
 import cpw.mods.fml.client.FMLTextureFX;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

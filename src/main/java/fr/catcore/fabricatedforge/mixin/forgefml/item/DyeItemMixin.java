@@ -54,7 +54,7 @@ public class DyeItemMixin extends Item {
                 }
 
                 if (var11 == Block.BROWN_MUSHROOM.id || var11 == Block.RED_MUSHROOM.id) {
-                    if (!par3World.isClient && ((MushroomBlock)Block.BLOCKS[var11]).method_345(par3World, par4, par5, par6, par3World.random)) {
+                    if (!par3World.isClient && ((MushroomPlantBlock)Block.BLOCKS[var11]).method_345(par3World, par4, par5, par6, par3World.random)) {
                         --par1ItemStack.count;
                     }
 
@@ -66,7 +66,7 @@ public class DyeItemMixin extends Item {
                         return false;
                     } else {
                         if (!par3World.isClient) {
-                            ((AttachedStemBlock)Block.BLOCKS[var11]).method_385(par3World, par4, par5, par6);
+                            ((StemBlock)Block.BLOCKS[var11]).method_385(par3World, par4, par5, par6);
                             --par1ItemStack.count;
                         }
 
@@ -89,7 +89,7 @@ public class DyeItemMixin extends Item {
 
                 if (var11 == Block.COCOA.id) {
                     if (!par3World.isClient) {
-                        par3World.method_3672(par4, par5, par6, 8 | HorizontalFacingBlock.method_297(par3World.getBlockData(par4, par5, par6)));
+                        par3World.method_3672(par4, par5, par6, 8 | FacingBlock.getRotation(par3World.getBlockData(par4, par5, par6)));
                         --par1ItemStack.count;
                     }
 
@@ -110,14 +110,14 @@ public class DyeItemMixin extends Item {
                                 var13 += RANDOM.nextInt(3) - 1;
                                 var14 += (RANDOM.nextInt(3) - 1) * RANDOM.nextInt(3) / 2;
                                 var15 += RANDOM.nextInt(3) - 1;
-                                if (par3World.getBlock(var13, var14 - 1, var15) != Block.GRASS_BLOCK.id || par3World.method_3783(var13, var14, var15)) {
+                                if (par3World.getBlock(var13, var14 - 1, var15) != Block.GRASS_BLOCK.id || par3World.isBlockSolid(var13, var14, var15)) {
                                     continue label137;
                                 }
                             }
 
                             if (par3World.getBlock(var13, var14, var15) == 0) {
                                 if (RANDOM.nextInt(10) != 0) {
-                                    if (Block.TALLGRASS.method_450(par3World, var13, var14, var15)) {
+                                    if (Block.TALLGRASS.canStayPlaced(par3World, var13, var14, var15)) {
                                         par3World.method_3683(var13, var14, var15, Block.TALLGRASS.id, 1);
                                     }
                                 } else {

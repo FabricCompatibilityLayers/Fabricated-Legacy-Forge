@@ -3,7 +3,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.entity;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.*;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.decoration.PaintingEntity;
+import net.minecraft.entity.decoration.painting.PaintingEntity;
 import net.minecraft.entity.passive.SquidEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.AbstractArrowEntity;

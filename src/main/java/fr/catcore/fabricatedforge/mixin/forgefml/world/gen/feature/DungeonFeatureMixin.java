@@ -1,9 +1,9 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.DungeonFeature;
@@ -94,7 +94,7 @@ public abstract class DungeonFeatureMixin extends Feature {
 
                         if (var15 == 1) {
                             par1World.method_3690(var12, par4, var14, Block.field_407.id);
-                            ChestBlockEntity var16 = (ChestBlockEntity)par1World.method_3781(var12, par4, var14);
+                            ChestBlockEntity var16 = (ChestBlockEntity)par1World.getBlockEntity(var12, par4, var14);
                             if (var16 == null) {
                                 break;
                             }
@@ -119,7 +119,7 @@ public abstract class DungeonFeatureMixin extends Feature {
             }
 
             par1World.method_3690(par3, par4, par5, Block.SPAWNER.id);
-            MobSpawnerBlockEntity var19 = (MobSpawnerBlockEntity)par1World.method_3781(par3, par4, par5);
+            MobSpawnerBlockEntity var19 = (MobSpawnerBlockEntity)par1World.getBlockEntity(par3, par4, par5);
             if (var19 != null) {
                 var19.method_527(DungeonHooks.getRandomDungeonMob(par2Random));
             } else {

@@ -15,7 +15,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.listener.PacketListener;
-import net.minecraft.network.packet.s2c.play.MapUpdate_S2CPacket;
+import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
 import net.minecraft.server.ListenThread;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.class_739;
@@ -285,7 +285,7 @@ public class FMLCommonHandler {
         }
     }
 
-    public void handleTinyPacket(PacketListener handler, MapUpdate_S2CPacket mapData) {
+    public void handleTinyPacket(PacketListener handler, MapUpdateS2CPacket mapData) {
         this.sidedDelegate.handleTinyPacket(handler, mapData);
     }
 

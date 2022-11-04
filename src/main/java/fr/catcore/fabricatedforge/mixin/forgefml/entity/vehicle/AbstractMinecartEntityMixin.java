@@ -211,7 +211,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
         }
 
         if (this.method_3063() && this.random.nextInt(4) == 0 && this.field_3897 == 2 && ((Object)this).getClass() == AbstractMinecartEntity.class) {
-            this.world.method_3621("largesmoke", this.x, this.y + 0.8, this.z, 0.0, 0.0, 0.0);
+            this.world.spawnParticle("largesmoke", this.x, this.y + 0.8, this.z, 0.0, 0.0, 0.0);
         }
 
         if (this.world.isClient) {
@@ -364,15 +364,15 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                         this.velocityX += this.velocityX / var41 * var43;
                         this.velocityZ += this.velocityZ / var41 * var43;
                     } else if (var10 == 1) {
-                        if (this.world.method_3783(var1 - 1, var2, var3)) {
+                        if (this.world.isBlockSolid(var1 - 1, var2, var3)) {
                             this.velocityX = 0.02;
-                        } else if (this.world.method_3783(var1 + 1, var2, var3)) {
+                        } else if (this.world.isBlockSolid(var1 + 1, var2, var3)) {
                             this.velocityX = -0.02;
                         }
                     } else if (var10 == 0) {
-                        if (this.world.method_3783(var1, var2, var3 - 1)) {
+                        if (this.world.isBlockSolid(var1, var2, var3 - 1)) {
                             this.velocityZ = 0.02;
-                        } else if (this.world.method_3783(var1, var2, var3 + 1)) {
+                        } else if (this.world.isBlockSolid(var1, var2, var3 + 1)) {
                             this.velocityZ = -0.02;
                         }
                     }

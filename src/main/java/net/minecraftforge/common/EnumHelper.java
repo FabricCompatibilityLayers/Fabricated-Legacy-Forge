@@ -1,10 +1,10 @@
 package net.minecraftforge.common;
 
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EntityCategory;
 import net.minecraft.entity.EntityGroup;
-import net.minecraft.entity.decoration.Paintings;
+import net.minecraft.entity.decoration.painting.Painting;
 import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.util.*;
@@ -36,8 +36,8 @@ public class EnumHelper {
         return (ArmorMaterial)addEnum(ArmorMaterial.class, name, durability, reductionAmounts, enchantability);
     }
 
-    public static Paintings addArt(String name, String tile, int sizeX, int sizeY, int offsetX, int offsetY) {
-        return (Paintings)addEnum(Paintings.class, name, tile, sizeX, sizeY, offsetX, offsetY);
+    public static Painting addArt(String name, String tile, int sizeX, int sizeY, int offsetX, int offsetY) {
+        return (Painting)addEnum(Painting.class, name, tile, sizeX, sizeY, offsetX, offsetY);
     }
 
     public static EntityGroup addCreatureAttribute(String name) {
@@ -203,7 +203,7 @@ public class EnumHelper {
     }
 
     static {
-        commonTypes = new Class[][]{{UseAction.class}, {ArmorMaterial.class, Integer.TYPE, int[].class, Integer.TYPE}, {Paintings.class, String.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE}, {EntityGroup.class}, {EntityCategory.class, Class.class, Integer.TYPE, Material.class, Boolean.TYPE}, {class_32.class}, {EnchantmentTarget.class}, {EntityBoundaryEnum.class}, {class_171.class}, {HitResultType.class}, {LightType.class, Integer.TYPE}, {CanSleepEnum.class}, {ToolMaterial.class, Integer.TYPE, Integer.TYPE, Float.TYPE, Integer.TYPE, Integer.TYPE}};
+        commonTypes = new Class[][]{{UseAction.class}, {ArmorMaterial.class, Integer.TYPE, int[].class, Integer.TYPE}, {Painting.class, String.class, Integer.TYPE, Integer.TYPE, Integer.TYPE, Integer.TYPE}, {EntityGroup.class}, {EntityCategory.class, Class.class, Integer.TYPE, Material.class, Boolean.TYPE}, {class_32.class}, {EnchantmentTarget.class}, {EntityBoundaryEnum.class}, {class_171.class}, {HitResultType.class}, {LightType.class, Integer.TYPE}, {CanSleepEnum.class}, {ToolMaterial.class, Integer.TYPE, Integer.TYPE, Float.TYPE, Integer.TYPE, Integer.TYPE}};
         if (!isSetup) {
             setup();
         }

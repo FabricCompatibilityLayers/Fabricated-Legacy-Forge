@@ -20,7 +20,7 @@ import java.util.Random;
 @Mixin(WeightedRandomChestContent.class)
 public class WeightedRandomChestContentMixin implements IWeightedRandomChestContent {
 
-    @Shadow private int minCount;
+    @Shadow private int min;
     @Unique
     public ItemStack itemStack;
 
@@ -73,7 +73,7 @@ public class WeightedRandomChestContentMixin implements IWeightedRandomChestCont
 
     @Override
     public int getMinCount() {
-        return minCount;
+        return min;
     }
 
     @Override

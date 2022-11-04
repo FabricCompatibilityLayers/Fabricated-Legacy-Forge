@@ -3,7 +3,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render;
 import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import fr.catcore.fabricatedforge.mixininterface.IWorldRenderer;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.*;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.render.*;
@@ -32,7 +32,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Shadow public Minecraft field_1918;
 
-    @Shadow private int field_1888;
+    @Shadow private int renderDistance;
 
     @Shadow private BufferBuilder[] field_1913;
 
@@ -68,7 +68,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Shadow protected abstract void method_1383(int i, int j, int k);
 
-    @Shadow private int field_1889;
+    @Shadow private int totalEntityCount;
 
     @Shadow private int field_1899;
 
@@ -94,21 +94,21 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Shadow protected abstract int method_1368(int i, int j, int k, double d);
 
-    @Shadow private int field_1922;
+    @Shadow private int ticks;
 
     @Shadow @Final public class_534 field_1910;
 
-    @Shadow private int field_1924;
+    @Shadow private int lightSkyList;
 
-    @Shadow private int field_1923;
+    @Shadow private int starsList;
 
-    @Shadow private int field_1925;
+    @Shadow private int darkSkyList;
 
     @Shadow public class_535 field_1919;
 
-    @Shadow public Map field_1887;
+    @Shadow public Map blockBreakingInfos;
 
-    @Shadow public abstract void method_3746(String particleName, double x, double y, double z, double d, double e, double f);
+    @Shadow public abstract void spawnParticle(String particleName, double x, double y, double z, double d, double e, double f);
 
     /**
      * @author Minecraft Forge
@@ -118,7 +118,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
     public void reload() {
         if (this.world != null) {
             Block.LEAVES.method_325(this.field_1918.options.fancyGraphics);
-            this.field_1888 = this.field_1918.options.renderDistance;
+            this.renderDistance = this.field_1918.options.renderDistance;
             int var2;
             int var3;
             BufferBuilder var5;
@@ -132,7 +132,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 }
             }
 
-            int var7 = 64 << 3 - this.field_1888;
+            int var7 = 64 << 3 - this.renderDistance;
             if (var7 > 400) {
                 var7 = 400;
             }
@@ -186,7 +186,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 }
             }
 
-            this.field_1889 = 2;
+            this.totalEntityCount = 2;
         }
 
     }
@@ -207,7 +207,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
             }
         }
 
-        if (this.field_1918.options.renderDistance != this.field_1888) {
+        if (this.field_1918.options.renderDistance != this.renderDistance) {
             this.reload();
         }
 
@@ -283,7 +283,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                         if (this.field_1912[var23].field_1790 && !this.field_1912[var23].field_1799) {
                             float var24 = MathHelper.sqrt(this.field_1912[var23].method_1311(par1EntityLiving));
                             int var25 = (int)(1.0F + var24 / 128.0F);
-                            if (this.field_1922 % var25 == var23 % var25) {
+                            if (this.ticks % var25 == var23 % var25) {
                                 BufferBuilder var26 = this.field_1912[var23];
                                 float var27 = (float)((double)var26.field_1784 - var33);
                                 float var28 = (float)((double)var26.field_1785 - var7);
@@ -412,7 +412,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 GL11.glDepthMask(false);
                 GL11.glEnable(2912);
                 GL11.glColor3f(var3, var4, var5);
-                GL11.glCallList(this.field_1924);
+                GL11.glCallList(this.lightSkyList);
                 GL11.glDisable(2912);
                 GL11.glDisable(3008);
                 GL11.glEnable(3042);
@@ -503,7 +503,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 float var20 = this.world.method_3707(par1) * var8;
                 if (var20 > 0.0F) {
                     GL11.glColor4f(var20, var20, var20, var20);
-                    GL11.glCallList(this.field_1923);
+                    GL11.glCallList(this.starsList);
                 }
 
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -517,7 +517,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 if (var25 < 0.0) {
                     GL11.glPushMatrix();
                     GL11.glTranslatef(0.0F, 12.0F, 0.0F);
-                    GL11.glCallList(this.field_1925);
+                    GL11.glCallList(this.darkSkyList);
                     GL11.glPopMatrix();
                     var10 = 1.0F;
                     var11 = -((float)(var25 + 65.0));
@@ -555,7 +555,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
                 GL11.glPushMatrix();
                 GL11.glTranslatef(0.0F, -((float)(var25 - 16.0)), 0.0F);
-                GL11.glCallList(this.field_1925);
+                GL11.glCallList(this.darkSkyList);
                 GL11.glPopMatrix();
                 GL11.glEnable(3553);
                 GL11.glDepthMask(true);
@@ -711,7 +711,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
         double var4 = par2EntityPlayer.prevTickX + (par2EntityPlayer.x - par2EntityPlayer.prevTickX) * (double)par3;
         double var6 = par2EntityPlayer.prevTickY + (par2EntityPlayer.y - par2EntityPlayer.prevTickY) * (double)par3;
         double var8 = par2EntityPlayer.prevTickZ + (par2EntityPlayer.z - par2EntityPlayer.prevTickZ) * (double)par3;
-        if (!this.field_1887.isEmpty()) {
+        if (!this.blockBreakingInfos.isEmpty()) {
             GL11.glBlendFunc(774, 768);
             int var10 = this.field_1910.getTextureFromPath("/terrain.png");
             GL11.glBindTexture(3553, var10);
@@ -724,7 +724,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
             par1Tessellator.method_1405();
             par1Tessellator.method_1406(-var4, -var6, -var8);
             par1Tessellator.method_1409();
-            Iterator var11 = this.field_1887.values().iterator();
+            Iterator var11 = this.blockBreakingInfos.values().iterator();
 
             while(var11.hasNext()) {
                 BlockBreakingInfo var12 = (BlockBreakingInfo)var11.next();
@@ -774,9 +774,9 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
             Particle var21 = null;
             Object effectObject = null;
             if (par1Str.equals("hugeexplosion")) {
-                this.field_1918.particleManager.method_1295(var21 = new ExplosionEmitterParticle(this.world, par2, par4, par6, par8, par10, par12));
+                this.field_1918.particleManager.addParticle(var21 = new ExplosionEmitterParticle(this.world, par2, par4, par6, par8, par10, par12));
             } else if (par1Str.equals("largeexplode")) {
-                this.field_1918.particleManager.method_1295(var21 = new LargeExplosionParticle(this.field_1910, this.world, par2, par4, par6, par8, par10, par12));
+                this.field_1918.particleManager.addParticle(var21 = new LargeExplosionParticle(this.field_1910, this.world, par2, par4, par6, par8, par10, par12));
             }
 
             if (var21 != null) {
@@ -811,7 +811,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                         var21 = new SpellParticle(this.world, par2, par4, par6, par8, par10, par12);
                     } else if (par1Str.equals("instantSpell")) {
                         var21 = new SpellParticle(this.world, par2, par4, par6, par8, par10, par12);
-                        ((SpellParticle)var21).method_1300(144);
+                        ((SpellParticle)var21).setTextureIndex(144);
                     } else if (par1Str.equals("note")) {
                         var21 = new NoteParticle(this.world, par2, par4, par6, par8, par10, par12);
                     } else if (par1Str.equals("portal")) {
@@ -876,7 +876,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
      * @reason none
      */
     @Overwrite
-    public void method_3750(PlayerEntity par1EntityPlayer, int par2, int par3, int par4, int par5, int par6) {
+    public void dispatchEvent(PlayerEntity par1EntityPlayer, int par2, int par3, int par4, int par5, int par6) {
         Random var7 = this.world.random;
         double var8;
         double var10;
@@ -911,9 +911,9 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 break;
             case 1005:
                 if (Item.ITEMS[par6] instanceof MusicDiscItem) {
-                    this.world.method_3622(((MusicDiscItem)Item.ITEMS[par6]).recordType, par3, par4, par5);
+                    this.world.playRecord(((MusicDiscItem)Item.ITEMS[par6]).recordType, par3, par4, par5);
                 } else {
-                    this.world.method_3622((String)null, par3, par4, par5);
+                    this.world.playRecord((String)null, par3, par4, par5);
                 }
                 break;
             case 1007:
@@ -946,7 +946,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                     var25 = (double)var33 * var37 + var7.nextGaussian() * 0.01;
                     var27 = -0.03 + var7.nextGaussian() * 0.01;
                     var29 = (double)var9 * var37 + var7.nextGaussian() * 0.01;
-                    this.method_3746("smoke", var38, var39, var23, var25, var27, var29);
+                    this.spawnParticle("smoke", var38, var39, var23, var25, var27, var29);
                 }
 
                 return;
@@ -954,7 +954,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 var20 = par6 & 4095;
                 if (var20 > 0) {
                     Block var40 = Block.BLOCKS[var20];
-                    this.field_1918.soundSystem.playSound(var40.soundGroup.method_484(), (float)par3 + 0.5F, (float)par4 + 0.5F, (float)par5 + 0.5F, (var40.soundGroup.method_485() + 1.0F) / 2.0F, var40.soundGroup.method_486() * 0.8F);
+                    this.field_1918.soundSystem.playSound(var40.soundGroup.getHitId(), (float)par3 + 0.5F, (float)par4 + 0.5F, (float)par5 + 0.5F, (var40.soundGroup.getVolume() + 1.0F) / 2.0F, var40.soundGroup.getPitch() * 0.8F);
                 }
 
                 this.field_1918.particleManager.method_1294(par3, par4, par5, par6 & 4095, par6 >> 12 & 255);
@@ -966,7 +966,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 var14 = "iconcrack_" + Item.POTION.id;
 
                 for(var15 = 0; var15 < 8; ++var15) {
-                    this.method_3746(var14, var8, var10, var12, var7.nextGaussian() * 0.15, var7.nextDouble() * 0.2, var7.nextGaussian() * 0.15);
+                    this.spawnParticle(var14, var8, var10, var12, var7.nextGaussian() * 0.15, var7.nextDouble() * 0.2, var7.nextGaussian() * 0.15);
                 }
 
                 var15 = Item.POTION.method_3344(par6, 0);
@@ -974,7 +974,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 float var17 = (float)(var15 >> 8 & 255) / 255.0F;
                 float var18 = (float)(var15 >> 0 & 255) / 255.0F;
                 String var19 = "spell";
-                if (Item.POTION.method_3459(par6)) {
+                if (Item.POTION.isInstant(par6)) {
                     var19 = "instantSpell";
                 }
 
@@ -988,7 +988,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                     if (var31 != null) {
                         float var32 = 0.75F + var7.nextFloat() * 0.25F;
                         var31.setColor(var16 * var32, var17 * var32, var18 * var32);
-                        var31.method_1287((float)var39);
+                        var31.move((float)var39);
                     }
                 }
 
@@ -1001,12 +1001,12 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 var14 = "iconcrack_" + Item.EYE_OF_ENDER.id;
 
                 for(var15 = 0; var15 < 8; ++var15) {
-                    this.method_3746(var14, var8, var10, var12, var7.nextGaussian() * 0.15, var7.nextDouble() * 0.2, var7.nextGaussian() * 0.15);
+                    this.spawnParticle(var14, var8, var10, var12, var7.nextGaussian() * 0.15, var7.nextDouble() * 0.2, var7.nextGaussian() * 0.15);
                 }
 
                 for(double var36 = 0.0; var36 < 6.283185307179586; var36 += 0.15707963267948966) {
-                    this.method_3746("portal", var8 + Math.cos(var36) * 5.0, var10 - 0.4, var12 + Math.sin(var36) * 5.0, Math.cos(var36) * -5.0, 0.0, Math.sin(var36) * -5.0);
-                    this.method_3746("portal", var8 + Math.cos(var36) * 5.0, var10 - 0.4, var12 + Math.sin(var36) * 5.0, Math.cos(var36) * -7.0, 0.0, Math.sin(var36) * -7.0);
+                    this.spawnParticle("portal", var8 + Math.cos(var36) * 5.0, var10 - 0.4, var12 + Math.sin(var36) * 5.0, Math.cos(var36) * -5.0, 0.0, Math.sin(var36) * -5.0);
+                    this.spawnParticle("portal", var8 + Math.cos(var36) * 5.0, var10 - 0.4, var12 + Math.sin(var36) * 5.0, Math.cos(var36) * -7.0, 0.0, Math.sin(var36) * -7.0);
                 }
 
                 return;
@@ -1015,8 +1015,8 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                     double var22 = (double)par3 + 0.5 + ((double)this.world.random.nextFloat() - 0.5) * 2.0;
                     double var24 = (double)par4 + 0.5 + ((double)this.world.random.nextFloat() - 0.5) * 2.0;
                     double var26 = (double)par5 + 0.5 + ((double)this.world.random.nextFloat() - 0.5) * 2.0;
-                    this.world.method_3621("smoke", var22, var24, var26, 0.0, 0.0, 0.0);
-                    this.world.method_3621("flame", var22, var24, var26, 0.0, 0.0, 0.0);
+                    this.world.spawnParticle("smoke", var22, var24, var26, 0.0, 0.0, 0.0);
+                    this.world.spawnParticle("flame", var22, var24, var26, 0.0, 0.0, 0.0);
                 }
         }
 

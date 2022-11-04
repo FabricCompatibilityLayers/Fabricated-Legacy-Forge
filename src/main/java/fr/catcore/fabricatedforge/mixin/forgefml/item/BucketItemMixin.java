@@ -1,12 +1,12 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.item;
 
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResultType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -36,7 +36,7 @@ public abstract class BucketItemMixin extends Item {
         double var7 = par3EntityPlayer.prevY + (par3EntityPlayer.y - par3EntityPlayer.prevY) * (double)var4 + 1.62 - (double)par3EntityPlayer.heightOffset;
         double var9 = par3EntityPlayer.prevZ + (par3EntityPlayer.z - par3EntityPlayer.prevZ) * (double)var4;
         boolean var11 = this.field_4170 == 0;
-        HitResult var12 = this.onHit(par2World, par3EntityPlayer, var11);
+        BlockHitResult var12 = this.onHit(par2World, par3EntityPlayer, var11);
         if (var12 == null) {
             return par1ItemStack;
         } else {

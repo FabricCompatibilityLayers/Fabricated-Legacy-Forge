@@ -225,7 +225,7 @@ public abstract class HeldItemRendererMixin {
         }
 
         ItemStack var17 = this.mainHand;
-        var6 = this.field_1876.world.method_3780(MathHelper.floor(var3.x), MathHelper.floor(var3.y), MathHelper.floor(var3.z));
+        var6 = this.field_1876.world.getBrightness(MathHelper.floor(var3.x), MathHelper.floor(var3.y), MathHelper.floor(var3.z));
         var6 = 1.0F;
         int var18 = this.field_1876.world.method_3778(MathHelper.floor(var3.x), MathHelper.floor(var3.y), MathHelper.floor(var3.z), 0);
         int var8 = var18 % 65536;

@@ -4,8 +4,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import fr.catcore.fabricatedforge.mixininterface.IServerChunkProvider;
 import fr.catcore.fabricatedforge.mixininterface.IWorld;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.collection.LongObjectStorage;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkProvider;
@@ -71,7 +71,7 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
      * @reason none
      */
     @Overwrite
-    public Chunk method_3871(int par1, int par2) {
+    public Chunk getOrGenerateChunk(int par1, int par2) {
         long var3 = ChunkPos.getIdFromCoords(par1, par2);
         this.chunksToUnload.remove(var3);
         Chunk var5 = (Chunk)this.chunkMap.get(var3);
@@ -95,7 +95,7 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
                 var5.loadToWorld();
             }
 
-            var5.method_3892(this, this, par1, par2);
+            var5.decorateChunk(this, this, par1, par2);
         }
 
         return var5;
@@ -108,7 +108,7 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
     @Overwrite
     public Chunk getChunk(int par1, int par2) {
         Chunk var3 = (Chunk)this.chunkMap.get(ChunkPos.getIdFromCoords(par1, par2));
-        return var3 == null ? (!this.world.field_4523 && !this.canGenerateChunks ? this.empty : this.method_3871(par1, par2)) : var3;
+        return var3 == null ? (!this.world.field_4523 && !this.canGenerateChunks ? this.empty : this.getOrGenerateChunk(par1, par2)) : var3;
     }
 
     /**

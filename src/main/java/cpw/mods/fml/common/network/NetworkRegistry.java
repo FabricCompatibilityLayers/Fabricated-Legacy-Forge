@@ -14,8 +14,8 @@ import net.minecraft.network.PendingConnection;
 import net.minecraft.network.class_690;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.network.packet.s2c.play.ChatMessage_S2CPacket;
-import net.minecraft.network.packet.s2c.play.MapUpdate_S2CPacket;
+import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
+import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.ServerPacketListener;
@@ -234,7 +234,7 @@ public class NetworkRegistry {
         FMLCommonHandler.instance().showGuiScreen(handler.getClientGuiElement(modGuiId, player, world, x, y, z));
     }
 
-    public ChatMessage_S2CPacket handleChat(PacketListener handler, ChatMessage_S2CPacket chat) {
+    public ChatMessageS2CPacket handleChat(PacketListener handler, ChatMessageS2CPacket chat) {
         Side s = Side.CLIENT;
         if (handler instanceof ServerPacketListener)
         {
@@ -248,7 +248,7 @@ public class NetworkRegistry {
         return chat;
     }
 
-    public void handleTinyPacket(PacketListener handler, MapUpdate_S2CPacket mapData) {
+    public void handleTinyPacket(PacketListener handler, MapUpdateS2CPacket mapData) {
         NetworkModHandler nmh = FMLNetworkHandler.instance().findNetworkModHandler(Integer.valueOf(mapData.item));
         if (nmh == null) {
             FMLLog.info("Received a tiny packet for network id %d that is not recognised here", new Object[]{mapData.item});

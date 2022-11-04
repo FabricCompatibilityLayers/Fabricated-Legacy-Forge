@@ -9,7 +9,7 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.PacketListener;
-import net.minecraft.network.packet.s2c.play.MapUpdate_S2CPacket;
+import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 
@@ -71,7 +71,7 @@ public class FMLServerHandler implements IFMLSidedHandler {
     public void displayMissingMods(ModMissingPacket modMissingPacket) {
     }
 
-    public void handleTinyPacket(PacketListener handler, MapUpdate_S2CPacket mapData) {
+    public void handleTinyPacket(PacketListener handler, MapUpdateS2CPacket mapData) {
     }
 
     public void setClientCompatibilityLevel(byte compatibilityLevel) {

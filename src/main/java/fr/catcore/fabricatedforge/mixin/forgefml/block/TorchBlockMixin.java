@@ -2,8 +2,8 @@ package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.block.TorchBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +24,7 @@ public abstract class TorchBlockMixin extends Block {
      */
     @Overwrite
     private boolean method_489(World par1World, int par2, int par3, int par4) {
-        if (par1World.method_3784(par2, par3, par4)) {
+        if (par1World.isTopSolid(par2, par3, par4)) {
             return true;
         } else {
             int var5 = par1World.getBlock(par2, par3, par4);
@@ -37,7 +37,7 @@ public abstract class TorchBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public boolean method_434(World par1World, int par2, int par3, int par4) {
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4) {
         return par1World.isBlockSolidOnSide(par2 - 1, par3, par4, ForgeDirection.EAST, true) || par1World.isBlockSolidOnSide(par2 + 1, par3, par4, ForgeDirection.WEST, true) || par1World.isBlockSolidOnSide(par2, par3, par4 - 1, ForgeDirection.SOUTH, true) || par1World.isBlockSolidOnSide(par2, par3, par4 + 1, ForgeDirection.NORTH, true) || this.method_489(par1World, par2, par3 - 1, par4);
     }
 
@@ -76,7 +76,7 @@ public abstract class TorchBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public void method_460(World par1World, int par2, int par3, int par4) {
+    public void breakNaturally(World par1World, int par2, int par3, int par4) {
         if (par1World.isBlockSolidOnSide(par2 - 1, par3, par4, ForgeDirection.EAST, true)) {
             par1World.method_3672(par2, par3, par4, 1);
         } else if (par1World.isBlockSolidOnSide(par2 + 1, par3, par4, ForgeDirection.WEST, true)) {
@@ -97,7 +97,7 @@ public abstract class TorchBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public void method_408(World par1World, int par2, int par3, int par4, int par5) {
+    public void onNeighborUpdate(World par1World, int par2, int par3, int par4, int par5) {
         if (this.method_490(par1World, par2, par3, par4)) {
             int var6 = par1World.getBlockData(par2, par3, par4);
             boolean var7 = false;
@@ -122,7 +122,7 @@ public abstract class TorchBlockMixin extends Block {
             }
 
             if (var7) {
-                this.method_445(par1World, par2, par3, par4, par1World.getBlockData(par2, par3, par4), 0);
+                this.canStayPlaced(par1World, par2, par3, par4, par1World.getBlockData(par2, par3, par4), 0);
                 par1World.method_3690(par2, par3, par4, 0);
             }
         }

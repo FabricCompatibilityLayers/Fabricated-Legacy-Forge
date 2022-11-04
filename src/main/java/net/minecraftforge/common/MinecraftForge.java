@@ -2,7 +2,7 @@ package net.minecraftforge.common;
 
 import cpw.mods.fml.common.FMLLog;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

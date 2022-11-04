@@ -10,7 +10,7 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.c2s.play.PlayerAction_C2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerActionC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
@@ -27,7 +27,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
 
     @Shadow @Final private Minecraft field_1646;
 
-    @Shadow private GameMode field_1656;
+    @Shadow private GameMode gameMode;
 
     @Shadow protected abstract void syncSelectedSlot();
 
@@ -64,7 +64,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
         ItemStack stack = this.field_1646.playerEntity.getMainHandStack();
         if (stack != null && stack.getItem() != null && ((IItem)stack.getItem()).onBlockStartBreak(stack, par1, par2, par3, this.field_1646.playerEntity)) {
             return false;
-        } else if (this.field_1656.isAdventure()) {
+        } else if (this.gameMode.isAdventure()) {
             return false;
         } else {
             ClientWorld var5 = this.field_1646.world;
@@ -72,14 +72,14 @@ public abstract class ClientPlayerInteractionManagerMixin {
             if (var6 == null) {
                 return false;
             } else {
-                var5.playSound(2001, par1, par2, par3, var6.id + (var5.getBlockData(par1, par2, par3) << 12));
+                var5.dispatchEvent(2001, par1, par2, par3, var6.id + (var5.getBlockData(par1, par2, par3) << 12));
                 int var7 = var5.getBlockData(par1, par2, par3);
                 boolean var8 = ((IBlock)var6).removeBlockByPlayer(var5, this.field_1646.playerEntity, par1, par2, par3);
                 if (var8) {
-                    var6.method_451(var5, par1, par2, par3, var7);
+                    var6.onDestroyed(var5, par1, par2, par3, var7);
                 }
 
-                if (!this.field_1656.isCreative()) {
+                if (!this.gameMode.isCreative()) {
                     ItemStack var9 = this.field_1646.playerEntity.getMainHandStack();
                     if (var9 != null) {
                         var9.method_3417(var5, var6.id, par1, par2, par3, this.field_1646.playerEntity);
@@ -103,9 +103,9 @@ public abstract class ClientPlayerInteractionManagerMixin {
         this.syncSelectedSlot();
         if (this.blockBreakingCooldown > 0) {
             --this.blockBreakingCooldown;
-        } else if (this.field_1656.isCreative()) {
+        } else if (this.gameMode.isCreative()) {
             this.blockBreakingCooldown = 5;
-            this.field_1647.sendPacket(new PlayerAction_C2SPacket(0, par1, par2, par3, par4));
+            this.field_1647.sendPacket(new PlayerActionC2SPacket(0, par1, par2, par3, par4));
             method_1225(this.field_1646, (ClientPlayerInteractionManager)(Object) this, par1, par2, par3, par4);
         } else if (par1 == this.field_1648 && par2 == this.field_1649 && par3 == this.field_1650) {
             int var5 = this.field_1646.world.getBlock(par1, par2, par3);
@@ -117,13 +117,13 @@ public abstract class ClientPlayerInteractionManagerMixin {
             Block var6 = Block.BLOCKS[var5];
             this.currentBreakingProgress += var6.method_405(this.field_1646.playerEntity, this.field_1646.playerEntity.world, par1, par2, par3);
             if (this.blockBreakingSoundCooldown % 4.0F == 0.0F && var6 != null) {
-                this.field_1646.soundSystem.playSound(var6.soundGroup.method_487(), (float)par1 + 0.5F, (float)par2 + 0.5F, (float)par3 + 0.5F, (var6.soundGroup.method_485() + 1.0F) / 8.0F, var6.soundGroup.method_486() * 0.5F);
+                this.field_1646.soundSystem.playSound(var6.soundGroup.getStepId(), (float)par1 + 0.5F, (float)par2 + 0.5F, (float)par3 + 0.5F, (var6.soundGroup.getVolume() + 1.0F) / 8.0F, var6.soundGroup.getPitch() * 0.5F);
             }
 
             ++this.blockBreakingSoundCooldown;
             if (this.currentBreakingProgress >= 1.0F) {
                 this.breakingBlock = false;
-                this.field_1647.sendPacket(new PlayerAction_C2SPacket(2, par1, par2, par3, par4));
+                this.field_1647.sendPacket(new PlayerActionC2SPacket(2, par1, par2, par3, par4));
                 this.method_1223(par1, par2, par3, par4);
                 this.currentBreakingProgress = 0.0F;
                 this.field_1652 = 0.0F;
@@ -153,7 +153,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
         if (par3ItemStack != null && par3ItemStack.getItem() != null && ((IItem)par3ItemStack.getItem()).onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11)) {
             return true;
         } else {
-            if (var13 > 0 && Block.BLOCKS[var13].method_421(par2World, par4, par5, par6, par1EntityPlayer, par7, var9, var10, var11)) {
+            if (var13 > 0 && Block.BLOCKS[var13].onActivated(par2World, par4, par5, par6, par1EntityPlayer, par7, var9, var10, var11)) {
                 var12 = true;
             }
 
@@ -169,7 +169,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
                 return true;
             } else if (par3ItemStack == null) {
                 return false;
-            } else if (this.field_1656.isCreative()) {
+            } else if (this.gameMode.isCreative()) {
                 int var17 = par3ItemStack.getMeta();
                 int var15 = par3ItemStack.count;
                 boolean var16 = par3ItemStack.method_3413(par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11);
@@ -193,7 +193,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
      * @reason none
      */
     @Overwrite
-    public boolean method_1228(PlayerEntity par1EntityPlayer, World par2World, ItemStack par3ItemStack) {
+    public boolean interactItem(PlayerEntity par1EntityPlayer, World par2World, ItemStack par3ItemStack) {
         this.syncSelectedSlot();
         this.field_1647.sendPacket(new PlayerInteractBlockC2SPacket(-1, -1, -1, 255, par1EntityPlayer.inventory.getMainHandStack(), 0.0F, 0.0F, 0.0F));
         int var4 = par3ItemStack.count;

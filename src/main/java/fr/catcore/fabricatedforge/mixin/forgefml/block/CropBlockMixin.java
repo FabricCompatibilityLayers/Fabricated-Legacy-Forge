@@ -3,12 +3,11 @@ package fr.catcore.fabricatedforge.mixin.forgefml.block;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.FlowerBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import net.minecraftforge.common.IPlantable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 

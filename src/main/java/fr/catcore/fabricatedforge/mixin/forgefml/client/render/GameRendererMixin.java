@@ -2,17 +2,15 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render;
 
 import fr.catcore.fabricatedforge.mixininterface.IWorldRenderer;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.class_321;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.render.*;
-import net.minecraft.client.util.Clipper;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -129,7 +127,7 @@ public abstract class GameRendererMixin {
                 var4 /= (1.0F - 500.0F / (var5 + 500.0F)) * 2.0F + 1.0F;
             }
 
-            int var6 = class_321.method_805(this.field_1860.world, var3, par1);
+            int var6 = Camera.method_805(this.field_1860.world, var3, par1);
             if (var6 != 0 && Block.BLOCKS[var6].material == Material.WATER) {
                 var4 = var4 * 60.0F / 70.0F;
             }
@@ -186,7 +184,7 @@ public abstract class GameRendererMixin {
                     var21 *= 0.1F;
                     var22 *= 0.1F;
                     var23 *= 0.1F;
-                    HitResult var24 = this.field_1860.world.rayTrace(Vec3d.method_603().getOrCreate(var4 + (double)var21, var6 + (double)var22, var8 + (double)var23), Vec3d.method_603().getOrCreate(var4 - var14 + (double)var21 + (double)var23, var6 - var18 + (double)var22, var8 - var16 + (double)var23));
+                    BlockHitResult var24 = this.field_1860.world.rayTrace(Vec3d.method_603().getOrCreate(var4 + (double)var21, var6 + (double)var22, var8 + (double)var23), Vec3d.method_603().getOrCreate(var4 - var14 + (double)var21 + (double)var23, var6 - var18 + (double)var22, var8 - var16 + (double)var23));
                     if (var24 != null) {
                         double var25 = var24.pos.distanceTo(Vec3d.method_603().getOrCreate(var4, var6, var8));
                         if (var25 < var27) {
@@ -218,7 +216,7 @@ public abstract class GameRendererMixin {
         var4 = var2.prevX + (var2.x - var2.prevX) * (double)par1;
         var6 = var2.prevY + (var2.y - var2.prevY) * (double)par1 - (double)var3;
         var8 = var2.prevZ + (var2.z - var2.prevZ) * (double)par1;
-        this.thickFog = this.field_1860.worldRenderer.method_1364(var4, var6, var8, par1);
+        this.thickFog = this.field_1860.worldRenderer.hasThickFog(var4, var6, var8, par1);
     }
 
     /**
@@ -343,9 +341,9 @@ public abstract class GameRendererMixin {
             GL11.glEnable(2884);
             this.field_1860.profiler.swap("camera");
             this.setupCamera(par1, var13);
-            class_321.method_804(this.field_1860.playerEntity, this.field_1860.options.perspective == 2);
+            Camera.update(this.field_1860.playerEntity, this.field_1860.options.perspective == 2);
             this.field_1860.profiler.swap("frustrum");
-            Clipper.getInstance();
+            Frustum.getInstance();
             if (this.field_1860.options.renderDistance < 2) {
                 this.renderFog(-1, par1);
                 this.field_1860.profiler.swap("sky");
@@ -391,7 +389,7 @@ public abstract class GameRendererMixin {
                 DiffuseLighting.disable();
                 this.renderFog(0, par1);
                 this.field_1860.profiler.swap("particles");
-                var6.method_1296(var4, par1);
+                var6.renderParticles(var4, par1);
                 this.method_1322((double)par1);
                 if (this.field_1860.result != null && var4.isSubmergedIn(Material.WATER) && var4 instanceof PlayerEntity && !this.field_1860.options.hudHidden) {
                     var17 = (PlayerEntity)var4;

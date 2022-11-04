@@ -40,7 +40,7 @@ import net.minecraft.network.IntegratedConnection;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.util.Language;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResultType;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -144,7 +144,7 @@ public abstract class MinecraftMixin {
 
     @Shadow public volatile boolean paused;
 
-    @Shadow private ClientTickTracker tricker;
+    @Shadow private ClientTickTracker ticker;
 
     @Shadow public class_481 playerEntity;
 
@@ -188,7 +188,7 @@ public abstract class MinecraftMixin {
 
     @Shadow private int attackCooldown;
 
-    @Shadow public HitResult result;
+    @Shadow public BlockHitResult result;
 
     @Shadow public ClientPlayerInteractionManager interactionManager;
 
@@ -284,7 +284,7 @@ public abstract class MinecraftMixin {
         FMLClientHandler.instance().beginMinecraftLoading((Minecraft)(Object) this);
         if (this.options.language != null) {
             Language.getInstance().setCode(this.options.language);
-            this.textRenderer.method_960(Language.getInstance().method_638());
+            this.textRenderer.setUnicode(Language.getInstance().method_638());
             this.textRenderer.setRightToLeft(Language.hasSpecialCharacters(this.options.language));
         }
 
@@ -365,17 +365,17 @@ public abstract class MinecraftMixin {
             }
 
             if (this.paused && this.world != null) {
-                float var1 = this.tricker.tickDelta;
-                this.tricker.tick();
-                this.tricker.tickDelta = var1;
+                float var1 = this.ticker.tickDelta;
+                this.ticker.tick();
+                this.ticker.tickDelta = var1;
             } else {
-                this.tricker.tick();
+                this.ticker.tick();
             }
 
             long var6 = System.nanoTime();
             this.profiler.push("tick");
 
-            for(int var3 = 0; var3 < this.tricker.ticksThisFrame; ++var3) {
+            for(int var3 = 0; var3 < this.ticker.ticksThisFrame; ++var3) {
                 this.tick();
             }
 
@@ -384,7 +384,7 @@ public abstract class MinecraftMixin {
             this.setGlErrorMessage("Pre render");
             class_535.field_2047 = this.options.fancyGraphics;
             this.profiler.swap("sound");
-            this.soundSystem.updateListener(this.playerEntity, this.tricker.tickDelta);
+            this.soundSystem.updateListener(this.playerEntity, this.ticker.tickDelta);
             this.profiler.swap("updatelights");
             if (this.world != null) {
                 this.world.method_3592();
@@ -404,11 +404,11 @@ public abstract class MinecraftMixin {
 
             this.profiler.pop();
             if (!this.skipGameRender) {
-                FMLCommonHandler.instance().onRenderTickStart(this.tricker.tickDelta);
+                FMLCommonHandler.instance().onRenderTickStart(this.ticker.tickDelta);
                 this.profiler.swap("gameRenderer");
-                this.gameRenderer.method_1331(this.tricker.tickDelta);
+                this.gameRenderer.method_1331(this.ticker.tickDelta);
                 this.profiler.pop();
-                FMLCommonHandler.instance().onRenderTickEnd(this.tricker.tickDelta);
+                FMLCommonHandler.instance().onRenderTickEnd(this.ticker.tickDelta);
             }
 
             GL11.glFlush();
@@ -558,7 +558,7 @@ public abstract class MinecraftMixin {
                     if (var3.count == 0) {
                         this.playerEntity.inventory.main[this.playerEntity.inventory.selectedSlot] = null;
                     } else if (var3.count != var8 || this.interactionManager.hasCreativeInventory()) {
-                        this.gameRenderer.firstPersonRenderer.method_1358();
+                        this.gameRenderer.firstPersonRenderer.resetEquipProgress();
                     }
                 }
             }
@@ -566,8 +566,8 @@ public abstract class MinecraftMixin {
             if (var2 && par1 == 1) {
                 ItemStack var9 = this.playerEntity.inventory.getMainHandStack();
                 boolean result = !ForgeEventFactory.onPlayerInteract(this.playerEntity, PlayerInteractEvent.Action.RIGHT_CLICK_AIR, 0, 0, 0, -1).isCanceled();
-                if (result && var9 != null && this.interactionManager.method_1228(this.playerEntity, this.world, var9)) {
-                    this.gameRenderer.firstPersonRenderer.method_1360();
+                if (result && var9 != null && this.interactionManager.interactItem(this.playerEntity, this.world, var9)) {
+                    this.gameRenderer.firstPersonRenderer.resetEquipProgress2();
                 }
             }
         }
@@ -839,13 +839,13 @@ public abstract class MinecraftMixin {
             }
 
             if (!this.paused) {
-                this.world.method_3645(this.world.field_4556 > 0, true);
+                this.world.setMobSpawning(this.world.difficulty > 0, true);
                 this.world.tick();
             }
 
             this.profiler.swap("animateTick");
             if (!this.paused && this.world != null) {
-                this.world.method_1248(MathHelper.floor(this.playerEntity.x), MathHelper.floor(this.playerEntity.y), MathHelper.floor(this.playerEntity.z));
+                this.world.spawnRandomParticles(MathHelper.floor(this.playerEntity.x), MathHelper.floor(this.playerEntity.y), MathHelper.floor(this.playerEntity.z));
             }
 
             this.profiler.swap("particles");
@@ -916,7 +916,7 @@ public abstract class MinecraftMixin {
         this.world = par1WorldClient;
         if (par1WorldClient != null) {
             if (this.worldRenderer != null) {
-                this.worldRenderer.method_1371(par1WorldClient);
+                this.worldRenderer.setWorld(par1WorldClient);
             }
 
             if (this.particleManager != null) {
@@ -925,7 +925,7 @@ public abstract class MinecraftMixin {
 
             if (this.playerEntity == null) {
                 this.playerEntity = this.interactionManager.method_1232(par1WorldClient);
-                this.interactionManager.method_1236(this.playerEntity);
+                this.interactionManager.flipPlayer(this.playerEntity);
             }
 
             this.playerEntity.afterSpawn();
@@ -934,7 +934,7 @@ public abstract class MinecraftMixin {
             this.interactionManager.copyAbilities(this.playerEntity);
             this.field_3806 = this.playerEntity;
         } else {
-            this.currentSave.method_254();
+            this.currentSave.clearAll();
             this.playerEntity = null;
         }
 

@@ -107,7 +107,7 @@ public abstract class BufferBuilderMixin {
                                     Block var23 = Block.BLOCKS[var18];
                                     if (var23 != null) {
                                         if (var11 == 0 && ((IBlock)var23).hasTileEntity(var9.getBlockData(var17, var15, var16))) {
-                                            BlockEntity var20 = var9.method_3781(var17, var15, var16);
+                                            BlockEntity var20 = var9.getBlockEntity(var17, var15, var16);
                                             if (BlockEntityRenderDispatcher.INSTANCE.method_1624(var20)) {
                                                 this.field_1802.add(var20);
                                             }

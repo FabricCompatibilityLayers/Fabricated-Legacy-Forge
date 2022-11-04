@@ -26,13 +26,13 @@ public abstract class ClientWorldMixin extends World {
 
     @Shadow private Set world;
 
-    @Shadow private Set field_1658;
+    @Shadow private Set entitiesForSpawn;
 
     public ClientWorldMixin(SaveHandler saveHandler, String string, Dimension dimension, LevelInfo levelInfo, Profiler profiler) {
         super(saveHandler, string, dimension, levelInfo, profiler);
     }
 
-    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/world/ClientWorld;method_3578(III)V"))
+    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/world/ClientWorld;setSpawnPos(III)V"))
     private void ctrFix1(class_469 par1NetClientHandler, LevelInfo par2WorldSettings, int par3, int par4, Profiler par5Profiler, CallbackInfo ci) {
         this.persistentStateManager = par1NetClientHandler.stateManager;
         this.isClient = true;
@@ -49,9 +49,9 @@ public abstract class ClientWorldMixin extends World {
      * @reason none
      */
     @Overwrite
-    public void method_1252(int par1, int par2, boolean par3) {
+    public void handleChunk(int par1, int par2, boolean par3) {
         if (par3) {
-            this.clientChunkCache.method_3871(par1, par2);
+            this.clientChunkCache.getOrGenerateChunk(par1, par2);
         } else {
             this.clientChunkCache.unloadChunk(par1, par2);
         }

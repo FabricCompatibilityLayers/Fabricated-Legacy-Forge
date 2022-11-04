@@ -6,15 +6,15 @@ import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import net.minecraft.block.Block;
-import net.minecraft.client.class_321;
 import net.minecraft.client.class_534;
 import net.minecraft.client.particle.BlockDustParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleManager;
+import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.ForgeHooks;
@@ -40,7 +40,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
     @Shadow protected World world;
     @Shadow private Random random;
 
-    @Shadow public abstract void method_1295(Particle particle);
+    @Shadow public abstract void addParticle(Particle particle);
 
     @Unique
     private Multimap<String, Particle> effectList = ArrayListMultimap.create();
@@ -63,12 +63,12 @@ public abstract class ParticleManagerMixin implements IParticleManager {
      * @reason none
      */
     @Overwrite
-    public void method_1296(Entity par1Entity, float par2) {
-        float var3 = class_321.field_890;
-        float var4 = class_321.field_892;
-        float var5 = class_321.field_893;
-        float var6 = class_321.field_894;
-        float var7 = class_321.field_891;
+    public void renderParticles(Entity par1Entity, float par2) {
+        float var3 = Camera.rotationX;
+        float var4 = Camera.rotationZ;
+        float var5 = Camera.rotationYZ;
+        float var6 = Camera.rotationXY;
+        float var7 = Camera.rotationXZ;
         Particle.field_1722 = par1Entity.prevTickX + (par1Entity.x - par1Entity.prevTickX) * (double)par2;
         Particle.field_1723 = par1Entity.prevTickY + (par1Entity.y - par1Entity.prevTickY) * (double)par2;
         Particle.field_1724 = par1Entity.prevTickZ + (par1Entity.z - par1Entity.prevTickZ) * (double)par2;
@@ -111,7 +111,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
                 Particle entry = i$.next();
                 tessallator = Tessellator.INSTANCE;
                 tessallator.method_1405();
-                if (entry.method_1284() != 3) {
+                if (entry.getLayer() != 3) {
                     tessallator.method_1411(entry.getLightmapCoordinates(par2));
                     entry.method_1283(tessallator, par2, var3, var7, var4, var5, var6);
                 }
@@ -189,7 +189,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
                 var8 = (double)par1 + var6.boundingBoxMaxX + (double)var7;
             }
 
-            this.addEffect((new BlockDustParticle(this.world, var8, var10, var12, 0.0, 0.0, 0.0, var6, par4, this.world.getBlockData(par1, par2, par3))).method_1301(par1, par2, par3).method_1287(0.2F).method_1289(0.6F), var6);
+            this.addEffect((new BlockDustParticle(this.world, var8, var10, var12, 0.0, 0.0, 0.0, var6, par4, this.world.getBlockData(par1, par2, par3))).method_1301(par1, par2, par3).move(0.2F).scale(0.6F), var6);
         }
 
     }
@@ -199,7 +199,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
      * @reason none
      */
     @Overwrite
-    public String method_1298() {
+    public String getDebugString() {
         int size = 0;
         List[] arr$ = this.field_1735;
 
@@ -215,14 +215,14 @@ public abstract class ParticleManagerMixin implements IParticleManager {
     public void addEffect(Particle effect, Object obj) {
         if (obj != null && (obj instanceof Block || obj instanceof Item)) {
             if (obj instanceof Item && ((IItem)obj).isDefaultTexture()) {
-                this.method_1295(effect);
+                this.addParticle(effect);
             } else if (obj instanceof Block && ((IBlock)obj).isDefaultTexture()) {
-                this.method_1295(effect);
+                this.addParticle(effect);
             } else {
                 String texture = "/terrain.png";
-                if (effect.method_1284() == 0) {
+                if (effect.getLayer() == 0) {
                     texture = "/particles.png";
-                } else if (effect.method_1284() == 2) {
+                } else if (effect.getLayer() == 2) {
                     texture = "/gui/items.png";
                 }
 
@@ -230,12 +230,12 @@ public abstract class ParticleManagerMixin implements IParticleManager {
                 this.effectList.put(texture, effect);
             }
         } else {
-            this.method_1295(effect);
+            this.addParticle(effect);
         }
     }
 
     @Override
-    public void addBlockHitEffects(int x, int y, int z, HitResult target) {
+    public void addBlockHitEffects(int x, int y, int z, BlockHitResult target) {
         Block block = Block.BLOCKS[this.world.getBlock(x, y, z)];
         if (block != null && !((IBlock)block).addBlockHitEffects(this.world, target, (ParticleManager)(Object) this)) {
             this.method_1293(x, y, z, target.side);

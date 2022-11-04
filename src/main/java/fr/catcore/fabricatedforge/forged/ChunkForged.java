@@ -30,8 +30,8 @@ public class ChunkForged extends Chunk {
                             ((IChunk)this).setChunkSection(var10, new ChunkSection(var10 << 4));
                         }
 
-                        ((IChunk)this).getChunkSection(var10).method_3927(x, y & 15, z, id);
-                        ((IChunk)this).getChunkSection(var10).method_3932(x, y & 15, z, meta);
+                        ((IChunk)this).getChunkSection(var10).setBlock(x, y & 15, z, id);
+                        ((IChunk)this).getChunkSection(var10).setBlockData(x, y & 15, z, meta);
                     }
                 }
             }

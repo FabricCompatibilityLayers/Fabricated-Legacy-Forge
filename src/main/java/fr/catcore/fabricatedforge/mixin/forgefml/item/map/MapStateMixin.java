@@ -98,7 +98,7 @@ public abstract class MapStateMixin extends PersistentState implements IMapState
      * @reason none
      */
     @Overwrite
-    public void method_191(NbtCompound par1NBTTagCompound) {
+    public void toNbt(NbtCompound par1NBTTagCompound) {
         par1NBTTagCompound.putInt("dimension", this.c);
         par1NBTTagCompound.putInt("xCenter", this.xCenter);
         par1NBTTagCompound.putInt("zCenter", this.zCenter);
@@ -139,7 +139,7 @@ public abstract class MapStateMixin extends PersistentState implements IMapState
                         var12 = (byte)(var13 * var13 * 34187121 + var13 * 121 >> 15 & 15);
                     }
 
-                    if (var4.playerEntity._dimension == this.c) {
+                    if (var4.playerEntity.dimension == this.c) {
                         this.field_208.add(new class_91((MapState)(Object) this, var9, var10, var11, var12));
                     }
                 }

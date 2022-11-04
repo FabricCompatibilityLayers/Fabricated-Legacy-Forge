@@ -11,7 +11,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -64,7 +64,7 @@ public abstract class ItemMixin implements ItemProxy, IItem {
      * @reason none
      */
     @Overwrite
-    public HitResult onHit(World par1World, PlayerEntity par2EntityPlayer, boolean par3) {
+    public BlockHitResult onHit(World par1World, PlayerEntity par2EntityPlayer, boolean par3) {
         float var4 = 1.0F;
         float var5 = par2EntityPlayer.prevPitch + (par2EntityPlayer.pitch - par2EntityPlayer.prevPitch) * var4;
         float var6 = par2EntityPlayer.prevYaw + (par2EntityPlayer.yaw - par2EntityPlayer.prevYaw) * var4;

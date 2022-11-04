@@ -29,7 +29,7 @@ public abstract class DeadbushFeatureMixin extends Feature {
             int var8 = i + random.nextInt(8) - random.nextInt(8);
             int var9 = j + random.nextInt(4) - random.nextInt(4);
             int var10 = k + random.nextInt(8) - random.nextInt(8);
-            if (world.isAir(var8, var9, var10) && Block.BLOCKS[this.field_4881].method_450(world, var8, var9, var10)) {
+            if (world.isAir(var8, var9, var10) && Block.BLOCKS[this.field_4881].canStayPlaced(world, var8, var9, var10)) {
                 world.method_3652(var8, var9, var10, this.field_4881);
             }
         }

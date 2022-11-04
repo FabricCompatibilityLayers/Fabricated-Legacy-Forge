@@ -87,7 +87,7 @@ public abstract class EnderDragonEntityMixin extends class_956 {
             var1 = (this.random.nextFloat() - 0.5F) * 8.0F;
             var26 = (this.random.nextFloat() - 0.5F) * 4.0F;
             var3 = (this.random.nextFloat() - 0.5F) * 8.0F;
-            this.world.method_3621("largeexplode", this.x + (double)var1, this.y + 2.0 + (double)var26, this.z + (double)var3, 0.0, 0.0, 0.0);
+            this.world.spawnParticle("largeexplode", this.x + (double)var1, this.y + 2.0 + (double)var26, this.z + (double)var3, 0.0, 0.0, 0.0);
         } else {
             this.tickWithEndCrystals();
             var1 = 0.2F / (MathHelper.sqrt(this.velocityX * this.velocityX + this.velocityZ * this.velocityZ) * 10.0F + 1.0F);
@@ -319,7 +319,7 @@ public abstract class EnderDragonEntityMixin extends class_956 {
             double var16 = par1AxisAlignedBB.minX + (par1AxisAlignedBB.maxX - par1AxisAlignedBB.minX) * (double)this.random.nextFloat();
             double var17 = par1AxisAlignedBB.minY + (par1AxisAlignedBB.maxY - par1AxisAlignedBB.minY) * (double)this.random.nextFloat();
             double var14 = par1AxisAlignedBB.minZ + (par1AxisAlignedBB.maxZ - par1AxisAlignedBB.minZ) * (double)this.random.nextFloat();
-            this.world.method_3621("largeexplode", var16, var17, var14, 0.0, 0.0, 0.0);
+            this.world.spawnParticle("largeexplode", var16, var17, var14, 0.0, 0.0, 0.0);
         }
 
         return var8;

@@ -8,7 +8,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_469;
-import net.minecraft.client.class_470;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -24,10 +23,10 @@ import net.minecraft.network.class_690;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.c2s.login.LoginKeyC2SPacket;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdate_S2CPacket;
-import net.minecraft.network.packet.s2c.play.ChatMessage_S2CPacket;
-import net.minecraft.network.packet.s2c.play.Disconnect_S2CPacket;
-import net.minecraft.network.packet.s2c.play.MapUpdate_S2CPacket;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
+import net.minecraft.network.packet.s2c.play.DisconnectS2CPacket;
+import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.util.Language;
 import net.minecraft.village.TraderOfferList;
@@ -36,7 +35,6 @@ import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -80,7 +78,7 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
      * @reason none
      */
     @Overwrite
-    public void onDisconnect(Disconnect_S2CPacket par1Packet255KickDisconnect) {
+    public void onDisconnect(DisconnectS2CPacket par1Packet255KickDisconnect) {
         this.connection.disconnect("disconnect.kicked", par1Packet255KickDisconnect.reason);
         this.disconnected = true;
         this.field_1623.connect((ClientWorld)null);
@@ -97,7 +95,7 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
      * @reason none
      */
     @Overwrite
-    public void onChatMessage(ChatMessage_S2CPacket par1Packet3Chat) {
+    public void onChatMessage(ChatMessageS2CPacket par1Packet3Chat) {
         par1Packet3Chat = FMLNetworkHandler.handleChatMessage((class_469)(Object)this, par1Packet3Chat);
         ClientChatReceivedEvent event = new ClientChatReceivedEvent(par1Packet3Chat.message);
         if (!MinecraftForge.EVENT_BUS.post(event) && event.message != null) {
@@ -110,9 +108,9 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
      * @reason none
      */
     @Overwrite
-    public void onBlockEntityUpdate(BlockEntityUpdate_S2CPacket par1Packet132TileEntityData) {
+    public void onBlockEntityUpdate(BlockEntityUpdateS2CPacket par1Packet132TileEntityData) {
         if (this.field_1623.world.isPosLoaded(par1Packet132TileEntityData.x, par1Packet132TileEntityData.y, par1Packet132TileEntityData.z)) {
-            BlockEntity var2 = this.field_1623.world.method_3781(par1Packet132TileEntityData.x, par1Packet132TileEntityData.y, par1Packet132TileEntityData.z);
+            BlockEntity var2 = this.field_1623.world.getBlockEntity(par1Packet132TileEntityData.x, par1Packet132TileEntityData.y, par1Packet132TileEntityData.z);
             if (var2 != null && par1Packet132TileEntityData.type == 1 && var2 instanceof MobSpawnerBlockEntity) {
                 var2.fromNbt(par1Packet132TileEntityData.nbt);
             } else if (var2 != null) {
@@ -126,12 +124,12 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
      * @reason none
      */
     @Overwrite
-    public void onMapUpdate(MapUpdate_S2CPacket par1Packet131MapData) {
+    public void onMapUpdate(MapUpdateS2CPacket par1Packet131MapData) {
         FMLNetworkHandler.handlePacket131Packet((class_469)(Object)this, par1Packet131MapData);
     }
 
     @Override
-    public void fmlPacket131Callback(MapUpdate_S2CPacket par1Packet131MapData) {
+    public void fmlPacket131Callback(MapUpdateS2CPacket par1Packet131MapData) {
         if (par1Packet131MapData.item == Item.MAP.id) {
             FilledMapItem.method_3455(par1Packet131MapData.id, this.field_1623.world).method_185(par1Packet131MapData.data);
         } else {

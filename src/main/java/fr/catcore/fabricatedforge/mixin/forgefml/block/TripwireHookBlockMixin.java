@@ -1,8 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.block.TripwireHookBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.util.math.Axis;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
@@ -38,7 +38,7 @@ public abstract class TripwireHookBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public boolean method_434(World par1World, int par2, int par3, int par4) {
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4) {
         return par1World.isBlockSolidOnSide(par2 - 1, par3, par4, ForgeDirection.SOUTH) || par1World.isBlockSolidOnSide(par2 + 1, par3, par4, ForgeDirection.NORTH) || par1World.isBlockSolidOnSide(par2, par3, par4 - 1, ForgeDirection.EAST) || par1World.isBlockSolidOnSide(par2, par3, par4 + 1, ForgeDirection.WEST);
     }
 
@@ -73,7 +73,7 @@ public abstract class TripwireHookBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public void method_408(World par1World, int par2, int par3, int par4, int par5) {
+    public void onNeighborUpdate(World par1World, int par2, int par3, int par4, int par5) {
         if (par5 != this.id && this.method_499(par1World, par2, par3, par4)) {
             int var6 = par1World.getBlockData(par2, par3, par4);
             int var7 = var6 & 3;
@@ -95,7 +95,7 @@ public abstract class TripwireHookBlockMixin extends Block {
             }
 
             if (var8) {
-                this.method_445(par1World, par2, par3, par4, var6, 0);
+                this.canStayPlaced(par1World, par2, par3, par4, var6, 0);
                 par1World.method_3690(par2, par3, par4, 0);
             }
         }

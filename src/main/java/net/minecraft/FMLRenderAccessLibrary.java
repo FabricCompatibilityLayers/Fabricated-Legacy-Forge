@@ -8,7 +8,7 @@ import net.minecraft.client.class_534;
 import net.minecraft.client.class_535;
 import net.minecraft.client.class_584;
 import net.minecraft.client.texture.ITexturePack;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.BlockView;
 
 import java.awt.*;
 import java.util.List;
@@ -51,7 +51,7 @@ public class FMLRenderAccessLibrary {
         TextureFXManager.instance().onTexturePackChange(engine, texturePack, textureFXList);
     }
 
-    public static boolean renderWorldBlock(class_535 renderer, WorldView world, int x, int y, int z, Block block, int modelId) {
+    public static boolean renderWorldBlock(class_535 renderer, BlockView world, int x, int y, int z, Block block, int modelId) {
         return RenderingRegistry.instance().renderWorldBlock(renderer, world, x, y, z, block, modelId);
     }
 

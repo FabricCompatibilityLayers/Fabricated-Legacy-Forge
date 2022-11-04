@@ -85,7 +85,7 @@ public abstract class class_1254Mixin extends StructurePiece {
                     if (par3StructureBoundingBox.intersects(var13, var11, var12)) {
                         this.field_4913 = true;
                         par1World.method_3690(var13, var11, var12, Block.SPAWNER.id);
-                        MobSpawnerBlockEntity var14 = (MobSpawnerBlockEntity)par1World.method_3781(var13, var11, var12);
+                        MobSpawnerBlockEntity var14 = (MobSpawnerBlockEntity)par1World.getBlockEntity(var13, var11, var12);
                         if (var14 != null) {
                             var14.method_527("CaveSpider");
                         }

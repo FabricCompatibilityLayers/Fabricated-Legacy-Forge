@@ -35,7 +35,7 @@ public class SnowGolemEntityRendererMixin extends MobEntityRenderer {
         ItemStack var3 = new ItemStack(Block.PUMPKIN, 1);
         if (var3 != null && var3.getItem() instanceof BlockItem) {
             GL11.glPushMatrix();
-            this.field_2138.field_1532.method_1195(0.0625F);
+            this.field_2138.field_1532.preRender(0.0625F);
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(var3, IItemRenderer.ItemRenderType.EQUIPPED);
             boolean is3D = customRenderer != null && customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.EQUIPPED, var3, IItemRenderer.ItemRendererHelper.BLOCK_3D);
             if (is3D || class_535.method_1455(Block.BLOCKS[var3.id].getBlockType())) {

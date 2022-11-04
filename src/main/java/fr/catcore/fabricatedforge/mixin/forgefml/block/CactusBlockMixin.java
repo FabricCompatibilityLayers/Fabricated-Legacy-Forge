@@ -3,7 +3,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.block;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.CactusBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.ForgeDirection;
@@ -23,7 +23,7 @@ public abstract class CactusBlockMixin extends Block implements IPlantable {
      * @reason none
      */
     @Overwrite
-    public boolean method_450(World par1World, int par2, int par3, int par4) {
+    public boolean canStayPlaced(World par1World, int par2, int par3, int par4) {
         if (par1World.getMaterial(par2 - 1, par3, par4).hasCollision()) {
             return false;
         } else if (par1World.getMaterial(par2 + 1, par3, par4).hasCollision()) {

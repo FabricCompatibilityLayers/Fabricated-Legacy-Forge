@@ -1,10 +1,10 @@
 package cpw.mods.fml.common.network;
 
 import net.minecraft.network.listener.PacketListener;
-import net.minecraft.network.packet.s2c.play.ChatMessage_S2CPacket;
+import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
 
 public interface IChatListener {
-    ChatMessage_S2CPacket serverChat(PacketListener arg, ChatMessage_S2CPacket arg2);
+    ChatMessageS2CPacket serverChat(PacketListener arg, ChatMessageS2CPacket arg2);
 
-    ChatMessage_S2CPacket clientChat(PacketListener arg, ChatMessage_S2CPacket arg2);
+    ChatMessageS2CPacket clientChat(PacketListener arg, ChatMessageS2CPacket arg2);
 }

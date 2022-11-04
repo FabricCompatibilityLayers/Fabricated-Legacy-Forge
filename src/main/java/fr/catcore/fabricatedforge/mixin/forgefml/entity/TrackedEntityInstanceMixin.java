@@ -3,7 +3,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.entity;
 import cpw.mods.fml.common.network.FMLNetworkHandler;
 import net.minecraft.entity.*;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
-import net.minecraft.entity.decoration.PaintingEntity;
+import net.minecraft.entity.decoration.painting.PaintingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,7 +25,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.Iterator;
 import java.util.Set;
 
 @Mixin(TrackedEntityInstance.class)
@@ -90,7 +89,7 @@ public abstract class TrackedEntityInstanceMixin {
                     ItemStack[] var7 = this.trackedEntity.getArmorStacks();
                     if (var7 != null) {
                         for(int var8 = 0; var8 < var7.length; ++var8) {
-                            par1EntityPlayerMP.field_2823.sendPacket(new EntityEquipmentUpdate_S2CPacket(this.trackedEntity.id, var8, var7[var8]));
+                            par1EntityPlayerMP.field_2823.sendPacket(new EntityEquipmentUpdateS2CPacket(this.trackedEntity.id, var8, var7[var8]));
                         }
                     }
 
@@ -106,7 +105,7 @@ public abstract class TrackedEntityInstanceMixin {
 
                         for (Object o : var12.method_2644()) {
                             StatusEffectInstance var10 = (StatusEffectInstance) o;
-                            par1EntityPlayerMP.field_2823.sendPacket(new EntityStatusEffect_S2CPacket(this.trackedEntity.id, var10));
+                            par1EntityPlayerMP.field_2823.sendPacket(new EntityStatusEffectS2CPacket(this.trackedEntity.id, var10));
                         }
                     }
                 }
@@ -139,52 +138,52 @@ public abstract class TrackedEntityInstanceMixin {
             var8.z = (double)var9.z / 32.0;
             return var9;
         } else if (this.trackedEntity instanceof ServerPlayerEntity) {
-            return new PlayerSpawn_S2CPacket((PlayerEntity)this.trackedEntity);
+            return new PlayerSpawnS2CPacket((PlayerEntity)this.trackedEntity);
         } else {
             if (this.trackedEntity instanceof AbstractMinecartEntity) {
                 AbstractMinecartEntity var2;
                 var2 = (AbstractMinecartEntity)this.trackedEntity;
                 if (var2.field_3897 == 0) {
-                    return new EntitySpawn_S2CPacket(this.trackedEntity, 10);
+                    return new EntitySpawnS2CPacket(this.trackedEntity, 10);
                 }
 
                 if (var2.field_3897 == 1) {
-                    return new EntitySpawn_S2CPacket(this.trackedEntity, 11);
+                    return new EntitySpawnS2CPacket(this.trackedEntity, 11);
                 }
 
                 if (var2.field_3897 == 2) {
-                    return new EntitySpawn_S2CPacket(this.trackedEntity, 12);
+                    return new EntitySpawnS2CPacket(this.trackedEntity, 12);
                 }
             }
 
             if (this.trackedEntity instanceof BoatEntity) {
-                return new EntitySpawn_S2CPacket(this.trackedEntity, 1);
+                return new EntitySpawnS2CPacket(this.trackedEntity, 1);
             } else if (!(this.trackedEntity instanceof EntityCategoryProvider) && !(this.trackedEntity instanceof EnderDragonEntity)) {
                 if (this.trackedEntity instanceof FishingBobberEntity) {
                     PlayerEntity var7 = ((FishingBobberEntity)this.trackedEntity).thrower;
-                    return new EntitySpawn_S2CPacket(this.trackedEntity, 90, var7 != null ? var7.id : this.trackedEntity.id);
+                    return new EntitySpawnS2CPacket(this.trackedEntity, 90, var7 != null ? var7.id : this.trackedEntity.id);
                 } else if (this.trackedEntity instanceof AbstractArrowEntity) {
                     Entity var6 = ((AbstractArrowEntity)this.trackedEntity).owner;
-                    return new EntitySpawn_S2CPacket(this.trackedEntity, 60, var6 != null ? var6.id : this.trackedEntity.id);
+                    return new EntitySpawnS2CPacket(this.trackedEntity, 60, var6 != null ? var6.id : this.trackedEntity.id);
                 } else if (this.trackedEntity instanceof SnowballEntity) {
-                    return new EntitySpawn_S2CPacket(this.trackedEntity, 61);
+                    return new EntitySpawnS2CPacket(this.trackedEntity, 61);
                 } else if (this.trackedEntity instanceof PotionEntity) {
-                    return new EntitySpawn_S2CPacket(this.trackedEntity, 73, ((PotionEntity)this.trackedEntity).method_3237());
+                    return new EntitySpawnS2CPacket(this.trackedEntity, 73, ((PotionEntity)this.trackedEntity).method_3237());
                 } else if (this.trackedEntity instanceof ExperienceBottleEntity) {
-                    return new EntitySpawn_S2CPacket(this.trackedEntity, 75);
+                    return new EntitySpawnS2CPacket(this.trackedEntity, 75);
                 } else if (this.trackedEntity instanceof EnderPearlEntity) {
-                    return new EntitySpawn_S2CPacket(this.trackedEntity, 65);
+                    return new EntitySpawnS2CPacket(this.trackedEntity, 65);
                 } else if (this.trackedEntity instanceof EyeOfEnderEntity) {
-                    return new EntitySpawn_S2CPacket(this.trackedEntity, 72);
+                    return new EntitySpawnS2CPacket(this.trackedEntity, 72);
                 } else {
-                    EntitySpawn_S2CPacket var2;
+                    EntitySpawnS2CPacket var2;
                     if (this.trackedEntity instanceof SmallFireballEntity) {
                         SmallFireballEntity var5 = (SmallFireballEntity)this.trackedEntity;
                         var2 = null;
                         if (var5.field_4040 != null) {
-                            var2 = new EntitySpawn_S2CPacket(this.trackedEntity, 64, var5.field_4040.id);
+                            var2 = new EntitySpawnS2CPacket(this.trackedEntity, 64, var5.field_4040.id);
                         } else {
-                            var2 = new EntitySpawn_S2CPacket(this.trackedEntity, 64, 0);
+                            var2 = new EntitySpawnS2CPacket(this.trackedEntity, 64, 0);
                         }
 
                         var2.velocityX = (int)(var5.powerX * 8000.0);
@@ -194,9 +193,9 @@ public abstract class TrackedEntityInstanceMixin {
                     } else if (this.trackedEntity instanceof ExplosiveProjectileEntity) {
                         ExplosiveProjectileEntity var4 = (ExplosiveProjectileEntity)this.trackedEntity;
                         if (var4.field_4040 != null) {
-                            var2 = new EntitySpawn_S2CPacket(this.trackedEntity, 63, ((ExplosiveProjectileEntity)this.trackedEntity).field_4040.id);
+                            var2 = new EntitySpawnS2CPacket(this.trackedEntity, 63, ((ExplosiveProjectileEntity)this.trackedEntity).field_4040.id);
                         } else {
-                            var2 = new EntitySpawn_S2CPacket(this.trackedEntity, 63, 0);
+                            var2 = new EntitySpawnS2CPacket(this.trackedEntity, 63, 0);
                         }
 
                         var2.velocityX = (int)(var4.powerX * 8000.0);
@@ -204,18 +203,18 @@ public abstract class TrackedEntityInstanceMixin {
                         var2.velocityZ = (int)(var4.powerZ * 8000.0);
                         return var2;
                     } else if (this.trackedEntity instanceof EggEntity) {
-                        return new EntitySpawn_S2CPacket(this.trackedEntity, 62);
+                        return new EntitySpawnS2CPacket(this.trackedEntity, 62);
                     } else if (this.trackedEntity instanceof TntEntity) {
-                        return new EntitySpawn_S2CPacket(this.trackedEntity, 50);
+                        return new EntitySpawnS2CPacket(this.trackedEntity, 50);
                     } else if (this.trackedEntity instanceof EndCrystalEntity) {
-                        return new EntitySpawn_S2CPacket(this.trackedEntity, 51);
+                        return new EntitySpawnS2CPacket(this.trackedEntity, 51);
                     } else if (this.trackedEntity instanceof FallingBlockEntity) {
                         FallingBlockEntity var3 = (FallingBlockEntity)this.trackedEntity;
-                        return new EntitySpawn_S2CPacket(this.trackedEntity, 70, var3.field_3888 | var3.field_3889 << 16);
+                        return new EntitySpawnS2CPacket(this.trackedEntity, 70, var3.field_3888 | var3.field_3889 << 16);
                     } else if (this.trackedEntity instanceof PaintingEntity) {
-                        return new PaintingSpawn_S2CPacket((PaintingEntity)this.trackedEntity);
+                        return new PaintingSpawnS2CPacket((PaintingEntity)this.trackedEntity);
                     } else if (this.trackedEntity instanceof ExperienceOrbEntity) {
-                        return new ExperienceOrbSpawn_S2CPacket((ExperienceOrbEntity)this.trackedEntity);
+                        return new ExperienceOrbSpawnS2CPacket((ExperienceOrbEntity)this.trackedEntity);
                     } else {
                         throw new IllegalArgumentException("Don't know how to add " + this.trackedEntity.getClass() + "!");
                     }

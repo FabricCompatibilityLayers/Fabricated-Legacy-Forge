@@ -8,7 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.BlockUpdate_S2CPacket;
+import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.World;
@@ -25,7 +25,7 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(ServerPlayerInteractionManager.class)
 public abstract class ServerPlayerInteractionManagerMixin implements IServerPlayerInteractionManager {
 
-    @Shadow private GameMode field_2846;
+    @Shadow private GameMode gameMode;
 
     @Shadow public ServerPlayerEntity player;
 
@@ -56,10 +56,10 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
      */
     @Overwrite
     public void method_2167(int par1, int par2, int par3, int par4) {
-        if (!this.field_2846.isAdventure()) {
+        if (!this.gameMode.isAdventure()) {
             PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(this.player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, par1, par2, par3, par4);
             if (event.isCanceled()) {
-                this.player.field_2823.sendPacket(new BlockUpdate_S2CPacket(par1, par2, par3, this.world));
+                this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(par1, par2, par3, this.world));
                 return;
             }
 
@@ -77,7 +77,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
                         block.method_420(this.world, par1, par2, par3, this.player);
                         this.world.method_3638(this.player, par1, par2, par3, par4);
                     } else {
-                        this.player.field_2823.sendPacket(new BlockUpdate_S2CPacket(par1, par2, par3, this.world));
+                        this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(par1, par2, par3, this.world));
                     }
 
                     var5 = block.method_405(this.player, this.player.world, par1, par2, par3);
@@ -85,7 +85,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
 
                 if (event.useItem == Event.Result.DENY) {
                     if (var5 >= 1.0F) {
-                        this.player.field_2823.sendPacket(new BlockUpdate_S2CPacket(par1, par2, par3, this.world));
+                        this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(par1, par2, par3, this.world));
                     }
 
                     return;
@@ -121,7 +121,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
 
         boolean var6 = var4 != null && ((IBlock)var4).removeBlockByPlayer(this.world, this.player, par1, par2, par3);
         if (var4 != null && var6) {
-            var4.method_451(this.world, par1, par2, par3, var5);
+            var4.onDestroyed(this.world, par1, par2, par3, var5);
         }
 
         return var6;
@@ -133,7 +133,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
      */
     @Overwrite
     public boolean method_2173(int par1, int par2, int par3) {
-        if (this.field_2846.isAdventure()) {
+        if (this.gameMode.isAdventure()) {
             return false;
         } else {
             ItemStack stack = this.player.getMainHandStack();
@@ -142,11 +142,11 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
             } else {
                 int var4 = this.world.getBlock(par1, par2, par3);
                 int var5 = this.world.getBlockData(par1, par2, par3);
-                this.world.method_3639(this.player, 2001, par1, par2, par3, var4 + (this.world.getBlockData(par1, par2, par3) << 12));
+                this.world.dispatchEvent(this.player, 2001, par1, par2, par3, var4 + (this.world.getBlockData(par1, par2, par3) << 12));
                 boolean var6 = false;
                 if (this.isCreative()) {
                     var6 = this.method_2177(par1, par2, par3);
-                    this.player.field_2823.sendPacket(new BlockUpdate_S2CPacket(par1, par2, par3, this.world));
+                    this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(par1, par2, par3, this.world));
                 } else {
                     ItemStack var7 = this.player.getMainHandStack();
                     boolean var8 = false;
@@ -209,7 +209,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
     public boolean method_2170(PlayerEntity par1EntityPlayer, World par2World, ItemStack par3ItemStack, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
         PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(par1EntityPlayer, PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK, par4, par5, par6, par7);
         if (event.isCanceled()) {
-            this.player.field_2823.sendPacket(new BlockUpdate_S2CPacket(par4, par5, par6, this.world));
+            this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(par4, par5, par6, this.world));
             return false;
         } else {
             Item item = par3ItemStack != null ? par3ItemStack.getItem() : null;
@@ -225,9 +225,9 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
                 boolean result = false;
                 if (block != null) {
                     if (event.useBlock != Event.Result.DENY) {
-                        result = block.method_421(par2World, par4, par5, par6, par1EntityPlayer, par7, par8, par9, par10);
+                        result = block.onActivated(par2World, par4, par5, par6, par1EntityPlayer, par7, par8, par9, par10);
                     } else {
-                        this.player.field_2823.sendPacket(new BlockUpdate_S2CPacket(par4, par5, par6, this.world));
+                        this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(par4, par5, par6, this.world));
                         result = event.useItem != Event.Result.ALLOW;
                     }
                 }

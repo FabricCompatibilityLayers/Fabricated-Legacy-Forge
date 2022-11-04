@@ -1,8 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.block.TrapdoorBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,7 +31,7 @@ public abstract class TrapdoorBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public void method_408(World par1World, int par2, int par3, int par4, int par5) {
+    public void onNeighborUpdate(World par1World, int par2, int par3, int par4, int par5) {
         if (!par1World.isClient) {
             int var6 = par1World.getBlockData(par2, par3, par4);
             int var7 = par2;
@@ -54,10 +54,10 @@ public abstract class TrapdoorBlockMixin extends Block {
 
             if (!method_494(par1World.getBlock(var7, par3, var8)) && !par1World.isBlockSolidOnSide(var7, par3, var8, ForgeDirection.getOrientation((var6 & 3) + 2))) {
                 par1World.method_3690(par2, par3, par4, 0);
-                this.method_445(par1World, par2, par3, par4, var6, 0);
+                this.canStayPlaced(par1World, par2, par3, par4, var6, 0);
             }
 
-            boolean var9 = par1World.method_3739(par2, par3, par4);
+            boolean var9 = par1World.isAnyFacePowered(par2, par3, par4);
             if (var9 || par5 > 0 && Block.BLOCKS[par5].emitsRedstonePower() || par5 == 0) {
                 this.method_491(par1World, par2, par3, par4, var9);
             }

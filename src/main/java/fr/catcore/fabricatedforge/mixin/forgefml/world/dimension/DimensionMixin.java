@@ -6,7 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
 import net.minecraft.world.LayeredBiomeSource;
@@ -81,7 +81,7 @@ public class DimensionMixin implements IDimension {
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
-    public boolean method_3993() {
+    public boolean hasVoidFog() {
         return ((ILevelGeneratorType)this.generatorType).hasVoidParticles(this.isNether);
     }
 
@@ -237,7 +237,7 @@ public class DimensionMixin implements IDimension {
 
     @Override
     public void setSpawnPoint(int x, int y, int z) {
-        this.world.getLevelProperties().method_203(x, y, z);
+        this.world.getLevelProperties().setSpawnPos(x, y, z);
     }
 
     @Override
@@ -247,7 +247,7 @@ public class DimensionMixin implements IDimension {
 
     @Override
     public boolean isBlockHighHumidity(int x, int y, int z) {
-        return this.world.method_3773(x, z).hasHighHumidity();
+        return this.world.getBiome(x, z).hasHighHumidity();
     }
 
     @Override

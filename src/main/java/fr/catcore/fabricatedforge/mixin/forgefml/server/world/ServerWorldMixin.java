@@ -127,7 +127,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
             this.method_3605(var5, var6, var7);
             this.profiler.swap("tickChunk");
             if (System.currentTimeMillis() + time <= 4L && this.doneChunks.add(var4)) {
-                var7.method_3919();
+                var7.tick();
             }
 
             this.profiler.swap("thunder");
@@ -140,8 +140,8 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
                 var8 = this.lcgBlockSeed >> 2;
                 var9 = var5 + (var8 & 15);
                 var10 = var6 + (var8 >> 8 & 15);
-                var11 = this.method_3703(var9, var10);
-                if (this.method_3580(var9, var11, var10)) {
+                var11 = this.getSurfaceY(var9, var10);
+                if (this.isBeingRainedOn(var9, var11, var10)) {
                     this.addEntity(new LightningBoltEntity(this, (double)var9, (double)var11, (double)var10));
                     this.field_4553 = 2;
                 }
@@ -154,17 +154,17 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
                 var8 = this.lcgBlockSeed >> 2;
                 var9 = var8 & 15;
                 var10 = var8 >> 8 & 15;
-                var11 = this.method_3703(var9 + var5, var10 + var6);
+                var11 = this.getSurfaceY(var9 + var5, var10 + var6);
                 if (this.method_3732(var9 + var5, var11 - 1, var10 + var6)) {
                     this.method_3690(var9 + var5, var11 - 1, var10 + var6, Block.ICE.id);
                 }
 
-                if (this.isRaining() && this.method_3734(var9 + var5, var11, var10 + var6)) {
+                if (this.isRaining() && this.canSnowLand(var9 + var5, var11, var10 + var6)) {
                     this.method_3690(var9 + var5, var11, var10 + var6, Block.SNOW_LAYER.id);
                 }
 
                 if (this.isRaining()) {
-                    Biome var12 = this.method_3773(var9 + var5, var10 + var6);
+                    Biome var12 = this.getBiome(var9 + var5, var10 + var6);
                     if (var12.method_3830()) {
                         var13 = this.getBlock(var9 + var5, var11 - 1, var10 + var6);
                         if (var13 != 0) {
@@ -187,12 +187,12 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
                         int var14 = var13 & 15;
                         int var15 = var13 >> 8 & 15;
                         int var16 = var13 >> 16 & 15;
-                        int var17 = var21.method_3926(var14, var16, var15);
+                        int var17 = var21.getBlock(var14, var16, var15);
                         ++var2;
                         Block var18 = Block.BLOCKS[var17];
                         if (var18 != null && var18.ticksRandomly()) {
                             ++var1;
-                            var18.method_436(this, var14 + var5, var16 + var21.getYOffset(), var15 + var6, this.random);
+                            var18.onTick(this, var14 + var5, var16 + var21.getYOffset(), var15 + var6, this.random);
                         }
                     }
                 }
@@ -216,7 +216,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
             if (this.isRegionLoaded(var6.x - var7, var6.y - var7, var6.z - var7, var6.x + var7, var6.y + var7, var6.z + var7)) {
                 int var8 = this.getBlock(var6.x, var6.y, var6.z);
                 if (var8 == var6.blockId && var8 > 0) {
-                    Block.BLOCKS[var8].method_436(this, var6.x, var6.y, var6.z, this.random);
+                    Block.BLOCKS[var8].onTick(this, var6.x, var6.y, var6.z, this.random);
                 }
             }
         } else if (this.isRegionLoaded(par1 - var7, par2 - var7, par3 - var7, par1 + var7, par2 + var7, par3 + var7)) {
@@ -276,7 +276,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
                 if (this.isRegionLoaded(var4.x - var5, var4.y - var5, var4.z - var5, var4.x + var5, var4.y + var5, var4.z + var5)) {
                     int var6 = this.getBlock(var4.x, var4.y, var4.z);
                     if (var6 == var4.blockId && var6 > 0) {
-                        Block.BLOCKS[var6].method_436(this, var4.x, var4.y, var4.z, this.random);
+                        Block.BLOCKS[var6].onTick(this, var4.x, var4.y, var4.z, this.random);
                     }
                 }
             }

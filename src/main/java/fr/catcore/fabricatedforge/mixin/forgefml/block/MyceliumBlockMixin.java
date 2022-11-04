@@ -1,8 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.block.MyceliumBlock;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -20,7 +20,7 @@ public class MyceliumBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public void method_436(World par1World, int par2, int par3, int par4, Random par5Random) {
+    public void onTick(World par1World, int par2, int par3, int par4, Random par5Random) {
         if (!par1World.isClient) {
             if (par1World.method_3720(par2, par3 + 1, par4) < 4 && par1World.method_3651(par2, par3 + 1, par4) > 2) {
                 par1World.method_3690(par2, par3, par4, Block.DIRT.id);

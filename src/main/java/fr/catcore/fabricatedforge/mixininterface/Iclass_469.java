@@ -1,9 +1,7 @@
 package fr.catcore.fabricatedforge.mixininterface;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.network.packet.s2c.play.MapUpdate_S2CPacket;
+import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
 
 public interface Iclass_469 {
-    public void fmlPacket131Callback(MapUpdate_S2CPacket par1Packet131MapData);
+    public void fmlPacket131Callback(MapUpdateS2CPacket par1Packet131MapData);
 }

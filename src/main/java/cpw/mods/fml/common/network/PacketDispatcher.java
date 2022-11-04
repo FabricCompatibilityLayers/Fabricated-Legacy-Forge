@@ -5,7 +5,7 @@ import cpw.mods.fml.common.FMLLog;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.network.packet.s2c.play.MapUpdate_S2CPacket;
+import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
 import net.minecraft.server.MinecraftServer;
 
 public class PacketDispatcher {
@@ -57,8 +57,8 @@ public class PacketDispatcher {
 
     }
 
-    public static MapUpdate_S2CPacket getTinyPacket(Object mod, short tag, byte[] data) {
+    public static MapUpdateS2CPacket getTinyPacket(Object mod, short tag, byte[] data) {
         NetworkModHandler nmh = FMLNetworkHandler.instance().findNetworkModHandler(mod);
-        return new MapUpdate_S2CPacket((short)nmh.getNetworkId(), tag, data);
+        return new MapUpdateS2CPacket((short)nmh.getNetworkId(), tag, data);
     }
 }

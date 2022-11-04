@@ -2,7 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.OakTreeFeature;

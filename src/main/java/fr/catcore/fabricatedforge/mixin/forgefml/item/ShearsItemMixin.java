@@ -43,7 +43,7 @@ public class ShearsItemMixin extends Item {
         } else {
             IShearable target = (IShearable)entity;
             if (target.isShearable(itemstack, entity.world, (int)entity.x, (int)entity.y, (int)entity.z)) {
-                ArrayList<ItemStack> drops = target.onSheared(itemstack, entity.world, (int)entity.x, (int)entity.y, (int)entity.z, EnchantmentHelper.method_3519(Enchantment.FORTUNE.id, itemstack));
+                ArrayList<ItemStack> drops = target.onSheared(itemstack, entity.world, (int)entity.x, (int)entity.y, (int)entity.z, EnchantmentHelper.getLevel(Enchantment.FORTUNE.id, itemstack));
 
                 ItemEntity ent;
                 for(Iterator<ItemStack> i$ = drops.iterator(); i$.hasNext(); ent.velocityZ += (double)((entity.getRandom().nextFloat() - entity.getRandom().nextFloat()) * 0.1F)) {
@@ -69,7 +69,7 @@ public class ShearsItemMixin extends Item {
             if (Block.BLOCKS[id] instanceof IShearable) {
                 IShearable target = (IShearable)Block.BLOCKS[id];
                 if (target.isShearable(itemstack, player.world, x, y, z)) {
-                    ArrayList<ItemStack> drops = target.onSheared(itemstack, player.world, x, y, z, EnchantmentHelper.method_3519(Enchantment.FORTUNE.id, itemstack));
+                    ArrayList<ItemStack> drops = target.onSheared(itemstack, player.world, x, y, z, EnchantmentHelper.getLevel(Enchantment.FORTUNE.id, itemstack));
 
                     for (ItemStack stack : drops) {
                         float f = 0.7F;

@@ -9,16 +9,12 @@ import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.*;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
@@ -38,7 +34,7 @@ import org.spongepowered.asm.mixin.*;
 import java.util.*;
 
 @Mixin(World.class)
-public abstract class WorldMixin implements WorldView, IWorld {
+public abstract class WorldMixin implements BlockView, IWorld {
 
     @Mutable
     @Shadow @Final public Dimension dimension;
@@ -64,7 +60,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     @Shadow public List playerEntities;
 
-    @Shadow public abstract void method_3669();
+    @Shadow public abstract void updateSleepingStatus();
 
     @Shadow public abstract Chunk getChunk(int chunkX, int chunkZ);
 
@@ -87,7 +83,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
     @Shadow protected abstract void onEntityRemoved(Entity entity);
 
-    @Shadow public abstract void method_3705(Entity entity);
+    @Shadow public abstract void checkChunk(Entity entity);
 
     @Shadow private boolean iteratingTickingBlockEntities;
     @Shadow public List blockEntities;
@@ -142,7 +138,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
      * @reason none
      */
     @Overwrite
-    public Biome method_3773(int par1, int par2) {
+    public Biome getBiome(int par1, int par2) {
         return this.dimension.getBiomeGenForCoords(par1, par2);
     }
 
@@ -151,7 +147,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
         if (this.isPosLoaded(par1, 0, par2)) {
             Chunk var3 = this.getChunkFromPos(par1, par2);
             if (var3 != null) {
-                return var3.method_3883(par1 & 15, par2 & 15, this.dimension.biomeSource);
+                return var3.getBiome(par1 & 15, par2 & 15, this.dimension.biomeSource);
             }
         }
 
@@ -259,7 +255,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
      * @reason none
      */
     @Overwrite
-    public HitResult rayTrace(Vec3d par1Vec3, Vec3d par2Vec3, boolean par3, boolean par4) {
+    public BlockHitResult rayTrace(Vec3d par1Vec3, Vec3d par2Vec3, boolean par3, boolean par4) {
         if (!Double.isNaN(par1Vec3.x) && !Double.isNaN(par1Vec3.y) && !Double.isNaN(par1Vec3.z)) {
             if (!Double.isNaN(par2Vec3.x) && !Double.isNaN(par2Vec3.y) && !Double.isNaN(par2Vec3.z)) {
                 int var5 = MathHelper.floor(par2Vec3.x);
@@ -271,8 +267,8 @@ public abstract class WorldMixin implements WorldView, IWorld {
                 int var11 = this.getBlock(var8, var9, var10);
                 int var12 = this.getBlockData(var8, var9, var10);
                 Block var13 = Block.BLOCKS[var11];
-                if (var13 != null && (!par4 || var13 == null || var13.method_454((World)(Object) this, var8, var9, var10) != null) && var11 > 0 && var13.method_400(var12, par3)) {
-                    HitResult var14 = var13.method_414((World)(Object) this, var8, var9, var10, par1Vec3, par2Vec3);
+                if (var13 != null && (!par4 || var13 == null || var13.getBoundingBox((World)(Object) this, var8, var9, var10) != null) && var11 > 0 && var13.method_400(var12, par3)) {
+                    BlockHitResult var14 = var13.method_414((World)(Object) this, var8, var9, var10, par1Vec3, par2Vec3);
                     if (var14 != null) {
                         return var14;
                     }
@@ -393,8 +389,8 @@ public abstract class WorldMixin implements WorldView, IWorld {
                     int var35 = this.getBlock(var8, var9, var10);
                     int var36 = this.getBlockData(var8, var9, var10);
                     Block var37 = Block.BLOCKS[var35];
-                    if ((!par4 || var37 == null || var37.method_454((World)(Object) this, var8, var9, var10) != null) && var35 > 0 && var37.method_400(var36, par3)) {
-                        HitResult var38 = var37.method_414((World)(Object) this, var8, var9, var10, par1Vec3, par2Vec3);
+                    if ((!par4 || var37 == null || var37.getBoundingBox((World)(Object) this, var8, var9, var10) != null) && var35 > 0 && var37.method_400(var36, par3)) {
+                        BlockHitResult var38 = var37.method_414((World)(Object) this, var8, var9, var10, par1Vec3, par2Vec3);
                         if (var38 != null) {
                             return var38;
                         }
@@ -445,7 +441,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
             if (par1Entity instanceof PlayerEntity) {
                 PlayerEntity var5 = (PlayerEntity)par1Entity;
                 this.playerEntities.add(var5);
-                this.method_3669();
+                this.updateSleepingStatus();
             }
 
             if (!var4 && MinecraftForge.EVENT_BUS.post(new EntityJoinWorldEvent(par1Entity, (World)(Object) this))) {
@@ -484,9 +480,9 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
         int var5 = MathHelper.floor(par1Entity.x);
         int var6 = MathHelper.floor(par1Entity.z);
-        Biome var7 = this.method_3773(var5, var6);
+        Biome var7 = this.getBiome(var5, var6);
         float var8 = var7.getTemperatureValue();
-        int var9 = var7.method_3818(var8);
+        int var9 = var7.getSkyColor(var8);
         float var10 = (float)(var9 >> 16 & 255) / 255.0F;
         float var11 = (float)(var9 >> 8 & 255) / 255.0F;
         float var12 = (float)(var9 & 255) / 255.0F;
@@ -591,7 +587,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
         par1 &= 15;
 
         for(par2 &= 15; var4 > 0; --var4) {
-            int var5 = var3.method_3879(par1, var4, par2);
+            int var5 = var3.getBlock(par1, var4, par2);
             if (var5 != 0 && Block.BLOCKS[var5].material.blocksMovement() && Block.BLOCKS[var5].material != Material.FOILAGE && !((IBlock)Block.BLOCKS[var5]).isBlockFoliage((World)(Object) this, par1, var4, par2)) {
                 return var4 + 1;
             }
@@ -683,7 +679,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
             this.profiler.push("tick");
             if (!var2.removed) {
-                this.method_3705(var2);
+                this.checkChunk(var2);
             }
 
             this.profiler.pop();
@@ -750,7 +746,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
                 } else if (this.isChunkLoaded(var9.x >> 4, var9.z >> 4)) {
                     Chunk var10 = this.getChunk(var9.x >> 4, var9.z >> 4);
                     if (var10 != null) {
-                        var10.method_3882(var9.x & 15, var9.y, var9.z & 15, var9);
+                        var10.addBlockEntity(var9.x & 15, var9.y, var9.z & 15, var9);
                     }
                 }
             }
@@ -848,7 +844,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
             this.profiler.pop();
             if (par2 && par1Entity.updateNeeded && par1Entity.rider != null) {
                 if (!par1Entity.rider.removed && par1Entity.rider.vehicle == par1Entity) {
-                    this.method_3705(par1Entity.rider);
+                    this.checkChunk(par1Entity.rider);
                 } else {
                     par1Entity.rider.vehicle = null;
                     par1Entity.rider = null;
@@ -905,7 +901,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
 
             Chunk chunk = this.getChunk(par1 >> 4, par3 >> 4);
             if (chunk != null) {
-                chunk.method_3882(par1 & 15, par2, par3 & 15, par4TileEntity);
+                chunk.addBlockEntity(par1 & 15, par2, par3 & 15, par4TileEntity);
             }
 
         }
@@ -919,7 +915,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
     public void method_3725(int par1, int par2, int par3) {
         Chunk chunk = this.getChunk(par1 >> 4, par3 >> 4);
         if (chunk != null) {
-            chunk.method_3913(par1 & 15, par2, par3 & 15);
+            chunk.removeBlockEntity(par1 & 15, par2, par3 & 15);
         }
 
     }
@@ -929,7 +925,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
      * @reason none
      */
     @Overwrite
-    public boolean method_3783(int par1, int par2, int par3) {
+    public boolean isBlockSolid(int par1, int par2, int par3) {
         Block block = Block.BLOCKS[this.getBlock(par1, par2, par3)];
         return block != null && ((IBlock)block).isBlockNormalCube((World)(Object) this, par1, par2, par3);
     }
@@ -939,7 +935,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
      * @reason none
      */
     @Overwrite
-    public boolean method_3784(int par1, int par2, int par3) {
+    public boolean isTopSolid(int par1, int par2, int par3) {
         return this.isBlockSolidOnSide(par1, par2, par3, ForgeDirection.UP);
     }
 
@@ -953,7 +949,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
             Chunk var5 = this.chunkProvider.getChunk(par1 >> 4, par3 >> 4);
             if (var5 != null && !var5.isEmpty()) {
                 Block var6 = Block.BLOCKS[this.getBlock(par1, par2, par3)];
-                return var6 != null && this.method_3783(par1, par2, par3);
+                return var6 != null && this.isBlockSolid(par1, par2, par3);
             } else {
                 return par4;
             }
@@ -967,7 +963,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
      * @reason none
      */
     @Overwrite
-    public void method_3645(boolean par1, boolean par2) {
+    public void setMobSpawning(boolean par1, boolean par2) {
         this.dimension.setAllowedSpawnTypes(par1, par2);
     }
 
@@ -1022,7 +1018,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
                 }
             }
 
-            int var2 = this.levelProperties.getRainTIme();
+            int var2 = this.levelProperties.getRainTime();
             if (var2 <= 0) {
                 if (this.levelProperties.isRaining()) {
                     this.levelProperties.setRainTime(this.random.nextInt(12000) + 12000);
@@ -1130,13 +1126,13 @@ public abstract class WorldMixin implements WorldView, IWorld {
      * @reason none
      */
     @Overwrite
-    public boolean method_3675(int par1, int par2, int par3, boolean par4) {
+    public boolean canWaterFreeze(int par1, int par2, int par3, boolean par4) {
         return this.dimension.canBlockFreeze(par1, par2, par3, par4);
     }
 
     @Override
     public boolean canBlockFreezeBody(int par1, int par2, int par3, boolean par4) {
-        Biome var5 = this.method_3773(par1, par3);
+        Biome var5 = this.getBiome(par1, par3);
         float var6 = var5.getTemperatureValue();
         if (!(var6 > 0.15F)) {
             if (par2 >= 0 && par2 < 256 && this.method_3667(LightType.BLOCK, par1, par2, par3) < 10) {
@@ -1176,19 +1172,19 @@ public abstract class WorldMixin implements WorldView, IWorld {
      * @reason none
      */
     @Overwrite
-    public boolean method_3734(int par1, int par2, int par3) {
+    public boolean canSnowLand(int par1, int par2, int par3) {
         return this.dimension.canSnowAt(par1, par2, par3);
     }
 
     @Override
     public boolean canSnowAtBody(int par1, int par2, int par3) {
-        Biome var4 = this.method_3773(par1, par3);
+        Biome var4 = this.getBiome(par1, par3);
         float var5 = var4.getTemperatureValue();
         if (!(var5 > 0.15F)) {
             if (par2 >= 0 && par2 < 256 && this.method_3667(LightType.BLOCK, par1, par2, par3) < 10) {
                 int var6 = this.getBlock(par1, par2 - 1, par3);
                 int var7 = this.getBlock(par1, par2, par3);
-                return var7 == 0 && Block.SNOW_LAYER.method_434((World) (Object) this, par1, par2, par3) && var6 != 0 && var6 != Block.ICE.id && Block.BLOCKS[var6].material.blocksMovement();
+                return var7 == 0 && Block.SNOW_LAYER.canPlaceBlockAt((World) (Object) this, par1, par2, par3) && var6 != 0 && var6 != Block.ICE.id && Block.BLOCKS[var6].material.blocksMovement();
             }
 
         }
@@ -1457,7 +1453,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
      * @reason none
      */
     @Overwrite
-    public void method_3625(List par1List) {
+    public void loadEntities(List par1List) {
         for (Object o : par1List) {
             Entity entity = (Entity) o;
             if (!MinecraftForge.EVENT_BUS.post(new EntityJoinWorldEvent(entity, (World)(Object) this))) {
@@ -1477,7 +1473,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
         int var8 = this.getBlock(par2, par3, par4);
         Block var9 = Block.BLOCKS[var8];
         Block var10 = Block.BLOCKS[par1];
-        Box var11 = var10.method_454((World)(Object) this, par2, par3, par4);
+        Box var11 = var10.getBoundingBox((World)(Object) this, par2, par3, par4);
         if (par5) {
             var11 = null;
         }
@@ -1539,7 +1535,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
-    public void method_3578(int par1, int par2, int par3) {
+    public void setSpawnPos(int par1, int par2, int par3) {
         this.dimension.setSpawnPoint(par1, par2, par3);
     }
 
@@ -1585,7 +1581,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
      * @reason none
      */
     @Overwrite
-    public boolean method_3582(int par1, int par2, int par3) {
+    public boolean isHighHumidity(int par1, int par2, int par3) {
         return this.dimension.isBlockHighHumidity(par1, par2, par3);
     }
 
@@ -1594,7 +1590,7 @@ public abstract class WorldMixin implements WorldView, IWorld {
      * @reason none
      */
     @Overwrite
-    public int method_3771() {
+    public int getMaxBuildHeight() {
         return this.dimension.getHeight();
     }
 

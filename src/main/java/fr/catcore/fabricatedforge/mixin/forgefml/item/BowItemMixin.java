@@ -31,7 +31,7 @@ public class BowItemMixin extends Item {
         MinecraftForge.EVENT_BUS.post(event);
         if (!event.isCanceled()) {
             var6 = event.charge;
-            boolean var5 = par3EntityPlayer.abilities.creativeMode || EnchantmentHelper.method_3519(Enchantment.INIFINITY.id, par1ItemStack) > 0;
+            boolean var5 = par3EntityPlayer.abilities.creativeMode || EnchantmentHelper.getLevel(Enchantment.INIFINITY.id, par1ItemStack) > 0;
             if (var5 || par3EntityPlayer.inventory.method_3139(Item.ARROW.id)) {
                 float var7 = (float)var6 / 20.0F;
                 var7 = (var7 * var7 + var7 * 2.0F) / 3.0F;
@@ -48,17 +48,17 @@ public class BowItemMixin extends Item {
                     var8.setCritical(true);
                 }
 
-                int var9 = EnchantmentHelper.method_3519(Enchantment.POWER.id, par1ItemStack);
+                int var9 = EnchantmentHelper.getLevel(Enchantment.POWER.id, par1ItemStack);
                 if (var9 > 0) {
                     var8.setDamage(var8.getDamage() + (double)var9 * 0.5 + 0.5);
                 }
 
-                int var10 = EnchantmentHelper.method_3519(Enchantment.PUNCH.id, par1ItemStack);
+                int var10 = EnchantmentHelper.getLevel(Enchantment.PUNCH.id, par1ItemStack);
                 if (var10 > 0) {
                     var8.setPunch(var10);
                 }
 
-                if (EnchantmentHelper.method_3519(Enchantment.FLAME.id, par1ItemStack) > 0) {
+                if (EnchantmentHelper.getLevel(Enchantment.FLAME.id, par1ItemStack) > 0) {
                     var8.setOnFireFor(100);
                 }
 

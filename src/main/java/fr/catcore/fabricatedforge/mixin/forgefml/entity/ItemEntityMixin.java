@@ -4,7 +4,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.advancement.AchievementsAndCriterions;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -175,7 +175,7 @@ public abstract class ItemEntityMixin extends Entity {
                 }
 
                 if (this.stack.id == Item.DIAMOND.id) {
-                    par1EntityPlayer.incrementStat(AchievementsAndCriterions.DIAOMNDS);
+                    par1EntityPlayer.incrementStat(AchievementsAndCriterions.DIAMONDS);
                 }
 
                 if (this.stack.id == Item.BLAZE_ROD.id) {

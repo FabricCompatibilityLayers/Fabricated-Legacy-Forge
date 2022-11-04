@@ -4,7 +4,7 @@ import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.BaseLeavesBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.LeavesBlock;
-import net.minecraft.block.Material;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -56,7 +56,7 @@ public abstract class LeavesBlockMixin extends BaseLeavesBlock implements IShear
      * @reason none
      */
     @Overwrite
-    public void method_436(World par1World, int par2, int par3, int par4, Random par5Random) {
+    public void onTick(World par1World, int par2, int par3, int par4, Random par5Random) {
         if (!par1World.isClient) {
             int var6 = par1World.getBlockData(par2, par3, par4);
             if ((var6 & 8) != 0 && (var6 & 4) == 0) {

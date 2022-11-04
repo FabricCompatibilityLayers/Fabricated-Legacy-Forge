@@ -4,8 +4,8 @@ import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockWithEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockWithEntity;
-import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -25,8 +25,8 @@ public abstract class BlockWithEntityMixin extends Block implements IBlockWithEn
      * @reason none
      */
     @Overwrite
-    public void method_460(World par1World, int par2, int par3, int par4) {
-        super.method_460(par1World, par2, par3, par4);
+    public void breakNaturally(World par1World, int par2, int par3, int par4) {
+        super.breakNaturally(par1World, par2, par3, par4);
         par1World.method_3603(par2, par3, par4, ((IBlock)this).createTileEntity(par1World, par1World.getBlockData(par2, par3, par4)));
     }
 

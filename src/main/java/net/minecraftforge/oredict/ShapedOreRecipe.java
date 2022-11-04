@@ -181,7 +181,7 @@ public class ShapedOreRecipe implements RecipeType {
                     }
                 }
 
-                ItemStack slot = inv.method_3280(x, y);
+                ItemStack slot = inv.getStackAt(x, y);
 
                 if (target instanceof ItemStack)
                 {

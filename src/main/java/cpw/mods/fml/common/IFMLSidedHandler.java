@@ -7,7 +7,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.PacketListener;
-import net.minecraft.network.packet.s2c.play.MapUpdate_S2CPacket;
+import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public interface IFMLSidedHandler {
 
     void displayMissingMods(ModMissingPacket modMissingPacket);
 
-    void handleTinyPacket(PacketListener arg, MapUpdate_S2CPacket arg2);
+    void handleTinyPacket(PacketListener arg, MapUpdateS2CPacket arg2);
 
     void setClientCompatibilityLevel(byte b);
 

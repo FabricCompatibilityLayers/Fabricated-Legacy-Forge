@@ -39,7 +39,7 @@ public class HoeItemMixin extends Item {
                     return false;
                 } else {
                     Block var13 = Block.FARMLAND;
-                    par3World.playSound((double)((float)par4 + 0.5F), (double)((float)par5 + 0.5F), (double)((float)par6 + 0.5F), var13.soundGroup.method_487(), (var13.soundGroup.method_485() + 1.0F) / 2.0F, var13.soundGroup.method_486() * 0.8F);
+                    par3World.playSound((double)((float)par4 + 0.5F), (double)((float)par5 + 0.5F), (double)((float)par6 + 0.5F), var13.soundGroup.getStepId(), (var13.soundGroup.getVolume() + 1.0F) / 2.0F, var13.soundGroup.getPitch() * 0.8F);
                     if (par3World.isClient) {
                         return true;
                     } else {

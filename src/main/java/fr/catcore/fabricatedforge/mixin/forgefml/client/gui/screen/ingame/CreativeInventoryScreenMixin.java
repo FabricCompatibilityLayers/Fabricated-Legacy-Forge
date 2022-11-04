@@ -141,20 +141,20 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
                         var7 = var5 - 5;
                         var8 = var7 / 2;
                         var9 = var7 % 2;
-                        var6.xPosition = 9 + var8 * 54;
-                        var6.yPosition = 6 + var9 * 27;
+                        var6.x = 9 + var8 * 54;
+                        var6.y = 6 + var9 * 27;
                     } else if (var5 >= 0 && var5 < 5) {
-                        var6.yPosition = -2000;
-                        var6.xPosition = -2000;
+                        var6.y = -2000;
+                        var6.x = -2000;
                     } else if (var5 < var4.slots.size()) {
                         var7 = var5 - 9;
                         var8 = var7 % 9;
                         var9 = var7 / 9;
-                        var6.xPosition = 9 + var8 * 18;
+                        var6.x = 9 + var8 * 18;
                         if (var5 >= 36) {
-                            var6.yPosition = 112;
+                            var6.y = 112;
                         } else {
-                            var6.yPosition = 54 + var9 * 18;
+                            var6.y = 54 + var9 * 18;
                         }
                     }
                 }
@@ -242,7 +242,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
             this.renderTabTooltipIfHovered(ItemGroup.INVENTORY, par1, par2);
         }
 
-        if (this.deleteItemSlot != null && selectedTab == ItemGroup.INVENTORY.getIndex() && this.isPointWithinBounds(this.deleteItemSlot.xPosition, this.deleteItemSlot.yPosition, 16, 16, par1, par2)) {
+        if (this.deleteItemSlot != null && selectedTab == ItemGroup.INVENTORY.getIndex() && this.isPointWithinBounds(this.deleteItemSlot.x, this.deleteItemSlot.y, 16, 16, par1, par2)) {
             this.method_1128(Language.getInstance().translate("inventory.binSlot"), par1, par2);
         }
 

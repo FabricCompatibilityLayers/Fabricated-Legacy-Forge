@@ -39,7 +39,7 @@ public abstract class TallGrassFeatureMixin extends Feature {
             int var8 = par3 + par2Random.nextInt(8) - par2Random.nextInt(8);
             int var9 = par4 + par2Random.nextInt(4) - par2Random.nextInt(4);
             int var10 = par5 + par2Random.nextInt(8) - par2Random.nextInt(8);
-            if (par1World.isAir(var8, var9, var10) && Block.BLOCKS[this.field_4898].method_450(par1World, var8, var9, var10)) {
+            if (par1World.isAir(var8, var9, var10) && Block.BLOCKS[this.field_4898].canStayPlaced(par1World, var8, var9, var10)) {
                 par1World.method_3673(var8, var9, var10, this.field_4898, this.field_4899);
             }
         }

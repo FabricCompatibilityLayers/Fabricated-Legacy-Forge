@@ -2,9 +2,9 @@ package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.DispenserBlock;
-import net.minecraft.block.Material;
 import net.minecraft.block.RailBlock;
 import net.minecraft.block.entity.DispenserBlockEntity;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.projectile.AbstractArrowEntity;
 import net.minecraft.entity.projectile.SmallFireballEntity;
 import net.minecraft.entity.thrown.EggEntity;
@@ -44,40 +44,40 @@ public abstract class DispenserBlockMixin {
             var28.method_3224((double)par7, 0.10000000149011612, (double)par8, var15, (float)var16);
             var28.pickup = 1;
             par1World.spawnEntity(var28);
-            par1World.playSound(1002, par4, par5, par6, 0);
+            par1World.dispatchEvent(1002, par4, par5, par6, 0);
             return 1;
         } else if (par2ItemStack.id == Item.EGG.id) {
             EggEntity var29 = new EggEntity(par1World, par9, par11, par13);
             var29.method_3233((double)par7, 0.10000000149011612, (double)par8, var15, (float)var16);
             par1World.spawnEntity(var29);
-            par1World.playSound(1002, par4, par5, par6, 0);
+            par1World.dispatchEvent(1002, par4, par5, par6, 0);
             return 1;
         } else if (par2ItemStack.id == Item.SNOWBALL.id) {
             SnowballEntity var24 = new SnowballEntity(par1World, par9, par11, par13);
             var24.method_3233((double)par7, 0.10000000149011612, (double)par8, var15, (float)var16);
             par1World.spawnEntity(var24);
-            par1World.playSound(1002, par4, par5, par6, 0);
+            par1World.dispatchEvent(1002, par4, par5, par6, 0);
             return 1;
-        } else if (par2ItemStack.id == Item.POTION.id && PotionItem.method_3458(par2ItemStack.getMeta())) {
+        } else if (par2ItemStack.id == Item.POTION.id && PotionItem.isThrowable(par2ItemStack.getMeta())) {
             PotionEntity var25 = new PotionEntity(par1World, par9, par11, par13, par2ItemStack.getMeta());
             var25.method_3233((double)par7, 0.10000000149011612, (double)par8, var15 * 1.25F, (float)var16 * 0.5F);
             par1World.spawnEntity(var25);
-            par1World.playSound(1002, par4, par5, par6, 0);
+            par1World.dispatchEvent(1002, par4, par5, par6, 0);
             return 1;
         } else if (par2ItemStack.id == Item.XP_BOTTLE.id) {
             ExperienceBottleEntity var26 = new ExperienceBottleEntity(par1World, par9, par11, par13);
             var26.method_3233((double)par7, 0.10000000149011612, (double)par8, var15 * 1.25F, (float)var16 * 0.5F);
             par1World.spawnEntity(var26);
-            par1World.playSound(1002, par4, par5, par6, 0);
+            par1World.dispatchEvent(1002, par4, par5, par6, 0);
             return 1;
         } else if (par2ItemStack.id == Item.SPAWN_EGG.id) {
             SpawnEggItem.method_3456(par1World, par2ItemStack.getMeta(), par9 + (double)par7 * 0.3, par11 - 0.3, par13 + (double)par8 * 0.3);
-            par1World.playSound(1002, par4, par5, par6, 0);
+            par1World.dispatchEvent(1002, par4, par5, par6, 0);
             return 1;
         } else if (par2ItemStack.id == Item.FIREBALL.id) {
             SmallFireballEntity var27 = new SmallFireballEntity(par1World, par9 + (double)par7 * 0.3, par11, par13 + (double)par8 * 0.3, (double)par7 + par3Random.nextGaussian() * 0.05, par3Random.nextGaussian() * 0.05, (double)par8 + par3Random.nextGaussian() * 0.05);
             par1World.spawnEntity(var27);
-            par1World.playSound(1009, par4, par5, par6, 0);
+            par1World.dispatchEvent(1009, par4, par5, par6, 0);
             return 1;
         } else if (par2ItemStack.id != Item.LAVA_BUCKET.id && par2ItemStack.id != Item.WATER_BUCKET.id) {
             if (par2ItemStack.id == Item.BUCKET.id) {
@@ -90,7 +90,7 @@ public abstract class DispenserBlockMixin {
                     if (--par2ItemStack.count == 0) {
                         par2ItemStack.id = Item.WATER_BUCKET.id;
                         par2ItemStack.count = 1;
-                    } else if (par0TileEntityDispenser.method_514(new ItemStack(Item.WATER_BUCKET)) < 0) {
+                    } else if (par0TileEntityDispenser.addToFirstFreeSlot(new ItemStack(Item.WATER_BUCKET)) < 0) {
                         method_299(par1World, new ItemStack(Item.WATER_BUCKET), par3Random, 6, par7, par8, par9, par11, par13);
                     }
 
@@ -100,7 +100,7 @@ public abstract class DispenserBlockMixin {
                     if (--par2ItemStack.count == 0) {
                         par2ItemStack.id = Item.LAVA_BUCKET.id;
                         par2ItemStack.count = 1;
-                    } else if (par0TileEntityDispenser.method_514(new ItemStack(Item.LAVA_BUCKET)) < 0) {
+                    } else if (par0TileEntityDispenser.addToFirstFreeSlot(new ItemStack(Item.LAVA_BUCKET)) < 0) {
                         method_299(par1World, new ItemStack(Item.LAVA_BUCKET), par3Random, 6, par7, par8, par9, par11, par13);
                     }
 
@@ -123,7 +123,7 @@ public abstract class DispenserBlockMixin {
 
                 AbstractMinecartEntity var22 = new AbstractMinecartEntity(par1World, par9, par11, par13, ((MinecartItem)par2ItemStack.getItem()).field_4381);
                 par1World.spawnEntity(var22);
-                par1World.playSound(1000, par4, par5, par6, 0);
+                par1World.dispatchEvent(1000, par4, par5, par6, 0);
                 return 1;
             } else if (par2ItemStack.id == Item.BOAT.id) {
                 par9 = (double)par4 + (par7 < 0 ? (double)par7 * 0.8 : (double)((float)par7 * 1.8F)) + (double)((float)Math.abs(par8) * 0.5F);
@@ -140,7 +140,7 @@ public abstract class DispenserBlockMixin {
 
                 BoatEntity var23 = new BoatEntity(par1World, par9, par11, par13);
                 par1World.spawnEntity(var23);
-                par1World.playSound(1000, par4, par5, par6, 0);
+                par1World.dispatchEvent(1000, par4, par5, par6, 0);
                 return 1;
             } else {
                 return 0;

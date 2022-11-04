@@ -9,7 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.command.CommandSource;
 import net.minecraft.network.Packet;
-import net.minecraft.network.packet.s2c.play.WorldTimeUpdate_S2CPacket;
+import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.class_738;
@@ -18,10 +18,10 @@ import net.minecraft.server.network.PacketListenerManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.server.world.ServerWorldManager;
 import net.minecraft.stat.Stats;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
@@ -202,7 +202,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
                         var2 = var9;
                     }
 
-                    var5.chunkCache.method_3871(var6.x + var7 >> 4, var6.z + var8 >> 4);
+                    var5.chunkCache.getOrGenerateChunk(var6.x + var7 >> 4, var6.z + var8 >> 4);
 
                     while(var5.method_3592() && this.isRunning()) {
                     }
@@ -355,12 +355,12 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
         this.lastTickLengths[this.ticks % 100] = System.nanoTime() - var1;
         this.field_3853[this.ticks % 100] = Packet.totalPacketsSent - this.field_3832;
         this.field_3832 = Packet.totalPacketsSent;
-        this.field_3854[this.ticks % 100] = Packet.totalPacketsSentSize - this.field_3833;
-        this.field_3833 = Packet.totalPacketsSentSize;
-        this.field_3855[this.ticks % 100] = Packet.totalpacketsReceived - this.field_3834;
-        this.field_3834 = Packet.totalpacketsReceived;
-        this.field_3856[this.ticks % 100] = Packet.totalPacketSizeReceived - this.field_3835;
-        this.field_3835 = Packet.totalPacketSizeReceived;
+        this.field_3854[this.ticks % 100] = Packet.totalBytesSent - this.field_3833;
+        this.field_3833 = Packet.totalBytesSent;
+        this.field_3855[this.ticks % 100] = Packet.totalPacketsReceived - this.field_3834;
+        this.field_3834 = Packet.totalPacketsReceived;
+        this.field_3856[this.ticks % 100] = Packet.totalBytesReceived - this.field_3835;
+        this.field_3835 = Packet.totalBytesReceived;
         this.profiler.pop();
         this.profiler.push("snooper");
         if (!this.snooper.isActive() && this.ticks > 100) {
@@ -391,7 +391,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
                 this.profiler.push(var4.getLevelProperties().getLevelName());
                 if (this.ticks % 20 == 0) {
                     this.profiler.push("timeSync");
-                    this.playerManager.sendToDimension(new WorldTimeUpdate_S2CPacket(var4.getTimeOfDay()), var4.dimension.dimensionType);
+                    this.playerManager.sendToDimension(new WorldTimeUpdateS2CPacket(var4.getTimeOfDay()), var4.dimension.dimensionType);
                     this.profiler.pop();
                 }
 
@@ -462,7 +462,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
     @Overwrite
     public void method_2980() {
         this.shouldResetWorld = true;
-        this.getSaveStorage().method_254();
+        this.getSaveStorage().clearAll();
 
         for (ServerWorld var2 : this.worlds) {
             if (var2 != null) {

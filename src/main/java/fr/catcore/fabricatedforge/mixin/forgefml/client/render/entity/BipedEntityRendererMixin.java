@@ -37,7 +37,7 @@ public class BipedEntityRendererMixin extends MobEntityRenderer {
         ItemStack var3 = par1EntityLiving.method_2640();
         if (var3 != null) {
             GL11.glPushMatrix();
-            this.bipedModel.field_1476.method_1195(0.0625F);
+            this.bipedModel.field_1476.preRender(0.0625F);
             GL11.glTranslatef(-0.0625F, 0.4375F, 0.0625F);
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(var3, IItemRenderer.ItemRenderType.EQUIPPED);
             boolean is3D = customRenderer != null && customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.EQUIPPED, var3, IItemRenderer.ItemRendererHelper.BLOCK_3D);

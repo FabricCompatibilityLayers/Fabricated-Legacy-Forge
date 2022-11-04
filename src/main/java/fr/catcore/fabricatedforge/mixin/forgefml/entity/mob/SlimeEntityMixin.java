@@ -25,6 +25,6 @@ public abstract class SlimeEntityMixin extends MobEntity {
     @Overwrite
     public boolean canSpawn() {
         Chunk var1 = this.world.getChunkFromPos(MathHelper.floor(this.x), MathHelper.floor(this.z));
-        return ((ILevelGeneratorType)this.world.getLevelProperties().getGeneratorType()).handleSlimeSpawnReduction(this.random, this.world) ? false : ((this.getSize() == 1 || this.world.field_4556 > 0) && this.random.nextInt(10) == 0 && var1.getRandom(987234911L).nextInt(10) == 0 && this.y < 40.0 ? super.canSpawn() : false);
+        return ((ILevelGeneratorType)this.world.getLevelProperties().getGeneratorType()).handleSlimeSpawnReduction(this.random, this.world) ? false : ((this.getSize() == 1 || this.world.difficulty > 0) && this.random.nextInt(10) == 0 && var1.getRandom(987234911L).nextInt(10) == 0 && this.y < 40.0 ? super.canSpawn() : false);
     }
 }

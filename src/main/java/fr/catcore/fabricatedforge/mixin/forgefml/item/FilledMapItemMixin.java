@@ -4,7 +4,7 @@ import fr.catcore.fabricatedforge.mixininterface.IMapState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.block.MaterialColor;
+import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.FilledMapItem;
@@ -30,12 +30,12 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
     @Environment(EnvType.CLIENT)
     @Overwrite
     public static MapState method_3455(short par0, World par1World) {
-        MapState var3 = (MapState)par1World.method_3619(MapState.class, "map_" + par0);
+        MapState var3 = (MapState)par1World.getOrCreateState(MapState.class, "map_" + par0);
         if (var3 == null) {
-            int var4 = par1World.method_3660("map");
+            int var4 = par1World.getIntState("map");
             String var2 = "map_" + var4;
             var3 = new MapState(var2);
-            par1World.setItemData(var2, var3);
+            par1World.replaceState(var2, var3);
         }
 
         return var3;
@@ -47,9 +47,9 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
      */
     @Overwrite
     public MapState getMapState(ItemStack par1ItemStack, World par2World) {
-        MapState var4 = (MapState)par2World.method_3619(MapState.class, "map_" + par1ItemStack.getMeta());
+        MapState var4 = (MapState)par2World.getOrCreateState(MapState.class, "map_" + par1ItemStack.getMeta());
         if (var4 == null) {
-            par1ItemStack.setDamage(par2World.method_3660("map"));
+            par1ItemStack.setDamage(par2World.getIntState("map"));
             String var3 = "map_" + par1ItemStack.getMeta();
             var4 = new MapState(var3);
             var4.xCenter = par2World.getLevelProperties().getSpawnX();
@@ -57,7 +57,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
             var4.scale = 3;
             ((IMapState)var4).setC(par2World.dimension.dimensionType);
             var4.markDirty();
-            par2World.setItemData(var3, var4);
+            par2World.replaceState(var3, var4);
         }
 
         return var4;
@@ -134,7 +134,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
 
                                                 do {
                                                     var37 = true;
-                                                    var36 = var27.method_3879(var33 + var28, var35 - 1, var34 + var29);
+                                                    var36 = var27.getBlock(var33 + var28, var35 - 1, var34 + var29);
                                                     if (var36 == 0) {
                                                         var37 = false;
                                                     } else if (var35 > 0 && var36 > 0 && Block.BLOCKS[var36].material.color == MaterialColor.AIR) {
@@ -147,7 +147,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
                                                             break;
                                                         }
 
-                                                        var36 = var27.method_3879(var33 + var28, var35 - 1, var34 + var29);
+                                                        var36 = var27.getBlock(var33 + var28, var35 - 1, var34 + var29);
                                                     }
                                                 } while(var35 > 0 && !var37);
 
@@ -157,7 +157,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
 
                                                     int var41;
                                                     do {
-                                                        var41 = var27.method_3879(var33 + var28, var38--, var34 + var29);
+                                                        var41 = var27.getBlock(var33 + var28, var38--, var34 + var29);
                                                         ++var30;
                                                     } while(var38 > 0 && var41 != 0 && Block.BLOCKS[var41].material.isFluid());
                                                 }
@@ -246,10 +246,10 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
      */
     @Overwrite
     public void onCraft(ItemStack par1ItemStack, World par2World, PlayerEntity par3EntityPlayer) {
-        par1ItemStack.setDamage(par2World.method_3660("map"));
+        par1ItemStack.setDamage(par2World.getIntState("map"));
         String var4 = "map_" + par1ItemStack.getMeta();
         MapState var5 = new MapState(var4);
-        par2World.setItemData(var4, var5);
+        par2World.replaceState(var4, var5);
         var5.xCenter = MathHelper.floor(par3EntityPlayer.x);
         var5.zCenter = MathHelper.floor(par3EntityPlayer.z);
         var5.scale = 3;

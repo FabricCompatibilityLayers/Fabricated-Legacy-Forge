@@ -260,7 +260,7 @@ public class AchievementsScreenMixin extends Screen {
             var27 = par2 - 4;
             if (this.handler.method_1735(var32)) {
                 var42 = Math.max(this.textRenderer.getStringWidth(var34), 120);
-                var41 = this.textRenderer.method_963(var36, var42);
+                var41 = this.textRenderer.getHeightSplit(var36, var42);
                 if (this.handler.method_1728(var32)) {
                     var41 += 12;
                 }
@@ -273,7 +273,7 @@ public class AchievementsScreenMixin extends Screen {
             } else {
                 var42 = Math.max(this.textRenderer.getStringWidth(var34), 120);
                 String var39 = CommonI18n.translate("achievement.requires", CommonI18n.translate(var32.parent.getStringId()));
-                var30 = this.textRenderer.method_963(var39, var42);
+                var30 = this.textRenderer.getHeightSplit(var39, var42);
                 this.fillGradient(var26 - 3, var27 - 3, var26 + var42 + 3, var27 + var30 + 12 + 3, -1073741824, -1073741824);
                 this.textRenderer.drawTrimmed(var39, var26, var27 + 12, var42, -9416624);
             }

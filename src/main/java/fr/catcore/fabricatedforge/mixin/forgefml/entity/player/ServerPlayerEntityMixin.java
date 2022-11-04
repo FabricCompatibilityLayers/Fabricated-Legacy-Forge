@@ -6,9 +6,9 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.s2c.play.ChatMessage_S2CPacket;
+import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
 import net.minecraft.network.packet.s2c.play.DestroyEntityS2CPacket;
-import net.minecraft.network.packet.s2c.play.EntityEquipmentUpdate_S2CPacket;
+import net.minecraft.network.packet.s2c.play.EntityEquipmentUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.class_687;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.server.MinecraftServer;
@@ -16,7 +16,7 @@ import net.minecraft.server.PlayerManager;
 import net.minecraft.server.ServerPacketListener;
 import net.minecraft.server.network.ServerPlayerInteractionManager;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
@@ -79,7 +79,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
      */
     @Overwrite
     public void tick() {
-        this.interactionManager.update();
+        this.interactionManager.tick();
         --this.spawnProtectionTicks;
         this.openScreenHandler.sendContentUpdates();
 
@@ -87,7 +87,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
         for(var1 = 0; var1 < 5; ++var1) {
             ItemStack var2 = this.method_2155(var1);
             if (var2 != this.field_2835[var1]) {
-                this.getServerWorld().getEntityTracker().sendToOtherTrackingEntities(this, new EntityEquipmentUpdate_S2CPacket(this.id, var1, var2));
+                this.getServerWorld().getEntityTracker().sendToOtherTrackingEntities(this, new EntityEquipmentUpdateS2CPacket(this.id, var1, var2));
                 this.field_2835[var1] = var2;
             }
         }
@@ -139,8 +139,8 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
     @Overwrite
     public void dropInventory(DamageSource par1DamageSource) {
         if (!ForgeHooks.onLivingDeath(this, par1DamageSource)) {
-            this.server.getPlayerManager().sendToAll(new ChatMessage_S2CPacket(par1DamageSource.method_2420(this)));
-            PlayerManager._LOGGER.info(par1DamageSource.method_2420(this));
+            this.server.getPlayerManager().sendToAll(new ChatMessageS2CPacket(par1DamageSource.method_2420(this)));
+            PlayerManager.LOGGER.info(par1DamageSource.method_2420(this));
             this.captureDrops(true);
             this.getCapturedDrops().clear();
             this.inventory.dropAll();

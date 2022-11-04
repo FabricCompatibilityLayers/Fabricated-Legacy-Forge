@@ -122,8 +122,8 @@ accessible method net/minecraft/client/class_535 method_1460 (DDDDDDFD)V
 extendable method net/minecraft/client/class_535 method_1460 (DDDDDDFD)V
 accessible method net/minecraft/client/class_535 method_1464 (Lnet/minecraft/block/Block;IIIZ)Z
 extendable method net/minecraft/client/class_535 method_1464 (Lnet/minecraft/block/Block;IIIZ)Z
-accessible method net/minecraft/client/class_535 method_1434 (IIILnet/minecraft/block/Material;)F
-extendable method net/minecraft/client/class_535 method_1434 (IIILnet/minecraft/block/Material;)F
+accessible method net/minecraft/client/class_535 method_1434 (IIILnet/minecraft/block/material/Material;)F
+extendable method net/minecraft/client/class_535 method_1434 (IIILnet/minecraft/block/material/Material;)F
 accessible method net/minecraft/client/class_535 method_1433 (IIII)I
 extendable method net/minecraft/client/class_535 method_1433 (IIII)I
 accessible method net/minecraft/client/class_535 method_1437 (Lnet/minecraft/block/CocoaBlock;III)Z
@@ -134,7 +134,7 @@ accessible field net/minecraft/client/class_534 field_1978 Ljava/util/List;
 accessible field net/minecraft/client/render/entity/PlayerEntityRenderer field_2136 [Ljava/lang/String;
 mutable field net/minecraft/client/render/entity/PlayerEntityRenderer field_2136 [Ljava/lang/String;
 
-accessible field net/minecraft/util/Language _translations Ljava/util/Properties;
+accessible field net/minecraft/util/Language translations Ljava/util/Properties;
 accessible field net/minecraft/util/Language code Ljava/lang/String;
 
 accessible field net/minecraft/client/render/block/entity/BlockEntityRenderDispatcher renderers Ljava/util/Map;
@@ -209,7 +209,7 @@ accessible field net/minecraft/client/render/WorldRenderer world Lnet/minecraft/
 accessible field net/minecraft/client/render/WorldRenderer field_1910 Lnet/minecraft/client/class_534;
 accessible field net/minecraft/client/render/WorldRenderer field_1918 Lnet/minecraft/client/Minecraft;
 accessible field net/minecraft/client/render/WorldRenderer field_1919 Lnet/minecraft/client/class_535;
-accessible field net/minecraft/client/render/WorldRenderer field_1887 Ljava/util/Map;
+accessible field net/minecraft/client/render/WorldRenderer blockBreakingInfos Ljava/util/Map;
 
 accessible field net/minecraft/client/sound/SoundSystem soundSystem Lpaulscode/sound/SoundSystem;
 accessible field net/minecraft/client/sound/SoundSystem soundsLoader Lnet/minecraft/client/sound/SoundLoader;
@@ -233,8 +233,8 @@ accessible field net/minecraft/entity/vehicle/AbstractMinecartEntity clientZVelo
 
 extendable method net/minecraft/entity/vehicle/AbstractMinecartEntity method_3063 ()Z
 
-accessible method net/minecraft/block/Block <init> (ILnet/minecraft/block/Material;)V
-accessible method net/minecraft/block/Block <init> (IILnet/minecraft/block/Material;)V
+accessible method net/minecraft/block/Block <init> (ILnet/minecraft/block/material/Material;)V
+accessible method net/minecraft/block/Block <init> (IILnet/minecraft/block/material/Material;)V
 accessible method net/minecraft/block/Block method_472 ()Lnet/minecraft/block/Block;
 accessible method net/minecraft/block/Block setBlockSoundGroup (Lnet/minecraft/sound/BlockSoundGroup;)Lnet/minecraft/block/Block;
 accessible method net/minecraft/block/Block setResistance (F)Lnet/minecraft/block/Block;

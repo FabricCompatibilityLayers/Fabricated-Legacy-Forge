@@ -445,7 +445,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
                 int var3 = this.world.getBlock(MathHelper.floor(this.x), MathHelper.floor(this.y - 0.20000000298023224 - (double)this.heightOffset), MathHelper.floor(this.z));
                 if (var3 > 0) {
                     BlockSoundGroup var4 = Block.BLOCKS[var3].soundGroup;
-                    this.world.playSound(this, var4.method_487(), var4.method_485() * 0.5F, var4.method_486() * 0.75F);
+                    this.world.playSound(this, var4.getStepId(), var4.getVolume() * 0.5F, var4.getPitch() * 0.75F);
                 }
             }
 

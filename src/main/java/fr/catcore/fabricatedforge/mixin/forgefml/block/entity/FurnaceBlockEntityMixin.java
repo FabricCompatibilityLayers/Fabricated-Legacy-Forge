@@ -5,9 +5,9 @@ import fr.catcore.fabricatedforge.mixininterface.IItem;
 import fr.catcore.fabricatedforge.mixininterface.ISmeltingRecipeRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.FurnaceBlock;
-import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.FurnaceBlockEntity;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.*;
@@ -170,7 +170,7 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
 
     @Override
     public boolean canPlayerUseInv(PlayerEntity par1EntityPlayer) {
-        return this.world.method_3781(this.x, this.y, this.z) != this ? false : par1EntityPlayer.squaredDistanceTo((double)this.x + 0.5, (double)this.y + 0.5, (double)this.z + 0.5) <= 64.0;
+        return this.world.getBlockEntity(this.x, this.y, this.z) != this ? false : par1EntityPlayer.squaredDistanceTo((double)this.x + 0.5, (double)this.y + 0.5, (double)this.z + 0.5) <= 64.0;
     }
 
     @Override
