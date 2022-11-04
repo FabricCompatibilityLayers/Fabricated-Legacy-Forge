@@ -40,7 +40,7 @@ dependencies {
 
 	modApi("maven.modrinth:mod-remapping-api:1.6.0")
 
-	modImplementation("net.legacyfabric.legacy-fabric-api:legacy-fabric-logger-api-v1:1.0.3+509c77a039")
+	modImplementation("net.legacyfabric.legacy-fabric-api:legacy-fabric-logger-api-v1:1.0.4+common+ae4aa0d092")
 
 	implementation(include(group: "local", name: "argo", version: "2.25"))
 	implementation(include(group: "local", name: "guava", version: "12.0.1"))
