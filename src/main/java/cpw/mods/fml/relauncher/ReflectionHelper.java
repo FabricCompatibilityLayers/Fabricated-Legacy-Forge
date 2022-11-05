@@ -1,5 +1,7 @@
 package cpw.mods.fml.relauncher;
 
+import fr.catcore.modremapperapi.remapping.RemapUtil;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -13,6 +15,7 @@ public class ReflectionHelper {
         {
             try
             {
+                fieldName = RemapUtil.getRemappedFieldName(clazz, fieldName);
                 Field f = clazz.getDeclaredField(fieldName);
                 f.setAccessible(true);
                 return f;
@@ -84,6 +87,7 @@ public class ReflectionHelper {
         {
             try
             {
+                methodName = RemapUtil.getRemappedMethodName(clazz, methodName, methodTypes);
                 Method m = clazz.getDeclaredMethod(methodName, methodTypes);
                 m.setAccessible(true);
                 return m;
