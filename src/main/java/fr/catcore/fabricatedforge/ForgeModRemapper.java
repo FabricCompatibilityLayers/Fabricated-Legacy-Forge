@@ -110,8 +110,8 @@ public class ForgeModRemapper implements ModRemapper {
             infos.registerMethodTypeIns(entry.getKey(), entry.getValue());
 
             infos.registerMethodMethodIns(
-                    new VisitorInfos.MethodNamed(entry.getKey().type, ""),
-                    new VisitorInfos.MethodNamed(entry.getValue().type, "")
+                    new VisitorInfos.MethodNamed(entry.getKey().type, "<init>"),
+                    new VisitorInfos.MethodNamed(entry.getValue().type, "<init>")
             );
         }
 

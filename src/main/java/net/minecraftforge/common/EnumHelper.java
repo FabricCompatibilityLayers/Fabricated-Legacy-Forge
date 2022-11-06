@@ -1,5 +1,6 @@
 package net.minecraftforge.common;
 
+import fr.catcore.fabricatedforge.util.EnumFactoryJ17;
 import net.minecraft.block.material.Material;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EntityCategory;
@@ -157,7 +158,12 @@ public class EnumHelper {
                 {
                     System.arraycopy(lookup, 1, paramTypes, 0, paramTypes.length);
                 }
-                return addEnum(enumType, enumName, paramTypes, paramValues);
+
+                if (newConstructorAccessor != null) {
+                    return addEnum(enumType, enumName, paramTypes, paramValues);
+                } else {
+                    return EnumFactoryJ17.addEnum(enumType, enumName, paramTypes, paramValues);
+                }
             }
         }
         return null;

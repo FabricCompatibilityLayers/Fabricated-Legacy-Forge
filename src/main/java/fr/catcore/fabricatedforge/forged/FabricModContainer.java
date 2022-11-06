@@ -33,6 +33,7 @@ public class FabricModContainer implements ModContainer {
         this.modMetadata.url = this.container.getMetadata().getContact().get("url").orElse("");
         this.modMetadata.description = this.container.getMetadata().getDescription();
         this.modMetadata.name = this.container.getMetadata().getName();
+        this.modMetadata.logoFile = this.container.getMetadata().getIconPath(1).orElse("");
     }
 
     @Override
