@@ -14,8 +14,6 @@ public class ForgeModRemapper implements ModRemapper {
 
     private static final BArrayList FORGE_EXCLUDED = new BArrayList();
     private static final Map<String, fr.catcore.modremapperapi.utils.BArrayList<String>> EXCLUDED = new HashMap<>();
-
-    private static final ForgePostVisitor POST_VISITOR = new ForgePostVisitor();
     
     @Override
     public String[] getJarFolders() {
@@ -102,7 +100,31 @@ public class ForgeModRemapper implements ModRemapper {
 
     @Override
     public void registerVisitors(VisitorInfos infos) {
+        Map<VisitorInfos.Type, VisitorInfos.Type> types = new HashMap<>();
+        types.put(new VisitorInfos.Type("net/minecraft/class_1041"), new VisitorInfos.Type("fr/catcore/fabricatedforge/forged/ItemGroupForged"));
+        types.put(new VisitorInfos.Type("net/minecraft/class_847"), new VisitorInfos.Type("fr/catcore/fabricatedforge/forged/WeightedRandomChestContentForged"));
+        types.put(new VisitorInfos.Type("net/minecraft/class_1196"), new VisitorInfos.Type("fr/catcore/fabricatedforge/forged/ChunkForged"));
 
+        for (Map.Entry<VisitorInfos.Type, VisitorInfos.Type> entry : types.entrySet()) {
+            infos.registerSuperType(entry.getKey(), entry.getValue());
+            infos.registerMethodTypeIns(entry.getKey(), entry.getValue());
+
+            infos.registerMethodMethodIns(
+                    new VisitorInfos.MethodNamed(entry.getKey().type, ""),
+                    new VisitorInfos.MethodNamed(entry.getValue().type, "")
+            );
+        }
+
+        infos.registerMethodMethodIns(
+                new VisitorInfos.MethodNamed("net/minecraft/class_197", "setBurnProperties"),
+                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "Block_setBurnProperties")
+        );
+
+        // Mystcraft
+        infos.registerMethodFieldIns(
+                new VisitorInfos.MethodNamed("xcompwiz/mystcraft/Mystcraft", "registeredDims"),
+                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/MystcraftCompat", "registeredDims")
+        );
     }
 
     @Override
@@ -111,16 +133,6 @@ public class ForgeModRemapper implements ModRemapper {
     }
     
     static {
-        EXCLUDED.put("ReiMinimap", new fr.catcore.modremapperapi.utils.BArrayList<>());
-        EXCLUDED.get("ReiMinimap")
-                .put("aow.class");
-
-        EXCLUDED.put("GlowstoneSeeds", new fr.catcore.modremapperapi.utils.BArrayList<>());
-        EXCLUDED.get("GlowstoneSeeds")
-                .put("__MACOSX/glowstone seeds 1.3.2/._.DS_Store")
-                .put("__MACOSX/glowstone seeds 1.3.2/._glowstoneseed.png")
-                .put("glowstone seeds 1.3.2/.DS_Store");
-        
         FORGE_EXCLUDED.put("a")
                 .put("aad")
                 .put("aae")

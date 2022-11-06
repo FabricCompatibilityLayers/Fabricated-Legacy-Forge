@@ -38,7 +38,7 @@ dependencies {
 	mappings "net.legacyfabric:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modApi("maven.modrinth:mod-remapping-api:1.6.0")
+	modApi("maven.modrinth:mod-remapping-api:1.6.1")
 
 	modImplementation("net.legacyfabric.legacy-fabric-api:legacy-fabric-logger-api-v1:1.0.4+common+ae4aa0d092")
 
