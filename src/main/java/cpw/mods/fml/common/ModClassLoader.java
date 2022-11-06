@@ -25,7 +25,7 @@ public class ModClassLoader extends URLClassLoader {
 
     private URL[] localUrls;
     public ModClassLoader(ClassLoader parent) {
-        super(new URL[0], FabricLauncherBase.getLauncher().getTargetClassLoader());
+        super(new URL[0], parent);
         localUrls = new URL[0];
     }
 

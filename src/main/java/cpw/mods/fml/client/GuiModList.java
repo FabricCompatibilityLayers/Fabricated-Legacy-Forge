@@ -3,6 +3,8 @@ package cpw.mods.fml.client;
 import com.google.common.base.Strings;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
+import fr.catcore.fabricatedforge.forged.FabricModContainer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -40,6 +42,10 @@ public class GuiModList extends Screen {
                 }
             }
             mods.add(mod);
+        }
+
+        for (net.fabricmc.loader.api.ModContainer container : FabricLoader.getInstance().getAllMods()) {
+            mods.add(new FabricModContainer(container));
         }
     }
 

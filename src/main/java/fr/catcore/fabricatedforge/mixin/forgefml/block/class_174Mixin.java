@@ -40,7 +40,7 @@ public abstract class class_174Mixin {
 
     @Shadow protected abstract int method_363();
 
-    @Unique // final
+    // final
     RailBlock field_305;
     @Unique // final
     private boolean canMakeSlopes;
