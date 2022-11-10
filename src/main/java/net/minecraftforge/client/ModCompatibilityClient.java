@@ -51,7 +51,6 @@ public class ModCompatibilityClient {
         if (((ISoundSystem)mngr).getMUSIC_INTERVAL() == 12000) {
             ((ISoundSystem)mngr).setMUSIC_INTERVAL(6000);
         }
-
     }
 
     private static void audioModLoadModAudio(String path, SoundLoader pool) {
@@ -63,22 +62,15 @@ public class ModCompatibilityClient {
             FMLLog.log(Level.FINE, var4, "Loading Mod audio failed for folder: %s", new Object[]{path});
             var4.printStackTrace();
         }
-
     }
 
     private static void audioModWalkFolder(File base, File folder, SoundLoader pool) throws IOException {
-        if (folder.exists() || folder.mkdirs())
-        {
-            for (File file : folder.listFiles())
-            {
-                if (!file.getName().startsWith("."))
-                {
-                    if (file.isDirectory())
-                    {
+        if (folder.exists() || folder.mkdirs()) {
+            for(File file : folder.listFiles()) {
+                if (!file.getName().startsWith(".")) {
+                    if (file.isDirectory()) {
                         audioModWalkFolder(base, file, pool);
-                    }
-                    else if (file.isFile())
-                    {
+                    } else if (file.isFile()) {
                         String subpath = file.getPath().substring(base.getPath().length() + 1).replace('\\', '/');
                         pool.getSound(subpath, file);
                     }
@@ -117,7 +109,7 @@ public class ModCompatibilityClient {
     public static Object mlmpVehicleSpawn(int type, World world, double x, double y, double z, Entity thrower, Object currentEntity) throws Exception {
         Class mlmp = getClass("ModLoaderMp");
         if (isMLMPInstalled() && mlmp != null) {
-            Object entry = mlmp.getDeclaredMethod("handleNetClientHandlerEntities", Integer.TYPE).invoke((Object)null, type);
+            Object entry = mlmp.getDeclaredMethod("handleNetClientHandlerEntities", Integer.TYPE).invoke(null, type);
             if (entry == null) {
                 return currentEntity;
             } else {
@@ -134,7 +126,9 @@ public class ModCompatibilityClient {
                         FMLLog.fine("Received spawn packet for entity with owner, but owner was not found.", new Object[0]);
                     } else {
                         if (!owner.getType().isAssignableFrom(thrower.getClass())) {
-                            throw new Exception(String.format("Tried to assign an entity of type %s to entity owner, which is of type %s.", thrower.getClass(), owner.getType()));
+                            throw new Exception(
+                                    String.format("Tried to assign an entity of type %s to entity owner, which is of type %s.", thrower.getClass(), owner.getType())
+                            );
                         }
 
                         owner.set(ret, thrower);
@@ -152,11 +146,10 @@ public class ModCompatibilityClient {
         Class mlmp = getClass("ModLoaderMp");
         if (isMLMPInstalled() && mlmp != null) {
             try {
-                mlmp.getDeclaredMethod("handleGUI", OpenScreenS2CPacket.class).invoke((Object)null, pkt);
+                mlmp.getDeclaredMethod("handleGUI", OpenScreenS2CPacket.class).invoke(null, pkt);
             } catch (Exception var3) {
                 var3.printStackTrace();
             }
-
         }
     }
 }

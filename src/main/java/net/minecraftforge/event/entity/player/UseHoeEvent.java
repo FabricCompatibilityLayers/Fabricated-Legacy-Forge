@@ -1,12 +1,14 @@
-package net.minecraftforge.event.entity;
+package net.minecraftforge.event.entity.player;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.event.Cancelable;
+import net.minecraftforge.event.Event;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 
 @Cancelable
+@Event.HasResult
 public class UseHoeEvent extends PlayerEvent {
     public final ItemStack current;
     public final World world;
@@ -22,13 +24,5 @@ public class UseHoeEvent extends PlayerEvent {
         this.x = x;
         this.y = y;
         this.z = z;
-    }
-
-    public boolean isHandeled() {
-        return this.handeled;
-    }
-
-    public void setHandeled() {
-        this.handeled = true;
     }
 }

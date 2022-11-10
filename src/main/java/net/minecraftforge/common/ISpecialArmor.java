@@ -57,11 +57,8 @@ public interface ISpecialArmor {
                 StandardizeList(props, damage);
                 int level = props[0].Priority;
                 double ratio = 0.0;
-                ISpecialArmor.ArmorProperties[] arr$ = props;
-                int len$ = props.length;
 
-                for(int i$ = 0; i$ < len$; ++i$) {
-                    ISpecialArmor.ArmorProperties prop = arr$[i$];
+                for(ISpecialArmor.ArmorProperties prop : props) {
                     if (level != prop.Priority) {
                         damage -= damage * ratio;
                         ratio = 0.0;
@@ -111,9 +108,8 @@ public interface ISpecialArmor {
                         pChange = true;
                     }
 
-                    int y;
                     if (total > 1.0) {
-                        for(y = start; y <= x; ++y) {
+                        for(int y = start; y <= x; ++y) {
                             double newRatio = armor[y].AbsorbRatio / total;
                             if (newRatio * damage > (double)armor[y].AbsorbMax) {
                                 armor[y].AbsorbRatio = (double)armor[y].AbsorbMax / damage;
@@ -141,15 +137,14 @@ public interface ISpecialArmor {
                             pChange = false;
                             pFinished = false;
                             if (damage <= 0.0) {
-                                for(y = x + 1; y < armor.length; ++y) {
+                                for(int y = x + 1; y < armor.length; ++y) {
                                     armor[y].AbsorbRatio = 0.0;
                                 }
-
-                                return;
+                                break;
                             }
                         }
                     } else {
-                        for(y = start; y <= x; ++y) {
+                        for(int y = start; y <= x; ++y) {
                             total -= armor[y].AbsorbRatio;
                             if (damage * armor[y].AbsorbRatio > (double)armor[y].AbsorbMax) {
                                 armor[y].AbsorbRatio = (double)armor[y].AbsorbMax / damage;
@@ -166,17 +161,15 @@ public interface ISpecialArmor {
                             pStart = start;
                             pChange = false;
                             if (damage <= 0.0) {
-                                for(y = x + 1; y < armor.length; ++y) {
+                                for(int y = x + 1; y < armor.length; ++y) {
                                     armor[y].AbsorbRatio = 0.0;
                                 }
-
-                                return;
+                                break;
                             }
                         }
                     }
                 }
             }
-
         }
 
         public int compareTo(ISpecialArmor.ArmorProperties o) {
@@ -190,7 +183,13 @@ public interface ISpecialArmor {
         }
 
         public String toString() {
-            return String.format("%d, %d, %f, %d", this.Priority, this.AbsorbMax, this.AbsorbRatio, this.AbsorbRatio == 0.0 ? 0 : (int)((double)this.AbsorbMax * 100.0 / this.AbsorbRatio));
+            return String.format(
+                    "%d, %d, %f, %d",
+                    this.Priority,
+                    this.AbsorbMax,
+                    this.AbsorbRatio,
+                    this.AbsorbRatio == 0.0 ? 0 : (int)((double)this.AbsorbMax * 100.0 / this.AbsorbRatio)
+            );
         }
 
         public ISpecialArmor.ArmorProperties copy() {

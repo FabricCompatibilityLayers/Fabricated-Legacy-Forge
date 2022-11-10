@@ -31,13 +31,12 @@ public class OreDictionary {
     }
 
     public static String getOreName(int id) {
-        for (Map.Entry<String, Integer> entry : oreIDs.entrySet())
-        {
-            if (id == entry.getValue())
-            {
-                return entry.getKey();
+        for(Map.Entry<String, Integer> entry : oreIDs.entrySet()) {
+            if (id == entry.getValue()) {
+                return (String)entry.getKey();
             }
         }
+
         return "Unknown";
     }
 

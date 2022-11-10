@@ -30,7 +30,6 @@ public class MinecartRegistry {
         if (item != null) {
             minecartForItem.remove(item);
         }
-
     }
 
     public static ItemStack getItemForCart(Class<? extends AbstractMinecartEntity> minecart) {
@@ -43,49 +42,42 @@ public class MinecartRegistry {
     }
 
     public static ItemStack getItemForCart(AbstractMinecartEntity cart) {
-        return getItemForCart(cart.getClass(), ((IAbstractMinecartEntity)cart).getMinecartType());
+        return getItemForCart(cart.getClass(), cart.getMinecartType());
     }
 
     public static Class<? extends AbstractMinecartEntity> getCartClassForItem(ItemStack item) {
-        MinecartKey key = null;
-        for (Map.Entry<ItemStack, MinecartKey> entry : minecartForItem.entrySet())
-        {
-            if (entry.getKey().equalsIgnoreNbt(item))
-            {
-                key = entry.getValue();
+        MinecartRegistry.MinecartKey key = null;
+
+        for(Map.Entry<ItemStack, MinecartKey> entry : minecartForItem.entrySet()) {
+            if (((ItemStack)entry.getKey()).equalsIgnoreNbt(item)) {
+                key = (MinecartRegistry.MinecartKey)entry.getValue();
                 break;
             }
         }
-        if (key != null)
-        {
-            return key.minecart;
-        }
-        return null;
+
+        return key != null ? key.minecart : null;
     }
 
     public static int getCartTypeForItem(ItemStack item) {
-        MinecartKey key = null;
-        for (Map.Entry<ItemStack, MinecartKey> entry : minecartForItem.entrySet())
-        {
-            if (entry.getKey().equalsIgnoreNbt(item))
-            {
-                key = entry.getValue();
+        MinecartRegistry.MinecartKey key = null;
+
+        for(Map.Entry<ItemStack, MinecartKey> entry : minecartForItem.entrySet()) {
+            if (((ItemStack)entry.getKey()).equalsIgnoreNbt(item)) {
+                key = (MinecartRegistry.MinecartKey)entry.getValue();
                 break;
             }
         }
-        if (key != null)
-        {
-            return key.type;
-        }
-        return -1;
+
+        return key != null ? key.type : -1;
     }
 
     public static Set<ItemStack> getAllCartItems() {
-        Set<ItemStack> ret = new HashSet<ItemStack>();
-        for (ItemStack item : minecartForItem.keySet())
-        {
+        Set<ItemStack> ret = new HashSet();
+
+        for(ItemStack item : minecartForItem.keySet()) {
             ret.add(item.copy());
         }
+
         return ret;
     }
 
@@ -111,10 +103,10 @@ public class MinecartRegistry {
                 return false;
             } else {
                 MinecartRegistry.MinecartKey other = (MinecartRegistry.MinecartKey)obj;
-                if (!Objects.equals(this.minecart, other.minecart)) {
-                    return false;
-                } else {
+                if (this.minecart == other.minecart || this.minecart != null && this.minecart.equals(other.minecart)) {
                     return this.type == other.type;
+                } else {
+                    return false;
                 }
             }
         }
@@ -122,8 +114,7 @@ public class MinecartRegistry {
         public int hashCode() {
             int hash = 7;
             hash = 59 * hash + (this.minecart != null ? this.minecart.hashCode() : 0);
-            hash = 59 * hash + this.type;
-            return hash;
+            return 59 * hash + this.type;
         }
     }
 }

@@ -39,7 +39,6 @@ public class GuiControlsScrollPanel extends ListWidget {
                 KeyBinding.updateKeysByCode();
             }
         }
-
     }
 
     protected boolean isEntrySelected(int i) {
