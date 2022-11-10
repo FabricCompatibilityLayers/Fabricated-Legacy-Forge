@@ -47,12 +47,11 @@ public class GameRegistry {
     public static void generateWorld(int chunkX, int chunkZ, World world, ChunkProvider chunkGenerator, ChunkProvider chunkProvider) {
         long worldSeed = world.getSeed();
         Random fmlRandom = new Random(worldSeed);
-        long xSeed = fmlRandom.nextLong() >> 2 + 1L;
-        long zSeed = fmlRandom.nextLong() >> 2 + 1L;
-        fmlRandom.setSeed((xSeed * chunkX + zSeed * chunkZ) ^ worldSeed);
+        long xSeed = fmlRandom.nextLong() >> 3;
+        long zSeed = fmlRandom.nextLong() >> 3;
+        fmlRandom.setSeed(xSeed * (long)chunkX + zSeed * (long)chunkZ ^ worldSeed);
 
-        for (IWorldGenerator generator : worldGenerators)
-        {
+        for(IWorldGenerator generator : worldGenerators) {
             generator.generate(fmlRandom, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
         }
     }
@@ -61,31 +60,35 @@ public class GameRegistry {
         dispenserHandlers.add(handler);
     }
 
-    /** @deprecated */
     @Deprecated
-    public static void registerDispenserHandler(final IDispenseHandler handler) {
-        registerDispenserHandler(new IDispenserHandler() {
-            public int dispense(int x, int y, int z, int xVelocity, int zVelocity, World world, ItemStack item, Random random, double entX, double entY, double entZ) {
-                return handler.dispense((double)x, (double)y, (double)z, xVelocity, zVelocity, world, item, random, entX, entY, entZ);
-            }
-        });
+    public static void registerDispenserHandler(IDispenseHandler handler) {
+        registerDispenserHandler(
+                new IDispenserHandler() {
+                    public int dispense(
+                            int x, int y, int z, int xVelocity, int zVelocity, World world, ItemStack item, Random random, double entX, double entY, double entZ
+                    ) {
+                        return handler.dispense((double)x, (double)y, (double)z, xVelocity, zVelocity, world, item, random, entX, entY, entZ);
+                    }
+                }
+        );
     }
 
-    public static int tryDispense(World world, int x, int y, int z, int xVelocity, int zVelocity, ItemStack item, Random random, double entX, double entY, double entZ) {
-        for (IDispenserHandler handler : dispenserHandlers)
-        {
+    public static int tryDispense(
+            World world, int x, int y, int z, int xVelocity, int zVelocity, ItemStack item, Random random, double entX, double entY, double entZ
+    ) {
+        for(IDispenserHandler handler : dispenserHandlers) {
             int dispensed = handler.dispense(x, y, z, xVelocity, zVelocity, world, item, random, entX, entY, entZ);
-            if (dispensed>-1)
-            {
+            if (dispensed > -1) {
                 return dispensed;
             }
         }
+
         return -1;
     }
 
     public static Object buildBlock(ModContainer container, Class<?> type, Mod.Block annotation) throws Exception {
         Object o = type.getConstructor(Integer.TYPE).newInstance(findSpareBlockId());
-        registerBlock((Block)o);
+        registerBlock((net.minecraft.block.Block)o);
         return o;
     }
 
@@ -93,13 +96,16 @@ public class GameRegistry {
         return BlockTracker.nextBlockId();
     }
 
-    public static void registerBlock(Block block) {
+    public static void registerBlock(net.minecraft.block.Block block) {
         registerBlock(block, BlockItem.class);
     }
 
-    public static void registerBlock(Block block, Class<? extends BlockItem> itemclass) {
+    public static void registerBlock(net.minecraft.block.Block block, Class<? extends BlockItem> itemclass) {
         if (Loader.instance().isInState(LoaderState.CONSTRUCTING)) {
-            FMLLog.warning("The mod %s is attempting to register a block whilst it it being constructed. This is bad modding practice - please use a proper mod lifecycle event.", new Object[]{Loader.instance().activeModContainer()});
+            FMLLog.warning(
+                    "The mod %s is attempting to register a block whilst it it being constructed. This is bad modding practice - please use a proper mod lifecycle event.",
+                    new Object[]{Loader.instance().activeModContainer()}
+            );
         }
 
         try {
@@ -138,11 +144,11 @@ public class GameRegistry {
     }
 
     public static void addBiome(Biome biome) {
-        ((ILevelGeneratorType)LevelGeneratorType.DEFAULT).addNewBiome(biome);
+        LevelGeneratorType.DEFAULT.addNewBiome(biome);
     }
 
     public static void removeBiome(Biome biome) {
-        ((ILevelGeneratorType)LevelGeneratorType.DEFAULT).removeBiome(biome);
+        LevelGeneratorType.DEFAULT.removeBiome(biome);
     }
 
     public static void registerFuelHandler(IFuelHandler handler) {
@@ -151,10 +157,11 @@ public class GameRegistry {
 
     public static int getFuelValue(ItemStack itemStack) {
         int fuelValue = 0;
-        for (IFuelHandler handler : fuelHandlers)
-        {
+
+        for(IFuelHandler handler : fuelHandlers) {
             fuelValue = Math.max(fuelValue, handler.getBurnTime(itemStack));
         }
+
         return fuelValue;
     }
 
@@ -163,15 +170,13 @@ public class GameRegistry {
     }
 
     public static void onItemCrafted(PlayerEntity player, ItemStack item, Inventory craftMatrix) {
-        for (ICraftingHandler handler : craftingHandlers)
-        {
+        for(ICraftingHandler handler : craftingHandlers) {
             handler.onCrafting(player, item, craftMatrix);
         }
     }
 
     public static void onItemSmelted(PlayerEntity player, ItemStack item) {
-        for (ICraftingHandler handler : craftingHandlers)
-        {
+        for(ICraftingHandler handler : craftingHandlers) {
             handler.onSmelting(player, item);
         }
     }
@@ -181,8 +186,7 @@ public class GameRegistry {
     }
 
     public static void onPickupNotification(PlayerEntity player, ItemEntity item) {
-        for (IPickupNotifier notify : pickupHandlers)
-        {
+        for(IPickupNotifier notify : pickupHandlers) {
             notify.notifyPickup(item, player);
         }
     }
@@ -192,22 +196,26 @@ public class GameRegistry {
     }
 
     public static void onPlayerLogin(PlayerEntity player) {
-        for(IPlayerTracker tracker : playerTrackers)
+        for(IPlayerTracker tracker : playerTrackers) {
             tracker.onPlayerLogin(player);
+        }
     }
 
     public static void onPlayerLogout(PlayerEntity player) {
-        for(IPlayerTracker tracker : playerTrackers)
+        for(IPlayerTracker tracker : playerTrackers) {
             tracker.onPlayerLogout(player);
+        }
     }
 
     public static void onPlayerChangedDimension(PlayerEntity player) {
-        for(IPlayerTracker tracker : playerTrackers)
+        for(IPlayerTracker tracker : playerTrackers) {
             tracker.onPlayerChangedDimension(player);
+        }
     }
 
     public static void onPlayerRespawn(PlayerEntity player) {
-        for(IPlayerTracker tracker : playerTrackers)
+        for(IPlayerTracker tracker : playerTrackers) {
             tracker.onPlayerRespawn(player);
+        }
     }
 }

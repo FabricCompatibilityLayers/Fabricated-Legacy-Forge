@@ -31,7 +31,12 @@ public class ModAnnotation {
     }
 
     public String toString() {
-        return Objects.toStringHelper("Annotation").add("type", this.type).add("name", this.asmType.getClassName()).add("member", this.member).add("values", this.values).toString();
+        return Objects.toStringHelper("Annotation")
+                .add("type", this.type)
+                .add("name", this.asmType.getClassName())
+                .add("member", this.member)
+                .add("values", this.values)
+                .toString();
     }
 
     public ASMModParser.AnnotationType getType() {
@@ -61,7 +66,6 @@ public class ModAnnotation {
         } else {
             this.values.put(key, value);
         }
-
     }
 
     public void addEnumProperty(String key, String enumName, String value) {

@@ -44,7 +44,7 @@ public abstract class FMLPacket {
 
         private Class<? extends FMLPacket> packetType;
 
-        private Type(Class clazz) {
+        private Type(Class<? extends FMLPacket> clazz) {
             this.packetType = clazz;
         }
 

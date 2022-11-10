@@ -28,7 +28,7 @@ public class ModLoaderHelper {
     }
 
     public static void updateStandardTicks(BaseModProxy mod, boolean enable, boolean useClock) {
-        ModLoaderModContainer mlmc = (ModLoaderModContainer) Loader.instance().activeModContainer();
+        ModLoaderModContainer mlmc = (ModLoaderModContainer)Loader.instance().activeModContainer();
         BaseModTicker ticker = mlmc.getGameTickHandler();
         EnumSet<TickType> ticks = ticker.ticks();
         if (enable && !useClock) {
@@ -44,7 +44,6 @@ public class ModLoaderHelper {
             ticks.add(TickType.CLIENT);
             ticks.add(TickType.WORLDLOAD);
         }
-
     }
 
     public static void updateGUITicks(BaseModProxy mod, boolean enable, boolean useClock) {
@@ -63,7 +62,6 @@ public class ModLoaderHelper {
             ticks.remove(TickType.CLIENT);
             ticks.remove(TickType.WORLDLOAD);
         }
-
     }
 
     public static IPacketHandler buildPacketHandlerFor(BaseModProxy mod) {
@@ -86,7 +84,6 @@ public class ModLoaderHelper {
         if (sidedHelper != null) {
             sidedHelper.finishModLoading(mc);
         }
-
     }
 
     public static IConnectionHandler buildConnectionHelper(BaseModProxy mod) {
@@ -117,9 +114,14 @@ public class ModLoaderHelper {
         return new ModLoaderDispenseHelper(mod);
     }
 
-    public static void buildEntityTracker(BaseModProxy mod, Class<? extends Entity> entityClass, int entityTypeId, int updateRange, int updateInterval, boolean sendVelocityInfo) {
+    public static void buildEntityTracker(
+            BaseModProxy mod, Class<? extends Entity> entityClass, int entityTypeId, int updateRange, int updateInterval, boolean sendVelocityInfo
+    ) {
         EntityRegistry.EntityRegistration er = EntityRegistry.registerModLoaderEntity(mod, entityClass, entityTypeId, updateRange, updateInterval, sendVelocityInfo);
-        er.setCustomSpawning(new ModLoaderEntitySpawnCallback(mod, er), EnderDragonEntity.class.isAssignableFrom(entityClass) || EntityCategoryProvider.class.isAssignableFrom(entityClass));
+        er.setCustomSpawning(
+                new ModLoaderEntitySpawnCallback(mod, er),
+                EnderDragonEntity.class.isAssignableFrom(entityClass) || EntityCategoryProvider.class.isAssignableFrom(entityClass)
+        );
     }
 
     public static void registerTrade(int profession, TradeEntry entry) {
@@ -138,7 +140,6 @@ public class ModLoaderHelper {
         if (mlmc != null) {
             mlmc.addServerCommand(command);
         }
-
     }
 
     public static IChatListener buildChatListener(BaseModProxy mod) {

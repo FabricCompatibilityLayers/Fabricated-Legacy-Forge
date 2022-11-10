@@ -19,6 +19,5 @@ public class ModLoaderPacketHandler implements IPacketHandler {
         } else {
             ModLoaderHelper.sidedHelper.sendClientPacket(this.mod, packet);
         }
-
     }
 }

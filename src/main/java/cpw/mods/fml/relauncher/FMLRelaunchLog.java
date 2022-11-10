@@ -95,35 +95,6 @@ public class FMLRelaunchLog {
         return this.myLog;
     }
 
-    private static class LoggingOutStream extends ByteArrayOutputStream {
-        private Logger log;
-        private StringBuilder currentMessage;
-
-        public LoggingOutStream(Logger log) {
-            this.log = log;
-            this.currentMessage = new StringBuilder();
-        }
-
-        public void flush() throws IOException {
-            Class var2 = FMLRelaunchLog.class;
-            synchronized (FMLRelaunchLog.class) {
-                super.flush();
-                String record = this.toString();
-                super.reset();
-                this.currentMessage.append(record.replace(FMLLogFormatter.LINE_SEPARATOR, "\n"));
-                if (this.currentMessage.lastIndexOf("\n") >= 0) {
-                    if (this.currentMessage.length() > 1) {
-                        this.currentMessage.setLength(this.currentMessage.length() - 1);
-                        this.log.log(Level.INFO, this.currentMessage.toString());
-                    }
-
-                    this.currentMessage.setLength(0);
-                }
-
-            }
-        }
-    }
-
     private static class ConsoleLogThread implements Runnable {
         static ConsoleHandler wrappedHandler = new ConsoleHandler();
         static LinkedBlockingQueue<LogRecord> recordQueue = new LinkedBlockingQueue();
@@ -132,9 +103,9 @@ public class FMLRelaunchLog {
         }
 
         public void run() {
-            while (true) {
+            while(true) {
                 try {
-                    LogRecord lr = (LogRecord) recordQueue.take();
+                    LogRecord lr = (LogRecord)recordQueue.take();
                     wrappedHandler.publish(lr);
                 } catch (InterruptedException var3) {
                     var3.printStackTrace(FMLRelaunchLog.errCache);
@@ -160,13 +131,39 @@ public class FMLRelaunchLog {
             if (currInt) {
                 Thread.currentThread().interrupt();
             }
-
         }
 
         public void flush() {
         }
 
         public void close() throws SecurityException {
+        }
+    }
+
+    private static class LoggingOutStream extends ByteArrayOutputStream {
+        private Logger log;
+        private StringBuilder currentMessage;
+
+        public LoggingOutStream(Logger log) {
+            this.log = log;
+            this.currentMessage = new StringBuilder();
+        }
+
+        public void flush() throws IOException {
+            synchronized(FMLRelaunchLog.class) {
+                super.flush();
+                String record = this.toString();
+                super.reset();
+                this.currentMessage.append(record.replace(FMLLogFormatter.LINE_SEPARATOR, "\n"));
+                if (this.currentMessage.lastIndexOf("\n") >= 0) {
+                    if (this.currentMessage.length() > 1) {
+                        this.currentMessage.setLength(this.currentMessage.length() - 1);
+                        this.log.log(Level.INFO, this.currentMessage.toString());
+                    }
+
+                    this.currentMessage.setLength(0);
+                }
+            }
         }
     }
 }

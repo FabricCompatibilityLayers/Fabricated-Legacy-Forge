@@ -47,7 +47,6 @@ public class TickRegistry {
                 tickHandlers.offer(tickQueueElement);
                 ticks.add(tickQueueElement.ticker);
             }
-
         }
     }
 

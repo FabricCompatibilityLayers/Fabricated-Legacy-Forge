@@ -27,24 +27,24 @@ public class ModMissingPacket extends FMLPacket {
 
     public byte[] generatePacket(Object... data) {
         ByteArrayDataOutput dat = ByteStreams.newDataOutput();
-
-        List<String> missing = (List<String>) data[0];
-        List<String> badVersion = (List<String>) data[1];
-
+        List<String> missing = (List)data[0];
+        List<String> badVersion = (List)data[1];
         dat.writeInt(missing.size());
-        for (String missed : missing)
-        {
-            ModContainer mc = Loader.instance().getIndexedModList().get(missed);
+
+        for(String missed : missing) {
+            ModContainer mc = (ModContainer)Loader.instance().getIndexedModList().get(missed);
             dat.writeUTF(missed);
             dat.writeUTF(mc.getVersion());
         }
+
         dat.writeInt(badVersion.size());
-        for (String bad : badVersion)
-        {
-            ModContainer mc = Loader.instance().getIndexedModList().get(bad);
+
+        for(String bad : badVersion) {
+            ModContainer mc = (ModContainer)Loader.instance().getIndexedModList().get(bad);
             dat.writeUTF(bad);
             dat.writeUTF(mc.getVersion());
         }
+
         return dat.toByteArray();
     }
 
@@ -53,15 +53,14 @@ public class ModMissingPacket extends FMLPacket {
         int missingLen = dat.readInt();
         this.missing = Lists.newArrayListWithCapacity(missingLen);
 
-        int badVerLength;
-        for(badVerLength = 0; badVerLength < missingLen; ++badVerLength) {
+        for(int i = 0; i < missingLen; ++i) {
             ModMissingPacket.ModData md = new ModMissingPacket.ModData();
             md.modId = dat.readUTF();
             md.modVersion = dat.readUTF();
             this.missing.add(md);
         }
 
-        badVerLength = dat.readInt();
+        int badVerLength = dat.readInt();
         this.badVersion = Lists.newArrayListWithCapacity(badVerLength);
 
         for(int i = 0; i < badVerLength; ++i) {
@@ -79,15 +78,16 @@ public class ModMissingPacket extends FMLPacket {
     }
 
     public List<ArtifactVersion> getModList() {
-        ImmutableList.Builder<ArtifactVersion> builder = ImmutableList.<ArtifactVersion>builder();
-        for (ModData md : missing)
-        {
+        ImmutableList.Builder<ArtifactVersion> builder = ImmutableList.builder();
+
+        for(ModMissingPacket.ModData md : this.missing) {
             builder.add(new DefaultArtifactVersion(md.modId, VersionRange.createFromVersion(md.modVersion, null)));
         }
-        for (ModData md : badVersion)
-        {
+
+        for(ModMissingPacket.ModData md : this.badVersion) {
             builder.add(new DefaultArtifactVersion(md.modId, VersionRange.createFromVersion(md.modVersion, null)));
         }
+
         return builder.build();
     }
 

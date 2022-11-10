@@ -19,10 +19,10 @@ public class EntitySpawnAdjustmentPacket extends FMLPacket {
 
     public byte[] generatePacket(Object... data) {
         ByteArrayDataOutput dat = ByteStreams.newDataOutput();
-        dat.writeInt((Integer)data[0]);
-        dat.writeInt((Integer)data[1]);
-        dat.writeInt((Integer)data[2]);
-        dat.writeInt((Integer)data[3]);
+        dat.writeInt((Integer) data[0]);
+        dat.writeInt((Integer) data[1]);
+        dat.writeInt((Integer) data[2]);
+        dat.writeInt((Integer) data[3]);
         return dat.toByteArray();
     }
 

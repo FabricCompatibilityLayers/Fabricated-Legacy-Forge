@@ -26,6 +26,10 @@ public class ModClassVisitor extends ClassVisitor {
     }
 
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-        return this.discoverer.isBaseMod(Collections.emptyList()) && name.equals("getPriorities") && desc.equals(Type.getMethodDescriptor(Type.getType(String.class), new Type[0])) ? new ModMethodVisitor(name, this.discoverer) : null;
+        return this.discoverer.isBaseMod(Collections.emptyList())
+                && name.equals("getPriorities")
+                && desc.equals(Type.getMethodDescriptor(Type.getType(String.class), new Type[0]))
+                ? new ModMethodVisitor(name, this.discoverer)
+                : null;
     }
 }

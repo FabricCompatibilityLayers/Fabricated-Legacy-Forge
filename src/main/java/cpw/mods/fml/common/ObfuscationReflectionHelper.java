@@ -13,7 +13,7 @@ public class ObfuscationReflectionHelper {
 
     public static <T, E> T getPrivateValue(Class<? super E> classToAccess, E instance, int fieldIndex) {
         try {
-            return ReflectionHelper.getPrivateValue(classToAccess, instance, fieldIndex);
+            return (T)ReflectionHelper.getPrivateValue(classToAccess, instance, fieldIndex);
         } catch (ReflectionHelper.UnableToAccessFieldException var4) {
             FMLLog.log(Level.SEVERE, var4, "There was a problem getting field index %d from %s", new Object[]{fieldIndex, classToAccess.getName()});
             throw var4;
@@ -22,7 +22,7 @@ public class ObfuscationReflectionHelper {
 
     public static <T, E> T getPrivateValue(Class<? super E> classToAccess, E instance, String... fieldNames) {
         try {
-            return ReflectionHelper.getPrivateValue(classToAccess, instance, fieldNames);
+            return (T)ReflectionHelper.getPrivateValue(classToAccess, instance, fieldNames);
         } catch (ReflectionHelper.UnableToFindFieldException var4) {
             FMLLog.log(Level.SEVERE, var4, "Unable to locate any field %s on type %s", new Object[]{Arrays.toString(fieldNames), classToAccess.getName()});
             throw var4;
@@ -32,7 +32,6 @@ public class ObfuscationReflectionHelper {
         }
     }
 
-    /** @deprecated */
     @Deprecated
     public static <T, E> void setPrivateValue(Class<? super T> classToAccess, T instance, int fieldIndex, E value) {
         setPrivateValue(classToAccess, instance, value, fieldIndex);
@@ -47,7 +46,6 @@ public class ObfuscationReflectionHelper {
         }
     }
 
-    /** @deprecated */
     @Deprecated
     public static <T, E> void setPrivateValue(Class<? super T> classToAccess, T instance, String fieldName, E value) {
         setPrivateValue(classToAccess, instance, value, fieldName);

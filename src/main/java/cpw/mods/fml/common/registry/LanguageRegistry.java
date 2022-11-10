@@ -65,7 +65,6 @@ public class LanguageRegistry {
         if (langPackAdditions != null) {
             langPack.putAll(langPackAdditions);
         }
-
     }
 
     public static void reloadLanguageTable() {
@@ -135,8 +134,6 @@ public class LanguageRegistry {
             } catch (IOException var14) {
                 var14.printStackTrace();
             }
-
         }
-
     }
 }

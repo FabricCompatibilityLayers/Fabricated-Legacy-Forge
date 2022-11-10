@@ -53,7 +53,9 @@ public class TextureFXManager {
                     effect.method_1613();
                 }
             } catch (Exception var6) {
-                FMLLog.warning("Texture FX %s has failed to animate. Likely caused by a texture pack change that they did not respond correctly to", new Object[]{name});
+                FMLLog.warning(
+                        "Texture FX %s has failed to animate. Likely caused by a texture pack change that they did not respond correctly to", new Object[]{name}
+                );
                 if (ifx != null) {
                     ifx.setErrored(true);
                 }
@@ -114,7 +116,6 @@ public class TextureFXManager {
         if (effect instanceof ITextureFX) {
             ((ITextureFX)effect).onTextureDimensionsUpdate(dim.width, dim.height);
         }
-
     }
 
     public int getEffectTexture(class_584 effect) {
@@ -132,27 +133,23 @@ public class TextureFXManager {
     }
 
     public void onTexturePackChange(class_534 engine, ITexturePack texturepack, List<class_584> effects) {
-        pruneOldTextureFX(texturepack, effects);
+        this.pruneOldTextureFX(texturepack, effects);
 
-        for (class_584 tex : effects)
-        {
-            if (tex instanceof ITextureFX)
-            {
-                ((ITextureFX)tex).onTexturePackChanged(engine, texturepack, getTextureDimensions(tex));
+        for(class_584 tex : effects) {
+            if (tex instanceof ITextureFX) {
+                ((ITextureFX)tex).onTexturePackChanged(engine, texturepack, this.getTextureDimensions(tex));
             }
         }
 
-        loadTextures(texturepack);
+        this.loadTextures(texturepack);
     }
 
     public void setTextureDimensions(int id, int width, int height, List<class_584> effects) {
         Dimension dim = new Dimension(width, height);
-        textureDims.put(id, dim);
+        this.textureDims.put(id, dim);
 
-        for (class_584 tex : effects)
-        {
-            if (getEffectTexture(tex) == id && tex instanceof ITextureFX)
-            {
+        for(class_584 tex : effects) {
+            if (this.getEffectTexture(tex) == id && tex instanceof ITextureFX) {
                 ((ITextureFX)tex).onTextureDimensionsUpdate(width, height);
             }
         }
@@ -183,25 +180,36 @@ public class TextureFXManager {
     }
 
     public void registerTextureOverrides(class_534 renderer) {
-        for (OverrideInfo animationOverride : animationSet) {
+        for(OverrideInfo animationOverride : this.animationSet) {
             renderer.method_1416(animationOverride.textureFX);
-            addedTextureFX.add(animationOverride.textureFX);
-            FMLCommonHandler.instance().getFMLLogger().finer(String.format("Registered texture override %d (%d) on %s (%d)", animationOverride.index, animationOverride.textureFX.field_2153, animationOverride.textureFX.getClass().getSimpleName(), animationOverride.textureFX.field_2157));
+            this.addedTextureFX.add(animationOverride.textureFX);
+            FMLCommonHandler.instance()
+                    .getFMLLogger()
+                    .finer(
+                            String.format(
+                                    "Registered texture override %d (%d) on %s (%d)",
+                                    animationOverride.index,
+                                    animationOverride.textureFX.field_2153,
+                                    animationOverride.textureFX.getClass().getSimpleName(),
+                                    animationOverride.textureFX.field_2157
+                            )
+                    );
         }
 
-        for (String fileToOverride : overrideInfo.keySet()) {
-            for (OverrideInfo override : overrideInfo.get(fileToOverride)) {
-                try
-                {
-                    BufferedImage image=loadImageFromTexturePack(renderer, override.override);
-                    ModTextureStatic mts=new ModTextureStatic(override.index, 1, override.texture, image);
+        for(String fileToOverride : this.overrideInfo.keySet()) {
+            for(OverrideInfo override : this.overrideInfo.get(fileToOverride)) {
+                try {
+                    BufferedImage image = this.loadImageFromTexturePack(renderer, override.override);
+                    ModTextureStatic mts = new ModTextureStatic(override.index, 1, override.texture, image);
                     renderer.method_1416(mts);
-                    addedTextureFX.add(mts);
-                    FMLCommonHandler.instance().getFMLLogger().finer(String.format("Registered texture override %d (%d) on %s (%d)", override.index, mts.field_2153, override.texture, mts.field_2157));
-                }
-                catch (IOException e)
-                {
-                    FMLCommonHandler.instance().getFMLLogger().throwing("FMLClientHandler", "registerTextureOverrides", e);
+                    this.addedTextureFX.add(mts);
+                    FMLCommonHandler.instance()
+                            .getFMLLogger()
+                            .finer(
+                                    String.format("Registered texture override %d (%d) on %s (%d)", override.index, mts.field_2153, override.texture, mts.field_2157)
+                            );
+                } catch (IOException var8) {
+                    FMLCommonHandler.instance().getFMLLogger().throwing("FMLClientHandler", "registerTextureOverrides", var8);
                 }
             }
         }
@@ -216,7 +224,6 @@ public class TextureFXManager {
         } else {
             this.loadTextures(fallback);
         }
-
     }
 
     public void pruneOldTextureFX(ITexturePack var1, List<class_584> effects) {
@@ -233,7 +240,6 @@ public class TextureFXManager {
                 li.remove();
             }
         }
-
     }
 
     public void addNewTextureOverride(String textureToOverride, String overridingTexturePath, int location) {
@@ -242,7 +248,10 @@ public class TextureFXManager {
         info.override = overridingTexturePath;
         info.texture = textureToOverride;
         this.overrideInfo.put(textureToOverride, info);
-        FMLLog.fine("Overriding %s @ %d with %s. %d slots remaining", new Object[]{textureToOverride, location, overridingTexturePath, SpriteHelper.freeSlotCount(textureToOverride)});
+        FMLLog.fine(
+                "Overriding %s @ %d with %s. %d slots remaining",
+                new Object[]{textureToOverride, location, overridingTexturePath, SpriteHelper.freeSlotCount(textureToOverride)}
+        );
     }
 
     public BufferedImage loadImageFromTexturePack(class_534 renderEngine, String path) throws IOException {

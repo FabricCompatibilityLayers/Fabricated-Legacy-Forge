@@ -21,6 +21,5 @@ public class ModLoaderWorldGenerator implements IWorldGenerator {
         } else if (chunkGenerator instanceof NetherChunkGenerator) {
             this.mod.generateNether(world, random, chunkX << 4, chunkZ << 4);
         }
-
     }
 }

@@ -35,7 +35,7 @@ import java.util.logging.Level;
 public class ModLoaderClientHelper implements IModLoaderSidedHelper {
     private Minecraft client;
     private static Multimap<ModLoaderModContainer, ModLoaderKeyBindingHandler> keyBindingContainers;
-    private Map<Connection, PacketListener> managerLookups = (new MapMaker()).weakKeys().weakValues().makeMap();
+    private Map<Connection, PacketListener> managerLookups = new MapMaker().weakKeys().weakValues().makeMap();
 
     public static int obtainBlockModelIdFor(BaseMod mod, boolean inventoryRenderer) {
         int renderId = RenderingRegistry.getNextAvailableRenderId();
@@ -45,48 +45,59 @@ public class ModLoaderClientHelper implements IModLoaderSidedHelper {
     }
 
     public static void handleFinishLoadingFor(ModLoaderModContainer mc, Minecraft game) {
-        FMLLog.finer("Handling post startup activities for ModLoader mod %s", mc.getModId());
-        BaseMod mod = (BaseMod) mc.getMod();
-
+        FMLLog.finer("Handling post startup activities for ModLoader mod %s", new Object[]{mc.getModId()});
+        BaseMod mod = (BaseMod)mc.getMod();
         Map<Class<? extends Entity>, EntityRenderer> renderers = Maps.newHashMap(EntityRenderDispatcher.field_2094.renderers);
 
-        try
-        {
-            FMLLog.finest("Requesting renderers from basemod %s", mc.getModId());
+        try {
+            FMLLog.finest("Requesting renderers from basemod %s", new Object[]{mc.getModId()});
             mod.addRenderer(renderers);
-            FMLLog.finest("Received %d renderers from basemod %s", renderers.size(), mc.getModId());
-        }
-        catch (Exception e)
-        {
-            FMLLog.log(Level.SEVERE, e, "A severe problem was detected with the mod %s during the addRenderer call. Continuing, but expect odd results", mc.getModId());
-        }
-
-        MapDifference<Class<? extends Entity>, EntityRenderer> difference = Maps.difference(EntityRenderDispatcher.field_2094.renderers, renderers, Equivalences.identity());
-
-        for ( Map.Entry<Class<? extends Entity>, EntityRenderer> e : difference.entriesOnlyOnLeft().entrySet())
-        {
-            FMLLog.warning("The mod %s attempted to remove an entity renderer %s from the entity map. This will be ignored.", mc.getModId(), e.getKey().getName());
+            FMLLog.finest("Received %d renderers from basemod %s", new Object[]{renderers.size(), mc.getModId()});
+        } catch (Exception var8) {
+            FMLLog.log(
+                    Level.SEVERE,
+                    var8,
+                    "A severe problem was detected with the mod %s during the addRenderer call. Continuing, but expect odd results",
+                    new Object[]{mc.getModId()}
+            );
         }
 
-        for (Map.Entry<Class<? extends Entity>, EntityRenderer> e : difference.entriesOnlyOnRight().entrySet())
-        {
-            FMLLog.finest("Registering ModLoader entity renderer %s as instance of %s", e.getKey().getName(), e.getValue().getClass().getName());
-            RenderingRegistry.registerEntityRenderingHandler(e.getKey(), e.getValue());
+        MapDifference<Class<? extends Entity>, EntityRenderer> difference = Maps.difference(
+                EntityRenderDispatcher.field_2094.renderers, renderers, Equivalences.identity()
+        );
+
+        for(Map.Entry<Class<? extends Entity>, EntityRenderer> e : difference.entriesOnlyOnLeft().entrySet()) {
+            FMLLog.warning(
+                    "The mod %s attempted to remove an entity renderer %s from the entity map. This will be ignored.",
+                    new Object[]{mc.getModId(), ((Class)e.getKey()).getName()}
+            );
         }
 
-        for (Map.Entry<Class<? extends Entity>, MapDifference.ValueDifference<EntityRenderer>> e : difference.entriesDiffering().entrySet())
-        {
-            FMLLog.finest("Registering ModLoader entity rendering override for %s as instance of %s", e.getKey().getName(), e.getValue().rightValue().getClass().getName());
-            RenderingRegistry.registerEntityRenderingHandler(e.getKey(), e.getValue().rightValue());
+        for(Map.Entry<Class<? extends Entity>, EntityRenderer> e : difference.entriesOnlyOnRight().entrySet()) {
+            FMLLog.finest(
+                    "Registering ModLoader entity renderer %s as instance of %s",
+                    new Object[]{((Class)e.getKey()).getName(), ((EntityRenderer)e.getValue()).getClass().getName()}
+            );
+            RenderingRegistry.registerEntityRenderingHandler((Class)e.getKey(), (EntityRenderer)e.getValue());
         }
 
-        try
-        {
+        for(Map.Entry<Class<? extends Entity>, MapDifference.ValueDifference<EntityRenderer>> e : difference.entriesDiffering().entrySet()) {
+            FMLLog.finest(
+                    "Registering ModLoader entity rendering override for %s as instance of %s",
+                    new Object[]{((Class)e.getKey()).getName(), ((EntityRenderer)((MapDifference.ValueDifference)e.getValue()).rightValue()).getClass().getName()}
+            );
+            RenderingRegistry.registerEntityRenderingHandler((Class)e.getKey(), (EntityRenderer)((MapDifference.ValueDifference)e.getValue()).rightValue());
+        }
+
+        try {
             mod.registerAnimation(game);
-        }
-        catch (Exception e)
-        {
-            FMLLog.log(Level.SEVERE, e, "A severe problem was detected with the mod %s during the registerAnimation call. Continuing, but expect odd results", mc.getModId());
+        } catch (Exception var7) {
+            FMLLog.log(
+                    Level.SEVERE,
+                    var7,
+                    "A severe problem was detected with the mod %s during the registerAnimation call. Continuing, but expect odd results",
+                    new Object[]{mc.getModId()}
+            );
         }
     }
 
@@ -105,7 +116,7 @@ public class ModLoaderClientHelper implements IModLoaderSidedHelper {
     }
 
     public static void registerKeyBinding(BaseModProxy mod, KeyBinding keyHandler, boolean allowRepeat) {
-        ModLoaderModContainer mlmc = (ModLoaderModContainer) Loader.instance().activeModContainer();
+        ModLoaderModContainer mlmc = (ModLoaderModContainer)Loader.instance().activeModContainer();
         ModLoaderKeyBindingHandler handler = (ModLoaderKeyBindingHandler)Iterables.getOnlyElement(keyBindingContainers.get(mlmc));
         handler.setModContainer(mlmc);
         handler.addKeyBinding(keyHandler, allowRepeat);

@@ -56,7 +56,14 @@ public class ASMModParser {
     }
 
     public String toString() {
-        return Objects.toStringHelper("ASMAnnotationDiscoverer").add("className", this.asmType.getClassName()).add("classVersion", this.classVersion).add("superName", this.asmSuperType.getClassName()).add("annotations", this.annotations).add("isBaseMod", this.isBaseMod(Collections.emptyList())).add("baseModProperties", this.baseModProperties).toString();
+        return Objects.toStringHelper("ASMAnnotationDiscoverer")
+                .add("className", this.asmType.getClassName())
+                .add("classVersion", this.classVersion)
+                .add("superName", this.asmSuperType.getClassName())
+                .add("annotations", this.annotations)
+                .add("isBaseMod", this.isBaseMod(Collections.emptyList()))
+                .add("baseModProperties", this.baseModProperties)
+                .toString();
     }
 
     public Type getASMType() {
@@ -91,8 +98,7 @@ public class ASMModParser {
     }
 
     public void sendToTable(ASMDataTable table, ModCandidate candidate) {
-        for (ModAnnotation ma : annotations)
-        {
+        for(ModAnnotation ma : this.annotations) {
             table.addASMData(candidate, ma.asmType.getClassName(), this.asmType.getClassName(), ma.member, ma.values);
         }
     }

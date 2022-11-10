@@ -16,7 +16,6 @@ class BlockTracker {
                 this.allocatedBlocks.clear(i);
             }
         }
-
     }
 
     public static int nextBlockId() {

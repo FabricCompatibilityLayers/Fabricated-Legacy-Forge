@@ -31,7 +31,7 @@ public class MetadataCollection {
                 JsonRootNode root = parser.parse(reader);
                 return root.hasElements() ? parse10ModInfo(root) : parseModInfo(root);
             } catch (InvalidSyntaxException var4) {
-                FMLLog.log(Level.SEVERE, var4, "The mcmod.info file in %s cannot be parsed as valid JSON. It will be ignored", sourceName);
+                FMLLog.log(Level.SEVERE, var4, "The mcmod.info file in %s cannot be parsed as valid JSON. It will be ignored", new Object[]{sourceName});
                 return new MetadataCollection();
             } catch (Exception var5) {
                 throw Throwables.propagate(var5);
@@ -41,8 +41,8 @@ public class MetadataCollection {
 
     private static MetadataCollection parseModInfo(JsonRootNode root) {
         MetadataCollection mc = new MetadataCollection();
-        mc.metadataVersion = Integer.parseInt(root.getNumberValue("modinfoversion"));
-        mc.parseModMetadataList(root.getNode("modlist"));
+        mc.metadataVersion = Integer.parseInt(root.getNumberValue(new Object[]{"modinfoversion"}));
+        mc.parseModMetadataList(root.getNode(new Object[]{"modlist"}));
         return mc;
     }
 
@@ -53,10 +53,9 @@ public class MetadataCollection {
     }
 
     private void parseModMetadataList(JsonNode metadataList) {
-        for (JsonNode node : metadataList.getElements())
-        {
+        for(JsonNode node : metadataList.getElements()) {
             ModMetadata mmd = new ModMetadata(node);
-            metadatas.put(mmd.modId, mmd);
+            this.metadatas.put(mmd.modId, mmd);
         }
     }
 

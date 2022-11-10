@@ -51,11 +51,16 @@ public class ModMetadata {
             this.version = Strings.nullToEmpty((String)processedFields.get(JsonNodeBuilders.aStringBuilder("version")));
             this.credits = Strings.nullToEmpty((String)processedFields.get(JsonNodeBuilders.aStringBuilder("credits")));
             this.parent = Strings.nullToEmpty((String)processedFields.get(JsonNodeBuilders.aStringBuilder("parent")));
-            this.authorList = (List) Objects.firstNonNull((List)processedFields.get(JsonNodeBuilders.aStringBuilder("authors")), Objects.firstNonNull((List)processedFields.get(JsonNodeBuilders.aStringBuilder("authorList")), this.authorList));
-            this.requiredMods = (Set)this.processReferences(processedFields.get(JsonNodeBuilders.aStringBuilder("requiredMods")), HashSet.class);
-            this.dependencies = (List)this.processReferences(processedFields.get(JsonNodeBuilders.aStringBuilder("dependencies")), ArrayList.class);
-            this.dependants = (List)this.processReferences(processedFields.get(JsonNodeBuilders.aStringBuilder("dependants")), ArrayList.class);
-            this.useDependencyInformation = Boolean.parseBoolean(Strings.nullToEmpty((String)processedFields.get(JsonNodeBuilders.aStringBuilder("useDependencyInformation"))));
+            this.authorList = (List)Objects.firstNonNull(
+                    (List)processedFields.get(JsonNodeBuilders.aStringBuilder("authors")),
+                    Objects.firstNonNull((List)processedFields.get(JsonNodeBuilders.aStringBuilder("authorList")), this.authorList)
+            );
+            this.requiredMods = this.processReferences(processedFields.get(JsonNodeBuilders.aStringBuilder("requiredMods")), HashSet.class);
+            this.dependencies = this.processReferences(processedFields.get(JsonNodeBuilders.aStringBuilder("dependencies")), ArrayList.class);
+            this.dependants = this.processReferences(processedFields.get(JsonNodeBuilders.aStringBuilder("dependants")), ArrayList.class);
+            this.useDependencyInformation = Boolean.parseBoolean(
+                    Strings.nullToEmpty((String)processedFields.get(JsonNodeBuilders.aStringBuilder("useDependencyInformation")))
+            );
         }
     }
 
@@ -64,17 +69,13 @@ public class ModMetadata {
 
     private <T extends Collection<ArtifactVersion>> T processReferences(Object refs, Class<? extends T> retType) {
         T res = null;
-        try
-        {
-            res = retType.newInstance();
-        }
-        catch (Exception e)
-        {
-            // unpossible
+
+        try {
+            res = (T)retType.newInstance();
+        } catch (Exception var6) {
         }
 
-        if (refs == null)
-        {
+        if (refs == null) {
             return res;
         }
         for (String ref : ((List<String>)refs))

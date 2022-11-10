@@ -43,7 +43,6 @@ public class ModLoaderKeyBindingHandler extends KeyBindingRegistry.KeyHandler {
                 this.active[idx] = true;
                 this.armed[idx] = false;
             }
-
         }
     }
 
@@ -63,7 +62,7 @@ public class ModLoaderKeyBindingHandler extends KeyBindingRegistry.KeyHandler {
     }
 
     void addKeyBinding(KeyBinding binding, boolean repeats) {
-        this.keyBindings = (KeyBinding[]) ObjectArrays.concat(this.keyBindings, binding);
+        this.keyBindings = (KeyBinding[])ObjectArrays.concat(this.keyBindings, binding);
         this.repeatings = new boolean[this.keyBindings.length];
         Arrays.fill(this.repeatings, true);
         this.active = new boolean[this.keyBindings.length];

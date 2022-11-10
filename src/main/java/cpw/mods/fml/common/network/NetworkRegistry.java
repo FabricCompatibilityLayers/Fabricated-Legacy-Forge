@@ -43,7 +43,15 @@ public class NetworkRegistry {
     }
 
     byte[] getPacketRegistry(Side side) {
-        return Joiner.on('\u0000').join(Iterables.concat(Arrays.asList("FML"), this.universalPacketHandlers.keySet(), side.isClient() ? this.clientPacketHandlers.keySet() : this.serverPacketHandlers.keySet())).getBytes(Charsets.UTF_8);
+        return Joiner.on('\u0000')
+                .join(
+                        Iterables.concat(
+                                Arrays.asList("FML"),
+                                this.universalPacketHandlers.keySet(),
+                                side.isClient() ? this.clientPacketHandlers.keySet() : this.serverPacketHandlers.keySet()
+                        )
+                )
+                .getBytes(Charsets.UTF_8);
     }
 
     public boolean isChannelActive(String channel, Player player) {
@@ -52,7 +60,10 @@ public class NetworkRegistry {
 
     public void registerChannel(IPacketHandler handler, String channelName) {
         if (Strings.isNullOrEmpty(channelName) || channelName != null && channelName.length() > 16) {
-            FMLLog.severe("Invalid channel name '%s' : %s", new Object[]{channelName, Strings.isNullOrEmpty(channelName) ? "Channel name is empty" : "Channel name is too long (16 chars is maximum)"});
+            FMLLog.severe(
+                    "Invalid channel name '%s' : %s",
+                    new Object[]{channelName, Strings.isNullOrEmpty(channelName) ? "Channel name is empty" : "Channel name is too long (16 chars is maximum)"}
+            );
             throw new RuntimeException("Channel name is invalid");
         } else {
             this.universalPacketHandlers.put(channelName, handler);
@@ -63,7 +74,10 @@ public class NetworkRegistry {
         if (side == null) {
             this.registerChannel(handler, channelName);
         } else if (Strings.isNullOrEmpty(channelName) || channelName != null && channelName.length() > 16) {
-            FMLLog.severe("Invalid channel name '%s' : %s", new Object[]{channelName, Strings.isNullOrEmpty(channelName) ? "Channel name is empty" : "Channel name is too long (16 chars is maximum)"});
+            FMLLog.severe(
+                    "Invalid channel name '%s' : %s",
+                    new Object[]{channelName, Strings.isNullOrEmpty(channelName) ? "Channel name is empty" : "Channel name is too long (16 chars is maximum)"}
+            );
             throw new RuntimeException("Channel name is invalid");
         } else {
             if (side.isClient()) {
@@ -71,7 +85,6 @@ public class NetworkRegistry {
             } else {
                 this.serverPacketHandlers.put(channelName, handler);
             }
-
         }
     }
 
@@ -92,35 +105,32 @@ public class NetworkRegistry {
     }
 
     void playerLoggedIn(ServerPlayerEntity player, ServerPacketListener netHandler, Connection manager) {
-        generateChannelRegistration(player, netHandler, manager);
-        for (IConnectionHandler handler : connectionHandlers)
-        {
+        this.generateChannelRegistration(player, netHandler, manager);
+
+        for(IConnectionHandler handler : this.connectionHandlers) {
             handler.playerLoggedIn((Player)player, netHandler, manager);
         }
     }
 
     String connectionReceived(PendingConnection netHandler, Connection manager) {
-        for (IConnectionHandler handler : connectionHandlers)
-        {
+        for(IConnectionHandler handler : this.connectionHandlers) {
             String kick = handler.connectionReceived(netHandler, manager);
-            if (!Strings.isNullOrEmpty(kick))
-            {
+            if (!Strings.isNullOrEmpty(kick)) {
                 return kick;
             }
         }
+
         return null;
     }
 
     void connectionOpened(PacketListener netClientHandler, String server, int port, Connection networkManager) {
-        for (IConnectionHandler handler : connectionHandlers)
-        {
+        for(IConnectionHandler handler : this.connectionHandlers) {
             handler.connectionOpened(netClientHandler, server, port, networkManager);
         }
     }
 
     void connectionOpened(PacketListener netClientHandler, MinecraftServer server, Connection networkManager) {
-        for (IConnectionHandler handler : connectionHandlers)
-        {
+        for(IConnectionHandler handler : this.connectionHandlers) {
             handler.connectionOpened(netClientHandler, server, networkManager);
         }
     }
@@ -134,11 +144,11 @@ public class NetworkRegistry {
     }
 
     void connectionClosed(Connection manager, PlayerEntity player) {
-        for (IConnectionHandler handler : connectionHandlers)
-        {
+        for(IConnectionHandler handler : this.connectionHandlers) {
             handler.connectionClosed(manager);
         }
-        activeChannels.removeAll(player);
+
+        this.activeChannels.removeAll(player);
     }
 
     void generateChannelRegistration(PlayerEntity player, PacketListener netHandler, Connection manager) {
@@ -157,30 +167,28 @@ public class NetworkRegistry {
         } else {
             this.handlePacket(packet, network, (Player)((IPacketListener)handler).getPlayer());
         }
-
     }
 
     private void handlePacket(CustomPayloadC2SPacket packet, Connection network, Player player) {
         String channel = packet.channel;
-        for (IPacketHandler handler : Iterables.concat(universalPacketHandlers.get(channel), player instanceof ServerPlayerEntity ? serverPacketHandlers.get(channel) : clientPacketHandlers.get(channel)))
-        {
+
+        for(IPacketHandler handler : Iterables.concat(
+                this.universalPacketHandlers.get(channel),
+                player instanceof ServerPlayerEntity ? this.serverPacketHandlers.get(channel) : this.clientPacketHandlers.get(channel)
+        )) {
             handler.onPacketData(network, packet, player);
         }
     }
 
     private void handleRegistrationPacket(CustomPayloadC2SPacket packet, Player player) {
-        List<String> channels = extractChannelList(packet);
-        for (String channel : channels)
-        {
-            activateChannel(player, channel);
+        for(String channel : this.extractChannelList(packet)) {
+            this.activateChannel(player, channel);
         }
     }
 
     private void handleUnregistrationPacket(CustomPayloadC2SPacket packet, Player player) {
-        List<String> channels = extractChannelList(packet);
-        for (String channel : channels)
-        {
-            deactivateChannel(player, channel);
+        for(String channel : this.extractChannelList(packet)) {
+            this.deactivateChannel(player, channel);
         }
     }
 
@@ -226,7 +234,6 @@ public class NetworkRegistry {
                 player.openScreenHandler.addListener(player);
             }
         }
-
     }
 
     void openLocalGui(ModContainer mc, PlayerEntity player, int modGuiId, World world, int x, int y, int z) {
@@ -236,12 +243,11 @@ public class NetworkRegistry {
 
     public ChatMessageS2CPacket handleChat(PacketListener handler, ChatMessageS2CPacket chat) {
         Side s = Side.CLIENT;
-        if (handler instanceof ServerPacketListener)
-        {
+        if (handler instanceof ServerPacketListener) {
             s = Side.SERVER;
         }
-        for (IChatListener listener : chatListeners)
-        {
+
+        for(IChatListener listener : this.chatListeners) {
             chat = s.isClient() ? listener.clientChat(handler, chat) : listener.serverChat(handler, chat);
         }
 
@@ -258,7 +264,6 @@ public class NetworkRegistry {
             } else {
                 FMLLog.info("Received a tiny packet for a network mod that does not accept tiny packets %s", new Object[]{nmh.getContainer().getModId()});
             }
-
         }
     }
 }

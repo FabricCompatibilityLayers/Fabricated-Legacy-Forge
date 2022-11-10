@@ -48,12 +48,11 @@ public class Downloader extends JOptionPane implements IDownloadDisplay {
                 if (evt.getSource() == Downloader.this && evt.getPropertyName() == "value") {
                     Downloader.this.requestClose("This will stop minecraft from launching\nAre you sure you want to do this?");
                 }
-
             }
         });
-        this.container = new JDialog((Window) null, "Hello", Dialog.ModalityType.MODELESS);
+        this.container = new JDialog(null, "Hello", Dialog.ModalityType.MODELESS);
         this.container.setResizable(false);
-        this.container.setLocationRelativeTo((Component) null);
+        this.container.setLocationRelativeTo(null);
         this.container.add(this);
         this.updateUI();
         this.container.pack();
@@ -78,7 +77,6 @@ public class Downloader extends JOptionPane implements IDownloadDisplay {
         if (this.pokeThread != null) {
             this.pokeThread.interrupt();
         }
-
     }
 
     public void updateProgressString(String progressUpdate, Object... data) {
@@ -86,21 +84,18 @@ public class Downloader extends JOptionPane implements IDownloadDisplay {
         if (this.currentActivity != null) {
             this.currentActivity.setText(String.format(progressUpdate, data));
         }
-
     }
 
     public void resetProgress(int sizeGuess) {
         if (this.progress != null) {
             this.progress.getModel().setRangeProperties(0, 0, 0, sizeGuess, false);
         }
-
     }
 
     public void updateProgress(int fullLength) {
         if (this.progress != null) {
             this.progress.getModel().setValue(fullLength);
         }
-
     }
 
     public void makeHeadless() {

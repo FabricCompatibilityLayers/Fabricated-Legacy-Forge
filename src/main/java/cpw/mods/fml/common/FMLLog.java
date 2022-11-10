@@ -6,18 +6,16 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FMLLog {
-    private static FMLRelaunchLog coreLog;
+    private static FMLRelaunchLog coreLog = FMLRelaunchLog.log;
 
     public FMLLog() {
     }
 
     public static void log(Level level, String format, Object... data) {
-        FMLRelaunchLog var10000 = coreLog;
         FMLRelaunchLog.log(level, format, data);
     }
 
     public static void log(Level level, Throwable ex, String format, Object... data) {
-        FMLRelaunchLog var10000 = coreLog;
         FMLRelaunchLog.log(level, ex, format, data);
     }
 
@@ -47,9 +45,5 @@ public class FMLLog {
 
     public static Logger getLogger() {
         return coreLog.getLogger();
-    }
-
-    static {
-        coreLog = FMLRelaunchLog.log;
     }
 }

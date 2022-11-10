@@ -40,14 +40,32 @@ public class GuiSlotModList extends GuiScrollingList {
     protected void drawSlot(int listIndex, int var2, int var3, int var4, Tessellator var5) {
         ModContainer mc = (ModContainer)this.mods.get(listIndex);
         if (Loader.instance().getModState(mc) == LoaderState.ModState.DISABLED) {
-            this.parent.getFontRenderer().method_964(this.parent.getFontRenderer().trimToWidth(mc.getName(), this.listWidth - 10), this.left + 3, var3 + 2, 16720418);
-            this.parent.getFontRenderer().method_964(this.parent.getFontRenderer().trimToWidth(mc.getDisplayVersion(), this.listWidth - 10), this.left + 3, var3 + 12, 16720418);
-            this.parent.getFontRenderer().method_964(this.parent.getFontRenderer().trimToWidth("DISABLED", this.listWidth - 10), this.left + 3, var3 + 22, 16720418);
+            this.parent
+                    .getFontRenderer()
+                    .method_4247(this.parent.getFontRenderer().trimToWidth(mc.getName(), this.listWidth - 10), this.left + 3, var3 + 2, 16720418);
+            this.parent
+                    .getFontRenderer()
+                    .method_4247(this.parent.getFontRenderer().trimToWidth(mc.getDisplayVersion(), this.listWidth - 10), this.left + 3, var3 + 12, 16720418);
+            this.parent
+                    .getFontRenderer()
+                    .method_4247(this.parent.getFontRenderer().trimToWidth("DISABLED", this.listWidth - 10), this.left + 3, var3 + 22, 16720418);
         } else {
-            this.parent.getFontRenderer().method_964(this.parent.getFontRenderer().trimToWidth(mc.getName(), this.listWidth - 10), this.left + 3, var3 + 2, 16777215);
-            this.parent.getFontRenderer().method_964(this.parent.getFontRenderer().trimToWidth(mc.getDisplayVersion(), this.listWidth - 10), this.left + 3, var3 + 12, 13421772);
-            this.parent.getFontRenderer().method_964(this.parent.getFontRenderer().trimToWidth(mc.getMetadata() != null ? mc.getMetadata().getChildModCountString() : "Metadata not found", this.listWidth - 10), this.left + 3, var3 + 22, 13421772);
+            this.parent
+                    .getFontRenderer()
+                    .method_4247(this.parent.getFontRenderer().trimToWidth(mc.getName(), this.listWidth - 10), this.left + 3, var3 + 2, 16777215);
+            this.parent
+                    .getFontRenderer()
+                    .method_4247(this.parent.getFontRenderer().trimToWidth(mc.getDisplayVersion(), this.listWidth - 10), this.left + 3, var3 + 12, 13421772);
+            this.parent
+                    .getFontRenderer()
+                    .method_4247(
+                            this.parent
+                                    .getFontRenderer()
+                                    .trimToWidth(mc.getMetadata() != null ? mc.getMetadata().getChildModCountString() : "Metadata not found", this.listWidth - 10),
+                            this.left + 3,
+                            var3 + 22,
+                            13421772
+                    );
         }
-
     }
 }

@@ -26,14 +26,12 @@ public class ModMethodVisitor extends MethodVisitor {
         if (cst instanceof String && this.labels.size() == 1) {
             this.foundProperties = (String)cst;
         }
-
     }
 
     public void visitInsn(int opcode) {
         if (176 == opcode && this.labels.size() == 1 && this.foundProperties != null) {
             this.validProperties = true;
         }
-
     }
 
     public void visitLabel(Label label) {
@@ -44,6 +42,5 @@ public class ModMethodVisitor extends MethodVisitor {
         if (this.validProperties) {
             this.discoverer.setBaseModProperties(this.foundProperties);
         }
-
     }
 }

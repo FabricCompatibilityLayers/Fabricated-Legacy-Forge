@@ -33,7 +33,6 @@ public class ModLoaderConnectionHandler implements IConnectionHandler {
             this.mod.serverDisconnect();
             this.mod.onClientLogout(manager);
         }
-
     }
 
     public void clientLoggedIn(PacketListener nh, Connection manager, class_690 login) {

@@ -50,6 +50,5 @@ public class ModAnnotationVisitor extends AnnotationVisitor {
         if (this.isSubAnnotation) {
             this.discoverer.endSubAnnotation();
         }
-
     }
 }

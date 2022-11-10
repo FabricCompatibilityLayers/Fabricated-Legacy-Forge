@@ -21,10 +21,24 @@ public class GuiWrongMinecraft extends FatalErrorScreenForged {
         int offset = 75;
         this.drawCenteredString(this.textRenderer, "Forge Mod Loader has found a problem with your minecraft installation", this.width / 2, offset, 16777215);
         offset += 10;
-        this.drawCenteredString(this.textRenderer, String.format("The mod listed below does not want to run in Minecraft version %s", Loader.instance().getMinecraftModContainer().getVersion()), this.width / 2, offset, 16777215);
+        this.drawCenteredString(
+                this.textRenderer,
+                String.format("The mod listed below does not want to run in Minecraft version %s", Loader.instance().getMinecraftModContainer().getVersion()),
+                this.width / 2,
+                offset,
+                16777215
+        );
         offset += 5;
         offset += 10;
-        this.drawCenteredString(this.textRenderer, String.format("%s (%s) wants Minecraft %s", this.wrongMC.mod.getName(), this.wrongMC.mod.getModId(), this.wrongMC.mod.acceptableMinecraftVersionRange()), this.width / 2, offset, 15658734);
+        this.drawCenteredString(
+                this.textRenderer,
+                String.format(
+                        "%s (%s) wants Minecraft %s", this.wrongMC.mod.getName(), this.wrongMC.mod.getModId(), this.wrongMC.mod.acceptableMinecraftVersionRange()
+                ),
+                this.width / 2,
+                offset,
+                15658734
+        );
         offset += 20;
         this.drawCenteredString(this.textRenderer, "The file 'ForgeModLoader-client-0.log' contains more information", this.width / 2, offset, 16777215);
     }

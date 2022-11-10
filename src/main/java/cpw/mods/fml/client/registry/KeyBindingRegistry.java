@@ -28,10 +28,8 @@ public class KeyBindingRegistry {
         if (!handler.isDummy) {
             TickRegistry.registerTickHandler(handler, Side.CLIENT);
         }
-
     }
 
-    /** @deprecated */
     @Deprecated
     public static KeyBindingRegistry instance() {
         return INSTANCE;
@@ -39,10 +37,9 @@ public class KeyBindingRegistry {
 
     public void uploadKeyBindingsToGame(GameOptions settings) {
         ArrayList<KeyBinding> harvestedBindings = Lists.newArrayList();
-        for (KeyHandler key : keyHandlers)
-        {
-            for (KeyBinding kb : key.keyBindings)
-            {
+
+        for(KeyBindingRegistry.KeyHandler key : this.keyHandlers) {
+            for(KeyBinding kb : key.keyBindings) {
                 harvestedBindings.add(kb);
             }
         }
@@ -103,7 +100,6 @@ public class KeyBindingRegistry {
                     }
                 }
             }
-
         }
 
         public abstract void keyDown(EnumSet<TickType> enumSet, KeyBinding arg, boolean bl, boolean bl2);

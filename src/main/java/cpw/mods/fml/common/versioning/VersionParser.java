@@ -23,7 +23,9 @@ public class VersionParser {
             if (parts.size() > 2) {
                 throw new RuntimeException(String.format("Invalid versioned reference %s", labelledRef));
             } else {
-                return parts.size() == 1 ? new DefaultArtifactVersion((String)parts.get(0), true) : new DefaultArtifactVersion((String)parts.get(0), parseRange((String)parts.get(1)));
+                return parts.size() == 1
+                        ? new DefaultArtifactVersion((String)parts.get(0), true)
+                        : new DefaultArtifactVersion((String)parts.get(0), parseRange((String)parts.get(1)));
             }
         }
     }

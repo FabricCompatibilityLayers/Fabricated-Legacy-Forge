@@ -34,13 +34,14 @@ public class FMLDummyContainer extends DummyModContainer implements WorldAccessC
     public NbtCompound getDataForWriting(WorldSaveHandler handler, LevelProperties info) {
         NbtCompound fmlData = new NbtCompound();
         NbtList list = new NbtList();
-        for (ModContainer mc : Loader.instance().getActiveModList())
-        {
+
+        for(ModContainer mc : Loader.instance().getActiveModList()) {
             NbtCompound mod = new NbtCompound();
             mod.putString("ModId", mc.getModId());
             mod.putString("ModVersion", mc.getVersion());
             list.method_1217(mod);
         }
+
         fmlData.put("ModList", list);
         return fmlData;
     }
@@ -57,10 +58,12 @@ public class FMLDummyContainer extends DummyModContainer implements WorldAccessC
                 if (container == null) {
                     FMLLog.severe("This world was saved with mod %s which appears to be missing, things may not work well", new Object[]{modId});
                 } else if (!modVersion.equals(container.getVersion())) {
-                    FMLLog.info("This world was saved with mod %s version %s and it is now at version %s, things may not work well", new Object[]{modId, modVersion, container.getVersion()});
+                    FMLLog.info(
+                            "This world was saved with mod %s version %s and it is now at version %s, things may not work well",
+                            new Object[]{modId, modVersion, container.getVersion()}
+                    );
                 }
             }
         }
-
     }
 }

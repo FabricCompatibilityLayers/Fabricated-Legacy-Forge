@@ -51,22 +51,22 @@ public class VillagerRegistry {
     }
 
     public static void manageVillagerTrades(TraderOfferList recipeList, VillagerEntity villager, int villagerType, Random random) {
-        for (IVillageTradeHandler handler : instance().tradeHandlers.get(villagerType))
-        {
+        for(VillagerRegistry.IVillageTradeHandler handler : instance().tradeHandlers.get(villagerType)) {
             handler.manipulateTradesForVillager(villager, recipeList, random);
         }
     }
 
     public static void addExtraVillageComponents(ArrayList components, Random random, int i) {
         List<class_44> parts = components;
-        for (IVillageCreationHandler handler : instance().villageCreationHandlers.values())
-        {
+
+        for(VillagerRegistry.IVillageCreationHandler handler : instance().villageCreationHandlers.values()) {
             parts.add(handler.getVillagePieceWeight(random, i));
         }
     }
 
     public static Object getVillageComponent(class_44 villagePiece, class_50 startPiece, List pieces, Random random, int p1, int p2, int p3, int p4, int p5) {
-        return ((VillagerRegistry.IVillageCreationHandler)instance().villageCreationHandlers.get(villagePiece.field_78)).buildComponent(villagePiece, startPiece, pieces, random, p1, p2, p3, p4, p5);
+        return ((VillagerRegistry.IVillageCreationHandler)instance().villageCreationHandlers.get(villagePiece.field_78))
+                .buildComponent(villagePiece, startPiece, pieces, random, p1, p2, p3, p4, p5);
     }
 
     public static void addEmeraldBuyRecipe(VillagerEntity villager, TraderOfferList list, Random random, Item item, float chance, int min, int max) {
@@ -88,11 +88,7 @@ public class VillagerRegistry {
     public static void applyRandomTrade(VillagerEntity villager, Random rand) {
         int extra = instance().newVillagerIds.size();
         int trade = rand.nextInt(5 + extra);
-        villager.setProfession(trade < 5 ? trade : (Integer)instance().newVillagerIds.get(trade - 5));
-    }
-
-    public interface IVillageTradeHandler {
-        void manipulateTradesForVillager(VillagerEntity arg, TraderOfferList arg2, Random random);
+        villager.setProfession(trade < 5 ? trade : instance().newVillagerIds.get(trade - 5));
     }
 
     public interface IVillageCreationHandler {
@@ -101,5 +97,9 @@ public class VillagerRegistry {
         Class<?> getComponentClass();
 
         Object buildComponent(class_44 arg, class_50 arg2, List list, Random random, int i, int j, int k, int l, int m);
+    }
+
+    public interface IVillageTradeHandler {
+        void manipulateTradesForVillager(VillagerEntity arg, TraderOfferList arg2, Random random);
     }
 }

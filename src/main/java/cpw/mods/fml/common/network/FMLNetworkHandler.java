@@ -63,7 +63,6 @@ public class FMLNetworkHandler {
         } else {
             NetworkRegistry.instance().handleCustomPacket(packet, network, handler);
         }
-
     }
 
     public static void onConnectionEstablishedToServer(PacketListener clientHandler, Connection manager, class_690 login) {
@@ -95,10 +94,10 @@ public class FMLNetworkHandler {
                 FMLLog.fine("Connection from %s rejected - no FML packet received from client", userName);
                 ((IPendingConnection)netLoginHandler).completeConnection("You don't have FML installed, you cannot connect to this server");
             } else {
-                FMLLog.fine("Connection from %s was closed by vanilla minecraft", userName);
+                FMLLog.fine("Connection from %s was closed by vanilla minecraft", new Object[]{userName});
             }
         } else {
-            switch ((Integer)this.loginStates.get(netLoginHandler)) {
+            switch(this.loginStates.get(netLoginHandler)) {
                 case -2:
                     ((IPendingConnection)netLoginHandler).completeConnection("The server requires mods that are absent or out of date on your client");
                     this.loginStates.remove(netLoginHandler);
@@ -130,10 +129,9 @@ public class FMLNetworkHandler {
                     this.loginStates.put(netLoginHandler, 2);
                     break;
                 case 2:
-                    ((IPendingConnection)netLoginHandler).completeConnection((String)null);
+                    ((IPendingConnection)netLoginHandler).completeConnection(null);
                     this.loginStates.remove(netLoginHandler);
             }
-
         }
     }
 
@@ -150,16 +148,15 @@ public class FMLNetworkHandler {
     public static void handleLoginPacketOnServer(PendingConnection handler, class_690 login) {
         if (login.entityId == FML_HASH) {
             if (login.dimension == 1) {
-                FMLLog.finest("Received valid FML login packet from %s", handler.connection.getAddress());
+                FMLLog.finest("Received valid FML login packet from %s", new Object[]{handler.connection.getAddress()});
                 instance().loginStates.put(handler, 1);
-            } else {
-                FMLLog.finest("Received incorrect FML (%x) login packet from %s", login.dimension, handler.connection.getAddress());
+            } else if (login.dimension != 1) {
+                FMLLog.finest("Received incorrect FML (%x) login packet from %s", new Object[]{login.dimension, handler.connection.getAddress()});
                 instance().loginStates.put(handler, -1);
             }
         } else {
-            FMLLog.fine("Received invalid login packet (%x, %x) from %s", login.entityId, login.dimension, handler.connection.getAddress());
+            FMLLog.fine("Received invalid login packet (%x, %x) from %s", new Object[]{login.entityId, login.dimension, handler.connection.getAddress()});
         }
-
     }
 
     static void setHandlerState(PendingConnection handler, int state) {
@@ -181,7 +178,7 @@ public class FMLNetworkHandler {
     }
 
     public CustomPayloadC2SPacket getModListRequestPacket() {
-        return PacketDispatcher.getPacket("FML", FMLPacket.makePacket(FMLPacket.Type.MOD_LIST_REQUEST));
+        return PacketDispatcher.getPacket("FML", FMLPacket.makePacket(FMLPacket.Type.MOD_LIST_REQUEST, new Object[0]));
     }
 
     public void registerNetworkMod(NetworkModHandler handler) {
@@ -202,7 +199,9 @@ public class FMLNetworkHandler {
         if (mc instanceof ModContainer) {
             return (NetworkModHandler)this.networkModHandlers.get(mc);
         } else {
-            return mc instanceof Integer ? (NetworkModHandler)this.networkIdLookup.get(mc) : (NetworkModHandler)this.networkModHandlers.get(FMLCommonHandler.instance().findContainerFor(mc));
+            return mc instanceof Integer
+                    ? (NetworkModHandler)this.networkIdLookup.get(mc)
+                    : (NetworkModHandler)this.networkModHandlers.get(FMLCommonHandler.instance().findContainerFor(mc));
         }
     }
 
@@ -226,7 +225,6 @@ public class FMLNetworkHandler {
             handler.setNetworkId(value);
             this.networkIdLookup.put(value, handler);
         }
-
     }
 
     public static void onClientConnectionToRemoteServer(PacketListener netClientHandler, String server, int port, Connection networkManager) {
@@ -246,7 +244,7 @@ public class FMLNetworkHandler {
         if (mc == null) {
             NetworkModHandler nmh = instance().findNetworkModHandler(mod);
             if (nmh == null) {
-                FMLLog.warning("A mod tried to open a gui on the server without being a NetworkMod");
+                FMLLog.warning("A mod tried to open a gui on the server without being a NetworkMod", new Object[0]);
                 return;
             }
 
@@ -258,7 +256,6 @@ public class FMLNetworkHandler {
         } else {
             NetworkRegistry.instance().openLocalGui(mc, player, modGuiId, world, x, y, z);
         }
-
     }
 
     public static Packet getEntitySpawningPacket(Entity entity) {
@@ -266,12 +263,18 @@ public class FMLNetworkHandler {
         if (er == null) {
             return null;
         } else {
-            return er.usesVanillaSpawning() ? null : PacketDispatcher.getPacket("FML", FMLPacket.makePacket(FMLPacket.Type.ENTITYSPAWN, er, entity, instance().findNetworkModHandler(er.getContainer())));
+            return er.usesVanillaSpawning()
+                    ? null
+                    : PacketDispatcher.getPacket(
+                    "FML", FMLPacket.makePacket(FMLPacket.Type.ENTITYSPAWN, new Object[]{er, entity, instance().findNetworkModHandler(er.getContainer())})
+            );
         }
     }
 
     public static void makeEntitySpawnAdjustment(int entityId, ServerPlayerEntity player, int serverX, int serverY, int serverZ) {
-        CustomPayloadC2SPacket pkt = PacketDispatcher.getPacket("FML", FMLPacket.makePacket(FMLPacket.Type.ENTITYSPAWNADJUSTMENT, entityId, serverX, serverY, serverZ));
+        CustomPayloadC2SPacket pkt = PacketDispatcher.getPacket(
+                "FML", FMLPacket.makePacket(FMLPacket.Type.ENTITYSPAWNADJUSTMENT, new Object[]{entityId, serverX, serverY, serverZ})
+        );
         player.field_2823.sendPacket(pkt);
     }
 
@@ -279,33 +282,30 @@ public class FMLNetworkHandler {
         InetAddress add = null;
         List<InetAddress> addresses = Lists.newArrayList();
         InetAddress localHost = InetAddress.getLocalHost();
-        for (NetworkInterface ni : Collections.list(NetworkInterface.getNetworkInterfaces()))
-        {
-            if (!ni.isLoopback() && ni.isUp())
-            {
+
+        for(NetworkInterface ni : Collections.list(NetworkInterface.getNetworkInterfaces())) {
+            if (!ni.isLoopback() && ni.isUp()) {
                 addresses.addAll(Collections.list(ni.getInetAddresses()));
-                if (addresses.contains(localHost))
-                {
+                if (addresses.contains(localHost)) {
                     add = localHost;
                     break;
                 }
             }
         }
-        if (add == null && !addresses.isEmpty())
-        {
-            for (InetAddress addr: addresses)
-            {
-                if (addr.getAddress().length == 4)
-                {
+
+        if (add == null && !addresses.isEmpty()) {
+            for(InetAddress addr : addresses) {
+                if (addr.getAddress().length == 4) {
                     add = addr;
                     break;
                 }
             }
         }
-        if (add == null)
-        {
+
+        if (add == null) {
             add = localHost;
         }
+
         return add;
     }
 
@@ -319,7 +319,6 @@ public class FMLNetworkHandler {
         } else {
             NetworkRegistry.instance().handleTinyPacket(handler, mapData);
         }
-
     }
 
     public static int getCompatibilityLevel() {

@@ -13,17 +13,15 @@ public class ModCandidate {
     private File modContainer;
     private ContainerType sourceType;
     private boolean classpath;
-    private List<String> baseModTypes;
+    private List<String> baseModTypes = Lists.newArrayList();
     private boolean isMinecraft;
-    private List<ASMModParser> baseModCandidateTypes;
+    private List<ASMModParser> baseModCandidateTypes = Lists.newArrayListWithCapacity(1);
 
     public ModCandidate(File classPathRoot, File modContainer, ContainerType sourceType) {
         this(classPathRoot, modContainer, sourceType, false, false);
     }
 
     public ModCandidate(File classPathRoot, File modContainer, ContainerType sourceType, boolean isMinecraft, boolean classpath) {
-        this.baseModTypes = Lists.newArrayList();
-        this.baseModCandidateTypes = Lists.newArrayListWithCapacity(1);
         this.classPathRoot = classPathRoot;
         this.modContainer = modContainer;
         this.sourceType = sourceType;
@@ -46,7 +44,7 @@ public class ModCandidate {
     public List<ModContainer> explore(ASMDataTable table) {
         List<ModContainer> mods = this.sourceType.findMods(this, table);
         if (!this.baseModCandidateTypes.isEmpty()) {
-            FMLLog.info("Attempting to reparse the mod container %s", this.getModContainer().getName());
+            FMLLog.info("Attempting to reparse the mod container %s", new Object[]{this.getModContainer().getName()});
             return this.sourceType.findMods(this, table);
         } else {
             return mods;

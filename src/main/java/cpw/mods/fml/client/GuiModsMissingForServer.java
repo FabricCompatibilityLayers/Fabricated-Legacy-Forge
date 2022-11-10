@@ -23,9 +23,8 @@ public class GuiModsMissingForServer extends Screen {
 
     protected void buttonClicked(ButtonWidget par1GuiButton) {
         if (par1GuiButton.active && par1GuiButton.id == 1) {
-            FMLClientHandler.instance().getClient().openScreen((Screen)null);
+            FMLClientHandler.instance().getClient().openScreen(null);
         }
-
     }
 
     public void render(int par1, int par2, float par3) {
@@ -38,10 +37,9 @@ public class GuiModsMissingForServer extends Screen {
         this.drawCenteredString(this.textRenderer, "They are required to play on this server", this.width / 2, offset, 16777215);
         offset += 5;
 
-        for (ArtifactVersion v : modsMissing.getModList())
-        {
+        for(ArtifactVersion v : this.modsMissing.getModList()) {
             offset += 10;
-            this.drawCenteredString(this.textRenderer, String.format("%s : %s", v.getLabel(), v.getRangeString()), this.width / 2, offset, 0xEEEEEE);
+            this.drawCenteredString(this.textRenderer, String.format("%s : %s", v.getLabel(), v.getRangeString()), this.width / 2, offset, 15658734);
         }
 
         super.render(par1, par2, par3);

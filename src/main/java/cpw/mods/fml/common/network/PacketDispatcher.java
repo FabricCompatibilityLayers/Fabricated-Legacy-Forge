@@ -24,7 +24,6 @@ public class PacketDispatcher {
         if (player instanceof ServerPlayerEntity) {
             ((ServerPlayerEntity)player).field_2823.sendPacket(packet);
         }
-
     }
 
     public static void sendPacketToAllAround(double X, double Y, double Z, double range, int dimensionId, Packet packet) {
@@ -34,7 +33,6 @@ public class PacketDispatcher {
         } else {
             FMLLog.fine("Attempt to send packet to all around without a server instance available", new Object[0]);
         }
-
     }
 
     public static void sendPacketToAllInDimension(Packet packet, int dimId) {
@@ -44,7 +42,6 @@ public class PacketDispatcher {
         } else {
             FMLLog.fine("Attempt to send packet to all in dimension without a server instance available", new Object[0]);
         }
-
     }
 
     public static void sendPacketToAllPlayers(Packet packet) {
@@ -54,7 +51,6 @@ public class PacketDispatcher {
         } else {
             FMLLog.fine("Attempt to send packet to all in dimension without a server instance available", new Object[0]);
         }
-
     }
 
     public static MapUpdateS2CPacket getTinyPacket(Object mod, short tag, byte[] data) {
