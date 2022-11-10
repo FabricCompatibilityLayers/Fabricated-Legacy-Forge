@@ -54,7 +54,6 @@ import java.util.logging.Logger;
 
 public class ModLoader {
     public static final String fmlMarker = "This is an FML marker";
-    /** @deprecated */
     @Deprecated
     public static final Map<String, Map<String, String>> localizedStrings = Collections.emptyMap();
 
@@ -67,13 +66,11 @@ public class ModLoader {
         addLocalization(achName + ".desc", description);
     }
 
-    /** @deprecated */
     @Deprecated
     public static int addAllFuel(int id, int metadata) {
         return 0;
     }
 
-    /** @deprecated */
     @Deprecated
     @SideOnly(Side.CLIENT)
     public static void addAllRenderers(Map<Class<? extends Entity>, EntityRenderer> renderers) {
@@ -93,7 +90,9 @@ public class ModLoader {
         GameRegistry.addBiome(biome);
     }
 
-    public static void addEntityTracker(BaseMod mod, Class<? extends Entity> entityClass, int entityTypeId, int updateRange, int updateInterval, boolean sendVelocityInfo) {
+    public static void addEntityTracker(
+            BaseMod mod, Class<? extends Entity> entityClass, int entityTypeId, int updateRange, int updateInterval, boolean sendVelocityInfo
+    ) {
         ModLoaderHelper.buildEntityTracker(mod, entityClass, entityTypeId, updateRange, updateInterval, sendVelocityInfo);
     }
 
@@ -167,7 +166,6 @@ public class ModLoader {
         PacketDispatcher.sendPacketToServer(packet);
     }
 
-    /** @deprecated */
     @Deprecated
     public static boolean dispenseEntity(World world, double x, double y, double z, int xVel, int zVel, ItemStack item) {
         return false;
@@ -194,11 +192,11 @@ public class ModLoader {
     }
 
     public static <T, E> T getPrivateValue(Class<? super E> instanceclass, E instance, int fieldindex) {
-        return ObfuscationReflectionHelper.getPrivateValue(instanceclass, instance, fieldindex);
+        return (T)ObfuscationReflectionHelper.getPrivateValue(instanceclass, instance, fieldindex);
     }
 
     public static <T, E> T getPrivateValue(Class<? super E> instanceclass, E instance, String field) {
-        return ObfuscationReflectionHelper.getPrivateValue(instanceclass, instance, new String[]{field});
+        return (T)ObfuscationReflectionHelper.getPrivateValue(instanceclass, instance, new String[]{field});
     }
 
     @SideOnly(Side.CLIENT)
@@ -228,7 +226,6 @@ public class ModLoader {
         return Loader.isModLoaded(modname);
     }
 
-    /** @deprecated */
     @Deprecated
     public static void loadConfig() {
     }
@@ -238,12 +235,10 @@ public class ModLoader {
         return TextureFXManager.instance().loadImageFromTexturePack(renderEngine, path);
     }
 
-    /** @deprecated */
     @Deprecated
     public static void onItemPickup(PlayerEntity player, ItemStack item) {
     }
 
-    /** @deprecated */
     @Deprecated
     @SideOnly(Side.CLIENT)
     public static void onTick(float tick, Minecraft game) {
@@ -254,24 +249,20 @@ public class ModLoader {
         FMLClientHandler.instance().displayGuiScreen(player, gui);
     }
 
-    /** @deprecated */
     @Deprecated
     public static void populateChunk(ChunkProvider generator, int chunkX, int chunkZ, World world) {
     }
 
-    /** @deprecated */
     @Deprecated
     public static void receivePacket(CustomPayloadC2SPacket packet) {
     }
 
-    /** @deprecated */
     @Deprecated
     @SideOnly(Side.CLIENT)
     public static KeyBinding[] registerAllKeys(KeyBinding[] keys) {
         return keys;
     }
 
-    /** @deprecated */
     @Deprecated
     @SideOnly(Side.CLIENT)
     public static void registerAllTextureOverrides(class_534 cache) {
@@ -335,28 +326,24 @@ public class ModLoader {
         EntityRegistry.removeSpawn(entityName, spawnList, biomes);
     }
 
-    /** @deprecated */
     @Deprecated
     @SideOnly(Side.CLIENT)
     public static boolean renderBlockIsItemFull3D(int modelID) {
         return RenderingRegistry.instance().renderItemAsFull3DBlock(modelID);
     }
 
-    /** @deprecated */
     @Deprecated
     @SideOnly(Side.CLIENT)
     public static void renderInvBlock(class_535 renderer, Block block, int metadata, int modelID) {
         RenderingRegistry.instance().renderInventoryBlock(renderer, block, metadata, modelID);
     }
 
-    /** @deprecated */
     @Deprecated
     @SideOnly(Side.CLIENT)
     public static boolean renderWorldBlock(class_535 renderer, BlockView world, int x, int y, int z, Block block, int modelID) {
         return RenderingRegistry.instance().renderWorldBlock(renderer, world, x, y, z, block, modelID);
     }
 
-    /** @deprecated */
     @Deprecated
     public static void saveConfig() {
     }
@@ -365,12 +352,10 @@ public class ModLoader {
         PacketDispatcher.sendPacketToServer(packet);
     }
 
-    /** @deprecated */
     @Deprecated
     public static void serverChat(String text) {
     }
 
-    /** @deprecated */
     @Deprecated
     @SideOnly(Side.CLIENT)
     public static void serverLogin(class_469 handler, class_690 loginPacket) {
@@ -380,7 +365,6 @@ public class ModLoader {
         if (handler != null) {
             PacketDispatcher.sendPacketToPlayer(packet, (Player)((IPacketListener)handler).getPlayer());
         }
-
     }
 
     public static void serverOpenWindow(ServerPlayerEntity player, ScreenHandler container, int ID, int x, int y, int z) {
@@ -403,12 +387,10 @@ public class ModLoader {
         ObfuscationReflectionHelper.setPrivateValue(instanceclass, instance, value, new String[]{field});
     }
 
-    /** @deprecated */
     @Deprecated
     public static void takenFromCrafting(PlayerEntity player, ItemStack item, Inventory matrix) {
     }
 
-    /** @deprecated */
     @Deprecated
     public static void takenFromFurnace(PlayerEntity player, ItemStack item) {
     }
