@@ -2,7 +2,6 @@ package fr.catcore.fabricatedforge.forged;
 
 import com.google.common.collect.ObjectArrays;
 import net.minecraft.world.biome.Biome;
-import org.spongepowered.asm.mixin.Unique;
 
 public class ReflectionUtils {
     public static double World_MAX_ENTITY_RADIUS = 2.0;
