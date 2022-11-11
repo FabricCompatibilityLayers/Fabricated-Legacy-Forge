@@ -44,7 +44,6 @@ public class MinecraftAppletMixin extends Applet implements IMinecraftApplet {
         return relaunched;
     }
 
-    @Unique
     public void fmlInitReentry() {
         this.canvas = new AppletCanvas((MinecraftApplet)(Object)this);
         boolean var1 = "true".equalsIgnoreCase(this.getParameter("fullscreen"));
@@ -82,11 +81,9 @@ public class MinecraftAppletMixin extends Applet implements IMinecraftApplet {
         FMLRelauncher.appletStart((MinecraftApplet)(Object)this);
     }
 
-    @Unique
     public void fmlStartReentry() {
         if (this.clientInstance != null) {
             this.clientInstance.paused = false;
         }
-
     }
 }

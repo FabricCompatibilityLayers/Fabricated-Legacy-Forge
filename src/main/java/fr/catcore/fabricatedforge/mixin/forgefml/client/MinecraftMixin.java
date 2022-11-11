@@ -7,7 +7,6 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.relauncher.ArgsWrapper;
 import cpw.mods.fml.relauncher.FMLRelauncher;
 import fr.catcore.fabricatedforge.forged.*;
-import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import net.minecraft.advancement.AchievementsAndCriterions;
 import net.minecraft.client.*;
 import net.minecraft.client.color.world.FoliageColors;
@@ -30,6 +29,7 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.sound.SoundSystem;
 import net.minecraft.client.texture.TexturePackManager;
+import net.minecraft.client.util.NetworkUtils;
 import net.minecraft.client.util.Session;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.mob.MobEntity;
@@ -44,7 +44,6 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResultType;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.snooper.Snooper;
 import net.minecraft.world.level.storage.AnvilLevelStorage;
@@ -256,11 +255,11 @@ public abstract class MinecraftMixin {
             Display.setDisplayMode(new DisplayMode(this.width, this.height));
         }
 
-        Display.setTitle("Minecraft Minecraft 1.3.2");
+        Display.setTitle("Minecraft Minecraft 1.4");
         System.out.println("LWJGL Version: " + Sys.getVersion());
 
         try {
-            Display.create((new PixelFormat()).withDepthBits(24));
+            Display.create(new PixelFormat().withDepthBits(24));
         } catch (LWJGLException var5) {
             var5.printStackTrace();
 
@@ -329,7 +328,7 @@ public abstract class MinecraftMixin {
         try {
             this.field_3780 = new ResourceDownloadThread(this.runDirectory, (Minecraft)(Object) this);
             this.field_3780.start();
-        } catch (Exception var3) {
+        } catch (Exception var31) {
         }
 
         this.setGlErrorMessage("Post startup");
@@ -358,7 +357,10 @@ public abstract class MinecraftMixin {
             this.running = false;
         } else {
             Box.getLocalPool().tick();
-            Vec3d.method_603().tick();
+            if (this.world != null) {
+                this.world.getVectorPool().tick();
+            }
+
             this.profiler.push("root");
             if (this.canvas == null && Display.isCloseRequested()) {
                 this.scheduleStop();
@@ -385,11 +387,6 @@ public abstract class MinecraftMixin {
             class_535.field_2047 = this.options.fancyGraphics;
             this.profiler.swap("sound");
             this.soundSystem.updateListener(this.playerEntity, this.ticker.tickDelta);
-            this.profiler.swap("updatelights");
-            if (this.world != null) {
-                this.world.method_3592();
-            }
-
             this.profiler.pop();
             this.profiler.push("render");
             this.profiler.push("display");
@@ -477,7 +474,6 @@ public abstract class MinecraftMixin {
                 Display.sync(GameRenderer.method_1328(this.options.maxFramerate));
             }
         }
-
     }
 
     /**
@@ -496,15 +492,14 @@ public abstract class MinecraftMixin {
                 int var4 = this.result.y;
                 int var5 = this.result.z;
                 this.interactionManager.method_1239(var3, var4, var5, this.result.side);
-                if (this.playerEntity.method_3204(var3, var4, var5)) {
-                    ((IParticleManager)this.particleManager).addBlockHitEffects(var3, var4, var5, this.result);
+                if (this.playerEntity.method_4579(var3, var4, var5)) {
+                    this.particleManager.addBlockHitEffects(var3, var4, var5, this.result);
                     this.playerEntity.method_3207();
                 }
             } else {
                 this.interactionManager.cancelBlockBreaking();
             }
         }
-
     }
 
     /**
@@ -571,7 +566,6 @@ public abstract class MinecraftMixin {
                 }
             }
         }
-
     }
 
     /**
@@ -651,8 +645,7 @@ public abstract class MinecraftMixin {
                                 var3 = -1;
                             }
 
-                            GameOptions var10000 = this.options;
-                            var10000.field_956 += (float)var3 * 0.25F;
+                            this.options.field_956 += (float)var3 * 0.25F;
                         }
                     }
 
@@ -672,73 +665,13 @@ public abstract class MinecraftMixin {
 
             this.profiler.swap("keyboard");
 
-            label358:
-            while(true) {
-                while(true) {
-                    boolean var4;
-                    do {
-                        if (!Keyboard.next()) {
-                            var4 = this.options.chatVisibility != 2;
+            while(Keyboard.next()) {
+                KeyBinding.setKeyPressed(Keyboard.getEventKey(), Keyboard.getEventKeyState());
+                if (Keyboard.getEventKeyState()) {
+                    KeyBinding.onKeyPressed(Keyboard.getEventKey());
+                }
 
-                            while(this.options.keyInventory.wasPressed()) {
-                                this.openScreen(new SurvivalInventoryScreen(this.playerEntity));
-                            }
-
-                            while(this.options.keyDrop.wasPressed()) {
-                                this.playerEntity.dropSelectedStack();
-                            }
-
-                            while(this.options.keyChat.wasPressed() && var4) {
-                                this.openScreen(new ChatScreen());
-                            }
-
-                            if (this.currentScreen == null && this.options.keyCommand.wasPressed() && var4) {
-                                this.openScreen(new ChatScreen("/"));
-                            }
-
-                            if (this.playerEntity.isUsingItem()) {
-                                if (!this.options.keyUse.pressed) {
-                                    this.interactionManager.stopUsingItem(this.playerEntity);
-                                }
-
-                                while(this.options.keyAttack.wasPressed()) {
-                                }
-
-                                while(true) {
-                                    if (!this.options.keyUse.wasPressed()) {
-                                        while(this.options.keyPickItem.wasPressed()) {
-                                        }
-                                        break;
-                                    }
-                                }
-                            } else {
-                                while(this.options.keyAttack.wasPressed()) {
-                                    this.method_2941(0);
-                                }
-
-                                while(this.options.keyUse.wasPressed()) {
-                                    this.method_2941(1);
-                                }
-
-                                while(this.options.keyPickItem.wasPressed()) {
-                                    this.doPick();
-                                }
-                            }
-
-                            if (this.options.keyUse.pressed && this.blockPlaceDelay == 0 && !this.playerEntity.isUsingItem()) {
-                                this.method_2941(1);
-                            }
-
-                            this.method_2925(0, this.currentScreen == null && this.options.keyAttack.pressed && this.focused);
-                            break label358;
-                        }
-
-                        KeyBinding.setKeyPressed(Keyboard.getEventKey(), Keyboard.getEventKeyState());
-                        if (Keyboard.getEventKeyState()) {
-                            KeyBinding.onKeyPressed(Keyboard.getEventKey());
-                        }
-                    } while(!Keyboard.getEventKeyState());
-
+                if (Keyboard.getEventKeyState()) {
                     if (Keyboard.getEventKey() == 87) {
                         this.toggleFullscreen();
                     } else {
@@ -758,12 +691,22 @@ public abstract class MinecraftMixin {
                             }
 
                             if (Keyboard.getEventKey() == 33 && Keyboard.isKeyDown(61)) {
-                                var4 = Keyboard.isKeyDown(42) | Keyboard.isKeyDown(54);
+                                boolean var4 = Keyboard.isKeyDown(42) | Keyboard.isKeyDown(54);
                                 this.options.setOption(GameOption.RENDER_DISTANCE, var4 ? -1 : 1);
                             }
 
                             if (Keyboard.getEventKey() == 30 && Keyboard.isKeyDown(61)) {
                                 this.worldRenderer.reload();
+                            }
+
+                            if (Keyboard.getEventKey() == 35 && Keyboard.isKeyDown(61)) {
+                                this.options.advancedItemTooltips = !this.options.advancedItemTooltips;
+                                this.options.save();
+                            }
+
+                            if (Keyboard.getEventKey() == 25 && Keyboard.isKeyDown(61)) {
+                                this.options.pauseOnLostFocus = !this.options.pauseOnLostFocus;
+                                this.options.save();
                             }
 
                             if (Keyboard.getEventKey() == 59) {
@@ -772,7 +715,7 @@ public abstract class MinecraftMixin {
 
                             if (Keyboard.getEventKey() == 61) {
                                 this.options.debugEnabled = !this.options.debugEnabled;
-                                this.options.debugProfilerEnabled = !Screen.hasShiftDown();
+                                this.options.debugProfilerEnabled = Screen.hasShiftDown();
                             }
 
                             if (Keyboard.getEventKey() == 63) {
@@ -787,8 +730,7 @@ public abstract class MinecraftMixin {
                             }
                         }
 
-                        int var5;
-                        for(var5 = 0; var5 < 9; ++var5) {
+                        for(int var5 = 0; var5 < 9; ++var5) {
                             if (Keyboard.getEventKey() == 2 + var5) {
                                 this.playerEntity.inventory.selectedSlot = var5;
                             }
@@ -799,15 +741,66 @@ public abstract class MinecraftMixin {
                                 this.method_2938(0);
                             }
 
-                            for(var5 = 0; var5 < 9; ++var5) {
-                                if (Keyboard.getEventKey() == 2 + var5) {
-                                    this.method_2938(var5 + 1);
+                            for(int var6 = 0; var6 < 9; ++var6) {
+                                if (Keyboard.getEventKey() == 2 + var6) {
+                                    this.method_2938(var6 + 1);
                                 }
                             }
                         }
                     }
                 }
             }
+
+            boolean var4 = this.options.chatVisibility != 2;
+
+            while(this.options.keyInventory.wasPressed()) {
+                this.openScreen(new SurvivalInventoryScreen(this.playerEntity));
+            }
+
+            while(this.options.keyDrop.wasPressed()) {
+                this.playerEntity.method_4580();
+            }
+
+            while(this.options.keyChat.wasPressed() && var4) {
+                this.openScreen(new ChatScreen());
+            }
+
+            if (this.currentScreen == null && this.options.keyCommand.wasPressed() && var4) {
+                this.openScreen(new ChatScreen("/"));
+            }
+
+            if (this.playerEntity.isUsingItem()) {
+                if (!this.options.keyUse.pressed) {
+                    this.interactionManager.stopUsingItem(this.playerEntity);
+                }
+
+                while(this.options.keyAttack.wasPressed()) {
+                }
+
+                while(this.options.keyUse.wasPressed()) {
+                }
+
+                while(this.options.keyPickItem.wasPressed()) {
+                }
+            } else {
+                while(this.options.keyAttack.wasPressed()) {
+                    this.method_2941(0);
+                }
+
+                while(this.options.keyUse.wasPressed()) {
+                    this.method_2941(1);
+                }
+
+                while(this.options.keyPickItem.wasPressed()) {
+                    this.doPick();
+                }
+            }
+
+            if (this.options.keyUse.pressed && this.blockPlaceDelay == 0 && !this.playerEntity.isUsingItem()) {
+                this.method_2941(1);
+            }
+
+            this.method_2925(0, this.currentScreen == null && this.options.keyAttack.pressed && this.focused);
         }
 
         if (this.world != null) {
@@ -831,8 +824,8 @@ public abstract class MinecraftMixin {
 
             this.profiler.swap("level");
             if (!this.paused) {
-                if (this.world.field_4554 > 0) {
-                    --this.world.field_4554;
+                if (this.world.field_4553 > 0) {
+                    --this.world.field_4553;
                 }
 
                 this.world.tickEntities();
@@ -845,7 +838,8 @@ public abstract class MinecraftMixin {
 
             this.profiler.swap("animateTick");
             if (!this.paused && this.world != null) {
-                this.world.spawnRandomParticles(MathHelper.floor(this.playerEntity.x), MathHelper.floor(this.playerEntity.y), MathHelper.floor(this.playerEntity.z));
+                this.world
+                        .spawnRandomParticles(MathHelper.floor(this.playerEntity.x), MathHelper.floor(this.playerEntity.y), MathHelper.floor(this.playerEntity.z));
             }
 
             this.profiler.swap("particles");
@@ -912,7 +906,8 @@ public abstract class MinecraftMixin {
             this.isIntegratedServerRunning = false;
         }
 
-        this.soundSystem.playBackgroundMusic(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+        this.soundSystem.method_1711(null, 0.0F, 0.0F, 0.0F);
+        this.soundSystem.stopAll();
         this.world = par1WorldClient;
         if (par1WorldClient != null) {
             if (this.worldRenderer != null) {
@@ -951,7 +946,6 @@ public abstract class MinecraftMixin {
         FMLRelauncher.handleClientRelaunch(new ArgsWrapper(par0ArrayOfStr));
     }
 
-    @Unique
     private static void fmlReentry(ArgsWrapper wrapper) {
         String[] par0ArrayOfStr = wrapper.args;
         HashMap var1 = new HashMap();
@@ -968,22 +962,25 @@ public abstract class MinecraftMixin {
             var6 = par0ArrayOfStr[1];
         }
 
-        MinecraftAppletStub var10000;
         for(int var7 = 2; var7 < par0ArrayOfStr.length; ++var7) {
             String var8 = par0ArrayOfStr[var7];
-            if (var7 == par0ArrayOfStr.length - 1) {
-                var10000 = null;
-            } else {
-                var8 = par0ArrayOfStr[var7 + 1];
-            }
-
+            String var9 = var7 == par0ArrayOfStr.length - 1 ? null : par0ArrayOfStr[var7 + 1];
             boolean var10 = false;
-            if (!var8.equals("-demo") && !var8.equals("--demo")) {
-                if (var8.equals("--applet")) {
-                    var3 = false;
-                }
-            } else {
+            if (var8.equals("-demo") || var8.equals("--demo")) {
                 var2 = true;
+            } else if (var8.equals("--applet")) {
+                var3 = false;
+            } else if (var8.equals("--password") && var9 != null) {
+                String[] var11 = NetworkUtils.method_4414(var5, var9);
+                if (var11 != null) {
+                    var5 = var11[0];
+                    var6 = var11[1];
+                    System.out.println("Logged in insecurely as " + var5 + " - sessionId is " + var6);
+                } else {
+                    System.out.println("Could not log in as " + var5 + " with given password");
+                }
+
+                var10 = true;
             }
 
             if (var10) {
@@ -996,29 +993,29 @@ public abstract class MinecraftMixin {
         var1.put("username", var5);
         var1.put("fullscreen", "" + var4);
         var1.put("sessionid", var6);
-        Frame var12 = new Frame();
-        var12.setTitle("Minecraft");
-        var12.setBackground(Color.BLACK);
-        JPanel var11 = new JPanel();
-        var12.setLayout(new BorderLayout());
-        var11.setPreferredSize(new Dimension(854, 480));
-        var12.add(var11, "Center");
-        var12.pack();
-        var12.setLocationRelativeTo(null);
-        var12.setVisible(true);
-        var12.addWindowListener(new MinecraftWindowEventListener());
-        var10000 = new MinecraftAppletStub(var1);
-        MinecraftApplet var13 = new MinecraftApplet();
-        var13.setStub(var10000);
-        var10000.setLayout(new BorderLayout());
-        var10000.add(var13, "Center");
-        var10000.validate();
-        var12.removeAll();
-        var12.setLayout(new BorderLayout());
-        var12.add(var10000, "Center");
-        var12.validate();
-        var13.init();
-        var13.start();
+        Frame var13 = new Frame();
+        var13.setTitle("Minecraft");
+        var13.setBackground(Color.BLACK);
+        JPanel var12 = new JPanel();
+        var13.setLayout(new BorderLayout());
+        var12.setPreferredSize(new Dimension(854, 480));
+        var13.add(var12, "Center");
+        var13.pack();
+        var13.setLocationRelativeTo(null);
+        var13.setVisible(true);
+        var13.addWindowListener(new MinecraftWindowEventListener());
+        MinecraftAppletStub var14 = new MinecraftAppletStub(var1);
+        MinecraftApplet var15 = new MinecraftApplet();
+        var15.setStub(var14);
+        var14.setLayout(new BorderLayout());
+        var14.add(var15, "Center");
+        var14.validate();
+        var13.removeAll();
+        var13.setLayout(new BorderLayout());
+        var13.add(var14, "Center");
+        var13.validate();
+        var15.init();
+        var15.start();
         Runtime.getRuntime().addShutdownHook(new MinecraftShutdownHook());
     }
 
@@ -1039,6 +1036,5 @@ public abstract class MinecraftMixin {
                 this.interactionManager.clickCreativeStack(this.playerEntity.inventory.getInvStack(this.playerEntity.inventory.selectedSlot), var5);
             }
         }
-
     }
 }

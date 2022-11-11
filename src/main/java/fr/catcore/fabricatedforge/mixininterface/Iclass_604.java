@@ -4,5 +4,5 @@ import net.minecraft.server.MinecraftServer;
 
 public interface Iclass_604 {
 
-    public MinecraftServer getServer();
+    public MinecraftServer getServerForge();
 }

@@ -8,7 +8,7 @@ import java.util.Random;
 
 public class class_588Forged extends FMLTextureFX {
     private int field_2169 = 0;
-    private byte[][] field_2170 = new byte[32][1024];
+    private byte[][] field_2170;
 
     public class_588Forged() {
         super(Block.NETHER_PORTAL.field_439);
@@ -26,8 +26,7 @@ public class class_588Forged extends FMLTextureFX {
                 for(int var4 = 0; var4 < this.tileSizeBase; ++var4) {
                     float var5 = 0.0F;
 
-                    int var6;
-                    for(var6 = 0; var6 < 2; ++var6) {
+                    for(int var6 = 0; var6 < 2; ++var6) {
                         float var7 = (float)(var6 * this.tileSizeBase) * 0.5F;
                         float var8 = (float)(var6 * this.tileSizeBase) * 0.5F;
                         float var9 = ((float)var3 - var7) / (float)this.tileSizeBase * 2.0F;
@@ -49,26 +48,26 @@ public class class_588Forged extends FMLTextureFX {
                         }
 
                         float var11 = var9 * var9 + var10 * var10;
-                        float var12 = (float)Math.atan2((double)var10, (double)var9) + ((float)var2 / 32.0F * 3.1415927F * 2.0F - var11 * 10.0F + (float)(var6 * 2)) * (float)(var6 * 2 - 1);
+                        float var12 = (float)Math.atan2((double)var10, (double)var9)
+                                + ((float)var2 / 32.0F * (float) Math.PI * 2.0F - var11 * 10.0F + (float)(var6 * 2)) * (float)(var6 * 2 - 1);
                         var12 = (MathHelper.sin(var12) + 1.0F) / 2.0F;
                         var12 /= var11 + 1.0F;
                         var5 += var12 * 0.5F;
                     }
 
                     var5 += var1.nextFloat() * 0.1F;
-                    var6 = (int)(var5 * 100.0F + 155.0F);
+                    int var141 = (int)(var5 * 100.0F + 155.0F);
                     int var13 = (int)(var5 * var5 * 200.0F + 55.0F);
-                    int var14 = (int)(var5 * var5 * var5 * var5 * 255.0F);
+                    int var14x = (int)(var5 * var5 * var5 * var5 * 255.0F);
                     int var15 = (int)(var5 * 100.0F + 155.0F);
                     int var16 = var4 * this.tileSizeBase + var3;
                     this.field_2170[var2][var16 * 4 + 0] = (byte)var13;
-                    this.field_2170[var2][var16 * 4 + 1] = (byte)var14;
-                    this.field_2170[var2][var16 * 4 + 2] = (byte)var6;
+                    this.field_2170[var2][var16 * 4 + 1] = (byte)var14x;
+                    this.field_2170[var2][var16 * 4 + 2] = (byte)var141;
                     this.field_2170[var2][var16 * 4 + 3] = (byte)var15;
                 }
             }
         }
-
     }
 
     @Override

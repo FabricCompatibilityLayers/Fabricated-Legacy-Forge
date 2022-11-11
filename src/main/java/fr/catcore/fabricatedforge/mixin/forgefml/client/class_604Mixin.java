@@ -6,18 +6,20 @@ import net.minecraft.client.class_604;
 import net.minecraft.client.util.NetworkUtils;
 import net.minecraft.server.ListenThread;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.server.network.PacketListenerManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.io.IOException;
-import java.net.InetAddress;
 
 @Mixin(class_604.class)
-public class class_604Mixin extends PacketListenerManager implements Iclass_604 {
+public abstract class class_604Mixin extends PacketListenerManager implements Iclass_604 {
 
     @Shadow private ListenThread field_2216;
+
+    @Shadow public abstract IntegratedServer getServer();
 
     public class_604Mixin(MinecraftServer server) {
         super(server);
@@ -42,7 +44,7 @@ public class class_604Mixin extends PacketListenerManager implements Iclass_604 
             }
 
             try {
-                this.field_2216 = new ListenThread((class_604)(Object) this, null, var1);
+                this.field_2216 = new ListenThread(this, null, var1);
                 this.field_2216.start();
             } catch (Exception var3) {
                 throw var3;
@@ -53,7 +55,7 @@ public class class_604Mixin extends PacketListenerManager implements Iclass_604 
     }
 
     @Override
-    public MinecraftServer getServer() {
-        return super.getServer();
+    public MinecraftServer getServerForge() {
+        return this.getServer();
     }
 }
