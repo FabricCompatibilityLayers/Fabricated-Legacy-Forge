@@ -135,8 +135,14 @@ public class FMLCommonHandler {
 
     public void computeBranding() {
         if (this.brandings == null) {
-            ImmutableList.Builder brd = ImmutableList.builder();
+            ImmutableList.Builder<String> brd = ImmutableList.builder();
             brd.add(Loader.instance().getMCVersionString());
+
+            brd.add("Fabric Loader " + FabricLoader.getInstance().getModContainer("fabricloader").get().getMetadata().getVersion().getFriendlyString()
+                    + String.format(" (%s Mod%s)", FabricLoader.getInstance().getAllMods().size(), FabricLoader.getInstance().getAllMods().size() > 1 ? "s" : "")
+            );
+            brd.add("Fabricated Forge " + FabricLoader.getInstance().getModContainer("fabricated-forge").get().getMetadata().getVersion().getFriendlyString());
+
             brd.add("FML v" + Loader.instance().getFMLVersionString());
             String forgeBranding = (String)this.callForgeMethod("getBrandingVersion");
             if (!Strings.isNullOrEmpty(forgeBranding)) {
@@ -154,7 +160,7 @@ public class FMLCommonHandler {
 
             int tModCount = Loader.instance().getModList().size();
             int aModCount = Loader.instance().getActiveModList().size();
-            brd.add(String.format("%d mod%s loaded, %d mod%s active", tModCount, tModCount != 1 ? "s" : "", aModCount, aModCount != 1 ? "s" : ""));
+            brd.add(String.format("%d forge mod%s loaded, %d forge mod%s active", tModCount, tModCount != 1 ? "s" : "", aModCount, aModCount != 1 ? "s" : ""));
             this.brandings = brd.build();
         }
     }
