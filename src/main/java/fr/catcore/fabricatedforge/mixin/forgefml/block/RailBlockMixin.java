@@ -24,7 +24,6 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
         super(id, material);
     }
 
-    @Unique
     private int renderType = 9;
 
     @Override
@@ -128,7 +127,6 @@ public abstract class RailBlockMixin extends Block implements IRailBlock {
                 this.method_352(par1World, par2, par3, par4, false);
             }
         }
-
     }
 
     @Override

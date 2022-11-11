@@ -1,10 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
-import fr.catcore.fabricatedforge.mixininterface.IRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.RailBlock;
 import net.minecraft.block.class_174;
-import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.*;
@@ -12,7 +10,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Iterator;
 import java.util.List;
 
 @Mixin(class_174.class)
@@ -24,7 +21,7 @@ public abstract class class_174Mixin {
     @Shadow protected abstract void method_358(int i);
 
     @Shadow private World field_306;
-    @Shadow private List field_311;
+    @Shadow private List<Vec3i> field_311;
 
     @Shadow protected abstract boolean method_364(int i, int j, int k);
 
@@ -38,30 +35,19 @@ public abstract class class_174Mixin {
 
     @Shadow protected abstract boolean method_367(class_174 arg);
 
-    @Shadow protected abstract int method_363();
+    @Shadow protected abstract class_174 method_361(Vec3i vec3i);
 
     // final
-    RailBlock field_305;
-    @Unique // final
     private boolean canMakeSlopes;
 
     @Inject(method = "<init>", at = @At(value = "RETURN"))
     private void overwriteCtr(RailBlock par1BlockRail, World par2World, int par3, int par4, int par5, CallbackInfo ci) {
         int var6 = par2World.getBlock(par3, par4, par5);
-        IRailBlock target = (IRailBlock) Block.BLOCKS[var6];
+        RailBlock target = (RailBlock)Block.BLOCKS[var6];
         int var7 = target.getBasicRailMetadata(par2World, null, par3, par4, par5);
         this.field_310 = !target.isFlexibleRail(par2World, par3, par4, par5);
         this.canMakeSlopes = target.canMakeSlopes(par2World, par3, par4, par5);
         this.method_358(var7);
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Overwrite
-    private class_174 method_361(Vec3i par1ChunkPosition) {
-        return RailBlock.method_355(this.field_306, par1ChunkPosition.x, par1ChunkPosition.y, par1ChunkPosition.z) ? new class_174(this.field_305, this.field_306, par1ChunkPosition.x, par1ChunkPosition.y, par1ChunkPosition.z) : (RailBlock.method_355(this.field_306, par1ChunkPosition.x, par1ChunkPosition.y + 1, par1ChunkPosition.z) ? new class_174(this.field_305, this.field_306, par1ChunkPosition.x, par1ChunkPosition.y + 1, par1ChunkPosition.z) : (RailBlock.method_355(this.field_306, par1ChunkPosition.x, par1ChunkPosition.y - 1, par1ChunkPosition.z) ? new class_174(this.field_305, this.field_306, par1ChunkPosition.x, par1ChunkPosition.y - 1, par1ChunkPosition.z) : null));
     }
 
     /**
@@ -249,8 +235,8 @@ public abstract class class_174Mixin {
 
         if (par2 || this.field_306.getBlockData(this.field_307, this.field_308, this.field_309) != var8) {
             this.field_306.method_3672(this.field_307, this.field_308, this.field_309, var8);
-            for (Object o : this.field_311) {
-                Vec3i var10 = (Vec3i) o;
+
+            for(Vec3i var10 : this.field_311) {
                 class_174 var11 = this.method_361(var10);
                 if (var11 != null) {
                     ((class_174Mixin) (Object) var11).method_357();

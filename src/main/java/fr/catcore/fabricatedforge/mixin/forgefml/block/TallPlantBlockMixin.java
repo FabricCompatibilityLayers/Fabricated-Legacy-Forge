@@ -41,14 +41,16 @@ public abstract class TallPlantBlockMixin extends FlowerBlock implements ISheara
     @Override
     public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int meta, int fortune) {
         ArrayList<ItemStack> ret = new ArrayList<>();
-        if (world.random.nextInt(8) == 0) {
+        if (world.random.nextInt(8) != 0) {
+            return ret;
+        } else {
             ItemStack item = ForgeHooks.getGrassSeed(world);
             if (item != null) {
                 ret.add(item);
             }
 
+            return ret;
         }
-        return ret;
     }
 
     @Override

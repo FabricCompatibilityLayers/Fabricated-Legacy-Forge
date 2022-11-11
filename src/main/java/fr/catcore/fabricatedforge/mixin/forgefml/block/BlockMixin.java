@@ -20,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.dimension.TheEndDimension;
@@ -69,7 +68,8 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     @Shadow public abstract int method_398(int i, Random random, int j);
 
-    @Shadow protected abstract int method_431(int i);
+    @Shadow
+    public abstract int method_431(int i);
 
     @Shadow
     public static boolean isSolid(int id) {
@@ -102,9 +102,9 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
     @Shadow @Final public static int[] field_494;
     @Shadow @Final public static Block OBSIDIAN;
     @Shadow @Final public static Block END_STONE;
-    @Unique
+
+    @Shadow @Final public static Block COBBLESTONE_WALL;
     protected String currentTexture;
-    @Unique
     public boolean isDefaultTexture;
 
     @Inject(method = "<init>(ILnet/minecraft/block/material/Material;)V", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/block/Block;field_469:Z"))
@@ -151,26 +151,6 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
      * @author Minecraft Forge
      * @reason none
      */
-    @Environment(EnvType.CLIENT)
-    @Overwrite
-    public boolean shouldRenderSide(BlockView par1IBlockAccess, int par2, int par3, int par4, int par5) {
-        return par5 == 0 && this.boundingBoxMinY > 0.0 ? true : (par5 == 1 && this.boundingBoxMaxY < 1.0 ? true : (par5 == 2 && this.boundingBoxMinZ > 0.0 ? true : (par5 == 3 && this.boundingBoxMaxZ < 1.0 ? true : (par5 == 4 && this.boundingBoxMinX > 0.0 ? true : (par5 == 5 && this.boundingBoxMaxX < 1.0 ? true : !par1IBlockAccess.isTransparent(par2, par3, par4))))));
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Environment(EnvType.CLIENT)
-    @Overwrite
-    public Box getRenderBoundingBox(World par1World, int par2, int par3, int par4) {
-        return Box.getLocalPool().getOrCreate((double)par2 + this.boundingBoxMinX, (double)par3 + this.boundingBoxMinY, (double)par4 + this.boundingBoxMinZ, (double)par2 + this.boundingBoxMaxX, (double)par3 + this.boundingBoxMaxY, (double)par4 + this.boundingBoxMaxZ);
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
     @Overwrite
     public float method_405(PlayerEntity par1EntityPlayer, World par2World, int par3, int par4, int par5) {
         return ForgeHooks.blockStrength((Block)(Object) this, par1EntityPlayer, par2World, par3, par4, par5);
@@ -183,9 +163,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
     @Overwrite
     public void method_410(World par1World, int par2, int par3, int par4, int par5, float par6, int par7) {
         if (!par1World.isClient) {
-            ArrayList<ItemStack> items = this.getBlockDropped(par1World, par2, par3, par4, par5, par7);
-
-            for (ItemStack item : items) {
+            for(ItemStack item : this.getBlockDropped(par1World, par2, par3, par4, par5, par7)) {
                 if (par1World.random.nextFloat() <= par6) {
                     this.method_422(par1World, par2, par3, par4, item);
                 }
@@ -201,16 +179,15 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
     public void method_424(World par1World, PlayerEntity par2EntityPlayer, int par3, int par4, int par5, int par6) {
         par2EntityPlayer.incrementStat(Stats.BLOCK_STATS[this.id], 1);
         par2EntityPlayer.addExhaustion(0.025F);
-        if (this.canSilkHarvest(par1World, par2EntityPlayer, par3, par4, par5, par6) && EnchantmentHelper.method_3534(par2EntityPlayer.inventory)) {
+        if (this.canSilkHarvest(par1World, par2EntityPlayer, par3, par4, par5, par6) && EnchantmentHelper.method_4653(par2EntityPlayer)) {
             ItemStack var8 = this.method_448(par6);
             if (var8 != null) {
                 this.method_422(par1World, par3, par4, par5, var8);
             }
         } else {
-            int var7 = EnchantmentHelper.method_3535(par2EntityPlayer.inventory);
+            int var7 = EnchantmentHelper.method_4654(par2EntityPlayer);
             this.canStayPlaced(par1World, par3, par4, par5, par6, var7);
         }
-
     }
 
     @Override
@@ -303,7 +280,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     @Override
     public BlockEntity createTileEntity(World world, int metadata) {
-        return ((Block)(Object)this) instanceof BlockWithEntity ? ((IBlockWithEntity)(Object)this).createNewTileEntity(world, metadata) : null;
+        return ((Block)(Object)this) instanceof BlockWithEntity ? ((IBlockWithEntity) this).createNewTileEntity(world, metadata) : null;
     }
 
     @Override
@@ -436,7 +413,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
             return true;
         } else {
             int id = world.getBlock(x, y, z);
-            return id == WOODEN_FENCE.id || id == NETHER_BRICK_FENCE.id || id == GLASS_BLOCK.id;
+            return id == WOODEN_FENCE.id || id == NETHER_BRICK_FENCE.id || id == GLASS_BLOCK.id || id == COBBLESTONE_WALL.id;
         }
     }
 
@@ -499,7 +476,10 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
                     return world.getMaterial(x, y, z) == Material.WATER && world.getBlockData(x, y, z) == 0;
                 case Beach:
                     boolean isBeach = this.id == GRASS_BLOCK.id || this.id == DIRT.id || this.id == SAND_BLOCK.id;
-                    boolean hasWater = world.getMaterial(x - 1, y - 1, z) == Material.WATER || world.getMaterial(x + 1, y - 1, z) == Material.WATER || world.getMaterial(x, y - 1, z - 1) == Material.WATER || world.getMaterial(x, y - 1, z + 1) == Material.WATER;
+                    boolean hasWater = world.getMaterial(x - 1, y - 1, z) == Material.WATER
+                            || world.getMaterial(x + 1, y - 1, z) == Material.WATER
+                            || world.getMaterial(x, y - 1, z - 1) == Material.WATER
+                            || world.getMaterial(x, y - 1, z + 1) == Material.WATER;
                     return isBeach && hasWater;
                 default:
                     return false;

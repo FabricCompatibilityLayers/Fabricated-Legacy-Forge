@@ -8,14 +8,9 @@ import net.minecraftforge.common.ForgeDirection;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(TrapdoorBlock.class)
 public abstract class TrapdoorBlockMixin extends Block {
-    @Shadow
-    private static boolean method_494(int i) {
-        return false;
-    }
 
     @Shadow public abstract void method_491(World world, int i, int j, int k, boolean bl);
 
@@ -23,7 +18,7 @@ public abstract class TrapdoorBlockMixin extends Block {
         super(id, material);
     }
 
-    @Unique // public
+    // public
     private static boolean disableValidation = false;
 
     /**
@@ -52,7 +47,8 @@ public abstract class TrapdoorBlockMixin extends Block {
                 --var7;
             }
 
-            if (!method_494(par1World.getBlock(var7, par3, var8)) && !par1World.isBlockSolidOnSide(var7, par3, var8, ForgeDirection.getOrientation((var6 & 3) + 2))) {
+            if (!method_494(par1World.getBlock(var7, par3, var8))
+                    && !par1World.isBlockSolidOnSide(var7, par3, var8, ForgeDirection.getOrientation((var6 & 3) + 2))) {
                 par1World.method_3690(par2, par3, par4, 0);
                 this.canStayPlaced(par1World, par2, par3, par4, var6, 0);
             }
@@ -62,7 +58,6 @@ public abstract class TrapdoorBlockMixin extends Block {
                 this.method_491(par1World, par2, par3, par4, var9);
             }
         }
-
     }
 
     /**
@@ -95,6 +90,22 @@ public abstract class TrapdoorBlockMixin extends Block {
             }
 
             return method_494(par1World.getBlock(par2, par3, par4)) || par1World.isBlockSolidOnSide(par2, par3, par4, ForgeDirection.UP);
+        }
+    }
+
+    /**
+     * @author Minecraft Forge
+     * @reason none
+     */
+    @Overwrite
+    private static boolean method_494(int par0) {
+        if (disableValidation) {
+            return true;
+        } else if (par0 <= 0) {
+            return false;
+        } else {
+            Block var1 = Block.BLOCKS[par0];
+            return var1 != null && var1.material.isOpaque() && var1.renderAsNormalBlock() || var1 == Block.GLOWSTONE;
         }
     }
 }

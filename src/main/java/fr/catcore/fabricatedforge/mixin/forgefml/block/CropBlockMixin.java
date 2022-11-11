@@ -1,20 +1,21 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
-import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.CropBlock;
 import net.minecraft.block.FlowerBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.ArrayList;
 
 @Mixin(CropBlock.class)
 public abstract class CropBlockMixin extends FlowerBlock {
+
+    @Shadow protected abstract int method_4164();
 
     protected CropBlockMixin(int i, int j, Material material) {
         super(i, j, material);
@@ -43,9 +44,9 @@ public abstract class CropBlockMixin extends FlowerBlock {
             for(int var18 = par4 - 1; var18 <= par4 + 1; ++var18) {
                 int var19 = par1World.getBlock(var17, par3 - 1, var18);
                 float var20 = 0.0F;
-                if (BLOCKS[var19] != null && ((IBlock)BLOCKS[var19]).canSustainPlant(par1World, var17, par3 - 1, var18, ForgeDirection.UP, this)) {
+                if (BLOCKS[var19] != null && BLOCKS[var19].canSustainPlant(par1World, var17, par3 - 1, var18, ForgeDirection.UP, this)) {
                     var20 = 1.0F;
-                    if (((IBlock)BLOCKS[var19]).isFertile(par1World, var17, par3 - 1, var18)) {
+                    if (BLOCKS[var19].isFertile(par1World, var17, par3 - 1, var18)) {
                         var20 = 3.0F;
                     }
                 }
@@ -76,14 +77,23 @@ public abstract class CropBlockMixin extends FlowerBlock {
 
     @Override
     public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune) {
-        ArrayList<ItemStack> ret = new ArrayList();
+        ArrayList<ItemStack> ret = new ArrayList<>();
         if (metadata == 7) {
-            ret.add(new ItemStack(Item.WHEAT));
+            int count = this.quantityDropped(metadata, fortune, world.random);
+
+            for(int i = 0; i < count; ++i) {
+                int id = this.method_398(metadata, world.random, 0);
+                if (id > 0) {
+                    ret.add(new ItemStack(id, 1, this.method_431(metadata)));
+                }
+            }
         }
 
-        for(int n = 0; n < 3 + fortune; ++n) {
-            if (world.random.nextInt(15) <= metadata) {
-                ret.add(new ItemStack(Item.WHEAT_SEEDS));
+        if (metadata >= 7) {
+            for(int n = 0; n < 3 + fortune; ++n) {
+                if (world.random.nextInt(15) <= metadata) {
+                    ret.add(new ItemStack(this.method_4164(), 1, 0));
+                }
             }
         }
 

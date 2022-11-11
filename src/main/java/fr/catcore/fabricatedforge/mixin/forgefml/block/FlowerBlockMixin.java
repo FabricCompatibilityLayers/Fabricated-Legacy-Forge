@@ -1,6 +1,5 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
-import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowerBlock;
 import net.minecraft.block.material.Material;
@@ -34,7 +33,9 @@ public abstract class FlowerBlockMixin extends Block implements IPlantable {
     @Overwrite
     public boolean canStayPlaced(World par1World, int par2, int par3, int par4) {
         Block soil = BLOCKS[par1World.getBlock(par2, par3 - 1, par4)];
-        return (par1World.method_3718(par2, par3, par4) >= 8 || par1World.isAboveHighestBlock(par2, par3, par4)) && soil != null && ((IBlock)soil).canSustainPlant(par1World, par2, par3 - 1, par4, ForgeDirection.UP, this);
+        return (par1World.method_3718(par2, par3, par4) >= 8 || par1World.isAboveHighestBlock(par2, par3, par4))
+                && soil != null
+                && soil.canSustainPlant(par1World, par2, par3 - 1, par4, ForgeDirection.UP, this);
     }
 
     @Override
