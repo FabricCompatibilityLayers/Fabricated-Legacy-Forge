@@ -3,17 +3,13 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render;
 import com.mojang.blaze3d.platform.GLX;
 import fr.catcore.fabricatedforge.mixininterface.ITessellator;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.util.GlAllocationUtils;
 import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GLContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.nio.ByteBuffer;
@@ -55,8 +51,6 @@ public abstract class TessellatorMixin implements ITessellator {
     @Shadow public double field_1967;
     @Shadow public double field_1968;
     @Shadow public static Tessellator INSTANCE;
-    @Shadow private static boolean field_1947;
-    @Shadow private int field_1944;
     private static int nativeBufferSize = 0x200000;
     private static int trivertsInBuffer = nativeBufferSize / 48 * 6;
     // Should be public
@@ -88,8 +82,8 @@ public abstract class TessellatorMixin implements ITessellator {
             this.field_1970 = false;
             int offs = 0;
 
-            int vtc;
             while(offs < this.field_1953) {
+                int vtc = 0;
                 if (this.field_1965 == 7 && field_1946) {
                     vtc = Math.min(this.field_1953 - offs, trivertsInBuffer);
                 } else {
@@ -192,9 +186,9 @@ public abstract class TessellatorMixin implements ITessellator {
                 this.field_1952 = null;
             }
 
-            vtc = this.field_1962 * 4;
+            int var1 = this.field_1962 * 4;
             this.method_1412();
-            return vtc;
+            return var1;
         }
     }
 
@@ -261,17 +255,6 @@ public abstract class TessellatorMixin implements ITessellator {
         this.field_1952[this.field_1962 + 2] = Float.floatToRawIntBits((float)(par5 + this.field_1968));
         this.field_1962 += 8;
         ++this.field_1953;
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Overwrite
-    public void method_1410(float par1, float par2, float par3) {
-        this.field_1966 += (double)par1;
-        this.field_1967 += (double)par2;
-        this.field_1968 += (double)par3;
     }
 
     @Inject(method = "<clinit>", at = @At("RETURN"))
