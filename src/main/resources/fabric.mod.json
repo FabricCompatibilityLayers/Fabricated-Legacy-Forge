@@ -76,7 +76,9 @@
       "net/minecraft/class_1160": ["fr/catcore/fabricatedforge/mixininterface/ILevelGeneratorType"],
       "net/minecraft/class_533": ["fr/catcore/fabricatedforge/mixininterface/ITessellator"],
       "net/minecraft/class_503": ["fr/catcore/fabricatedforge/mixininterface/IParticleManager"],
-      "net/minecraft/class_530": ["fr/catcore/fabricatedforge/mixininterface/IWorldRenderer"]
+      "net/minecraft/class_530": ["fr/catcore/fabricatedforge/mixininterface/IWorldRenderer"],
+      "net/minecraft/class_623": ["fr/catcore/fabricatedforge/mixininterface/ISoundLoader"],
+      "net/minecraft/class_622": ["fr/catcore/fabricatedforge/mixininterface/ISoundSystem"]
     }
   }
 }

@@ -73,7 +73,6 @@ public class SoundSystemMixin implements ISoundSystem {
                 soundSystem.play("BgMusic");
             }
         }
-
     }
 
     /**
@@ -81,30 +80,29 @@ public class SoundSystemMixin implements ISoundSystem {
      * @reason none
      */
     @Overwrite
-    public void playBackgroundMusic(String par1Str, float par2, float par3, float par4, float par5, float par6) {
+    public void method_1711(String par1Str, float par2, float par3, float par4) {
         if (started && (this.options.soundVolume != 0.0F || par1Str == null)) {
-            String var7 = "streaming";
-            if (soundSystem.playing("streaming")) {
-                soundSystem.stop("streaming");
+            String var5 = "streaming";
+            if (soundSystem.playing(var5)) {
+                soundSystem.stop(var5);
             }
 
             if (par1Str != null) {
-                Sound var8 = this.bgmusicLoader.getSound(par1Str);
-                var8 = SoundEvent.getResult(new PlayStreamingEvent((SoundSystem)(Object) this, var8, par1Str, par2, par3, par4));
-                if (var8 != null && par5 > 0.0F) {
+                Sound var6 = this.bgmusicLoader.getSound(par1Str);
+                var6 = SoundEvent.getResult(new PlayStreamingEvent((SoundSystem)(Object) this, var6, par1Str, par2, par3, par4));
+                if (var6 != null) {
                     if (soundSystem.playing("BgMusic")) {
                         soundSystem.stop("BgMusic");
                     }
 
-                    float var9 = 16.0F;
-                    soundSystem.newStreamingSource(true, var7, var8.field_2258, var8.field_2257, false, par2, par3, par4, 2, var9 * 4.0F);
-                    soundSystem.setVolume(var7, 0.5F * this.options.soundVolume);
-                    MinecraftForge.EVENT_BUS.post(new PlayStreamingSourceEvent((SoundSystem)(Object) this, var7, par2, par3, par4));
-                    soundSystem.play(var7);
+                    float var7 = 16.0F;
+                    soundSystem.newStreamingSource(true, var5, var6.field_2258, var6.field_2257, false, par2, par3, par4, 2, var7 * 4.0F);
+                    soundSystem.setVolume(var5, 0.5F * this.options.soundVolume);
+                    MinecraftForge.EVENT_BUS.post(new PlayStreamingSourceEvent((SoundSystem)(Object) this, var5, par2, par3, par4));
+                    soundSystem.play(var5);
                 }
             }
         }
-
     }
 
     /**
@@ -135,7 +133,6 @@ public class SoundSystemMixin implements ISoundSystem {
                 soundSystem.play(var8);
             }
         }
-
     }
 
     /**
@@ -162,7 +159,6 @@ public class SoundSystemMixin implements ISoundSystem {
                 soundSystem.play(var5);
             }
         }
-
     }
 
     @Override
