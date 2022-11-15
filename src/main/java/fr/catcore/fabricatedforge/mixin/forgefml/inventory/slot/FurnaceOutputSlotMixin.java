@@ -36,11 +36,10 @@ public class FurnaceOutputSlotMixin extends Slot {
         if (!this.player.world.isClient) {
             int var2 = this.amount;
             float var3 = SmeltingRecipeRegistry.getInstance().method_3491(par1ItemStack.id);
-            int var4;
             if (var3 == 0.0F) {
                 var2 = 0;
             } else if (var3 < 1.0F) {
-                var4 = MathHelper.floor((float)var2 * var3);
+                int var4 = MathHelper.floor((float)var2 * var3);
                 if (var4 < MathHelper.ceil((float)var2 * var3) && (float)Math.random() < (float)var2 * var3 - (float)var4) {
                     ++var4;
                 }
@@ -49,7 +48,7 @@ public class FurnaceOutputSlotMixin extends Slot {
             }
 
             while(var2 > 0) {
-                var4 = ExperienceOrbEntity.roundToOrbSize(var2);
+                int var4 = ExperienceOrbEntity.roundToOrbSize(var2);
                 var2 -= var4;
                 this.player.world.spawnEntity(new ExperienceOrbEntity(this.player.world, this.player.x, this.player.y + 0.5, this.player.z + 0.5, var4));
             }

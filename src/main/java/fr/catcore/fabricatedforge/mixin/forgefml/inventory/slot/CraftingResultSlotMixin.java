@@ -1,7 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.inventory.slot;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.slot.CraftingResultSlot;
@@ -29,26 +28,26 @@ public class CraftingResultSlotMixin extends Slot {
      * @reason none
      */
     @Overwrite
-    public void method_3298(ItemStack par1ItemStack) {
-        GameRegistry.onItemCrafted(this.player, par1ItemStack, this.field_4147);
-        this.onCrafted(par1ItemStack);
+    public void onTakeItem(PlayerEntity par1EntityPlayer, ItemStack par2ItemStack) {
+        GameRegistry.onItemCrafted(par1EntityPlayer, par2ItemStack, this.field_4147);
+        this.onCrafted(par2ItemStack);
 
-        for(int var2 = 0; var2 < this.field_4147.getInvSize(); ++var2) {
-            ItemStack var3 = this.field_4147.getInvStack(var2);
-            if (var3 != null) {
-                this.field_4147.takeInvStack(var2, 1);
-                if (var3.getItem().isFood()) {
-                    ItemStack var4 = ((IItem)var3.getItem()).getContainerItemStack(var3);
-                    if (var4.isDamageable() && var4.getMeta() > var4.getMaxDamage()) {
-                        MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(this.player, var4));
+        for(int var3 = 0; var3 < this.field_4147.getInvSize(); ++var3) {
+            ItemStack var4 = this.field_4147.getInvStack(var3);
+            if (var4 != null) {
+                this.field_4147.takeInvStack(var3, 1);
+                if (var4.getItem().isFood()) {
+                    ItemStack var5 = var4.getItem().getContainerItemStack(var4);
+                    if (var5.isDamageable() && var5.getMeta() > var5.getMaxDamage()) {
+                        MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(this.player, var5));
                         var4 = null;
                     }
 
-                    if (var4 != null && (!var3.getItem().method_3380(var3) || !this.player.inventory.insertStack(var4))) {
-                        if (this.field_4147.getInvStack(var2) == null) {
-                            this.field_4147.setInvStack(var2, var4);
+                    if (var5 != null && (!var4.getItem().method_3380(var4) || !this.player.inventory.insertStack(var5))) {
+                        if (this.field_4147.getInvStack(var3) == null) {
+                            this.field_4147.setInvStack(var3, var5);
                         } else {
-                            this.player.dropStack(var4);
+                            this.player.dropStack(var5);
                         }
                     }
                 }
