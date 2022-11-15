@@ -41,7 +41,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 @Mixin(class_469.class)
-public abstract class class_469Mixin extends PacketListener implements Iclass_469, IPacketListener {
+public abstract class class_469Mixin extends PacketListener implements Iclass_469 {
 
     @Shadow private Connection connection;
 

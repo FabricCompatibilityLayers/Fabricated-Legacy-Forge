@@ -41,7 +41,7 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 @Mixin(ServerPacketListener.class)
-public abstract class ServerPacketListenerMixin extends PacketListener implements IPacketListener {
+public abstract class ServerPacketListenerMixin extends PacketListener {
 
     @Shadow private MinecraftServer server;
 

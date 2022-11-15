@@ -47,6 +47,5 @@ public abstract class IntegratedConnectionMixin implements Connection {
             this.packetListener.onDisconnected(this.disconnectReason, this.field_2310);
             FMLNetworkHandler.onConnectionClosed(this, ((IPacketListener)this.packetListener).getPlayer());
         }
-
     }
 }

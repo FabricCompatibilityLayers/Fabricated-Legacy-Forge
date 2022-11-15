@@ -68,8 +68,7 @@ public abstract class class_687Mixin extends Packet {
                 this.field_2531[var6] = par1DataInputStream.readShort();
                 int var7 = 0;
 
-                int var8;
-                for (var8 = 0; var8 < 16; ++var8) {
+                for (int var8 = 0; var8 < 16; ++var8) {
                     var7 += this.field_2530[var6] >> var8 & 1;
                 }
 
@@ -79,13 +78,13 @@ public abstract class class_687Mixin extends Packet {
                     msb += this.field_2531[var6] >> x & 1;
                 }
 
-                var8 = 10240 * var7 + 2048 * msb + 256;
-                this.field_2535[var6] = new byte[var8];
-                System.arraycopy(var3, var5, this.field_2535[var6], 0, var8);
-                var5 += var8;
+                int var15 = 10240 * var7 + 2048 * msb + 256;
+                this.field_2535[var6] = new byte[var15];
+                System.arraycopy(var3, var5, this.field_2535[var6], 0, var15);
+                var5 += var15;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

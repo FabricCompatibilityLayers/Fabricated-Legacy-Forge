@@ -8,7 +8,6 @@ import net.minecraft.world.level.LevelGeneratorType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -19,7 +18,6 @@ import java.io.IOException;
 
 @Mixin(class_690.class)
 public abstract class class_690Mixin extends Packet {
-
     @Shadow public int entityId;
     @Shadow public LevelGeneratorType levelType;
     @Shadow public boolean hardcore;
@@ -28,7 +26,7 @@ public abstract class class_690Mixin extends Packet {
     @Shadow public byte difficulty;
     @Shadow public byte worldHeight;
     @Shadow public byte maxPlayers;
-    @Unique
+
     private boolean vanillaCompatible;
 
     @Inject(method = "<init>()V", at = @At("RETURN"))
@@ -69,7 +67,7 @@ public abstract class class_690Mixin extends Packet {
             this.worldHeight = par1DataInputStream.readByte();
             this.maxPlayers = par1DataInputStream.readByte();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -98,7 +96,7 @@ public abstract class class_690Mixin extends Packet {
             par1DataOutputStream.writeByte(this.worldHeight);
             par1DataOutputStream.writeByte(this.maxPlayers);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

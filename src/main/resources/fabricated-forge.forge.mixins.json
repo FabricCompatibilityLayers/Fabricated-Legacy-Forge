@@ -76,7 +76,6 @@
     "item.ToolItemMixin",
     "item.itemgroup.ItemGroupMixin",
     "item.map.MapStateMixin",
-    "nbt.NbtIoMixin",
     "network.class_690Mixin",
     "network.IntegratedConnectionMixin",
     "network.OutboundConnectionMixin",

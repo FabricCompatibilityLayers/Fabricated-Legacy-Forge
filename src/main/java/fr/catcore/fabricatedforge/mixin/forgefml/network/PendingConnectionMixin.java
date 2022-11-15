@@ -1,7 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.network;
 
 import cpw.mods.fml.common.network.FMLNetworkHandler;
-import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
 import fr.catcore.fabricatedforge.mixininterface.IPendingConnection;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -16,7 +15,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(PendingConnection.class)
-public abstract class PendingConnectionMixin extends PacketListener implements IPendingConnection, IPacketListener {
+public abstract class PendingConnectionMixin extends PacketListener implements IPendingConnection {
 
     @Shadow private volatile boolean field_2889;
 
@@ -47,7 +46,6 @@ public abstract class PendingConnectionMixin extends PacketListener implements I
         } else {
             this.connection.applyQueuedPackets();
         }
-
     }
 
     /**
