@@ -21,9 +21,7 @@ import net.minecraft.stat.Stats;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.snooper.Snoopable;
 import net.minecraft.util.snooper.Snooper;
@@ -78,12 +76,6 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
     @Shadow public static Logger field_3848;
 
-    @Shadow public abstract boolean isRunning();
-
-    @Shadow protected abstract void logProgress(String progressType, int worldProgress);
-
-    @Shadow protected abstract void save();
-
     @Shadow private boolean shouldResetWorld;
 
     @Shadow public abstract PacketListenerManager method_3005();
@@ -123,43 +115,48 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
     @Shadow public abstract boolean isNetherAllowed();
 
-    @Shadow @Final private List tickables;
+    @Shadow @Final private List<Tickable> tickables;
 
     @Shadow public abstract LevelStorageAccess getSaveStorage();
 
     @Shadow public abstract void stopRunning();
 
-    @Unique
+    @Shadow protected abstract void prepareWorlds();
+
     public Hashtable<Integer, long[]> worldTickTimes = new Hashtable<>();
-    @Unique
-    public int spawnProtectionSize = 16;
 
     /**
      * @author Minecraft Forge
      * @reason none
      */
     @Overwrite
-    public void method_2995(String par1Str, String par2Str, long par3, LevelGeneratorType par5WorldType) {
+    protected void setupWorld(String par1Str, String par2Str, long par3, LevelGeneratorType par5WorldType, String par6Str) {
         this.upgradeWorld(par1Str);
         this.setServerOperation("menu.loadingLevel");
-        SaveHandler var6 = this.saveStorage.createSaveHandler(par1Str, true);
-        LevelProperties var8 = var6.getLevelProperties();
-        LevelInfo var7;
-        if (var8 == null) {
-            var7 = new LevelInfo(par3, this.method_3026(), this.shouldGenerateStructures(), this.isHardcore(), par5WorldType);
+        SaveHandler var7 = this.saveStorage.createSaveHandler(par1Str, true);
+        LevelProperties var9 = var7.getLevelProperties();
+        LevelInfo var8;
+        if (var9 == null) {
+            var8 = new LevelInfo(par3, this.method_3026(), this.shouldGenerateStructures(), this.isHardcore(), par5WorldType);
+            var8.setGeneratorOptions(par6Str);
         } else {
-            var7 = new LevelInfo(var8);
+            var8 = new LevelInfo(var9);
         }
 
         if (this.forceWorldUpgrade) {
-            var7.setBonusChest();
+            var8.setBonusChest();
         }
 
-        ServerWorld overWorld = this.isDemo() ? new DemoServerWorld((MinecraftServer)(Object) this, var6, par2Str, 0, this.profiler) : new ServerWorld((MinecraftServer)(Object) this, var6, par2Str, 0, var7, this.profiler);
+        ServerWorld overWorld = (ServerWorld)(this.isDemo()
+                ? new DemoServerWorld((MinecraftServer)(Object) this, var7, par2Str, 0, this.profiler)
+                : new ServerWorld((MinecraftServer)(Object) this, var7, par2Str, 0, var8, this.profiler));
+        Integer[] arr$ = DimensionManager.getStaticDimensionIDs();
+        int len$ = arr$.length;
 
-        for (int dim : DimensionManager.getStaticDimensionIDs()) {
-            ServerWorld world = dim == 0 ? overWorld : new MultiServerWorld((MinecraftServer) (Object) this, var6, par2Str, dim, var7, (ServerWorld) overWorld, this.profiler);
-            world.addListener(new ServerWorldManager((MinecraftServer) (Object) this, (ServerWorld) world));
+        for(int i$ = 0; i$ < len$; ++i$) {
+            int dim = arr$[i$];
+            ServerWorld world = (ServerWorld)(dim == 0 ? overWorld : new MultiServerWorld((MinecraftServer)(Object) this, var7, par2Str, dim, var8, overWorld, this.profiler));
+            world.addListener(new ServerWorldManager((MinecraftServer)(Object) this, world));
             if (!this.isSinglePlayer()) {
                 world.getLevelProperties().method_207(this.method_3026());
             }
@@ -171,46 +168,6 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
         this.playerManager.setMainWorld(new ServerWorld[]{overWorld});
         this.method_3016(this.method_3029());
         this.prepareWorlds();
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Overwrite
-    public void prepareWorlds() {
-        short var1 = 196;
-        long var2 = System.currentTimeMillis();
-        this.setServerOperation("menu.generatingTerrain");
-
-        for(int var4 = 0; var4 < 1; ++var4) {
-            field_3848.info("Preparing start region for level " + var4);
-            ServerWorld var5 = this.worlds[var4];
-            BlockPos var6 = var5.getWorldSpawnPos();
-
-            for(int var7 = -var1; var7 <= var1 && this.isRunning(); var7 += 16) {
-                for(int var8 = -var1; var8 <= var1 && this.isRunning(); var8 += 16) {
-                    long var9 = System.currentTimeMillis();
-                    if (var9 < var2) {
-                        var2 = var9;
-                    }
-
-                    if (var9 > var2 + 1000L) {
-                        int var11 = (var1 * 2 + 1) * (var1 * 2 + 1);
-                        int var12 = (var7 + var1) * (var1 * 2 + 1) + var8 + 1;
-                        this.logProgress("Preparing spawn area", var12 * 100 / var11);
-                        var2 = var9;
-                    }
-
-                    var5.chunkCache.getOrGenerateChunk(var6.x + var7 >> 4, var6.z + var8 >> 4);
-
-                    while(var5.method_3592() && this.isRunning()) {
-                    }
-                }
-            }
-        }
-
-        this.save();
     }
 
     /**
@@ -234,7 +191,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
             field_3848.info("Saving worlds");
             this.saveWorlds(false);
 
-            for (ServerWorld var4 : this.worlds) {
+            for(ServerWorld var4 : this.worlds) {
                 MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(var4));
                 var4.close();
                 DimensionManager.setWorld(var4.dimension.dimensionType, null);
@@ -244,7 +201,6 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
                 this.snooper.concel();
             }
         }
-
     }
 
     /**
@@ -302,7 +258,9 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
                 var2 = this.populateCrashReport(new CrashReport("Exception in server tick loop", var48));
             }
 
-            File var3 = new File(new File(this.getRunDirectory(), "crash-reports"), "crash-" + (new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss")).format(new Date()) + "-server.txt");
+            File var3 = new File(
+                    new File(this.getRunDirectory(), "crash-reports"), "crash-" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + "-server.txt"
+            );
             if (var2.saveTo(var3)) {
                 field_3848.severe("This crash report has been saved to: " + var3.getAbsolutePath());
             } else {
@@ -314,14 +272,12 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
             try {
                 this.stopServer();
                 this.stopped = true;
-            } catch (Throwable var46) {
-                var46.printStackTrace();
+            } catch (Throwable var461) {
+                var461.printStackTrace();
             } finally {
                 this.exit();
             }
-
         }
-
     }
 
     /**
@@ -333,7 +289,6 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
         FMLCommonHandler.instance().rescheduleTicks(Side.SERVER);
         long var1 = System.nanoTime();
         Box.getLocalPool().tick();
-        Vec3d.method_603().tick();
         FMLCommonHandler.instance().onPreServerTick();
         ++this.ticks;
         if (this.profiling) {
@@ -384,35 +339,34 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
     public void tick() {
         this.profiler.push("levels");
 
-        for (Integer id : DimensionManager.getIDs()) {
+        for(Integer id : DimensionManager.getIDs()) {
             long var2 = System.nanoTime();
             if (id == 0 || this.isNetherAllowed()) {
                 ServerWorld var4 = DimensionManager.getWorld(id);
                 this.profiler.push(var4.getLevelProperties().getLevelName());
+                this.profiler.push("pools");
+                var4.getVectorPool().tick();
+                this.profiler.pop();
                 if (this.ticks % 20 == 0) {
                     this.profiler.push("timeSync");
-                    this.playerManager.sendToDimension(new WorldTimeUpdateS2CPacket(var4.getTimeOfDay()), var4.dimension.dimensionType);
+                    this.playerManager
+                            .sendToDimension(new WorldTimeUpdateS2CPacket(var4.getLastUpdateTime(), var4.getTimeOfDay()), var4.dimension.dimensionType);
                     this.profiler.pop();
                 }
 
                 this.profiler.push("tick");
                 FMLCommonHandler.instance().onPreWorldTick(var4);
                 var4.tick();
-                FMLCommonHandler.instance().onPostWorldTick(var4);
-                this.profiler.swap("lights");
-
-                while (var4.method_3592()) {
-                }
-
-                this.profiler.pop();
                 var4.tickEntities();
+                FMLCommonHandler.instance().onPostWorldTick(var4);
+                this.profiler.pop();
                 this.profiler.push("tracker");
                 var4.getEntityTracker().method_2095();
                 this.profiler.pop();
                 this.profiler.pop();
             }
 
-            ((long[]) this.worldTickTimes.get(id))[this.ticks % 100] = System.nanoTime() - var2;
+            ((long[])this.worldTickTimes.get(id))[this.ticks % 100] = System.nanoTime() - var2;
         }
 
         this.profiler.swap("dim_unloading");
@@ -423,8 +377,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
         this.playerManager.updatePlayerLatency();
         this.profiler.swap("tickables");
 
-        for (Object tickable : this.tickables) {
-            Tickable var6 = (Tickable) tickable;
+        for(Tickable var6 : this.tickables) {
             var6.tick();
         }
 
@@ -464,14 +417,15 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
         this.shouldResetWorld = true;
         this.getSaveStorage().clearAll();
 
-        for (ServerWorld var2 : this.worlds) {
+        for(int var1 = 0; var1 < this.worlds.length; ++var1) {
+            ServerWorld var2 = this.worlds[var1];
             if (var2 != null) {
                 MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(var2));
                 var2.close();
             }
         }
 
-        this.getSaveStorage().method_255(this.worlds[0].getSaveHandler().getWorldName());
+        this.getSaveStorage().deleteLevel(this.worlds[0].getSaveHandler().getWorldName());
         this.stopRunning();
     }
 
@@ -486,7 +440,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
     }
 
     @Environment(EnvType.SERVER)
-    private static void fmlReentry(ArgsWrapper wrap) {
+    protected static void fmlReentry(ArgsWrapper wrap) {
         String[] par0ArrayOfStr = wrap.args;
         Stats.method_2269();
 
@@ -503,30 +457,28 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
                 String var9 = par0ArrayOfStr[var8];
                 String var10 = var8 == par0ArrayOfStr.length - 1 ? null : par0ArrayOfStr[var8 + 1];
                 boolean var11 = false;
-                if (!var9.equals("nogui") && !var9.equals("--nogui")) {
-                    if (var9.equals("--port") && var10 != null) {
-                        var11 = true;
-
-                        try {
-                            var7 = Integer.parseInt(var10);
-                        } catch (NumberFormatException var14) {
-                        }
-                    } else if (var9.equals("--singleplayer") && var10 != null) {
-                        var11 = true;
-                        var2 = var10;
-                    } else if (var9.equals("--universe") && var10 != null) {
-                        var11 = true;
-                        var3 = var10;
-                    } else if (var9.equals("--world") && var10 != null) {
-                        var11 = true;
-                        var4 = var10;
-                    } else if (var9.equals("--demo")) {
-                        var5 = true;
-                    } else if (var9.equals("--bonusChest")) {
-                        var6 = true;
-                    }
-                } else {
+                if (var9.equals("nogui") || var9.equals("--nogui")) {
                     var1 = false;
+                } else if (var9.equals("--port") && var10 != null) {
+                    var11 = true;
+
+                    try {
+                        var7 = Integer.parseInt(var10);
+                    } catch (NumberFormatException var141) {
+                    }
+                } else if (var9.equals("--singleplayer") && var10 != null) {
+                    var11 = true;
+                    var2 = var10;
+                } else if (var9.equals("--universe") && var10 != null) {
+                    var11 = true;
+                    var3 = var10;
+                } else if (var9.equals("--world") && var10 != null) {
+                    var11 = true;
+                    var4 = var10;
+                } else if (var9.equals("--demo")) {
+                    var5 = true;
+                } else if (var9.equals("--bonusChest")) {
+                    var6 = true;
                 }
 
                 if (var11) {
@@ -561,20 +513,9 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
             var15.startServerThread();
             Runtime.getRuntime().addShutdownHook(new class_738(var15));
-        } catch (Exception var15) {
-            field_3848.log(Level.SEVERE, "Failed to start the minecraft server", var15);
+        } catch (Exception var151) {
+            field_3848.log(Level.SEVERE, "Failed to start the minecraft server", var151);
         }
-
-    }
-
-    @Override
-    public int getSpawnProtectionSize() {
-        return this.spawnProtectionSize;
-    }
-
-    @Override
-    public void setSpawnProtectionSize(int spawnProtectionSize) {
-        this.spawnProtectionSize = spawnProtectionSize;
     }
 
     @Override

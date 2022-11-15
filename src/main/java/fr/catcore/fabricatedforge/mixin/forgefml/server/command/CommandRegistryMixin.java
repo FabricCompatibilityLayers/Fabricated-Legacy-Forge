@@ -1,7 +1,9 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server.command;
 
 import net.minecraft.command.*;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.server.command.CommandRegistry;
+import net.minecraft.util.PlayerSelector;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.CommandEvent;
 import org.spongepowered.asm.mixin.Final;
@@ -21,6 +23,8 @@ public abstract class CommandRegistryMixin {
 
     @Shadow @Final private Map commandMap;
 
+    @Shadow protected abstract int method_4642(Command command, String[] args);
+
     /**
      * @author Minecraft Forge
      * @reason none
@@ -35,6 +39,7 @@ public abstract class CommandRegistryMixin {
         String var4 = var3[0];
         var3 = method_3104(var3);
         Command var5 = (Command)this.commandMap.get(var4);
+        int var6 = this.method_4642(var5, var3);
 
         try {
             if (var5 == null) {
@@ -43,22 +48,44 @@ public abstract class CommandRegistryMixin {
 
             if (var5.isAccessible(par1ICommandSender)) {
                 CommandEvent event = new CommandEvent(var5, par1ICommandSender, var3);
-                if (!MinecraftForge.EVENT_BUS.post(event)) {
-                    var5.execute(par1ICommandSender, event.parameters);
-                } else if (event.exception != null) {
-                    throw event.exception;
+                if (MinecraftForge.EVENT_BUS.post(event)) {
+                    if (event.exception != null) {
+                        throw event.exception;
+                    }
+
+                    return;
+                }
+
+                if (var6 > -1) {
+                    ServerPlayerEntity[] var7 = PlayerSelector.selectPlayers(par1ICommandSender, var3[var6]);
+                    String var8 = var3[var6];
+
+                    for(ServerPlayerEntity var12 : var7) {
+                        var3[var6] = var12.getTranslationKey();
+
+                        try {
+                            var5.execute(par1ICommandSender, var3);
+                        } catch (PlayerNotFoundException var15) {
+                            par1ICommandSender.method_3331("§c" + par1ICommandSender.translate(var15.getMessage(), var15.getArgs()));
+                        }
+                    }
+
+                    var3[var6] = var8;
+                } else {
+                    var5.execute(par1ICommandSender, var3);
                 }
             } else {
                 par1ICommandSender.method_3331("§cYou do not have permission to use this command.");
             }
-        } catch (IncorrectUsageException var7) {
-            par1ICommandSender.method_3331("§c" + par1ICommandSender.translate("commands.generic.usage", par1ICommandSender.translate(var7.getMessage(), var7.getArgs())));
-        } catch (CommandException var8) {
-            par1ICommandSender.method_3331("§c" + par1ICommandSender.translate(var8.getMessage(), var8.getArgs()));
-        } catch (Throwable var9) {
-            par1ICommandSender.method_3331("§c" + par1ICommandSender.translate("commands.generic.exception"));
-            var9.printStackTrace();
+        } catch (IncorrectUsageException var16) {
+            par1ICommandSender.method_3331(
+                    "§c" + par1ICommandSender.translate("commands.generic.usage", new Object[]{par1ICommandSender.translate(var16.getMessage(), var16.getArgs())})
+            );
+        } catch (CommandException var171) {
+            par1ICommandSender.method_3331("§c" + par1ICommandSender.translate(var171.getMessage(), var171.getArgs()));
+        } catch (Throwable var18) {
+            par1ICommandSender.method_3331("§c" + par1ICommandSender.translate("commands.generic.exception", new Object[0]));
+            var18.printStackTrace();
         }
-
     }
 }

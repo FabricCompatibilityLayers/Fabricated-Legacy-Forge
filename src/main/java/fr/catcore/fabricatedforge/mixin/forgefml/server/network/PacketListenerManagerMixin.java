@@ -42,6 +42,5 @@ public class PacketListenerManagerMixin {
 
             var2.connection.wakeThreads();
         }
-
     }
 }

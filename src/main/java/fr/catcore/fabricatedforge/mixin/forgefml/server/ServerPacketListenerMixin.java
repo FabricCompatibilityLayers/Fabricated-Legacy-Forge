@@ -1,9 +1,9 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server;
 
 import cpw.mods.fml.common.network.FMLNetworkHandler;
-import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
-import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
-import fr.catcore.fabricatedforge.mixininterface.IServerPlayerInteractionManager;
+import net.minecraft.block.entity.BeaconBlockEntity;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.CommandBlockBlockEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.slot.Slot;
 import net.minecraft.item.Item;
@@ -18,6 +18,8 @@ import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
 import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
+import net.minecraft.screen.AnvilScreenHandler;
+import net.minecraft.screen.BeaconScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.VillagerScreenHandler;
 import net.minecraft.server.BanEntry;
@@ -82,34 +84,26 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
         ServerWorld var2 = this.server.getWorld(this.player.dimension);
         this.hasMoved = true;
         if (!this.player.killedEnderdragon) {
-            double var3;
             if (!this.field_2910) {
-                var3 = par1Packet10Flying.collisionY - this.lastTickY;
+                double var3 = par1Packet10Flying.collisionY - this.lastTickY;
                 if (par1Packet10Flying.x == this.lastTickX && var3 * var3 < 0.01 && par1Packet10Flying.z == this.lastTickZ) {
                     this.field_2910 = true;
                 }
             }
 
             if (this.field_2910) {
-                double var5;
-                double var7;
-                double var9;
-                double var13;
-                float var11;
-                float var12;
-                double var15;
                 if (this.player.vehicle != null) {
-                    var11 = this.player.yaw;
-                    var12 = this.player.pitch;
+                    float var34 = this.player.yaw;
+                    float var4 = this.player.pitch;
                     this.player.vehicle.updatePassengerPosition();
-                    var5 = this.player.x;
-                    var7 = this.player.y;
-                    var9 = this.player.z;
-                    var15 = 0.0;
-                    var13 = 0.0;
+                    double var5 = this.player.x;
+                    double var7 = this.player.y;
+                    double var9 = this.player.z;
+                    double var35 = 0.0;
+                    double var13 = 0.0;
                     if (par1Packet10Flying.changeLook) {
-                        var11 = par1Packet10Flying.yaw;
-                        var12 = par1Packet10Flying.pitch;
+                        var34 = par1Packet10Flying.yaw;
+                        var4 = par1Packet10Flying.pitch;
                     }
 
                     if (par1Packet10Flying.changePosition && par1Packet10Flying.collisionY == -999.0 && par1Packet10Flying.y == -999.0) {
@@ -119,15 +113,15 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                             return;
                         }
 
-                        var15 = par1Packet10Flying.x;
+                        var35 = par1Packet10Flying.x;
                         var13 = par1Packet10Flying.z;
                     }
 
                     this.player.onGround = par1Packet10Flying.onGround;
                     this.player.tickPlayer();
-                    this.player.move(var15, 0.0, var13);
-                    this.player.updatePositionAndAngles(var5, var7, var9, var11, var12);
-                    this.player.velocityX = var15;
+                    this.player.move(var35, 0.0, var13);
+                    this.player.updatePositionAndAngles(var5, var7, var9, var34, var4);
+                    this.player.velocityX = var35;
                     this.player.velocityZ = var13;
                     if (this.player.vehicle != null) {
                         var2.method_2139(this.player.vehicle, true);
@@ -156,15 +150,15 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                     return;
                 }
 
-                var3 = this.player.y;
+                double var3 = this.player.y;
                 this.lastTickX = this.player.x;
                 this.lastTickY = this.player.y;
                 this.lastTickZ = this.player.z;
-                var5 = this.player.x;
-                var7 = this.player.y;
-                var9 = this.player.z;
-                var11 = this.player.yaw;
-                var12 = this.player.pitch;
+                double var5 = this.player.x;
+                double var7 = this.player.y;
+                double var9 = this.player.z;
+                float var11 = this.player.yaw;
+                float var12 = this.player.pitch;
                 if (par1Packet10Flying.changePosition && par1Packet10Flying.collisionY == -999.0 && par1Packet10Flying.y == -999.0) {
                     par1Packet10Flying.changePosition = false;
                 }
@@ -173,7 +167,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                     var5 = par1Packet10Flying.x;
                     var7 = par1Packet10Flying.collisionY;
                     var9 = par1Packet10Flying.z;
-                    var13 = par1Packet10Flying.y - par1Packet10Flying.collisionY;
+                    double var13 = par1Packet10Flying.y - par1Packet10Flying.collisionY;
                     if (!this.player.method_2641() && (var13 > 1.65 || var13 < 0.1)) {
                         this.disconnect("Illegal stance");
                         LOGGER.warning(this.player.username + " had an illegal stance: " + var13);
@@ -198,21 +192,24 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                     return;
                 }
 
-                var13 = var5 - this.player.x;
-                var15 = var7 - this.player.y;
+                double var13 = var5 - this.player.x;
+                double var15 = var7 - this.player.y;
                 double var17 = var9 - this.player.z;
                 double var19 = Math.min(Math.abs(var13), Math.abs(this.player.velocityX));
                 double var21 = Math.min(Math.abs(var15), Math.abs(this.player.velocityY));
                 double var23 = Math.min(Math.abs(var17), Math.abs(this.player.velocityZ));
                 double var25 = var19 * var19 + var21 * var21 + var23 * var23;
                 if (var25 > 100.0 && (!this.server.isSinglePlayer() || !this.server.getUserName().equals(this.player.username))) {
-                    LOGGER.warning(this.player.username + " moved too quickly! " + var13 + "," + var15 + "," + var17 + " (" + var19 + ", " + var21 + ", " + var23 + ")");
+                    LOGGER.warning(
+                            this.player.username + " moved too quickly! " + var13 + "," + var15 + "," + var17 + " (" + var19 + ", " + var21 + ", " + var23 + ")"
+                    );
                     this.requestTeleport(this.lastTickX, this.lastTickY, this.lastTickZ, this.player.yaw, this.player.pitch);
                     return;
                 }
 
                 float var27 = 0.0625F;
-                boolean var28 = var2.doesBoxCollide(this.player, this.player.boundingBox.method_591().increment((double)var27, (double)var27, (double)var27)).isEmpty();
+                boolean var28 = var2.doesBoxCollide(this.player, this.player.boundingBox.method_591().increment((double)var27, (double)var27, (double)var27))
+                        .isEmpty();
                 if (this.player.onGround && !par1Packet10Flying.onGround && var15 > 0.0) {
                     this.player.addExhaustion(0.2F);
                 }
@@ -224,7 +221,6 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 this.player.move(var13, var15, var17);
                 this.player.onGround = par1Packet10Flying.onGround;
                 this.player.method_3209(var13, var15, var17);
-                double var29 = var15;
                 var13 = var5 - this.player.x;
                 var15 = var7 - this.player.y;
                 if (var15 > -0.5 || var15 < 0.5) {
@@ -244,24 +240,26 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 }
 
                 this.player.updatePositionAndAngles(var5, var7, var9, var11, var12);
-                boolean var32 = var2.doesBoxCollide(this.player, this.player.boundingBox.method_591().increment((double)var27, (double)var27, (double)var27)).isEmpty();
+                boolean var32 = var2.doesBoxCollide(this.player, this.player.boundingBox.method_591().increment((double)var27, (double)var27, (double)var27))
+                        .isEmpty();
                 if (var28 && (var31 || !var32) && !this.player.method_2641() && !this.player.noClip) {
                     this.requestTeleport(this.lastTickX, this.lastTickY, this.lastTickZ, var11, var12);
                     return;
                 }
 
                 Box var33 = this.player.boundingBox.method_591().expand((double)var27, (double)var27, (double)var27).stretch(0.0, -0.55, 0.0);
-                if (!this.server.isFlightEnabled() && !this.player.interactionManager.isCreative() && !var2.isBoxNotEmpty(var33) && !this.player.abilities.allowFlying) {
-                    if (var29 >= -0.03125) {
-                        ++this.floatingTicks;
-                        if (this.floatingTicks > 80) {
-                            LOGGER.warning(this.player.username + " was kicked for floating too long!");
-                            this.disconnect("Flying is not enabled on this server");
-                            return;
-                        }
-                    }
-                } else {
+                if (this.server.isFlightEnabled()
+                        || this.player.interactionManager.isCreative()
+                        || var2.isBoxNotEmpty(var33)
+                        || this.player.abilities.allowFlying) {
                     this.floatingTicks = 0;
+                } else if (var15 >= -0.03125) {
+                    ++this.floatingTicks;
+                    if (this.floatingTicks > 80) {
+                        LOGGER.warning(this.player.username + " was kicked for floating too long!");
+                        this.disconnect("Flying is not enabled on this server");
+                        return;
+                    }
                 }
 
                 if (!this.field_2910) {
@@ -273,7 +271,6 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 this.player.handleFall(this.player.y - var3, par1Packet10Flying.onGround);
             }
         }
-
     }
 
     /**
@@ -284,11 +281,14 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
     public void onPlayerAction(PlayerActionC2SPacket par1Packet14BlockDig) {
         ServerWorld var2 = this.server.getWorld(this.player.dimension);
         if (par1Packet14BlockDig.action == 4) {
-            this.player.dropSelectedStack();
+            this.player.method_4580();
         } else if (par1Packet14BlockDig.action == 5) {
             this.player.stopUsingItem();
         } else {
-            boolean var3 = var2.field_2821 = var2.dimension.dimensionType != 0 || this.server.getPlayerManager().canCheat(this.player.username) || this.server.isSinglePlayer();
+            boolean var3 = var2.dimension.dimensionType != 0
+                    || this.server.getPlayerManager().getAdmins().isEmpty()
+                    || this.server.getPlayerManager().canCheat(this.player.username)
+                    || this.server.isSinglePlayer();
             boolean var4 = false;
             if (par1Packet14BlockDig.action == 0) {
                 var4 = true;
@@ -306,7 +306,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 double var10 = this.player.y - ((double)var6 + 0.5) + 1.5;
                 double var12 = this.player.z - ((double)var7 + 0.5);
                 double var14 = var8 * var8 + var10 * var10 + var12 * var12;
-                double dist = ((IServerPlayerInteractionManager)this.player.interactionManager).getBlockReachDistance() + 1.0;
+                double dist = this.player.interactionManager.getBlockReachDistance() + 1.0;
                 dist *= dist;
                 if (var14 > dist) {
                     return;
@@ -325,7 +325,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
             }
 
             if (par1Packet14BlockDig.action == 0) {
-                if (var20 <= ((IMinecraftServer)this.server).getSpawnProtectionSize() && !var3) {
+                if (var20 <= this.server.getSpawnProtectionRadius() && !var3) {
                     ForgeEventFactory.onPlayerInteract(this.player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, var5, var6, var7, 0);
                     this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var5, var6, var7, var2));
                 } else {
@@ -350,10 +350,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                     this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var5, var6, var7, var2));
                 }
             }
-
-            var2.field_2821 = false;
         }
-
     }
 
     /**
@@ -369,7 +366,10 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
         int var6 = par1Packet15Place.getY();
         int var7 = par1Packet15Place.getZ();
         int var8 = par1Packet15Place.getSide();
-        boolean var9 = var2.field_2821 = var2.dimension.dimensionType != 0 || this.server.getPlayerManager().canCheat(this.player.username) || this.server.isSinglePlayer();
+        boolean var9 = var2.dimension.dimensionType != 0
+                || this.server.getPlayerManager().getAdmins().isEmpty()
+                || this.server.getPlayerManager().canCheat(this.player.username)
+                || this.server.isSinglePlayer();
         if (par1Packet15Place.getSide() == 255) {
             if (var3 == null) {
                 return;
@@ -379,10 +379,8 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
             if (event.useItem != Event.Result.DENY) {
                 this.player.interactionManager.interactItem(this.player, var2, var3);
             }
-        } else if (par1Packet15Place.getY() >= this.server.getWorldHeight() - 1 && (par1Packet15Place.getSide() == 1 || par1Packet15Place.getY() >= this.server.getWorldHeight())) {
-            this.player.field_2823.sendPacket(new ChatMessageS2CPacket("§7Height limit for building is " + this.server.getWorldHeight()));
-            var4 = true;
-        } else {
+        } else if (par1Packet15Place.getY() < this.server.getWorldHeight() - 1
+                || par1Packet15Place.getSide() != 1 && par1Packet15Place.getY() < this.server.getWorldHeight()) {
             BlockPos var10 = var2.getWorldSpawnPos();
             int var11 = MathHelper.abs(var5 - var10.x);
             int var12 = MathHelper.abs(var7 - var10.z);
@@ -390,12 +388,30 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 var12 = var11;
             }
 
-            double dist = ((IServerPlayerInteractionManager)this.player.interactionManager).getBlockReachDistance() + 1.0;
+            double dist = this.player.interactionManager.getBlockReachDistance() + 1.0;
             dist *= dist;
-            if (this.field_2910 && this.player.squaredDistanceTo((double)var5 + 0.5, (double)var6 + 0.5, (double)var7 + 0.5) < dist && (var12 > ((IMinecraftServer)this.server).getSpawnProtectionSize() || var9)) {
-                this.player.interactionManager.method_2170(this.player, var2, var3, var5, var6, var7, var8, par1Packet15Place.method_1949(), par1Packet15Place.method_1950(), par1Packet15Place.method_1951());
+            if (this.field_2910
+                    && this.player.squaredDistanceTo((double)var5 + 0.5, (double)var6 + 0.5, (double)var7 + 0.5) < dist
+                    && (var12 > this.server.getSpawnProtectionRadius() || var9)) {
+                this.player
+                        .interactionManager
+                        .method_2170(
+                                this.player,
+                                var2,
+                                var3,
+                                var5,
+                                var6,
+                                var7,
+                                var8,
+                                par1Packet15Place.method_1949(),
+                                par1Packet15Place.method_1950(),
+                                par1Packet15Place.method_1951()
+                        );
             }
 
+            var4 = true;
+        } else {
+            this.player.field_2823.sendPacket(new ChatMessageS2CPacket("§7Height limit for building is " + this.server.getWorldHeight()));
             var4 = true;
         }
 
@@ -444,8 +460,6 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 this.sendPacket(new ScreenHandlerSlotUpdateS2CPacket(this.player.openScreenHandler.syncId, var13.id, this.player.inventory.getMainHandStack()));
             }
         }
-
-        var2.field_2821 = false;
     }
 
     /**
@@ -490,7 +504,6 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 }
             }
         }
-
     }
 
     /**
@@ -520,63 +533,113 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 this.player = this.server.getPlayerManager().respawnPlayer(this.player, this.player.dimension, false);
             }
         }
-
     }
 
-    @Override
+    /**
+     * @author Minecraft Forge
+     * @reason none
+     */
+    @Overwrite
     public void onCustomPayload(CustomPayloadC2SPacket par1Packet250CustomPayload) {
         FMLNetworkHandler.handlePacket250Packet(par1Packet250CustomPayload, this.connection, this);
     }
 
     @Override
     public void handleVanilla250Packet(CustomPayloadC2SPacket par1Packet250CustomPayload) {
-        DataInputStream var2;
-        ItemStack var3;
-        ItemStack var4;
         if ("MC|BEdit".equals(par1Packet250CustomPayload.channel)) {
             try {
-                var2 = new DataInputStream(new ByteArrayInputStream(par1Packet250CustomPayload.field_2455));
-                var3 = Packet.readItemStack(var2);
+                DataInputStream var2 = new DataInputStream(new ByteArrayInputStream(par1Packet250CustomPayload.field_2455));
+                ItemStack var3 = Packet.readItemStack(var2);
                 if (!WritableBookItem.method_3466(var3.getNbt())) {
                     throw new IOException("Invalid book tag!");
                 }
 
-                var4 = this.player.inventory.getMainHandStack();
+                ItemStack var4 = this.player.inventory.getMainHandStack();
                 if (var3 != null && var3.id == Item.WRITABLE_BOOK.id && var3.id == var4.id) {
                     var4.setNbt(var3.getNbt());
                 }
-            } catch (Exception var9) {
-                var9.printStackTrace();
+            } catch (Exception var141) {
+                var141.printStackTrace();
             }
         } else if ("MC|BSign".equals(par1Packet250CustomPayload.channel)) {
             try {
-                var2 = new DataInputStream(new ByteArrayInputStream(par1Packet250CustomPayload.field_2455));
-                var3 = Packet.readItemStack(var2);
-                if (!WrittenBookItem.isValid(var3.getNbt())) {
+                DataInputStream var15 = new DataInputStream(new ByteArrayInputStream(par1Packet250CustomPayload.field_2455));
+                ItemStack var19 = Packet.readItemStack(var15);
+                if (!WrittenBookItem.isValid(var19.getNbt())) {
                     throw new IOException("Invalid book tag!");
                 }
 
-                var4 = this.player.inventory.getMainHandStack();
-                if (var3 != null && var3.id == Item.WRITTEN_BOOK.id && var4.id == Item.WRITABLE_BOOK.id) {
-                    var4.setNbt(var3.getNbt());
-                    var4.id = Item.WRITTEN_BOOK.id;
+                ItemStack var201 = this.player.inventory.getMainHandStack();
+                if (var19 != null && var19.id == Item.WRITTEN_BOOK.id && var201.id == Item.WRITABLE_BOOK.id) {
+                    var201.setNbt(var19.getNbt());
+                    var201.id = Item.WRITTEN_BOOK.id;
                 }
-            } catch (Exception var8) {
-                var8.printStackTrace();
+            } catch (Exception var131) {
+                var131.printStackTrace();
             }
         } else if ("MC|TrSel".equals(par1Packet250CustomPayload.channel)) {
             try {
-                var2 = new DataInputStream(new ByteArrayInputStream(par1Packet250CustomPayload.field_2455));
-                int var8 = var2.readInt();
-                ScreenHandler var9 = this.player.openScreenHandler;
-                if (var9 instanceof VillagerScreenHandler) {
-                    ((VillagerScreenHandler)var9).setRecipeIndex(var8);
+                DataInputStream var161 = new DataInputStream(new ByteArrayInputStream(par1Packet250CustomPayload.field_2455));
+                int var14 = var161.readInt();
+                ScreenHandler var15 = this.player.openScreenHandler;
+                if (var15 instanceof VillagerScreenHandler) {
+                    ((VillagerScreenHandler)var15).setRecipeIndex(var14);
                 }
-            } catch (Exception var7) {
-                var7.printStackTrace();
+            } catch (Exception var12) {
+                var12.printStackTrace();
+            }
+        } else if ("MC|AdvCdm".equals(par1Packet250CustomPayload.channel)) {
+            if (!this.server.areCommandBlocksEnabled()) {
+                this.player.method_3331(this.player.translate("advMode.notEnabled", new Object[0]));
+            } else if (this.player.canUseCommand(2, "") && this.player.abilities.creativeMode) {
+                try {
+                    DataInputStream var17 = new DataInputStream(new ByteArrayInputStream(par1Packet250CustomPayload.field_2455));
+                    int var21 = var17.readInt();
+                    int var18 = var17.readInt();
+                    int var5 = var17.readInt();
+                    String var6 = Packet.getString(var17, 256);
+                    BlockEntity var7 = this.player.world.getBlockEntity(var21, var18, var5);
+                    if (var7 != null && var7 instanceof CommandBlockBlockEntity) {
+                        ((CommandBlockBlockEntity)var7).method_4207(var6);
+                        this.player.world.method_3709(var21, var18, var5);
+                        this.player.method_3331("Command set: " + var6);
+                    }
+                } catch (Exception var11) {
+                    var11.printStackTrace();
+                }
+            } else {
+                this.player.method_3331(this.player.translate("advMode.notAllowed", new Object[0]));
+            }
+        } else if ("MC|Beacon".equals(par1Packet250CustomPayload.channel)) {
+            if (this.player.openScreenHandler instanceof BeaconScreenHandler) {
+                try {
+                    DataInputStream var181 = new DataInputStream(new ByteArrayInputStream(par1Packet250CustomPayload.field_2455));
+                    int var22 = var181.readInt();
+                    int var24 = var181.readInt();
+                    BeaconScreenHandler var17 = (BeaconScreenHandler)this.player.openScreenHandler;
+                    Slot var19 = var17.getSlot(0);
+                    if (var19.hasStack()) {
+                        var19.takeStack(1);
+                        BeaconBlockEntity var20 = var17.method_4590();
+                        var20.method_4197(var22);
+                        var20.method_4198(var24);
+                        var20.markDirty();
+                    }
+                } catch (Exception var10) {
+                    var10.printStackTrace();
+                }
+            }
+        } else if ("MC|ItemName".equals(par1Packet250CustomPayload.channel) && this.player.openScreenHandler instanceof AnvilScreenHandler) {
+            AnvilScreenHandler var13 = (AnvilScreenHandler)this.player.openScreenHandler;
+            if (par1Packet250CustomPayload.field_2455 != null && par1Packet250CustomPayload.field_2455.length >= 1) {
+                String var16 = SharedConstants.stripInvalidChars(new String(par1Packet250CustomPayload.field_2455));
+                if (var16.length() <= 30) {
+                    var13.rename(var16);
+                }
+            } else {
+                var13.rename("");
             }
         }
-
     }
 
     @Override

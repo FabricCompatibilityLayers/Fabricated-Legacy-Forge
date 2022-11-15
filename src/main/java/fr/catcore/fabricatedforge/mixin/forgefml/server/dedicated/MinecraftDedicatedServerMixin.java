@@ -1,9 +1,9 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server.dedicated;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
 import net.minecraft.network.NetworkEncryptionUtils;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerManager;
 import net.minecraft.server.dedicated.*;
 import net.minecraft.server.network.PacketListenerManager;
 import net.minecraft.server.network.class_774;
@@ -47,13 +47,13 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
      * @reason none
      */
     @Overwrite
-    public boolean setupServer() {
+    protected boolean setupServer() {
         try {
             class_772 var1 = class_772Accessor.newInstance((MinecraftDedicatedServer) (Object) this);
             var1.setDaemon(true);
             var1.start();
             LogFileWriter.method_1974();
-            field_3848.info("Starting minecraft server version 1.3.2");
+            field_3848.info("Starting minecraft server version 1.4");
             if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L) {
                 field_3848.warning("To start the server with more ram, launch it as \"java -Xmx1024M -Xms1024M -jar minecraft_server.jar\"");
             }
@@ -74,7 +74,6 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
             this.setFlightEnabled(this.abstractPropertiesHandler.getBooleanOrDefault("allow-flight", false));
             this.method_3043(this.abstractPropertiesHandler.getOrDefault("texture-pack", ""));
             this.setMotd(this.abstractPropertiesHandler.getOrDefault("motd", "A Minecraft Server"));
-            ((IMinecraftServer)this).setSpawnProtectionSize(this.abstractPropertiesHandler.getIntOrDefault("spawn-protection-size", 16));
             this.shouldGenerateStructures = this.abstractPropertiesHandler.getBooleanOrDefault("generate-structures", true);
             int var2 = this.abstractPropertiesHandler.getIntOrDefault("gamemode", GameMode.SURVIVAL.getGameModeId());
             this.field_2736 = LevelInfo.method_3754(var2);
@@ -94,9 +93,9 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
 
             try {
                 this.field_2737 = new class_774(this, var3, this.getServerPort());
-            } catch (Exception var15) {
+            } catch (Exception var16) {
                 field_3848.warning("**** FAILED TO BIND TO PORT!");
-                field_3848.log(Level.WARNING, "The exception was: " + var15.toString());
+                field_3848.log(Level.WARNING, "The exception was: " + var16.toString());
                 field_3848.warning("Perhaps a server is already running on that port?");
                 return false;
             }
@@ -104,7 +103,9 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
             if (!this.isOnlineMode()) {
                 field_3848.warning("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
                 field_3848.warning("The server will make no attempt to authenticate usernames. Beware.");
-                field_3848.warning("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.");
+                field_3848.warning(
+                        "While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose."
+                );
                 field_3848.warning("To change this, set \"online-mode\" to \"true\" in the server.properties file.");
             }
 
@@ -117,21 +118,22 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
 
             String var6 = this.abstractPropertiesHandler.getOrDefault("level-seed", "");
             String var7 = this.abstractPropertiesHandler.getOrDefault("level-type", "DEFAULT");
-            long var8 = (new Random()).nextLong();
+            String var8 = this.abstractPropertiesHandler.getOrDefault("generator-settings", "");
+            long var9 = new Random().nextLong();
             if (var6.length() > 0) {
                 try {
-                    long var10 = Long.parseLong(var6);
-                    if (var10 != 0L) {
-                        var8 = var10;
+                    long var11 = Long.parseLong(var6);
+                    if (var11 != 0L) {
+                        var9 = var11;
                     }
-                } catch (NumberFormatException var14) {
-                    var8 = (long) var6.hashCode();
+                } catch (NumberFormatException var15) {
+                    var9 = (long) var6.hashCode();
                 }
             }
 
-            LevelGeneratorType var16 = LevelGeneratorType.getTypeFromName(var7);
-            if (var16 == null) {
-                var16 = LevelGeneratorType.DEFAULT;
+            LevelGeneratorType var17 = LevelGeneratorType.getTypeFromName(var7);
+            if (var17 == null) {
+                var17 = LevelGeneratorType.DEFAULT;
             }
 
             this.setWorldHeight(this.abstractPropertiesHandler.getIntOrDefault("max-build-height", 256));
@@ -139,10 +141,10 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
             this.setWorldHeight(MathHelper.clamp(this.getWorldHeight(), 64, 256));
             this.abstractPropertiesHandler.set("max-build-height", this.getWorldHeight());
             field_3848.info("Preparing level \"" + this.getLevelName() + "\"");
-            this.method_2995(this.getLevelName(), this.getLevelName(), var8, var16);
-            long var11 = System.nanoTime() - var4;
-            String var13 = String.format("%.3fs", (double) var11 / 1.0E9);
-            field_3848.info("Done (" + var13 + ")! For help, type \"help\" or \"?\"");
+            this.setupWorld(this.getLevelName(), this.getLevelName(), var9, var17, var8);
+            long var12 = System.nanoTime() - var4;
+            String var14 = String.format("%.3fs", (double) var12 / 1.0E9);
+            field_3848.info("Done (" + var14 + ")! For help, type \"help\" or \"?\"");
             if (this.abstractPropertiesHandler.getBooleanOrDefault("enable-query", false)) {
                 field_3848.info("Starting GS4 status listener");
                 this.queryResponseHandler = new QueryResponseHandler(this);
@@ -158,8 +160,11 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
             FMLCommonHandler.instance().handleServerStarting(this);
             return true;
         } catch (IOException e) {
-            e.printStackTrace();
-            return false;
+            throw new RuntimeException(e);
         }
+    }
+
+    public PlayerManager getPlayerManager() {
+        return ((MinecraftDedicatedServer)(Object) this).getPlayerManager();
     }
 }

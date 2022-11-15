@@ -1,9 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server.world;
 
-import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
-import fr.catcore.fabricatedforge.mixininterface.IServerChunkProvider;
 import fr.catcore.fabricatedforge.mixininterface.IServerWorld;
-import fr.catcore.fabricatedforge.mixininterface.IThreadedAnvilChunkStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LightningBoltEntity;
@@ -27,7 +24,6 @@ import net.minecraft.world.chunk.ThreadedAnvilChunkStorage;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.gen.feature.BonusChestFeature;
 import net.minecraft.world.level.LevelInfo;
-import net.minecraft.world.level.storage.WorldSaveException;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -42,8 +38,6 @@ import java.util.*;
 
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin extends World implements IServerWorld {
-    @Shadow private boolean ready;
-
     @Shadow private Set entityNavigations;
 
     @Shadow private TreeSet field_2812;
@@ -60,11 +54,12 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     @Shadow public ServerChunkProvider chunkCache;
 
+    @Shadow public abstract void resetIdleTimeout();
+
     public ServerWorldMixin(SaveHandler saveHandler, String string, Dimension dimension, LevelInfo levelInfo, Profiler profiler) {
         super(saveHandler, string, dimension, levelInfo, profiler);
     }
 
-    @Unique
     protected Set<ChunkPos> doneChunks = new HashSet<>();
 
     @Inject(method = "<init>", at = @At("RETURN"))
@@ -86,27 +81,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      * @reason none
      */
     @Overwrite
-    public boolean isReady() {
-        if (this.ready && !this.isClient) {
-            for (Object playerEntity : this.playerEntities) {
-                PlayerEntity var2 = (PlayerEntity) playerEntity;
-                if (!var2.isSleepingLongEnough()) {
-                    return false;
-                }
-            }
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Overwrite
-    public void tickBlocks() {
+    protected void tickBlocks() {
         super.tickBlocks();
         int var1 = 0;
         int var2 = 0;
@@ -131,30 +106,25 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
             }
 
             this.profiler.swap("thunder");
-            int var8;
-            int var9;
-            int var10;
-            int var11;
             if (this.dimension.canDoLightning(var7) && this.random.nextInt(100000) == 0 && this.isRaining() && this.isThundering()) {
                 this.lcgBlockSeed = this.lcgBlockSeed * 3 + 1013904223;
-                var8 = this.lcgBlockSeed >> 2;
-                var9 = var5 + (var8 & 15);
-                var10 = var6 + (var8 >> 8 & 15);
-                var11 = this.getSurfaceY(var9, var10);
+                int var8 = this.lcgBlockSeed >> 2;
+                int var9 = var5 + (var8 & 15);
+                int var10 = var6 + (var8 >> 8 & 15);
+                int var11 = this.getSurfaceY(var9, var10);
                 if (this.isBeingRainedOn(var9, var11, var10)) {
                     this.addEntity(new LightningBoltEntity(this, (double)var9, (double)var11, (double)var10));
-                    this.field_4553 = 2;
+                    this.field_23088 = 2;
                 }
             }
 
             this.profiler.swap("iceandsnow");
-            int var13;
             if (this.dimension.canDoRainSnowIce(var7) && this.random.nextInt(16) == 0) {
                 this.lcgBlockSeed = this.lcgBlockSeed * 3 + 1013904223;
-                var8 = this.lcgBlockSeed >> 2;
-                var9 = var8 & 15;
-                var10 = var8 >> 8 & 15;
-                var11 = this.getSurfaceY(var9 + var5, var10 + var6);
+                int var8 = this.lcgBlockSeed >> 2;
+                int var9 = var8 & 15;
+                int var10 = var8 >> 8 & 15;
+                int var11 = this.getSurfaceY(var9 + var5, var10 + var6);
                 if (this.method_3732(var9 + var5, var11 - 1, var10 + var6)) {
                     this.method_3690(var9 + var5, var11 - 1, var10 + var6, Block.ICE.id);
                 }
@@ -166,7 +136,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
                 if (this.isRaining()) {
                     Biome var12 = this.getBiome(var9 + var5, var10 + var6);
                     if (var12.method_3830()) {
-                        var13 = this.getBlock(var9 + var5, var11 - 1, var10 + var6);
+                        int var13 = this.getBlock(var9 + var5, var11 - 1, var10 + var6);
                         if (var13 != 0) {
                             Block.BLOCKS[var13].method_457(this, var9 + var5, var11 - 1, var10 + var6);
                         }
@@ -175,15 +145,12 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
             }
 
             this.profiler.swap("tickTiles");
-            ChunkSection[] var19 = var7.getBlockStorage();
-            var9 = var19.length;
 
-            for(var10 = 0; var10 < var9; ++var10) {
-                ChunkSection var21 = var19[var10];
+            for(ChunkSection var21 : var7.getBlockStorage()) {
                 if (var21 != null && var21.hasTickableBlocks()) {
                     for(int var20 = 0; var20 < 3; ++var20) {
                         this.lcgBlockSeed = this.lcgBlockSeed * 3 + 1013904223;
-                        var13 = this.lcgBlockSeed >> 2;
+                        int var13 = this.lcgBlockSeed >> 2;
                         int var14 = var13 & 15;
                         int var15 = var13 >> 8 & 15;
                         int var16 = var13 >> 16 & 15;
@@ -200,7 +167,6 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
             this.profiler.pop();
         }
-
     }
 
     /**
@@ -208,28 +174,36 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      * @reason none
      */
     @Overwrite
-    public void method_3599(int par1, int par2, int par3, int par4, int par5) {
-        TickableEntry var6 = new TickableEntry(par1, par2, par3, par4);
-        boolean isForced = this.getPersistentChunks().containsKey(new ChunkPos(var6.x >> 4, var6.z >> 4));
-        int var7 = isForced ? 0 : 8;
-        if (this.immediateUpdates) {
-            if (this.isRegionLoaded(var6.x - var7, var6.y - var7, var6.z - var7, var6.x + var7, var6.y + var7, var6.z + var7)) {
-                int var8 = this.getBlock(var6.x, var6.y, var6.z);
-                if (var8 == var6.blockId && var8 > 0) {
-                    Block.BLOCKS[var8].onTick(this, var6.x, var6.y, var6.z, this.random);
+    public void method_4682(int par1, int par2, int par3, int par4, int par5, int par6) {
+        TickableEntry var7 = new TickableEntry(par1, par2, par3, par4);
+        boolean isForced = this.getPersistentChunks().containsKey(new ChunkPos(var7.x >> 4, var7.z >> 4));
+        byte var8 = (byte)(isForced ? 0 : 8);
+        if (this.immediateUpdates && par4 > 0) {
+            if (Block.BLOCKS[par4].isFire()) {
+                if (this.isRegionLoaded(var7.x - var8, var7.y - var8, var7.z - var8, var7.x + var8, var7.y + var8, var7.z + var8)) {
+                    int var9 = this.getBlock(var7.x, var7.y, var7.z);
+                    if (var9 == var7.blockId && var9 > 0) {
+                        Block.BLOCKS[var9].onTick(this, var7.x, var7.y, var7.z, this.random);
+                    }
                 }
-            }
-        } else if (this.isRegionLoaded(par1 - var7, par2 - var7, par3 - var7, par1 + var7, par2 + var7, par3 + var7)) {
-            if (par4 > 0) {
-                var6.setTime((long)par5 + this.levelProperties.getTimeOfDay());
+
+                return;
             }
 
-            if (!this.entityNavigations.contains(var6)) {
-                this.entityNavigations.add(var6);
-                this.field_2812.add(var6);
-            }
+            par5 = 1;
         }
 
+        if (this.isRegionLoaded(par1 - var8, par2 - var8, par3 - var8, par1 + var8, par2 + var8, par3 + var8)) {
+            if (par4 > 0) {
+                var7.setTime((long)par5 + this.levelProperties.getTime());
+                var7.setPriority(par6);
+            }
+
+            if (!this.entityNavigations.contains(var7)) {
+                this.entityNavigations.add(var7);
+                this.field_2812.add(var7);
+            }
+        }
     }
 
     /**
@@ -239,11 +213,11 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
     @Overwrite
     public void tickEntities() {
         if (this.playerEntities.isEmpty() && this.getPersistentChunks().isEmpty()) {
-            if (this.idleTimeout++ >= 60) {
+            if (this.idleTimeout++ >= 1200) {
                 return;
             }
         } else {
-            this.idleTimeout = 0;
+            this.resetIdleTimeout();
         }
 
         super.tickEntities();
@@ -265,14 +239,14 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
             for(int var3 = 0; var3 < var2; ++var3) {
                 TickableEntry var4 = (TickableEntry)this.field_2812.first();
-                if (!par1 && var4.time > this.levelProperties.getTimeOfDay()) {
+                if (!par1 && var4.time > this.levelProperties.getTime()) {
                     break;
                 }
 
                 this.field_2812.remove(var4);
                 this.entityNavigations.remove(var4);
                 boolean isForced = this.getPersistentChunks().containsKey(new ChunkPos(var4.x >> 4, var4.z >> 4));
-                int var5 = isForced ? 0 : 8;
+                byte var5 = (byte)(isForced ? 0 : 8);
                 if (this.isRegionLoaded(var4.x - var5, var4.y - var5, var4.z - var5, var4.x + var5, var4.y + var5, var4.z + var5)) {
                     int var6 = this.getBlock(var4.x, var4.y, var4.z);
                     if (var6 == var4.blockId && var6 > 0) {
@@ -291,15 +265,21 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      */
     @Overwrite
     public List method_2134(int par1, int par2, int par3, int par4, int par5, int par6) {
-        ArrayList var7 = new ArrayList<>();
+        ArrayList var7 = new ArrayList();
 
         for(int x = par1 >> 4; x <= par4 >> 4; ++x) {
             for(int z = par3 >> 4; z <= par6 >> 4; ++z) {
                 Chunk chunk = this.getChunk(x, z);
                 if (chunk != null) {
-                    for (Object obj : chunk.blockEntities.values()) {
-                        BlockEntity entity = (BlockEntity) obj;
-                        if (!entity.isRemoved() && entity.x >= par1 && entity.y >= par2 && entity.z >= par3 && entity.x <= par4 && entity.y <= par5 && entity.z <= par6) {
+                    for(Object obj : chunk.blockEntities.values()) {
+                        BlockEntity entity = (BlockEntity)obj;
+                        if (!entity.isRemoved()
+                                && entity.x >= par1
+                                && entity.y >= par2
+                                && entity.z >= par3
+                                && entity.x <= par4
+                                && entity.y <= par5
+                                && entity.z <= par6) {
                             var7.add(entity);
                         }
                     }
@@ -327,7 +307,9 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
             var6 = var5;
         }
 
-        return var6 > ((IMinecraftServer)this.server).getSpawnProtectionSize() || this.server.getPlayerManager().canCheat(par1EntityPlayer.username) || this.server.isSinglePlayer();
+        return var6 > this.server.getSpawnProtectionRadius()
+                || this.server.getPlayerManager().canCheat(par1EntityPlayer.username)
+                || this.server.isSinglePlayer();
     }
 
     /**
@@ -335,7 +317,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      * @reason none
      */
     @Overwrite
-    public void placeBonusChest() {
+    protected void placeBonusChest() {
         BonusChestFeature var1 = new BonusChestFeature(ChestGenHooks.getItems("bonusChest"), ChestGenHooks.getCount("bonusChest", this.random));
 
         for(int var2 = 0; var2 < 10; ++var2) {
@@ -346,7 +328,6 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
                 break;
             }
         }
-
     }
 
     /**
@@ -368,7 +349,6 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
             this.chunkProvider.saveChunks(par1, par2IProgressUpdate);
             MinecraftForge.EVENT_BUS.post(new WorldEvent.Save(this));
         }
-
     }
 
     /**
@@ -391,6 +371,6 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     @Override
     public File getChunkSaveLocation() {
-        return ((IThreadedAnvilChunkStorage)((IServerChunkProvider)this.chunkCache).getChunkWriter()).getSaveLocation();
+        return ((ThreadedAnvilChunkStorage)this.chunkCache.getChunkWriter()).getSaveLocation();
     }
 }

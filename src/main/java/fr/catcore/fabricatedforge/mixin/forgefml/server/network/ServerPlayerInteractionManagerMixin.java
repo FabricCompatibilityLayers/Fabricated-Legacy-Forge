@@ -1,7 +1,5 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server.network;
 
-import fr.catcore.fabricatedforge.mixininterface.IBlock;
-import fr.catcore.fabricatedforge.mixininterface.IItem;
 import fr.catcore.fabricatedforge.mixininterface.IServerPlayerInteractionManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,7 +18,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ServerPlayerInteractionManager.class)
 public abstract class ServerPlayerInteractionManagerMixin implements IServerPlayerInteractionManager {
@@ -47,7 +44,6 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
 
     @Shadow private int field_2858;
 
-    @Unique
     private double blockReachDistance = 5.0;
 
     /**
@@ -56,7 +52,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
      */
     @Overwrite
     public void method_2167(int par1, int par2, int par3, int par4) {
-        if (!this.gameMode.isAdventure()) {
+        if (!this.gameMode.isAdventure() || this.player.method_4579(par1, par2, par3)) {
             PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(this.player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, par1, par2, par3, par4);
             if (event.isCanceled()) {
                 this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(par1, par2, par3, this.world));
@@ -104,7 +100,6 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
                 }
             }
         }
-
     }
 
     /**
@@ -119,7 +114,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
             var4.method_412(this.world, par1, par2, par3, var5, this.player);
         }
 
-        boolean var6 = var4 != null && ((IBlock)var4).removeBlockByPlayer(this.world, this.player, par1, par2, par3);
+        boolean var6 = var4 != null && var4.removeBlockByPlayer(this.world, this.player, par1, par2, par3);
         if (var4 != null && var6) {
             var4.onDestroyed(this.world, par1, par2, par3, var5);
         }
@@ -133,11 +128,11 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
      */
     @Overwrite
     public boolean method_2173(int par1, int par2, int par3) {
-        if (this.gameMode.isAdventure()) {
+        if (this.gameMode.isAdventure() && !this.player.method_4579(par1, par2, par3)) {
             return false;
         } else {
             ItemStack stack = this.player.getMainHandStack();
-            if (stack != null && ((IItem)stack.getItem()).onBlockStartBreak(stack, par1, par2, par3, this.player)) {
+            if (stack != null && stack.getItem().onBlockStartBreak(stack, par1, par2, par3, this.player)) {
                 return false;
             } else {
                 int var4 = this.world.getBlock(par1, par2, par3);
@@ -152,7 +147,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
                     boolean var8 = false;
                     Block block = Block.BLOCKS[var4];
                     if (block != null) {
-                        var8 = ((IBlock)block).canHarvestBlock(this.player, var5);
+                        var8 = block.canHarvestBlock(this.player, var5);
                     }
 
                     if (var7 != null) {
@@ -183,13 +178,13 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
         int var4 = par3ItemStack.count;
         int var5 = par3ItemStack.getMeta();
         ItemStack var6 = par3ItemStack.onStartUse(par2World, par1EntityPlayer);
-        if (var6 == par3ItemStack && (var6 == null || var6.count == var4) && (var6 == null || var6.getMaxUseTime() <= 0)) {
-            return false;
-        } else {
+        if (var6 != par3ItemStack || var6 != null && (var6.count != var4 || var6.getMaxUseTime() > 0 || var6.getMeta() != var5)) {
             par1EntityPlayer.inventory.main[par1EntityPlayer.inventory.selectedSlot] = var6;
             if (this.isCreative()) {
                 var6.count = var4;
-                var6.setDamage(var5);
+                if (var6.isDamageable()) {
+                    var6.setDamage(var5);
+                }
             }
 
             if (var6.count == 0) {
@@ -197,7 +192,13 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
                 MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(this.player, var6));
             }
 
+            if (!par1EntityPlayer.isUsingItem()) {
+                ((ServerPlayerEntity)par1EntityPlayer).refreshScreenHandler(par1EntityPlayer.playerScreenHandler);
+            }
+
             return true;
+        } else {
+            return false;
         }
     }
 
@@ -206,14 +207,16 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
      * @reason none
      */
     @Overwrite
-    public boolean method_2170(PlayerEntity par1EntityPlayer, World par2World, ItemStack par3ItemStack, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
+    public boolean method_2170(
+            PlayerEntity par1EntityPlayer, World par2World, ItemStack par3ItemStack, int par4, int par5, int par6, int par7, float par8, float par9, float par10
+    ) {
         PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(par1EntityPlayer, PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK, par4, par5, par6, par7);
         if (event.isCanceled()) {
             this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(par4, par5, par6, this.world));
             return false;
         } else {
             Item item = par3ItemStack != null ? par3ItemStack.getItem() : null;
-            if (item != null && ((IItem)item).onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, par8, par9, par10)) {
+            if (item != null && item.onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, par8, par9, par10)) {
                 if (par3ItemStack.count <= 0) {
                     ForgeEventFactory.onPlayerDestroyItem(this.player, par3ItemStack);
                 }

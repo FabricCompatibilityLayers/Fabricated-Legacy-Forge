@@ -1,7 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server.integrated;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
 import net.minecraft.network.NetworkEncryptionUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.integrated.IntegratedServer;
@@ -35,13 +34,18 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
      * @reason none
      */
     @Overwrite
-    public void method_2995(String par1Str, String par2Str, long par3, LevelGeneratorType par5WorldType) {
+    protected void setupWorld(String par1Str, String par2Str, long par3, LevelGeneratorType par5WorldType, String par6Str) {
         this.upgradeWorld(par1Str);
-        SaveHandler var6 = this.getSaveStorage().createSaveHandler(par1Str, true);
-        ServerWorld overWorld = this.isDemo() ? new DemoServerWorld(this, var6, par2Str, 0, this.profiler) : new ServerWorld(this, var6, par2Str, 0, this.levelInfo, this.profiler);
+        SaveHandler var7 = this.getSaveStorage().createSaveHandler(par1Str, true);
+        ServerWorld overWorld = (ServerWorld)(this.isDemo()
+                ? new DemoServerWorld(this, var7, par2Str, 0, this.profiler)
+                : new ServerWorld(this, var7, par2Str, 0, this.levelInfo, this.profiler));
+        Integer[] arr$ = DimensionManager.getStaticDimensionIDs();
+        int len$ = arr$.length;
 
-        for (int dim : DimensionManager.getStaticDimensionIDs()) {
-            ServerWorld world = dim == 0 ? overWorld : new MultiServerWorld(this, var6, par2Str, dim, this.levelInfo, overWorld, this.profiler);
+        for(int i$ = 0; i$ < len$; ++i$) {
+            int dim = arr$[i$];
+            ServerWorld world = (ServerWorld)(dim == 0 ? overWorld : new MultiServerWorld(this, var7, par2Str, dim, this.levelInfo, overWorld, this.profiler));
             world.addListener(new ServerWorldManager(this, world));
             if (!this.isSinglePlayer()) {
                 world.getLevelProperties().method_207(this.method_3026());
@@ -60,8 +64,8 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
      * @reason none
      */
     @Overwrite
-    public boolean setupServer() {
-        field_3848.info("Starting integrated minecraft server version 1.3.2");
+    protected boolean setupServer() {
+        field_3848.info("Starting integrated minecraft server version 1.4");
         this.setOnlineMode(false);
         this.setSpawnAnimals(true);
         this.setSpawnNpcs(true);
@@ -69,10 +73,11 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
         this.setFlightEnabled(true);
         field_3848.info("Generating keypair");
         this.setKeyPair(NetworkEncryptionUtils.generateServerKeyPair());
-        this.method_2995(this.getLevelName(), this.getServerName(), this.levelInfo.getSeed(), this.levelInfo.getGeneratorType());
+        this.setupWorld(
+                this.getLevelName(), this.getServerName(), this.levelInfo.getSeed(), this.levelInfo.getGeneratorType(), this.levelInfo.getGeneratorOptions()
+        );
         this.setMotd(this.getUserName() + " - " + this.worlds[0].getLevelProperties().getLevelName());
         FMLCommonHandler.instance().handleServerStarting(this);
-        ((IMinecraftServer)this).setSpawnProtectionSize(0);
         return true;
     }
 }
