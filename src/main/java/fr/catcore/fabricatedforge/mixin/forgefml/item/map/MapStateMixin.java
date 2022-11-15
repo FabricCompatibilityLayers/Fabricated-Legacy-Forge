@@ -11,10 +11,10 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtInt;
 import net.minecraft.world.PersistentState;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.util.List;
 import java.util.Map;
@@ -33,15 +33,12 @@ public abstract class MapStateMixin extends PersistentState implements IMapState
 
     @Shadow public List updateTrackers;
 
-    @Shadow public List field_208;
-
-    @Shadow public int field_206;
+    @Shadow public Map icons;
 
     public MapStateMixin(String id) {
         super(id);
     }
 
-    @Unique
     public int c;
 
     /**
@@ -90,7 +87,6 @@ public abstract class MapStateMixin extends PersistentState implements IMapState
                 }
             }
         }
-
     }
 
     /**
@@ -120,28 +116,17 @@ public abstract class MapStateMixin extends PersistentState implements IMapState
             this.updateTrackers.add(var3);
         }
 
-        this.field_208.clear();
+        if (!par1EntityPlayer.inventory.contains(par2ItemStack)) {
+            this.icons.remove(par1EntityPlayer.getUsername());
+        }
 
-        for(int var14 = 0; var14 < this.updateTrackers.size(); ++var14) {
-            class_90 var4 = (class_90)this.updateTrackers.get(var14);
-            if (!var4.playerEntity.removed && var4.playerEntity.inventory.contains(par2ItemStack)) {
-                float var5 = (float)(var4.playerEntity.x - (double)this.xCenter) / (float)(1 << this.scale);
-                float var6 = (float)(var4.playerEntity.z - (double)this.zCenter) / (float)(1 << this.scale);
-                byte var7 = 64;
-                byte var8 = 64;
-                if (var5 >= (float)(-var7) && var6 >= (float)(-var8) && var5 <= (float)var7 && var6 <= (float)var8) {
-                    byte var9 = 0;
-                    byte var10 = (byte)((int)((double)(var5 * 2.0F) + 0.5));
-                    byte var11 = (byte)((int)((double)(var6 * 2.0F) + 0.5));
-                    byte var12 = (byte)((int)((double)var4.playerEntity.yaw * 16.0 / 360.0));
-                    if (this.c < 0) {
-                        int var13 = this.field_206 / 10;
-                        var12 = (byte)(var13 * var13 * 34187121 + var13 * 121 >> 15 & 15);
-                    }
-
-                    if (var4.playerEntity.dimension == this.c) {
-                        this.field_208.add(new class_91((MapState)(Object) this, var9, var10, var11, var12));
-                    }
+        for(int var5 = 0; var5 < this.updateTrackers.size(); ++var5) {
+            class_90 var4 = (class_90)this.updateTrackers.get(var5);
+            if (!var4.playerEntity.removed && (var4.playerEntity.inventory.contains(par2ItemStack) || par2ItemStack.isInItemFrame())) {
+                if (!par2ItemStack.isInItemFrame() && var4.playerEntity.dimension == this.c) {
+                    this.method_4126(
+                            0, var4.playerEntity.world, var4.playerEntity.getUsername(), var4.playerEntity.x, var4.playerEntity.z, (double)var4.playerEntity.yaw
+                    );
                 }
             } else {
                 this.updateTrackersByPlayer.remove(var4.playerEntity);
@@ -149,6 +134,64 @@ public abstract class MapStateMixin extends PersistentState implements IMapState
             }
         }
 
+        if (par2ItemStack.isInItemFrame()) {
+            this.method_4126(
+                    1,
+                    par1EntityPlayer.world,
+                    "frame-" + par2ItemStack.getItemFrame().id,
+                    (double)par2ItemStack.getItemFrame().field_5329,
+                    (double)par2ItemStack.getItemFrame().field_5331,
+                    (double)(par2ItemStack.getItemFrame().field_5328 * 90)
+            );
+        }
+    }
+
+    /**
+     * @author Minecraft Forge
+     * @reason none
+     */
+    @Overwrite
+    private void method_4126(int par1, World par2World, String par3Str, double par4, double par6, double par8) {
+        int var10 = 1 << this.scale;
+        float var11 = (float)(par4 - (double)this.xCenter) / (float)var10;
+        float var12 = (float)(par6 - (double)this.zCenter) / (float)var10;
+        byte var13 = (byte)((int)((double)(var11 * 2.0F) + 0.5));
+        byte var14 = (byte)((int)((double)(var12 * 2.0F) + 0.5));
+        byte var16 = 63;
+        byte var15;
+        if (var11 >= (float)(-var16) && var12 >= (float)(-var16) && var11 <= (float)var16 && var12 <= (float)var16) {
+            par8 += par8 < 0.0 ? -8.0 : 8.0;
+            var15 = (byte)((int)(par8 * 16.0 / 360.0));
+            if (this.c < 0) {
+                int var17 = (int)(par2World.getLevelProperties().getTimeOfDay() / 10L);
+                var15 = (byte)(var17 * var17 * 34187121 + var17 * 121 >> 15 & 15);
+            }
+        } else {
+            if (Math.abs(var11) >= 320.0F || Math.abs(var12) >= 320.0F) {
+                this.icons.remove(par3Str);
+                return;
+            }
+
+            par1 = 6;
+            var15 = 0;
+            if (var11 <= (float)(-var16)) {
+                var13 = (byte)((int)((double)(var16 * 2) + 2.5));
+            }
+
+            if (var12 <= (float)(-var16)) {
+                var14 = (byte)((int)((double)(var16 * 2) + 2.5));
+            }
+
+            if (var11 >= (float)var16) {
+                var13 = (byte)(var16 * 2 + 1);
+            }
+
+            if (var12 >= (float)var16) {
+                var14 = (byte)(var16 * 2 + 1);
+            }
+        }
+
+        this.icons.put(par3Str, new class_91((MapState)(Object) this, (byte)par1, var13, var14, var15));
     }
 
     @Override

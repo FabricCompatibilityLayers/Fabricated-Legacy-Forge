@@ -22,12 +22,14 @@ public abstract class ItemGroupMixin implements IItemGroup {
 
     @Shadow public abstract Item method_3320();
 
-    @Inject(method = "<init>", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/item/itemgroup/ItemGroup;id:Ljava/lang/String;"))
+    @Inject(method = "<init>", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/item/itemgroup/ItemGroup;index:I"))
     private void fmlCtr(int par1, String par2, CallbackInfo ci) {
         if (par1 >= itemGroups.length) {
             ItemGroup[] tmp = new ItemGroup[par1 + 1];
 
-            System.arraycopy(itemGroups, 0, tmp, 0, itemGroups.length);
+            for(int x = 0; x < itemGroups.length; ++x) {
+                tmp[x] = itemGroups[x];
+            }
 
             itemGroups = tmp;
         }

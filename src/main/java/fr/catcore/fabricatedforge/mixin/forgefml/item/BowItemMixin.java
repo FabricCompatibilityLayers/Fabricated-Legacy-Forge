@@ -74,7 +74,6 @@ public class BowItemMixin extends Item {
                     par2World.spawnEntity(var8);
                 }
             }
-
         }
     }
 

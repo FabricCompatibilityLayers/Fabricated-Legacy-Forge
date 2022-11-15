@@ -1,16 +1,15 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.item;
 
-import fr.catcore.fabricatedforge.mixininterface.IMapState;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.FilledMapItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.NetworkSyncedItem;
 import net.minecraft.item.map.MapState;
+import net.minecraft.item.map.class_90;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
@@ -27,35 +26,19 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
      * @author Minecraft Forge
      * @reason none
      */
-    @Environment(EnvType.CLIENT)
-    @Overwrite
-    public static MapState method_3455(short par0, World par1World) {
-        MapState var3 = (MapState)par1World.getOrCreateState(MapState.class, "map_" + par0);
-        if (var3 == null) {
-            int var4 = par1World.getIntState("map");
-            String var2 = "map_" + var4;
-            var3 = new MapState(var2);
-            par1World.replaceState(var2, var3);
-        }
-
-        return var3;
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
     @Overwrite
     public MapState getMapState(ItemStack par1ItemStack, World par2World) {
-        MapState var4 = (MapState)par2World.getOrCreateState(MapState.class, "map_" + par1ItemStack.getMeta());
-        if (var4 == null) {
+        String var3 = "map_" + par1ItemStack.getMeta();
+        MapState var4 = (MapState)par2World.getOrCreateState(MapState.class, var3);
+        if (var4 == null && !par2World.isClient) {
             par1ItemStack.setDamage(par2World.getIntState("map"));
-            String var3 = "map_" + par1ItemStack.getMeta();
+            var3 = "map_" + par1ItemStack.getMeta();
             var4 = new MapState(var3);
-            var4.xCenter = par2World.getLevelProperties().getSpawnX();
-            var4.zCenter = par2World.getLevelProperties().getSpawnZ();
             var4.scale = 3;
-            ((IMapState)var4).setC(par2World.dimension.dimensionType);
+            int var5 = 128 * (1 << var4.scale);
+            var4.xCenter = Math.round((float)par2World.getLevelProperties().getSpawnX() / (float)var5) * var5;
+            var4.zCenter = Math.round((float)(par2World.getLevelProperties().getSpawnZ() / var5)) * var5;
+            var4.setC(par2World.dimension.dimensionType);
             var4.markDirty();
             par2World.replaceState(var3, var4);
         }
@@ -69,7 +52,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
      */
     @Overwrite
     public void updateColors(World par1World, Entity par2Entity, MapState par3MapData) {
-        if (par1World.dimension.dimensionType == ((IMapState)par3MapData).getC()) {
+        if (par1World.dimension.dimensionType == par3MapData.getC() && par2Entity instanceof PlayerEntity) {
             short var4 = 128;
             short var5 = 128;
             int var6 = 1 << par3MapData.scale;
@@ -82,162 +65,147 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
                 var11 /= 2;
             }
 
-            ++par3MapData.field_206;
+            class_90 var12 = par3MapData.method_4127((PlayerEntity)par2Entity);
+            ++var12.field_4983;
 
-            for(int var12 = var9 - var11 + 1; var12 < var9 + var11; ++var12) {
-                if ((var12 & 15) == (par3MapData.field_206 & 15)) {
-                    int var13 = 255;
-                    int var14 = 0;
-                    double var15 = 0.0;
+            for(int var13 = var9 - var11 + 1; var13 < var9 + var11; ++var13) {
+                if ((var13 & 15) == (var12.field_4983 & 15)) {
+                    int var14 = 255;
+                    int var15 = 0;
+                    double var16 = 0.0;
 
-                    for(int var17 = var10 - var11 - 1; var17 < var10 + var11; ++var17) {
-                        if (var12 >= 0 && var17 >= -1 && var12 < var4 && var17 < var5) {
-                            int var18 = var12 - var9;
-                            int var19 = var17 - var10;
-                            boolean var20 = var18 * var18 + var19 * var19 > (var11 - 2) * (var11 - 2);
-                            int var21 = (var7 / var6 + var12 - var4 / 2) * var6;
-                            int var22 = (var8 / var6 + var17 - var5 / 2) * var6;
-                            byte var23 = 0;
-                            byte var24 = 0;
-                            byte var25 = 0;
-                            int[] var26 = new int[Block.BLOCKS.length];
-                            Chunk var27 = par1World.getChunkFromPos(var21, var22);
-                            if (!var27.isEmpty()) {
-                                int var28 = var21 & 15;
-                                int var29 = var22 & 15;
-                                int var30 = 0;
-                                double var31 = 0.0;
-                                int var34;
-                                int var35;
-                                int var33;
-                                int var38;
+                    for(int var18 = var10 - var11 - 1; var18 < var10 + var11; ++var18) {
+                        if (var13 >= 0 && var18 >= -1 && var13 < var4 && var18 < var5) {
+                            int var19 = var13 - var9;
+                            int var20 = var18 - var10;
+                            boolean var21 = var19 * var19 + var20 * var20 > (var11 - 2) * (var11 - 2);
+                            int var22 = (var7 / var6 + var13 - var4 / 2) * var6;
+                            int var23 = (var8 / var6 + var18 - var5 / 2) * var6;
+                            int[] var24 = new int[Block.BLOCKS.length];
+                            Chunk var25 = par1World.getChunkFromPos(var22, var23);
+                            if (!var25.isEmpty()) {
+                                int var26 = var22 & 15;
+                                int var27 = var23 & 15;
+                                int var28 = 0;
+                                double var29 = 0.0;
                                 if (par1World.dimension.isNether) {
-                                    var33 = var21 + var22 * 231871;
-                                    var33 = var33 * var33 * 31287121 + var33 * 11;
-                                    int var10001;
-                                    if ((var33 >> 20 & 1) == 0) {
-                                        var10001 = Block.DIRT.id;
-                                        var26[var10001] += 10;
+                                    int var31 = var22 + var23 * 231871;
+                                    var31 = var31 * var31 * 31287121 + var31 * 11;
+                                    if ((var31 >> 20 & 1) == 0) {
+                                        var24[Block.DIRT.id] += 10;
                                     } else {
-                                        var10001 = Block.STONE_BLOCK.id;
-                                        var26[var10001] += 10;
+                                        var24[Block.STONE_BLOCK.id] += 10;
                                     }
 
-                                    var31 = 100.0;
+                                    var29 = 100.0;
                                 } else {
-                                    for(var33 = 0; var33 < var6; ++var33) {
-                                        for(var34 = 0; var34 < var6; ++var34) {
-                                            var35 = var27.getHighestBlockY(var33 + var28, var34 + var29) + 1;
-                                            int var36 = 0;
-                                            if (var35 > 1) {
-                                                boolean var37 = false;
-
+                                    for(int var31 = 0; var31 < var6; ++var31) {
+                                        for(int var32 = 0; var32 < var6; ++var32) {
+                                            int var33 = var25.getHighestBlockY(var31 + var26, var32 + var27) + 1;
+                                            int var34 = 0;
+                                            if (var33 > 1) {
+                                                boolean var35;
                                                 do {
-                                                    var37 = true;
-                                                    var36 = var27.getBlock(var33 + var28, var35 - 1, var34 + var29);
-                                                    if (var36 == 0) {
-                                                        var37 = false;
-                                                    } else if (var35 > 0 && var36 > 0 && Block.BLOCKS[var36].material.color == MaterialColor.AIR) {
-                                                        var37 = false;
+                                                    var35 = true;
+                                                    var34 = var25.getBlock(var31 + var26, var33 - 1, var32 + var27);
+                                                    if (var34 == 0) {
+                                                        var35 = false;
+                                                    } else if (var33 > 0 && var34 > 0 && Block.BLOCKS[var34].material.color == MaterialColor.AIR) {
+                                                        var35 = false;
                                                     }
 
-                                                    if (!var37) {
-                                                        --var35;
-                                                        if (var35 <= 0) {
+                                                    if (!var35) {
+                                                        if (--var33 <= 0) {
                                                             break;
                                                         }
 
-                                                        var36 = var27.getBlock(var33 + var28, var35 - 1, var34 + var29);
+                                                        var34 = var25.getBlock(var31 + var26, var33 - 1, var32 + var27);
                                                     }
-                                                } while(var35 > 0 && !var37);
+                                                } while(var33 > 0 && !var35);
 
-                                                if (var35 > 0 && var36 != 0 && Block.BLOCKS[var36].material.isFluid()) {
-                                                    var38 = var35 - 1;
-                                                    boolean var39 = false;
+                                                if (var33 > 0 && var34 != 0 && Block.BLOCKS[var34].material.isFluid()) {
+                                                    int var36 = var33 - 1;
+                                                    boolean var37 = false;
 
-                                                    int var41;
+                                                    int var43;
                                                     do {
-                                                        var41 = var27.getBlock(var33 + var28, var38--, var34 + var29);
-                                                        ++var30;
-                                                    } while(var38 > 0 && var41 != 0 && Block.BLOCKS[var41].material.isFluid());
+                                                        var43 = var25.getBlock(var31 + var26, var36--, var32 + var27);
+                                                        ++var28;
+                                                    } while(var36 > 0 && var43 != 0 && Block.BLOCKS[var43].material.isFluid());
                                                 }
                                             }
 
-                                            var31 += (double)var35 / (double)(var6 * var6);
-                                            int var10002 = var26[var36]++;
+                                            var29 += (double)var33 / (double)(var6 * var6);
+                                            var24[var34]++;
                                         }
                                     }
                                 }
 
-                                var30 /= var6 * var6;
-                                int var10000 = var23 / (var6 * var6);
-                                var10000 = var24 / (var6 * var6);
-                                var10000 = var25 / (var6 * var6);
-                                var33 = 0;
-                                var34 = 0;
+                                var28 /= var6 * var6;
+                                int var43 = 0;
+                                int var32 = 0;
 
-                                for(var35 = 0; var35 < Block.BLOCKS.length; ++var35) {
-                                    if (var26[var35] > var33) {
-                                        var34 = var35;
-                                        var33 = var26[var35];
+                                for(int var33 = 0; var33 < Block.BLOCKS.length; ++var33) {
+                                    if (var24[var33] > var43) {
+                                        var32 = var33;
+                                        var43 = var24[var33];
                                     }
                                 }
 
-                                double var43 = (var31 - var15) * 4.0 / (double)(var6 + 4) + ((double)(var12 + var17 & 1) - 0.5) * 0.4;
-                                byte var42 = 1;
-                                if (var43 > 0.6) {
-                                    var42 = 2;
+                                double var40 = (var29 - var16) * 4.0 / (double)(var6 + 4) + ((double)(var13 + var18 & 1) - 0.5) * 0.4;
+                                byte var39 = 1;
+                                if (var40 > 0.6) {
+                                    var39 = 2;
                                 }
 
-                                if (var43 < -0.6) {
-                                    var42 = 0;
+                                if (var40 < -0.6) {
+                                    var39 = 0;
                                 }
 
-                                var38 = 0;
-                                if (var34 > 0) {
-                                    MaterialColor var45 = Block.BLOCKS[var34].material.color;
-                                    if (var45 == MaterialColor.WATER) {
-                                        var43 = (double)var30 * 0.1 + (double)(var12 + var17 & 1) * 0.2;
-                                        var42 = 1;
-                                        if (var43 < 0.5) {
-                                            var42 = 2;
+                                int var36 = 0;
+                                if (var32 > 0) {
+                                    MaterialColor var42 = Block.BLOCKS[var32].material.color;
+                                    if (var42 == MaterialColor.WATER) {
+                                        var40 = (double)var28 * 0.1 + (double)(var13 + var18 & 1) * 0.2;
+                                        var39 = 1;
+                                        if (var40 < 0.5) {
+                                            var39 = 2;
                                         }
 
-                                        if (var43 > 0.9) {
-                                            var42 = 0;
+                                        if (var40 > 0.9) {
+                                            var39 = 0;
                                         }
                                     }
 
-                                    var38 = var45.id;
+                                    var36 = var42.id;
                                 }
 
-                                var15 = var31;
-                                if (var17 >= 0 && var18 * var18 + var19 * var19 < var11 * var11 && (!var20 || (var12 + var17 & 1) != 0)) {
-                                    byte var44 = par3MapData.colors[var12 + var17 * var4];
-                                    byte var40 = (byte)(var38 * 4 + var42);
-                                    if (var44 != var40) {
-                                        if (var13 > var17) {
-                                            var13 = var17;
+                                var16 = var29;
+                                if (var18 >= 0 && var19 * var19 + var20 * var20 < var11 * var11 && (!var21 || (var13 + var18 & 1) != 0)) {
+                                    byte var41 = par3MapData.colors[var13 + var18 * var4];
+                                    byte var38 = (byte)(var36 * 4 + var39);
+                                    if (var41 != var38) {
+                                        if (var14 > var18) {
+                                            var14 = var18;
                                         }
 
-                                        if (var14 < var17) {
-                                            var14 = var17;
+                                        if (var15 < var18) {
+                                            var15 = var18;
                                         }
 
-                                        par3MapData.colors[var12 + var17 * var4] = var40;
+                                        par3MapData.colors[var13 + var18 * var4] = var38;
                                     }
                                 }
                             }
                         }
                     }
 
-                    if (var13 <= var14) {
-                        par3MapData.method_182(var12, var13, var14);
+                    if (var14 <= var15) {
+                        par3MapData.method_182(var13, var14, var15);
                     }
                 }
             }
         }
-
     }
 
     /**
@@ -246,14 +214,20 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
      */
     @Overwrite
     public void onCraft(ItemStack par1ItemStack, World par2World, PlayerEntity par3EntityPlayer) {
-        par1ItemStack.setDamage(par2World.getIntState("map"));
-        String var4 = "map_" + par1ItemStack.getMeta();
-        MapState var5 = new MapState(var4);
-        par2World.replaceState(var4, var5);
-        var5.xCenter = MathHelper.floor(par3EntityPlayer.x);
-        var5.zCenter = MathHelper.floor(par3EntityPlayer.z);
-        var5.scale = 3;
-        ((IMapState)var5).setC(par2World.dimension.dimensionType);
-        var5.markDirty();
+        if (par1ItemStack.hasNbt() && par1ItemStack.getNbt().getBoolean("map_is_scaling")) {
+            MapState var4 = Item.MAP.getMapState(par1ItemStack, par2World);
+            par1ItemStack.setDamage(par2World.getIntState("map"));
+            MapState var5 = new MapState("map_" + par1ItemStack.getMeta());
+            var5.scale = (byte)(var4.scale + 1);
+            if (var5.scale > 4) {
+                var5.scale = 4;
+            }
+
+            var5.xCenter = var4.xCenter;
+            var5.zCenter = var4.zCenter;
+            var5.setC(var4.getC());
+            var5.markDirty();
+            par2World.replaceState("map_" + par1ItemStack.getMeta(), var5);
+        }
     }
 }

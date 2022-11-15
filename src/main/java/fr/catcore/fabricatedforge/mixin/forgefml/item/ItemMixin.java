@@ -1,9 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.item;
 
 import cpw.mods.fml.common.registry.ItemProxy;
-import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
-import fr.catcore.fabricatedforge.mixininterface.IServerPlayerInteractionManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -40,11 +38,8 @@ public abstract class ItemMixin implements ItemProxy, IItem {
 
     @Shadow public abstract Item getRecipeRemainder();
 
-    @Unique
     protected boolean canRepair = true;
-    @Unique
     public boolean isDefaultTexture = true;
-    @Unique
     private String currentTexture = "/gui/items.png";
 
     @Inject(method = "<init>", at = @At("RETURN"))
@@ -56,7 +51,7 @@ public abstract class ItemMixin implements ItemProxy, IItem {
 
     @ModifyArg(method = "<init>", at = @At(value = "INVOKE", target = "Ljava/io/PrintStream;println(Ljava/lang/String;)V"), index = 0)
     private String fmlCtr(String x) {
-        return "CONFLICT @ " + (this.id - 256) + " item slot already occupied by " + ITEMS[this.id] + " while adding " + this;
+        return "CONFLICT @ " + this.id + " item slot already occupied by " + ITEMS[this.id] + " while adding " + this;
     }
 
     /**
@@ -64,23 +59,23 @@ public abstract class ItemMixin implements ItemProxy, IItem {
      * @reason none
      */
     @Overwrite
-    public BlockHitResult onHit(World par1World, PlayerEntity par2EntityPlayer, boolean par3) {
+    protected BlockHitResult onHit(World par1World, PlayerEntity par2EntityPlayer, boolean par3) {
         float var4 = 1.0F;
         float var5 = par2EntityPlayer.prevPitch + (par2EntityPlayer.pitch - par2EntityPlayer.prevPitch) * var4;
         float var6 = par2EntityPlayer.prevYaw + (par2EntityPlayer.yaw - par2EntityPlayer.prevYaw) * var4;
         double var7 = par2EntityPlayer.prevX + (par2EntityPlayer.x - par2EntityPlayer.prevX) * (double)var4;
         double var9 = par2EntityPlayer.prevY + (par2EntityPlayer.y - par2EntityPlayer.prevY) * (double)var4 + 1.62 - (double)par2EntityPlayer.heightOffset;
         double var11 = par2EntityPlayer.prevZ + (par2EntityPlayer.z - par2EntityPlayer.prevZ) * (double)var4;
-        Vec3d var13 = Vec3d.method_603().getOrCreate(var7, var9, var11);
-        float var14 = MathHelper.cos(-var6 * 0.017453292F - 3.1415927F);
-        float var15 = MathHelper.sin(-var6 * 0.017453292F - 3.1415927F);
-        float var16 = -MathHelper.cos(-var5 * 0.017453292F);
-        float var17 = MathHelper.sin(-var5 * 0.017453292F);
+        Vec3d var13 = par1World.getVectorPool().getOrCreate(var7, var9, var11);
+        float var14 = MathHelper.cos(-var6 * (float) (Math.PI / 180.0) - (float) Math.PI);
+        float var15 = MathHelper.sin(-var6 * (float) (Math.PI / 180.0) - (float) Math.PI);
+        float var16 = -MathHelper.cos(-var5 * (float) (Math.PI / 180.0));
+        float var17 = MathHelper.sin(-var5 * (float) (Math.PI / 180.0));
         float var18 = var15 * var16;
         float var20 = var14 * var16;
         double var21 = 5.0;
         if (par2EntityPlayer instanceof ServerPlayerEntity) {
-            var21 = ((IServerPlayerInteractionManager)((ServerPlayerEntity)par2EntityPlayer).interactionManager).getBlockReachDistance();
+            var21 = ((ServerPlayerEntity)par2EntityPlayer).interactionManager.getBlockReachDistance();
         }
 
         Vec3d var23 = var13.method_613((double)var18 * var21, (double)var17 * var21, (double)var20 * var21);
@@ -146,7 +141,7 @@ public abstract class ItemMixin implements ItemProxy, IItem {
 
     @Override
     public String getTextureFile() {
-        return (Object)this instanceof BlockItem ? ((IBlock)Block.BLOCKS[((BlockItem)(Object)this).method_3464()]).getTextureFile() : this.currentTexture;
+        return (Object)this instanceof BlockItem ? Block.BLOCKS[((BlockItem)(Object)this).method_3464()].getTextureFile() : this.currentTexture;
     }
 
     @Override

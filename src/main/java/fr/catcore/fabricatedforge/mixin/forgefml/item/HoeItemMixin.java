@@ -7,6 +7,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.Event;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -22,14 +23,16 @@ public class HoeItemMixin extends Item {
      * @reason none
      */
     @Overwrite
-    public boolean method_3355(ItemStack par1ItemStack, PlayerEntity par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10) {
-        if (!par2EntityPlayer.method_3204(par4, par5, par6)) {
+    public boolean method_3355(
+            ItemStack par1ItemStack, PlayerEntity par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10
+    ) {
+        if (!par2EntityPlayer.method_4570(par4, par5, par6, par7, par1ItemStack)) {
             return false;
         } else {
             UseHoeEvent event = new UseHoeEvent(par2EntityPlayer, par1ItemStack, par3World, par4, par5, par6);
             if (MinecraftForge.EVENT_BUS.post(event)) {
                 return false;
-            } else if (event.isHandeled()) {
+            } else if (event.getResult() == Event.Result.ALLOW) {
                 par1ItemStack.method_3406(1, par2EntityPlayer);
                 return true;
             } else {
@@ -39,7 +42,14 @@ public class HoeItemMixin extends Item {
                     return false;
                 } else {
                     Block var13 = Block.FARMLAND;
-                    par3World.playSound((double)((float)par4 + 0.5F), (double)((float)par5 + 0.5F), (double)((float)par6 + 0.5F), var13.soundGroup.getStepId(), (var13.soundGroup.getVolume() + 1.0F) / 2.0F, var13.soundGroup.getPitch() * 0.8F);
+                    par3World.playSound(
+                            (double)((float)par4 + 0.5F),
+                            (double)((float)par5 + 0.5F),
+                            (double)((float)par6 + 0.5F),
+                            var13.soundGroup.getStepId(),
+                            (var13.soundGroup.getVolume() + 1.0F) / 2.0F,
+                            var13.soundGroup.getPitch() * 0.8F
+                    );
                     if (par3World.isClient) {
                         return true;
                     } else {

@@ -10,6 +10,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResultType;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.Event;
 import net.minecraftforge.event.entity.player.FillBucketEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -43,7 +44,7 @@ public abstract class BucketItemMixin extends Item {
             FillBucketEvent event = new FillBucketEvent(par3EntityPlayer, par1ItemStack, par2World, var12);
             if (MinecraftForge.EVENT_BUS.post(event)) {
                 return par1ItemStack;
-            } else if (event.isHandeled()) {
+            } else if (event.getResult() == Event.Result.ALLOW) {
                 if (par3EntityPlayer.abilities.creativeMode) {
                     return par1ItemStack;
                 } else if (--par1ItemStack.count <= 0) {
@@ -65,7 +66,7 @@ public abstract class BucketItemMixin extends Item {
                     }
 
                     if (this.field_4170 == 0) {
-                        if (!par3EntityPlayer.method_3204(var13, var14, var15)) {
+                        if (!par3EntityPlayer.method_4570(var13, var14, var15, var12.side, par1ItemStack)) {
                             return par1ItemStack;
                         }
 
@@ -131,7 +132,7 @@ public abstract class BucketItemMixin extends Item {
                             ++var13;
                         }
 
-                        if (!par3EntityPlayer.method_3204(var13, var14, var15)) {
+                        if (!par3EntityPlayer.method_4570(var13, var14, var15, var12.side, par1ItemStack)) {
                             return par1ItemStack;
                         }
 

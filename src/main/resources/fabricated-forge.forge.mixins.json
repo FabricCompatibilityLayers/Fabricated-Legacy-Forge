@@ -73,7 +73,6 @@
     "item.MilkBucketItemMixin",
     "item.SeedItemMixin",
     "item.ShearsItemMixin",
-    "item.SpawnEggItemMixin",
     "item.ToolItemMixin",
     "item.itemgroup.ItemGroupMixin",
     "item.map.MapStateMixin",
