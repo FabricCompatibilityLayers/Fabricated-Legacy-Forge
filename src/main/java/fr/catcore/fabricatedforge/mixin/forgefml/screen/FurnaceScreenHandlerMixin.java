@@ -1,7 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.screen;
 
-import fr.catcore.fabricatedforge.mixininterface.ISmeltingRecipeRegistry;
 import net.minecraft.block.entity.FurnaceBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.slot.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
@@ -18,51 +18,51 @@ public abstract class FurnaceScreenHandlerMixin extends ScreenHandler {
      * @reason none
      */
     @Overwrite
-    public ItemStack method_3265(int par1) {
-        ItemStack var2 = null;
-        Slot var3 = (Slot)this.slots.get(par1);
-        if (var3 != null && var3.hasStack()) {
-            ItemStack var4 = var3.getStack();
-            var2 = var4.copy();
-            if (par1 == 2) {
-                if (!this.insertItem(var4, 3, 39, true)) {
+    public ItemStack transferSlot(PlayerEntity player, int invSlot) {
+        ItemStack var3 = null;
+        Slot var4 = (Slot)this.slots.get(invSlot);
+        if (var4 != null && var4.hasStack()) {
+            ItemStack var5 = var4.getStack();
+            var3 = var5.copy();
+            if (invSlot == 2) {
+                if (!this.insertItem(var5, 3, 39, true)) {
                     return null;
                 }
 
-                var3.onStackChanged(var4, var2);
-            } else if (par1 != 1 && par1 != 0) {
-                if (((ISmeltingRecipeRegistry)SmeltingRecipeRegistry.getInstance()).getSmeltingResult(var4) != null) {
-                    if (!this.insertItem(var4, 0, 1, false)) {
+                var4.onStackChanged(var5, var3);
+            } else if (invSlot != 1 && invSlot != 0) {
+                if (SmeltingRecipeRegistry.getInstance().method_3490(var5.getItem().id) != null) {
+                    if (!this.insertItem(var5, 0, 1, false)) {
                         return null;
                     }
-                } else if (FurnaceBlockEntity.isFuel(var4)) {
-                    if (!this.insertItem(var4, 1, 2, false)) {
+                } else if (FurnaceBlockEntity.isFuel(var5)) {
+                    if (!this.insertItem(var5, 1, 2, false)) {
                         return null;
                     }
-                } else if (par1 >= 3 && par1 < 30) {
-                    if (!this.insertItem(var4, 30, 39, false)) {
+                } else if (invSlot >= 3 && invSlot < 30) {
+                    if (!this.insertItem(var5, 30, 39, false)) {
                         return null;
                     }
-                } else if (par1 >= 30 && par1 < 39 && !this.insertItem(var4, 3, 30, false)) {
+                } else if (invSlot >= 30 && invSlot < 39 && !this.insertItem(var5, 3, 30, false)) {
                     return null;
                 }
-            } else if (!this.insertItem(var4, 3, 39, false)) {
+            } else if (!this.insertItem(var5, 3, 39, false)) {
                 return null;
             }
 
-            if (var4.count == 0) {
-                var3.setStack((ItemStack)null);
+            if (var5.count == 0) {
+                var4.setStack(null);
             } else {
-                var3.markDirty();
+                var4.markDirty();
             }
 
-            if (var4.count == var2.count) {
+            if (var5.count == var3.count) {
                 return null;
             }
 
-            var3.method_3298(var4);
+            var4.onTakeItem(player, var5);
         }
 
-        return var2;
+        return var3;
     }
 }
