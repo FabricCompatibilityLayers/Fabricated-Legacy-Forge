@@ -1,7 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity.vehicle;
 
 import fr.catcore.fabricatedforge.mixininterface.IAbstractMinecartEntity;
-import fr.catcore.fabricatedforge.mixininterface.IRailBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -17,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -80,62 +80,38 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     @Shadow protected abstract void method_3062(boolean bl);
 
+    @Shadow @Final public Tickable field_5383;
+
     public AbstractMinecartEntityMixin(World world) {
         super(world);
     }
 
     // Public
-    @Unique
-    private static float defaultMaxSpeedRail = 0.4F;
-    @Unique
-    private static float defaultMaxSpeedGround = 0.4F;
-    @Unique
-    private static float defaultMaxSpeedAirLateral = 0.4F;
-    @Unique
-    private static float defaultMaxSpeedAirVertical = -1.0F;
-    @Unique
-    private static double defaultDragRidden = 0.996999979019165;
-    @Unique
-    private static double defaultDragEmpty = 0.9599999785423279;
-    @Unique
-    private static double defaultDragAir = 0.949999988079071;
+    protected static float defaultMaxSpeedRail = 0.4F;
+    protected static float defaultMaxSpeedGround = 0.4F;
+    protected static float defaultMaxSpeedAirLateral = 0.4F;
+    protected static float defaultMaxSpeedAirVertical = -1.0F;
+    protected static double defaultDragRidden = 0.997F;
+    protected static double defaultDragEmpty = 0.96F;
+    protected static double defaultDragAir = 0.95F;
     // Not public
-    @Unique
-    protected boolean canUseRail;
-    @Unique
-    protected boolean canBePushed;
-    @Unique
+    protected boolean canUseRail = true;
+    protected boolean canBePushed = true;
     private static IMinecartCollisionHandler collisionHandler = null;
-    @Unique
     protected float maxSpeedRail;
-    @Unique
     protected float maxSpeedGround;
-    @Unique
     protected float maxSpeedAirLateral;
-    @Unique
     protected float maxSpeedAirVertical;
-    @Unique
     protected double dragAir;
 
     @Inject(method = "<init>(Lnet/minecraft/world/World;)V", at = @At("RETURN"))
     private void fmlCtr(World par1, CallbackInfo ci) {
-        this.canUseRail = true;
-        this.canBePushed = true;
-
         this.maxSpeedRail = defaultMaxSpeedRail;
         this.maxSpeedGround = defaultMaxSpeedGround;
         this.maxSpeedAirLateral = defaultMaxSpeedAirLateral;
         this.maxSpeedAirVertical = defaultMaxSpeedAirVertical;
         this.dragAir = defaultDragAir;
     }
-
-    /*
-    Todo: add this somehow
-    public AbstractMinecartEntity(World world, int type) {
-        this(world);
-        this.field_3897 = type;
-    }
-     */
 
     /**
      * @author Minecraft Forge
@@ -188,8 +164,10 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                 this.dropCartAsItem();
             }
 
+            return true;
+        } else {
+            return true;
         }
-        return true;
     }
 
     /**
@@ -198,6 +176,10 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
      */
     @Overwrite
     public void tick() {
+        if (this.field_5383 != null) {
+            this.field_5383.tick();
+        }
+
         if (this.getDamageWobbleTicks() > 0) {
             this.setDamageWobbleTicks(this.getDamageWobbleTicks() - 1);
         }
@@ -233,7 +215,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
             this.prevX = this.x;
             this.prevY = this.y;
             this.prevZ = this.z;
-            this.velocityY -= 0.03999999910593033;
+            this.velocityY -= 0.04F;
             int var1 = MathHelper.floor(this.x);
             int var2 = MathHelper.floor(this.y);
             int var3 = MathHelper.floor(this.z);
@@ -246,7 +228,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
             int var8 = this.world.getBlock(var1, var2, var3);
             if (this.canUseRail() && RailBlock.method_354(var8)) {
                 Vec3d var9 = this.snapPositionToRail(this.x, this.y, this.z);
-                int var10 = ((IRailBlock) Block.BLOCKS[var8]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var1, var2, var3);
+                int var10 = ((RailBlock)Block.BLOCKS[var8]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var1, var2, var3);
                 this.y = (double)var2;
                 boolean var11 = false;
                 boolean var12 = false;
@@ -277,11 +259,9 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                 double var22 = Math.sqrt(this.velocityX * this.velocityX + this.velocityZ * this.velocityZ);
                 this.velocityX = var22 * var14 / var18;
                 this.velocityZ = var22 * var16 / var18;
-                double var24;
-                double var26;
                 if (this.rider != null) {
-                    var24 = this.rider.velocityX * this.rider.velocityX + this.rider.velocityZ * this.rider.velocityZ;
-                    var26 = this.velocityX * this.velocityX + this.velocityZ * this.velocityZ;
+                    double var24 = this.rider.velocityX * this.rider.velocityX + this.rider.velocityZ * this.rider.velocityZ;
+                    double var26 = this.velocityX * this.velocityX + this.velocityZ * this.velocityZ;
                     if (var24 > 1.0E-4 && var26 < 0.01) {
                         this.velocityX += this.rider.velocityX * 0.1;
                         this.velocityZ += this.rider.velocityZ * 0.1;
@@ -290,7 +270,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                 }
 
                 if (var12 && this.shouldDoRailFunctions()) {
-                    var24 = Math.sqrt(this.velocityX * this.velocityX + this.velocityZ * this.velocityZ);
+                    double var24 = Math.sqrt(this.velocityX * this.velocityX + this.velocityZ * this.velocityZ);
                     if (var24 < 0.03) {
                         this.velocityX *= 0.0;
                         this.velocityY *= 0.0;
@@ -302,8 +282,8 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                     }
                 }
 
-                var24 = 0.0;
-                var26 = (double)var1 + 0.5 + (double)var13[0][0] * 0.5;
+                double var24 = 0.0;
+                double var26 = (double)var1 + 0.5 + (double)var13[0][0] * 0.5;
                 double var28 = (double)var3 + 0.5 + (double)var13[0][2] * 0.5;
                 double var30 = (double)var1 + 0.5 + (double)var13[1][0] * 0.5;
                 double var32 = (double)var3 + 0.5 + (double)var13[1][2] * 0.5;
@@ -354,7 +334,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
                 this.updatePushForces();
                 if (this.shouldDoRailFunctions()) {
-                    ((IRailBlock)Block.BLOCKS[var8]).onMinecartPass(this.world, (AbstractMinecartEntity)(Object) this, var1, var2, var3);
+                    ((RailBlock)Block.BLOCKS[var8]).onMinecartPass(this.world, (AbstractMinecartEntity)(Object) this, var1, var2, var3);
                 }
 
                 if (var11 && this.shouldDoRailFunctions()) {
@@ -377,12 +357,11 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                         }
                     }
                 }
-
-                this.checkBlockCollision();
             } else {
                 this.moveMinecartOffRail(var1, var2, var3);
             }
 
+            this.checkBlockCollision();
             this.pitch = 0.0F;
             double var47 = this.prevX - this.x;
             double var48 = this.prevZ - this.z;
@@ -409,8 +388,8 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
             List var15 = this.world.getEntitiesIn(this, box);
             if (var15 != null && !var15.isEmpty()) {
-                for (Object o : var15) {
-                    Entity var17 = (Entity) o;
+                for(int var50 = 0; var50 < var15.size(); ++var50) {
+                    Entity var17 = (Entity)var15.get(var50);
                     if (var17 != this.rider && var17.isPushable() && var17 instanceof AbstractMinecartEntity) {
                         var17.pushAwayFrom(this);
                     }
@@ -428,7 +407,6 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
             this.updateFuel();
             MinecraftForge.EVENT_BUS.post(new MinecartUpdateEvent((AbstractMinecartEntity)(Object) this, (float)var1, (float)var2, (float)var3));
         }
-
     }
 
     /**
@@ -449,7 +427,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
         if (!RailBlock.method_354(var12)) {
             return null;
         } else {
-            int var13 = ((IRailBlock)Block.BLOCKS[var12]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var9, var10, var11);
+            int var13 = ((RailBlock)Block.BLOCKS[var12]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var9, var10, var11);
             par3 = (double)var10;
             if (var13 >= 2 && var13 <= 5) {
                 par3 = (double)(var10 + 1);
@@ -488,7 +466,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
         int var10 = this.world.getBlock(var7, var8, var9);
         if (RailBlock.method_354(var10)) {
-            int var11 = ((IRailBlock)Block.BLOCKS[var10]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var7, var8, var9);
+            int var11 = ((RailBlock)Block.BLOCKS[var10]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var7, var8, var9);
             par3 = (double)var8;
             if (var11 >= 2 && var11 <= 5) {
                 par3 = (double)(var8 + 1);
@@ -528,7 +506,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                 par3 += 0.5;
             }
 
-            return Vec3d.method_603().getOrCreate(par1, par3, par5);
+            return this.world.getVectorPool().getOrCreate(par1, par3, par5);
         } else {
             return null;
         }
@@ -539,7 +517,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
      * @reason none
      */
     @Overwrite
-    public void writeCustomDataToNbt(NbtCompound par1NBTTagCompound) {
+    protected void writeCustomDataToNbt(NbtCompound par1NBTTagCompound) {
         par1NBTTagCompound.putInt("Type", this.field_3897);
         if (this.isPoweredCart()) {
             par1NBTTagCompound.putDouble("PushX", this.field_3904);
@@ -561,7 +539,6 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
             par1NBTTagCompound.put("Items", var2);
         }
-
     }
 
     /**
@@ -569,7 +546,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
      * @reason none
      */
     @Overwrite
-    public void readCustomDataFromNbt(NbtCompound par1NBTTagCompound) {
+    protected void readCustomDataFromNbt(NbtCompound par1NBTTagCompound) {
         this.field_3897 = par1NBTTagCompound.getInt("Type");
         if (this.isPoweredCart()) {
             this.field_3904 = par1NBTTagCompound.getDouble("PushX");
@@ -594,7 +571,6 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                 }
             }
         }
-
     }
 
     /**
@@ -608,14 +584,20 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
             getCollisionHandler().onEntityCollision((AbstractMinecartEntity)(Object) this, par1Entity);
         } else {
             if (!this.world.isClient && par1Entity != this.rider) {
-                if (par1Entity instanceof MobEntity && !(par1Entity instanceof PlayerEntity) && !(par1Entity instanceof IronGolemEntity) && this.canBeRidden() && this.velocityX * this.velocityX + this.velocityZ * this.velocityZ > 0.01 && this.rider == null && par1Entity.vehicle == null) {
+                if (par1Entity instanceof MobEntity
+                        && !(par1Entity instanceof PlayerEntity)
+                        && !(par1Entity instanceof IronGolemEntity)
+                        && this.canBeRidden()
+                        && this.velocityX * this.velocityX + this.velocityZ * this.velocityZ > 0.01
+                        && this.rider == null
+                        && par1Entity.vehicle == null) {
                     par1Entity.startRiding(this);
                 }
 
                 double var2 = par1Entity.x - this.x;
                 double var4 = par1Entity.z - this.z;
                 double var6 = var2 * var2 + var4 * var4;
-                if (var6 >= 9.999999747378752E-5) {
+                if (var6 >= 1.0E-4F) {
                     var6 = (double)MathHelper.sqrt(var6);
                     var2 /= var6;
                     var4 /= var6;
@@ -626,8 +608,8 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
                     var2 *= var8;
                     var4 *= var8;
-                    var2 *= 0.10000000149011612;
-                    var4 *= 0.10000000149011612;
+                    var2 *= 0.1F;
+                    var4 *= 0.1F;
                     var2 *= (double)(1.0F - this.pushSpeedReduction);
                     var4 *= (double)(1.0F - this.pushSpeedReduction);
                     var2 *= 0.5;
@@ -635,35 +617,40 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                     if (par1Entity instanceof AbstractMinecartEntity) {
                         double var10 = par1Entity.x - this.x;
                         double var12 = par1Entity.z - this.z;
-                        Vec3d var14 = Vec3d.method_603().getOrCreate(var10, 0.0, var12).normalize();
-                        Vec3d var15 = Vec3d.method_603().getOrCreate((double)MathHelper.cos(this.yaw * 3.1415927F / 180.0F), 0.0, (double)MathHelper.sin(this.yaw * 3.1415927F / 180.0F)).normalize();
+                        Vec3d var14 = this.world.getVectorPool().getOrCreate(var10, 0.0, var12).normalize();
+                        Vec3d var15 = this.world
+                                .getVectorPool()
+                                .getOrCreate(
+                                        (double)MathHelper.cos(this.yaw * (float) Math.PI / 180.0F), 0.0, (double)MathHelper.sin(this.yaw * (float) Math.PI / 180.0F)
+                                )
+                                .normalize();
                         double var16 = Math.abs(var14.dotProduct(var15));
-                        if (var16 < 0.800000011920929) {
+                        if (var16 < 0.8F) {
                             return;
                         }
 
                         double var18 = par1Entity.velocityX + this.velocityX;
                         double var20 = par1Entity.velocityZ + this.velocityZ;
-                        if (((IAbstractMinecartEntity)par1Entity).isPoweredCart() && !this.isPoweredCart()) {
-                            this.velocityX *= 0.20000000298023224;
-                            this.velocityZ *= 0.20000000298023224;
+                        if (((AbstractMinecartEntity)par1Entity).isPoweredCart() && !this.isPoweredCart()) {
+                            this.velocityX *= 0.2F;
+                            this.velocityZ *= 0.2F;
                             this.addVelocity(par1Entity.velocityX - var2, 0.0, par1Entity.velocityZ - var4);
-                            par1Entity.velocityX *= 0.949999988079071;
-                            par1Entity.velocityZ *= 0.949999988079071;
-                        } else if (!((IAbstractMinecartEntity)par1Entity).isPoweredCart() && this.isPoweredCart()) {
-                            par1Entity.velocityX *= 0.20000000298023224;
-                            par1Entity.velocityZ *= 0.20000000298023224;
+                            par1Entity.velocityX *= 0.95F;
+                            par1Entity.velocityZ *= 0.95F;
+                        } else if (!((AbstractMinecartEntity)par1Entity).isPoweredCart() && this.isPoweredCart()) {
+                            par1Entity.velocityX *= 0.2F;
+                            par1Entity.velocityZ *= 0.2F;
                             par1Entity.addVelocity(this.velocityX + var2, 0.0, this.velocityZ + var4);
-                            this.velocityX *= 0.949999988079071;
-                            this.velocityZ *= 0.949999988079071;
+                            this.velocityX *= 0.95F;
+                            this.velocityZ *= 0.95F;
                         } else {
                             var18 /= 2.0;
                             var20 /= 2.0;
-                            this.velocityX *= 0.20000000298023224;
-                            this.velocityZ *= 0.20000000298023224;
+                            this.velocityX *= 0.2F;
+                            this.velocityZ *= 0.2F;
                             this.addVelocity(var18 - var2, 0.0, var20 - var4);
-                            par1Entity.velocityX *= 0.20000000298023224;
-                            par1Entity.velocityZ *= 0.20000000298023224;
+                            par1Entity.velocityX *= 0.2F;
+                            par1Entity.velocityZ *= 0.2F;
                             par1Entity.addVelocity(var18 + var2, 0.0, var20 + var4);
                         }
                     } else {
@@ -672,7 +659,6 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                     }
                 }
             }
-
         }
     }
 
@@ -726,16 +712,16 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
     @Override
     public void dropCartAsItem() {
-        for (ItemStack item : this.getItemsDropped()) {
+        for(ItemStack item : this.getItemsDropped()) {
             this.dropItem(item, 0.0F);
         }
     }
 
     @Override
     public List<ItemStack> getItemsDropped() {
-        List<ItemStack> items = new ArrayList<>();
+        List<ItemStack> items = new ArrayList();
         items.add(new ItemStack(Item.MINECART));
-        switch (this.field_3897) {
+        switch(this.field_3897) {
             case 1:
                 items.add(new ItemStack(Block.field_407));
                 break;
@@ -796,11 +782,13 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
         collisionHandler = handler;
     }
 
-    protected double getDrag() {
+    @Override
+    public double getDrag() {
         return this.rider != null ? defaultDragRidden : defaultDragEmpty;
     }
 
-    protected void applyDragAndPushForces() {
+    @Override
+    public void applyDragAndPushForces() {
         if (this.isPoweredCart()) {
             double d27 = (double)MathHelper.sqrt(this.field_3904 * this.field_3904 + this.field_3905 * this.field_3905);
             if (d27 > 0.01) {
@@ -824,7 +812,8 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
         this.velocityZ *= this.getDrag();
     }
 
-    protected void updatePushForces() {
+    @Override
+    public void updatePushForces() {
         if (this.isPoweredCart()) {
             double push = (double)MathHelper.sqrt(this.field_3904 * this.field_3904 + this.field_3905 * this.field_3905);
             if (push > 0.01 && this.velocityX * this.velocityX + this.velocityZ * this.velocityZ > 0.001) {
@@ -839,13 +828,13 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                 }
             }
         }
-
     }
 
-    protected void moveMinecartOnRail(int i, int j, int k) {
+    @Override
+    public void moveMinecartOnRail(int i, int j, int k) {
         int id = this.world.getBlock(i, j, k);
         if (RailBlock.method_354(id)) {
-            float railMaxSpeed = ((IRailBlock)Block.BLOCKS[id]).getRailMaxSpeed(this.world, (AbstractMinecartEntity)(Object) this, i, j, k);
+            float railMaxSpeed = ((RailBlock)Block.BLOCKS[id]).getRailMaxSpeed(this.world, (AbstractMinecartEntity)(Object) this, i, j, k);
             double maxSpeed = (double)Math.min(railMaxSpeed, this.getMaxSpeedRail());
             double mX = this.velocityX;
             double mZ = this.velocityZ;
@@ -874,7 +863,8 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
         }
     }
 
-    protected void moveMinecartOffRail(int i, int j, int k) {
+    @Override
+    public void moveMinecartOffRail(int i, int j, int k) {
         double d2 = (double)this.getMaxSpeedGround();
         if (!this.onGround) {
             d2 = (double)this.getMaxSpeedAirLateral();
@@ -899,8 +889,8 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
         double moveY = this.velocityY;
         if (this.getMaxSpeedAirVertical() > 0.0F && this.velocityY > (double)this.getMaxSpeedAirVertical()) {
             moveY = (double)this.getMaxSpeedAirVertical();
-            if (Math.abs(this.velocityX) < 0.30000001192092896 && Math.abs(this.velocityZ) < 0.30000001192092896) {
-                moveY = 0.15000000596046448;
+            if (Math.abs(this.velocityX) < 0.3F && Math.abs(this.velocityZ) < 0.3F) {
+                moveY = 0.15F;
                 this.velocityY = moveY;
             }
         }
@@ -917,10 +907,10 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
             this.velocityY *= this.getDragAir();
             this.velocityZ *= this.getDragAir();
         }
-
     }
 
-    protected void updateFuel() {
+    @Override
+    public void updateFuel() {
         if (this.field_3907 > 0) {
             --this.field_3907;
         }
@@ -932,7 +922,8 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
         this.method_3062(this.field_3907 > 0);
     }
 
-    protected void adjustSlopeVelocities(int metadata) {
+    @Override
+    public void adjustSlopeVelocities(int metadata) {
         double acceleration = 0.0078125;
         if (metadata == 2) {
             this.velocityX -= acceleration;
@@ -943,7 +934,6 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
         } else if (metadata == 5) {
             this.velocityZ -= acceleration;
         }
-
     }
 
 

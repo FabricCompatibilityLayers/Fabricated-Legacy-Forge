@@ -5,7 +5,6 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -16,7 +15,6 @@ import java.util.List;
 @Mixin(StatusEffectInstance.class)
 public class StatusEffectInstanceMixin implements IStatusEffectInstance {
 
-    @Unique
     private List<ItemStack> curativeItems;
 
     @Inject(method = "<init>(III)V", at = @At("RETURN"))
@@ -27,7 +25,7 @@ public class StatusEffectInstanceMixin implements IStatusEffectInstance {
 
     @Inject(method = "<init>(Lnet/minecraft/entity/effect/StatusEffectInstance;)V", at = @At("RETURN"))
     private void fmlCtr(StatusEffectInstance par1PotionEffect, CallbackInfo ci) {
-        this.curativeItems = ((IStatusEffectInstance)par1PotionEffect).getCurativeItems();
+        this.curativeItems = par1PotionEffect.getCurativeItems();
     }
 
     @Override
@@ -39,10 +37,9 @@ public class StatusEffectInstanceMixin implements IStatusEffectInstance {
     public boolean isCurativeItem(ItemStack stack) {
         boolean found = false;
 
-        for (ItemStack curativeItem : this.curativeItems) {
+        for(ItemStack curativeItem : this.curativeItems) {
             if (curativeItem.equalsIgnoreNbt(stack)) {
                 found = true;
-                break;
             }
         }
 
@@ -58,16 +55,14 @@ public class StatusEffectInstanceMixin implements IStatusEffectInstance {
     public void addCurativeItem(ItemStack stack) {
         boolean found = false;
 
-        for (ItemStack curativeItem : this.curativeItems) {
+        for(ItemStack curativeItem : this.curativeItems) {
             if (curativeItem.equalsIgnoreNbt(stack)) {
                 found = true;
-                break;
             }
         }
 
         if (!found) {
             this.curativeItems.add(stack);
         }
-
     }
 }
