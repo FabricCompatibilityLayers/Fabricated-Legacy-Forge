@@ -11,8 +11,6 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.nio.file.Files;
 
 @Mixin(WorldSaveHandler.class)
@@ -28,12 +26,10 @@ public class WorldSaveHandlerMixin {
     public LevelProperties getLevelProperties() {
         File var1 = new File(this.worldDir, "level.dat");
         LevelProperties worldInfo = null;
-        NbtCompound var2;
-        NbtCompound var3;
         if (var1.exists()) {
             try {
-                var2 = NbtIo.readCompressed(Files.newInputStream(var1.toPath()));
-                var3 = var2.getCompound("Data");
+                NbtCompound var2 = NbtIo.readCompressed(Files.newInputStream(var1.toPath()));
+                NbtCompound var3 = var2.getCompound("Data");
                 worldInfo = new LevelProperties(var3);
                 FMLCommonHandler.instance().handleWorldDataLoad((WorldSaveHandler)(Object) this, worldInfo, var2);
                 return worldInfo;
@@ -45,8 +41,8 @@ public class WorldSaveHandlerMixin {
         var1 = new File(this.worldDir, "level.dat_old");
         if (var1.exists()) {
             try {
-                var2 = NbtIo.readCompressed(Files.newInputStream(var1.toPath()));
-                var3 = var2.getCompound("Data");
+                NbtCompound var2 = NbtIo.readCompressed(Files.newInputStream(var1.toPath()));
+                NbtCompound var3 = var2.getCompound("Data");
                 worldInfo = new LevelProperties(var3);
                 FMLCommonHandler.instance().handleWorldDataLoad((WorldSaveHandler)(Object) this, worldInfo, var2);
                 return worldInfo;
@@ -87,10 +83,9 @@ public class WorldSaveHandlerMixin {
             if (var5.exists()) {
                 var5.delete();
             }
-        } catch (Exception var8) {
-            var8.printStackTrace();
+        } catch (Exception var81) {
+            var81.printStackTrace();
         }
-
     }
 
     /**
@@ -122,9 +117,8 @@ public class WorldSaveHandlerMixin {
             if (var4.exists()) {
                 var4.delete();
             }
-        } catch (Exception var7) {
-            var7.printStackTrace();
+        } catch (Exception var71) {
+            var71.printStackTrace();
         }
-
     }
 }

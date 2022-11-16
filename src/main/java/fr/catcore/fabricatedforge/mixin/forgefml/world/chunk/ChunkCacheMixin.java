@@ -1,7 +1,5 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.chunk.Chunk;
@@ -55,15 +53,5 @@ public abstract class ChunkCacheMixin implements BlockView {
                 return 0;
             }
         }
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Environment(EnvType.CLIENT)
-    @Overwrite
-    public int getMaxBuildHeight() {
-        return 256;
     }
 }

@@ -2,7 +2,6 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import fr.catcore.fabricatedforge.mixininterface.IServerChunkProvider;
-import fr.catcore.fabricatedforge.mixininterface.IWorld;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.LongObjectStorage;
 import net.minecraft.util.math.BlockPos;
@@ -17,7 +16,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -26,7 +24,7 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
 
     @Shadow private ServerWorld world;
 
-    @Shadow private Set chunksToUnload;
+    @Shadow private Set<Long> chunksToUnload;
 
     @Shadow private LongObjectStorage chunkMap;
 
@@ -36,9 +34,7 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
 
     @Shadow private Chunk empty;
 
-    @Shadow private List chunks;
-
-    @Shadow public boolean canGenerateChunks;
+    @Shadow private List<Chunk> chunks;
 
     @Shadow protected abstract void method_2128(Chunk chunk);
 
@@ -63,7 +59,6 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
         } else {
             this.chunksToUnload.add(ChunkPos.getIdFromCoords(par1, par2));
         }
-
     }
 
     /**
@@ -106,16 +101,6 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
      * @reason none
      */
     @Overwrite
-    public Chunk getChunk(int par1, int par2) {
-        Chunk var3 = (Chunk)this.chunkMap.get(ChunkPos.getIdFromCoords(par1, par2));
-        return var3 == null ? (!this.world.field_4523 && !this.canGenerateChunks ? this.empty : this.getOrGenerateChunk(par1, par2)) : var3;
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Overwrite
     public void decorateChunk(ChunkProvider par1IChunkProvider, int par2, int par3) {
         Chunk var4 = this.getChunk(par2, par3);
         if (!var4.terrainPopulated) {
@@ -126,7 +111,6 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
                 var4.setModified();
             }
         }
-
     }
 
     /**
@@ -136,16 +120,13 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
     @Overwrite
     public boolean tickChunks() {
         if (!this.world.savingDisabled) {
-            Iterator i$ = ((IWorld)this.world).getPersistentChunks().keySet().iterator();
-
-            while(i$.hasNext()) {
-                ChunkPos forced = (ChunkPos)i$.next();
+            for(ChunkPos forced : this.world.getPersistentChunks().keySet()) {
                 this.chunksToUnload.remove(ChunkPos.getIdFromCoords(forced.x, forced.z));
             }
 
             for(int var1 = 0; var1 < 100; ++var1) {
                 if (!this.chunksToUnload.isEmpty()) {
-                    Long var2 = (Long)this.chunksToUnload.iterator().next();
+                    Long var2 = this.chunksToUnload.iterator().next();
                     Chunk var3 = (Chunk)this.chunkMap.get(var2);
                     var3.unloadFromWorld();
                     this.method_2128(var3);
@@ -154,7 +135,9 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
                     this.chunkMap.remove(var2);
                     this.chunks.remove(var3);
                     ForgeChunkManager.putDormantChunk(ChunkPos.getIdFromCoords(var3.chunkX, var3.chunkZ), var3);
-                    if (this.chunks.size() == 0 && ForgeChunkManager.getPersistentChunksFor(this.world).size() == 0 && !DimensionManager.shouldLoadSpawn(this.world.dimension.dimensionType)) {
+                    if (this.chunks.size() == 0
+                            && ForgeChunkManager.getPersistentChunksFor(this.world).size() == 0
+                            && !DimensionManager.shouldLoadSpawn(this.world.dimension.dimensionType)) {
                         DimensionManager.unloadWorld(this.world.dimension.dimensionType);
                         return this.chunkGenerator.tickChunks();
                     }

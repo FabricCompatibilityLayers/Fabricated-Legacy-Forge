@@ -20,17 +20,19 @@ public abstract class DeadbushFeatureMixin extends Feature {
      * @reason none
      */
     @Overwrite
-    public boolean method_4028(World world, Random random, int i, int j, int k) {
-        int var11;
-        for(boolean var6 = false; ((var11 = world.getBlock(i, j, k)) == 0 || var11 == Block.LEAVES.id) && j > 0; --j) {
-        }
+    public boolean method_4028(World par1World, Random par2Random, int par3, int par4, int par5) {
+        Block block = null;
+
+        do {
+            block = Block.BLOCKS[par1World.getBlock(par3, par4, par5)];
+        } while((block == null || block.isLeaves(par1World, par3, par4, par5)) && --par4 > 0);
 
         for(int var7 = 0; var7 < 4; ++var7) {
-            int var8 = i + random.nextInt(8) - random.nextInt(8);
-            int var9 = j + random.nextInt(4) - random.nextInt(4);
-            int var10 = k + random.nextInt(8) - random.nextInt(8);
-            if (world.isAir(var8, var9, var10) && Block.BLOCKS[this.field_4881].canStayPlaced(world, var8, var9, var10)) {
-                world.method_3652(var8, var9, var10, this.field_4881);
+            int var8 = par3 + par2Random.nextInt(8) - par2Random.nextInt(8);
+            int var9 = par4 + par2Random.nextInt(4) - par2Random.nextInt(4);
+            int var10 = par5 + par2Random.nextInt(8) - par2Random.nextInt(8);
+            if (par1World.isAir(var8, var9, var10) && Block.BLOCKS[this.field_4881].canStayPlaced(par1World, var8, var9, var10)) {
+                par1World.method_3652(var8, var9, var10, this.field_4881);
             }
         }
 

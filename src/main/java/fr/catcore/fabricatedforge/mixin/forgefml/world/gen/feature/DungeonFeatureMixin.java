@@ -28,12 +28,9 @@ public abstract class DungeonFeatureMixin extends Feature {
         int var8 = par2Random.nextInt(2) + 2;
         int var9 = 0;
 
-        int var10;
-        int var11;
-        int var12;
-        for(var10 = par3 - var7 - 1; var10 <= par3 + var7 + 1; ++var10) {
-            for(var11 = par4 - 1; var11 <= par4 + var6 + 1; ++var11) {
-                for(var12 = par5 - var8 - 1; var12 <= par5 + var8 + 1; ++var12) {
+        for(int var10 = par3 - var7 - 1; var10 <= par3 + var7 + 1; ++var10) {
+            for(int var11 = par4 - 1; var11 <= par4 + var6 + 1; ++var11) {
+                for(int var12 = par5 - var8 - 1; var12 <= par5 + var8 + 1; ++var12) {
                     Material var13 = par1World.getMaterial(var10, var11, var12);
                     if (var11 == par4 - 1 && !var13.hasCollision()) {
                         return false;
@@ -43,7 +40,10 @@ public abstract class DungeonFeatureMixin extends Feature {
                         return false;
                     }
 
-                    if ((var10 == par3 - var7 - 1 || var10 == par3 + var7 + 1 || var12 == par5 - var8 - 1 || var12 == par5 + var8 + 1) && var11 == par4 && par1World.isAir(var10, var11, var12) && par1World.isAir(var10, var11 + 1, var12)) {
+                    if ((var10 == par3 - var7 - 1 || var10 == par3 + var7 + 1 || var12 == par5 - var8 - 1 || var12 == par5 + var8 + 1)
+                            && var11 == par4
+                            && par1World.isAir(var10, var11, var12)
+                            && par1World.isAir(var10, var11 + 1, var12)) {
                         ++var9;
                     }
                 }
@@ -51,28 +51,32 @@ public abstract class DungeonFeatureMixin extends Feature {
         }
 
         if (var9 >= 1 && var9 <= 5) {
-            for(var10 = par3 - var7 - 1; var10 <= par3 + var7 + 1; ++var10) {
-                for(var11 = par4 + var6; var11 >= par4 - 1; --var11) {
-                    for(var12 = par5 - var8 - 1; var12 <= par5 + var8 + 1; ++var12) {
-                        if (var10 != par3 - var7 - 1 && var11 != par4 - 1 && var12 != par5 - var8 - 1 && var10 != par3 + var7 + 1 && var11 != par4 + var6 + 1 && var12 != par5 + var8 + 1) {
-                            par1World.method_3690(var10, var11, var12, 0);
-                        } else if (var11 >= 0 && !par1World.getMaterial(var10, var11 - 1, var12).hasCollision()) {
-                            par1World.method_3690(var10, var11, var12, 0);
-                        } else if (par1World.getMaterial(var10, var11, var12).hasCollision()) {
+            for(int var181 = par3 - var7 - 1; var181 <= par3 + var7 + 1; ++var181) {
+                for(int var11 = par4 + var6; var11 >= par4 - 1; --var11) {
+                    for(int var12 = par5 - var8 - 1; var12 <= par5 + var8 + 1; ++var12) {
+                        if (var181 != par3 - var7 - 1
+                                && var11 != par4 - 1
+                                && var12 != par5 - var8 - 1
+                                && var181 != par3 + var7 + 1
+                                && var11 != par4 + var6 + 1
+                                && var12 != par5 + var8 + 1) {
+                            par1World.method_3690(var181, var11, var12, 0);
+                        } else if (var11 >= 0 && !par1World.getMaterial(var181, var11 - 1, var12).hasCollision()) {
+                            par1World.method_3690(var181, var11, var12, 0);
+                        } else if (par1World.getMaterial(var181, var11, var12).hasCollision()) {
                             if (var11 == par4 - 1 && par2Random.nextInt(4) != 0) {
-                                par1World.method_3690(var10, var11, var12, Block.MOSSY_COBBLESTONE.id);
+                                par1World.method_3690(var181, var11, var12, Block.MOSSY_COBBLESTONE.id);
                             } else {
-                                par1World.method_3690(var10, var11, var12, Block.STONE_BRICKS.id);
+                                par1World.method_3690(var181, var11, var12, Block.STONE_BRICKS.id);
                             }
                         }
                     }
                 }
             }
 
-            label116:
-            for(var10 = 0; var10 < 2; ++var10) {
-                for(var11 = 0; var11 < 3; ++var11) {
-                    var12 = par3 + par2Random.nextInt(var7 * 2 + 1) - var7;
+            for(int var191 = 0; var191 < 2; ++var191) {
+                for(int var11 = 0; var11 < 3; ++var11) {
+                    int var12 = par3 + par2Random.nextInt(var7 * 2 + 1) - var7;
                     int var14 = par5 + par2Random.nextInt(var8 * 2 + 1) - var8;
                     if (par1World.isAir(var12, par4, var14)) {
                         int var15 = 0;
@@ -95,24 +99,15 @@ public abstract class DungeonFeatureMixin extends Feature {
                         if (var15 == 1) {
                             par1World.method_3690(var12, par4, var14, Block.field_407.id);
                             ChestBlockEntity var16 = (ChestBlockEntity)par1World.getBlockEntity(var12, par4, var14);
-                            if (var16 == null) {
-                                break;
-                            }
-
-                            int var17 = 0;
-
-                            while(true) {
-                                if (var17 >= DungeonHooks.getDungeonLootTries()) {
-                                    continue label116;
+                            if (var16 != null) {
+                                for(int var17 = 0; var17 < DungeonHooks.getDungeonLootTries(); ++var17) {
+                                    ItemStack var18 = DungeonHooks.getRandomDungeonLoot(par2Random);
+                                    if (var18 != null) {
+                                        var16.setInvStack(par2Random.nextInt(var16.getInvSize()), var18);
+                                    }
                                 }
-
-                                ItemStack var18 = DungeonHooks.getRandomDungeonLoot(par2Random);
-                                if (var18 != null) {
-                                    var16.setInvStack(par2Random.nextInt(var16.getInvSize()), var18);
-                                }
-
-                                ++var17;
                             }
+                            break;
                         }
                     }
                 }

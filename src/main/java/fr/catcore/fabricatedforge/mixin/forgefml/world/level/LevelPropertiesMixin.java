@@ -4,14 +4,12 @@ import fr.catcore.fabricatedforge.mixininterface.ILevelProperties;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.world.level.LevelProperties;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Map;
 
 @Mixin(LevelProperties.class)
 public class LevelPropertiesMixin implements ILevelProperties {
 
-    @Unique
     private Map<String, NbtElement> additionalProperties;
 
     @Override
@@ -19,7 +17,6 @@ public class LevelPropertiesMixin implements ILevelProperties {
         if (this.additionalProperties == null) {
             this.additionalProperties = additionalProperties;
         }
-
     }
 
     @Override

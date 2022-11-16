@@ -1,6 +1,5 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
-import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.Feature;
@@ -25,25 +24,21 @@ public abstract class PineTreeFeatureMixin extends Feature {
         int var9 = 1 + par2Random.nextInt(var8 + 1);
         boolean var10 = true;
         if (par4 >= 1 && par4 + var6 + 1 <= 128) {
-            int var11;
-            int var13;
-            int var14;
-            int var15;
-            int var18;
-            for(var11 = par4; var11 <= par4 + 1 + var6 && var10; ++var11) {
+            for(int var11 = par4; var11 <= par4 + 1 + var6 && var10; ++var11) {
                 boolean var12 = true;
+                int var18;
                 if (var11 - par4 < var7) {
                     var18 = 0;
                 } else {
                     var18 = var9;
                 }
 
-                for(var13 = par3 - var18; var13 <= par3 + var18 && var10; ++var13) {
-                    for(var14 = par5 - var18; var14 <= par5 + var18 && var10; ++var14) {
+                for(int var13 = par3 - var18; var13 <= par3 + var18 && var10; ++var13) {
+                    for(int var14 = par5 - var18; var14 <= par5 + var18 && var10; ++var14) {
                         if (var11 >= 0 && var11 < 128) {
-                            var15 = par1World.getBlock(var13, var11, var14);
+                            int var15 = par1World.getBlock(var13, var11, var14);
                             Block block = Block.BLOCKS[var15];
-                            if (var15 != 0 && (block == null || !((IBlock)block).isLeaves(par1World, var13, var11, var14))) {
+                            if (var15 != 0 && (block == null || !block.isLeaves(par1World, var13, var11, var14))) {
                                 var10 = false;
                             }
                         } else {
@@ -56,19 +51,20 @@ public abstract class PineTreeFeatureMixin extends Feature {
             if (!var10) {
                 return false;
             } else {
-                var11 = par1World.getBlock(par3, par4 - 1, par5);
-                if ((var11 == Block.GRASS_BLOCK.id || var11 == Block.DIRT.id) && par4 < 128 - var6 - 1) {
+                int var19 = par1World.getBlock(par3, par4 - 1, par5);
+                if ((var19 == Block.GRASS_BLOCK.id || var19 == Block.DIRT.id) && par4 < 128 - var6 - 1) {
                     this.method_4026(par1World, par3, par4 - 1, par5, Block.DIRT.id);
-                    var18 = 0;
+                    int var18 = 0;
 
-                    for(var13 = par4 + var6; var13 >= par4 + var7; --var13) {
-                        for(var14 = par3 - var18; var14 <= par3 + var18; ++var14) {
-                            var15 = var14 - par3;
+                    for(int var13 = par4 + var6; var13 >= par4 + var7; --var13) {
+                        for(int var14 = par3 - var18; var14 <= par3 + var18; ++var14) {
+                            int var15 = var14 - par3;
 
                             for(int var16 = par5 - var18; var16 <= par5 + var18; ++var16) {
                                 int var17 = var16 - par5;
                                 Block block = Block.BLOCKS[par1World.getBlock(var14, var13, var16)];
-                                if ((Math.abs(var15) != var18 || Math.abs(var17) != var18 || var18 <= 0) && (block == null || ((IBlock)block).canBeReplacedByLeaves(par1World, var14, var13, var16))) {
+                                if ((Math.abs(var15) != var18 || Math.abs(var17) != var18 || var18 <= 0)
+                                        && (block == null || block.canBeReplacedByLeaves(par1World, var14, var13, var16))) {
                                     this.method_4027(par1World, var14, var13, var16, Block.LEAVES.id, 1);
                                 }
                             }
@@ -81,11 +77,11 @@ public abstract class PineTreeFeatureMixin extends Feature {
                         }
                     }
 
-                    for(var13 = 0; var13 < var6 - 1; ++var13) {
-                        var14 = par1World.getBlock(par3, par4 + var13, par5);
+                    for(int var21 = 0; var21 < var6 - 1; ++var21) {
+                        int var14 = par1World.getBlock(par3, par4 + var21, par5);
                         Block block = Block.BLOCKS[var14];
-                        if (var14 == 0 || block == null || ((IBlock)block).isLeaves(par1World, par3, par4 + var13, par5)) {
-                            this.method_4027(par1World, par3, par4 + var13, par5, Block.LOG.id, 1);
+                        if (var14 == 0 || block == null || block.isLeaves(par1World, par3, par4 + var21, par5)) {
+                            this.method_4027(par1World, par3, par4 + var21, par5, Block.LOG.id, 1);
                         }
                     }
 

@@ -8,6 +8,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.PersistentStateManager;
+import net.minecraft.world.SaveHandler;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.level.LevelProperties;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -18,6 +20,8 @@ public interface IWorld {
 
     @Environment(EnvType.CLIENT)
     void finishSetup();
+
+    PersistentStateManager getMapStorage(SaveHandler savehandler);
 
     @Environment(EnvType.CLIENT)
     Vec3d getSkyColorBody(Entity par1Entity, float par2);

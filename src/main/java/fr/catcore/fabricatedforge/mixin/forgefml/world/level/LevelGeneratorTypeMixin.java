@@ -10,11 +10,11 @@ import net.minecraft.world.biome.SingletonBiomeSource;
 import net.minecraft.world.chunk.ChunkProvider;
 import net.minecraft.world.chunk.FlatChunkGenerator;
 import net.minecraft.world.chunk.SurfaceChunkGenerator;
+import net.minecraft.world.gen.FlatWorldHelper;
 import net.minecraft.world.level.LevelGeneratorType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -27,7 +27,6 @@ import java.util.Set;
 public class LevelGeneratorTypeMixin implements ILevelGeneratorType {
     @Shadow @Final public static LevelGeneratorType FLAT;
 
-    @Unique
     protected Biome[] biomesForWorldType;
 
     @Inject(method = "<init>(ILjava/lang/String;I)V", at = @At("RETURN"))
@@ -43,12 +42,19 @@ public class LevelGeneratorTypeMixin implements ILevelGeneratorType {
 
     @Override
     public LayeredBiomeSource getChunkManager(World world) {
-        return (LayeredBiomeSource)((Object)this == FLAT ? new SingletonBiomeSource(Biome.PLAINS, 0.5F, 0.5F) : new LayeredBiomeSource(world));
+        if ((Object)this == FLAT) {
+            FlatWorldHelper var1 = FlatWorldHelper.method_4101(world.getLevelProperties().getGeneratorOptions());
+            return new SingletonBiomeSource(Biome.BIOMES[var1.getBiomeId()], 0.5F, 0.5F);
+        } else {
+            return new LayeredBiomeSource(world);
+        }
     }
 
     @Override
-    public ChunkProvider getChunkGenerator(World world) {
-        return (ChunkProvider)((Object)this == FLAT ? new FlatChunkGenerator(world, world.getSeed(), world.getLevelProperties().hasStructures()) : new SurfaceChunkGenerator(world, world.getSeed(), world.getLevelProperties().hasStructures()));
+    public ChunkProvider getChunkGenerator(World world, String generatorOptions) {
+        return (Object)this == FLAT
+                ? new FlatChunkGenerator(world, world.getSeed(), world.getLevelProperties().hasStructures(), generatorOptions)
+                : new SurfaceChunkGenerator(world, world.getSeed(), world.getLevelProperties().hasStructures());
     }
 
     @Override

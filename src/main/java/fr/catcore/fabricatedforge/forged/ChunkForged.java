@@ -1,6 +1,5 @@
 package fr.catcore.fabricatedforge.forged;
 
-import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
@@ -26,12 +25,12 @@ public class ChunkForged extends Chunk {
                     int meta = metadata[idx];
                     if (id != 0) {
                         int var10 = y >> 4;
-                        if (((IChunk)this).getChunkSection(var10) == null) {
-                            ((IChunk)this).setChunkSection(var10, new ChunkSection(var10 << 4));
+                        if (this.getChunkSection(var10) == null) {
+                            this.setChunkSection(var10, new ChunkSection(var10 << 4));
                         }
 
-                        ((IChunk)this).getChunkSection(var10).setBlock(x, y & 15, z, id);
-                        ((IChunk)this).getChunkSection(var10).setBlockData(x, y & 15, z, meta);
+                        this.getChunkSection(var10).setBlock(x, y & 15, z, id);
+                        this.getChunkSection(var10).setBlockData(x, y & 15, z, meta);
                     }
                 }
             }

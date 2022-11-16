@@ -10,7 +10,7 @@ import java.util.Random;
 public interface ILevelGeneratorType {
     LayeredBiomeSource getChunkManager(World world);
 
-    ChunkProvider getChunkGenerator(World world);
+    ChunkProvider getChunkGenerator(World world, String generatorOptions);
 
     int getMinimumSpawnHeight(World world);
 

@@ -1,6 +1,5 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.biome.layer;
 
-import fr.catcore.fabricatedforge.mixininterface.ILevelGeneratorType;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.layer.Layer;
 import net.minecraft.world.biome.layer.SetBaseBiomesLayer;
@@ -21,7 +20,7 @@ public abstract class SetBaseBiomesLayerMixin extends Layer {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void fmlCtr(long par1, Layer par3GenLayer, LevelGeneratorType par4WorldType, CallbackInfo ci) {
-        this.field_166 = ((ILevelGeneratorType)par4WorldType).getBiomesForWorldType();
+        this.field_166 = par4WorldType.getBiomesForWorldType();
         this.field_172 = par3GenLayer;
     }
 }
