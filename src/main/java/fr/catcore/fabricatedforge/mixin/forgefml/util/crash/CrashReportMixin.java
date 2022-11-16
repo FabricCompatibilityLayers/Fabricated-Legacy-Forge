@@ -9,7 +9,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(CrashReport.class)
 public class CrashReportMixin {
-
     @Inject(method = "fillSystemDetails", at = @At("RETURN"))
     private void fmlEnhanceCrashReport(CallbackInfo ci) {
         FMLCommonHandler.instance().enhanceCrashReport((CrashReport)(Object) this);

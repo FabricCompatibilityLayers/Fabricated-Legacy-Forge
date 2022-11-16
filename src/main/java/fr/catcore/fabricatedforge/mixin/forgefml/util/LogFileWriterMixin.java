@@ -32,6 +32,5 @@ public class LogFileWriterMixin {
         } catch (Exception var2) {
             LOGGER.log(Level.WARNING, "Failed to log to server.log", var2);
         }
-
     }
 }

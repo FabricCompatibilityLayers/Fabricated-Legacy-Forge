@@ -11,7 +11,6 @@ import java.util.Properties;
 
 @Mixin(Language.class)
 public class LanguageMixin {
-
     @Inject(method = "method_633", at = @At("RETURN"))
     private void fmlLoadLanguageTable(Properties par1Properties, String par2Str, CallbackInfo ci) {
         LanguageRegistry.instance().loadLanguageTable(par1Properties, par2Str);

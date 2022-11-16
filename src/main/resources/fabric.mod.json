@@ -81,7 +81,8 @@
       "net/minecraft/class_622": ["fr/catcore/fabricatedforge/mixininterface/ISoundSystem"],
       "net/minecraft/class_701": ["fr/catcore/fabricatedforge/mixininterface/IPacketListener"],
       "net/minecraft/server/MinecraftServer": ["fr/catcore/fabricatedforge/mixininterface/IMinecraftServer"],
-      "net/minecraft/class_1205": ["fr/catcore/fabricatedforge/mixininterface/IThreadedAnvilChunkStorage"]
+      "net/minecraft/class_1205": ["fr/catcore/fabricatedforge/mixininterface/IThreadedAnvilChunkStorage"],
+      "net/minecraft/class_847": ["fr/catcore/fabricatedforge/mixininterface/IWeightedRandomChestContent"]
     }
   }
 }
