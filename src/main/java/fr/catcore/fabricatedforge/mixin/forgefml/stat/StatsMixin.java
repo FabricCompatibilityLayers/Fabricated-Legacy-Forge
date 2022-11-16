@@ -31,7 +31,7 @@ public abstract class StatsMixin {
         for(int var3 = 0; var3 < Block.BLOCKS.length; ++var3) {
             if (Block.BLOCKS[var3] != null && Block.BLOCKS[var3].hasStats()) {
                 String var4 = CommonI18n.translate(par0Str, Block.BLOCKS[var3].getTranslatedName());
-                var2[var3] = (new CraftingStat(par1 + var3, var4, var3)).addStat();
+                var2[var3] = new CraftingStat(par1 + var3, var4, var3).addStat();
                 MINE.add(var2[var3]);
             }
         }

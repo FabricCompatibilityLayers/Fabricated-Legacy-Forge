@@ -44,11 +44,8 @@ public abstract class class_1254Mixin extends StructurePiece {
                 this.method_66(par1World, par3StructureBoundingBox, par2Random, 0.6F, 0, 0, 0, 2, 1, var8, Block.COBWEB.id, 0, false);
             }
 
-            int var9;
-            int var10;
-            int var11;
-            for(var9 = 0; var9 < this.field_4914; ++var9) {
-                var10 = 2 + var9 * 5;
+            for(int var9 = 0; var9 < this.field_4914; ++var9) {
+                int var10 = 2 + var9 * 5;
                 this.method_62(par1World, par3StructureBoundingBox, 0, 0, var10, 0, 1, var10, Block.WOODEN_FENCE.id, 0, false);
                 this.method_62(par1World, par3StructureBoundingBox, 2, 0, var10, 2, 1, var10, Block.WOODEN_FENCE.id, 0, false);
                 if (par2Random.nextInt(4) == 0) {
@@ -78,7 +75,7 @@ public abstract class class_1254Mixin extends StructurePiece {
                 }
 
                 if (this.field_4912 && !this.field_4913) {
-                    var11 = this.applyYTransform(0);
+                    int var11 = this.applyYTransform(0);
                     int var12 = var10 - 1 + par2Random.nextInt(3);
                     int var13 = this.applyXTransform(1, var12);
                     var12 = this.applyZTransform(1, var12);
@@ -93,20 +90,22 @@ public abstract class class_1254Mixin extends StructurePiece {
                 }
             }
 
-            for(var9 = 0; var9 <= 2; ++var9) {
-                for(var10 = 0; var10 <= var8; ++var10) {
-                    var11 = this.method_57(par1World, var9, -1, var10, par3StructureBoundingBox);
+            for(int var121 = 0; var121 <= 2; ++var121) {
+                for(int var10 = 0; var10 <= var8; ++var10) {
+                    int var11 = this.method_57(par1World, var121, -1, var10, par3StructureBoundingBox);
                     if (var11 == 0) {
-                        this.method_56(par1World, Block.PLANKS.id, 0, var9, -1, var10, par3StructureBoundingBox);
+                        this.method_56(par1World, Block.PLANKS.id, 0, var121, -1, var10, par3StructureBoundingBox);
                     }
                 }
             }
 
             if (this.field_4911) {
-                for(var9 = 0; var9 <= var8; ++var9) {
-                    var10 = this.method_57(par1World, 1, -1, var9, par3StructureBoundingBox);
+                for(int var131 = 0; var131 <= var8; ++var131) {
+                    int var10 = this.method_57(par1World, 1, -1, var131, par3StructureBoundingBox);
                     if (var10 > 0 && Block.field_493[var10]) {
-                        this.method_65(par1World, par3StructureBoundingBox, par2Random, 0.7F, 1, 0, var9, Block.RAIL_BLOCK.id, this.method_75(Block.RAIL_BLOCK.id, 0));
+                        this.method_65(
+                                par1World, par3StructureBoundingBox, par2Random, 0.7F, 1, 0, var131, Block.RAIL_BLOCK.id, this.method_75(Block.RAIL_BLOCK.id, 0)
+                        );
                     }
                 }
             }

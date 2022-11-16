@@ -70,8 +70,7 @@ public abstract class class_6Mixin extends class_8 {
             this.method_56(par1World, 0, 0, 1, 5, 9, par3StructureBoundingBox);
             this.method_56(par1World, 0, 0, 10, 5, 9, par3StructureBoundingBox);
 
-            int var8;
-            for(var8 = 0; var8 <= 14; var8 += 14) {
+            for(int var8 = 0; var8 <= 14; var8 += 14) {
                 this.method_64(par1World, par3StructureBoundingBox, 2, 4, var8, 2, 5, var8, false, par2Random, field_13);
                 this.method_64(par1World, par3StructureBoundingBox, 4, 4, var8, 4, 5, var8, false, par2Random, field_13);
                 this.method_64(par1World, par3StructureBoundingBox, 7, 4, var8, 7, 5, var8, false, par2Random, field_13);
@@ -80,13 +79,13 @@ public abstract class class_6Mixin extends class_8 {
 
             this.method_64(par1World, par3StructureBoundingBox, 5, 6, 0, 6, 6, 0, false, par2Random, field_13);
 
-            for(var8 = 0; var8 <= 11; var8 += 11) {
+            for(int var11 = 0; var11 <= 11; var11 += 11) {
                 for(int var9 = 2; var9 <= 12; var9 += 2) {
-                    this.method_64(par1World, par3StructureBoundingBox, var8, 4, var9, var8, 5, var9, false, par2Random, field_13);
+                    this.method_64(par1World, par3StructureBoundingBox, var11, 4, var9, var11, 5, var9, false, par2Random, field_13);
                 }
 
-                this.method_64(par1World, par3StructureBoundingBox, var8, 6, 5, var8, 6, 5, false, par2Random, field_13);
-                this.method_64(par1World, par3StructureBoundingBox, var8, 6, 9, var8, 6, 9, false, par2Random, field_13);
+                this.method_64(par1World, par3StructureBoundingBox, var11, 6, 5, var11, 6, 5, false, par2Random, field_13);
+                this.method_64(par1World, par3StructureBoundingBox, var11, 6, 9, var11, 6, 9, false, par2Random, field_13);
             }
 
             this.method_64(par1World, par3StructureBoundingBox, 2, 7, 2, 2, 9, 2, false, par2Random, field_13);
@@ -119,22 +118,22 @@ public abstract class class_6Mixin extends class_8 {
             this.method_56(par1World, Block.STONE_STAIRS.id, var6, 4, 4, 5, par3StructureBoundingBox);
             this.method_56(par1World, Block.STONE_STAIRS.id, var7, 7, 4, 5, par3StructureBoundingBox);
 
-            for(var8 = 0; var8 < 4; ++var8) {
-                this.method_56(par1World, Block.STONE_STAIRS.id, var5, 5, -var8, 6 + var8, par3StructureBoundingBox);
-                this.method_56(par1World, Block.STONE_STAIRS.id, var5, 6, -var8, 6 + var8, par3StructureBoundingBox);
-                this.setAir(par1World, par3StructureBoundingBox, 5, -var8, 7 + var8, 6, -var8, 9 + var8);
+            for(int var12 = 0; var12 < 4; ++var12) {
+                this.method_56(par1World, Block.STONE_STAIRS.id, var5, 5, 0 - var12, 6 + var12, par3StructureBoundingBox);
+                this.method_56(par1World, Block.STONE_STAIRS.id, var5, 6, 0 - var12, 6 + var12, par3StructureBoundingBox);
+                this.setAir(par1World, par3StructureBoundingBox, 5, 0 - var12, 7 + var12, 6, 0 - var12, 9 + var12);
             }
 
             this.setAir(par1World, par3StructureBoundingBox, 1, -3, 12, 10, -1, 13);
             this.setAir(par1World, par3StructureBoundingBox, 1, -3, 1, 3, -1, 13);
             this.setAir(par1World, par3StructureBoundingBox, 1, -3, 1, 9, -1, 5);
 
-            for(var8 = 1; var8 <= 13; var8 += 2) {
-                this.method_64(par1World, par3StructureBoundingBox, 1, -3, var8, 1, -2, var8, false, par2Random, field_13);
+            for(int var13 = 1; var13 <= 13; var13 += 2) {
+                this.method_64(par1World, par3StructureBoundingBox, 1, -3, var13, 1, -2, var13, false, par2Random, field_13);
             }
 
-            for(var8 = 2; var8 <= 12; var8 += 2) {
-                this.method_64(par1World, par3StructureBoundingBox, 1, -1, var8, 3, -1, var8, false, par2Random, field_13);
+            for(int var14 = 2; var14 <= 12; var14 += 2) {
+                this.method_64(par1World, par3StructureBoundingBox, 1, -1, var14, 3, -1, var14, false, par2Random, field_13);
             }
 
             this.method_64(par1World, par3StructureBoundingBox, 2, -2, 1, 5, -2, 1, false, par2Random, field_13);
@@ -157,7 +156,9 @@ public abstract class class_6Mixin extends class_8 {
             ChestGenHooks dispenser = ChestGenHooks.getInfo("pyramidJungleDispenser");
             ChestGenHooks chest = ChestGenHooks.getInfo("pyramidJungleChest");
             if (!this.field_9) {
-                this.field_9 = this.method_68(par1World, par3StructureBoundingBox, par2Random, 3, -2, 1, 2, dispenser.getItems(), dispenser.getCount(par2Random));
+                this.field_9 = this.method_68(
+                        par1World, par3StructureBoundingBox, par2Random, 3, -2, 1, 2, dispenser.getItems(), dispenser.getCount(par2Random)
+                );
             }
 
             this.method_56(par1World, Block.VINE.id, 15, 3, -2, 2, par3StructureBoundingBox);
@@ -172,7 +173,9 @@ public abstract class class_6Mixin extends class_8 {
             this.method_56(par1World, Block.MOSSY_COBBLESTONE.id, 0, 9, -3, 4, par3StructureBoundingBox);
             this.method_56(par1World, Block.field_408.id, 0, 9, -2, 4, par3StructureBoundingBox);
             if (!this.field_10) {
-                this.field_10 = this.method_68(par1World, par3StructureBoundingBox, par2Random, 9, -2, 3, 4, dispenser.getItems(), dispenser.getCount(par2Random));
+                this.field_10 = this.method_68(
+                        par1World, par3StructureBoundingBox, par2Random, 9, -2, 3, 4, dispenser.getItems(), dispenser.getCount(par2Random)
+                );
             }
 
             this.method_56(par1World, Block.VINE.id, 15, 8, -1, 3, par3StructureBoundingBox);

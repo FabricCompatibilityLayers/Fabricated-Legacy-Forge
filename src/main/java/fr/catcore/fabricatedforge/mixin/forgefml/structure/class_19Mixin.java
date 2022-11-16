@@ -43,8 +43,7 @@ public abstract class class_19Mixin extends class_31 {
             this.method_41(par1World, par2Random, par3StructureBoundingBox, this.field_37, 4, 1, 0);
             this.method_66(par1World, par3StructureBoundingBox, par2Random, 0.07F, 2, 1, 1, 11, 4, 13, Block.COBWEB.id, Block.COBWEB.id, false);
 
-            int var7;
-            for(var7 = 1; var7 <= 13; ++var7) {
+            for(int var7 = 1; var7 <= 13; ++var7) {
                 if ((var7 - 1) % 4 == 0) {
                     this.method_62(par1World, par3StructureBoundingBox, 1, 1, var7, 1, 4, var7, Block.PLANKS.id, Block.PLANKS.id, false);
                     this.method_62(par1World, par3StructureBoundingBox, 12, 1, var7, 12, 4, var7, Block.PLANKS.id, Block.PLANKS.id, false);
@@ -64,10 +63,10 @@ public abstract class class_19Mixin extends class_31 {
                 }
             }
 
-            for(var7 = 3; var7 < 12; var7 += 2) {
-                this.method_62(par1World, par3StructureBoundingBox, 3, 1, var7, 4, 3, var7, Block.BOOKSHELF.id, Block.BOOKSHELF.id, false);
-                this.method_62(par1World, par3StructureBoundingBox, 6, 1, var7, 7, 3, var7, Block.BOOKSHELF.id, Block.BOOKSHELF.id, false);
-                this.method_62(par1World, par3StructureBoundingBox, 9, 1, var7, 10, 3, var7, Block.BOOKSHELF.id, Block.BOOKSHELF.id, false);
+            for(int var8 = 3; var8 < 12; var8 += 2) {
+                this.method_62(par1World, par3StructureBoundingBox, 3, 1, var8, 4, 3, var8, Block.BOOKSHELF.id, Block.BOOKSHELF.id, false);
+                this.method_62(par1World, par3StructureBoundingBox, 6, 1, var8, 7, 3, var8, Block.BOOKSHELF.id, Block.BOOKSHELF.id, false);
+                this.method_62(par1World, par3StructureBoundingBox, 9, 1, var8, 10, 3, var8, Block.BOOKSHELF.id, Block.BOOKSHELF.id, false);
             }
 
             if (this.field_39) {
@@ -85,34 +84,34 @@ public abstract class class_19Mixin extends class_31 {
                 this.method_56(par1World, Block.WOODEN_FENCE.id, 0, 9, 6, 11, par3StructureBoundingBox);
                 this.method_56(par1World, Block.WOODEN_FENCE.id, 0, 8, 6, 11, par3StructureBoundingBox);
                 this.method_56(par1World, Block.WOODEN_FENCE.id, 0, 9, 6, 10, par3StructureBoundingBox);
-                var7 = this.method_75(Block.LADDER_BLOCK.id, 3);
-                this.method_56(par1World, Block.LADDER_BLOCK.id, var7, 10, 1, 13, par3StructureBoundingBox);
-                this.method_56(par1World, Block.LADDER_BLOCK.id, var7, 10, 2, 13, par3StructureBoundingBox);
-                this.method_56(par1World, Block.LADDER_BLOCK.id, var7, 10, 3, 13, par3StructureBoundingBox);
-                this.method_56(par1World, Block.LADDER_BLOCK.id, var7, 10, 4, 13, par3StructureBoundingBox);
-                this.method_56(par1World, Block.LADDER_BLOCK.id, var7, 10, 5, 13, par3StructureBoundingBox);
-                this.method_56(par1World, Block.LADDER_BLOCK.id, var7, 10, 6, 13, par3StructureBoundingBox);
-                this.method_56(par1World, Block.LADDER_BLOCK.id, var7, 10, 7, 13, par3StructureBoundingBox);
+                int var91 = this.method_75(Block.LADDER_BLOCK.id, 3);
+                this.method_56(par1World, Block.LADDER_BLOCK.id, var91, 10, 1, 13, par3StructureBoundingBox);
+                this.method_56(par1World, Block.LADDER_BLOCK.id, var91, 10, 2, 13, par3StructureBoundingBox);
+                this.method_56(par1World, Block.LADDER_BLOCK.id, var91, 10, 3, 13, par3StructureBoundingBox);
+                this.method_56(par1World, Block.LADDER_BLOCK.id, var91, 10, 4, 13, par3StructureBoundingBox);
+                this.method_56(par1World, Block.LADDER_BLOCK.id, var91, 10, 5, 13, par3StructureBoundingBox);
+                this.method_56(par1World, Block.LADDER_BLOCK.id, var91, 10, 6, 13, par3StructureBoundingBox);
+                this.method_56(par1World, Block.LADDER_BLOCK.id, var91, 10, 7, 13, par3StructureBoundingBox);
                 byte var8 = 7;
-                byte var9 = 7;
-                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 - 1, 9, var9, par3StructureBoundingBox);
-                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8, 9, var9, par3StructureBoundingBox);
-                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 - 1, 8, var9, par3StructureBoundingBox);
-                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8, 8, var9, par3StructureBoundingBox);
-                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 - 1, 7, var9, par3StructureBoundingBox);
-                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8, 7, var9, par3StructureBoundingBox);
-                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 - 2, 7, var9, par3StructureBoundingBox);
-                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 + 1, 7, var9, par3StructureBoundingBox);
-                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 - 1, 7, var9 - 1, par3StructureBoundingBox);
-                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 - 1, 7, var9 + 1, par3StructureBoundingBox);
-                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8, 7, var9 - 1, par3StructureBoundingBox);
-                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8, 7, var9 + 1, par3StructureBoundingBox);
-                this.method_56(par1World, Block.TORCH.id, 0, var8 - 2, 8, var9, par3StructureBoundingBox);
-                this.method_56(par1World, Block.TORCH.id, 0, var8 + 1, 8, var9, par3StructureBoundingBox);
-                this.method_56(par1World, Block.TORCH.id, 0, var8 - 1, 8, var9 - 1, par3StructureBoundingBox);
-                this.method_56(par1World, Block.TORCH.id, 0, var8 - 1, 8, var9 + 1, par3StructureBoundingBox);
-                this.method_56(par1World, Block.TORCH.id, 0, var8, 8, var9 - 1, par3StructureBoundingBox);
-                this.method_56(par1World, Block.TORCH.id, 0, var8, 8, var9 + 1, par3StructureBoundingBox);
+                byte var9x = 7;
+                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 - 1, 9, var9x, par3StructureBoundingBox);
+                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8, 9, var9x, par3StructureBoundingBox);
+                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 - 1, 8, var9x, par3StructureBoundingBox);
+                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8, 8, var9x, par3StructureBoundingBox);
+                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 - 1, 7, var9x, par3StructureBoundingBox);
+                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8, 7, var9x, par3StructureBoundingBox);
+                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 - 2, 7, var9x, par3StructureBoundingBox);
+                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 + 1, 7, var9x, par3StructureBoundingBox);
+                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 - 1, 7, var9x - 1, par3StructureBoundingBox);
+                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8 - 1, 7, var9x + 1, par3StructureBoundingBox);
+                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8, 7, var9x - 1, par3StructureBoundingBox);
+                this.method_56(par1World, Block.WOODEN_FENCE.id, 0, var8, 7, var9x + 1, par3StructureBoundingBox);
+                this.method_56(par1World, Block.TORCH.id, 0, var8 - 2, 8, var9x, par3StructureBoundingBox);
+                this.method_56(par1World, Block.TORCH.id, 0, var8 + 1, 8, var9x, par3StructureBoundingBox);
+                this.method_56(par1World, Block.TORCH.id, 0, var8 - 1, 8, var9x - 1, par3StructureBoundingBox);
+                this.method_56(par1World, Block.TORCH.id, 0, var8 - 1, 8, var9x + 1, par3StructureBoundingBox);
+                this.method_56(par1World, Block.TORCH.id, 0, var8, 8, var9x - 1, par3StructureBoundingBox);
+                this.method_56(par1World, Block.TORCH.id, 0, var8, 8, var9x + 1, par3StructureBoundingBox);
             }
 
             ChestGenHooks info = ChestGenHooks.getInfo("strongholdLibrary");

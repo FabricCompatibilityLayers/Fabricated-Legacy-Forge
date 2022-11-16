@@ -43,18 +43,26 @@ public abstract class class_15Mixin extends class_31 {
             this.method_56(par1World, Block.STONE_SLAB.id, 5, 3, 2, 2, par3StructureBoundingBox);
             this.method_56(par1World, Block.STONE_SLAB.id, 5, 3, 2, 4, par3StructureBoundingBox);
 
-            int var4;
-            for(var4 = 2; var4 <= 4; ++var4) {
+            for(int var4 = 2; var4 <= 4; ++var4) {
                 this.method_56(par1World, Block.STONE_SLAB.id, 5, 2, 1, var4, par3StructureBoundingBox);
             }
 
             if (!this.field_29) {
-                var4 = this.applyYTransform(2);
+                int var7 = this.applyYTransform(2);
                 int var5 = this.applyXTransform(3, 3);
                 int var6 = this.applyZTransform(3, 3);
-                if (par3StructureBoundingBox.intersects(var5, var4, var6)) {
+                if (par3StructureBoundingBox.intersects(var5, var7, var6)) {
                     this.field_29 = true;
-                    this.method_69(par1World, par3StructureBoundingBox, par2Random, 3, 2, 3, ChestGenHooks.getItems("strongholdCorridor"), ChestGenHooks.getCount("strongholdCorridor", par2Random));
+                    this.method_69(
+                            par1World,
+                            par3StructureBoundingBox,
+                            par2Random,
+                            3,
+                            2,
+                            3,
+                            ChestGenHooks.getItems("strongholdCorridor"),
+                            ChestGenHooks.getCount("strongholdCorridor", par2Random)
+                    );
                 }
             }
 
