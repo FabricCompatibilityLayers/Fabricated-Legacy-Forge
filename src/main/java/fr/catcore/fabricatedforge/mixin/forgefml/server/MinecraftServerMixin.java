@@ -158,7 +158,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
             ServerWorld world = (ServerWorld)(dim == 0 ? overWorld : new MultiServerWorld((MinecraftServer)(Object) this, var7, par2Str, dim, var8, overWorld, this.profiler));
             world.addListener(new ServerWorldManager((MinecraftServer)(Object) this, world));
             if (!this.isSinglePlayer()) {
-                world.getLevelProperties().method_207(this.method_3026());
+                world.getLevelProperties().getGameMode(this.method_3026());
             }
 
             this.playerManager.setMainWorld(this.worlds);

@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity.passive;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.passive.OcelotEntity;
 import net.minecraft.entity.passive.TameableEntity;
@@ -35,7 +36,7 @@ public abstract class OcelotEntityMixin extends TameableEntity {
 
                 int var4 = this.world.getBlock(var1, var2 - 1, var3);
                 Block block = Block.BLOCKS[var4];
-                if (var4 == Block.GRASS_BLOCK.id || block != null && block.isLeaves(this.world, var1, var2 - 1, var3)) {
+                if (var4 == Block.GRASS_BLOCK.id || block != null && ((IBlock)block).isLeaves(this.world, var1, var2 - 1, var3)) {
                     return true;
                 }
             }

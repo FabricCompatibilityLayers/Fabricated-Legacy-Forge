@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IFireBlock;
 import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.fabricmc.api.EnvType;
@@ -71,7 +72,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
     public void onTick(World par1World, int par2, int par3, int par4, Random par5Random) {
         if (par1World.getGameRules().getBoolean("doFireTick")) {
             Block base = Block.BLOCKS[par1World.getBlock(par2, par3 - 1, par4)];
-            boolean var6 = base != null && base.isFireSource(par1World, par2, par3 - 1, par4, par1World.getBlockData(par2, par3 - 1, par4), ForgeDirection.UP);
+            boolean var6 = base != null && ((IBlock)base).isFireSource(par1World, par2, par3 - 1, par4, par1World.getBlockData(par2, par3 - 1, par4), ForgeDirection.UP);
             if (!this.canPlaceBlockAt(par1World, par2, par3, par4)) {
                 par1World.method_3690(par2, par3, par4, 0);
             }
@@ -165,7 +166,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
         int var8 = 0;
         Block block = Block.BLOCKS[par1World.getBlock(par2, par3, par4)];
         if (block != null) {
-            var8 = block.getFlammability(par1World, par2, par3, par4, par1World.getBlockData(par2, par3, par4), face);
+            var8 = ((IBlock)block).getFlammability(par1World, par2, par3, par4, par1World.getBlockData(par2, par3, par4), face);
         }
 
         if (par6Random.nextInt(par5) < var8) {
@@ -256,8 +257,8 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
             );
         }
 
-        if (!par1World.isTopSolid(par2, par3 - 1, par4) && !Block.FIRE.canBlockCatchFire(par1World, par2, par3 - 1, par4, ForgeDirection.UP)) {
-            if (Block.FIRE.canBlockCatchFire(par1World, par2 - 1, par3, par4, ForgeDirection.EAST)) {
+        if (!par1World.isTopSolid(par2, par3 - 1, par4) && !((IFireBlock)Block.FIRE).canBlockCatchFire(par1World, par2, par3 - 1, par4, ForgeDirection.UP)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(par1World, par2 - 1, par3, par4, ForgeDirection.EAST)) {
                 for(int var6 = 0; var6 < 2; ++var6) {
                     float var7 = (float)par2 + par5Random.nextFloat() * 0.1F;
                     float var8 = (float)par3 + par5Random.nextFloat();
@@ -266,7 +267,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
                 }
             }
 
-            if (Block.FIRE.canBlockCatchFire(par1World, par2 + 1, par3, par4, ForgeDirection.WEST)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(par1World, par2 + 1, par3, par4, ForgeDirection.WEST)) {
                 for(int var6 = 0; var6 < 2; ++var6) {
                     float var7 = (float)(par2 + 1) - par5Random.nextFloat() * 0.1F;
                     float var8 = (float)par3 + par5Random.nextFloat();
@@ -275,7 +276,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
                 }
             }
 
-            if (Block.FIRE.canBlockCatchFire(par1World, par2, par3, par4 - 1, ForgeDirection.SOUTH)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(par1World, par2, par3, par4 - 1, ForgeDirection.SOUTH)) {
                 for(int var6 = 0; var6 < 2; ++var6) {
                     float var7 = (float)par2 + par5Random.nextFloat();
                     float var8 = (float)par3 + par5Random.nextFloat();
@@ -284,7 +285,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
                 }
             }
 
-            if (Block.FIRE.canBlockCatchFire(par1World, par2, par3, par4 + 1, ForgeDirection.NORTH)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(par1World, par2, par3, par4 + 1, ForgeDirection.NORTH)) {
                 for(int var6 = 0; var6 < 2; ++var6) {
                     float var7 = (float)par2 + par5Random.nextFloat();
                     float var8 = (float)par3 + par5Random.nextFloat();
@@ -293,7 +294,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
                 }
             }
 
-            if (Block.FIRE.canBlockCatchFire(par1World, par2, par3 + 1, par4, ForgeDirection.DOWN)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(par1World, par2, par3 + 1, par4, ForgeDirection.DOWN)) {
                 for(int var6 = 0; var6 < 2; ++var6) {
                     float var7 = (float)par2 + par5Random.nextFloat();
                     float var8 = (float)(par3 + 1) - par5Random.nextFloat() * 0.1F;
@@ -314,7 +315,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
     @Override
     public boolean canBlockCatchFire(BlockView world, int x, int y, int z, ForgeDirection face) {
         Block block = Block.BLOCKS[world.getBlock(x, y, z)];
-        return block != null ? block.isFlammable(world, x, y, z, world.getBlockData(x, y, z), face) : false;
+        return block != null ? ((IBlock)block).isFlammable(world, x, y, z, world.getBlockData(x, y, z), face) : false;
     }
 
     @Override
@@ -322,7 +323,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
         int newChance = 0;
         Block block = Block.BLOCKS[world.getBlock(x, y, z)];
         if (block != null) {
-            newChance = block.getFireSpreadSpeed(world, x, y, z, world.getBlockData(x, y, z), face);
+            newChance = ((IBlock)block).getFireSpreadSpeed(world, x, y, z, world.getBlockData(x, y, z), face);
         }
 
         return newChance > oldChance ? newChance : oldChance;

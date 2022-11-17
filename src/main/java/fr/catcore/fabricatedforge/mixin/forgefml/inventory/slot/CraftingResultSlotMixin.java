@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.inventory.slot;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.slot.CraftingResultSlot;
@@ -37,7 +38,7 @@ public class CraftingResultSlotMixin extends Slot {
             if (var4 != null) {
                 this.field_4147.takeInvStack(var3, 1);
                 if (var4.getItem().isFood()) {
-                    ItemStack var5 = var4.getItem().getContainerItemStack(var4);
+                    ItemStack var5 = ((IItem)var4.getItem()).getContainerItemStack(var4);
                     if (var5.isDamageable() && var5.getMeta() > var5.getMaxDamage()) {
                         MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(this.player, var5));
                         var4 = null;

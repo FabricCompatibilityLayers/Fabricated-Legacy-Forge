@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.dimension;
 
 import fr.catcore.fabricatedforge.mixininterface.IDimension;
+import fr.catcore.fabricatedforge.mixininterface.ILevelGeneratorType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
@@ -44,7 +45,7 @@ public class DimensionMixin implements IDimension {
      */
     @Overwrite
     protected void init() {
-        this.biomeSource = this.generatorType.getChunkManager(this.world);
+        this.biomeSource = ((ILevelGeneratorType)this.generatorType).getChunkManager(this.world);
     }
 
     /**
@@ -53,7 +54,7 @@ public class DimensionMixin implements IDimension {
      */
     @Overwrite
     public ChunkProvider createChunkGenerator() {
-        return this.generatorType.getChunkGenerator(this.world, this.generatorOptions);
+        return ((ILevelGeneratorType)this.generatorType).getChunkGenerator(this.world, this.generatorOptions);
     }
 
     /**
@@ -71,7 +72,7 @@ public class DimensionMixin implements IDimension {
      */
     @Overwrite
     public int getAverageYLevel() {
-        return this.generatorType.getMinimumSpawnHeight(this.world);
+        return ((ILevelGeneratorType)this.generatorType).getMinimumSpawnHeight(this.world);
     }
 
     /**
@@ -81,7 +82,7 @@ public class DimensionMixin implements IDimension {
     @Environment(EnvType.CLIENT)
     @Overwrite
     public boolean hasVoidFog() {
-        return this.generatorType.hasVoidParticles(this.isNether);
+        return ((ILevelGeneratorType)this.generatorType).hasVoidParticles(this.isNether);
     }
 
     /**
@@ -91,7 +92,7 @@ public class DimensionMixin implements IDimension {
     @Environment(EnvType.CLIENT)
     @Overwrite
     public double method_3994() {
-        return this.generatorType.voidFadeMagnitude();
+        return ((ILevelGeneratorType)this.generatorType).voidFadeMagnitude();
     }
 
     @Override
@@ -143,7 +144,7 @@ public class DimensionMixin implements IDimension {
     public BlockPos getRandomizedSpawnPoint() {
         BlockPos var5 = new BlockPos(this.world.getWorldSpawnPos());
         boolean isAdventure = this.world.getLevelProperties().getGamemode() != GameMode.ADVENTURE;
-        int spawnFuzz = this.generatorType.getSpawnFuzz();
+        int spawnFuzz = ((ILevelGeneratorType)this.generatorType).getSpawnFuzz();
         int spawnFuzzHalf = spawnFuzz / 2;
         if (!this.isNether && !isAdventure) {
             var5.x += this.world.random.nextInt(spawnFuzz) - spawnFuzzHalf;
@@ -261,7 +262,7 @@ public class DimensionMixin implements IDimension {
 
     @Override
     public double getHorizon() {
-        return this.world.getLevelProperties().getGeneratorType().getHorizon(this.world);
+        return ((ILevelGeneratorType)this.world.getLevelProperties().getGeneratorType()).getHorizon(this.world);
     }
 
     @Override

@@ -23,45 +23,74 @@ import java.util.logging.Level;
 
 public class ModClassLoader extends URLClassLoader {
     private static final List<String> STANDARD_LIBRARIES = ImmutableList.of("jinput.jar", "lwjgl.jar", "lwjgl_util.jar");
-    private RelaunchClassLoader mainClassLoader;
 
+    private URL[] localUrls;
     public ModClassLoader(ClassLoader parent) {
-        super(new URL[0], null);
-        this.mainClassLoader = (RelaunchClassLoader)parent;
-    }
-
-    public void addFile(File modFile) throws MalformedURLException {
-        URL url = modFile.toURI().toURL();
-        this.mainClassLoader.addURL(url);
-    }
-
-    public Class<?> loadClass(String name) throws ClassNotFoundException {
-        return this.mainClassLoader.loadClass(name);
-    }
-
-    public File[] getParentSources() {
-        List<URL> urls = this.mainClassLoader.getSources();
-        File[] sources = new File[urls.size()];
-
-        try {
-            for(int i = 0; i < urls.size(); ++i) {
-                sources[i] = new File(((URL)urls.get(i)).toURI());
-            }
-
-            return sources;
-        } catch (URISyntaxException var4) {
-            FMLLog.log(Level.SEVERE, "Unable to process our input to locate the minecraft code", new Object[]{var4});
-            throw new LoaderException(var4);
-        }
+        super(new URL[0], parent);
+        localUrls = new URL[0];
     }
 
     public List<String> getDefaultLibraries() {
-        return new ArrayList<>();
+        return Collections.emptyList();
+    }
+
+    @Override
+    protected void addURL(URL url) {
+        FabricLauncherBase.getLauncher().addToClassPath(UrlUtil.asPath(url));
+
+        URL[] newLocalUrls = new URL[localUrls.length + 1];
+        System.arraycopy(localUrls, 0, newLocalUrls, 0, localUrls.length);
+        newLocalUrls[localUrls.length] = url;
+        localUrls = newLocalUrls;
+    }
+
+    @Override
+    public URL[] getURLs() {
+        return localUrls;
+    }
+
+    @Override
+    public URL findResource(final String name) {
+        return getParent().getResource(name);
+    }
+
+    @Override
+    public Enumeration<URL> findResources(final String name) throws IOException {
+        return getParent().getResources(name);
+    }
+
+    /**
+     * This is used to add mods to the classpath.
+     * @param file The mod file.
+     * @throws MalformedURLException If the File->URL transformation fails.
+     */
+    public void addFile(File file) throws MalformedURLException {
+        try {
+            addURL(UrlUtil.asUrl(file));
+        } catch (MalformedURLException e) {
+            throw new MalformedURLException(e.getMessage());
+        }
+    }
+
+    /**
+     * This is used to find the Minecraft .JAR location.
+     *
+     * @return The "parent source" file.
+     */
+    public File getParentSource() {
+        return ((MinecraftGameProvider) FabricLoaderImpl.INSTANCE.getGameProvider()).getGameJar().toFile();
+    }
+
+    /**
+     * @return The "parent source" files array.
+     */
+    public File[] getParentSources() {
+        return new File[] { getParentSource() };
     }
 
     public Class<? extends BaseModProxy> loadBaseModClass(String modClazzName) throws Exception {
-        AccessTransformer transformer = (AccessTransformer)this.mainClassLoader.getTransformers().get(0);
-        transformer.ensurePublicAccessFor(modClazzName);
+//        AccessTransformer transformer = (AccessTransformer)this.mainClassLoader.getTransformers().get(0);
+//        transformer.ensurePublicAccessFor(modClazzName);
         return (Class<? extends BaseModProxy>) Class.forName(modClazzName, true, this);
     }
 }

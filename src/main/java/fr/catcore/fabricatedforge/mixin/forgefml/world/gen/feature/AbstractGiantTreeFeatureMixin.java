@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -46,11 +47,11 @@ public abstract class AbstractGiantTreeFeatureMixin extends Feature {
                             int var12 = par1World.getBlock(var10, var8, var11);
                             if (var12 != 0
                                     && Block.BLOCKS[var12] != null
-                                    && !Block.BLOCKS[var12].isLeaves(par1World, var10, var8, var11)
+                                    && !((IBlock)Block.BLOCKS[var12]).isLeaves(par1World, var10, var8, var11)
                                     && var12 != Block.GRASS_BLOCK.id
                                     && var12 != Block.DIRT.id
                                     && Block.BLOCKS[var12] != null
-                                    && !Block.BLOCKS[var12].isWood(par1World, var10, var8, var11)
+                                    && !((IBlock)Block.BLOCKS[var12]).isWood(par1World, var10, var8, var11)
                                     && var12 != Block.SAPLING.id) {
                                 var7 = false;
                             }
@@ -87,7 +88,7 @@ public abstract class AbstractGiantTreeFeatureMixin extends Feature {
 
                     for(int var10 = 0; var10 < var6; ++var10) {
                         int var11 = par1World.getBlock(par3, par4 + var10, par5);
-                        if (var11 == 0 || Block.BLOCKS[var11] == null || Block.BLOCKS[var11].isLeaves(par1World, par3, par4 + var10, par5)) {
+                        if (var11 == 0 || Block.BLOCKS[var11] == null || ((IBlock)Block.BLOCKS[var11]).isLeaves(par1World, par3, par4 + var10, par5)) {
                             this.method_4027(par1World, par3, par4 + var10, par5, Block.LOG.id, this.field_4890);
                             if (var10 > 0) {
                                 if (par2Random.nextInt(3) > 0 && par1World.isAir(par3 - 1, par4 + var10, par5)) {
@@ -102,7 +103,7 @@ public abstract class AbstractGiantTreeFeatureMixin extends Feature {
 
                         if (var10 < var6 - 1) {
                             var11 = par1World.getBlock(par3 + 1, par4 + var10, par5);
-                            if (var11 == 0 || Block.BLOCKS[var11] == null || Block.BLOCKS[var11].isLeaves(par1World, par3 + 1, par4 + var10, par5)) {
+                            if (var11 == 0 || Block.BLOCKS[var11] == null || ((IBlock)Block.BLOCKS[var11]).isLeaves(par1World, par3 + 1, par4 + var10, par5)) {
                                 this.method_4027(par1World, par3 + 1, par4 + var10, par5, Block.LOG.id, this.field_4890);
                                 if (var10 > 0) {
                                     if (par2Random.nextInt(3) > 0 && par1World.isAir(par3 + 2, par4 + var10, par5)) {
@@ -116,7 +117,7 @@ public abstract class AbstractGiantTreeFeatureMixin extends Feature {
                             }
 
                             var11 = par1World.getBlock(par3 + 1, par4 + var10, par5 + 1);
-                            if (var11 == 0 || Block.BLOCKS[var11] == null || Block.BLOCKS[var11].isLeaves(par1World, par3 + 1, par4 + var10, par5 + 1)) {
+                            if (var11 == 0 || Block.BLOCKS[var11] == null || ((IBlock)Block.BLOCKS[var11]).isLeaves(par1World, par3 + 1, par4 + var10, par5 + 1)) {
                                 this.method_4027(par1World, par3 + 1, par4 + var10, par5 + 1, Block.LOG.id, this.field_4890);
                                 if (var10 > 0) {
                                     if (par2Random.nextInt(3) > 0 && par1World.isAir(par3 + 2, par4 + var10, par5 + 1)) {
@@ -130,7 +131,7 @@ public abstract class AbstractGiantTreeFeatureMixin extends Feature {
                             }
 
                             var11 = par1World.getBlock(par3, par4 + var10, par5 + 1);
-                            if (var11 == 0 || Block.BLOCKS[var11] == null || Block.BLOCKS[var11].isLeaves(par1World, par3, par4 + var10, par5 + 1)) {
+                            if (var11 == 0 || Block.BLOCKS[var11] == null || ((IBlock)Block.BLOCKS[var11]).isLeaves(par1World, par3, par4 + var10, par5 + 1)) {
                                 this.method_4027(par1World, par3, par4 + var10, par5 + 1, Block.LOG.id, this.field_4890);
                                 if (var10 > 0) {
                                     if (par2Random.nextInt(3) > 0 && par1World.isAir(par3 - 1, par4 + var10, par5 + 1)) {
@@ -176,7 +177,7 @@ public abstract class AbstractGiantTreeFeatureMixin extends Feature {
                     if ((var12 >= 0 || var14 >= 0 || var12 * var12 + var14 * var14 <= var10 * var10)
                             && (var12 <= 0 && var14 <= 0 || var12 * var12 + var14 * var14 <= (var10 + 1) * (var10 + 1))
                             && (par6Random.nextInt(4) != 0 || var12 * var12 + var14 * var14 <= (var10 - 1) * (var10 - 1))
-                            && (block == null || block.canBeReplacedByLeaves(par1World, var11, var8, var13))) {
+                            && (block == null || ((IBlock)block).canBeReplacedByLeaves(par1World, var11, var8, var13))) {
                         this.method_4027(par1World, var11, var8, var13, Block.LEAVES.id, this.field_4891);
                     }
                 }

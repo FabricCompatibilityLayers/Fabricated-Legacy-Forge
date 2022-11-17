@@ -1,5 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity;
 
+import fr.catcore.fabricatedforge.mixininterface.IAbstractMinecartEntity;
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -219,7 +221,7 @@ public abstract class EntityMixin implements IEntity {
      */
     @Overwrite
     public float method_4444(Explosion par1Explosion, Block par2Block, int par3, int par4, int par5) {
-        return par2Block.getExplosionResistance((Entity)(Object) this, this.world, par3, par4, par5, this.x, this.y + (double)this.getEyeHeight(), this.z);
+        return ((IBlock)par2Block).getExplosionResistance((Entity)(Object) this, this.world, par3, par4, par5, this.x, this.y + (double)this.getEyeHeight(), this.z);
     }
 
     @Override
@@ -241,7 +243,7 @@ public abstract class EntityMixin implements IEntity {
         if ((Object)this instanceof PaintingEntity) {
             return new ItemStack(Item.PAINTING);
         } else if ((Object)this instanceof AbstractMinecartEntity) {
-            return ((AbstractMinecartEntity)(Object)this).getCartItem();
+            return ((IAbstractMinecartEntity) this).getCartItem();
         } else if ((Object)this instanceof BoatEntity) {
             return new ItemStack(Item.BOAT);
         } else if ((Object)this instanceof ItemFrameEntity) {

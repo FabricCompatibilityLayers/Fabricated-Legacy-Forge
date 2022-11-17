@@ -38,7 +38,8 @@ public class WeightedRandomChestContentMixin implements IWeightedRandomChestCont
     ) {
         for(int var4 = 0; var4 < par3; ++var4) {
             WeightedRandomChestContent var5 = (WeightedRandomChestContent)Weighting.getRandom(par0Random, par1ArrayOfWeightedRandomChestContent);
-            ItemStack[] stacks = ChestGenHooks.generateStacks(par0Random, var5.getItemStack(), var5.getMinCount(), var5.getMinCount());
+            ItemStack[] stacks = ChestGenHooks.generateStacks(par0Random, ((IWeightedRandomChestContent)var5).getItemStack(),
+                    ((IWeightedRandomChestContent)var5).getMinCount(), ((IWeightedRandomChestContent)var5).getMinCount());
 
             for(ItemStack item : stacks) {
                 par2TileEntityChest.setInvStack(par0Random.nextInt(par2TileEntityChest.getInvSize()), item);
@@ -56,7 +57,8 @@ public class WeightedRandomChestContentMixin implements IWeightedRandomChestCont
     ) {
         for(int var4 = 0; var4 < par3; ++var4) {
             WeightedRandomChestContent var5 = (WeightedRandomChestContent)Weighting.getRandom(par0Random, par1ArrayOfWeightedRandomChestContent);
-            ItemStack[] stacks = ChestGenHooks.generateStacks(par0Random, var5.getItemStack(), var5.getMinCount(), var5.getMinCount());
+            ItemStack[] stacks = ChestGenHooks.generateStacks(par0Random, ((IWeightedRandomChestContent)var5).getItemStack(),
+                    ((IWeightedRandomChestContent)var5).getMinCount(), ((IWeightedRandomChestContent)var5).getMinCount());
 
             for(ItemStack item : stacks) {
                 par2TileEntityDispenser.setInvStack(par0Random.nextInt(par2TileEntityDispenser.getInvSize()), item);

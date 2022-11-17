@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.item;
 
+import fr.catcore.fabricatedforge.mixininterface.IMapState;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraft.entity.Entity;
@@ -38,7 +39,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
             int var5 = 128 * (1 << var4.scale);
             var4.xCenter = Math.round((float)par2World.getLevelProperties().getSpawnX() / (float)var5) * var5;
             var4.zCenter = Math.round((float)(par2World.getLevelProperties().getSpawnZ() / var5)) * var5;
-            var4.setC(par2World.dimension.dimensionType);
+            ((IMapState)var4).setC(par2World.dimension.dimensionType);
             var4.markDirty();
             par2World.replaceState(var3, var4);
         }
@@ -52,7 +53,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
      */
     @Overwrite
     public void updateColors(World par1World, Entity par2Entity, MapState par3MapData) {
-        if (par1World.dimension.dimensionType == par3MapData.getC() && par2Entity instanceof PlayerEntity) {
+        if (par1World.dimension.dimensionType == ((IMapState)par3MapData).getC() && par2Entity instanceof PlayerEntity) {
             short var4 = 128;
             short var5 = 128;
             int var6 = 1 << par3MapData.scale;
@@ -225,7 +226,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
 
             var5.xCenter = var4.xCenter;
             var5.zCenter = var4.zCenter;
-            var5.setC(var4.getC());
+            ((IMapState)var5).setC(((IMapState)var4).getC());
             var5.markDirty();
             par2World.replaceState("map_" + par1ItemStack.getMeta(), var5);
         }

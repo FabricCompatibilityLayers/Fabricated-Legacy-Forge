@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.Feature;
@@ -38,7 +39,7 @@ public abstract class SpruceTreeFeatureMixin extends Feature {
                         if (var11 >= 0 && var11 < 256) {
                             int var15 = par1World.getBlock(var13, var11, var14);
                             Block block = Block.BLOCKS[var15];
-                            if (var15 != 0 && block != null && !block.isLeaves(par1World, var13, var11, var14)) {
+                            if (var15 != 0 && block != null && !((IBlock)block).isLeaves(par1World, var13, var11, var14)) {
                                 var10 = false;
                             }
                         } else {
@@ -68,7 +69,7 @@ public abstract class SpruceTreeFeatureMixin extends Feature {
                                 int var20 = var19 - par5;
                                 Block block = Block.BLOCKS[par1World.getBlock(var17, var16, var19)];
                                 if ((Math.abs(var18) != var21 || Math.abs(var20) != var21 || var21 <= 0)
-                                        && (block == null || block.canBeReplacedByLeaves(par1World, var17, var16, var19))) {
+                                        && (block == null || ((IBlock)block).canBeReplacedByLeaves(par1World, var17, var16, var19))) {
                                     this.method_4027(par1World, var17, var16, var19, Block.LEAVES.id, 1);
                                 }
                             }
@@ -90,7 +91,7 @@ public abstract class SpruceTreeFeatureMixin extends Feature {
                     for(int var16 = 0; var16 < var6 - var25; ++var16) {
                         int var17 = par1World.getBlock(par3, par4 + var16, par5);
                         Block block = Block.BLOCKS[var17];
-                        if (var17 == 0 || block == null || block.isLeaves(par1World, par3, par4 + var16, par5)) {
+                        if (var17 == 0 || block == null || ((IBlock)block).isLeaves(par1World, par3, par4 + var16, par5)) {
                             this.method_4027(par1World, par3, par4 + var16, par5, Block.LOG.id, 1);
                         }
                     }

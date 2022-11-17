@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
+import fr.catcore.fabricatedforge.mixininterface.IRailBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.RailBlock;
 import net.minecraft.block.class_174;
@@ -44,9 +45,9 @@ public abstract class class_174Mixin {
     private void overwriteCtr(RailBlock par1BlockRail, World par2World, int par3, int par4, int par5, CallbackInfo ci) {
         int var6 = par2World.getBlock(par3, par4, par5);
         RailBlock target = (RailBlock)Block.BLOCKS[var6];
-        int var7 = target.getBasicRailMetadata(par2World, null, par3, par4, par5);
-        this.field_310 = !target.isFlexibleRail(par2World, par3, par4, par5);
-        this.canMakeSlopes = target.canMakeSlopes(par2World, par3, par4, par5);
+        int var7 = ((IRailBlock)target).getBasicRailMetadata(par2World, null, par3, par4, par5);
+        this.field_310 = !((IRailBlock)target).isFlexibleRail(par2World, par3, par4, par5);
+        this.canMakeSlopes = ((IRailBlock)target).canMakeSlopes(par2World, par3, par4, par5);
         this.method_358(var7);
     }
 

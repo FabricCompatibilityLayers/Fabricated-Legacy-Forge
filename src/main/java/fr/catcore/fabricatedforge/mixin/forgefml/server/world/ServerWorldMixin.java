@@ -1,6 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server.world;
 
+import fr.catcore.fabricatedforge.mixininterface.IServerChunkProvider;
 import fr.catcore.fabricatedforge.mixininterface.IServerWorld;
+import fr.catcore.fabricatedforge.mixininterface.IThreadedAnvilChunkStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LightningBoltEntity;
@@ -9,7 +11,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.BlockAction;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ProgressListener;
-import net.minecraft.util.TickableEntry;
+import net.minecraft.util.ScheduledTick;
 import net.minecraft.util.class_797;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -20,7 +22,6 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ServerChunkProvider;
-import net.minecraft.world.chunk.ThreadedAnvilChunkStorage;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.gen.feature.BonusChestFeature;
 import net.minecraft.world.level.LevelInfo;
@@ -38,9 +39,9 @@ import java.util.*;
 
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin extends World implements IServerWorld {
-    @Shadow private Set entityNavigations;
+    @Shadow private Set field_2811;
 
-    @Shadow private TreeSet field_2812;
+    @Shadow private TreeSet scheduledTicks;
 
     @Shadow private int idleTimeout;
 
@@ -175,11 +176,11 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      */
     @Overwrite
     public void method_4682(int par1, int par2, int par3, int par4, int par5, int par6) {
-        TickableEntry var7 = new TickableEntry(par1, par2, par3, par4);
+        ScheduledTick var7 = new ScheduledTick(par1, par2, par3, par4);
         boolean isForced = this.getPersistentChunks().containsKey(new ChunkPos(var7.x >> 4, var7.z >> 4));
         byte var8 = (byte)(isForced ? 0 : 8);
         if (this.immediateUpdates && par4 > 0) {
-            if (Block.BLOCKS[par4].isFire()) {
+            if (Block.BLOCKS[par4].doImmediateUpdates()) {
                 if (this.isRegionLoaded(var7.x - var8, var7.y - var8, var7.z - var8, var7.x + var8, var7.y + var8, var7.z + var8)) {
                     int var9 = this.getBlock(var7.x, var7.y, var7.z);
                     if (var9 == var7.blockId && var9 > 0) {
@@ -199,9 +200,9 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
                 var7.setPriority(par6);
             }
 
-            if (!this.entityNavigations.contains(var7)) {
-                this.entityNavigations.add(var7);
-                this.field_2812.add(var7);
+            if (!this.field_2811.contains(var7)) {
+                this.field_2811.add(var7);
+                this.scheduledTicks.add(var7);
             }
         }
     }
@@ -229,8 +230,8 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      */
     @Overwrite
     public boolean method_3644(boolean par1) {
-        int var2 = this.field_2812.size();
-        if (var2 != this.entityNavigations.size()) {
+        int var2 = this.scheduledTicks.size();
+        if (var2 != this.field_2811.size()) {
             throw new IllegalStateException("TickNextTick list out of synch");
         } else {
             if (var2 > 1000) {
@@ -238,13 +239,13 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
             }
 
             for(int var3 = 0; var3 < var2; ++var3) {
-                TickableEntry var4 = (TickableEntry)this.field_2812.first();
+                ScheduledTick var4 = (ScheduledTick)this.scheduledTicks.first();
                 if (!par1 && var4.time > this.levelProperties.getTime()) {
                     break;
                 }
 
-                this.field_2812.remove(var4);
-                this.entityNavigations.remove(var4);
+                this.scheduledTicks.remove(var4);
+                this.field_2811.remove(var4);
                 boolean isForced = this.getPersistentChunks().containsKey(new ChunkPos(var4.x >> 4, var4.z >> 4));
                 byte var5 = (byte)(isForced ? 0 : 8);
                 if (this.isRegionLoaded(var4.x - var5, var4.y - var5, var4.z - var5, var4.x + var5, var4.y + var5, var4.z + var5)) {
@@ -255,7 +256,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
                 }
             }
 
-            return !this.field_2812.isEmpty();
+            return !this.scheduledTicks.isEmpty();
         }
     }
 
@@ -371,6 +372,6 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     @Override
     public File getChunkSaveLocation() {
-        return ((ThreadedAnvilChunkStorage)this.chunkCache.getChunkWriter()).getSaveLocation();
+        return ((IThreadedAnvilChunkStorage)((IServerChunkProvider)this.chunkCache).getChunkWriter()).getSaveLocation();
     }
 }

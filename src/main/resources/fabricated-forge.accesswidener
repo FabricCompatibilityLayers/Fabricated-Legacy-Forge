@@ -207,12 +207,12 @@ accessible field net/minecraft/client/render/Tessellator field_1970 Z
 
 accessible method net/minecraft/item/PickaxeItem <init> (ILnet/minecraft/item/ToolMaterial;)V
 ## +final
-#accessible field net/minecraft/item/PickaxeItem field_4382 [Lnet/minecraft/block/Block;
+accessible field net/minecraft/item/PickaxeItem field_4382 [Lnet/minecraft/block/Block;
 accessible method net/minecraft/item/AxeItem <init> (ILnet/minecraft/item/ToolMaterial;)V
 ## +final
-#accessible field net/minecraft/item/AxeItem field_4207 [Lnet/minecraft/block/Block;
+accessible field net/minecraft/item/AxeItem field_4207 [Lnet/minecraft/block/Block;
 ## +final
-#accessible field net/minecraft/item/ShovelItem field_4396 [Lnet/minecraft/block/Block;
+accessible field net/minecraft/item/ShovelItem field_4396 [Lnet/minecraft/block/Block;
 
 accessible field net/minecraft/item/ToolItem miningSpeed F
 accessible field net/minecraft/item/ToolItem field_4193 I
@@ -316,4 +316,3 @@ accessible class net/minecraft/structure/class_7
 accessible class net/minecraft/structure/class_31
 accessible class net/minecraft/structure/class_25
 accessible class net/minecraft/util/LogFormatter
-#accessible class net/minecraft/world/chunk/class_1206

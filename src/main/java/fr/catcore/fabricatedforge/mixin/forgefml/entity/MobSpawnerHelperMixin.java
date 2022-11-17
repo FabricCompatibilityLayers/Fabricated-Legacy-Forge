@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityCategory;
@@ -162,7 +163,7 @@ public abstract class MobSpawnerHelperMixin {
             return false;
         } else {
             int var5 = par1World.getBlock(par2, par3 - 1, par4);
-            boolean spawnBlock = Block.BLOCKS[var5] != null && Block.BLOCKS[var5].canCreatureSpawn(par0EnumCreatureType, par1World, par2, par3 - 1, par4);
+            boolean spawnBlock = Block.BLOCKS[var5] != null && ((IBlock)Block.BLOCKS[var5]).canCreatureSpawn(par0EnumCreatureType, par1World, par2, par3 - 1, par4);
             return spawnBlock
                     && var5 != Block.BEDROCK.id
                     && !par1World.isBlockSolid(par2, par3, par4)

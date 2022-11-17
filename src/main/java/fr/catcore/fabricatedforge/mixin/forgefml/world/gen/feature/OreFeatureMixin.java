@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IOreFeature;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.MathHelper;
@@ -64,7 +65,7 @@ public abstract class OreFeatureMixin extends Feature implements IOreFeature {
                                 Block block = Block.BLOCKS[par1World.getBlock(var38, var41, var44)];
                                 if (var39 * var39 + var42 * var42 + var45 * var45 < 1.0
                                         && block != null
-                                        && block.isGenMineableReplaceable(par1World, var38, var41, var44)) {
+                                        && ((IBlock)block).isGenMineableReplaceable(par1World, var38, var41, var44)) {
                                     par1World.method_3673(var38, var41, var44, this.field_4892, this.minableBlockMeta);
                                 }
                             }

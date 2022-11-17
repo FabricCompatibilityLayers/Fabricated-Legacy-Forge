@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render.entity;
 
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.class_535;
 import net.minecraft.client.render.block.entity.SkullBlockEntityRenderer;
@@ -277,7 +278,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
             }
 
             if (var21.getItem().method_3397()) {
-                for(int var27 = 0; var27 < var21.getItem().getRenderPasses(var21.getMeta()); ++var27) {
+                for(int var27 = 0; var27 < ((IItem)var21.getItem()).getRenderPasses(var21.getMeta()); ++var27) {
                     int var26 = var21.getItem().getDisplayColor(var21, var27);
                     float var28 = (float)(var26 >> 16 & 0xFF) / 255.0F;
                     float var10 = (float)(var26 >> 8 & 0xFF) / 255.0F;

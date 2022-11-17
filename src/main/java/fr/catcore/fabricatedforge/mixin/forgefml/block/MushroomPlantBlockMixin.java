@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowerBlock;
 import net.minecraft.block.MushroomPlantBlock;
@@ -26,7 +27,7 @@ public class MushroomPlantBlockMixin extends FlowerBlock {
             Block soil = Block.BLOCKS[var5];
             return (var5 == Block.MYCELIUM.id || par1World.method_3718(par2, par3, par4) < 13)
                     && soil != null
-                    && soil.canSustainPlant(par1World, par2, par3 - 1, par4, ForgeDirection.UP, this);
+                    && ((IBlock)soil).canSustainPlant(par1World, par2, par3 - 1, par4, ForgeDirection.UP, this);
         } else {
             return false;
         }

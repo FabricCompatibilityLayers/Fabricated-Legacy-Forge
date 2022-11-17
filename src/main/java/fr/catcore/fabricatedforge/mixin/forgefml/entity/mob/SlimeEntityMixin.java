@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity.mob;
 
+import fr.catcore.fabricatedforge.mixininterface.ILevelGeneratorType;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SlimeEntity;
 import net.minecraft.util.math.MathHelper;
@@ -25,7 +26,7 @@ public abstract class SlimeEntityMixin extends MobEntity {
     @Overwrite
     public boolean canSpawn() {
         Chunk var1 = this.world.getChunkFromPos(MathHelper.floor(this.x), MathHelper.floor(this.z));
-        if (this.world.getLevelProperties().getGeneratorType().handleSlimeSpawnReduction(this.random, this.world)) {
+        if (((ILevelGeneratorType)this.world.getLevelProperties().getGeneratorType()).handleSlimeSpawnReduction(this.random, this.world)) {
             return false;
         } else {
             if (this.getSize() == 1 || this.world.difficulty > 0) {

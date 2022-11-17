@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render.entity;
 
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.class_535;
 import net.minecraft.client.render.block.entity.SkullBlockEntityRenderer;
@@ -185,7 +186,7 @@ public abstract class BipedEntityRendererMixin extends MobEntityRenderer {
 
             this.dispatcher.field_2099.method_1357(par1EntityLiving, var4, 0);
             if (var4.getItem().method_3397()) {
-                for(int x = 1; x < var4.getItem().getRenderPasses(var4.getMeta()); ++x) {
+                for(int x = 1; x < ((IItem)var4.getItem()).getRenderPasses(var4.getMeta()); ++x) {
                     this.dispatcher.field_2099.method_1357(par1EntityLiving, var4, x);
                 }
             }

@@ -137,9 +137,9 @@ public class ForgeHooks {
 
     public static String getTexture(String _default, Object obj) {
         if (obj instanceof Item) {
-            return ((Item)obj).getTextureFile();
+            return ((IItem)obj).getTextureFile();
         } else {
-            return obj instanceof Block ? ((Block)obj).getTextureFile() : _default;
+            return obj instanceof Block ? ((IBlock)obj).getTextureFile() : _default;
         }
     }
 
@@ -170,7 +170,7 @@ public class ForgeHooks {
                 return false;
             }
 
-            result = var8.getPickBlock(target, world, x, y, z);
+            result = ((IBlock)var8).getPickBlock(target, world, x, y, z);
         } else {
             if (target.field_595 != HitResultType.ENTITY || target.entity == null || !isCreative) {
                 return false;
@@ -238,7 +238,7 @@ public class ForgeHooks {
     }
 
     public static boolean isLivingOnLadder(Block block, World world, int x, int y, int z) {
-        return block != null && block.isLadder(world, x, y, z);
+        return block != null && ((IBlock)block).isLadder(world, x, y, z);
     }
 
     public static void onLivingJump(MobEntity entity) {

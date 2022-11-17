@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
 import cpw.mods.fml.common.network.FMLNetworkHandler;
+import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
 import fr.catcore.fabricatedforge.mixininterface.Iclass_469;
 import net.minecraft.block.entity.*;
@@ -121,7 +122,7 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
                 } else if (par1Packet132TileEntityData.type == 4 && var2 instanceof SkullBlockEntity) {
                     var2.fromNbt(par1Packet132TileEntityData.nbt);
                 } else {
-                    var2.onDataPacket(this.connection, par1Packet132TileEntityData);
+                    ((IBlockEntity)var2).onDataPacket(this.connection, par1Packet132TileEntityData);
                 }
             }
         }

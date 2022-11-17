@@ -19,13 +19,13 @@ public class StatusEffectInstanceMixin implements IStatusEffectInstance {
 
     @Inject(method = "<init>(III)V", at = @At("RETURN"))
     private void fmlCtr(int duration, int amplifier, int par3, CallbackInfo ci) {
-        this.curativeItems = new ArrayList();
+        this.curativeItems = new ArrayList<>();
         this.curativeItems.add(new ItemStack(Item.MILK_BUCKET));
     }
 
     @Inject(method = "<init>(Lnet/minecraft/entity/effect/StatusEffectInstance;)V", at = @At("RETURN"))
     private void fmlCtr(StatusEffectInstance par1PotionEffect, CallbackInfo ci) {
-        this.curativeItems = par1PotionEffect.getCurativeItems();
+        this.curativeItems = ((IStatusEffectInstance)par1PotionEffect).getCurativeItems();
     }
 
     @Override

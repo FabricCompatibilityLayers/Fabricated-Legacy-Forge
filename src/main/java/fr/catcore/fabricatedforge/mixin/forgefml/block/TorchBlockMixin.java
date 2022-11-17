@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.TorchBlock;
 import net.minecraft.block.material.Material;
@@ -27,7 +28,7 @@ public abstract class TorchBlockMixin extends Block {
             return true;
         } else {
             int var5 = par1World.getBlock(par2, par3, par4);
-            return Block.BLOCKS[var5] != null && Block.BLOCKS[var5].canPlaceTorchOnTop(par1World, par2, par3, par4);
+            return Block.BLOCKS[var5] != null && ((IBlock)Block.BLOCKS[var5]).canPlaceTorchOnTop(par1World, par2, par3, par4);
         }
     }
 

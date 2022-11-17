@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.Feature;
@@ -27,7 +28,7 @@ public abstract class JungleBushFeatureMixin extends Feature {
 
         do {
             block = Block.BLOCKS[par1World.getBlock(par3, par4, par5)];
-        } while((block == null || block.isLeaves(par1World, par3, par4, par5)) && --par4 > 0);
+        } while((block == null || ((IBlock)block).isLeaves(par1World, par3, par4, par5)) && --par4 > 0);
 
         int var7 = par1World.getBlock(par3, par4, par5);
         if (var7 == Block.DIRT.id || var7 == Block.GRASS_BLOCK.id) {
@@ -44,7 +45,7 @@ public abstract class JungleBushFeatureMixin extends Feature {
                         int var14 = var13 - par5;
                         block = Block.BLOCKS[par1World.getBlock(var11, var8, var13)];
                         if ((Math.abs(var12) != var10 || Math.abs(var14) != var10 || par2Random.nextInt(2) != 0)
-                                && (block == null || block.canBeReplacedByLeaves(par1World, var11, var8, var13))) {
+                                && (block == null || ((IBlock)block).canBeReplacedByLeaves(par1World, var11, var8, var13))) {
                             this.method_4027(par1World, var11, var8, var13, Block.LEAVES.id, this.field_4884);
                         }
                     }

@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.gui.screen.world;
 
+import fr.catcore.fabricatedforge.mixininterface.ILevelGeneratorType;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -16,6 +17,6 @@ public class CreateWorldScreenMixin extends Screen {
 
     @Inject(method = "buttonClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameMode;setGameModeWithString(Ljava/lang/String;)Lnet/minecraft/world/GameMode;"))
     private void FMLOnGUICreateWorldPress(ButtonWidget par1, CallbackInfo ci) {
-        LevelGeneratorType.TYPES[this.generatorType].onGUICreateWorldPress();
+        ((ILevelGeneratorType)LevelGeneratorType.TYPES[this.generatorType]).onGUICreateWorldPress();
     }
 }

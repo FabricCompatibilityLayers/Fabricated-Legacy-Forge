@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.advancement.AchievementsAndCriterions;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -45,7 +46,7 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Inject(method = "<init>(Lnet/minecraft/world/World;DDDLnet/minecraft/item/ItemStack;)V", at = @At("RETURN"))
     private void fmlCtr(World par1World, double par2, double par4, double par6, ItemStack par8ItemStack, CallbackInfo ci) {
-        this.lifespan = par8ItemStack.getItem() == null ? 6000 : par8ItemStack.getItem().getEntityLifespan(par8ItemStack, par1World);
+        this.lifespan = par8ItemStack.getItem() == null ? 6000 : ((IItem)par8ItemStack.getItem()).getEntityLifespan(par8ItemStack, par1World);
     }
 
     /**
@@ -100,7 +101,7 @@ public abstract class ItemEntityMixin extends Entity {
         ++this.age;
         if (!this.world.isClient && this.age >= this.lifespan) {
             ItemExpireEvent event = new ItemExpireEvent(
-                    (ItemEntity)(Object) this, this.field_23087.getItem() == null ? 6000 : this.field_23087.getItem().getEntityLifespan(this.field_23087, this.world)
+                    (ItemEntity)(Object) this, this.field_23087.getItem() == null ? 6000 : ((IItem)this.field_23087.getItem()).getEntityLifespan(this.field_23087, this.world)
             );
             if (MinecraftForge.EVENT_BUS.post(event)) {
                 this.lifespan += event.extraLife;

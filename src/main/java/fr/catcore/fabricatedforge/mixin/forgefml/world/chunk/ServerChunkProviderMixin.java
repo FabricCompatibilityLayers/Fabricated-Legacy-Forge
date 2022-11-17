@@ -2,6 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import fr.catcore.fabricatedforge.mixininterface.IServerChunkProvider;
+import fr.catcore.fabricatedforge.mixininterface.IWorld;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.LongObjectStorage;
 import net.minecraft.util.math.BlockPos;
@@ -120,7 +121,7 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
     @Overwrite
     public boolean tickChunks() {
         if (!this.world.savingDisabled) {
-            for(ChunkPos forced : this.world.getPersistentChunks().keySet()) {
+            for(ChunkPos forced : ((IWorld)this.world).getPersistentChunks().keySet()) {
                 this.chunksToUnload.remove(ChunkPos.getIdFromCoords(forced.x, forced.z));
             }
 

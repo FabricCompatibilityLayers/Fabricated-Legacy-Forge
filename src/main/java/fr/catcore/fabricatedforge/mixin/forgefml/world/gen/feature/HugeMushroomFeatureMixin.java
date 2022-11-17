@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.Feature;
@@ -40,7 +41,7 @@ public abstract class HugeMushroomFeatureMixin extends Feature {
                         if (var9 >= 0 && var9 < 256) {
                             int var13 = par1World.getBlock(var11, var9, var12);
                             Block block = Block.BLOCKS[var13];
-                            if (var13 != 0 && block != null && !block.isLeaves(par1World, var11, var9, var12)) {
+                            if (var13 != 0 && block != null && !((IBlock)block).isLeaves(par1World, var11, var9, var12)) {
                                 var8 = false;
                             }
                         } else {
@@ -134,7 +135,7 @@ public abstract class HugeMushroomFeatureMixin extends Feature {
                                 }
 
                                 Block block = Block.BLOCKS[par1World.getBlock(var13, var11, var14)];
-                                if ((var15 != 0 || par4 >= par4 + var7 - 1) && (block == null || block.canBeReplacedByLeaves(par1World, var13, var11, var14))) {
+                                if ((var15 != 0 || par4 >= par4 + var7 - 1) && (block == null || ((IBlock)block).canBeReplacedByLeaves(par1World, var13, var11, var14))) {
                                     this.method_4027(par1World, var13, var11, var14, Block.BROWN_MUSHROOM_BLOCK.id + var6, var15);
                                 }
                             }
@@ -144,7 +145,7 @@ public abstract class HugeMushroomFeatureMixin extends Feature {
                     for(int var19 = 0; var19 < var7; ++var19) {
                         int var12 = par1World.getBlock(par3, par4 + var19, par5);
                         Block block = Block.BLOCKS[var12];
-                        if (block == null || block.canBeReplacedByLeaves(par1World, par3, par4 + var19, par5)) {
+                        if (block == null || ((IBlock)block).canBeReplacedByLeaves(par1World, par3, par4 + var19, par5)) {
                             this.method_4027(par1World, par3, par4 + var19, par5, Block.BROWN_MUSHROOM_BLOCK.id + var6, 10);
                         }
                     }

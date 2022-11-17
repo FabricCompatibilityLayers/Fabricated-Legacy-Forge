@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.DeadbushFeature;
@@ -25,7 +26,7 @@ public abstract class DeadbushFeatureMixin extends Feature {
 
         do {
             block = Block.BLOCKS[par1World.getBlock(par3, par4, par5)];
-        } while((block == null || block.isLeaves(par1World, par3, par4, par5)) && --par4 > 0);
+        } while((block == null || ((IBlock)block).isLeaves(par1World, par3, par4, par5)) && --par4 > 0);
 
         for(int var7 = 0; var7 < 4; ++var7) {
             int var8 = par3 + par2Random.nextInt(8) - par2Random.nextInt(8);

@@ -7,6 +7,7 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.relauncher.ArgsWrapper;
 import cpw.mods.fml.relauncher.FMLRelauncher;
 import fr.catcore.fabricatedforge.forged.*;
+import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import net.minecraft.advancement.AchievementsAndCriterions;
 import net.minecraft.client.*;
 import net.minecraft.client.color.world.FoliageColors;
@@ -493,7 +494,7 @@ public abstract class MinecraftMixin {
                 int var5 = this.result.z;
                 this.interactionManager.method_1239(var3, var4, var5, this.result.side);
                 if (this.playerEntity.method_4579(var3, var4, var5)) {
-                    this.particleManager.addBlockHitEffects(var3, var4, var5, this.result);
+                    ((IParticleManager)this.particleManager).addBlockHitEffects(var3, var4, var5, this.result);
                     this.playerEntity.method_3207();
                 }
             } else {
