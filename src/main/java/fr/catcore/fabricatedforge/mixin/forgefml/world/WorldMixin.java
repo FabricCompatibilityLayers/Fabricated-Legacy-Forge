@@ -945,7 +945,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
      * @reason none
      */
     @Overwrite
-    protected void tickWeather() {
+    public void tickWeather() {
         this.dimension.updateWeather();
     }
 
