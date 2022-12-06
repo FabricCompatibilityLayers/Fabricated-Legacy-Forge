@@ -14,6 +14,13 @@ accessible field net/minecraft/client/class_534 field_1978 Ljava/util/List;
 
 accessible field net/minecraft/client/render/entity/EntityRenderDispatcher renderers Ljava/util/Map;
 
+accessible field net/minecraft/client/class_535 field_5184 D
+accessible field net/minecraft/client/class_535 field_5185 D
+accessible field net/minecraft/client/class_535 field_5186 D
+accessible field net/minecraft/client/class_535 field_5187 D
+accessible field net/minecraft/client/class_535 field_5188 D
+accessible field net/minecraft/client/class_535 field_5189 D
+
 accessible field net/minecraft/client/class_535 field_2049 I
 accessible field net/minecraft/client/class_535 field_2052 I
 accessible field net/minecraft/client/class_535 field_2053 I
@@ -62,6 +69,7 @@ accessible field net/minecraft/client/class_535 field_2016 Z
 accessible field net/minecraft/client/class_535 field_2018 Z
 accessible field net/minecraft/client/class_535 field_2019 Z
 accessible field net/minecraft/client/class_535 field_2020 Z
+accessible field net/minecraft/client/class_535 field_5190 Z
 
 accessible field net/minecraft/client/class_535 field_2059 F
 accessible field net/minecraft/client/class_535 field_2060 F
@@ -208,6 +216,7 @@ accessible field net/minecraft/client/render/Tessellator field_1970 Z
 accessible method net/minecraft/item/PickaxeItem <init> (ILnet/minecraft/item/ToolMaterial;)V
 ## +final
 accessible field net/minecraft/item/PickaxeItem field_4382 [Lnet/minecraft/block/Block;
+
 accessible method net/minecraft/item/AxeItem <init> (ILnet/minecraft/item/ToolMaterial;)V
 ## +final
 accessible field net/minecraft/item/AxeItem field_4207 [Lnet/minecraft/block/Block;
@@ -260,6 +269,7 @@ accessible method net/minecraft/block/Block method_393 (F)Lnet/minecraft/block/B
 accessible method net/minecraft/block/Block setUnbreakable ()Lnet/minecraft/block/Block;
 accessible method net/minecraft/block/Block setTickRandomly (Z)Lnet/minecraft/block/Block;
 accessible method net/minecraft/block/Block disableStats ()Lnet/minecraft/block/Block;
+accessible method net/minecraft/block/Block setBoundingBox (FFFFFF)V
 
 accessible field net/minecraft/server/ServerPacketListener floatingTicks I
 
@@ -297,9 +307,7 @@ accessible field net/minecraft/structure/class_49 field_89 [Lnet/minecraft/util/
 
 ### idk what default means
 #field net/minecraft/world/chunk/ThreadedAnvilChunkStorage saveLocation Ljava/io/File;
-
 #field net/minecraft/world/chunk/ServerChunkProvider chunkWriter Lnet/minecraft/world/chunk/ChunkStorage;
-
 #method net/minecraft/server/PlayerWorldManager method_2107 (IIZ)Lnet/minecraft/server/class_793;
 
 accessible field net/minecraft/world/World villageState Lnet/minecraft/village/VillageState;
