@@ -43,7 +43,7 @@ public class OpenGuiPacket extends FMLPacket {
     }
 
     public void execute(Connection network, FMLNetworkHandler handler, PacketListener netHandler, String userName) {
-        PlayerEntity player = ((IPacketListener)netHandler).getPlayer();
+        PlayerEntity player = netHandler.getPlayer();
         player.openGui(this.networkId, this.modGuiId, player.world, this.x, this.y, this.z);
         player.openScreenHandler.syncId = this.windowId;
     }

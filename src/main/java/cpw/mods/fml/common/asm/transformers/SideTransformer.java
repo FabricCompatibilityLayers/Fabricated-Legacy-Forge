@@ -22,33 +22,37 @@ public class SideTransformer implements IClassTransformer {
     }
 
     public byte[] transform(String name, byte[] bytes) {
-        ClassNode classNode = new ClassNode();
-        ClassReader classReader = new ClassReader(bytes);
-        classReader.accept(classNode, 0);
-        if (this.remove(classNode.visibleAnnotations, SIDE)) {
+        if (bytes == null) {
             return null;
         } else {
-            Iterator<FieldNode> fields = classNode.fields.iterator();
+            ClassNode classNode = new ClassNode();
+            ClassReader classReader = new ClassReader(bytes);
+            classReader.accept(classNode, 0);
+            if (this.remove(classNode.visibleAnnotations, SIDE)) {
+                throw new RuntimeException(String.format("Attempted to load class %s for invalid side %s", classNode.name, SIDE));
+            } else {
+                Iterator<FieldNode> fields = classNode.fields.iterator();
 
-            while(fields.hasNext()) {
-                FieldNode field = (FieldNode)fields.next();
-                if (this.remove(field.visibleAnnotations, SIDE)) {
-                    fields.remove();
+                while(fields.hasNext()) {
+                    FieldNode field = (FieldNode)fields.next();
+                    if (this.remove(field.visibleAnnotations, SIDE)) {
+                        fields.remove();
+                    }
                 }
-            }
 
-            Iterator<MethodNode> methods = classNode.methods.iterator();
+                Iterator<MethodNode> methods = classNode.methods.iterator();
 
-            while(methods.hasNext()) {
-                MethodNode method = (MethodNode)methods.next();
-                if (this.remove(method.visibleAnnotations, SIDE)) {
-                    methods.remove();
+                while(methods.hasNext()) {
+                    MethodNode method = (MethodNode)methods.next();
+                    if (this.remove(method.visibleAnnotations, SIDE)) {
+                        methods.remove();
+                    }
                 }
-            }
 
-            ClassWriter writer = new ClassWriter(1);
-            classNode.accept(writer);
-            return writer.toByteArray();
+                ClassWriter writer = new ClassWriter(1);
+                classNode.accept(writer);
+                return writer.toByteArray();
+            }
         }
     }
 

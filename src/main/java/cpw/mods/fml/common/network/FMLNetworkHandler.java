@@ -55,7 +55,7 @@ public class FMLNetworkHandler {
     public static void handlePacket250Packet(CustomPayloadC2SPacket packet, Connection network, PacketListener handler) {
         String target = packet.channel;
         if (target.startsWith("MC|")) {
-            ((IPacketListener)handler).handleVanilla250Packet(packet);
+            handler.handleVanilla250Packet(packet);
         }
 
         if (target.equals("FML")) {
@@ -75,7 +75,7 @@ public class FMLNetworkHandler {
         if (netHandler instanceof PendingConnection) {
             userName = ((PendingConnection)netHandler).username;
         } else {
-            PlayerEntity pl = ((IPacketListener)netHandler).getPlayer();
+            PlayerEntity pl = netHandler.getPlayer();
             if (pl != null) {
                 userName = pl.getUsername();
             }

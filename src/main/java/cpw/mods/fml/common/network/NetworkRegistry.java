@@ -136,9 +136,9 @@ public class NetworkRegistry {
     }
 
     void clientLoggedIn(PacketListener clientHandler, Connection manager, class_690 login) {
-        generateChannelRegistration(((IPacketListener)clientHandler).getPlayer(), clientHandler, manager);
-        for (IConnectionHandler handler : connectionHandlers)
-        {
+        this.generateChannelRegistration(clientHandler.getPlayer(), clientHandler, manager);
+
+        for(IConnectionHandler handler : this.connectionHandlers) {
             handler.clientLoggedIn(clientHandler, manager, login);
         }
     }
@@ -161,11 +161,11 @@ public class NetworkRegistry {
 
     void handleCustomPacket(CustomPayloadC2SPacket packet, Connection network, PacketListener handler) {
         if ("REGISTER".equals(packet.channel)) {
-            this.handleRegistrationPacket(packet, (Player)((IPacketListener)handler).getPlayer());
+            this.handleRegistrationPacket(packet, (Player)handler.getPlayer());
         } else if ("UNREGISTER".equals(packet.channel)) {
-            this.handleUnregistrationPacket(packet, (Player)((IPacketListener)handler).getPlayer());
+            this.handleUnregistrationPacket(packet, (Player)handler.getPlayer());
         } else {
-            this.handlePacket(packet, network, (Player)((IPacketListener)handler).getPlayer());
+            this.handlePacket(packet, network, (Player)handler.getPlayer());
         }
     }
 

@@ -84,7 +84,9 @@ public class AccessTransformer implements IClassTransformer {
     }
 
     public byte[] transform(String name, byte[] bytes) {
-        if (!this.modifiers.containsKey(name)) {
+        if (bytes == null) {
+            return null;
+        } else if (!this.modifiers.containsKey(name)) {
             return bytes;
         } else {
             ClassNode classNode = new ClassNode();

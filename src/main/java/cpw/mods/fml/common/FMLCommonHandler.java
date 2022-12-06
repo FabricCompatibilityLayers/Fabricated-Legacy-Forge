@@ -59,7 +59,7 @@ public class FMLCommonHandler {
         List<IScheduledTickHandler> scheduledTicks = side.isClient() ? this.scheduledClientTicks : this.scheduledServerTicks;
         if (scheduledTicks.size() != 0) {
             for(IScheduledTickHandler ticker : scheduledTicks) {
-                EnumSet<TickType> ticksToRun = EnumSet.copyOf((EnumSet) com.google.common.base.Objects.firstNonNull(ticker.ticks(), EnumSet.noneOf(TickType.class)));
+                EnumSet<TickType> ticksToRun = EnumSet.copyOf((EnumSet)Objects.firstNonNull(ticker.ticks(), EnumSet.noneOf(TickType.class)));
                 ticksToRun.removeAll(EnumSet.complementOf(ticks));
                 if (!ticksToRun.isEmpty()) {
                     ticker.tickStart(ticksToRun, data);
@@ -72,7 +72,7 @@ public class FMLCommonHandler {
         List<IScheduledTickHandler> scheduledTicks = side.isClient() ? this.scheduledClientTicks : this.scheduledServerTicks;
         if (scheduledTicks.size() != 0) {
             for(IScheduledTickHandler ticker : scheduledTicks) {
-                EnumSet<TickType> ticksToRun = EnumSet.copyOf((EnumSet) Objects.firstNonNull(ticker.ticks(), EnumSet.noneOf(TickType.class)));
+                EnumSet<TickType> ticksToRun = EnumSet.copyOf((EnumSet)Objects.firstNonNull(ticker.ticks(), EnumSet.noneOf(TickType.class)));
                 ticksToRun.removeAll(EnumSet.complementOf(ticks));
                 if (!ticksToRun.isEmpty()) {
                     ticker.tickEnd(ticksToRun, data);
@@ -295,7 +295,7 @@ public class FMLCommonHandler {
             if (!this.handlerSet.contains(handler)) {
                 this.handlerSet.add(handler);
                 Map<String, NbtElement> additionalProperties = Maps.newHashMap();
-                ((ILevelProperties)worldInfo).setAdditionalProperties(additionalProperties);
+                worldInfo.setAdditionalProperties(additionalProperties);
 
                 for(ModContainer mc : Loader.instance().getModList()) {
                     if (mc instanceof InjectedModContainer) {

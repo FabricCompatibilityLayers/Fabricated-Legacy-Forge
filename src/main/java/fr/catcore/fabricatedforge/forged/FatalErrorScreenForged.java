@@ -12,13 +12,13 @@ public class FatalErrorScreenForged extends Screen {
     public FatalErrorScreenForged() {
     }
 
-    public void render(int par1, int par2, float par3) {
+    public void render(int mouseX, int mouseY, float tickDelta) {
         this.fillGradient(0, 0, this.width, this.height, -12574688, -11530224);
         this.drawCenteredString(this.textRenderer, this.title, this.width / 2, 90, 16777215);
         this.drawCenteredString(this.textRenderer, this.message, this.width / 2, 110, 16777215);
-        super.render(par1, par2, par3);
+        super.render(mouseX, mouseY, tickDelta);
     }
 
-    protected void keyPressed(char par1, int par2) {
+    protected void keyPressed(char character, int code) {
     }
 }

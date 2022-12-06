@@ -96,7 +96,7 @@ public class FMLRelauncher {
 
     private Class<? super Object> setupNewClientHome(File minecraftHome) {
         Class<? super Object> client = ReflectionHelper.getClass(this.classLoader, new String[]{"net.minecraft.client.Minecraft"});
-        ReflectionHelper.setPrivateValue(client, null, minecraftHome, new String[]{"minecraftDir", "am", "minecraftDir"});
+        ReflectionHelper.setPrivateValue(client, null, minecraftHome, new String[]{"minecraftDir", "an", "minecraftDir"});
         return client;
     }
 
@@ -104,7 +104,7 @@ public class FMLRelauncher {
         this.showWindow(false);
         File minecraftHome = new File(".");
         this.setupHome(minecraftHome);
-        Class<? super Object> server = ReflectionHelper.getClass(this.classLoader, "net.minecraft.server.MinecraftServer");
+        Class<? super Object> server = ReflectionHelper.getClass(this.classLoader, new String[]{"net.minecraft.server.MinecraftServer"});
 
         try {
             Method method = ReflectionHelper.findMethod(server, (Object) null, new String[]{"fmlReentry"}, ArgsWrapper.class);
@@ -152,11 +152,11 @@ public class FMLRelauncher {
     }
 
     private File computeExistingClientHome() {
-        Class<? super Object> mcMaster = ReflectionHelper.getClass(this.getClass().getClassLoader(), "net.minecraft.client.Minecraft");
+        Class<? super Object> mcMaster = ReflectionHelper.getClass(this.getClass().getClassLoader(), new String[]{"net.minecraft.client.Minecraft"});
         String str = System.getProperty("minecraft.applet.TargetDirectory");
         if (str != null) {
             str = str.replace('/', File.separatorChar);
-            ReflectionHelper.setPrivateValue(mcMaster, null, new File(str), new String[]{"minecraftDir", "am", "minecraftDir"});
+            ReflectionHelper.setPrivateValue(mcMaster, null, new File(str), new String[]{"minecraftDir", "an", "minecraftDir"});
         }
 
         Method setupHome = ReflectionHelper.findMethod(mcMaster, null, new String[]{"getMinecraftDir", "getMinecraftDir", "b"}, new Class[0]);
@@ -166,7 +166,7 @@ public class FMLRelauncher {
         } catch (Exception var5) {
         }
 
-        return (File)ReflectionHelper.getPrivateValue(mcMaster, null, new String[]{"minecraftDir", "am", "minecraftDir"});
+        return (File)ReflectionHelper.getPrivateValue(mcMaster, null, new String[]{"minecraftDir", "an", "minecraftDir"});
     }
 
     public static void appletEntry(Applet minecraftApplet) {
@@ -200,7 +200,7 @@ public class FMLRelauncher {
             File mcDir = this.computeExistingClientHome();
             this.setupHome(mcDir);
             this.setupNewClientHome(mcDir);
-            Class<? super Object> parentAppletClass = ReflectionHelper.getClass(this.getClass().getClassLoader(), "java.applet.Applet");
+            Class<? super Object> parentAppletClass = ReflectionHelper.getClass(this.getClass().getClassLoader(), new String[]{"java.applet.Applet"});
 
             try {
                 this.newApplet = this.classLoader.loadClass(this.appletClass.getName())
@@ -209,9 +209,9 @@ public class FMLRelauncher {
                 ((IMinecraftApplet)this.newApplet).setRelaunched(true);
                 AppletLauncher appletContainer = (AppletLauncher) minecraftApplet.getParent();
                 String launcherClassName = System.getProperty("minecraft.applet.WrapperClass", "net.minecraft.Launcher");
-                Class<? super Object> launcherClass = ReflectionHelper.getClass(this.getClass().getClassLoader(), launcherClassName);
+                Class<? super Object> launcherClass = ReflectionHelper.getClass(this.getClass().getClassLoader(), new String[]{launcherClassName});
                 if (!launcherClass.isInstance(appletContainer)) {
-                    FMLRelaunchLog.severe("Found unknown applet parent %s, unable to inject!\n", appletContainer.getClass().getName());
+                    FMLRelaunchLog.severe("Found unknown applet parent %s, unable to inject!\n", new Object[]{appletContainer.getClass().getName()});
                     throw new RuntimeException();
                 }
 

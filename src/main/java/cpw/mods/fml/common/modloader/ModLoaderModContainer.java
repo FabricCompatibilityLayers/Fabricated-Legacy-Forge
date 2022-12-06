@@ -254,7 +254,7 @@ public class ModLoaderModContainer implements ModContainer {
     }
 
     public static <A extends BaseModProxy> List<A> findAll(Class<A> clazz) {
-        ArrayList<A> modList = new ArrayList<>();
+        ArrayList<A> modList = new ArrayList();
 
         for(ModContainer mc : Loader.instance().getActiveModList()) {
             if (mc instanceof ModLoaderModContainer && mc.getMod() != null) {

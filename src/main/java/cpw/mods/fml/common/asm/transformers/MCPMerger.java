@@ -228,7 +228,7 @@ public class MCPMerger {
         ClassReader reader = new ClassReader(readEntry(inJar, entry));
         ClassNode classNode = new ClassNode();
         reader.accept(classNode, 0);
-        if (!classNode.name.equals("bcs")) {
+        if (!classNode.name.equals("bct")) {
             if (classNode.visibleAnnotations == null) {
                 classNode.visibleAnnotations = new ArrayList();
             }

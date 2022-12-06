@@ -77,12 +77,13 @@ public class ModMetadata {
 
         if (refs == null) {
             return res;
+        } else {
+            for(String ref : (List<String>)refs) {
+                res.add(VersionParser.parseVersionReference(ref));
+            }
+
+            return res;
         }
-        for (String ref : ((List<String>)refs))
-        {
-            res.add(VersionParser.parseVersionReference(ref));
-        }
-        return res;
     }
 
     public String getChildModCountString() {

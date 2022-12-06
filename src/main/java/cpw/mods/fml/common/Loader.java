@@ -177,17 +177,15 @@ public class Loader {
         }
 
         ModDiscoverer discoverer = new ModDiscoverer();
-        FMLLog.fine("Attempting to load mods contained in the minecraft jar file and associated classes");
-        discoverer.findClasspathMods(modClassLoader);
-        FMLLog.fine("Minecraft jar mods loaded successfully");
-
+        FMLLog.fine("Attempting to load mods contained in the minecraft jar file and associated classes", new Object[0]);
+        discoverer.findClasspathMods(this.modClassLoader);
+        FMLLog.fine("Minecraft jar mods loaded successfully", new Object[0]);
         FMLLog.info("Searching %s for mods", Constants.MODS_FOLDER);
         discoverer.findModDirMods(Constants.MODS_FOLDER);
-
-        mods.addAll(discoverer.identifyMods());
-        identifyDuplicates(mods);
-        namedMods = Maps.uniqueIndex(mods, new ModIdFunction());
-        FMLLog.info("Forge Mod Loader has identified %d mod%s to load", mods.size(), mods.size() != 1 ? "s" : "");
+        this.mods.addAll(discoverer.identifyMods());
+        this.identifyDuplicates(this.mods);
+        this.namedMods = Maps.uniqueIndex(this.mods, new ModIdFunction());
+        FMLLog.info("Forge Mod Loader has identified %d mod%s to load", new Object[]{this.mods.size(), this.mods.size() != 1 ? "s" : ""});
         return discoverer;
     }
 
