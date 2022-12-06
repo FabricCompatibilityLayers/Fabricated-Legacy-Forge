@@ -5,6 +5,8 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.asm.SideOnly;
 import cpw.mods.fml.common.modloader.BaseModProxy;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_469;
@@ -50,6 +52,7 @@ public abstract class BaseMod implements BaseModProxy {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void addRenderer(Map<Class<? extends Entity>, EntityRenderer> renderers) {
     }
 
@@ -64,6 +67,7 @@ public abstract class BaseMod implements BaseModProxy {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public HandledScreen getContainerGUI(class_481 player, int containerID, int x, int y, int z) {
         return null;
     }
@@ -79,6 +83,7 @@ public abstract class BaseMod implements BaseModProxy {
     public abstract String getVersion();
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void keyboardEvent(KeyBinding event) {
     }
 
@@ -91,6 +96,7 @@ public abstract class BaseMod implements BaseModProxy {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public boolean onTickInGame(float time, Minecraft minecraftInstance) {
         return false;
     }
@@ -100,6 +106,7 @@ public abstract class BaseMod implements BaseModProxy {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public boolean onTickInGUI(float tick, Minecraft game, Screen gui) {
         return false;
     }
@@ -108,10 +115,12 @@ public abstract class BaseMod implements BaseModProxy {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void clientConnect(class_469 handler) {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void clientDisconnect(class_469 handler) {
     }
 
@@ -119,14 +128,17 @@ public abstract class BaseMod implements BaseModProxy {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void registerAnimation(Minecraft game) {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public void renderInvBlock(class_535 renderer, Block block, int metadata, int modelID) {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public boolean renderWorldBlock(class_535 renderer, BlockView world, int x, int y, int z, Block block, int modelID) {
         return false;
     }
@@ -160,6 +172,7 @@ public abstract class BaseMod implements BaseModProxy {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public Entity spawnEntity(int entityId, World world, double scaledX, double scaledY, double scaledZ) {
         return null;
     }

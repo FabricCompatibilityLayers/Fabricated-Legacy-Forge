@@ -18,6 +18,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
 import fr.catcore.fabricatedforge.forged.ReflectionUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.advancement.Achievement;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
@@ -73,15 +75,18 @@ public class ModLoader {
 
     @Deprecated
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void addAllRenderers(Map<Class<? extends Entity>, EntityRenderer> renderers) {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void addAnimation(class_584 anim) {
         TextureFXManager.instance().addAnimation(anim);
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static int addArmor(String armor) {
         return RenderingRegistry.addNewArmourRendererPrefix(armor);
     }
@@ -117,11 +122,13 @@ public class ModLoader {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static int addOverride(String fileToOverride, String fileToAdd) {
         return RenderingRegistry.addTextureOverride(fileToOverride, fileToAdd);
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void addOverride(String path, String overlayPath, int index) {
         RenderingRegistry.addTextureOverride(path, overlayPath, index);
     }
@@ -183,6 +190,7 @@ public class ModLoader {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static Minecraft getMinecraftInstance() {
         return FMLClientHandler.instance().getClient();
     }
@@ -200,6 +208,7 @@ public class ModLoader {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static int getUniqueBlockModelID(BaseMod mod, boolean inventoryRenderer) {
         return ModLoaderClientHelper.obtainBlockModelIdFor(mod, inventoryRenderer);
     }
@@ -209,6 +218,7 @@ public class ModLoader {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static int getUniqueSpriteIndex(String path) {
         return SpriteHelper.getUniqueSpriteIndex(path);
     }
@@ -218,6 +228,7 @@ public class ModLoader {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static boolean isGUIOpen(Class<? extends Screen> gui) {
         return FMLClientHandler.instance().getClient().currentScreen != null && FMLClientHandler.instance().getClient().currentScreen.equals(gui);
     }
@@ -231,6 +242,7 @@ public class ModLoader {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static BufferedImage loadImage(class_534 renderEngine, String path) throws Exception {
         return TextureFXManager.instance().loadImageFromTexturePack(renderEngine, path);
     }
@@ -241,10 +253,12 @@ public class ModLoader {
 
     @Deprecated
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void onTick(float tick, Minecraft game) {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void openGUI(PlayerEntity player, Screen gui) {
         FMLClientHandler.instance().displayGuiScreen(player, gui);
     }
@@ -259,12 +273,14 @@ public class ModLoader {
 
     @Deprecated
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static KeyBinding[] registerAllKeys(KeyBinding[] keys) {
         return keys;
     }
 
     @Deprecated
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void registerAllTextureOverrides(class_534 cache) {
     }
 
@@ -289,6 +305,7 @@ public class ModLoader {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void registerKey(BaseMod mod, KeyBinding keyHandler, boolean allowRepeat) {
         ModLoaderClientHelper.registerKeyBinding(mod, keyHandler, allowRepeat);
     }
@@ -302,6 +319,7 @@ public class ModLoader {
     }
 
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void registerTileEntity(Class<? extends BlockEntity> tileEntityClass, String id, BlockEntityRenderer renderer) {
         ClientRegistry.registerTileEntity(tileEntityClass, id, renderer);
     }
@@ -328,18 +346,21 @@ public class ModLoader {
 
     @Deprecated
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static boolean renderBlockIsItemFull3D(int modelID) {
         return RenderingRegistry.instance().renderItemAsFull3DBlock(modelID);
     }
 
     @Deprecated
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void renderInvBlock(class_535 renderer, Block block, int metadata, int modelID) {
         RenderingRegistry.instance().renderInventoryBlock(renderer, block, metadata, modelID);
     }
 
     @Deprecated
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static boolean renderWorldBlock(class_535 renderer, BlockView world, int x, int y, int z, Block block, int modelID) {
         return RenderingRegistry.instance().renderWorldBlock(renderer, world, x, y, z, block, modelID);
     }
@@ -358,12 +379,13 @@ public class ModLoader {
 
     @Deprecated
     @SideOnly(Side.CLIENT)
+    @Environment(EnvType.CLIENT)
     public static void serverLogin(class_469 handler, class_690 loginPacket) {
     }
 
     public static void serverSendPacket(ServerPacketListener handler, Packet packet) {
         if (handler != null) {
-            PacketDispatcher.sendPacketToPlayer(packet, (Player)((IPacketListener)handler).getPlayer());
+            PacketDispatcher.sendPacketToPlayer(packet, (Player)handler.getPlayer());
         }
     }
 
