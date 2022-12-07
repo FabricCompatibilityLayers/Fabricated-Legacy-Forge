@@ -29,6 +29,8 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.client.sound.SoundSystem;
+import net.minecraft.client.texture.ClockSprite;
+import net.minecraft.client.texture.CompassSprite;
 import net.minecraft.client.texture.TexturePackManager;
 import net.minecraft.client.util.NetworkUtils;
 import net.minecraft.client.util.Session;
@@ -41,6 +43,8 @@ import net.minecraft.network.IntegratedConnection;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.stat.StatHandler;
 import net.minecraft.util.Language;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResultType;
 import net.minecraft.util.math.Box;
@@ -219,6 +223,8 @@ public abstract class MinecraftMixin {
 
     @Shadow private boolean isIntegratedServerRunning;
 
+    @Shadow private long f3CTime;
+
     @Inject(method = "openScreen", at = @At("HEAD"), cancellable = true)
     private void fix_openScreen(Screen par1, CallbackInfo ci) {
         if (par1 instanceof FatalErrorScreenForged) {
@@ -256,7 +262,7 @@ public abstract class MinecraftMixin {
             Display.setDisplayMode(new DisplayMode(this.width, this.height));
         }
 
-        Display.setTitle("Minecraft Minecraft 1.4");
+        Display.setTitle("Minecraft Minecraft 1.4.1");
         System.out.println("LWJGL Version: " + Sys.getVersion());
 
         try {
@@ -494,7 +500,7 @@ public abstract class MinecraftMixin {
                 int var5 = this.result.z;
                 this.interactionManager.method_1239(var3, var4, var5, this.result.side);
                 if (this.playerEntity.method_4579(var3, var4, var5)) {
-                    ((IParticleManager)this.particleManager).addBlockHitEffects(var3, var4, var5, this.result);
+                    this.particleManager.addBlockHitEffects(var3, var4, var5, this.result);
                     this.playerEntity.method_3207();
                 }
             } else {
@@ -603,12 +609,12 @@ public abstract class MinecraftMixin {
 
         if (this.currentScreen == null && this.playerEntity != null) {
             if (this.playerEntity.method_2600() <= 0) {
-                this.openScreen(null);
+                this.openScreen((Screen)null);
             } else if (this.playerEntity.method_2641() && this.world != null) {
                 this.openScreen(new SleepingChatScreen());
             }
         } else if (this.currentScreen != null && this.currentScreen instanceof SleepingChatScreen && !this.playerEntity.method_2641()) {
-            this.openScreen(null);
+            this.openScreen((Screen)null);
         }
 
         if (this.currentScreen != null) {
@@ -670,6 +676,18 @@ public abstract class MinecraftMixin {
                 KeyBinding.setKeyPressed(Keyboard.getEventKey(), Keyboard.getEventKeyState());
                 if (Keyboard.getEventKeyState()) {
                     KeyBinding.onKeyPressed(Keyboard.getEventKey());
+                }
+
+                if (this.f3CTime > 0L) {
+                    if (getTime() - this.f3CTime >= 6000L) {
+                        throw new CrashException(new CrashReport("Manually triggered debug crash", new Throwable()));
+                    }
+
+                    if (!Keyboard.isKeyDown(46) || !Keyboard.isKeyDown(61)) {
+                        this.f3CTime = -1L;
+                    }
+                } else if (Keyboard.isKeyDown(46) && Keyboard.isKeyDown(61)) {
+                    this.f3CTime = getTime();
                 }
 
                 if (Keyboard.getEventKeyState()) {
@@ -903,11 +921,11 @@ public abstract class MinecraftMixin {
                 this.texturePackManager.method_1685();
             }
 
-            this.setCurrentServerEntry(null);
+            this.setCurrentServerEntry((ServerInfo)null);
             this.isIntegratedServerRunning = false;
         }
 
-        this.soundSystem.method_1711(null, 0.0F, 0.0F, 0.0F);
+        this.soundSystem.method_1711((String)null, 0.0F, 0.0F, 0.0F);
         this.soundSystem.stopAll();
         this.world = par1WorldClient;
         if (par1WorldClient != null) {
@@ -1002,7 +1020,7 @@ public abstract class MinecraftMixin {
         var12.setPreferredSize(new Dimension(854, 480));
         var13.add(var12, "Center");
         var13.pack();
-        var13.setLocationRelativeTo(null);
+        var13.setLocationRelativeTo((Component)null);
         var13.setVisible(true);
         var13.addWindowListener(new MinecraftWindowEventListener());
         MinecraftAppletStub var14 = new MinecraftAppletStub(var1);

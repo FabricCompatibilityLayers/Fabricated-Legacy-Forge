@@ -38,13 +38,6 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     @Shadow @Final public static Block[] BLOCKS;
 
-    @Shadow public double boundingBoxMinY;
-    @Shadow public double boundingBoxMaxY;
-    @Shadow public double boundingBoxMinZ;
-    @Shadow public double boundingBoxMaxZ;
-    @Shadow public double boundingBoxMinX;
-    @Shadow public double boundingBoxMaxX;
-
     @Shadow protected abstract void method_422(World world, int i, int j, int k, ItemStack itemStack);
 
     @Shadow @Final public int id;

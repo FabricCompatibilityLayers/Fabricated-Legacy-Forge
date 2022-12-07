@@ -279,6 +279,22 @@ public abstract class class_535Mixin {
 
     @Shadow public abstract boolean method_1442(PaneBlock paneBlock, int i, int j, int k);
 
+    @Shadow public abstract void method_4320(Block block);
+
+    @Shadow public double field_5189;
+
+    @Shadow public double field_5188;
+
+    @Shadow public double field_5187;
+
+    @Shadow public double field_5185;
+
+    @Shadow public double field_5184;
+
+    @Shadow public double field_5186;
+
+    @Shadow public abstract void method_4311(double d, double e, double f, double g, double h, double i);
+
     /**
      * @author Minecraft Forge
      * @reason none
@@ -287,6 +303,7 @@ public abstract class class_535Mixin {
     public boolean method_1458(Block par1Block, int par2, int par3, int par4) {
         int var5 = par1Block.getBlockType();
         par1Block.method_425(this.field_2017, par2, par3, par4);
+        this.method_4320(par1Block);
         switch(var5) {
             case 0:
                 return this.method_1482(par1Block, par2, par3, par4);
@@ -371,8 +388,8 @@ public abstract class class_535Mixin {
     @Overwrite
     public boolean method_1488(Block par1Block, int par2, int par3, int par4) {
         Tessellator var5 = Tessellator.INSTANCE;
-        int var7 = ((IBlock)par1Block).getBedDirection(this.field_2017, par2, par3, par4);
-        boolean var8 = ((IBlock)par1Block).isBedFoot(this.field_2017, par2, par3, par4);
+        int var7 = par1Block.getBedDirection(this.field_2017, par2, par3, par4);
+        boolean var8 = par1Block.isBedFoot(this.field_2017, par2, par3, par4);
         float var9 = 0.5F;
         float var10 = 1.0F;
         float var11 = 0.8F;
@@ -391,11 +408,11 @@ public abstract class class_535Mixin {
         double var32 = ((double)(var28 + 16) - 0.01) / 256.0;
         double var34 = (double)((float)var29 / 256.0F);
         double var36 = ((double)(var29 + 16) - 0.01) / 256.0;
-        double var38 = (double)par2 + par1Block.boundingBoxMinX;
-        double var40 = (double)par2 + par1Block.boundingBoxMaxX;
-        double var42 = (double)par3 + par1Block.boundingBoxMinY + 0.1875;
-        double var44 = (double)par4 + par1Block.boundingBoxMinZ;
-        double var46 = (double)par4 + par1Block.boundingBoxMaxZ;
+        double var38 = (double)par2 + this.field_5184;
+        double var40 = (double)par2 + this.field_5185;
+        double var42 = (double)par3 + this.field_5186 + 0.1875;
+        double var44 = (double)par4 + this.field_5188;
+        double var46 = (double)par4 + this.field_5189;
         var5.method_1399(var38, var42, var46, var30, var36);
         var5.method_1399(var38, var42, var44, var30, var34);
         var5.method_1399(var40, var42, var44, var32, var34);
@@ -442,11 +459,11 @@ public abstract class class_535Mixin {
             var52 = var34;
         }
 
-        double var54 = (double)par2 + par1Block.boundingBoxMinX;
-        double var56 = (double)par2 + par1Block.boundingBoxMaxX;
-        double var58 = (double)par3 + par1Block.boundingBoxMaxY;
-        double var60 = (double)par4 + par1Block.boundingBoxMinZ;
-        double var62 = (double)par4 + par1Block.boundingBoxMaxZ;
+        double var54 = (double)par2 + this.field_5184;
+        double var56 = (double)par2 + this.field_5185;
+        double var58 = (double)par3 + this.field_5187;
+        double var60 = (double)par4 + this.field_5188;
+        double var62 = (double)par4 + this.field_5189;
         var5.method_1399(var56, var58, var62, var46, var50);
         var5.method_1399(var56, var58, var60, var38, var42);
         var5.method_1399(var54, var58, var60, var40, var44);
@@ -471,28 +488,28 @@ public abstract class class_535Mixin {
         }
 
         if (var64 != 2 && (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3, par4 - 1, 2))) {
-            var5.method_1411(par1Block.boundingBoxMinZ > 0.0 ? var25 : par1Block.method_455(this.field_2017, par2, par3, par4 - 1));
+            var5.method_1411(this.field_5188 > 0.0 ? var25 : par1Block.method_455(this.field_2017, par2, par3, par4 - 1));
             var5.method_1400(var11, var11, var11);
             this.field_2050 = var65 == 2;
             this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 2));
         }
 
         if (var64 != 3 && (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3, par4 + 1, 3))) {
-            var5.method_1411(par1Block.boundingBoxMaxZ < 1.0 ? var25 : par1Block.method_455(this.field_2017, par2, par3, par4 + 1));
+            var5.method_1411(this.field_5189 < 1.0 ? var25 : par1Block.method_455(this.field_2017, par2, par3, par4 + 1));
             var5.method_1400(var11, var11, var11);
             this.field_2050 = var65 == 3;
             this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 3));
         }
 
         if (var64 != 4 && (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2 - 1, par3, par4, 4))) {
-            var5.method_1411(par1Block.boundingBoxMinZ > 0.0 ? var25 : par1Block.method_455(this.field_2017, par2 - 1, par3, par4));
+            var5.method_1411(this.field_5188 > 0.0 ? var25 : par1Block.method_455(this.field_2017, par2 - 1, par3, par4));
             var5.method_1400(var12, var12, var12);
             this.field_2050 = var65 == 4;
             this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 4));
         }
 
         if (var64 != 5 && (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2 + 1, par3, par4, 5))) {
-            var5.method_1411(par1Block.boundingBoxMaxZ < 1.0 ? var25 : par1Block.method_455(this.field_2017, par2 + 1, par3, par4));
+            var5.method_1411(this.field_5189 < 1.0 ? var25 : par1Block.method_455(this.field_2017, par2 + 1, par3, par4));
             var5.method_1400(var12, var12, var12);
             this.field_2050 = var65 == 5;
             this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 5));
@@ -523,7 +540,7 @@ public abstract class class_535Mixin {
         double var13 = (double)((float)var8 / 256.0F);
         double var15 = (double)(((float)var8 + 15.99F) / 256.0F);
         float var17 = 1.4F;
-        if (!this.field_2017.isTopSolid(par2, par3 - 1, par4) && !((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2, par3 - 1, par4, ForgeDirection.UP)) {
+        if (!this.field_2017.isTopSolid(par2, par3 - 1, par4) && !Block.FIRE.canBlockCatchFire(this.field_2017, par2, par3 - 1, par4, ForgeDirection.UP)) {
             float var36 = 0.2F;
             float var19 = 0.0625F;
             if ((par2 + par3 + par4 & 1) == 1) {
@@ -539,7 +556,7 @@ public abstract class class_535Mixin {
                 var9 = var20;
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2 - 1, par3, par4, ForgeDirection.EAST)) {
+            if (Block.FIRE.canBlockCatchFire(this.field_2017, par2 - 1, par3, par4, ForgeDirection.EAST)) {
                 var5.method_1399((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
                 var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
                 var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
@@ -550,7 +567,7 @@ public abstract class class_535Mixin {
                 var5.method_1399((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2 + 1, par3, par4, ForgeDirection.WEST)) {
+            if (Block.FIRE.canBlockCatchFire(this.field_2017, par2 + 1, par3, par4, ForgeDirection.WEST)) {
                 var5.method_1399((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
                 var5.method_1399((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
                 var5.method_1399((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
@@ -561,7 +578,7 @@ public abstract class class_535Mixin {
                 var5.method_1399((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2, par3, par4 - 1, ForgeDirection.SOUTH)) {
+            if (Block.FIRE.canBlockCatchFire(this.field_2017, par2, par3, par4 - 1, ForgeDirection.SOUTH)) {
                 var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var11, var13);
                 var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var11, var15);
                 var5.method_1399((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
@@ -572,7 +589,7 @@ public abstract class class_535Mixin {
                 var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var11, var13);
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2, par3, par4 + 1, ForgeDirection.NORTH)) {
+            if (Block.FIRE.canBlockCatchFire(this.field_2017, par2, par3, par4 + 1, ForgeDirection.NORTH)) {
                 var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var9, var13);
                 var5.method_1399((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var9, var15);
                 var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var11, var15);
@@ -583,7 +600,7 @@ public abstract class class_535Mixin {
                 var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var9, var13);
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2, par3 + 1, par4, ForgeDirection.DOWN)) {
+            if (Block.FIRE.canBlockCatchFire(this.field_2017, par2, par3 + 1, par4, ForgeDirection.DOWN)) {
                 double var20 = (double)par2 + 0.5 + 0.5;
                 double var22 = (double)par2 + 0.5 - 0.5;
                 double var24 = (double)par4 + 0.5 + 0.5;
@@ -720,27 +737,27 @@ public abstract class class_535Mixin {
         int var23 = var19;
         int var24 = var19;
         int var25 = var19;
-        if (par1Block.boundingBoxMinY <= 0.0) {
+        if (this.field_5186 <= 0.0) {
             var21 = par1Block.method_455(this.field_2017, par2, par3 - 1, par4);
         }
 
-        if (par1Block.boundingBoxMaxY >= 1.0) {
+        if (this.field_5187 >= 1.0) {
             var24 = par1Block.method_455(this.field_2017, par2, par3 + 1, par4);
         }
 
-        if (par1Block.boundingBoxMinX <= 0.0) {
+        if (this.field_5184 <= 0.0) {
             var20 = par1Block.method_455(this.field_2017, par2 - 1, par3, par4);
         }
 
-        if (par1Block.boundingBoxMaxX >= 1.0) {
+        if (this.field_5185 >= 1.0) {
             var23 = par1Block.method_455(this.field_2017, par2 + 1, par3, par4);
         }
 
-        if (par1Block.boundingBoxMinZ <= 0.0) {
+        if (this.field_5188 <= 0.0) {
             var22 = par1Block.method_455(this.field_2017, par2, par3, par4 - 1);
         }
 
-        if (par1Block.boundingBoxMaxZ >= 1.0) {
+        if (this.field_5189 >= 1.0) {
             var25 = par1Block.method_455(this.field_2017, par2, par3, par4 + 1);
         }
 
@@ -776,7 +793,7 @@ public abstract class class_535Mixin {
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3 - 1, par4, 0)) {
             if (this.field_2033 > 0) {
-                if (par1Block.boundingBoxMinY <= 0.0) {
+                if (this.field_5186 <= 0.0) {
                     --par3;
                 }
 
@@ -820,7 +837,7 @@ public abstract class class_535Mixin {
                     this.field_2004 = par1Block.method_455(this.field_2017, par2 + 1, par3, par4 + 1);
                 }
 
-                if (par1Block.boundingBoxMinY <= 0.0) {
+                if (this.field_5186 <= 0.0) {
                     ++par3;
                 }
 
@@ -861,7 +878,7 @@ public abstract class class_535Mixin {
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3 + 1, par4, 1)) {
             if (this.field_2033 > 0) {
-                if (par1Block.boundingBoxMaxY >= 1.0) {
+                if (this.field_5187 >= 1.0) {
                     ++par3;
                 }
 
@@ -905,7 +922,7 @@ public abstract class class_535Mixin {
                     this.field_2028 = par1Block.method_455(this.field_2017, par2 + 1, par3, par4 + 1);
                 }
 
-                if (par1Block.boundingBoxMaxY >= 1.0) {
+                if (this.field_5187 >= 1.0) {
                     --par3;
                 }
 
@@ -946,7 +963,7 @@ public abstract class class_535Mixin {
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3, par4 - 1, 2)) {
             if (this.field_2033 > 0) {
-                if (par1Block.boundingBoxMinZ <= 0.0) {
+                if (this.field_5188 <= 0.0) {
                     --par4;
                 }
 
@@ -990,7 +1007,7 @@ public abstract class class_535Mixin {
                     this.field_2025 = par1Block.method_455(this.field_2017, par2 + 1, par3 + 1, par4);
                 }
 
-                if (par1Block.boundingBoxMinZ <= 0.0) {
+                if (this.field_5188 <= 0.0) {
                     ++par4;
                 }
 
@@ -1027,7 +1044,7 @@ public abstract class class_535Mixin {
             this.field_2007 *= var12;
             int var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 2);
             this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, var27);
-            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
+            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
                 this.field_2038 *= par5;
                 this.field_2039 *= par5;
                 this.field_2040 *= par5;
@@ -1048,7 +1065,7 @@ public abstract class class_535Mixin {
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3, par4 + 1, 3)) {
             if (this.field_2033 > 0) {
-                if (par1Block.boundingBoxMaxZ >= 1.0) {
+                if (this.field_5189 >= 1.0) {
                     ++par4;
                 }
 
@@ -1092,7 +1109,7 @@ public abstract class class_535Mixin {
                     this.field_2028 = par1Block.method_455(this.field_2017, par2 + 1, par3 + 1, par4);
                 }
 
-                if (par1Block.boundingBoxMaxZ >= 1.0) {
+                if (this.field_5189 >= 1.0) {
                     --par4;
                 }
 
@@ -1129,7 +1146,7 @@ public abstract class class_535Mixin {
             this.field_2007 *= var12;
             int var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 3);
             this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 3));
-            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
+            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
                 this.field_2038 *= par5;
                 this.field_2039 *= par5;
                 this.field_2040 *= par5;
@@ -1150,7 +1167,7 @@ public abstract class class_535Mixin {
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2 - 1, par3, par4, 4)) {
             if (this.field_2033 > 0) {
-                if (par1Block.boundingBoxMinX <= 0.0) {
+                if (this.field_5184 <= 0.0) {
                     --par2;
                 }
 
@@ -1194,7 +1211,7 @@ public abstract class class_535Mixin {
                     this.field_2023 = par1Block.method_455(this.field_2017, par2, par3 + 1, par4 + 1);
                 }
 
-                if (par1Block.boundingBoxMinX <= 0.0) {
+                if (this.field_5184 <= 0.0) {
                     ++par2;
                 }
 
@@ -1231,7 +1248,7 @@ public abstract class class_535Mixin {
             this.field_2007 *= var12;
             int var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 4);
             this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, var27);
-            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
+            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
                 this.field_2038 *= par5;
                 this.field_2039 *= par5;
                 this.field_2040 *= par5;
@@ -1252,7 +1269,7 @@ public abstract class class_535Mixin {
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2 + 1, par3, par4, 5)) {
             if (this.field_2033 > 0) {
-                if (par1Block.boundingBoxMaxX >= 1.0) {
+                if (this.field_5185 >= 1.0) {
                     ++par2;
                 }
 
@@ -1296,7 +1313,7 @@ public abstract class class_535Mixin {
                     this.field_2028 = par1Block.method_455(this.field_2017, par2, par3 + 1, par4 + 1);
                 }
 
-                if (par1Block.boundingBoxMaxX >= 1.0) {
+                if (this.field_5185 >= 1.0) {
                     --par2;
                 }
 
@@ -1333,7 +1350,7 @@ public abstract class class_535Mixin {
             this.field_2007 *= var12;
             int var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 5);
             this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, var27);
-            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
+            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
                 this.field_2038 *= par5;
                 this.field_2039 *= par5;
                 this.field_2040 *= par5;
@@ -1395,25 +1412,25 @@ public abstract class class_535Mixin {
 
         int var26 = par1Block.method_455(this.field_2017, par2, par3, par4);
         if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3 - 1, par4, 0)) {
-            var8.method_1411(par1Block.boundingBoxMinY > 0.0 ? var26 : par1Block.method_455(this.field_2017, par2, par3 - 1, par4));
+            var8.method_1411(this.field_5186 > 0.0 ? var26 : par1Block.method_455(this.field_2017, par2, par3 - 1, par4));
             var8.method_1400(var17, var20, var23);
             this.method_1444(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 0));
             var9 = true;
         }
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3 + 1, par4, 1)) {
-            var8.method_1411(par1Block.boundingBoxMaxY < 1.0 ? var26 : par1Block.method_455(this.field_2017, par2, par3 + 1, par4));
+            var8.method_1411(this.field_5187 < 1.0 ? var26 : par1Block.method_455(this.field_2017, par2, par3 + 1, par4));
             var8.method_1400(var14, var15, var16);
             this.method_1456(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 1));
             var9 = true;
         }
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3, par4 - 1, 2)) {
-            var8.method_1411(par1Block.boundingBoxMinZ > 0.0 ? var26 : par1Block.method_455(this.field_2017, par2, par3, par4 - 1));
+            var8.method_1411(this.field_5188 > 0.0 ? var26 : par1Block.method_455(this.field_2017, par2, par3, par4 - 1));
             var8.method_1400(var18, var21, var24);
             int var28 = par1Block.method_439(this.field_2017, par2, par3, par4, 2);
             this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, var28);
-            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
+            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
                 var8.method_1400(var18 * par5, var21 * par6, var24 * par7);
                 this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, 38);
             }
@@ -1422,11 +1439,11 @@ public abstract class class_535Mixin {
         }
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3, par4 + 1, 3)) {
-            var8.method_1411(par1Block.boundingBoxMaxZ < 1.0 ? var26 : par1Block.method_455(this.field_2017, par2, par3, par4 + 1));
+            var8.method_1411(this.field_5189 < 1.0 ? var26 : par1Block.method_455(this.field_2017, par2, par3, par4 + 1));
             var8.method_1400(var18, var21, var24);
             int var28 = par1Block.method_439(this.field_2017, par2, par3, par4, 3);
             this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, var28);
-            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
+            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
                 var8.method_1400(var18 * par5, var21 * par6, var24 * par7);
                 this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, 38);
             }
@@ -1435,11 +1452,11 @@ public abstract class class_535Mixin {
         }
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2 - 1, par3, par4, 4)) {
-            var8.method_1411(par1Block.boundingBoxMinX > 0.0 ? var26 : par1Block.method_455(this.field_2017, par2 - 1, par3, par4));
+            var8.method_1411(this.field_5184 > 0.0 ? var26 : par1Block.method_455(this.field_2017, par2 - 1, par3, par4));
             var8.method_1400(var19, var22, var25);
             int var28 = par1Block.method_439(this.field_2017, par2, par3, par4, 4);
             this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, var28);
-            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
+            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
                 var8.method_1400(var19 * par5, var22 * par6, var25 * par7);
                 this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, 38);
             }
@@ -1448,11 +1465,11 @@ public abstract class class_535Mixin {
         }
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2 + 1, par3, par4, 5)) {
-            var8.method_1411(par1Block.boundingBoxMaxX < 1.0 ? var26 : par1Block.method_455(this.field_2017, par2 + 1, par3, par4));
+            var8.method_1411(this.field_5185 < 1.0 ? var26 : par1Block.method_455(this.field_2017, par2 + 1, par3, par4));
             var8.method_1400(var19, var22, var25);
             int var28 = par1Block.method_439(this.field_2017, par2, par3, par4, 5);
             this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, var28);
-            if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
+            if (Tessellator.INSTANCE.defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
                 var8.method_1400(var19 * par5, var22 * par6, var25 * par7);
                 this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, 38);
             }
@@ -1484,6 +1501,7 @@ public abstract class class_535Mixin {
         }
 
         int var6 = par1Block.getBlockType();
+        this.method_4320(par1Block);
         if (var6 != 0 && var6 != 31 && var6 != 16 && var6 != 26) {
             if (var6 == 1) {
                 var4.method_1405();
@@ -1494,7 +1512,7 @@ public abstract class class_535Mixin {
                 var4.method_1405();
                 var4.method_1407(0.0F, -1.0F, 0.0F);
                 par1Block.setBlockItemBounds();
-                this.method_1446(par1Block, par2, par1Block.boundingBoxMaxY, -0.5, -0.5, -0.5);
+                this.method_1446(par1Block, par2, this.field_5187, -0.5, -0.5, -0.5);
                 var4.method_1396();
             } else if (var6 == 23) {
                 var4.method_1405();
@@ -1556,11 +1574,11 @@ public abstract class class_535Mixin {
             } else if (var6 == 10) {
                 for(int var14 = 0; var14 < 2; ++var14) {
                     if (var14 == 0) {
-                        par1Block.setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.5F);
+                        this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 0.5);
                     }
 
                     if (var14 == 1) {
-                        par1Block.setBoundingBox(0.0F, 0.0F, 0.5F, 1.0F, 0.5F, 1.0F);
+                        this.method_4311(0.0, 0.0, 0.5, 1.0, 0.5, 1.0);
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -1638,7 +1656,9 @@ public abstract class class_535Mixin {
                     float var12 = 1.0F - (float)var14 / 16.0F;
                     float var13 = 1.0F - (float)(var14 + var17) / 16.0F;
                     var14 += var17;
-                    par1Block.setBoundingBox(0.5F - var11, var13, 0.5F - var11, 0.5F + var11, var12, 0.5F + var11);
+                    this.method_4311(
+                            (double)(0.5F - var11), (double)var13, (double)(0.5F - var11), (double)(0.5F + var11), (double)var12, (double)(0.5F + var11)
+                    );
                     var4.method_1407(0.0F, -1.0F, 0.0F);
                     this.method_1444(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(0));
                     var4.method_1407(0.0F, 1.0F, 0.0F);
@@ -1655,25 +1675,39 @@ public abstract class class_535Mixin {
 
                 var4.method_1396();
                 GL11.glTranslatef(0.5F, 0.5F, 0.5F);
-                par1Block.setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
             } else if (var6 == 11) {
                 for(int var14 = 0; var14 < 4; ++var14) {
                     float var8 = 0.125F;
                     if (var14 == 0) {
-                        par1Block.setBoundingBox(0.5F - var8, 0.0F, 0.0F, 0.5F + var8, 1.0F, var8 * 2.0F);
+                        this.method_4311((double)(0.5F - var8), 0.0, 0.0, (double)(0.5F + var8), 1.0, (double)(var8 * 2.0F));
                     }
 
                     if (var14 == 1) {
-                        par1Block.setBoundingBox(0.5F - var8, 0.0F, 1.0F - var8 * 2.0F, 0.5F + var8, 1.0F, 1.0F);
+                        this.method_4311((double)(0.5F - var8), 0.0, (double)(1.0F - var8 * 2.0F), (double)(0.5F + var8), 1.0, 1.0);
                     }
 
                     var8 = 0.0625F;
                     if (var14 == 2) {
-                        par1Block.setBoundingBox(0.5F - var8, 1.0F - var8 * 3.0F, -var8 * 2.0F, 0.5F + var8, 1.0F - var8, 1.0F + var8 * 2.0F);
+                        this.method_4311(
+                                (double)(0.5F - var8),
+                                (double)(1.0F - var8 * 3.0F),
+                                (double)(-var8 * 2.0F),
+                                (double)(0.5F + var8),
+                                (double)(1.0F - var8),
+                                (double)(1.0F + var8 * 2.0F)
+                        );
                     }
 
                     if (var14 == 3) {
-                        par1Block.setBoundingBox(0.5F - var8, 0.5F - var8 * 3.0F, -var8 * 2.0F, 0.5F + var8, 0.5F - var8, 1.0F + var8 * 2.0F);
+                        this.method_4311(
+                                (double)(0.5F - var8),
+                                (double)(0.5F - var8 * 3.0F),
+                                (double)(-var8 * 2.0F),
+                                (double)(0.5F + var8),
+                                (double)(0.5F - var8),
+                                (double)(1.0F + var8 * 2.0F)
+                        );
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -1704,21 +1738,21 @@ public abstract class class_535Mixin {
                     GL11.glTranslatef(0.5F, 0.5F, 0.5F);
                 }
 
-                par1Block.setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
             } else if (var6 == 21) {
                 for(int var14 = 0; var14 < 3; ++var14) {
                     float var8 = 0.0625F;
                     if (var14 == 0) {
-                        par1Block.setBoundingBox(0.5F - var8, 0.3F, 0.0F, 0.5F + var8, 1.0F, var8 * 2.0F);
+                        this.method_4311((double)(0.5F - var8), 0.3F, 0.0, (double)(0.5F + var8), 1.0, (double)(var8 * 2.0F));
                     }
 
                     if (var14 == 1) {
-                        par1Block.setBoundingBox(0.5F - var8, 0.3F, 1.0F - var8 * 2.0F, 0.5F + var8, 1.0F, 1.0F);
+                        this.method_4311((double)(0.5F - var8), 0.3F, (double)(1.0F - var8 * 2.0F), (double)(0.5F + var8), 1.0, 1.0);
                     }
 
                     var8 = 0.0625F;
                     if (var14 == 2) {
-                        par1Block.setBoundingBox(0.5F - var8, 0.5F, 0.0F, 0.5F + var8, 1.0F - var8, 1.0F);
+                        this.method_4311((double)(0.5F - var8), 0.5, 0.0, (double)(0.5F + var8), (double)(1.0F - var8), 1.0);
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -1751,11 +1785,11 @@ public abstract class class_535Mixin {
             } else if (var6 == 32) {
                 for(int var14 = 0; var14 < 2; ++var14) {
                     if (var14 == 0) {
-                        par1Block.setBoundingBox(0.0F, 0.0F, 0.3125F, 1.0F, 0.8125F, 0.6875F);
+                        this.method_4311(0.0, 0.0, 0.3125, 1.0, 0.8125, 0.6875);
                     }
 
                     if (var14 == 1) {
-                        par1Block.setBoundingBox(0.25F, 0.0F, 0.25F, 0.75F, 1.0F, 0.75F);
+                        this.method_4311(0.25, 0.0, 0.25, 0.75, 1.0, 0.75);
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
@@ -1786,7 +1820,7 @@ public abstract class class_535Mixin {
                     GL11.glTranslatef(0.5F, 0.5F, 0.5F);
                 }
 
-                par1Block.setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
             } else if (var6 == 35) {
                 GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
                 this.method_4316((AnvilBlock)par1Block, 0, 0, 0, par2, true);
@@ -1794,13 +1828,13 @@ public abstract class class_535Mixin {
             } else if (var6 == 34) {
                 for(int var14 = 0; var14 < 3; ++var14) {
                     if (var14 == 0) {
-                        par1Block.setBoundingBox(0.125F, 0.0F, 0.125F, 0.875F, 0.1875F, 0.875F);
+                        this.method_4311(0.125, 0.0, 0.125, 0.875, 0.1875, 0.875);
                         this.method_4312(Block.OBSIDIAN.field_439);
                     } else if (var14 == 1) {
-                        par1Block.setBoundingBox(0.1875F, 0.1875F, 0.1875F, 0.8125F, 0.875F, 0.8125F);
+                        this.method_4311(0.1875, 0.1875, 0.1875, 0.8125, 0.875, 0.8125);
                         this.method_4312(41);
                     } else if (var14 == 2) {
-                        par1Block.setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                        this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
                         this.method_4312(Block.GLASS_BLOCK.field_439);
                     }
 
@@ -1832,7 +1866,7 @@ public abstract class class_535Mixin {
                     GL11.glTranslatef(0.5F, 0.5F, 0.5F);
                 }
 
-                par1Block.setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                this.method_4311(0.0, 0.0, 0.0, 1.0, 1.0, 1.0);
                 this.method_1431();
             } else {
                 FMLRenderAccessLibrary.renderInventoryBlock((class_535)(Object) this, par1Block, par2, var6);
@@ -1843,6 +1877,7 @@ public abstract class class_535Mixin {
             }
 
             par1Block.setBlockItemBounds();
+            this.method_4320(par1Block);
             GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
             GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
             var4.method_1405();

@@ -149,7 +149,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
      */
     @Overwrite
     public void method_1299(Entity par1Entity, float par2) {
-        float var4 = MathHelper.cos(par1Entity.yaw * ((float) (Math.PI / 180.0)));
+        float var4 = MathHelper.cos(par1Entity.yaw * (float) (Math.PI / 180.0));
         float var5 = MathHelper.sin(par1Entity.yaw * (float) (Math.PI / 180.0));
         float var6 = -var5 * MathHelper.sin(par1Entity.pitch * (float) (Math.PI / 180.0));
         float var7 = var4 * MathHelper.sin(par1Entity.pitch * (float) (Math.PI / 180.0));
@@ -222,40 +222,31 @@ public abstract class ParticleManagerMixin implements IParticleManager {
         if (var5 != 0) {
             Block var6 = Block.BLOCKS[var5];
             float var7 = 0.1F;
-            double var8 = (double)par1
-                    + this.random.nextDouble() * (var6.boundingBoxMaxX - var6.boundingBoxMinX - (double)(var7 * 2.0F))
-                    + (double)var7
-                    + var6.boundingBoxMinX;
-            double var10 = (double)par2
-                    + this.random.nextDouble() * (var6.boundingBoxMaxY - var6.boundingBoxMinY - (double)(var7 * 2.0F))
-                    + (double)var7
-                    + var6.boundingBoxMinY;
-            double var12 = (double)par3
-                    + this.random.nextDouble() * (var6.boundingBoxMaxZ - var6.boundingBoxMinZ - (double)(var7 * 2.0F))
-                    + (double)var7
-                    + var6.boundingBoxMinZ;
+            double var8 = (double)par1 + this.random.nextDouble() * (var6.getMaxX() - var6.getMinX() - (double)(var7 * 2.0F)) + (double)var7 + var6.getMinX();
+            double var10 = (double)par2 + this.random.nextDouble() * (var6.getMaxY() - var6.getMinY() - (double)(var7 * 2.0F)) + (double)var7 + var6.getMinY();
+            double var12 = (double)par3 + this.random.nextDouble() * (var6.getMaxZ() - var6.getMinZ() - (double)(var7 * 2.0F)) + (double)var7 + var6.getMinZ();
             if (par4 == 0) {
-                var10 = (double)par2 + var6.boundingBoxMinY - (double)var7;
+                var10 = (double)par2 + var6.getMinY() - (double)var7;
             }
 
             if (par4 == 1) {
-                var10 = (double)par2 + var6.boundingBoxMaxY + (double)var7;
+                var10 = (double)par2 + var6.getMaxY() + (double)var7;
             }
 
             if (par4 == 2) {
-                var12 = (double)par3 + var6.boundingBoxMinZ - (double)var7;
+                var12 = (double)par3 + var6.getMinZ() - (double)var7;
             }
 
             if (par4 == 3) {
-                var12 = (double)par3 + var6.boundingBoxMaxZ + (double)var7;
+                var12 = (double)par3 + var6.getMaxZ() + (double)var7;
             }
 
             if (par4 == 4) {
-                var8 = (double)par1 + var6.boundingBoxMinX - (double)var7;
+                var8 = (double)par1 + var6.getMinX() - (double)var7;
             }
 
             if (par4 == 5) {
-                var8 = (double)par1 + var6.boundingBoxMaxX + (double)var7;
+                var8 = (double)par1 + var6.getMaxX() + (double)var7;
             }
 
             this.addEffect(
@@ -287,9 +278,9 @@ public abstract class ParticleManagerMixin implements IParticleManager {
     @Override
     public void addEffect(Particle effect, Object obj) {
         if (obj != null && (obj instanceof Block || obj instanceof Item)) {
-            if (obj instanceof Item && ((IItem)obj).isDefaultTexture()) {
+            if (obj instanceof Item && ((Item)obj).isDefaultTexture()) {
                 this.addParticle(effect);
-            } else if (obj instanceof Block && ((IBlock)obj).isDefaultTexture()) {
+            } else if (obj instanceof Block && ((Block)obj).isDefaultTexture()) {
                 this.addParticle(effect);
             } else {
                 String texture = "/terrain.png";

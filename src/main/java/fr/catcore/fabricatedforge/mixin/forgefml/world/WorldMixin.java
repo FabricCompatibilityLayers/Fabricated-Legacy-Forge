@@ -210,7 +210,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     public boolean hasBlockEntity(int par1, int par2, int par3) {
         int var4 = this.getBlock(par1, par2, par3);
         int meta = this.getBlockData(par1, par2, par3);
-        return Block.BLOCKS[var4] != null && ((IBlock)Block.BLOCKS[var4]).hasTileEntity(meta);
+        return Block.BLOCKS[var4] != null && Block.BLOCKS[var4].hasTileEntity(meta);
     }
 
     /**
@@ -605,7 +605,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.profiler.push("global");
 
         for(int var1 = 0; var1 < this.entities.size(); ++var1) {
-            Entity var2 = this.entities.get(var1);
+            Entity var2 = (Entity)this.entities.get(var1);
             var2.tick();
             if (var2.removed) {
                 this.entities.remove(var1--);
@@ -677,7 +677,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
                 if (this.isChunkInsideSpawnChunks(var6.x >> 4, var6.z >> 4)) {
                     Chunk var8 = this.getChunk(var6.x >> 4, var6.z >> 4);
                     if (var8 != null) {
-                        ((IChunk)var8).cleanChunkBlockTileEntity(var6.x & 15, var6.y, var6.z & 15);
+                        var8.cleanChunkBlockTileEntity(var6.x & 15, var6.y, var6.z & 15);
                     }
                 }
             }
@@ -686,7 +686,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.iteratingTickingBlockEntities = false;
         if (!this.unloadedBlockEntities.isEmpty()) {
             for(Object tile : this.unloadedBlockEntities) {
-                ((IBlockEntity)tile).onChunkUnload();
+                ((BlockEntity)tile).onChunkUnload();
             }
 
             this.blockEntities.removeAll(this.unloadedBlockEntities);
@@ -724,7 +724,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         List dest = this.iteratingTickingBlockEntities ? this.pendingBlockEntities : this.blockEntities;
 
         for(Object entity : par1Collection) {
-            if (((IBlockEntity)entity).canUpdate()) {
+            if (((BlockEntity)entity).canUpdate()) {
                 dest.add(entity);
             }
         }
@@ -850,7 +850,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Overwrite
     public void method_3603(int par1, int par2, int par3, BlockEntity par4TileEntity) {
         if (par4TileEntity != null && !par4TileEntity.isRemoved()) {
-            if (((IBlockEntity)par4TileEntity).canUpdate()) {
+            if (par4TileEntity.canUpdate()) {
                 List dest = this.iteratingTickingBlockEntities ? this.pendingBlockEntities : this.blockEntities;
                 dest.add(par4TileEntity);
             }
@@ -945,7 +945,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
      * @reason none
      */
     @Overwrite
-    public void tickWeather() {
+    protected void tickWeather() {
         this.dimension.updateWeather();
     }
 
@@ -1036,7 +1036,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.profiler.push("buildList");
 
         for(int var1 = 0; var1 < this.playerEntities.size(); ++var1) {
-            PlayerEntity var2 = this.playerEntities.get(var1);
+            PlayerEntity var2 = (PlayerEntity)this.playerEntities.get(var1);
             int var3 = MathHelper.floor(var2.x / 16.0);
             int var4 = MathHelper.floor(var2.z / 16.0);
             byte var5 = 7;
@@ -1056,7 +1056,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.profiler.push("playerCheckLight");
         if (!this.playerEntities.isEmpty()) {
             int var81 = this.random.nextInt(this.playerEntities.size());
-            PlayerEntity var2 = this.playerEntities.get(var81);
+            PlayerEntity var2 = (PlayerEntity)this.playerEntities.get(var81);
             int var3 = MathHelper.floor(var2.x) + this.random.nextInt(11) - 5;
             int var4 = MathHelper.floor(var2.y) + this.random.nextInt(11) - 5;
             int var8x = MathHelper.floor(var2.z) + this.random.nextInt(11) - 5;
@@ -1154,7 +1154,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
      */
     @Overwrite
     private int method_3699(int par1, int par2, int par3, int par4, int par5, int par6) {
-        int var7 = par5 != 0 && Block.BLOCKS[par5] != null ? ((IBlock)Block.BLOCKS[par5]).getLightValue(this, par2, par3, par4) : 0;
+        int var7 = par5 != 0 && Block.BLOCKS[par5] != null ? Block.BLOCKS[par5].getLightValue(this, par2, par3, par4) : 0;
         int var8 = this.method_3667(LightType.BLOCK, par2 - 1, par3, par4) - par6;
         int var9 = this.method_3667(LightType.BLOCK, par2 + 1, par3, par4) - par6;
         int var10 = this.method_3667(LightType.BLOCK, par2, par3 - 1, par4) - par6;
@@ -1572,7 +1572,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Override
     public void addTileEntity(BlockEntity entity) {
         List dest = this.iteratingTickingBlockEntities ? this.pendingBlockEntities : this.blockEntities;
-        if (((IBlockEntity)entity).canUpdate()) {
+        if (entity.canUpdate()) {
             dest.add(entity);
         }
     }

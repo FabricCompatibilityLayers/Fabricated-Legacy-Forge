@@ -318,7 +318,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     @Override
     public float getCurrentPlayerStrVsBlock(Block par1Block, int meta) {
         ItemStack stack = this.inventory.getMainHandStack();
-        float var2 = stack == null ? 1.0F : ((IItem)stack.getItem()).getStrVsBlock(stack, par1Block, meta);
+        float var2 = stack == null ? 1.0F : stack.getItem().getStrVsBlock(stack, par1Block, meta);
         int var3 = EnchantmentHelper.method_4652(this);
         if (var3 > 0 && ForgeHooks.canHarvestBlock(par1Block, (PlayerEntity)(Object) this, meta)) {
             var2 += (float)(var3 * var3 + 1);
@@ -359,19 +359,24 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
      */
     @Overwrite
     protected void method_2653(DamageSource par1DamageSource, int par2) {
-        LivingHurtEvent event = new LivingHurtEvent(this, par1DamageSource, par2);
-        if (!MinecraftForge.EVENT_BUS.post(event) && event.ammount != 0) {
-            par2 = event.ammount;
+        if (!this.field_23097) {
+            par2 = ForgeHooks.onLivingHurt(this, par1DamageSource, par2);
+            if (par2 <= 0) {
+                return;
+            }
+
             if (!par1DamageSource.bypassesArmor() && this.method_2611()) {
                 par2 = 1 + par2 >> 1;
             }
 
             par2 = ISpecialArmor.ArmorProperties.ApplyArmor(this, this.inventory.armor, par1DamageSource, (double)par2);
-            if (par2 > 0) {
-                par2 = this.method_2648(par1DamageSource, par2);
-                this.addExhaustion(par1DamageSource.getExhaustion());
-                this.field_3294 -= par2;
+            if (par2 <= 0) {
+                return;
             }
+
+            par2 = this.method_2648(par1DamageSource, par2);
+            this.addExhaustion(par1DamageSource.getExhaustion());
+            this.field_3294 -= par2;
         }
     }
 
@@ -564,7 +569,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
                 int var5 = BedBlock.getRotation(var9);
                 Block block = Block.BLOCKS[this.world.getBlock(par1, par2, par3)];
                 if (block != null) {
-                    var5 = ((IBlock)block).getBedDirection(this.world, par1, par2, par3);
+                    var5 = block.getBedDirection(this.world, par1, par2, par3);
                 }
 
                 float var10 = 0.5F;
@@ -646,7 +651,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     private boolean method_3213() {
         BlockPos c = this.field_3992;
         int blockID = this.world.getBlock(c.x, c.y, c.z);
-        return Block.BLOCKS[blockID] != null && ((IBlock)Block.BLOCKS[blockID]).isBed(this.world, c.x, c.y, c.z, this);
+        return Block.BLOCKS[blockID] != null && Block.BLOCKS[blockID].isBed(this.world, c.x, c.y, c.z, this);
     }
 
     /**
@@ -661,8 +666,8 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         var3.getOrGenerateChunk(par1ChunkCoordinates.x - 3 >> 4, par1ChunkCoordinates.z + 3 >> 4);
         var3.getOrGenerateChunk(par1ChunkCoordinates.x + 3 >> 4, par1ChunkCoordinates.z + 3 >> 4);
         Block block = Block.BLOCKS[par0World.getBlock(par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z)];
-        if (block != null && ((IBlock)block).isBed(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, null)) {
-            return ((IBlock)block).getBedSpawnPosition(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, null);
+        if (block != null && block.isBed(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, null)) {
+            return block.getBedSpawnPosition(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, null);
         } else {
             return par2
                     && par0World.isAir(par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z)
@@ -684,7 +689,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
             int y = this.field_3992.y;
             int z = this.field_3992.z;
             Block block = Block.BLOCKS[this.world.getBlock(x, y, z)];
-            int var2 = block == null ? 0 : ((IBlock)block).getBedDirection(this.world, x, y, z);
+            int var2 = block == null ? 0 : block.getBedDirection(this.world, x, y, z);
             switch(var2) {
                 case 0:
                     return 90.0F;
