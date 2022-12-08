@@ -60,7 +60,7 @@ public class EventBus {
             Event event = (Event)ctr.newInstance();
             ASMEventHandler listener = new ASMEventHandler(target, method);
             event.getListenerList().register(this.busID, listener.getPriority(), listener);
-            ArrayList<IEventListener> others = this.listeners.get(target);
+            ArrayList<IEventListener> others = (ArrayList)this.listeners.get(target);
             if (others == null) {
                 others = new ArrayList();
                 this.listeners.put(target, others);

@@ -18,6 +18,7 @@ import net.minecraft.world.dimension.OverworldDimension;
 import net.minecraft.world.dimension.TheEndDimension;
 import net.minecraft.world.dimension.TheNetherDimension;
 import net.minecraft.world.level.LevelInfo;
+import net.minecraft.world.level.storage.WorldSaveException;
 import net.minecraftforge.event.world.WorldEvent;
 
 import java.util.*;
