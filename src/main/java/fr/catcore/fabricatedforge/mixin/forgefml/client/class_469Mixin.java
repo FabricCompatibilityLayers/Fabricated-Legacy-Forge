@@ -7,10 +7,12 @@ import fr.catcore.fabricatedforge.mixininterface.Iclass_469;
 import net.minecraft.block.entity.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_469;
+import net.minecraft.client.class_470;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.VillagerTradingScreen;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.data.Trader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.FilledMapItem;
@@ -77,11 +79,11 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
      */
     @Overwrite
     public void onDisconnect(DisconnectS2CPacket par1Packet255KickDisconnect) {
-        this.connection.disconnect("disconnect.kicked", par1Packet255KickDisconnect.reason);
+        this.connection.disconnect("disconnect.kicked", new Object[]{par1Packet255KickDisconnect.reason});
         this.disconnected = true;
-        this.field_1623.connect(null);
+        this.field_1623.connect((ClientWorld)null);
         this.field_1623
-                .openScreen(new DisconnectedScreen("disconnect.disconnected", "disconnect.genericReason", par1Packet255KickDisconnect.reason));
+                .openScreen(new DisconnectedScreen("disconnect.disconnected", "disconnect.genericReason", new Object[]{par1Packet255KickDisconnect.reason}));
     }
 
     @Inject(method = "sendPacketAndDisconnect", at = @At(value = "RETURN"))
@@ -122,7 +124,7 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
                 } else if (par1Packet132TileEntityData.type == 4 && var2 instanceof SkullBlockEntity) {
                     var2.fromNbt(par1Packet132TileEntityData.nbt);
                 } else {
-                    ((IBlockEntity)var2).onDataPacket(this.connection, par1Packet132TileEntityData);
+                    var2.onDataPacket(this.connection, par1Packet132TileEntityData);
                 }
             }
         }

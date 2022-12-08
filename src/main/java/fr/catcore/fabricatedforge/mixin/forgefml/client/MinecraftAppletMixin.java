@@ -28,7 +28,7 @@ public class MinecraftAppletMixin extends Applet implements IMinecraftApplet {
      */
     @Overwrite
     public void init() {
-        FMLRelauncher.appletEntry((MinecraftApplet)(Object)this);
+        FMLRelauncher.appletEntry(this);
     }
 
     @Unique
@@ -78,7 +78,7 @@ public class MinecraftAppletMixin extends Applet implements IMinecraftApplet {
      */
     @Overwrite
     public void start() {
-        FMLRelauncher.appletStart((MinecraftApplet)(Object)this);
+        FMLRelauncher.appletStart(this);
     }
 
     public void fmlStartReentry() {

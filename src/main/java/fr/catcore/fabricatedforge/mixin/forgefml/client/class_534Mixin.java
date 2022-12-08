@@ -334,7 +334,7 @@ public abstract class class_534Mixin {
                     var4 = this.readBufferedImage(var1.openStream(var9));
                 }
 
-                this.method_1419(var4, this.field_1974.get(var9));
+                this.method_1419(var4, (int[])this.field_1974.get(var9));
                 this.field_1972 = false;
                 this.field_1971 = false;
             } catch (Exception var7) {
