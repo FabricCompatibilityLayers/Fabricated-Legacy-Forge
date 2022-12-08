@@ -23,7 +23,7 @@ public class RedstoneWireBlockMixin {
         } else if (var5 == 0) {
             return false;
         } else if (var5 != Block.field_447.id && var5 != Block.field_448.id) {
-            return Block.BLOCKS[var5] != null && ((IBlock)Block.BLOCKS[var5]).canConnectRedstone(par0IBlockAccess, par1, par2, par3, par4);
+            return Block.BLOCKS[var5] != null && Block.BLOCKS[var5].canConnectRedstone(par0IBlockAccess, par1, par2, par3, par4);
         } else {
             int var6 = par0IBlockAccess.getBlockData(par1, par2, par3);
             return par4 == (var6 & 3) || par4 == Axis.OPPOSITE[var6 & 3];
