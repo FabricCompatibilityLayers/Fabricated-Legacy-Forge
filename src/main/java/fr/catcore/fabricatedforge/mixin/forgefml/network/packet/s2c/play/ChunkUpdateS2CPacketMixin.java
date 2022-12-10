@@ -54,14 +54,14 @@ public abstract class ChunkUpdateS2CPacketMixin extends Packet {
             par1DataInputStream.readFully(field_2487, 0, this.field_2486);
             int var2 = 0;
 
-            for (int var3 = 0; var3 < 16; ++var3) {
+            for(int var3 = 0; var3 < 16; ++var3) {
                 var2 += this.field_2481 >> var3 & 1;
             }
 
             int var12 = 12288 * var2;
             int msb = 0;
 
-            for (int x = 0; x < 16; ++x) {
+            for(int x = 0; x < 16; ++x) {
                 msb += this.field_2482 >> x & 1;
             }
 

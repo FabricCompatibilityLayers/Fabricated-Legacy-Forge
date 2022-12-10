@@ -61,20 +61,20 @@ public abstract class class_687Mixin extends Packet {
 
             int var5 = 0;
 
-            for (int var6 = 0; var6 < var2; ++var6) {
+            for(int var6 = 0; var6 < var2; ++var6) {
                 this.field_2532[var6] = par1DataInputStream.readInt();
                 this.field_2533[var6] = par1DataInputStream.readInt();
                 this.field_2530[var6] = par1DataInputStream.readShort();
                 this.field_2531[var6] = par1DataInputStream.readShort();
                 int var7 = 0;
 
-                for (int var8 = 0; var8 < 16; ++var8) {
+                for(int var8 = 0; var8 < 16; ++var8) {
                     var7 += this.field_2530[var6] >> var8 & 1;
                 }
 
                 int msb = 0;
 
-                for (int x = 0; x < 16; ++x) {
+                for(int x = 0; x < 16; ++x) {
                     msb += this.field_2531[var6] >> x & 1;
                 }
 

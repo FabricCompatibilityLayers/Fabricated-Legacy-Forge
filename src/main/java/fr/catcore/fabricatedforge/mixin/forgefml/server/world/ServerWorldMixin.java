@@ -25,6 +25,7 @@ import net.minecraft.world.chunk.ServerChunkProvider;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.gen.feature.BonusChestFeature;
 import net.minecraft.world.level.LevelInfo;
+import net.minecraft.world.level.storage.WorldSaveException;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -336,7 +337,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      * @reason none
      */
     @Overwrite
-    public void method_2138(boolean par1, ProgressListener par2IProgressUpdate) {
+    public void method_2138(boolean par1, ProgressListener par2IProgressUpdate) throws WorldSaveException {
         if (this.chunkProvider.isSavingEnabled()) {
             if (par2IProgressUpdate != null) {
                 par2IProgressUpdate.setTitle("Saving level");

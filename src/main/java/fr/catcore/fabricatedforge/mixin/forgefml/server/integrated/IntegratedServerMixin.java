@@ -20,6 +20,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.io.File;
+import java.io.IOException;
 
 @Mixin(IntegratedServer.class)
 public abstract class IntegratedServerMixin extends MinecraftServer {
@@ -65,7 +66,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
      */
     @Overwrite
     protected boolean setupServer() {
-        field_3848.info("Starting integrated minecraft server version 1.4");
+        field_3848.info("Starting integrated minecraft server version 1.4.1");
         this.setOnlineMode(false);
         this.setSpawnAnimals(true);
         this.setSpawnNpcs(true);

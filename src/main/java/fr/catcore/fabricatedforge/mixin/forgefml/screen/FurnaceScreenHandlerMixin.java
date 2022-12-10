@@ -18,20 +18,20 @@ public abstract class FurnaceScreenHandlerMixin extends ScreenHandler {
      * @reason none
      */
     @Overwrite
-    public ItemStack transferSlot(PlayerEntity player, int invSlot) {
+    public ItemStack transferSlot(PlayerEntity par1EntityPlayer, int par2) {
         ItemStack var3 = null;
-        Slot var4 = (Slot)this.slots.get(invSlot);
+        Slot var4 = (Slot)this.slots.get(par2);
         if (var4 != null && var4.hasStack()) {
             ItemStack var5 = var4.getStack();
             var3 = var5.copy();
-            if (invSlot == 2) {
+            if (par2 == 2) {
                 if (!this.insertItem(var5, 3, 39, true)) {
                     return null;
                 }
 
                 var4.onStackChanged(var5, var3);
-            } else if (invSlot != 1 && invSlot != 0) {
-                if (SmeltingRecipeRegistry.getInstance().method_3490(var5.getItem().id) != null) {
+            } else if (par2 != 1 && par2 != 0) {
+                if (SmeltingRecipeRegistry.getInstance().getSmeltingResult(var5) != null) {
                     if (!this.insertItem(var5, 0, 1, false)) {
                         return null;
                     }
@@ -39,11 +39,11 @@ public abstract class FurnaceScreenHandlerMixin extends ScreenHandler {
                     if (!this.insertItem(var5, 1, 2, false)) {
                         return null;
                     }
-                } else if (invSlot >= 3 && invSlot < 30) {
+                } else if (par2 >= 3 && par2 < 30) {
                     if (!this.insertItem(var5, 30, 39, false)) {
                         return null;
                     }
-                } else if (invSlot >= 30 && invSlot < 39 && !this.insertItem(var5, 3, 30, false)) {
+                } else if (par2 >= 30 && par2 < 39 && !this.insertItem(var5, 3, 30, false)) {
                     return null;
                 }
             } else if (!this.insertItem(var5, 3, 39, false)) {
@@ -51,7 +51,7 @@ public abstract class FurnaceScreenHandlerMixin extends ScreenHandler {
             }
 
             if (var5.count == 0) {
-                var4.setStack(null);
+                var4.setStack((ItemStack)null);
             } else {
                 var4.markDirty();
             }
@@ -60,7 +60,7 @@ public abstract class FurnaceScreenHandlerMixin extends ScreenHandler {
                 return null;
             }
 
-            var4.onTakeItem(player, var5);
+            var4.onTakeItem(par1EntityPlayer, var5);
         }
 
         return var3;

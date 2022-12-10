@@ -25,6 +25,7 @@ public abstract class ListenThreadMixin extends Thread {
      */
     @Overwrite
     public void method_2073() {
+        List var2 = this.field_2744;
         synchronized(this.field_2744) {
             for(int var2x = 0; var2x < this.field_2744.size(); ++var2x) {
                 PendingConnection var3 = (PendingConnection)this.field_2744.get(var2x);
@@ -33,7 +34,7 @@ public abstract class ListenThreadMixin extends Thread {
                     var3.tick();
                 } catch (Exception var7) {
                     var3.disconnect("Internal server error");
-                    FMLLog.log(Level.SEVERE, var7, "Error handling login related packet - connection from %s refused", var3.username);
+                    FMLLog.log(Level.SEVERE, var7, "Error handling login related packet - connection from %s refused", new Object[]{var3.username});
                     LOGGER.log(Level.WARNING, "Failed to handle packet: " + var7, var7);
                 }
 

@@ -31,7 +31,7 @@ public class PacketListenerManagerMixin {
             try {
                 var2.tick();
             } catch (Exception var4) {
-                FMLLog.log(Level.SEVERE, var4, "A critical server error occured handling a packet, kicking %s", var2);
+                FMLLog.log(Level.SEVERE, var4, "A critical server error occured handling a packet, kicking %s", new Object[]{var2});
                 LOGGER.log(Level.WARNING, "Failed to handle packet: " + var4, var4);
                 var2.disconnect("Internal server error");
             }

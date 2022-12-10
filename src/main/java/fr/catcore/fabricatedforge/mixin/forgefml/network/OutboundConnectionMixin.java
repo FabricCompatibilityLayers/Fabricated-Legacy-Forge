@@ -56,7 +56,7 @@ public abstract class OutboundConnectionMixin implements Connection {
         this.wakeThreads();
         if (this.ignoreExceptions && this.field_2328.isEmpty()) {
             this.packetListener.onDisconnected(this.disconnectReason, this.args);
-            FMLNetworkHandler.onConnectionClosed(this, ((IPacketListener)this.packetListener).getPlayer());
+            FMLNetworkHandler.onConnectionClosed(this, this.packetListener.getPlayer());
         }
     }
 }

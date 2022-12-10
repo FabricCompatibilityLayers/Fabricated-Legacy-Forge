@@ -121,13 +121,13 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
     @Overwrite
     public boolean tickChunks() {
         if (!this.world.savingDisabled) {
-            for(ChunkPos forced : ((IWorld)this.world).getPersistentChunks().keySet()) {
+            for(ChunkPos forced : this.world.getPersistentChunks().keySet()) {
                 this.chunksToUnload.remove(ChunkPos.getIdFromCoords(forced.x, forced.z));
             }
 
             for(int var1 = 0; var1 < 100; ++var1) {
                 if (!this.chunksToUnload.isEmpty()) {
-                    Long var2 = this.chunksToUnload.iterator().next();
+                    Long var2 = (Long)this.chunksToUnload.iterator().next();
                     Chunk var3 = (Chunk)this.chunkMap.get(var2);
                     var3.unloadFromWorld();
                     this.method_2128(var3);
