@@ -39,7 +39,7 @@ This mod requires [Mod-Remapping-API](https://modrinth.com/mod/mod-remapping-api
 - ThexXTURBOXx
 
 ### Fabricated Forge itself
-- CatCore (aka. arthubambou)
+- CatCore (aka. arthurbambou)
 - Contributors
 
 
