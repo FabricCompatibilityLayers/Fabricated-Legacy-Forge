@@ -382,7 +382,7 @@ public abstract class GameRendererMixin {
             this.field_1860.profiler.swap("destroyProgress");
             GL11.glEnable(3042);
             GL11.glBlendFunc(770, 1);
-            var5.drawBlockDamageTexture(Tessellator.INSTANCE, var4, par1);
+            ((IWorldRenderer)var5).drawBlockDamageTexture(Tessellator.INSTANCE, var4, par1);
             GL11.glDisable(3042);
             this.field_1860.profiler.swap("weather");
             this.renderWeather(par1);

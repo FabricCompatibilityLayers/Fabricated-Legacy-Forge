@@ -26,7 +26,7 @@ public class SnowLayerBlockMixin extends Block {
     public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4) {
         int var5 = par1World.getBlock(par2, par3 - 1, par4);
         Block block = Block.BLOCKS[var5];
-        return block == null || !block.isLeaves(par1World, par2, par3 - 1, par4) && !Block.BLOCKS[var5].hasTransparency()
+        return block == null || !((IBlock)block).isLeaves(par1World, par2, par3 - 1, par4) && !Block.BLOCKS[var5].hasTransparency()
                 ? false
                 : par1World.getMaterial(par2, par3 - 1, par4).blocksMovement();
     }

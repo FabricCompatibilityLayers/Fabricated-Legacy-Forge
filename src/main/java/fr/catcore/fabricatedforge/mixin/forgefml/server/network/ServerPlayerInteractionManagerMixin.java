@@ -116,7 +116,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
             var4.method_412(this.world, par1, par2, par3, var5, this.player);
         }
 
-        boolean var6 = var4 != null && var4.removeBlockByPlayer(this.world, this.player, par1, par2, par3);
+        boolean var6 = var4 != null && ((IBlock)var4).removeBlockByPlayer(this.world, this.player, par1, par2, par3);
         if (var4 != null && var6) {
             var4.onDestroyed(this.world, par1, par2, par3, var5);
         }
@@ -134,7 +134,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
             return false;
         } else {
             ItemStack stack = this.player.getMainHandStack();
-            if (stack != null && stack.getItem().onBlockStartBreak(stack, par1, par2, par3, this.player)) {
+            if (stack != null && ((IItem)stack.getItem()).onBlockStartBreak(stack, par1, par2, par3, this.player)) {
                 return false;
             } else {
                 int var4 = this.world.getBlock(par1, par2, par3);
@@ -149,7 +149,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
                     boolean var8 = false;
                     Block block = Block.BLOCKS[var4];
                     if (block != null) {
-                        var8 = block.canHarvestBlock(this.player, var5);
+                        var8 = ((IBlock)block).canHarvestBlock(this.player, var5);
                     }
 
                     if (var7 != null) {
@@ -218,7 +218,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
             return false;
         } else {
             Item item = par3ItemStack != null ? par3ItemStack.getItem() : null;
-            if (item != null && item.onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, par8, par9, par10)) {
+            if (item != null && ((IItem)item).onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, par8, par9, par10)) {
                 if (par3ItemStack.count <= 0) {
                     ForgeEventFactory.onPlayerDestroyItem(this.player, par3ItemStack);
                 }

@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.item;
 
+import fr.catcore.fabricatedforge.mixininterface.IMapState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.EmptyMapItem;
 import net.minecraft.item.Item;
@@ -25,7 +26,7 @@ public class EmptyMapItemMixin {
         int var7 = 128 * (1 << var6.scale);
         var6.xCenter = (int)(Math.round(par3EntityPlayer.x / (double)var7) * (long)var7);
         var6.zCenter = (int)(Math.round(par3EntityPlayer.z / (double)var7) * (long)var7);
-        var6.setC((byte)par2World.dimension.dimensionType);
+        ((IMapState)var6).setC((byte)par2World.dimension.dimensionType);
         var6.markDirty();
         --par1ItemStack.count;
         if (par1ItemStack.count <= 0) {

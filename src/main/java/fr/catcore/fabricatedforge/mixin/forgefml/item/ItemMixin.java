@@ -77,7 +77,7 @@ public abstract class ItemMixin implements ItemProxy, IItem {
         float var20 = var14 * var16;
         double var21 = 5.0;
         if (par2EntityPlayer instanceof ServerPlayerEntity) {
-            var21 = ((ServerPlayerEntity)par2EntityPlayer).interactionManager.getBlockReachDistance();
+            var21 = ((IServerPlayerInteractionManager)((ServerPlayerEntity)par2EntityPlayer).interactionManager).getBlockReachDistance();
         }
 
         Vec3d var23 = var13.method_613((double)var18 * var21, (double)var17 * var21, (double)var20 * var21);

@@ -38,7 +38,7 @@ public abstract class EnderDragonEntityMixin extends MobEntity {
                     int var13 = this.world.getBlock(var10, var11, var12);
                     Block block = Block.BLOCKS[var13];
                     if (block != null) {
-                        if (block.canDragonDestroy(this.world, var10, var11, var12)) {
+                        if (((IBlock)block).canDragonDestroy(this.world, var10, var11, var12)) {
                             var9 = true;
                             this.world.method_3690(var10, var11, var12, 0);
                         } else {

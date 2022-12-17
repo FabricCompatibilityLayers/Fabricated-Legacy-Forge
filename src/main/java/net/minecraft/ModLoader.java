@@ -385,7 +385,7 @@ public class ModLoader {
 
     public static void serverSendPacket(ServerPacketListener handler, Packet packet) {
         if (handler != null) {
-            PacketDispatcher.sendPacketToPlayer(packet, (Player)handler.getPlayer());
+            PacketDispatcher.sendPacketToPlayer(packet, (Player)((IPacketListener)handler).getPlayer());
         }
     }
 

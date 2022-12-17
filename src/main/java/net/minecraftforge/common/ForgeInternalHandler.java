@@ -28,8 +28,8 @@ public class ForgeInternalHandler {
         Entity entity = event.entity;
         if (entity.getClass().equals(ItemEntity.class)) {
             ItemStack item = ((ItemEntity)entity).field_23087;
-            if (item != null && item.getItem().hasCustomEntity(item)) {
-                Entity newEntity = item.getItem().createEntity(event.world, entity, item);
+            if (item != null && ((IItem)item.getItem()).hasCustomEntity(item)) {
+                Entity newEntity = ((IItem)item.getItem()).createEntity(event.world, entity, item);
                 if (newEntity != null) {
                     entity.remove();
                     event.setCanceled(true);

@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.screen;
 
+import fr.catcore.fabricatedforge.mixininterface.ISmeltingRecipeRegistry;
 import net.minecraft.block.entity.FurnaceBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.slot.Slot;
@@ -31,7 +32,7 @@ public abstract class FurnaceScreenHandlerMixin extends ScreenHandler {
 
                 var4.onStackChanged(var5, var3);
             } else if (par2 != 1 && par2 != 0) {
-                if (SmeltingRecipeRegistry.getInstance().getSmeltingResult(var5) != null) {
+                if (((ISmeltingRecipeRegistry)SmeltingRecipeRegistry.getInstance()).getSmeltingResult(var5) != null) {
                     if (!this.insertItem(var5, 0, 1, false)) {
                         return null;
                     }

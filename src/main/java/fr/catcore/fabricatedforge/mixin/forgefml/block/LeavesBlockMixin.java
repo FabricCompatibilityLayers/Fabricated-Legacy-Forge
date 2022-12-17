@@ -42,7 +42,7 @@ public abstract class LeavesBlockMixin extends BaseLeavesBlock implements IShear
                     for(int var11 = -var7; var11 <= var7; ++var11) {
                         int var12 = par1World.getBlock(par2 + var9, par3 + var10, par4 + var11);
                         if (Block.BLOCKS[var12] != null) {
-                            Block.BLOCKS[var12].beginLeavesDecay(par1World, par2 + var9, par3 + var10, par4 + var11);
+                            ((IBlock)Block.BLOCKS[var12]).beginLeavesDecay(par1World, par2 + var9, par3 + var10, par4 + var11);
                         }
                     }
                 }
@@ -74,9 +74,9 @@ public abstract class LeavesBlockMixin extends BaseLeavesBlock implements IShear
                             for(int var14 = -var7; var14 <= var7; ++var14) {
                                 int var15 = par1World.getBlock(par2 + var12, par3 + var13, par4 + var14);
                                 Block block = Block.BLOCKS[var15];
-                                if (block != null && block.canSustainLeaves(par1World, par2 + var12, par3 + var13, par4 + var14)) {
+                                if (block != null && ((IBlock)block).canSustainLeaves(par1World, par2 + var12, par3 + var13, par4 + var14)) {
                                     this.neighborBlockDecayInfo[(var12 + var11) * var10 + (var13 + var11) * var9 + var14 + var11] = 0;
-                                } else if (block != null && block.isLeaves(par1World, par2 + var12, par3 + var13, par4 + var14)) {
+                                } else if (block != null && ((IBlock)block).isLeaves(par1World, par2 + var12, par3 + var13, par4 + var14)) {
                                     this.neighborBlockDecayInfo[(var12 + var11) * var10 + (var13 + var11) * var9 + var14 + var11] = -2;
                                 } else {
                                     this.neighborBlockDecayInfo[(var12 + var11) * var10 + (var13 + var11) * var9 + var14 + var11] = -1;

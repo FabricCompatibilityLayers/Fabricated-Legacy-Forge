@@ -50,7 +50,7 @@ public class ForgeChunkManager {
         if (world instanceof ServerWorld) {
             dormantChunkCache.put(world, CacheBuilder.newBuilder().maximumSize((long)dormantChunkCacheSize).build());
             ServerWorld worldServer = (ServerWorld)world;
-            File chunkDir = worldServer.getChunkSaveLocation();
+            File chunkDir = ((IServerWorld)worldServer).getChunkSaveLocation();
             File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
             if (chunkLoaderData.exists() && chunkLoaderData.isFile()) {
                 ArrayListMultimap<String, ForgeChunkManager.Ticket> loadedTickets = ArrayListMultimap.create();
@@ -322,7 +322,7 @@ public class ForgeChunkManager {
     static void saveWorld(World world) {
         if (world instanceof ServerWorld) {
             ServerWorld worldServer = (ServerWorld)world;
-            File chunkDir = worldServer.getChunkSaveLocation();
+            File chunkDir = ((IServerWorld)worldServer).getChunkSaveLocation();
             File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
             NbtCompound forcedChunkData = new NbtCompound();
             NbtList ticketList = new NbtList();

@@ -48,7 +48,7 @@ public abstract class BlockItemMixin extends Item implements IBlockItem {
         } else if (var11 != Block.VINE.id
                 && var11 != Block.TALLGRASS.id
                 && var11 != Block.DEADBUSH.id
-                && (Block.BLOCKS[var11] == null || !Block.BLOCKS[var11].isBlockReplaceable(par3World, par4, par5, par6))) {
+                && (Block.BLOCKS[var11] == null || !((IBlock)Block.BLOCKS[var11]).isBlockReplaceable(par3World, par4, par5, par6))) {
             if (par7 == 0) {
                 --par5;
             }
@@ -113,7 +113,7 @@ public abstract class BlockItemMixin extends Item implements IBlockItem {
         } else if (var8 != Block.VINE.id
                 && var8 != Block.TALLGRASS.id
                 && var8 != Block.DEADBUSH.id
-                && (Block.BLOCKS[var8] == null || !Block.BLOCKS[var8].isBlockReplaceable(par1World, par2, par3, par4))) {
+                && (Block.BLOCKS[var8] == null || !((IBlock)Block.BLOCKS[var8]).isBlockReplaceable(par1World, par2, par3, par4))) {
             if (par5 == 0) {
                 --par3;
             }

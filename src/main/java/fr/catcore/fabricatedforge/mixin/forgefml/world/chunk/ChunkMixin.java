@@ -135,7 +135,7 @@ public abstract class ChunkMixin implements IChunk {
         int x = (this.chunkX << 4) + par1;
         int z = (this.chunkZ << 4) + par3;
         Block block = Block.BLOCKS[this.getBlock(par1, par2, par3)];
-        return block == null ? 0 : block.getLightOpacity(this.world, x, par2, z);
+        return block == null ? 0 : ((IBlock)block).getLightOpacity(this.world, x, par2, z);
     }
 
     /**
@@ -204,7 +204,7 @@ public abstract class ChunkMixin implements IChunk {
             if (var8 != 0) {
                 if (!this.world.isClient) {
                     Block.BLOCKS[var8].method_411(this.world, var12, par2, var13, var8, var9);
-                } else if (Block.BLOCKS[var8] != null && Block.BLOCKS[var8].hasTileEntity(var9)) {
+                } else if (Block.BLOCKS[var8] != null && ((IBlock)Block.BLOCKS[var8]).hasTileEntity(var9)) {
                     this.world.method_3725(var12, par2, var13);
                 }
             }
@@ -232,10 +232,10 @@ public abstract class ChunkMixin implements IChunk {
                         Block.BLOCKS[par4].breakNaturally(this.world, var12, par2, var13);
                     }
 
-                    if (Block.BLOCKS[par4] != null && Block.BLOCKS[par4].hasTileEntity(par5)) {
+                    if (Block.BLOCKS[par4] != null && ((IBlock)Block.BLOCKS[par4]).hasTileEntity(par5)) {
                         BlockEntity var14 = this.getBlockEntity(par1, par2, par3);
                         if (var14 == null) {
-                            var14 = Block.BLOCKS[par4].createTileEntity(this.world, par5);
+                            var14 = ((IBlock)Block.BLOCKS[par4]).createTileEntity(this.world, par5);
                             this.world.method_3603(var12, par2, var13, var14);
                         }
 
@@ -271,7 +271,7 @@ public abstract class ChunkMixin implements IChunk {
                 this.modified = true;
                 var5.setBlockData(par1, par2 & 15, par3, par4);
                 int var7 = var5.getBlock(par1, par2 & 15, par3);
-                if (var7 > 0 && Block.BLOCKS[var7] != null && Block.BLOCKS[var7].hasTileEntity(par4)) {
+                if (var7 > 0 && Block.BLOCKS[var7] != null && ((IBlock)Block.BLOCKS[var7]).hasTileEntity(par4)) {
                     BlockEntity var8 = this.getBlockEntity(par1, par2, par3);
                     if (var8 != null) {
                         var8.resetBlock();
@@ -396,12 +396,12 @@ public abstract class ChunkMixin implements IChunk {
         if (var5 == null) {
             int var6 = this.getBlock(par1, par2, par3);
             int meta = this.getBlockData(par1, par2, par3);
-            if (var6 <= 0 || !Block.BLOCKS[var6].hasTileEntity(meta)) {
+            if (var6 <= 0 || !((IBlock)Block.BLOCKS[var6]).hasTileEntity(meta)) {
                 return null;
             }
 
             if (var5 == null) {
-                var5 = Block.BLOCKS[var6].createTileEntity(this.world, meta);
+                var5 = ((IBlock)Block.BLOCKS[var6]).createTileEntity(this.world, meta);
                 this.world.method_3603(this.chunkX * 16 + par1, par2, this.chunkZ * 16 + par3, var5);
             }
 
@@ -438,7 +438,7 @@ public abstract class ChunkMixin implements IChunk {
         par4TileEntity.y = par2;
         par4TileEntity.z = this.chunkZ * 16 + par3;
         Block block = Block.BLOCKS[this.getBlock(par1, par2, par3)];
-        if (block != null && block.hasTileEntity(this.getBlockData(par1, par2, par3))) {
+        if (block != null && ((IBlock)block).hasTileEntity(this.getBlockData(par1, par2, par3))) {
             BlockEntity old = (BlockEntity)this.blockEntities.get(var5);
             if (old != null) {
                 old.markRemoved();

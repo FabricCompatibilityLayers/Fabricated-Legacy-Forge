@@ -75,7 +75,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
                     GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
                 }
 
-                this.method_1529(Block.BLOCKS[var10.id].getTextureFile());
+                this.method_1529(((IBlock)Block.BLOCKS[var10.id]).getTextureFile());
                 float var22 = 0.25F;
                 int var16 = Block.BLOCKS[var10.id].getBlockType();
                 if (var16 == 1 || var16 == 19 || var16 == 12 || var16 == 2) {
@@ -106,9 +106,9 @@ public abstract class ItemRendererMixin extends EntityRenderer {
                     GL11.glScalef(0.5F, 0.5F, 0.5F);
                 }
 
-                this.method_1529(Item.ITEMS[var10.id].getTextureFile());
+                this.method_1529(((IItem)Item.ITEMS[var10.id]).getTextureFile());
 
-                for(int var15 = 0; var15 < var10.getItem().getRenderPasses(var10.getMeta()); ++var15) {
+                for(int var15 = 0; var15 < ((IItem)var10.getItem()).getRenderPasses(var10.getMeta()); ++var15) {
                     this.field_2126.setSeed(187L);
                     int var16 = var10.getItem().method_3369(var10.getMeta(), var15);
                     float var17 = 1.0F;
@@ -132,7 +132,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
                 }
 
                 int var15 = var10.method_3429();
-                this.method_1529(var10.getItem().getTextureFile());
+                this.method_1529(((IItem)var10.getItem()).getTextureFile());
                 if (this.field_2123) {
                     int var16 = Item.ITEMS[var10.id].getDisplayColor(var10, 0);
                     float var17 = (float)(var16 >> 16 & 0xFF) / 255.0F;
@@ -161,7 +161,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
         int var8 = par3ItemStack.method_3429();
         if (par3ItemStack.getItem() instanceof BlockItem && class_535.method_1455(Block.BLOCKS[par3ItemStack.id].getBlockType())) {
             Block var15 = Block.BLOCKS[var6];
-            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(var15.getTextureFile()));
+            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(((IBlock)var15).getTextureFile()));
             GL11.glPushMatrix();
             GL11.glTranslatef((float)(par4 - 2), (float)(par5 + 3), -3.0F + this.zOffset);
             GL11.glScalef(10.0F, 10.0F, 10.0F);
@@ -184,9 +184,9 @@ public abstract class ItemRendererMixin extends EntityRenderer {
             GL11.glPopMatrix();
         } else if (Item.ITEMS[var6].method_3397()) {
             GL11.glDisable(2896);
-            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(Item.ITEMS[var6].getTextureFile()));
+            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(((IItem)Item.ITEMS[var6]).getTextureFile()));
 
-            for(int var9 = 0; var9 < Item.ITEMS[var6].getRenderPasses(var7); ++var9) {
+            for(int var9 = 0; var9 < ((IItem)Item.ITEMS[var6]).getRenderPasses(var7); ++var9) {
                 int var10 = Item.ITEMS[var6].method_3369(var7, var9);
                 int var11 = Item.ITEMS[var6].getDisplayColor(par3ItemStack, var9);
                 float var12 = (float)(var11 >> 16 & 0xFF) / 255.0F;
@@ -202,7 +202,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
             GL11.glEnable(2896);
         } else if (var8 >= 0) {
             GL11.glDisable(2896);
-            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(par3ItemStack.getItem().getTextureFile()));
+            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(((IItem)par3ItemStack.getItem()).getTextureFile()));
             int var9 = Item.ITEMS[var6].getDisplayColor(par3ItemStack, 0);
             float var17 = (float)(var9 >> 16 & 0xFF) / 255.0F;
             float var16 = (float)(var9 >> 8 & 0xFF) / 255.0F;
