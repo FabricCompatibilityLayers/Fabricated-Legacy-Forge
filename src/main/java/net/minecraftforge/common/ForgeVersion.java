@@ -10,22 +10,22 @@ public class ForgeVersion {
     }
 
     public static int getMajorVersion() {
-        return 4;
+        return majorVersion;
     }
 
     public static int getMinorVersion() {
-        return 3;
+        return minorVersion;
     }
 
     public static int getRevisionVersion() {
-        return 5;
+        return revisionVersion;
     }
 
     public static int getBuildVersion() {
-        return 318;
+        return buildVersion;
     }
 
     public static String getVersion() {
-        return String.format("%d.%d.%d.%d", 4, 3, 5, 318);
+        return String.format("%d.%d.%d.%d", majorVersion, minorVersion, revisionVersion, buildVersion);
     }
 }

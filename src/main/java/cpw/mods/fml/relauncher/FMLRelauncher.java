@@ -101,7 +101,7 @@ public class FMLRelauncher {
 
     private Class<? super Object> setupNewClientHome(File minecraftHome) {
         Class<? super Object> client = ReflectionHelper.getClass(this.classLoader, "net.minecraft.client.Minecraft");
-        ReflectionHelper.setPrivateValue(client, (Object) null, minecraftHome, "gameFolder", "am", "field_3798");
+        ReflectionHelper.setPrivateValue(client, (Object) null, minecraftHome, "gameFolder", "am");
         return client;
     }
 
@@ -146,17 +146,17 @@ public class FMLRelauncher {
         String str = System.getProperty("minecraft.applet.TargetDirectory");
         if (str != null) {
             str = str.replace('/', File.separatorChar);
-            ReflectionHelper.setPrivateValue(mcMaster, (Object) null, new File(str), "gameFolder", "field_3798", "am");
+            ReflectionHelper.setPrivateValue(mcMaster, (Object) null, new File(str), "gameFolder", "am");
         }
 
-        Method setupHome = ReflectionHelper.findMethod(mcMaster, (Object) null, new String[]{"getGameFolder", "method_2937", "b"});
+        Method setupHome = ReflectionHelper.findMethod(mcMaster, (Object) null, new String[]{"getGameFolder", "b"});
 
         try {
             setupHome.invoke((Object) null);
         } catch (Exception var5) {
         }
 
-        return (File) ReflectionHelper.getPrivateValue(mcMaster, (Object) null, new String[]{"gameFolder", "field_3798", "am"});
+        return (File) ReflectionHelper.getPrivateValue(mcMaster, (Object) null, new String[]{"gameFolder", "am"});
     }
 
     public static void appletEntry(Applet minecraftApplet) {
