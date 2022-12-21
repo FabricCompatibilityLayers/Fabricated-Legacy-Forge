@@ -43,16 +43,14 @@ dependencies {
 	mappings "net.legacyfabric:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	modApi("maven.modrinth:mod-remapping-api:1.6.2")
+	modApi("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
 
-	modImplementation("net.legacyfabric.legacy-fabric-api:legacy-fabric-logger-api-v1:1.0.4+common+ae4aa0d092")
+	modImplementation("net.legacyfabric.legacy-fabric-api:legacy-fabric-logger-api-v1:${project.logger_api}")
 
 	implementation(include(group: "local", name: "argo", version: "2.25"))
 	implementation(include(group: "local", name: "guava", version: "12.0.1"))
 
-//	modRuntimeOnly(files("./forge-1.3.2-4.3.5.318-universal-intermediary.jar"))
-
-//	modImplementation "com.github.Chocohead:Fabric-ASM:v2.3"
+	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
 
 	if (System.getProperty("os.name").toLowerCase().contains("mac")) {
 		implementation 'org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209'
