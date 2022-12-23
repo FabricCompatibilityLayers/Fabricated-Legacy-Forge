@@ -39,9 +39,9 @@ import java.util.*;
 
 @Mixin(ServerWorld.class)
 public abstract class ServerWorldMixin extends World implements IServerWorld {
-    @Shadow private Set field_2811;
+    @Shadow private Set<ScheduledTick> field_2811;
 
-    @Shadow private TreeSet scheduledTicks;
+    @Shadow private TreeSet<ScheduledTick> scheduledTicks;
 
     @Shadow private int idleTimeout;
 
