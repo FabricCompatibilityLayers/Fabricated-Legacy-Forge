@@ -12,7 +12,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.world.BlockAction;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ProgressListener;
-import net.minecraft.util.TickableEntry;
+import net.minecraft.util.ScheduledTick;
 import net.minecraft.util.class_797;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -23,11 +23,9 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ServerChunkProvider;
-import net.minecraft.world.chunk.ThreadedAnvilChunkStorage;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.gen.feature.BonusChestFeature;
 import net.minecraft.world.level.LevelInfo;
-import net.minecraft.world.level.storage.WorldSaveException;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
@@ -44,9 +42,9 @@ import java.util.*;
 public abstract class ServerWorldMixin extends World implements IServerWorld {
     @Shadow private boolean ready;
 
-    @Shadow private Set entityNavigations;
+    @Shadow private Set<ScheduledTick> field_2811;
 
-    @Shadow private TreeSet field_2812;
+    @Shadow private TreeSet<ScheduledTick> scheduledTicks;
 
     @Shadow private int idleTimeout;
 
@@ -209,7 +207,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      */
     @Overwrite
     public void method_3599(int par1, int par2, int par3, int par4, int par5) {
-        TickableEntry var6 = new TickableEntry(par1, par2, par3, par4);
+        ScheduledTick var6 = new ScheduledTick(par1, par2, par3, par4);
         boolean isForced = this.getPersistentChunks().containsKey(new ChunkPos(var6.x >> 4, var6.z >> 4));
         int var7 = isForced ? 0 : 8;
         if (this.immediateUpdates) {
@@ -224,9 +222,9 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
                 var6.setTime((long)par5 + this.levelProperties.getTimeOfDay());
             }
 
-            if (!this.entityNavigations.contains(var6)) {
-                this.entityNavigations.add(var6);
-                this.field_2812.add(var6);
+            if (!this.field_2811.contains(var6)) {
+                this.field_2811.add(var6);
+                this.scheduledTicks.add(var6);
             }
         }
 
@@ -255,8 +253,8 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      */
     @Overwrite
     public boolean method_3644(boolean par1) {
-        int var2 = this.field_2812.size();
-        if (var2 != this.entityNavigations.size()) {
+        int var2 = this.scheduledTicks.size();
+        if (var2 != this.field_2811.size()) {
             throw new IllegalStateException("TickNextTick list out of synch");
         } else {
             if (var2 > 1000) {
@@ -264,13 +262,13 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
             }
 
             for(int var3 = 0; var3 < var2; ++var3) {
-                TickableEntry var4 = (TickableEntry)this.field_2812.first();
+                ScheduledTick var4 = (ScheduledTick)this.scheduledTicks.first();
                 if (!par1 && var4.time > this.levelProperties.getTimeOfDay()) {
                     break;
                 }
 
-                this.field_2812.remove(var4);
-                this.entityNavigations.remove(var4);
+                this.scheduledTicks.remove(var4);
+                this.field_2811.remove(var4);
                 boolean isForced = this.getPersistentChunks().containsKey(new ChunkPos(var4.x >> 4, var4.z >> 4));
                 int var5 = isForced ? 0 : 8;
                 if (this.isRegionLoaded(var4.x - var5, var4.y - var5, var4.z - var5, var4.x + var5, var4.y + var5, var4.z + var5)) {
@@ -281,7 +279,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
                 }
             }
 
-            return !this.field_2812.isEmpty();
+            return !this.scheduledTicks.isEmpty();
         }
     }
 
