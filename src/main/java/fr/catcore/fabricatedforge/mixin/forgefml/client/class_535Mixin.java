@@ -275,9 +275,9 @@ public abstract class class_535Mixin {
 
     @Shadow public abstract void method_1431();
 
-    @Shadow public abstract boolean method_1481(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderFluid(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1442(PaneBlock paneBlock, int i, int j, int k);
+    @Shadow public abstract boolean renderPane(PaneBlock paneBlock, int i, int j, int k);
 
     /**
      * @author Minecraft Forge
@@ -297,7 +297,7 @@ public abstract class class_535Mixin {
             case 3:
                 return this.method_1473(par1Block, par2, par3, par4);
             case 4:
-                return this.method_1481(par1Block, par2, par3, par4);
+                return this.renderFluid(par1Block, par2, par3, par4);
             case 5:
                 return this.renderRedstone(par1Block, par2, par3, par4);
             case 6:
@@ -325,7 +325,7 @@ public abstract class class_535Mixin {
             case 17:
                 return this.renderPistonHead(par1Block, par2, par3, par4, true);
             case 18:
-                return this.method_1442((PaneBlock)par1Block, par2, par3, par4);
+                return this.renderPane((PaneBlock)par1Block, par2, par3, par4);
             case 19:
                 return this.renderStem(par1Block, par2, par3, par4);
             case 20:

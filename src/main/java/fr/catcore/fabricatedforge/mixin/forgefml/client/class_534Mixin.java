@@ -243,7 +243,7 @@ public abstract class class_534Mixin {
      * @reason none
      */
     @Overwrite
-    public int method_4309(class_584 par1TextureFX, int par2) {
+    public int method_4309(Sprite par1TextureFX, int par2) {
         Dimension dim = TextureFXManager.instance().getTextureDimensions(par1TextureFX);
         int tWidth = dim.width >> 4;
         int tHeight = dim.height >> 4;
@@ -257,7 +257,7 @@ public abstract class class_534Mixin {
         }
 
         if (par1TextureFX.field_2153 != par2) {
-            par1TextureFX.method_1614((TextureManager)(Object) this);
+            par1TextureFX.bind((TextureManager)(Object) this);
             par2 = par1TextureFX.field_2153;
         }
 
