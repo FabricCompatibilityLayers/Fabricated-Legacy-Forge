@@ -29,3 +29,4 @@ run/
 
 ./ModLoader*
 jars/
+remappedSrc/
