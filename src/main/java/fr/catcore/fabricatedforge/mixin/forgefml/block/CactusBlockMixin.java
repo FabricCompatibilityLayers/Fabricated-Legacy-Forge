@@ -24,13 +24,13 @@ public abstract class CactusBlockMixin extends Block implements IPlantable {
      */
     @Overwrite
     public boolean canStayPlaced(World par1World, int par2, int par3, int par4) {
-        if (par1World.getMaterial(par2 - 1, par3, par4).hasCollision()) {
+        if (par1World.getMaterial(par2 - 1, par3, par4).isSolid()) {
             return false;
-        } else if (par1World.getMaterial(par2 + 1, par3, par4).hasCollision()) {
+        } else if (par1World.getMaterial(par2 + 1, par3, par4).isSolid()) {
             return false;
-        } else if (par1World.getMaterial(par2, par3, par4 - 1).hasCollision()) {
+        } else if (par1World.getMaterial(par2, par3, par4 - 1).isSolid()) {
             return false;
-        } else if (par1World.getMaterial(par2, par3, par4 + 1).hasCollision()) {
+        } else if (par1World.getMaterial(par2, par3, par4 + 1).isSolid()) {
             return false;
         } else {
             int var5 = par1World.getBlock(par2, par3 - 1, par4);

@@ -78,7 +78,7 @@ public abstract class BlockItemMixin extends Item implements IBlockItem {
             return false;
         } else if (!par2EntityPlayer.method_4570(par4, par5, par6, par7, par1ItemStack)) {
             return false;
-        } else if (par5 == 255 && Block.BLOCKS[this.blockItemId].material.hasCollision()) {
+        } else if (par5 == 255 && Block.BLOCKS[this.blockItemId].material.isSolid()) {
             return false;
         } else if (par3World.method_3602(this.blockItemId, par4, par5, par6, false, par7, par2EntityPlayer)) {
             Block var12 = Block.BLOCKS[this.blockItemId];
