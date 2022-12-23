@@ -2,8 +2,8 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
 import cpw.mods.fml.client.TextureFXManager;
 import cpw.mods.fml.common.FMLLog;
-import net.minecraft.client.class_534;
-import net.minecraft.client.class_584;
+import net.minecraft.client.Sprite;
+import net.minecraft.client.TextureManager;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.texture.ITexturePack;
 import net.minecraft.client.texture.PlayerSkinTexture;
@@ -32,11 +32,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Mixin(class_534.class)
+@Mixin(TextureManager.class)
 public abstract class class_534Mixin {
 
     @Shadow public TexturePackManager packManager;
-    @Shadow private HashMap field_1974;
+    @Shadow private HashMap<String, int[]> field_1974;
 
     @Shadow protected abstract int[] method_1427(BufferedImage bufferedImage);
 
@@ -47,13 +47,13 @@ public abstract class class_534Mixin {
     @Shadow public boolean field_1971;
     @Shadow public boolean field_1972;
     @Shadow private BufferedImage missingTexture;
-    @Shadow private HashMap textureCache;
+    @Shadow private HashMap<String, Integer> textureCache;
     @Shadow private IntBuffer field_1976;
-    @Shadow public List field_1978;
+    @Shadow public List<Sprite> field_1978;
     @Shadow private GameOptions options;
     @Shadow private ByteBuffer field_1977;
     @Shadow private IntObjectStorage field_1975;
-    @Shadow private Map field_1979;
+    @Shadow private Map<String, PlayerSkinTexture> playerSkins;
 
     @Shadow protected abstract int[] method_1419(BufferedImage bufferedImage, int[] is);
 
@@ -219,7 +219,7 @@ public abstract class class_534Mixin {
     }
 
     @Inject(method = "method_1416", at = @At("HEAD"))
-    private void FMLonPreRegisterEffect(class_584 par1TextureFX, CallbackInfo ci) {
+    private void FMLonPreRegisterEffect(Sprite par1TextureFX, CallbackInfo ci) {
         TextureFXManager.instance().onPreRegisterEffect(par1TextureFX);
     }
 
@@ -232,7 +232,7 @@ public abstract class class_534Mixin {
         int var1 = -1;
 
         for (Object o : this.field_1978) {
-            class_584 var3 = (class_584) o;
+            Sprite var3 = (Sprite) o;
             var3.field_2154 = this.options.anaglyph3d;
             if (TextureFXManager.instance().onUpdateTextureEffect(var3)) {
                 Dimension dim = TextureFXManager.instance().getTextureDimensions(var3);
@@ -248,7 +248,7 @@ public abstract class class_534Mixin {
                 }
 
                 if (var3.field_2153 != var1) {
-                    var3.method_1614((class_534) (Object) this);
+                    var3.bind((TextureManager) (Object) this);
                     var1 = var3.field_2153;
                 }
 
@@ -281,7 +281,7 @@ public abstract class class_534Mixin {
         }
 
         PlayerSkinTexture var8;
-        for(var2 = this.field_1979.values().iterator(); var2.hasNext(); var8.field_1872 = false) {
+        for(var2 = this.playerSkins.values().iterator(); var2.hasNext(); var8.field_1872 = false) {
             var8 = (PlayerSkinTexture)var2.next();
         }
 
