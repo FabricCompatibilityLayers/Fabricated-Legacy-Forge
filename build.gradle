@@ -40,7 +40,7 @@ loom {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.legacyfabric:yarn:${project.yarn_mappings}:v2"
+	mappings "net.legacyfabric:yarn:${project.minecraft_version}+build.${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modApi("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
