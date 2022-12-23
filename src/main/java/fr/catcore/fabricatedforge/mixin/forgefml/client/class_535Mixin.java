@@ -5,8 +5,8 @@ import fr.catcore.fabricatedforge.mixininterface.IFireBlock;
 import fr.catcore.fabricatedforge.mixininterface.ITessellator;
 import net.minecraft.FMLRenderAccessLibrary;
 import net.minecraft.block.*;
+import net.minecraft.client.BlockRenderer;
 import net.minecraft.client.class_523;
-import net.minecraft.client.class_535;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.util.math.Axis;
 import net.minecraft.world.BlockView;
@@ -16,62 +16,62 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(class_535.class)
+@Mixin(BlockRenderer.class)
 public abstract class class_535Mixin {
 
-    @Shadow public BlockView field_2017;
+    @Shadow public BlockView world;
 
-    @Shadow public abstract boolean method_1482(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderCube(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1477(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderCross(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1462(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderTorch(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1474(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderRedstone(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1479(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderCrop(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1486(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderDoor(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1475(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderLadder(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1441(RailBlock railBlock, int i, int j, int k);
+    @Shadow public abstract boolean renderRail(RailBlock railBlock, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1440(FenceBlock fenceBlock, int i, int j, int k);
+    @Shadow public abstract boolean renderFence(FenceBlock fenceBlock, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1469(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderLever(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1484(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderCactus(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1489(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderRepeater(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1459(Block block, int i, int j, int k, boolean bl);
+    @Shadow public abstract boolean renderPiston(Block block, int i, int j, int k, boolean bl);
 
-    @Shadow public abstract boolean method_1464(Block block, int i, int j, int k, boolean bl);
+    @Shadow public abstract boolean renderPistonHead(Block block, int i, int j, int k, boolean bl);
 
-    @Shadow public abstract boolean method_1478(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderStem(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1476(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderVines(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1439(FenceGateBlock fenceGateBlock, int i, int j, int k);
+    @Shadow public abstract boolean renderFenceGate(FenceGateBlock fenceGateBlock, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1480(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderLilyPad(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1436(CauldronBlock cauldronBlock, int i, int j, int k);
+    @Shadow public abstract boolean renderCauldron(CauldronBlock cauldronBlock, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1435(BrewingStandBlock brewingStandBlock, int i, int j, int k);
+    @Shadow public abstract boolean renderBrewingStand(BrewingStandBlock brewingStandBlock, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1487(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderEndPortalFrame(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1438(DragonEggBlock dragonEggBlock, int i, int j, int k);
+    @Shadow public abstract boolean renderDragonEgg(DragonEggBlock dragonEggBlock, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1437(CocoaBlock cocoaBlock, int i, int j, int k);
+    @Shadow public abstract boolean renderCocoa(CocoaBlock cocoaBlock, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1471(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderTripwireHook(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1472(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderTripwire(Block block, int i, int j, int k);
 
-    @Shadow public abstract boolean method_1483(Block block, int i, int j, int k);
+    @Shadow public abstract boolean renderPillar(Block block, int i, int j, int k);
 
     @Shadow public int field_2049;
 
@@ -286,73 +286,73 @@ public abstract class class_535Mixin {
     @Overwrite
     public boolean method_1458(Block par1Block, int par2, int par3, int par4) {
         int var5 = par1Block.getBlockType();
-        par1Block.method_425(this.field_2017, par2, par3, par4);
+        par1Block.method_425(this.world, par2, par3, par4);
         switch(var5) {
             case 0:
-                return this.method_1482(par1Block, par2, par3, par4);
+                return this.renderCube(par1Block, par2, par3, par4);
             case 1:
-                return this.method_1477(par1Block, par2, par3, par4);
+                return this.renderCross(par1Block, par2, par3, par4);
             case 2:
-                return this.method_1462(par1Block, par2, par3, par4);
+                return this.renderTorch(par1Block, par2, par3, par4);
             case 3:
                 return this.method_1473(par1Block, par2, par3, par4);
             case 4:
                 return this.method_1481(par1Block, par2, par3, par4);
             case 5:
-                return this.method_1474(par1Block, par2, par3, par4);
+                return this.renderRedstone(par1Block, par2, par3, par4);
             case 6:
-                return this.method_1479(par1Block, par2, par3, par4);
+                return this.renderCrop(par1Block, par2, par3, par4);
             case 7:
-                return this.method_1486(par1Block, par2, par3, par4);
+                return this.renderDoor(par1Block, par2, par3, par4);
             case 8:
-                return this.method_1475(par1Block, par2, par3, par4);
+                return this.renderLadder(par1Block, par2, par3, par4);
             case 9:
-                return this.method_1441((RailBlock)par1Block, par2, par3, par4);
+                return this.renderRail((RailBlock)par1Block, par2, par3, par4);
             case 10:
                 return this.method_4319((StairsBlock)par1Block, par2, par3, par4);
             case 11:
-                return this.method_1440((FenceBlock)par1Block, par2, par3, par4);
+                return this.renderFence((FenceBlock)par1Block, par2, par3, par4);
             case 12:
-                return this.method_1469(par1Block, par2, par3, par4);
+                return this.renderLever(par1Block, par2, par3, par4);
             case 13:
-                return this.method_1484(par1Block, par2, par3, par4);
+                return this.renderCactus(par1Block, par2, par3, par4);
             case 14:
                 return this.method_1488(par1Block, par2, par3, par4);
             case 15:
-                return this.method_1489(par1Block, par2, par3, par4);
+                return this.renderRepeater(par1Block, par2, par3, par4);
             case 16:
-                return this.method_1459(par1Block, par2, par3, par4, false);
+                return this.renderPiston(par1Block, par2, par3, par4, false);
             case 17:
-                return this.method_1464(par1Block, par2, par3, par4, true);
+                return this.renderPistonHead(par1Block, par2, par3, par4, true);
             case 18:
                 return this.method_1442((PaneBlock)par1Block, par2, par3, par4);
             case 19:
-                return this.method_1478(par1Block, par2, par3, par4);
+                return this.renderStem(par1Block, par2, par3, par4);
             case 20:
-                return this.method_1476(par1Block, par2, par3, par4);
+                return this.renderVines(par1Block, par2, par3, par4);
             case 21:
-                return this.method_1439((FenceGateBlock)par1Block, par2, par3, par4);
+                return this.renderFenceGate((FenceGateBlock)par1Block, par2, par3, par4);
             case 22:
             default:
-                return FMLRenderAccessLibrary.renderWorldBlock((class_535)(Object) this, this.field_2017, par2, par3, par4, par1Block, var5);
+                return FMLRenderAccessLibrary.renderWorldBlock((class_535)(Object) this, this.world, par2, par3, par4, par1Block, var5);
             case 23:
-                return this.method_1480(par1Block, par2, par3, par4);
+                return this.renderLilyPad(par1Block, par2, par3, par4);
             case 24:
-                return this.method_1436((CauldronBlock)par1Block, par2, par3, par4);
+                return this.renderCauldron((CauldronBlock)par1Block, par2, par3, par4);
             case 25:
-                return this.method_1435((BrewingStandBlock)par1Block, par2, par3, par4);
+                return this.renderBrewingStand((BrewingStandBlock)par1Block, par2, par3, par4);
             case 26:
-                return this.method_1487(par1Block, par2, par3, par4);
+                return this.renderEndPortalFrame(par1Block, par2, par3, par4);
             case 27:
-                return this.method_1438((DragonEggBlock)par1Block, par2, par3, par4);
+                return this.renderDragonEgg((DragonEggBlock)par1Block, par2, par3, par4);
             case 28:
-                return this.method_1437((CocoaBlock)par1Block, par2, par3, par4);
+                return this.renderCocoa((CocoaBlock)par1Block, par2, par3, par4);
             case 29:
-                return this.method_1471(par1Block, par2, par3, par4);
+                return this.renderTripwireHook(par1Block, par2, par3, par4);
             case 30:
-                return this.method_1472(par1Block, par2, par3, par4);
+                return this.renderTripwire(par1Block, par2, par3, par4);
             case 31:
-                return this.method_1483(par1Block, par2, par3, par4);
+                return this.renderPillar(par1Block, par2, par3, par4);
             case 32:
                 return this.method_4321((WallBlock)par1Block, par2, par3, par4);
             case 33:
@@ -371,16 +371,16 @@ public abstract class class_535Mixin {
     @Overwrite
     public boolean method_1488(Block par1Block, int par2, int par3, int par4) {
         Tessellator var5 = Tessellator.INSTANCE;
-        int var7 = ((IBlock)par1Block).getBedDirection(this.field_2017, par2, par3, par4);
-        boolean var8 = ((IBlock)par1Block).isBedFoot(this.field_2017, par2, par3, par4);
+        int var7 = ((IBlock)par1Block).getBedDirection(this.world, par2, par3, par4);
+        boolean var8 = ((IBlock)par1Block).isBedFoot(this.world, par2, par3, par4);
         float var9 = 0.5F;
         float var10 = 1.0F;
         float var11 = 0.8F;
         float var12 = 0.6F;
-        int var25 = par1Block.method_455(this.field_2017, par2, par3, par4);
+        int var25 = par1Block.method_455(this.world, par2, par3, par4);
         var5.method_1411(var25);
         var5.method_1400(var9, var9, var9);
-        int var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 0);
+        int var27 = par1Block.method_439(this.world, par2, par3, par4, 0);
         if (this.field_2049 >= 0) {
             var27 = this.field_2049;
         }
@@ -400,9 +400,9 @@ public abstract class class_535Mixin {
         var5.method_1399(var38, var42, var44, var30, var34);
         var5.method_1399(var40, var42, var44, var32, var34);
         var5.method_1399(var40, var42, var46, var32, var36);
-        var5.method_1411(par1Block.method_455(this.field_2017, par2, par3 + 1, par4));
+        var5.method_1411(par1Block.method_455(this.world, par2, par3 + 1, par4));
         var5.method_1400(var10, var10, var10);
-        var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 1);
+        var27 = par1Block.method_439(this.world, par2, par3, par4, 1);
         if (this.field_2049 >= 0) {
             var27 = this.field_2049;
         }
@@ -470,32 +470,32 @@ public abstract class class_535Mixin {
                 var65 = 2;
         }
 
-        if (var64 != 2 && (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3, par4 - 1, 2))) {
-            var5.method_1411(par1Block.boundingBoxMinZ > 0.0 ? var25 : par1Block.method_455(this.field_2017, par2, par3, par4 - 1));
+        if (var64 != 2 && (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3, par4 - 1, 2))) {
+            var5.method_1411(par1Block.boundingBoxMinZ > 0.0 ? var25 : par1Block.method_455(this.world, par2, par3, par4 - 1));
             var5.method_1400(var11, var11, var11);
             this.field_2050 = var65 == 2;
-            this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 2));
+            this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 2));
         }
 
-        if (var64 != 3 && (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3, par4 + 1, 3))) {
-            var5.method_1411(par1Block.boundingBoxMaxZ < 1.0 ? var25 : par1Block.method_455(this.field_2017, par2, par3, par4 + 1));
+        if (var64 != 3 && (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3, par4 + 1, 3))) {
+            var5.method_1411(par1Block.boundingBoxMaxZ < 1.0 ? var25 : par1Block.method_455(this.world, par2, par3, par4 + 1));
             var5.method_1400(var11, var11, var11);
             this.field_2050 = var65 == 3;
-            this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 3));
+            this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 3));
         }
 
-        if (var64 != 4 && (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2 - 1, par3, par4, 4))) {
-            var5.method_1411(par1Block.boundingBoxMinZ > 0.0 ? var25 : par1Block.method_455(this.field_2017, par2 - 1, par3, par4));
+        if (var64 != 4 && (this.field_2051 || par1Block.shouldRenderSide(this.world, par2 - 1, par3, par4, 4))) {
+            var5.method_1411(par1Block.boundingBoxMinZ > 0.0 ? var25 : par1Block.method_455(this.world, par2 - 1, par3, par4));
             var5.method_1400(var12, var12, var12);
             this.field_2050 = var65 == 4;
-            this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 4));
+            this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 4));
         }
 
-        if (var64 != 5 && (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2 + 1, par3, par4, 5))) {
-            var5.method_1411(par1Block.boundingBoxMaxZ < 1.0 ? var25 : par1Block.method_455(this.field_2017, par2 + 1, par3, par4));
+        if (var64 != 5 && (this.field_2051 || par1Block.shouldRenderSide(this.world, par2 + 1, par3, par4, 5))) {
+            var5.method_1411(par1Block.boundingBoxMaxZ < 1.0 ? var25 : par1Block.method_455(this.world, par2 + 1, par3, par4));
             var5.method_1400(var12, var12, var12);
             this.field_2050 = var65 == 5;
-            this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 5));
+            this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 5));
         }
 
         this.field_2050 = false;
@@ -515,7 +515,7 @@ public abstract class class_535Mixin {
         }
 
         var5.method_1400(1.0F, 1.0F, 1.0F);
-        var5.method_1411(par1Block.method_455(this.field_2017, par2, par3, par4));
+        var5.method_1411(par1Block.method_455(this.world, par2, par3, par4));
         int var7 = (var6 & 15) << 4;
         int var8 = var6 & 240;
         double var9 = (double)((float)var7 / 256.0F);
@@ -523,7 +523,7 @@ public abstract class class_535Mixin {
         double var13 = (double)((float)var8 / 256.0F);
         double var15 = (double)(((float)var8 + 15.99F) / 256.0F);
         float var17 = 1.4F;
-        if (!this.field_2017.isTopSolid(par2, par3 - 1, par4) && !((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2, par3 - 1, par4, ForgeDirection.UP)) {
+        if (!this.world.isTopSolid(par2, par3 - 1, par4) && !((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2, par3 - 1, par4, ForgeDirection.UP)) {
             float var36 = 0.2F;
             float var19 = 0.0625F;
             if ((par2 + par3 + par4 & 1) == 1) {
@@ -539,7 +539,7 @@ public abstract class class_535Mixin {
                 var9 = var20;
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2 - 1, par3, par4, ForgeDirection.EAST)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2 - 1, par3, par4, ForgeDirection.EAST)) {
                 var5.method_1399((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
                 var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
                 var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
@@ -550,7 +550,7 @@ public abstract class class_535Mixin {
                 var5.method_1399((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2 + 1, par3, par4, ForgeDirection.WEST)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2 + 1, par3, par4, ForgeDirection.WEST)) {
                 var5.method_1399((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
                 var5.method_1399((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
                 var5.method_1399((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
@@ -561,7 +561,7 @@ public abstract class class_535Mixin {
                 var5.method_1399((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2, par3, par4 - 1, ForgeDirection.SOUTH)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2, par3, par4 - 1, ForgeDirection.SOUTH)) {
                 var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var11, var13);
                 var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var11, var15);
                 var5.method_1399((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
@@ -572,7 +572,7 @@ public abstract class class_535Mixin {
                 var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var11, var13);
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2, par3, par4 + 1, ForgeDirection.NORTH)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2, par3, par4 + 1, ForgeDirection.NORTH)) {
                 var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var9, var13);
                 var5.method_1399((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var9, var15);
                 var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var11, var15);
@@ -583,7 +583,7 @@ public abstract class class_535Mixin {
                 var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var9, var13);
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.field_2017, par2, par3 + 1, par4, ForgeDirection.DOWN)) {
+            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2, par3 + 1, par4, ForgeDirection.DOWN)) {
                 double var20 = (double)par2 + 0.5 + 0.5;
                 double var22 = (double)par2 + 0.5 - 0.5;
                 double var24 = (double)par4 + 0.5 + 0.5;
@@ -706,14 +706,14 @@ public abstract class class_535Mixin {
         boolean var16 = true;
         boolean var17 = true;
         boolean var18 = true;
-        this.field_2059 = par1Block.method_465(this.field_2017, par2, par3, par4);
-        this.field_2060 = par1Block.method_465(this.field_2017, par2 - 1, par3, par4);
-        this.field_2061 = par1Block.method_465(this.field_2017, par2, par3 - 1, par4);
-        this.field_2062 = par1Block.method_465(this.field_2017, par2, par3, par4 - 1);
-        this.field_2063 = par1Block.method_465(this.field_2017, par2 + 1, par3, par4);
-        this.field_2064 = par1Block.method_465(this.field_2017, par2, par3 + 1, par4);
-        this.field_2065 = par1Block.method_465(this.field_2017, par2, par3, par4 + 1);
-        int var19 = par1Block.method_455(this.field_2017, par2, par3, par4);
+        this.field_2059 = par1Block.method_465(this.world, par2, par3, par4);
+        this.field_2060 = par1Block.method_465(this.world, par2 - 1, par3, par4);
+        this.field_2061 = par1Block.method_465(this.world, par2, par3 - 1, par4);
+        this.field_2062 = par1Block.method_465(this.world, par2, par3, par4 - 1);
+        this.field_2063 = par1Block.method_465(this.world, par2 + 1, par3, par4);
+        this.field_2064 = par1Block.method_465(this.world, par2, par3 + 1, par4);
+        this.field_2065 = par1Block.method_465(this.world, par2, par3, par4 + 1);
+        int var19 = par1Block.method_455(this.world, par2, par3, par4);
         int var20 = var19;
         int var21 = var19;
         int var22 = var19;
@@ -721,43 +721,43 @@ public abstract class class_535Mixin {
         int var24 = var19;
         int var25 = var19;
         if (par1Block.boundingBoxMinY <= 0.0) {
-            var21 = par1Block.method_455(this.field_2017, par2, par3 - 1, par4);
+            var21 = par1Block.method_455(this.world, par2, par3 - 1, par4);
         }
 
         if (par1Block.boundingBoxMaxY >= 1.0) {
-            var24 = par1Block.method_455(this.field_2017, par2, par3 + 1, par4);
+            var24 = par1Block.method_455(this.world, par2, par3 + 1, par4);
         }
 
         if (par1Block.boundingBoxMinX <= 0.0) {
-            var20 = par1Block.method_455(this.field_2017, par2 - 1, par3, par4);
+            var20 = par1Block.method_455(this.world, par2 - 1, par3, par4);
         }
 
         if (par1Block.boundingBoxMaxX >= 1.0) {
-            var23 = par1Block.method_455(this.field_2017, par2 + 1, par3, par4);
+            var23 = par1Block.method_455(this.world, par2 + 1, par3, par4);
         }
 
         if (par1Block.boundingBoxMinZ <= 0.0) {
-            var22 = par1Block.method_455(this.field_2017, par2, par3, par4 - 1);
+            var22 = par1Block.method_455(this.world, par2, par3, par4 - 1);
         }
 
         if (par1Block.boundingBoxMaxZ >= 1.0) {
-            var25 = par1Block.method_455(this.field_2017, par2, par3, par4 + 1);
+            var25 = par1Block.method_455(this.world, par2, par3, par4 + 1);
         }
 
         Tessellator var26 = Tessellator.INSTANCE;
         var26.method_1411(983055);
-        this.field_2009 = Block.field_495[this.field_2017.getBlock(par2 + 1, par3 + 1, par4)];
-        this.field_2018 = Block.field_495[this.field_2017.getBlock(par2 + 1, par3 - 1, par4)];
-        this.field_2013 = Block.field_495[this.field_2017.getBlock(par2 + 1, par3, par4 + 1)];
-        this.field_2015 = Block.field_495[this.field_2017.getBlock(par2 + 1, par3, par4 - 1)];
-        this.field_2010 = Block.field_495[this.field_2017.getBlock(par2 - 1, par3 + 1, par4)];
-        this.field_2019 = Block.field_495[this.field_2017.getBlock(par2 - 1, par3 - 1, par4)];
-        this.field_2012 = Block.field_495[this.field_2017.getBlock(par2 - 1, par3, par4 - 1)];
-        this.field_2014 = Block.field_495[this.field_2017.getBlock(par2 - 1, par3, par4 + 1)];
-        this.field_2011 = Block.field_495[this.field_2017.getBlock(par2, par3 + 1, par4 + 1)];
-        this.field_2008 = Block.field_495[this.field_2017.getBlock(par2, par3 + 1, par4 - 1)];
-        this.field_2020 = Block.field_495[this.field_2017.getBlock(par2, par3 - 1, par4 + 1)];
-        this.field_2016 = Block.field_495[this.field_2017.getBlock(par2, par3 - 1, par4 - 1)];
+        this.field_2009 = Block.field_495[this.world.getBlock(par2 + 1, par3 + 1, par4)];
+        this.field_2018 = Block.field_495[this.world.getBlock(par2 + 1, par3 - 1, par4)];
+        this.field_2013 = Block.field_495[this.world.getBlock(par2 + 1, par3, par4 + 1)];
+        this.field_2015 = Block.field_495[this.world.getBlock(par2 + 1, par3, par4 - 1)];
+        this.field_2010 = Block.field_495[this.world.getBlock(par2 - 1, par3 + 1, par4)];
+        this.field_2019 = Block.field_495[this.world.getBlock(par2 - 1, par3 - 1, par4)];
+        this.field_2012 = Block.field_495[this.world.getBlock(par2 - 1, par3, par4 - 1)];
+        this.field_2014 = Block.field_495[this.world.getBlock(par2 - 1, par3, par4 + 1)];
+        this.field_2011 = Block.field_495[this.world.getBlock(par2, par3 + 1, par4 + 1)];
+        this.field_2008 = Block.field_495[this.world.getBlock(par2, par3 + 1, par4 - 1)];
+        this.field_2020 = Block.field_495[this.world.getBlock(par2, par3 - 1, par4 + 1)];
+        this.field_2016 = Block.field_495[this.world.getBlock(par2, par3 - 1, par4 - 1)];
         if (par1Block.field_439 == 3) {
             var18 = false;
             var17 = false;
@@ -774,50 +774,50 @@ public abstract class class_535Mixin {
             var13 = false;
         }
 
-        if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3 - 1, par4, 0)) {
+        if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3 - 1, par4, 0)) {
             if (this.field_2033 > 0) {
                 if (par1Block.boundingBoxMinY <= 0.0) {
                     --par3;
                 }
 
-                this.field_1998 = par1Block.method_455(this.field_2017, par2 - 1, par3, par4);
-                this.field_2000 = par1Block.method_455(this.field_2017, par2, par3, par4 - 1);
-                this.field_2001 = par1Block.method_455(this.field_2017, par2, par3, par4 + 1);
-                this.field_2003 = par1Block.method_455(this.field_2017, par2 + 1, par3, par4);
-                this.field_2067 = par1Block.method_465(this.field_2017, par2 - 1, par3, par4);
-                this.field_2069 = par1Block.method_465(this.field_2017, par2, par3, par4 - 1);
-                this.field_2070 = par1Block.method_465(this.field_2017, par2, par3, par4 + 1);
-                this.field_1983 = par1Block.method_465(this.field_2017, par2 + 1, par3, par4);
+                this.field_1998 = par1Block.method_455(this.world, par2 - 1, par3, par4);
+                this.field_2000 = par1Block.method_455(this.world, par2, par3, par4 - 1);
+                this.field_2001 = par1Block.method_455(this.world, par2, par3, par4 + 1);
+                this.field_2003 = par1Block.method_455(this.world, par2 + 1, par3, par4);
+                this.field_2067 = par1Block.method_465(this.world, par2 - 1, par3, par4);
+                this.field_2069 = par1Block.method_465(this.world, par2, par3, par4 - 1);
+                this.field_2070 = par1Block.method_465(this.world, par2, par3, par4 + 1);
+                this.field_1983 = par1Block.method_465(this.world, par2 + 1, par3, par4);
                 if (!this.field_2016 && !this.field_2019) {
                     this.field_2066 = this.field_2067;
                     this.field_1997 = this.field_1998;
                 } else {
-                    this.field_2066 = par1Block.method_465(this.field_2017, par2 - 1, par3, par4 - 1);
-                    this.field_1997 = par1Block.method_455(this.field_2017, par2 - 1, par3, par4 - 1);
+                    this.field_2066 = par1Block.method_465(this.world, par2 - 1, par3, par4 - 1);
+                    this.field_1997 = par1Block.method_455(this.world, par2 - 1, par3, par4 - 1);
                 }
 
                 if (!this.field_2020 && !this.field_2019) {
                     this.field_2068 = this.field_2067;
                     this.field_1999 = this.field_1998;
                 } else {
-                    this.field_2068 = par1Block.method_465(this.field_2017, par2 - 1, par3, par4 + 1);
-                    this.field_1999 = par1Block.method_455(this.field_2017, par2 - 1, par3, par4 + 1);
+                    this.field_2068 = par1Block.method_465(this.world, par2 - 1, par3, par4 + 1);
+                    this.field_1999 = par1Block.method_455(this.world, par2 - 1, par3, par4 + 1);
                 }
 
                 if (!this.field_2016 && !this.field_2018) {
                     this.field_2071 = this.field_1983;
                     this.field_2002 = this.field_2003;
                 } else {
-                    this.field_2071 = par1Block.method_465(this.field_2017, par2 + 1, par3, par4 - 1);
-                    this.field_2002 = par1Block.method_455(this.field_2017, par2 + 1, par3, par4 - 1);
+                    this.field_2071 = par1Block.method_465(this.world, par2 + 1, par3, par4 - 1);
+                    this.field_2002 = par1Block.method_455(this.world, par2 + 1, par3, par4 - 1);
                 }
 
                 if (!this.field_2020 && !this.field_2018) {
                     this.field_1984 = this.field_1983;
                     this.field_2004 = this.field_2003;
                 } else {
-                    this.field_1984 = par1Block.method_465(this.field_2017, par2 + 1, par3, par4 + 1);
-                    this.field_2004 = par1Block.method_455(this.field_2017, par2 + 1, par3, par4 + 1);
+                    this.field_1984 = par1Block.method_465(this.world, par2 + 1, par3, par4 + 1);
+                    this.field_2004 = par1Block.method_455(this.world, par2 + 1, par3, par4 + 1);
                 }
 
                 if (par1Block.boundingBoxMinY <= 0.0) {
@@ -855,54 +855,54 @@ public abstract class class_535Mixin {
             this.field_2041 *= var12;
             this.field_2045 *= var12;
             this.field_2007 *= var12;
-            this.method_1444(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 0));
+            this.method_1444(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 0));
             var8 = true;
         }
 
-        if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3 + 1, par4, 1)) {
+        if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3 + 1, par4, 1)) {
             if (this.field_2033 > 0) {
                 if (par1Block.boundingBoxMaxY >= 1.0) {
                     ++par3;
                 }
 
-                this.field_2022 = par1Block.method_455(this.field_2017, par2 - 1, par3, par4);
-                this.field_2026 = par1Block.method_455(this.field_2017, par2 + 1, par3, par4);
-                this.field_2024 = par1Block.method_455(this.field_2017, par2, par3, par4 - 1);
-                this.field_2027 = par1Block.method_455(this.field_2017, par2, par3, par4 + 1);
-                this.field_1986 = par1Block.method_465(this.field_2017, par2 - 1, par3, par4);
-                this.field_1990 = par1Block.method_465(this.field_2017, par2 + 1, par3, par4);
-                this.field_1988 = par1Block.method_465(this.field_2017, par2, par3, par4 - 1);
-                this.field_1991 = par1Block.method_465(this.field_2017, par2, par3, par4 + 1);
+                this.field_2022 = par1Block.method_455(this.world, par2 - 1, par3, par4);
+                this.field_2026 = par1Block.method_455(this.world, par2 + 1, par3, par4);
+                this.field_2024 = par1Block.method_455(this.world, par2, par3, par4 - 1);
+                this.field_2027 = par1Block.method_455(this.world, par2, par3, par4 + 1);
+                this.field_1986 = par1Block.method_465(this.world, par2 - 1, par3, par4);
+                this.field_1990 = par1Block.method_465(this.world, par2 + 1, par3, par4);
+                this.field_1988 = par1Block.method_465(this.world, par2, par3, par4 - 1);
+                this.field_1991 = par1Block.method_465(this.world, par2, par3, par4 + 1);
                 if (!this.field_2008 && !this.field_2010) {
                     this.field_1985 = this.field_1986;
                     this.field_2021 = this.field_2022;
                 } else {
-                    this.field_1985 = par1Block.method_465(this.field_2017, par2 - 1, par3, par4 - 1);
-                    this.field_2021 = par1Block.method_455(this.field_2017, par2 - 1, par3, par4 - 1);
+                    this.field_1985 = par1Block.method_465(this.world, par2 - 1, par3, par4 - 1);
+                    this.field_2021 = par1Block.method_455(this.world, par2 - 1, par3, par4 - 1);
                 }
 
                 if (!this.field_2008 && !this.field_2009) {
                     this.field_1989 = this.field_1990;
                     this.field_2025 = this.field_2026;
                 } else {
-                    this.field_1989 = par1Block.method_465(this.field_2017, par2 + 1, par3, par4 - 1);
-                    this.field_2025 = par1Block.method_455(this.field_2017, par2 + 1, par3, par4 - 1);
+                    this.field_1989 = par1Block.method_465(this.world, par2 + 1, par3, par4 - 1);
+                    this.field_2025 = par1Block.method_455(this.world, par2 + 1, par3, par4 - 1);
                 }
 
                 if (!this.field_2011 && !this.field_2010) {
                     this.field_1987 = this.field_1986;
                     this.field_2023 = this.field_2022;
                 } else {
-                    this.field_1987 = par1Block.method_465(this.field_2017, par2 - 1, par3, par4 + 1);
-                    this.field_2023 = par1Block.method_455(this.field_2017, par2 - 1, par3, par4 + 1);
+                    this.field_1987 = par1Block.method_465(this.world, par2 - 1, par3, par4 + 1);
+                    this.field_2023 = par1Block.method_455(this.world, par2 - 1, par3, par4 + 1);
                 }
 
                 if (!this.field_2011 && !this.field_2009) {
                     this.field_1992 = this.field_1990;
                     this.field_2028 = this.field_2026;
                 } else {
-                    this.field_1992 = par1Block.method_465(this.field_2017, par2 + 1, par3, par4 + 1);
-                    this.field_2028 = par1Block.method_455(this.field_2017, par2 + 1, par3, par4 + 1);
+                    this.field_1992 = par1Block.method_465(this.world, par2 + 1, par3, par4 + 1);
+                    this.field_2028 = par1Block.method_455(this.world, par2 + 1, par3, par4 + 1);
                 }
 
                 if (par1Block.boundingBoxMaxY >= 1.0) {
@@ -940,54 +940,54 @@ public abstract class class_535Mixin {
             this.field_2041 *= var12;
             this.field_2045 *= var12;
             this.field_2007 *= var12;
-            this.method_1456(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 1));
+            this.method_1456(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 1));
             var8 = true;
         }
 
-        if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3, par4 - 1, 2)) {
+        if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3, par4 - 1, 2)) {
             if (this.field_2033 > 0) {
                 if (par1Block.boundingBoxMinZ <= 0.0) {
                     --par4;
                 }
 
-                this.field_1993 = par1Block.method_465(this.field_2017, par2 - 1, par3, par4);
-                this.field_2069 = par1Block.method_465(this.field_2017, par2, par3 - 1, par4);
-                this.field_1988 = par1Block.method_465(this.field_2017, par2, par3 + 1, par4);
-                this.field_1994 = par1Block.method_465(this.field_2017, par2 + 1, par3, par4);
-                this.field_2029 = par1Block.method_455(this.field_2017, par2 - 1, par3, par4);
-                this.field_2000 = par1Block.method_455(this.field_2017, par2, par3 - 1, par4);
-                this.field_2024 = par1Block.method_455(this.field_2017, par2, par3 + 1, par4);
-                this.field_2030 = par1Block.method_455(this.field_2017, par2 + 1, par3, par4);
+                this.field_1993 = par1Block.method_465(this.world, par2 - 1, par3, par4);
+                this.field_2069 = par1Block.method_465(this.world, par2, par3 - 1, par4);
+                this.field_1988 = par1Block.method_465(this.world, par2, par3 + 1, par4);
+                this.field_1994 = par1Block.method_465(this.world, par2 + 1, par3, par4);
+                this.field_2029 = par1Block.method_455(this.world, par2 - 1, par3, par4);
+                this.field_2000 = par1Block.method_455(this.world, par2, par3 - 1, par4);
+                this.field_2024 = par1Block.method_455(this.world, par2, par3 + 1, par4);
+                this.field_2030 = par1Block.method_455(this.world, par2 + 1, par3, par4);
                 if (!this.field_2012 && !this.field_2016) {
                     this.field_2066 = this.field_1993;
                     this.field_1997 = this.field_2029;
                 } else {
-                    this.field_2066 = par1Block.method_465(this.field_2017, par2 - 1, par3 - 1, par4);
-                    this.field_1997 = par1Block.method_455(this.field_2017, par2 - 1, par3 - 1, par4);
+                    this.field_2066 = par1Block.method_465(this.world, par2 - 1, par3 - 1, par4);
+                    this.field_1997 = par1Block.method_455(this.world, par2 - 1, par3 - 1, par4);
                 }
 
                 if (!this.field_2012 && !this.field_2008) {
                     this.field_1985 = this.field_1993;
                     this.field_2021 = this.field_2029;
                 } else {
-                    this.field_1985 = par1Block.method_465(this.field_2017, par2 - 1, par3 + 1, par4);
-                    this.field_2021 = par1Block.method_455(this.field_2017, par2 - 1, par3 + 1, par4);
+                    this.field_1985 = par1Block.method_465(this.world, par2 - 1, par3 + 1, par4);
+                    this.field_2021 = par1Block.method_455(this.world, par2 - 1, par3 + 1, par4);
                 }
 
                 if (!this.field_2015 && !this.field_2016) {
                     this.field_2071 = this.field_1994;
                     this.field_2002 = this.field_2030;
                 } else {
-                    this.field_2071 = par1Block.method_465(this.field_2017, par2 + 1, par3 - 1, par4);
-                    this.field_2002 = par1Block.method_455(this.field_2017, par2 + 1, par3 - 1, par4);
+                    this.field_2071 = par1Block.method_465(this.world, par2 + 1, par3 - 1, par4);
+                    this.field_2002 = par1Block.method_455(this.world, par2 + 1, par3 - 1, par4);
                 }
 
                 if (!this.field_2015 && !this.field_2008) {
                     this.field_1989 = this.field_1994;
                     this.field_2025 = this.field_2030;
                 } else {
-                    this.field_1989 = par1Block.method_465(this.field_2017, par2 + 1, par3 + 1, par4);
-                    this.field_2025 = par1Block.method_455(this.field_2017, par2 + 1, par3 + 1, par4);
+                    this.field_1989 = par1Block.method_465(this.world, par2 + 1, par3 + 1, par4);
+                    this.field_2025 = par1Block.method_455(this.world, par2 + 1, par3 + 1, par4);
                 }
 
                 if (par1Block.boundingBoxMinZ <= 0.0) {
@@ -1025,7 +1025,7 @@ public abstract class class_535Mixin {
             this.field_2041 *= var12;
             this.field_2045 *= var12;
             this.field_2007 *= var12;
-            int var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 2);
+            int var27 = par1Block.method_439(this.world, par2, par3, par4, 2);
             this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, var27);
             if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
                 this.field_2038 *= par5;
@@ -1046,50 +1046,50 @@ public abstract class class_535Mixin {
             var8 = true;
         }
 
-        if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3, par4 + 1, 3)) {
+        if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3, par4 + 1, 3)) {
             if (this.field_2033 > 0) {
                 if (par1Block.boundingBoxMaxZ >= 1.0) {
                     ++par4;
                 }
 
-                this.field_1995 = par1Block.method_465(this.field_2017, par2 - 1, par3, par4);
-                this.field_1996 = par1Block.method_465(this.field_2017, par2 + 1, par3, par4);
-                this.field_2070 = par1Block.method_465(this.field_2017, par2, par3 - 1, par4);
-                this.field_1991 = par1Block.method_465(this.field_2017, par2, par3 + 1, par4);
-                this.field_2031 = par1Block.method_455(this.field_2017, par2 - 1, par3, par4);
-                this.field_2032 = par1Block.method_455(this.field_2017, par2 + 1, par3, par4);
-                this.field_2001 = par1Block.method_455(this.field_2017, par2, par3 - 1, par4);
-                this.field_2027 = par1Block.method_455(this.field_2017, par2, par3 + 1, par4);
+                this.field_1995 = par1Block.method_465(this.world, par2 - 1, par3, par4);
+                this.field_1996 = par1Block.method_465(this.world, par2 + 1, par3, par4);
+                this.field_2070 = par1Block.method_465(this.world, par2, par3 - 1, par4);
+                this.field_1991 = par1Block.method_465(this.world, par2, par3 + 1, par4);
+                this.field_2031 = par1Block.method_455(this.world, par2 - 1, par3, par4);
+                this.field_2032 = par1Block.method_455(this.world, par2 + 1, par3, par4);
+                this.field_2001 = par1Block.method_455(this.world, par2, par3 - 1, par4);
+                this.field_2027 = par1Block.method_455(this.world, par2, par3 + 1, par4);
                 if (!this.field_2014 && !this.field_2020) {
                     this.field_2068 = this.field_1995;
                     this.field_1999 = this.field_2031;
                 } else {
-                    this.field_2068 = par1Block.method_465(this.field_2017, par2 - 1, par3 - 1, par4);
-                    this.field_1999 = par1Block.method_455(this.field_2017, par2 - 1, par3 - 1, par4);
+                    this.field_2068 = par1Block.method_465(this.world, par2 - 1, par3 - 1, par4);
+                    this.field_1999 = par1Block.method_455(this.world, par2 - 1, par3 - 1, par4);
                 }
 
                 if (!this.field_2014 && !this.field_2011) {
                     this.field_1987 = this.field_1995;
                     this.field_2023 = this.field_2031;
                 } else {
-                    this.field_1987 = par1Block.method_465(this.field_2017, par2 - 1, par3 + 1, par4);
-                    this.field_2023 = par1Block.method_455(this.field_2017, par2 - 1, par3 + 1, par4);
+                    this.field_1987 = par1Block.method_465(this.world, par2 - 1, par3 + 1, par4);
+                    this.field_2023 = par1Block.method_455(this.world, par2 - 1, par3 + 1, par4);
                 }
 
                 if (!this.field_2013 && !this.field_2020) {
                     this.field_1984 = this.field_1996;
                     this.field_2004 = this.field_2032;
                 } else {
-                    this.field_1984 = par1Block.method_465(this.field_2017, par2 + 1, par3 - 1, par4);
-                    this.field_2004 = par1Block.method_455(this.field_2017, par2 + 1, par3 - 1, par4);
+                    this.field_1984 = par1Block.method_465(this.world, par2 + 1, par3 - 1, par4);
+                    this.field_2004 = par1Block.method_455(this.world, par2 + 1, par3 - 1, par4);
                 }
 
                 if (!this.field_2013 && !this.field_2011) {
                     this.field_1992 = this.field_1996;
                     this.field_2028 = this.field_2032;
                 } else {
-                    this.field_1992 = par1Block.method_465(this.field_2017, par2 + 1, par3 + 1, par4);
-                    this.field_2028 = par1Block.method_455(this.field_2017, par2 + 1, par3 + 1, par4);
+                    this.field_1992 = par1Block.method_465(this.world, par2 + 1, par3 + 1, par4);
+                    this.field_2028 = par1Block.method_455(this.world, par2 + 1, par3 + 1, par4);
                 }
 
                 if (par1Block.boundingBoxMaxZ >= 1.0) {
@@ -1127,8 +1127,8 @@ public abstract class class_535Mixin {
             this.field_2041 *= var12;
             this.field_2045 *= var12;
             this.field_2007 *= var12;
-            int var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 3);
-            this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 3));
+            int var27 = par1Block.method_439(this.world, par2, par3, par4, 3);
+            this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 3));
             if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
                 this.field_2038 *= par5;
                 this.field_2039 *= par5;
@@ -1148,50 +1148,50 @@ public abstract class class_535Mixin {
             var8 = true;
         }
 
-        if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2 - 1, par3, par4, 4)) {
+        if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2 - 1, par3, par4, 4)) {
             if (this.field_2033 > 0) {
                 if (par1Block.boundingBoxMinX <= 0.0) {
                     --par2;
                 }
 
-                this.field_2067 = par1Block.method_465(this.field_2017, par2, par3 - 1, par4);
-                this.field_1993 = par1Block.method_465(this.field_2017, par2, par3, par4 - 1);
-                this.field_1995 = par1Block.method_465(this.field_2017, par2, par3, par4 + 1);
-                this.field_1986 = par1Block.method_465(this.field_2017, par2, par3 + 1, par4);
-                this.field_1998 = par1Block.method_455(this.field_2017, par2, par3 - 1, par4);
-                this.field_2029 = par1Block.method_455(this.field_2017, par2, par3, par4 - 1);
-                this.field_2031 = par1Block.method_455(this.field_2017, par2, par3, par4 + 1);
-                this.field_2022 = par1Block.method_455(this.field_2017, par2, par3 + 1, par4);
+                this.field_2067 = par1Block.method_465(this.world, par2, par3 - 1, par4);
+                this.field_1993 = par1Block.method_465(this.world, par2, par3, par4 - 1);
+                this.field_1995 = par1Block.method_465(this.world, par2, par3, par4 + 1);
+                this.field_1986 = par1Block.method_465(this.world, par2, par3 + 1, par4);
+                this.field_1998 = par1Block.method_455(this.world, par2, par3 - 1, par4);
+                this.field_2029 = par1Block.method_455(this.world, par2, par3, par4 - 1);
+                this.field_2031 = par1Block.method_455(this.world, par2, par3, par4 + 1);
+                this.field_2022 = par1Block.method_455(this.world, par2, par3 + 1, par4);
                 if (!this.field_2012 && !this.field_2019) {
                     this.field_2066 = this.field_1993;
                     this.field_1997 = this.field_2029;
                 } else {
-                    this.field_2066 = par1Block.method_465(this.field_2017, par2, par3 - 1, par4 - 1);
-                    this.field_1997 = par1Block.method_455(this.field_2017, par2, par3 - 1, par4 - 1);
+                    this.field_2066 = par1Block.method_465(this.world, par2, par3 - 1, par4 - 1);
+                    this.field_1997 = par1Block.method_455(this.world, par2, par3 - 1, par4 - 1);
                 }
 
                 if (!this.field_2014 && !this.field_2019) {
                     this.field_2068 = this.field_1995;
                     this.field_1999 = this.field_2031;
                 } else {
-                    this.field_2068 = par1Block.method_465(this.field_2017, par2, par3 - 1, par4 + 1);
-                    this.field_1999 = par1Block.method_455(this.field_2017, par2, par3 - 1, par4 + 1);
+                    this.field_2068 = par1Block.method_465(this.world, par2, par3 - 1, par4 + 1);
+                    this.field_1999 = par1Block.method_455(this.world, par2, par3 - 1, par4 + 1);
                 }
 
                 if (!this.field_2012 && !this.field_2010) {
                     this.field_1985 = this.field_1993;
                     this.field_2021 = this.field_2029;
                 } else {
-                    this.field_1985 = par1Block.method_465(this.field_2017, par2, par3 + 1, par4 - 1);
-                    this.field_2021 = par1Block.method_455(this.field_2017, par2, par3 + 1, par4 - 1);
+                    this.field_1985 = par1Block.method_465(this.world, par2, par3 + 1, par4 - 1);
+                    this.field_2021 = par1Block.method_455(this.world, par2, par3 + 1, par4 - 1);
                 }
 
                 if (!this.field_2014 && !this.field_2010) {
                     this.field_1987 = this.field_1995;
                     this.field_2023 = this.field_2031;
                 } else {
-                    this.field_1987 = par1Block.method_465(this.field_2017, par2, par3 + 1, par4 + 1);
-                    this.field_2023 = par1Block.method_455(this.field_2017, par2, par3 + 1, par4 + 1);
+                    this.field_1987 = par1Block.method_465(this.world, par2, par3 + 1, par4 + 1);
+                    this.field_2023 = par1Block.method_455(this.world, par2, par3 + 1, par4 + 1);
                 }
 
                 if (par1Block.boundingBoxMinX <= 0.0) {
@@ -1229,7 +1229,7 @@ public abstract class class_535Mixin {
             this.field_2041 *= var12;
             this.field_2045 *= var12;
             this.field_2007 *= var12;
-            int var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 4);
+            int var27 = par1Block.method_439(this.world, par2, par3, par4, 4);
             this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, var27);
             if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
                 this.field_2038 *= par5;
@@ -1250,50 +1250,50 @@ public abstract class class_535Mixin {
             var8 = true;
         }
 
-        if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2 + 1, par3, par4, 5)) {
+        if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2 + 1, par3, par4, 5)) {
             if (this.field_2033 > 0) {
                 if (par1Block.boundingBoxMaxX >= 1.0) {
                     ++par2;
                 }
 
-                this.field_1983 = par1Block.method_465(this.field_2017, par2, par3 - 1, par4);
-                this.field_1994 = par1Block.method_465(this.field_2017, par2, par3, par4 - 1);
-                this.field_1996 = par1Block.method_465(this.field_2017, par2, par3, par4 + 1);
-                this.field_1990 = par1Block.method_465(this.field_2017, par2, par3 + 1, par4);
-                this.field_2003 = par1Block.method_455(this.field_2017, par2, par3 - 1, par4);
-                this.field_2030 = par1Block.method_455(this.field_2017, par2, par3, par4 - 1);
-                this.field_2032 = par1Block.method_455(this.field_2017, par2, par3, par4 + 1);
-                this.field_2026 = par1Block.method_455(this.field_2017, par2, par3 + 1, par4);
+                this.field_1983 = par1Block.method_465(this.world, par2, par3 - 1, par4);
+                this.field_1994 = par1Block.method_465(this.world, par2, par3, par4 - 1);
+                this.field_1996 = par1Block.method_465(this.world, par2, par3, par4 + 1);
+                this.field_1990 = par1Block.method_465(this.world, par2, par3 + 1, par4);
+                this.field_2003 = par1Block.method_455(this.world, par2, par3 - 1, par4);
+                this.field_2030 = par1Block.method_455(this.world, par2, par3, par4 - 1);
+                this.field_2032 = par1Block.method_455(this.world, par2, par3, par4 + 1);
+                this.field_2026 = par1Block.method_455(this.world, par2, par3 + 1, par4);
                 if (!this.field_2018 && !this.field_2015) {
                     this.field_2071 = this.field_1994;
                     this.field_2002 = this.field_2030;
                 } else {
-                    this.field_2071 = par1Block.method_465(this.field_2017, par2, par3 - 1, par4 - 1);
-                    this.field_2002 = par1Block.method_455(this.field_2017, par2, par3 - 1, par4 - 1);
+                    this.field_2071 = par1Block.method_465(this.world, par2, par3 - 1, par4 - 1);
+                    this.field_2002 = par1Block.method_455(this.world, par2, par3 - 1, par4 - 1);
                 }
 
                 if (!this.field_2018 && !this.field_2013) {
                     this.field_1984 = this.field_1996;
                     this.field_2004 = this.field_2032;
                 } else {
-                    this.field_1984 = par1Block.method_465(this.field_2017, par2, par3 - 1, par4 + 1);
-                    this.field_2004 = par1Block.method_455(this.field_2017, par2, par3 - 1, par4 + 1);
+                    this.field_1984 = par1Block.method_465(this.world, par2, par3 - 1, par4 + 1);
+                    this.field_2004 = par1Block.method_455(this.world, par2, par3 - 1, par4 + 1);
                 }
 
                 if (!this.field_2009 && !this.field_2015) {
                     this.field_1989 = this.field_1994;
                     this.field_2025 = this.field_2030;
                 } else {
-                    this.field_1989 = par1Block.method_465(this.field_2017, par2, par3 + 1, par4 - 1);
-                    this.field_2025 = par1Block.method_455(this.field_2017, par2, par3 + 1, par4 - 1);
+                    this.field_1989 = par1Block.method_465(this.world, par2, par3 + 1, par4 - 1);
+                    this.field_2025 = par1Block.method_455(this.world, par2, par3 + 1, par4 - 1);
                 }
 
                 if (!this.field_2009 && !this.field_2013) {
                     this.field_1992 = this.field_1996;
                     this.field_2028 = this.field_2032;
                 } else {
-                    this.field_1992 = par1Block.method_465(this.field_2017, par2, par3 + 1, par4 + 1);
-                    this.field_2028 = par1Block.method_455(this.field_2017, par2, par3 + 1, par4 + 1);
+                    this.field_1992 = par1Block.method_465(this.world, par2, par3 + 1, par4 + 1);
+                    this.field_2028 = par1Block.method_455(this.world, par2, par3 + 1, par4 + 1);
                 }
 
                 if (par1Block.boundingBoxMaxX >= 1.0) {
@@ -1331,7 +1331,7 @@ public abstract class class_535Mixin {
             this.field_2041 *= var12;
             this.field_2045 *= var12;
             this.field_2007 *= var12;
-            int var27 = par1Block.method_439(this.field_2017, par2, par3, par4, 5);
+            int var27 = par1Block.method_439(this.world, par2, par3, par4, 5);
             this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, var27);
             if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var27 == 3 && this.field_2049 < 0) {
                 this.field_2038 *= par5;
@@ -1393,25 +1393,25 @@ public abstract class class_535Mixin {
             var25 = var13 * par7;
         }
 
-        int var26 = par1Block.method_455(this.field_2017, par2, par3, par4);
-        if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3 - 1, par4, 0)) {
-            var8.method_1411(par1Block.boundingBoxMinY > 0.0 ? var26 : par1Block.method_455(this.field_2017, par2, par3 - 1, par4));
+        int var26 = par1Block.method_455(this.world, par2, par3, par4);
+        if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3 - 1, par4, 0)) {
+            var8.method_1411(par1Block.boundingBoxMinY > 0.0 ? var26 : par1Block.method_455(this.world, par2, par3 - 1, par4));
             var8.method_1400(var17, var20, var23);
-            this.method_1444(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 0));
+            this.method_1444(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 0));
             var9 = true;
         }
 
-        if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3 + 1, par4, 1)) {
-            var8.method_1411(par1Block.boundingBoxMaxY < 1.0 ? var26 : par1Block.method_455(this.field_2017, par2, par3 + 1, par4));
+        if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3 + 1, par4, 1)) {
+            var8.method_1411(par1Block.boundingBoxMaxY < 1.0 ? var26 : par1Block.method_455(this.world, par2, par3 + 1, par4));
             var8.method_1400(var14, var15, var16);
-            this.method_1456(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.field_2017, par2, par3, par4, 1));
+            this.method_1456(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 1));
             var9 = true;
         }
 
-        if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3, par4 - 1, 2)) {
-            var8.method_1411(par1Block.boundingBoxMinZ > 0.0 ? var26 : par1Block.method_455(this.field_2017, par2, par3, par4 - 1));
+        if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3, par4 - 1, 2)) {
+            var8.method_1411(par1Block.boundingBoxMinZ > 0.0 ? var26 : par1Block.method_455(this.world, par2, par3, par4 - 1));
             var8.method_1400(var18, var21, var24);
-            int var28 = par1Block.method_439(this.field_2017, par2, par3, par4, 2);
+            int var28 = par1Block.method_439(this.world, par2, par3, par4, 2);
             this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, var28);
             if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
                 var8.method_1400(var18 * par5, var21 * par6, var24 * par7);
@@ -1421,10 +1421,10 @@ public abstract class class_535Mixin {
             var9 = true;
         }
 
-        if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2, par3, par4 + 1, 3)) {
-            var8.method_1411(par1Block.boundingBoxMaxZ < 1.0 ? var26 : par1Block.method_455(this.field_2017, par2, par3, par4 + 1));
+        if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3, par4 + 1, 3)) {
+            var8.method_1411(par1Block.boundingBoxMaxZ < 1.0 ? var26 : par1Block.method_455(this.world, par2, par3, par4 + 1));
             var8.method_1400(var18, var21, var24);
-            int var28 = par1Block.method_439(this.field_2017, par2, par3, par4, 3);
+            int var28 = par1Block.method_439(this.world, par2, par3, par4, 3);
             this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, var28);
             if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
                 var8.method_1400(var18 * par5, var21 * par6, var24 * par7);
@@ -1434,10 +1434,10 @@ public abstract class class_535Mixin {
             var9 = true;
         }
 
-        if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2 - 1, par3, par4, 4)) {
-            var8.method_1411(par1Block.boundingBoxMinX > 0.0 ? var26 : par1Block.method_455(this.field_2017, par2 - 1, par3, par4));
+        if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2 - 1, par3, par4, 4)) {
+            var8.method_1411(par1Block.boundingBoxMinX > 0.0 ? var26 : par1Block.method_455(this.world, par2 - 1, par3, par4));
             var8.method_1400(var19, var22, var25);
-            int var28 = par1Block.method_439(this.field_2017, par2, par3, par4, 4);
+            int var28 = par1Block.method_439(this.world, par2, par3, par4, 4);
             this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, var28);
             if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
                 var8.method_1400(var19 * par5, var22 * par6, var25 * par7);
@@ -1447,10 +1447,10 @@ public abstract class class_535Mixin {
             var9 = true;
         }
 
-        if (this.field_2051 || par1Block.shouldRenderSide(this.field_2017, par2 + 1, par3, par4, 5)) {
-            var8.method_1411(par1Block.boundingBoxMaxX < 1.0 ? var26 : par1Block.method_455(this.field_2017, par2 + 1, par3, par4));
+        if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2 + 1, par3, par4, 5)) {
+            var8.method_1411(par1Block.boundingBoxMaxX < 1.0 ? var26 : par1Block.method_455(this.world, par2 + 1, par3, par4));
             var8.method_1400(var19, var22, var25);
-            int var28 = par1Block.method_439(this.field_2017, par2, par3, par4, 5);
+            int var28 = par1Block.method_439(this.world, par2, par3, par4, 5);
             this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, var28);
             if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
                 var8.method_1400(var19 * par5, var22 * par6, var25 * par7);

@@ -8,8 +8,8 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.ModContainer;
 import net.minecraft.ModTextureStatic;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.class_534;
-import net.minecraft.client.class_584;
+import net.minecraft.client.TextureManager;
+import net.minecraft.client.Sprite;
 import net.minecraft.client.texture.ITexturePack;
 import org.lwjgl.opengl.GL11;
 
@@ -27,10 +27,10 @@ public class TextureFXManager {
     private Map<Integer, TextureFXManager.TextureProperties> textureProperties = Maps.newHashMap();
     private Multimap<String, OverrideInfo> overrideInfo = ArrayListMultimap.create();
     private HashSet<OverrideInfo> animationSet = new HashSet();
-    private List<class_584> addedTextureFX = new ArrayList();
+    private List<Sprite> addedTextureFX = new ArrayList();
     private Minecraft client;
     private HashMap<Integer, Dimension> textureDims = new HashMap();
-    private IdentityHashMap<class_584, Integer> effectTextures = new IdentityHashMap();
+    private IdentityHashMap<Sprite, Integer> effectTextures = new IdentityHashMap();
     private ITexturePack earlyTexturePack;
 
     public TextureFXManager() {
@@ -40,7 +40,7 @@ public class TextureFXManager {
         this.client = client;
     }
 
-    public boolean onUpdateTextureEffect(class_584 effect) {
+    public boolean onUpdateTextureEffect(Sprite effect) {
         ITextureFX ifx = effect instanceof ITextureFX ? (ITextureFX)effect : null;
         if (ifx != null && ifx.getErrored()) {
             return false;
@@ -111,14 +111,14 @@ public class TextureFXManager {
         buf.position(0).limit(length);
     }
 
-    public void onPreRegisterEffect(class_584 effect) {
+    public void onPreRegisterEffect(Sprite effect) {
         Dimension dim = this.getTextureDimensions(effect);
         if (effect instanceof ITextureFX) {
             ((ITextureFX)effect).onTextureDimensionsUpdate(dim.width, dim.height);
         }
     }
 
-    public int getEffectTexture(class_584 effect) {
+    public int getEffectTexture(Sprite effect) {
         Integer id = (Integer)this.effectTextures.get(effect);
         if (id != null) {
             return id;
@@ -132,10 +132,10 @@ public class TextureFXManager {
         }
     }
 
-    public void onTexturePackChange(class_534 engine, ITexturePack texturepack, List<class_584> effects) {
+    public void onTexturePackChange(TextureManager engine, ITexturePack texturepack, List<Sprite> effects) {
         this.pruneOldTextureFX(texturepack, effects);
 
-        for(class_584 tex : effects) {
+        for(Sprite tex : effects) {
             if (tex instanceof ITextureFX) {
                 ((ITextureFX)tex).onTexturePackChanged(engine, texturepack, this.getTextureDimensions(tex));
             }
@@ -144,18 +144,18 @@ public class TextureFXManager {
         this.loadTextures(texturepack);
     }
 
-    public void setTextureDimensions(int id, int width, int height, List<class_584> effects) {
+    public void setTextureDimensions(int id, int width, int height, List<Sprite> effects) {
         Dimension dim = new Dimension(width, height);
         this.textureDims.put(id, dim);
 
-        for(class_584 tex : effects) {
+        for(Sprite tex : effects) {
             if (this.getEffectTexture(tex) == id && tex instanceof ITextureFX) {
                 ((ITextureFX)tex).onTextureDimensionsUpdate(width, height);
             }
         }
     }
 
-    public Dimension getTextureDimensions(class_584 effect) {
+    public Dimension getTextureDimensions(Sprite effect) {
         return this.getTextureDimensions(this.getEffectTexture(effect));
     }
 
@@ -163,7 +163,7 @@ public class TextureFXManager {
         return (Dimension)this.textureDims.get(id);
     }
 
-    public void addAnimation(class_584 anim) {
+    public void addAnimation(Sprite anim) {
         OverrideInfo info = new OverrideInfo();
         info.index = anim.field_2153;
         info.imageIndex = anim.field_2157;
@@ -179,7 +179,7 @@ public class TextureFXManager {
         this.registerTextureOverrides(this.client.field_3813);
     }
 
-    public void registerTextureOverrides(class_534 renderer) {
+    public void registerTextureOverrides(TextureManager renderer) {
         for(OverrideInfo animationOverride : this.animationSet) {
             renderer.method_1416(animationOverride.textureFX);
             this.addedTextureFX.add(animationOverride.textureFX);
@@ -226,11 +226,11 @@ public class TextureFXManager {
         }
     }
 
-    public void pruneOldTextureFX(ITexturePack var1, List<class_584> effects) {
-        ListIterator<class_584> li = this.addedTextureFX.listIterator();
+    public void pruneOldTextureFX(ITexturePack var1, List<Sprite> effects) {
+        ListIterator<Sprite> li = this.addedTextureFX.listIterator();
 
         while(li.hasNext()) {
-            class_584 tex = (class_584)li.next();
+            Sprite tex = li.next();
             if (tex instanceof FMLTextureFX) {
                 if (((FMLTextureFX)tex).unregister(this.client.field_3813, effects)) {
                     li.remove();
@@ -254,7 +254,7 @@ public class TextureFXManager {
         );
     }
 
-    public BufferedImage loadImageFromTexturePack(class_534 renderEngine, String path) throws IOException {
+    public BufferedImage loadImageFromTexturePack(TextureManager renderEngine, String path) throws IOException {
         InputStream image = this.client.texturePackManager.getCurrentTexturePack().openStream(path);
         if (image == null) {
             throw new RuntimeException(String.format("The requested image path %s is not found", path));
