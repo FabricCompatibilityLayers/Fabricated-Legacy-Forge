@@ -102,32 +102,32 @@ accessible field net/minecraft/client/BlockRenderer field_2005 F
 accessible field net/minecraft/client/BlockRenderer field_2006 F
 accessible field net/minecraft/client/BlockRenderer field_2007 F
 
-accessible method net/minecraft/client/BlockRenderer method_1487 (Lnet/minecraft/block/Block;III)Z
-extendable method net/minecraft/client/BlockRenderer method_1487 (Lnet/minecraft/block/Block;III)Z
-accessible method net/minecraft/client/BlockRenderer method_1488 (Lnet/minecraft/block/Block;III)Z
-extendable method net/minecraft/client/BlockRenderer method_1488 (Lnet/minecraft/block/Block;III)Z
-accessible method net/minecraft/client/BlockRenderer method_1435 (Lnet/minecraft/block/BrewingStandBlock;III)Z
-extendable method net/minecraft/client/BlockRenderer method_1435 (Lnet/minecraft/block/BrewingStandBlock;III)Z
-accessible method net/minecraft/client/BlockRenderer method_1436 (Lnet/minecraft/block/CauldronBlock;III)Z
-extendable method net/minecraft/client/BlockRenderer method_1436 (Lnet/minecraft/block/CauldronBlock;III)Z
-accessible method net/minecraft/client/BlockRenderer method_1489 (Lnet/minecraft/block/Block;III)Z
-extendable method net/minecraft/client/BlockRenderer method_1489 (Lnet/minecraft/block/Block;III)Z
-accessible method net/minecraft/client/BlockRenderer method_1459 (Lnet/minecraft/block/Block;IIIZ)Z
-extendable method net/minecraft/client/BlockRenderer method_1459 (Lnet/minecraft/block/Block;IIIZ)Z
+accessible method net/minecraft/client/BlockRenderer renderEndPortalFrame (Lnet/minecraft/block/Block;III)Z
+extendable method net/minecraft/client/BlockRenderer renderEndPortalFrame (Lnet/minecraft/block/Block;III)Z
+accessible method net/minecraft/client/BlockRenderer renderBed (Lnet/minecraft/block/Block;III)Z
+extendable method net/minecraft/client/BlockRenderer renderBed (Lnet/minecraft/block/Block;III)Z
+accessible method net/minecraft/client/BlockRenderer renderBrewingStand (Lnet/minecraft/block/BrewingStandBlock;III)Z
+extendable method net/minecraft/client/BlockRenderer renderBrewingStand (Lnet/minecraft/block/BrewingStandBlock;III)Z
+accessible method net/minecraft/client/BlockRenderer renderCauldron (Lnet/minecraft/block/CauldronBlock;III)Z
+extendable method net/minecraft/client/BlockRenderer renderCauldron (Lnet/minecraft/block/CauldronBlock;III)Z
+accessible method net/minecraft/client/BlockRenderer renderRepeater (Lnet/minecraft/block/Block;III)Z
+extendable method net/minecraft/client/BlockRenderer renderRepeater (Lnet/minecraft/block/Block;III)Z
+accessible method net/minecraft/client/BlockRenderer renderPiston (Lnet/minecraft/block/Block;IIIZ)Z
+extendable method net/minecraft/client/BlockRenderer renderPiston (Lnet/minecraft/block/Block;IIIZ)Z
 accessible method net/minecraft/client/BlockRenderer method_1432 (DDDDDDFD)V
 extendable method net/minecraft/client/BlockRenderer method_1432 (DDDDDDFD)V
 accessible method net/minecraft/client/BlockRenderer method_1454 (DDDDDDFD)V
 extendable method net/minecraft/client/BlockRenderer method_1454 (DDDDDDFD)V
 accessible method net/minecraft/client/BlockRenderer method_1460 (DDDDDDFD)V
 extendable method net/minecraft/client/BlockRenderer method_1460 (DDDDDDFD)V
-accessible method net/minecraft/client/BlockRenderer method_1464 (Lnet/minecraft/block/Block;IIIZ)Z
-extendable method net/minecraft/client/BlockRenderer method_1464 (Lnet/minecraft/block/Block;IIIZ)Z
-accessible method net/minecraft/client/BlockRenderer method_1434 (IIILnet/minecraft/block/material/Material;)F
-extendable method net/minecraft/client/BlockRenderer method_1434 (IIILnet/minecraft/block/material/Material;)F
+accessible method net/minecraft/client/BlockRenderer renderPistonHead (Lnet/minecraft/block/Block;IIIZ)Z
+extendable method net/minecraft/client/BlockRenderer renderPistonHead (Lnet/minecraft/block/Block;IIIZ)Z
+accessible method net/minecraft/client/BlockRenderer getFluidHeight (IIILnet/minecraft/block/material/Material;)F
+extendable method net/minecraft/client/BlockRenderer getFluidHeight (IIILnet/minecraft/block/material/Material;)F
 accessible method net/minecraft/client/BlockRenderer method_1433 (IIII)I
 extendable method net/minecraft/client/BlockRenderer method_1433 (IIII)I
-accessible method net/minecraft/client/BlockRenderer method_1437 (Lnet/minecraft/block/CocoaBlock;III)Z
-extendable method net/minecraft/client/BlockRenderer method_1437 (Lnet/minecraft/block/CocoaBlock;III)Z
+accessible method net/minecraft/client/BlockRenderer renderCocoa (Lnet/minecraft/block/CocoaBlock;III)Z
+extendable method net/minecraft/client/BlockRenderer renderCocoa (Lnet/minecraft/block/CocoaBlock;III)Z
 
 accessible field net/minecraft/client/TextureManager field_1978 Ljava/util/List;
 
@@ -186,12 +186,12 @@ accessible class net/minecraft/client/class_424
 ### Forge
 accessible method net/minecraft/block/class_174 method_360 (Lnet/minecraft/block/class_174;)I
 
-accessible field net/minecraft/client/render/Tessellator field_1965 I
-accessible field net/minecraft/client/render/Tessellator field_1966 D
-accessible field net/minecraft/client/render/Tessellator field_1967 D
-accessible field net/minecraft/client/render/Tessellator field_1968 D
+accessible field net/minecraft/client/render/Tessellator format I
+accessible field net/minecraft/client/render/Tessellator offsetX D
+accessible field net/minecraft/client/render/Tessellator offsetY D
+accessible field net/minecraft/client/render/Tessellator offsetZ D
 mutable field net/minecraft/client/render/Tessellator INSTANCE Lnet/minecraft/client/render/Tessellator;
-accessible field net/minecraft/client/render/Tessellator field_1970 Z
+accessible field net/minecraft/client/render/Tessellator tesselating Z
 
 # +final
 accessible field net/minecraft/item/PickaxeItem field_4382 [Lnet/minecraft/block/Block;
@@ -206,9 +206,9 @@ accessible field net/minecraft/item/ToolItem field_4193 I
 accessible field net/minecraft/entity/mob/EndermanEntity field_3919 [Z
 
 accessible field net/minecraft/client/render/WorldRenderer world Lnet/minecraft/client/world/ClientWorld;
-accessible field net/minecraft/client/render/WorldRenderer field_1910 Lnet/minecraft/client/TextureManager;
-accessible field net/minecraft/client/render/WorldRenderer field_1918 Lnet/minecraft/client/Minecraft;
-accessible field net/minecraft/client/render/WorldRenderer field_1919 Lnet/minecraft/client/BlockRenderer;
+accessible field net/minecraft/client/render/WorldRenderer textureManager Lnet/minecraft/client/TextureManager;
+accessible field net/minecraft/client/render/WorldRenderer client Lnet/minecraft/client/Minecraft;
+accessible field net/minecraft/client/render/WorldRenderer blockRenderer Lnet/minecraft/client/BlockRenderer;
 accessible field net/minecraft/client/render/WorldRenderer blockBreakingInfos Ljava/util/Map;
 
 accessible field net/minecraft/client/sound/SoundSystem soundSystem Lpaulscode/sound/SoundSystem;
