@@ -153,7 +153,7 @@ public class DimensionManager {
             ((ServerWorld)world).addListener(new ServerWorldManager(mcServer, (ServerWorld)world));
             MinecraftForge.EVENT_BUS.post(new WorldEvent.Load((World)world));
             if (!mcServer.isSinglePlayer()) {
-                ((ServerWorld)world).getLevelProperties().method_207(mcServer.method_3026());
+                ((ServerWorld)world).getLevelProperties().getGameMode(mcServer.method_3026());
             }
 
             mcServer.method_3016(mcServer.method_3029());

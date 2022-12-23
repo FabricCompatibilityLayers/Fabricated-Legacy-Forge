@@ -44,7 +44,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
             ServerWorld world = dim == 0 ? overWorld : new MultiServerWorld(this, var6, par2Str, dim, this.levelInfo, overWorld, this.profiler);
             world.addListener(new ServerWorldManager(this, world));
             if (!this.isSinglePlayer()) {
-                world.getLevelProperties().method_207(this.method_3026());
+                world.getLevelProperties().getGameMode(this.method_3026());
             }
 
             MinecraftForge.EVENT_BUS.post(new WorldEvent.Load(world));

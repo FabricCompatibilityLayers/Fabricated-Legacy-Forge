@@ -35,11 +35,11 @@ public abstract class DungeonFeatureMixin extends Feature {
             for(var11 = par4 - 1; var11 <= par4 + var6 + 1; ++var11) {
                 for(var12 = par5 - var8 - 1; var12 <= par5 + var8 + 1; ++var12) {
                     Material var13 = par1World.getMaterial(var10, var11, var12);
-                    if (var11 == par4 - 1 && !var13.hasCollision()) {
+                    if (var11 == par4 - 1 && !var13.isSolid()) {
                         return false;
                     }
 
-                    if (var11 == par4 + var6 + 1 && !var13.hasCollision()) {
+                    if (var11 == par4 + var6 + 1 && !var13.isSolid()) {
                         return false;
                     }
 
@@ -56,9 +56,9 @@ public abstract class DungeonFeatureMixin extends Feature {
                     for(var12 = par5 - var8 - 1; var12 <= par5 + var8 + 1; ++var12) {
                         if (var10 != par3 - var7 - 1 && var11 != par4 - 1 && var12 != par5 - var8 - 1 && var10 != par3 + var7 + 1 && var11 != par4 + var6 + 1 && var12 != par5 + var8 + 1) {
                             par1World.method_3690(var10, var11, var12, 0);
-                        } else if (var11 >= 0 && !par1World.getMaterial(var10, var11 - 1, var12).hasCollision()) {
+                        } else if (var11 >= 0 && !par1World.getMaterial(var10, var11 - 1, var12).isSolid()) {
                             par1World.method_3690(var10, var11, var12, 0);
-                        } else if (par1World.getMaterial(var10, var11, var12).hasCollision()) {
+                        } else if (par1World.getMaterial(var10, var11, var12).isSolid()) {
                             if (var11 == par4 - 1 && par2Random.nextInt(4) != 0) {
                                 par1World.method_3690(var10, var11, var12, Block.MOSSY_COBBLESTONE.id);
                             } else {
@@ -76,19 +76,19 @@ public abstract class DungeonFeatureMixin extends Feature {
                     int var14 = par5 + par2Random.nextInt(var8 * 2 + 1) - var8;
                     if (par1World.isAir(var12, par4, var14)) {
                         int var15 = 0;
-                        if (par1World.getMaterial(var12 - 1, par4, var14).hasCollision()) {
+                        if (par1World.getMaterial(var12 - 1, par4, var14).isSolid()) {
                             ++var15;
                         }
 
-                        if (par1World.getMaterial(var12 + 1, par4, var14).hasCollision()) {
+                        if (par1World.getMaterial(var12 + 1, par4, var14).isSolid()) {
                             ++var15;
                         }
 
-                        if (par1World.getMaterial(var12, par4, var14 - 1).hasCollision()) {
+                        if (par1World.getMaterial(var12, par4, var14 - 1).isSolid()) {
                             ++var15;
                         }
 
-                        if (par1World.getMaterial(var12, par4, var14 + 1).hasCollision()) {
+                        if (par1World.getMaterial(var12, par4, var14 + 1).isSolid()) {
                             ++var15;
                         }
 

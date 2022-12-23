@@ -3,6 +3,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render;
 import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import fr.catcore.fabricatedforge.mixininterface.IWorldRenderer;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.*;
 import net.minecraft.client.particle.*;
@@ -56,9 +57,9 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Shadow private int field_1886;
 
-    @Shadow private List field_1911;
+    @Shadow private List<BufferBuilder> field_1911;
 
-    @Shadow public List field_1902;
+    @Shadow public List<BlockEntity> field_1902;
 
     @Shadow private boolean field_1921;
 
@@ -84,11 +85,14 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Shadow private int field_1897;
 
-    @Shadow private double field_1905;
+    @Shadow
+    double field_1905;
 
-    @Shadow private double field_1906;
+    @Shadow
+    double field_1906;
 
-    @Shadow private double field_1907;
+    @Shadow
+    double field_1907;
 
     @Shadow protected abstract void onResized(int i, int j);
 
@@ -106,7 +110,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Shadow public class_535 field_1919;
 
-    @Shadow public Map blockBreakingInfos;
+    @Shadow public Map<Integer, BlockBreakingInfo> blockBreakingInfos;
 
     @Shadow public abstract void spawnParticle(String particleName, double x, double y, double z, double d, double e, double f);
 
@@ -117,7 +121,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
     @Overwrite
     public void reload() {
         if (this.world != null) {
-            Block.LEAVES.method_325(this.field_1918.options.fancyGraphics);
+            Block.LEAVES.setGraphics(this.field_1918.options.fancyGraphics);
             this.renderDistance = this.field_1918.options.renderDistance;
             int var2;
             int var3;
@@ -618,7 +622,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
                 ++var8;
                 var6.add(var10);
-                this.field_1911.set(var9, (Object)null);
+                this.field_1911.set(var9, null);
             }
         }
 

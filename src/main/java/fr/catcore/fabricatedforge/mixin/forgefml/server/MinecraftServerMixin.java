@@ -123,7 +123,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
     @Shadow public abstract boolean isNetherAllowed();
 
-    @Shadow @Final private List tickables;
+    @Shadow @Final private List<Tickable> tickables;
 
     @Shadow public abstract LevelStorageAccess getSaveStorage();
 
@@ -161,7 +161,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
             ServerWorld world = dim == 0 ? overWorld : new MultiServerWorld((MinecraftServer) (Object) this, var6, par2Str, dim, var7, (ServerWorld) overWorld, this.profiler);
             world.addListener(new ServerWorldManager((MinecraftServer) (Object) this, (ServerWorld) world));
             if (!this.isSinglePlayer()) {
-                world.getLevelProperties().method_207(this.method_3026());
+                world.getLevelProperties().getGameMode(this.method_3026());
             }
 
             this.playerManager.setMainWorld(this.worlds);
