@@ -6,7 +6,7 @@ import com.google.common.collect.ObjectArrays;
 import cpw.mods.fml.client.SpriteHelper;
 import cpw.mods.fml.client.TextureFXManager;
 import net.minecraft.block.Block;
-import net.minecraft.client.class_535;
+import net.minecraft.client.BlockRenderer;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
@@ -66,7 +66,7 @@ public class RenderingRegistry {
         return INSTANCE;
     }
 
-    public boolean renderWorldBlock(class_535 renderer, BlockView world, int x, int y, int z, Block block, int modelId) {
+    public boolean renderWorldBlock(BlockRenderer renderer, BlockView world, int x, int y, int z, Block block, int modelId) {
         if (!this.blockRenderers.containsKey(modelId)) {
             return false;
         } else {
@@ -75,7 +75,7 @@ public class RenderingRegistry {
         }
     }
 
-    public void renderInventoryBlock(class_535 renderer, Block block, int metadata, int modelID) {
+    public void renderInventoryBlock(BlockRenderer renderer, Block block, int metadata, int modelID) {
         if (this.blockRenderers.containsKey(modelID)) {
             ISimpleBlockRenderingHandler bri = (ISimpleBlockRenderingHandler)this.blockRenderers.get(modelID);
             bri.renderInventoryBlock(block, metadata, modelID, renderer);
@@ -91,7 +91,7 @@ public class RenderingRegistry {
         for (EntityRendererInfo info : entityRenderers)
         {
             rendererMap.put(info.target, info.renderer);
-            info.renderer.method_1528(EntityRenderDispatcher.field_2094);
+            info.renderer.setRenderDispatcher(EntityRenderDispatcher.INSTANCE);
         }
     }
 

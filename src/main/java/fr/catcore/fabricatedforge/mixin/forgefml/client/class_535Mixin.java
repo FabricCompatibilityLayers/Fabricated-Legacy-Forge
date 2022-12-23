@@ -271,9 +271,9 @@ public abstract class class_535Mixin {
      * @reason none
      */
     @Overwrite
-    public boolean method_1458(Block par1Block, int par2, int par3, int par4) {
+    public boolean render(Block par1Block, int par2, int par3, int par4) {
         int var5 = par1Block.getBlockType();
-        par1Block.method_425(this.world, par2, par3, par4);
+        par1Block.onRender(this.world, par2, par3, par4);
         switch (var5) {
             case 0:
                 return this.renderCube(par1Block, par2, par3, par4);
@@ -282,9 +282,9 @@ public abstract class class_535Mixin {
             case 2:
                 return this.renderTorch(par1Block, par2, par3, par4);
             case 3:
-                return this.method_1473(par1Block, par2, par3, par4);
+                return this.renderFire(par1Block, par2, par3, par4);
             case 4:
-                return this.method_1481(par1Block, par2, par3, par4);
+                return this.renderFluid(par1Block, par2, par3, par4);
             case 5:
                 return this.renderRedstone(par1Block, par2, par3, par4);
             case 6:
@@ -304,7 +304,7 @@ public abstract class class_535Mixin {
             case 13:
                 return this.renderCactus(par1Block, par2, par3, par4);
             case 14:
-                return this.method_1488(par1Block, par2, par3, par4);
+                return this.renderBed(par1Block, par2, par3, par4);
             case 15:
                 return this.renderRepeater(par1Block, par2, par3, par4);
             case 16:
@@ -312,7 +312,7 @@ public abstract class class_535Mixin {
             case 17:
                 return this.renderPistonHead(par1Block, par2, par3, par4, true);
             case 18:
-                return this.method_1442((PaneBlock)par1Block, par2, par3, par4);
+                return this.renderPane((PaneBlock)par1Block, par2, par3, par4);
             case 19:
                 return this.renderStem(par1Block, par2, par3, par4);
             case 20:
@@ -321,7 +321,7 @@ public abstract class class_535Mixin {
                 return this.renderFenceGate((FenceGateBlock)par1Block, par2, par3, par4);
             case 22:
             default:
-                return FMLRenderAccessLibrary.renderWorldBlock((class_535)(Object) this, this.world, par2, par3, par4, par1Block, var5);
+                return FMLRenderAccessLibrary.renderWorldBlock((BlockRenderer)(Object) this, this.world, par2, par3, par4, par1Block, var5);
             case 23:
                 return this.renderLilyPad(par1Block, par2, par3, par4);
             case 24:
@@ -348,7 +348,7 @@ public abstract class class_535Mixin {
      * @reason none
      */
     @Overwrite
-    public boolean method_1488(Block par1Block, int par2, int par3, int par4) {
+    public boolean renderBed(Block par1Block, int par2, int par3, int par4) {
         Tessellator var5 = Tessellator.INSTANCE;
         int var7 = ((IBlock)par1Block).getBedDirection(this.world, par2, par3, par4);
         boolean var8 = ((IBlock)par1Block).isBedFoot(this.world, par2, par3, par4);
@@ -356,9 +356,9 @@ public abstract class class_535Mixin {
         float var10 = 1.0F;
         float var11 = 0.8F;
         float var12 = 0.6F;
-        int var25 = par1Block.method_455(this.world, par2, par3, par4);
-        var5.method_1411(var25);
-        var5.method_1400(var9, var9, var9);
+        int var25 = par1Block.getLight(this.world, par2, par3, par4);
+        var5.setLight(var25);
+        var5.color(var9, var9, var9);
         int var27 = par1Block.method_439(this.world, par2, par3, par4, 0);
         if (this.field_2049 >= 0) {
             var27 = this.field_2049;
@@ -375,12 +375,12 @@ public abstract class class_535Mixin {
         double var42 = (double)par3 + par1Block.boundingBoxMinY + 0.1875;
         double var44 = (double)par4 + par1Block.boundingBoxMinZ;
         double var46 = (double)par4 + par1Block.boundingBoxMaxZ;
-        var5.method_1399(var38, var42, var46, var30, var36);
-        var5.method_1399(var38, var42, var44, var30, var34);
-        var5.method_1399(var40, var42, var44, var32, var34);
-        var5.method_1399(var40, var42, var46, var32, var36);
-        var5.method_1411(par1Block.method_455(this.world, par2, par3 + 1, par4));
-        var5.method_1400(var10, var10, var10);
+        var5.vertex(var38, var42, var46, var30, var36);
+        var5.vertex(var38, var42, var44, var30, var34);
+        var5.vertex(var40, var42, var44, var32, var34);
+        var5.vertex(var40, var42, var46, var32, var36);
+        var5.setLight(par1Block.getLight(this.world, par2, par3 + 1, par4));
+        var5.color(var10, var10, var10);
         var27 = par1Block.method_439(this.world, par2, par3, par4, 1);
         if (this.field_2049 >= 0) {
             var27 = this.field_2049;
@@ -426,10 +426,10 @@ public abstract class class_535Mixin {
         double var58 = (double)par3 + par1Block.boundingBoxMaxY;
         double var60 = (double)par4 + par1Block.boundingBoxMinZ;
         double var62 = (double)par4 + par1Block.boundingBoxMaxZ;
-        var5.method_1399(var56, var58, var62, var46, var50);
-        var5.method_1399(var56, var58, var60, var38, var42);
-        var5.method_1399(var54, var58, var60, var40, var44);
-        var5.method_1399(var54, var58, var62, var48, var52);
+        var5.vertex(var56, var58, var62, var46, var50);
+        var5.vertex(var56, var58, var60, var38, var42);
+        var5.vertex(var54, var58, var60, var40, var44);
+        var5.vertex(var54, var58, var62, var48, var52);
         int var64 = Axis.AXIS_TO_DIRECTION[var7];
         if (var8) {
             var64 = Axis.AXIS_TO_DIRECTION[Axis.OPPOSITE[var7]];
@@ -450,29 +450,29 @@ public abstract class class_535Mixin {
         }
 
         if (var64 != 2 && (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3, par4 - 1, 2))) {
-            var5.method_1411(par1Block.boundingBoxMinZ > 0.0 ? var25 : par1Block.method_455(this.world, par2, par3, par4 - 1));
-            var5.method_1400(var11, var11, var11);
+            var5.setLight(par1Block.boundingBoxMinZ > 0.0 ? var25 : par1Block.getLight(this.world, par2, par3, par4 - 1));
+            var5.color(var11, var11, var11);
             this.field_2050 = var65 == 2;
             this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 2));
         }
 
         if (var64 != 3 && (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3, par4 + 1, 3))) {
-            var5.method_1411(par1Block.boundingBoxMaxZ < 1.0 ? var25 : par1Block.method_455(this.world, par2, par3, par4 + 1));
-            var5.method_1400(var11, var11, var11);
+            var5.setLight(par1Block.boundingBoxMaxZ < 1.0 ? var25 : par1Block.getLight(this.world, par2, par3, par4 + 1));
+            var5.color(var11, var11, var11);
             this.field_2050 = var65 == 3;
             this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 3));
         }
 
         if (var64 != 4 && (this.field_2051 || par1Block.shouldRenderSide(this.world, par2 - 1, par3, par4, 4))) {
-            var5.method_1411(par1Block.boundingBoxMinZ > 0.0 ? var25 : par1Block.method_455(this.world, par2 - 1, par3, par4));
-            var5.method_1400(var12, var12, var12);
+            var5.setLight(par1Block.boundingBoxMinZ > 0.0 ? var25 : par1Block.getLight(this.world, par2 - 1, par3, par4));
+            var5.color(var12, var12, var12);
             this.field_2050 = var65 == 4;
             this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 4));
         }
 
         if (var64 != 5 && (this.field_2051 || par1Block.shouldRenderSide(this.world, par2 + 1, par3, par4, 5))) {
-            var5.method_1411(par1Block.boundingBoxMaxZ < 1.0 ? var25 : par1Block.method_455(this.world, par2 + 1, par3, par4));
-            var5.method_1400(var12, var12, var12);
+            var5.setLight(par1Block.boundingBoxMaxZ < 1.0 ? var25 : par1Block.getLight(this.world, par2 + 1, par3, par4));
+            var5.color(var12, var12, var12);
             this.field_2050 = var65 == 5;
             this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 5));
         }
@@ -486,15 +486,15 @@ public abstract class class_535Mixin {
      * @reason none
      */
     @Overwrite
-    public boolean method_1473(Block par1Block, int par2, int par3, int par4) {
+    public boolean renderFire(Block par1Block, int par2, int par3, int par4) {
         Tessellator var5 = Tessellator.INSTANCE;
         int var6 = par1Block.method_395(0);
         if (this.field_2049 >= 0) {
             var6 = this.field_2049;
         }
 
-        var5.method_1400(1.0F, 1.0F, 1.0F);
-        var5.method_1411(par1Block.method_455(this.world, par2, par3, par4));
+        var5.color(1.0F, 1.0F, 1.0F);
+        var5.setLight(par1Block.getLight(this.world, par2, par3, par4));
         int var7 = (var6 & 15) << 4;
         int var8 = var6 & 240;
         double var9 = (double)((float)var7 / 256.0F);
@@ -526,47 +526,47 @@ public abstract class class_535Mixin {
             }
 
             if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2 - 1, par3, par4, ForgeDirection.EAST)) {
-                var5.method_1399((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
-                var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
-                var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
-                var5.method_1399((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
-                var5.method_1399((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
-                var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
-                var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
-                var5.method_1399((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
+                var5.vertex((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
+                var5.vertex((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
+                var5.vertex((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
+                var5.vertex((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
+                var5.vertex((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
+                var5.vertex((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
+                var5.vertex((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
+                var5.vertex((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
             }
 
             if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2 + 1, par3, par4, ForgeDirection.WEST)) {
-                var5.method_1399((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
-                var5.method_1399((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
-                var5.method_1399((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
-                var5.method_1399((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
-                var5.method_1399((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
-                var5.method_1399((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
-                var5.method_1399((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
-                var5.method_1399((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
+                var5.vertex((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
+                var5.vertex((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
+                var5.vertex((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
+                var5.vertex((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
+                var5.vertex((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
+                var5.vertex((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
+                var5.vertex((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
+                var5.vertex((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
             }
 
             if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2, par3, par4 - 1, ForgeDirection.SOUTH)) {
-                var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var11, var13);
-                var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var11, var15);
-                var5.method_1399((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
-                var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var9, var13);
-                var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var9, var13);
-                var5.method_1399((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
-                var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var11, var15);
-                var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var11, var13);
+                var5.vertex((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var11, var13);
+                var5.vertex((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var11, var15);
+                var5.vertex((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
+                var5.vertex((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var9, var13);
+                var5.vertex((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var9, var13);
+                var5.vertex((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
+                var5.vertex((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var11, var15);
+                var5.vertex((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var11, var13);
             }
 
             if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2, par3, par4 + 1, ForgeDirection.NORTH)) {
-                var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var9, var13);
-                var5.method_1399((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var9, var15);
-                var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var11, var15);
-                var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var11, var13);
-                var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var11, var13);
-                var5.method_1399((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var11, var15);
-                var5.method_1399((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var9, var15);
-                var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var9, var13);
+                var5.vertex((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var9, var13);
+                var5.vertex((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var9, var15);
+                var5.vertex((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var11, var15);
+                var5.vertex((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var11, var13);
+                var5.vertex((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var11, var13);
+                var5.vertex((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var11, var15);
+                var5.vertex((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var9, var15);
+                var5.vertex((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var9, var13);
             }
 
             if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2, par3 + 1, par4, ForgeDirection.DOWN)) {
@@ -585,31 +585,31 @@ public abstract class class_535Mixin {
                 ++par3;
                 var17 = -0.2F;
                 if ((par2 + par3 + par4 & 1) == 0) {
-                    var5.method_1399(var28, (double)((float)par3 + var17), (double)(par4 + 0), var11, var13);
-                    var5.method_1399(var20, (double)(par3 + 0), (double)(par4 + 0), var11, var15);
-                    var5.method_1399(var20, (double)(par3 + 0), (double)(par4 + 1), var9, var15);
-                    var5.method_1399(var28, (double)((float)par3 + var17), (double)(par4 + 1), var9, var13);
+                    var5.vertex(var28, (double)((float)par3 + var17), (double)(par4 + 0), var11, var13);
+                    var5.vertex(var20, (double)(par3 + 0), (double)(par4 + 0), var11, var15);
+                    var5.vertex(var20, (double)(par3 + 0), (double)(par4 + 1), var9, var15);
+                    var5.vertex(var28, (double)((float)par3 + var17), (double)(par4 + 1), var9, var13);
                     var9 = (double)((float)var7 / 256.0F);
                     var11 = (double)(((float)var7 + 15.99F) / 256.0F);
                     var13 = (double)((float)(var8 + 16) / 256.0F);
                     var15 = (double)(((float)var8 + 15.99F + 16.0F) / 256.0F);
-                    var5.method_1399(var30, (double)((float)par3 + var17), (double)(par4 + 1), var11, var13);
-                    var5.method_1399(var22, (double)(par3 + 0), (double)(par4 + 1), var11, var15);
-                    var5.method_1399(var22, (double)(par3 + 0), (double)(par4 + 0), var9, var15);
-                    var5.method_1399(var30, (double)((float)par3 + var17), (double)(par4 + 0), var9, var13);
+                    var5.vertex(var30, (double)((float)par3 + var17), (double)(par4 + 1), var11, var13);
+                    var5.vertex(var22, (double)(par3 + 0), (double)(par4 + 1), var11, var15);
+                    var5.vertex(var22, (double)(par3 + 0), (double)(par4 + 0), var9, var15);
+                    var5.vertex(var30, (double)((float)par3 + var17), (double)(par4 + 0), var9, var13);
                 } else {
-                    var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17), var34, var11, var13);
-                    var5.method_1399((double)(par2 + 0), (double)(par3 + 0), var26, var11, var15);
-                    var5.method_1399((double)(par2 + 1), (double)(par3 + 0), var26, var9, var15);
-                    var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17), var34, var9, var13);
+                    var5.vertex((double)(par2 + 0), (double)((float)par3 + var17), var34, var11, var13);
+                    var5.vertex((double)(par2 + 0), (double)(par3 + 0), var26, var11, var15);
+                    var5.vertex((double)(par2 + 1), (double)(par3 + 0), var26, var9, var15);
+                    var5.vertex((double)(par2 + 1), (double)((float)par3 + var17), var34, var9, var13);
                     var9 = (double)((float)var7 / 256.0F);
                     var11 = (double)(((float)var7 + 15.99F) / 256.0F);
                     var13 = (double)((float)(var8 + 16) / 256.0F);
                     var15 = (double)(((float)var8 + 15.99F + 16.0F) / 256.0F);
-                    var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17), var32, var11, var13);
-                    var5.method_1399((double)(par2 + 1), (double)(par3 + 0), var24, var11, var15);
-                    var5.method_1399((double)(par2 + 0), (double)(par3 + 0), var24, var9, var15);
-                    var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17), var32, var9, var13);
+                    var5.vertex((double)(par2 + 1), (double)((float)par3 + var17), var32, var11, var13);
+                    var5.vertex((double)(par2 + 1), (double)(par3 + 0), var24, var11, var15);
+                    var5.vertex((double)(par2 + 0), (double)(par3 + 0), var24, var9, var15);
+                    var5.vertex((double)(par2 + 0), (double)((float)par3 + var17), var32, var9, var13);
                 }
             }
         } else {
@@ -621,26 +621,26 @@ public abstract class class_535Mixin {
             var28 = (double)par2 + 0.5 + 0.3;
             var30 = (double)par4 + 0.5 - 0.3;
             var32 = (double)par4 + 0.5 + 0.3;
-            var5.method_1399(var26, (double)((float)par3 + var17), (double)(par4 + 1), var11, var13);
-            var5.method_1399(var18, (double)(par3 + 0), (double)(par4 + 1), var11, var15);
-            var5.method_1399(var18, (double)(par3 + 0), (double)(par4 + 0), var9, var15);
-            var5.method_1399(var26, (double)((float)par3 + var17), (double)(par4 + 0), var9, var13);
-            var5.method_1399(var28, (double)((float)par3 + var17), (double)(par4 + 0), var11, var13);
-            var5.method_1399(var20, (double)(par3 + 0), (double)(par4 + 0), var11, var15);
-            var5.method_1399(var20, (double)(par3 + 0), (double)(par4 + 1), var9, var15);
-            var5.method_1399(var28, (double)((float)par3 + var17), (double)(par4 + 1), var9, var13);
+            var5.vertex(var26, (double)((float)par3 + var17), (double)(par4 + 1), var11, var13);
+            var5.vertex(var18, (double)(par3 + 0), (double)(par4 + 1), var11, var15);
+            var5.vertex(var18, (double)(par3 + 0), (double)(par4 + 0), var9, var15);
+            var5.vertex(var26, (double)((float)par3 + var17), (double)(par4 + 0), var9, var13);
+            var5.vertex(var28, (double)((float)par3 + var17), (double)(par4 + 0), var11, var13);
+            var5.vertex(var20, (double)(par3 + 0), (double)(par4 + 0), var11, var15);
+            var5.vertex(var20, (double)(par3 + 0), (double)(par4 + 1), var9, var15);
+            var5.vertex(var28, (double)((float)par3 + var17), (double)(par4 + 1), var9, var13);
             var9 = (double)((float)var7 / 256.0F);
             var11 = (double)(((float)var7 + 15.99F) / 256.0F);
             var13 = (double)((float)(var8 + 16) / 256.0F);
             var15 = (double)(((float)var8 + 15.99F + 16.0F) / 256.0F);
-            var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17), var32, var11, var13);
-            var5.method_1399((double)(par2 + 1), (double)(par3 + 0), var24, var11, var15);
-            var5.method_1399((double)(par2 + 0), (double)(par3 + 0), var24, var9, var15);
-            var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17), var32, var9, var13);
-            var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17), var30, var11, var13);
-            var5.method_1399((double)(par2 + 0), (double)(par3 + 0), var22, var11, var15);
-            var5.method_1399((double)(par2 + 1), (double)(par3 + 0), var22, var9, var15);
-            var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17), var30, var9, var13);
+            var5.vertex((double)(par2 + 1), (double)((float)par3 + var17), var32, var11, var13);
+            var5.vertex((double)(par2 + 1), (double)(par3 + 0), var24, var11, var15);
+            var5.vertex((double)(par2 + 0), (double)(par3 + 0), var24, var9, var15);
+            var5.vertex((double)(par2 + 0), (double)((float)par3 + var17), var32, var9, var13);
+            var5.vertex((double)(par2 + 0), (double)((float)par3 + var17), var30, var11, var13);
+            var5.vertex((double)(par2 + 0), (double)(par3 + 0), var22, var11, var15);
+            var5.vertex((double)(par2 + 1), (double)(par3 + 0), var22, var9, var15);
+            var5.vertex((double)(par2 + 1), (double)((float)par3 + var17), var30, var9, var13);
             var18 = (double)par2 + 0.5 - 0.5;
             var20 = (double)par2 + 0.5 + 0.5;
             var22 = (double)par4 + 0.5 - 0.5;
@@ -649,26 +649,26 @@ public abstract class class_535Mixin {
             var28 = (double)par2 + 0.5 + 0.4;
             var30 = (double)par4 + 0.5 - 0.4;
             var32 = (double)par4 + 0.5 + 0.4;
-            var5.method_1399(var26, (double)((float)par3 + var17), (double)(par4 + 0), var9, var13);
-            var5.method_1399(var18, (double)(par3 + 0), (double)(par4 + 0), var9, var15);
-            var5.method_1399(var18, (double)(par3 + 0), (double)(par4 + 1), var11, var15);
-            var5.method_1399(var26, (double)((float)par3 + var17), (double)(par4 + 1), var11, var13);
-            var5.method_1399(var28, (double)((float)par3 + var17), (double)(par4 + 1), var9, var13);
-            var5.method_1399(var20, (double)(par3 + 0), (double)(par4 + 1), var9, var15);
-            var5.method_1399(var20, (double)(par3 + 0), (double)(par4 + 0), var11, var15);
-            var5.method_1399(var28, (double)((float)par3 + var17), (double)(par4 + 0), var11, var13);
+            var5.vertex(var26, (double)((float)par3 + var17), (double)(par4 + 0), var9, var13);
+            var5.vertex(var18, (double)(par3 + 0), (double)(par4 + 0), var9, var15);
+            var5.vertex(var18, (double)(par3 + 0), (double)(par4 + 1), var11, var15);
+            var5.vertex(var26, (double)((float)par3 + var17), (double)(par4 + 1), var11, var13);
+            var5.vertex(var28, (double)((float)par3 + var17), (double)(par4 + 1), var9, var13);
+            var5.vertex(var20, (double)(par3 + 0), (double)(par4 + 1), var9, var15);
+            var5.vertex(var20, (double)(par3 + 0), (double)(par4 + 0), var11, var15);
+            var5.vertex(var28, (double)((float)par3 + var17), (double)(par4 + 0), var11, var13);
             var9 = (double)((float)var7 / 256.0F);
             var11 = (double)(((float)var7 + 15.99F) / 256.0F);
             var13 = (double)((float)var8 / 256.0F);
             var15 = (double)(((float)var8 + 15.99F) / 256.0F);
-            var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17), var32, var9, var13);
-            var5.method_1399((double)(par2 + 0), (double)(par3 + 0), var24, var9, var15);
-            var5.method_1399((double)(par2 + 1), (double)(par3 + 0), var24, var11, var15);
-            var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17), var32, var11, var13);
-            var5.method_1399((double)(par2 + 1), (double)((float)par3 + var17), var30, var9, var13);
-            var5.method_1399((double)(par2 + 1), (double)(par3 + 0), var22, var9, var15);
-            var5.method_1399((double)(par2 + 0), (double)(par3 + 0), var22, var11, var15);
-            var5.method_1399((double)(par2 + 0), (double)((float)par3 + var17), var30, var11, var13);
+            var5.vertex((double)(par2 + 0), (double)((float)par3 + var17), var32, var9, var13);
+            var5.vertex((double)(par2 + 0), (double)(par3 + 0), var24, var9, var15);
+            var5.vertex((double)(par2 + 1), (double)(par3 + 0), var24, var11, var15);
+            var5.vertex((double)(par2 + 1), (double)((float)par3 + var17), var32, var11, var13);
+            var5.vertex((double)(par2 + 1), (double)((float)par3 + var17), var30, var9, var13);
+            var5.vertex((double)(par2 + 1), (double)(par3 + 0), var22, var9, var15);
+            var5.vertex((double)(par2 + 0), (double)(par3 + 0), var22, var11, var15);
+            var5.vertex((double)(par2 + 0), (double)((float)par3 + var17), var30, var11, var13);
         }
 
         return true;
@@ -679,12 +679,12 @@ public abstract class class_535Mixin {
      * @reason none
      */
     @Overwrite
-    public boolean method_1442(PaneBlock par1BlockPane, int par2, int par3, int par4) {
+    public boolean renderPane(PaneBlock par1BlockPane, int par2, int par3, int par4) {
         int var5 = this.world.getMaxBuildHeight();
         Tessellator var6 = Tessellator.INSTANCE;
-        var6.method_1411(par1BlockPane.method_455(this.world, par2, par3, par4));
+        var6.setLight(par1BlockPane.getLight(this.world, par2, par3, par4));
         float var7 = 1.0F;
-        int var8 = par1BlockPane.method_438(this.world, par2, par3, par4);
+        int var8 = par1BlockPane.getTint(this.world, par2, par3, par4);
         float var9 = (float)(var8 >> 16 & 255) / 255.0F;
         float var10 = (float)(var8 >> 8 & 255) / 255.0F;
         float var11 = (float)(var8 & 255) / 255.0F;
@@ -697,7 +697,7 @@ public abstract class class_535Mixin {
             var11 = var14;
         }
 
-        var6.method_1400(var7 * var9, var7 * var10, var7 * var11);
+        var6.color(var7 * var9, var7 * var10, var7 * var11);
         boolean var64 = false;
         boolean var67 = false;
         int var65;
@@ -744,320 +744,320 @@ public abstract class class_535Mixin {
         boolean var63 = par1BlockPane.shouldRenderSide(this.world, par2, par3 - 1, par4, 0);
         if ((!var60 || !var61) && (var60 || var61 || var58 || var59)) {
             if (var60 && !var61) {
-                var6.method_1399(var38, (double)(par3 + 1), var46, var16, var22);
-                var6.method_1399(var38, (double)(par3 + 0), var46, var16, var24);
-                var6.method_1399(var40, (double)(par3 + 0), var46, var18, var24);
-                var6.method_1399(var40, (double)(par3 + 1), var46, var18, var22);
-                var6.method_1399(var40, (double)(par3 + 1), var46, var16, var22);
-                var6.method_1399(var40, (double)(par3 + 0), var46, var16, var24);
-                var6.method_1399(var38, (double)(par3 + 0), var46, var18, var24);
-                var6.method_1399(var38, (double)(par3 + 1), var46, var18, var22);
+                var6.vertex(var38, (double)(par3 + 1), var46, var16, var22);
+                var6.vertex(var38, (double)(par3 + 0), var46, var16, var24);
+                var6.vertex(var40, (double)(par3 + 0), var46, var18, var24);
+                var6.vertex(var40, (double)(par3 + 1), var46, var18, var22);
+                var6.vertex(var40, (double)(par3 + 1), var46, var16, var22);
+                var6.vertex(var40, (double)(par3 + 0), var46, var16, var24);
+                var6.vertex(var38, (double)(par3 + 0), var46, var18, var24);
+                var6.vertex(var38, (double)(par3 + 1), var46, var18, var22);
                 if (!var59 && !var58) {
-                    var6.method_1399(var40, (double)(par3 + 1), var56, var28, var32);
-                    var6.method_1399(var40, (double)(par3 + 0), var56, var28, var36);
-                    var6.method_1399(var40, (double)(par3 + 0), var54, var30, var36);
-                    var6.method_1399(var40, (double)(par3 + 1), var54, var30, var32);
-                    var6.method_1399(var40, (double)(par3 + 1), var54, var28, var32);
-                    var6.method_1399(var40, (double)(par3 + 0), var54, var28, var36);
-                    var6.method_1399(var40, (double)(par3 + 0), var56, var30, var36);
-                    var6.method_1399(var40, (double)(par3 + 1), var56, var30, var32);
+                    var6.vertex(var40, (double)(par3 + 1), var56, var28, var32);
+                    var6.vertex(var40, (double)(par3 + 0), var56, var28, var36);
+                    var6.vertex(var40, (double)(par3 + 0), var54, var30, var36);
+                    var6.vertex(var40, (double)(par3 + 1), var54, var30, var32);
+                    var6.vertex(var40, (double)(par3 + 1), var54, var28, var32);
+                    var6.vertex(var40, (double)(par3 + 0), var54, var28, var36);
+                    var6.vertex(var40, (double)(par3 + 0), var56, var30, var36);
+                    var6.vertex(var40, (double)(par3 + 1), var56, var30, var32);
                 }
 
                 if (var62 || par3 < var5 - 1 && this.world.isAir(par2 - 1, par3 + 1, par4)) {
-                    var6.method_1399(var38, (double)(par3 + 1) + 0.01, var56, var30, var34);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var56, var30, var36);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var54, var28, var36);
-                    var6.method_1399(var38, (double)(par3 + 1) + 0.01, var54, var28, var34);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var56, var30, var34);
-                    var6.method_1399(var38, (double)(par3 + 1) + 0.01, var56, var30, var36);
-                    var6.method_1399(var38, (double)(par3 + 1) + 0.01, var54, var28, var36);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var54, var28, var34);
+                    var6.vertex(var38, (double)(par3 + 1) + 0.01, var56, var30, var34);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var56, var30, var36);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var54, var28, var36);
+                    var6.vertex(var38, (double)(par3 + 1) + 0.01, var54, var28, var34);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var56, var30, var34);
+                    var6.vertex(var38, (double)(par3 + 1) + 0.01, var56, var30, var36);
+                    var6.vertex(var38, (double)(par3 + 1) + 0.01, var54, var28, var36);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var54, var28, var34);
                 }
 
                 if (var63 || par3 > 1 && this.world.isAir(par2 - 1, par3 - 1, par4)) {
-                    var6.method_1399(var38, (double)par3 - 0.01, var56, var30, var34);
-                    var6.method_1399(var40, (double)par3 - 0.01, var56, var30, var36);
-                    var6.method_1399(var40, (double)par3 - 0.01, var54, var28, var36);
-                    var6.method_1399(var38, (double)par3 - 0.01, var54, var28, var34);
-                    var6.method_1399(var40, (double)par3 - 0.01, var56, var30, var34);
-                    var6.method_1399(var38, (double)par3 - 0.01, var56, var30, var36);
-                    var6.method_1399(var38, (double)par3 - 0.01, var54, var28, var36);
-                    var6.method_1399(var40, (double)par3 - 0.01, var54, var28, var34);
+                    var6.vertex(var38, (double)par3 - 0.01, var56, var30, var34);
+                    var6.vertex(var40, (double)par3 - 0.01, var56, var30, var36);
+                    var6.vertex(var40, (double)par3 - 0.01, var54, var28, var36);
+                    var6.vertex(var38, (double)par3 - 0.01, var54, var28, var34);
+                    var6.vertex(var40, (double)par3 - 0.01, var56, var30, var34);
+                    var6.vertex(var38, (double)par3 - 0.01, var56, var30, var36);
+                    var6.vertex(var38, (double)par3 - 0.01, var54, var28, var36);
+                    var6.vertex(var40, (double)par3 - 0.01, var54, var28, var34);
                 }
             } else if (!var60 && var61) {
-                var6.method_1399(var40, (double)(par3 + 1), var46, var18, var22);
-                var6.method_1399(var40, (double)(par3 + 0), var46, var18, var24);
-                var6.method_1399(var42, (double)(par3 + 0), var46, var20, var24);
-                var6.method_1399(var42, (double)(par3 + 1), var46, var20, var22);
-                var6.method_1399(var42, (double)(par3 + 1), var46, var18, var22);
-                var6.method_1399(var42, (double)(par3 + 0), var46, var18, var24);
-                var6.method_1399(var40, (double)(par3 + 0), var46, var20, var24);
-                var6.method_1399(var40, (double)(par3 + 1), var46, var20, var22);
+                var6.vertex(var40, (double)(par3 + 1), var46, var18, var22);
+                var6.vertex(var40, (double)(par3 + 0), var46, var18, var24);
+                var6.vertex(var42, (double)(par3 + 0), var46, var20, var24);
+                var6.vertex(var42, (double)(par3 + 1), var46, var20, var22);
+                var6.vertex(var42, (double)(par3 + 1), var46, var18, var22);
+                var6.vertex(var42, (double)(par3 + 0), var46, var18, var24);
+                var6.vertex(var40, (double)(par3 + 0), var46, var20, var24);
+                var6.vertex(var40, (double)(par3 + 1), var46, var20, var22);
                 if (!var59 && !var58) {
-                    var6.method_1399(var40, (double)(par3 + 1), var54, var28, var32);
-                    var6.method_1399(var40, (double)(par3 + 0), var54, var28, var36);
-                    var6.method_1399(var40, (double)(par3 + 0), var56, var30, var36);
-                    var6.method_1399(var40, (double)(par3 + 1), var56, var30, var32);
-                    var6.method_1399(var40, (double)(par3 + 1), var56, var28, var32);
-                    var6.method_1399(var40, (double)(par3 + 0), var56, var28, var36);
-                    var6.method_1399(var40, (double)(par3 + 0), var54, var30, var36);
-                    var6.method_1399(var40, (double)(par3 + 1), var54, var30, var32);
+                    var6.vertex(var40, (double)(par3 + 1), var54, var28, var32);
+                    var6.vertex(var40, (double)(par3 + 0), var54, var28, var36);
+                    var6.vertex(var40, (double)(par3 + 0), var56, var30, var36);
+                    var6.vertex(var40, (double)(par3 + 1), var56, var30, var32);
+                    var6.vertex(var40, (double)(par3 + 1), var56, var28, var32);
+                    var6.vertex(var40, (double)(par3 + 0), var56, var28, var36);
+                    var6.vertex(var40, (double)(par3 + 0), var54, var30, var36);
+                    var6.vertex(var40, (double)(par3 + 1), var54, var30, var32);
                 }
 
                 if (var62 || par3 < var5 - 1 && this.world.isAir(par2 + 1, par3 + 1, par4)) {
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var56, var30, var32);
-                    var6.method_1399(var42, (double)(par3 + 1) + 0.01, var56, var30, var34);
-                    var6.method_1399(var42, (double)(par3 + 1) + 0.01, var54, var28, var34);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var54, var28, var32);
-                    var6.method_1399(var42, (double)(par3 + 1) + 0.01, var56, var30, var32);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var56, var30, var34);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var54, var28, var34);
-                    var6.method_1399(var42, (double)(par3 + 1) + 0.01, var54, var28, var32);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var56, var30, var32);
+                    var6.vertex(var42, (double)(par3 + 1) + 0.01, var56, var30, var34);
+                    var6.vertex(var42, (double)(par3 + 1) + 0.01, var54, var28, var34);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var54, var28, var32);
+                    var6.vertex(var42, (double)(par3 + 1) + 0.01, var56, var30, var32);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var56, var30, var34);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var54, var28, var34);
+                    var6.vertex(var42, (double)(par3 + 1) + 0.01, var54, var28, var32);
                 }
 
                 if (var63 || par3 > 1 && this.world.isAir(par2 + 1, par3 - 1, par4)) {
-                    var6.method_1399(var40, (double)par3 - 0.01, var56, var30, var32);
-                    var6.method_1399(var42, (double)par3 - 0.01, var56, var30, var34);
-                    var6.method_1399(var42, (double)par3 - 0.01, var54, var28, var34);
-                    var6.method_1399(var40, (double)par3 - 0.01, var54, var28, var32);
-                    var6.method_1399(var42, (double)par3 - 0.01, var56, var30, var32);
-                    var6.method_1399(var40, (double)par3 - 0.01, var56, var30, var34);
-                    var6.method_1399(var40, (double)par3 - 0.01, var54, var28, var34);
-                    var6.method_1399(var42, (double)par3 - 0.01, var54, var28, var32);
+                    var6.vertex(var40, (double)par3 - 0.01, var56, var30, var32);
+                    var6.vertex(var42, (double)par3 - 0.01, var56, var30, var34);
+                    var6.vertex(var42, (double)par3 - 0.01, var54, var28, var34);
+                    var6.vertex(var40, (double)par3 - 0.01, var54, var28, var32);
+                    var6.vertex(var42, (double)par3 - 0.01, var56, var30, var32);
+                    var6.vertex(var40, (double)par3 - 0.01, var56, var30, var34);
+                    var6.vertex(var40, (double)par3 - 0.01, var54, var28, var34);
+                    var6.vertex(var42, (double)par3 - 0.01, var54, var28, var32);
                 }
             }
         } else {
-            var6.method_1399(var38, (double)(par3 + 1), var46, var16, var22);
-            var6.method_1399(var38, (double)(par3 + 0), var46, var16, var24);
-            var6.method_1399(var42, (double)(par3 + 0), var46, var20, var24);
-            var6.method_1399(var42, (double)(par3 + 1), var46, var20, var22);
-            var6.method_1399(var42, (double)(par3 + 1), var46, var16, var22);
-            var6.method_1399(var42, (double)(par3 + 0), var46, var16, var24);
-            var6.method_1399(var38, (double)(par3 + 0), var46, var20, var24);
-            var6.method_1399(var38, (double)(par3 + 1), var46, var20, var22);
+            var6.vertex(var38, (double)(par3 + 1), var46, var16, var22);
+            var6.vertex(var38, (double)(par3 + 0), var46, var16, var24);
+            var6.vertex(var42, (double)(par3 + 0), var46, var20, var24);
+            var6.vertex(var42, (double)(par3 + 1), var46, var20, var22);
+            var6.vertex(var42, (double)(par3 + 1), var46, var16, var22);
+            var6.vertex(var42, (double)(par3 + 0), var46, var16, var24);
+            var6.vertex(var38, (double)(par3 + 0), var46, var20, var24);
+            var6.vertex(var38, (double)(par3 + 1), var46, var20, var22);
             if (var62) {
-                var6.method_1399(var38, (double)(par3 + 1) + 0.01, var56, var30, var36);
-                var6.method_1399(var42, (double)(par3 + 1) + 0.01, var56, var30, var32);
-                var6.method_1399(var42, (double)(par3 + 1) + 0.01, var54, var28, var32);
-                var6.method_1399(var38, (double)(par3 + 1) + 0.01, var54, var28, var36);
-                var6.method_1399(var42, (double)(par3 + 1) + 0.01, var56, var30, var36);
-                var6.method_1399(var38, (double)(par3 + 1) + 0.01, var56, var30, var32);
-                var6.method_1399(var38, (double)(par3 + 1) + 0.01, var54, var28, var32);
-                var6.method_1399(var42, (double)(par3 + 1) + 0.01, var54, var28, var36);
+                var6.vertex(var38, (double)(par3 + 1) + 0.01, var56, var30, var36);
+                var6.vertex(var42, (double)(par3 + 1) + 0.01, var56, var30, var32);
+                var6.vertex(var42, (double)(par3 + 1) + 0.01, var54, var28, var32);
+                var6.vertex(var38, (double)(par3 + 1) + 0.01, var54, var28, var36);
+                var6.vertex(var42, (double)(par3 + 1) + 0.01, var56, var30, var36);
+                var6.vertex(var38, (double)(par3 + 1) + 0.01, var56, var30, var32);
+                var6.vertex(var38, (double)(par3 + 1) + 0.01, var54, var28, var32);
+                var6.vertex(var42, (double)(par3 + 1) + 0.01, var54, var28, var36);
             } else {
                 if (par3 < var5 - 1 && this.world.isAir(par2 - 1, par3 + 1, par4)) {
-                    var6.method_1399(var38, (double)(par3 + 1) + 0.01, var56, var30, var34);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var56, var30, var36);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var54, var28, var36);
-                    var6.method_1399(var38, (double)(par3 + 1) + 0.01, var54, var28, var34);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var56, var30, var34);
-                    var6.method_1399(var38, (double)(par3 + 1) + 0.01, var56, var30, var36);
-                    var6.method_1399(var38, (double)(par3 + 1) + 0.01, var54, var28, var36);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var54, var28, var34);
+                    var6.vertex(var38, (double)(par3 + 1) + 0.01, var56, var30, var34);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var56, var30, var36);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var54, var28, var36);
+                    var6.vertex(var38, (double)(par3 + 1) + 0.01, var54, var28, var34);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var56, var30, var34);
+                    var6.vertex(var38, (double)(par3 + 1) + 0.01, var56, var30, var36);
+                    var6.vertex(var38, (double)(par3 + 1) + 0.01, var54, var28, var36);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var54, var28, var34);
                 }
 
                 if (par3 < var5 - 1 && this.world.isAir(par2 + 1, par3 + 1, par4)) {
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var56, var30, var32);
-                    var6.method_1399(var42, (double)(par3 + 1) + 0.01, var56, var30, var34);
-                    var6.method_1399(var42, (double)(par3 + 1) + 0.01, var54, var28, var34);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var54, var28, var32);
-                    var6.method_1399(var42, (double)(par3 + 1) + 0.01, var56, var30, var32);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var56, var30, var34);
-                    var6.method_1399(var40, (double)(par3 + 1) + 0.01, var54, var28, var34);
-                    var6.method_1399(var42, (double)(par3 + 1) + 0.01, var54, var28, var32);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var56, var30, var32);
+                    var6.vertex(var42, (double)(par3 + 1) + 0.01, var56, var30, var34);
+                    var6.vertex(var42, (double)(par3 + 1) + 0.01, var54, var28, var34);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var54, var28, var32);
+                    var6.vertex(var42, (double)(par3 + 1) + 0.01, var56, var30, var32);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var56, var30, var34);
+                    var6.vertex(var40, (double)(par3 + 1) + 0.01, var54, var28, var34);
+                    var6.vertex(var42, (double)(par3 + 1) + 0.01, var54, var28, var32);
                 }
             }
 
             if (var63) {
-                var6.method_1399(var38, (double)par3 - 0.01, var56, var30, var36);
-                var6.method_1399(var42, (double)par3 - 0.01, var56, var30, var32);
-                var6.method_1399(var42, (double)par3 - 0.01, var54, var28, var32);
-                var6.method_1399(var38, (double)par3 - 0.01, var54, var28, var36);
-                var6.method_1399(var42, (double)par3 - 0.01, var56, var30, var36);
-                var6.method_1399(var38, (double)par3 - 0.01, var56, var30, var32);
-                var6.method_1399(var38, (double)par3 - 0.01, var54, var28, var32);
-                var6.method_1399(var42, (double)par3 - 0.01, var54, var28, var36);
+                var6.vertex(var38, (double)par3 - 0.01, var56, var30, var36);
+                var6.vertex(var42, (double)par3 - 0.01, var56, var30, var32);
+                var6.vertex(var42, (double)par3 - 0.01, var54, var28, var32);
+                var6.vertex(var38, (double)par3 - 0.01, var54, var28, var36);
+                var6.vertex(var42, (double)par3 - 0.01, var56, var30, var36);
+                var6.vertex(var38, (double)par3 - 0.01, var56, var30, var32);
+                var6.vertex(var38, (double)par3 - 0.01, var54, var28, var32);
+                var6.vertex(var42, (double)par3 - 0.01, var54, var28, var36);
             } else {
                 if (par3 > 1 && this.world.isAir(par2 - 1, par3 - 1, par4)) {
-                    var6.method_1399(var38, (double)par3 - 0.01, var56, var30, var34);
-                    var6.method_1399(var40, (double)par3 - 0.01, var56, var30, var36);
-                    var6.method_1399(var40, (double)par3 - 0.01, var54, var28, var36);
-                    var6.method_1399(var38, (double)par3 - 0.01, var54, var28, var34);
-                    var6.method_1399(var40, (double)par3 - 0.01, var56, var30, var34);
-                    var6.method_1399(var38, (double)par3 - 0.01, var56, var30, var36);
-                    var6.method_1399(var38, (double)par3 - 0.01, var54, var28, var36);
-                    var6.method_1399(var40, (double)par3 - 0.01, var54, var28, var34);
+                    var6.vertex(var38, (double)par3 - 0.01, var56, var30, var34);
+                    var6.vertex(var40, (double)par3 - 0.01, var56, var30, var36);
+                    var6.vertex(var40, (double)par3 - 0.01, var54, var28, var36);
+                    var6.vertex(var38, (double)par3 - 0.01, var54, var28, var34);
+                    var6.vertex(var40, (double)par3 - 0.01, var56, var30, var34);
+                    var6.vertex(var38, (double)par3 - 0.01, var56, var30, var36);
+                    var6.vertex(var38, (double)par3 - 0.01, var54, var28, var36);
+                    var6.vertex(var40, (double)par3 - 0.01, var54, var28, var34);
                 }
 
                 if (par3 > 1 && this.world.isAir(par2 + 1, par3 - 1, par4)) {
-                    var6.method_1399(var40, (double)par3 - 0.01, var56, var30, var32);
-                    var6.method_1399(var42, (double)par3 - 0.01, var56, var30, var34);
-                    var6.method_1399(var42, (double)par3 - 0.01, var54, var28, var34);
-                    var6.method_1399(var40, (double)par3 - 0.01, var54, var28, var32);
-                    var6.method_1399(var42, (double)par3 - 0.01, var56, var30, var32);
-                    var6.method_1399(var40, (double)par3 - 0.01, var56, var30, var34);
-                    var6.method_1399(var40, (double)par3 - 0.01, var54, var28, var34);
-                    var6.method_1399(var42, (double)par3 - 0.01, var54, var28, var32);
+                    var6.vertex(var40, (double)par3 - 0.01, var56, var30, var32);
+                    var6.vertex(var42, (double)par3 - 0.01, var56, var30, var34);
+                    var6.vertex(var42, (double)par3 - 0.01, var54, var28, var34);
+                    var6.vertex(var40, (double)par3 - 0.01, var54, var28, var32);
+                    var6.vertex(var42, (double)par3 - 0.01, var56, var30, var32);
+                    var6.vertex(var40, (double)par3 - 0.01, var56, var30, var34);
+                    var6.vertex(var40, (double)par3 - 0.01, var54, var28, var34);
+                    var6.vertex(var42, (double)par3 - 0.01, var54, var28, var32);
                 }
             }
         }
 
         if ((!var58 || !var59) && (var60 || var61 || var58 || var59)) {
             if (var58 && !var59) {
-                var6.method_1399(var40, (double)(par3 + 1), var44, var16, var22);
-                var6.method_1399(var40, (double)(par3 + 0), var44, var16, var24);
-                var6.method_1399(var40, (double)(par3 + 0), var46, var18, var24);
-                var6.method_1399(var40, (double)(par3 + 1), var46, var18, var22);
-                var6.method_1399(var40, (double)(par3 + 1), var46, var16, var22);
-                var6.method_1399(var40, (double)(par3 + 0), var46, var16, var24);
-                var6.method_1399(var40, (double)(par3 + 0), var44, var18, var24);
-                var6.method_1399(var40, (double)(par3 + 1), var44, var18, var22);
+                var6.vertex(var40, (double)(par3 + 1), var44, var16, var22);
+                var6.vertex(var40, (double)(par3 + 0), var44, var16, var24);
+                var6.vertex(var40, (double)(par3 + 0), var46, var18, var24);
+                var6.vertex(var40, (double)(par3 + 1), var46, var18, var22);
+                var6.vertex(var40, (double)(par3 + 1), var46, var16, var22);
+                var6.vertex(var40, (double)(par3 + 0), var46, var16, var24);
+                var6.vertex(var40, (double)(par3 + 0), var44, var18, var24);
+                var6.vertex(var40, (double)(par3 + 1), var44, var18, var22);
                 if (!var61 && !var60) {
-                    var6.method_1399(var50, (double)(par3 + 1), var46, var28, var32);
-                    var6.method_1399(var50, (double)(par3 + 0), var46, var28, var36);
-                    var6.method_1399(var52, (double)(par3 + 0), var46, var30, var36);
-                    var6.method_1399(var52, (double)(par3 + 1), var46, var30, var32);
-                    var6.method_1399(var52, (double)(par3 + 1), var46, var28, var32);
-                    var6.method_1399(var52, (double)(par3 + 0), var46, var28, var36);
-                    var6.method_1399(var50, (double)(par3 + 0), var46, var30, var36);
-                    var6.method_1399(var50, (double)(par3 + 1), var46, var30, var32);
+                    var6.vertex(var50, (double)(par3 + 1), var46, var28, var32);
+                    var6.vertex(var50, (double)(par3 + 0), var46, var28, var36);
+                    var6.vertex(var52, (double)(par3 + 0), var46, var30, var36);
+                    var6.vertex(var52, (double)(par3 + 1), var46, var30, var32);
+                    var6.vertex(var52, (double)(par3 + 1), var46, var28, var32);
+                    var6.vertex(var52, (double)(par3 + 0), var46, var28, var36);
+                    var6.vertex(var50, (double)(par3 + 0), var46, var30, var36);
+                    var6.vertex(var50, (double)(par3 + 1), var46, var30, var32);
                 }
 
                 if (var62 || par3 < var5 - 1 && this.world.isAir(par2, par3 + 1, par4 - 1)) {
-                    var6.method_1399(var50, (double)(par3 + 1), var44, var30, var32);
-                    var6.method_1399(var50, (double)(par3 + 1), var46, var30, var34);
-                    var6.method_1399(var52, (double)(par3 + 1), var46, var28, var34);
-                    var6.method_1399(var52, (double)(par3 + 1), var44, var28, var32);
-                    var6.method_1399(var50, (double)(par3 + 1), var46, var30, var32);
-                    var6.method_1399(var50, (double)(par3 + 1), var44, var30, var34);
-                    var6.method_1399(var52, (double)(par3 + 1), var44, var28, var34);
-                    var6.method_1399(var52, (double)(par3 + 1), var46, var28, var32);
+                    var6.vertex(var50, (double)(par3 + 1), var44, var30, var32);
+                    var6.vertex(var50, (double)(par3 + 1), var46, var30, var34);
+                    var6.vertex(var52, (double)(par3 + 1), var46, var28, var34);
+                    var6.vertex(var52, (double)(par3 + 1), var44, var28, var32);
+                    var6.vertex(var50, (double)(par3 + 1), var46, var30, var32);
+                    var6.vertex(var50, (double)(par3 + 1), var44, var30, var34);
+                    var6.vertex(var52, (double)(par3 + 1), var44, var28, var34);
+                    var6.vertex(var52, (double)(par3 + 1), var46, var28, var32);
                 }
 
                 if (var63 || par3 > 1 && this.world.isAir(par2, par3 - 1, par4 - 1)) {
-                    var6.method_1399(var50, (double)par3, var44, var30, var32);
-                    var6.method_1399(var50, (double)par3, var46, var30, var34);
-                    var6.method_1399(var52, (double)par3, var46, var28, var34);
-                    var6.method_1399(var52, (double)par3, var44, var28, var32);
-                    var6.method_1399(var50, (double)par3, var46, var30, var32);
-                    var6.method_1399(var50, (double)par3, var44, var30, var34);
-                    var6.method_1399(var52, (double)par3, var44, var28, var34);
-                    var6.method_1399(var52, (double)par3, var46, var28, var32);
+                    var6.vertex(var50, (double)par3, var44, var30, var32);
+                    var6.vertex(var50, (double)par3, var46, var30, var34);
+                    var6.vertex(var52, (double)par3, var46, var28, var34);
+                    var6.vertex(var52, (double)par3, var44, var28, var32);
+                    var6.vertex(var50, (double)par3, var46, var30, var32);
+                    var6.vertex(var50, (double)par3, var44, var30, var34);
+                    var6.vertex(var52, (double)par3, var44, var28, var34);
+                    var6.vertex(var52, (double)par3, var46, var28, var32);
                 }
             } else if (!var58 && var59) {
-                var6.method_1399(var40, (double)(par3 + 1), var46, var18, var22);
-                var6.method_1399(var40, (double)(par3 + 0), var46, var18, var24);
-                var6.method_1399(var40, (double)(par3 + 0), var48, var20, var24);
-                var6.method_1399(var40, (double)(par3 + 1), var48, var20, var22);
-                var6.method_1399(var40, (double)(par3 + 1), var48, var18, var22);
-                var6.method_1399(var40, (double)(par3 + 0), var48, var18, var24);
-                var6.method_1399(var40, (double)(par3 + 0), var46, var20, var24);
-                var6.method_1399(var40, (double)(par3 + 1), var46, var20, var22);
+                var6.vertex(var40, (double)(par3 + 1), var46, var18, var22);
+                var6.vertex(var40, (double)(par3 + 0), var46, var18, var24);
+                var6.vertex(var40, (double)(par3 + 0), var48, var20, var24);
+                var6.vertex(var40, (double)(par3 + 1), var48, var20, var22);
+                var6.vertex(var40, (double)(par3 + 1), var48, var18, var22);
+                var6.vertex(var40, (double)(par3 + 0), var48, var18, var24);
+                var6.vertex(var40, (double)(par3 + 0), var46, var20, var24);
+                var6.vertex(var40, (double)(par3 + 1), var46, var20, var22);
                 if (!var61 && !var60) {
-                    var6.method_1399(var52, (double)(par3 + 1), var46, var28, var32);
-                    var6.method_1399(var52, (double)(par3 + 0), var46, var28, var36);
-                    var6.method_1399(var50, (double)(par3 + 0), var46, var30, var36);
-                    var6.method_1399(var50, (double)(par3 + 1), var46, var30, var32);
-                    var6.method_1399(var50, (double)(par3 + 1), var46, var28, var32);
-                    var6.method_1399(var50, (double)(par3 + 0), var46, var28, var36);
-                    var6.method_1399(var52, (double)(par3 + 0), var46, var30, var36);
-                    var6.method_1399(var52, (double)(par3 + 1), var46, var30, var32);
+                    var6.vertex(var52, (double)(par3 + 1), var46, var28, var32);
+                    var6.vertex(var52, (double)(par3 + 0), var46, var28, var36);
+                    var6.vertex(var50, (double)(par3 + 0), var46, var30, var36);
+                    var6.vertex(var50, (double)(par3 + 1), var46, var30, var32);
+                    var6.vertex(var50, (double)(par3 + 1), var46, var28, var32);
+                    var6.vertex(var50, (double)(par3 + 0), var46, var28, var36);
+                    var6.vertex(var52, (double)(par3 + 0), var46, var30, var36);
+                    var6.vertex(var52, (double)(par3 + 1), var46, var30, var32);
                 }
 
                 if (var62 || par3 < var5 - 1 && this.world.isAir(par2, par3 + 1, par4 + 1)) {
-                    var6.method_1399(var50, (double)(par3 + 1), var46, var28, var34);
-                    var6.method_1399(var50, (double)(par3 + 1), var48, var28, var36);
-                    var6.method_1399(var52, (double)(par3 + 1), var48, var30, var36);
-                    var6.method_1399(var52, (double)(par3 + 1), var46, var30, var34);
-                    var6.method_1399(var50, (double)(par3 + 1), var48, var28, var34);
-                    var6.method_1399(var50, (double)(par3 + 1), var46, var28, var36);
-                    var6.method_1399(var52, (double)(par3 + 1), var46, var30, var36);
-                    var6.method_1399(var52, (double)(par3 + 1), var48, var30, var34);
+                    var6.vertex(var50, (double)(par3 + 1), var46, var28, var34);
+                    var6.vertex(var50, (double)(par3 + 1), var48, var28, var36);
+                    var6.vertex(var52, (double)(par3 + 1), var48, var30, var36);
+                    var6.vertex(var52, (double)(par3 + 1), var46, var30, var34);
+                    var6.vertex(var50, (double)(par3 + 1), var48, var28, var34);
+                    var6.vertex(var50, (double)(par3 + 1), var46, var28, var36);
+                    var6.vertex(var52, (double)(par3 + 1), var46, var30, var36);
+                    var6.vertex(var52, (double)(par3 + 1), var48, var30, var34);
                 }
 
                 if (var63 || par3 > 1 && this.world.isAir(par2, par3 - 1, par4 + 1)) {
-                    var6.method_1399(var50, (double)par3, var46, var28, var34);
-                    var6.method_1399(var50, (double)par3, var48, var28, var36);
-                    var6.method_1399(var52, (double)par3, var48, var30, var36);
-                    var6.method_1399(var52, (double)par3, var46, var30, var34);
-                    var6.method_1399(var50, (double)par3, var48, var28, var34);
-                    var6.method_1399(var50, (double)par3, var46, var28, var36);
-                    var6.method_1399(var52, (double)par3, var46, var30, var36);
-                    var6.method_1399(var52, (double)par3, var48, var30, var34);
+                    var6.vertex(var50, (double)par3, var46, var28, var34);
+                    var6.vertex(var50, (double)par3, var48, var28, var36);
+                    var6.vertex(var52, (double)par3, var48, var30, var36);
+                    var6.vertex(var52, (double)par3, var46, var30, var34);
+                    var6.vertex(var50, (double)par3, var48, var28, var34);
+                    var6.vertex(var50, (double)par3, var46, var28, var36);
+                    var6.vertex(var52, (double)par3, var46, var30, var36);
+                    var6.vertex(var52, (double)par3, var48, var30, var34);
                 }
             }
         } else {
-            var6.method_1399(var40, (double)(par3 + 1), var48, var16, var22);
-            var6.method_1399(var40, (double)(par3 + 0), var48, var16, var24);
-            var6.method_1399(var40, (double)(par3 + 0), var44, var20, var24);
-            var6.method_1399(var40, (double)(par3 + 1), var44, var20, var22);
-            var6.method_1399(var40, (double)(par3 + 1), var44, var16, var22);
-            var6.method_1399(var40, (double)(par3 + 0), var44, var16, var24);
-            var6.method_1399(var40, (double)(par3 + 0), var48, var20, var24);
-            var6.method_1399(var40, (double)(par3 + 1), var48, var20, var22);
+            var6.vertex(var40, (double)(par3 + 1), var48, var16, var22);
+            var6.vertex(var40, (double)(par3 + 0), var48, var16, var24);
+            var6.vertex(var40, (double)(par3 + 0), var44, var20, var24);
+            var6.vertex(var40, (double)(par3 + 1), var44, var20, var22);
+            var6.vertex(var40, (double)(par3 + 1), var44, var16, var22);
+            var6.vertex(var40, (double)(par3 + 0), var44, var16, var24);
+            var6.vertex(var40, (double)(par3 + 0), var48, var20, var24);
+            var6.vertex(var40, (double)(par3 + 1), var48, var20, var22);
             if (var62) {
-                var6.method_1399(var52, (double)(par3 + 1), var48, var30, var36);
-                var6.method_1399(var52, (double)(par3 + 1), var44, var30, var32);
-                var6.method_1399(var50, (double)(par3 + 1), var44, var28, var32);
-                var6.method_1399(var50, (double)(par3 + 1), var48, var28, var36);
-                var6.method_1399(var52, (double)(par3 + 1), var44, var30, var36);
-                var6.method_1399(var52, (double)(par3 + 1), var48, var30, var32);
-                var6.method_1399(var50, (double)(par3 + 1), var48, var28, var32);
-                var6.method_1399(var50, (double)(par3 + 1), var44, var28, var36);
+                var6.vertex(var52, (double)(par3 + 1), var48, var30, var36);
+                var6.vertex(var52, (double)(par3 + 1), var44, var30, var32);
+                var6.vertex(var50, (double)(par3 + 1), var44, var28, var32);
+                var6.vertex(var50, (double)(par3 + 1), var48, var28, var36);
+                var6.vertex(var52, (double)(par3 + 1), var44, var30, var36);
+                var6.vertex(var52, (double)(par3 + 1), var48, var30, var32);
+                var6.vertex(var50, (double)(par3 + 1), var48, var28, var32);
+                var6.vertex(var50, (double)(par3 + 1), var44, var28, var36);
             } else {
                 if (par3 < var5 - 1 && this.world.isAir(par2, par3 + 1, par4 - 1)) {
-                    var6.method_1399(var50, (double)(par3 + 1), var44, var30, var32);
-                    var6.method_1399(var50, (double)(par3 + 1), var46, var30, var34);
-                    var6.method_1399(var52, (double)(par3 + 1), var46, var28, var34);
-                    var6.method_1399(var52, (double)(par3 + 1), var44, var28, var32);
-                    var6.method_1399(var50, (double)(par3 + 1), var46, var30, var32);
-                    var6.method_1399(var50, (double)(par3 + 1), var44, var30, var34);
-                    var6.method_1399(var52, (double)(par3 + 1), var44, var28, var34);
-                    var6.method_1399(var52, (double)(par3 + 1), var46, var28, var32);
+                    var6.vertex(var50, (double)(par3 + 1), var44, var30, var32);
+                    var6.vertex(var50, (double)(par3 + 1), var46, var30, var34);
+                    var6.vertex(var52, (double)(par3 + 1), var46, var28, var34);
+                    var6.vertex(var52, (double)(par3 + 1), var44, var28, var32);
+                    var6.vertex(var50, (double)(par3 + 1), var46, var30, var32);
+                    var6.vertex(var50, (double)(par3 + 1), var44, var30, var34);
+                    var6.vertex(var52, (double)(par3 + 1), var44, var28, var34);
+                    var6.vertex(var52, (double)(par3 + 1), var46, var28, var32);
                 }
 
                 if (par3 < var5 - 1 && this.world.isAir(par2, par3 + 1, par4 + 1)) {
-                    var6.method_1399(var50, (double)(par3 + 1), var46, var28, var34);
-                    var6.method_1399(var50, (double)(par3 + 1), var48, var28, var36);
-                    var6.method_1399(var52, (double)(par3 + 1), var48, var30, var36);
-                    var6.method_1399(var52, (double)(par3 + 1), var46, var30, var34);
-                    var6.method_1399(var50, (double)(par3 + 1), var48, var28, var34);
-                    var6.method_1399(var50, (double)(par3 + 1), var46, var28, var36);
-                    var6.method_1399(var52, (double)(par3 + 1), var46, var30, var36);
-                    var6.method_1399(var52, (double)(par3 + 1), var48, var30, var34);
+                    var6.vertex(var50, (double)(par3 + 1), var46, var28, var34);
+                    var6.vertex(var50, (double)(par3 + 1), var48, var28, var36);
+                    var6.vertex(var52, (double)(par3 + 1), var48, var30, var36);
+                    var6.vertex(var52, (double)(par3 + 1), var46, var30, var34);
+                    var6.vertex(var50, (double)(par3 + 1), var48, var28, var34);
+                    var6.vertex(var50, (double)(par3 + 1), var46, var28, var36);
+                    var6.vertex(var52, (double)(par3 + 1), var46, var30, var36);
+                    var6.vertex(var52, (double)(par3 + 1), var48, var30, var34);
                 }
             }
 
             if (var63) {
-                var6.method_1399(var52, (double)par3, var48, var30, var36);
-                var6.method_1399(var52, (double)par3, var44, var30, var32);
-                var6.method_1399(var50, (double)par3, var44, var28, var32);
-                var6.method_1399(var50, (double)par3, var48, var28, var36);
-                var6.method_1399(var52, (double)par3, var44, var30, var36);
-                var6.method_1399(var52, (double)par3, var48, var30, var32);
-                var6.method_1399(var50, (double)par3, var48, var28, var32);
-                var6.method_1399(var50, (double)par3, var44, var28, var36);
+                var6.vertex(var52, (double)par3, var48, var30, var36);
+                var6.vertex(var52, (double)par3, var44, var30, var32);
+                var6.vertex(var50, (double)par3, var44, var28, var32);
+                var6.vertex(var50, (double)par3, var48, var28, var36);
+                var6.vertex(var52, (double)par3, var44, var30, var36);
+                var6.vertex(var52, (double)par3, var48, var30, var32);
+                var6.vertex(var50, (double)par3, var48, var28, var32);
+                var6.vertex(var50, (double)par3, var44, var28, var36);
             } else {
                 if (par3 > 1 && this.world.isAir(par2, par3 - 1, par4 - 1)) {
-                    var6.method_1399(var50, (double)par3, var44, var30, var32);
-                    var6.method_1399(var50, (double)par3, var46, var30, var34);
-                    var6.method_1399(var52, (double)par3, var46, var28, var34);
-                    var6.method_1399(var52, (double)par3, var44, var28, var32);
-                    var6.method_1399(var50, (double)par3, var46, var30, var32);
-                    var6.method_1399(var50, (double)par3, var44, var30, var34);
-                    var6.method_1399(var52, (double)par3, var44, var28, var34);
-                    var6.method_1399(var52, (double)par3, var46, var28, var32);
+                    var6.vertex(var50, (double)par3, var44, var30, var32);
+                    var6.vertex(var50, (double)par3, var46, var30, var34);
+                    var6.vertex(var52, (double)par3, var46, var28, var34);
+                    var6.vertex(var52, (double)par3, var44, var28, var32);
+                    var6.vertex(var50, (double)par3, var46, var30, var32);
+                    var6.vertex(var50, (double)par3, var44, var30, var34);
+                    var6.vertex(var52, (double)par3, var44, var28, var34);
+                    var6.vertex(var52, (double)par3, var46, var28, var32);
                 }
 
                 if (par3 > 1 && this.world.isAir(par2, par3 - 1, par4 + 1)) {
-                    var6.method_1399(var50, (double)par3, var46, var28, var34);
-                    var6.method_1399(var50, (double)par3, var48, var28, var36);
-                    var6.method_1399(var52, (double)par3, var48, var30, var36);
-                    var6.method_1399(var52, (double)par3, var46, var30, var34);
-                    var6.method_1399(var50, (double)par3, var48, var28, var34);
-                    var6.method_1399(var50, (double)par3, var46, var28, var36);
-                    var6.method_1399(var52, (double)par3, var46, var30, var36);
-                    var6.method_1399(var52, (double)par3, var48, var30, var34);
+                    var6.vertex(var50, (double)par3, var46, var28, var34);
+                    var6.vertex(var50, (double)par3, var48, var28, var36);
+                    var6.vertex(var52, (double)par3, var48, var30, var36);
+                    var6.vertex(var52, (double)par3, var46, var30, var34);
+                    var6.vertex(var50, (double)par3, var48, var28, var34);
+                    var6.vertex(var50, (double)par3, var46, var28, var36);
+                    var6.vertex(var52, (double)par3, var46, var30, var36);
+                    var6.vertex(var52, (double)par3, var48, var30, var34);
                 }
             }
         }
@@ -1070,9 +1070,9 @@ public abstract class class_535Mixin {
      * @reason none
      */
     @Overwrite
-    public boolean method_1481(Block par1Block, int par2, int par3, int par4) {
+    public boolean renderFluid(Block par1Block, int par2, int par3, int par4) {
         Tessellator var5 = Tessellator.INSTANCE;
-        int var6 = par1Block.method_438(this.world, par2, par3, par4);
+        int var6 = par1Block.getTint(this.world, par2, par3, par4);
         float var7 = (float)(var6 >> 16 & 255) / 255.0F;
         float var8 = (float)(var6 >> 8 & 255) / 255.0F;
         float var9 = (float)(var6 & 255) / 255.0F;
@@ -1128,19 +1128,19 @@ public abstract class class_535Mixin {
 
                 var41 = (double)(MathHelper.sin(var35) * 8.0F) / 256.0;
                 var47 = (double)(MathHelper.cos(var35) * 8.0F) / 256.0;
-                var5.method_1411(par1Block.method_455(this.world, par2, par3, par4));
+                var5.setLight(par1Block.getLight(this.world, par2, par3, par4));
                 float var46 = 1.0F;
-                var5.method_1400(var15 * var46 * var7, var15 * var46 * var8, var15 * var46 * var9);
-                var5.method_1399((double)(par2 + 0), (double)par3 + var24, (double)(par4 + 0), var38 - var47 - var41, var43 - var47 + var41);
-                var5.method_1399((double)(par2 + 0), (double)par3 + var26, (double)(par4 + 1), var38 - var47 + var41, var43 + var47 + var41);
-                var5.method_1399((double)(par2 + 1), (double)par3 + var28, (double)(par4 + 1), var38 + var47 + var41, var43 + var47 - var41);
-                var5.method_1399((double)(par2 + 1), (double)par3 + var30, (double)(par4 + 0), var38 + var47 - var41, var43 - var47 - var41);
+                var5.color(var15 * var46 * var7, var15 * var46 * var8, var15 * var46 * var9);
+                var5.vertex((double)(par2 + 0), (double)par3 + var24, (double)(par4 + 0), var38 - var47 - var41, var43 - var47 + var41);
+                var5.vertex((double)(par2 + 0), (double)par3 + var26, (double)(par4 + 1), var38 - var47 + var41, var43 + var47 + var41);
+                var5.vertex((double)(par2 + 1), (double)par3 + var28, (double)(par4 + 1), var38 + var47 + var41, var43 + var47 - var41);
+                var5.vertex((double)(par2 + 1), (double)par3 + var30, (double)(par4 + 0), var38 + var47 - var41, var43 - var47 - var41);
             }
 
             if (this.field_2051 || var11) {
-                var5.method_1411(par1Block.method_455(this.world, par2, par3 - 1, par4));
+                var5.setLight(par1Block.getLight(this.world, par2, par3 - 1, par4));
                 var35 = 1.0F;
-                var5.method_1400(var14 * var35, var14 * var35, var14 * var35);
+                var5.color(var14 * var35, var14 * var35, var14 * var35);
                 this.method_1444(par1Block, (double)par2, (double)par3 + var32, (double)par4, par1Block.method_395(0));
                 var13 = true;
             }
@@ -1207,7 +1207,7 @@ public abstract class class_535Mixin {
                     double var57 = ((double)var67 + (1.0 - var41) * 16.0) / 256.0;
                     double var59 = ((double)var67 + (1.0 - var43) * 16.0) / 256.0;
                     double var61 = ((double)(var67 + 16) - 0.01) / 256.0;
-                    var5.method_1411(par1Block.method_455(this.world, var64, par3, var37));
+                    var5.setLight(par1Block.getLight(this.world, var64, par3, var37));
                     float var63 = 1.0F;
                     if (var34 < 2) {
                         var63 *= var16;
@@ -1215,11 +1215,11 @@ public abstract class class_535Mixin {
                         var63 *= var17;
                     }
 
-                    var5.method_1400(var15 * var63 * var7, var15 * var63 * var8, var15 * var63 * var9);
-                    var5.method_1399(var45, (double)par3 + var41, var47, var53, var57);
-                    var5.method_1399(var49, (double)par3 + var43, var51, var55, var59);
-                    var5.method_1399(var49, (double)(par3 + 0), var51, var55, var61);
-                    var5.method_1399(var45, (double)(par3 + 0), var47, var53, var61);
+                    var5.color(var15 * var63 * var7, var15 * var63 * var8, var15 * var63 * var9);
+                    var5.vertex(var45, (double)par3 + var41, var47, var53, var57);
+                    var5.vertex(var49, (double)par3 + var43, var51, var55, var59);
+                    var5.vertex(var49, (double)(par3 + 0), var51, var55, var61);
+                    var5.vertex(var45, (double)(par3 + 0), var47, var53, var61);
                 }
             }
 
@@ -1234,7 +1234,7 @@ public abstract class class_535Mixin {
      * @reason none
      */
     @Overwrite
-    public boolean method_1450(Block par1Block, int par2, int par3, int par4, float par5, float par6, float par7) {
+    public boolean renderCubeAO(Block par1Block, int par2, int par3, int par4, float par5, float par6, float par7) {
         this.field_2058 = true;
         boolean var8 = false;
         float var9 = this.field_2059;
@@ -1254,7 +1254,7 @@ public abstract class class_535Mixin {
         this.field_2063 = par1Block.method_465(this.world, par2 + 1, par3, par4);
         this.field_2064 = par1Block.method_465(this.world, par2, par3 + 1, par4);
         this.field_2065 = par1Block.method_465(this.world, par2, par3, par4 + 1);
-        int var19 = par1Block.method_455(this.world, par2, par3, par4);
+        int var19 = par1Block.getLight(this.world, par2, par3, par4);
         int var20 = var19;
         int var21 = var19;
         int var22 = var19;
@@ -1262,31 +1262,31 @@ public abstract class class_535Mixin {
         int var24 = var19;
         int var25 = var19;
         if (par1Block.boundingBoxMinY <= 0.0) {
-            var21 = par1Block.method_455(this.world, par2, par3 - 1, par4);
+            var21 = par1Block.getLight(this.world, par2, par3 - 1, par4);
         }
 
         if (par1Block.boundingBoxMaxY >= 1.0) {
-            var24 = par1Block.method_455(this.world, par2, par3 + 1, par4);
+            var24 = par1Block.getLight(this.world, par2, par3 + 1, par4);
         }
 
         if (par1Block.boundingBoxMinX <= 0.0) {
-            var20 = par1Block.method_455(this.world, par2 - 1, par3, par4);
+            var20 = par1Block.getLight(this.world, par2 - 1, par3, par4);
         }
 
         if (par1Block.boundingBoxMaxX >= 1.0) {
-            var23 = par1Block.method_455(this.world, par2 + 1, par3, par4);
+            var23 = par1Block.getLight(this.world, par2 + 1, par3, par4);
         }
 
         if (par1Block.boundingBoxMinZ <= 0.0) {
-            var22 = par1Block.method_455(this.world, par2, par3, par4 - 1);
+            var22 = par1Block.getLight(this.world, par2, par3, par4 - 1);
         }
 
         if (par1Block.boundingBoxMaxZ >= 1.0) {
-            var25 = par1Block.method_455(this.world, par2, par3, par4 + 1);
+            var25 = par1Block.getLight(this.world, par2, par3, par4 + 1);
         }
 
         Tessellator var26 = Tessellator.INSTANCE;
-        var26.method_1411(983055);
+        var26.setLight(983055);
         this.field_2009 = Block.field_495[this.world.getBlock(par2 + 1, par3 + 1, par4)];
         this.field_2018 = Block.field_495[this.world.getBlock(par2 + 1, par3 - 1, par4)];
         this.field_2013 = Block.field_495[this.world.getBlock(par2 + 1, par3, par4 + 1)];
@@ -1321,10 +1321,10 @@ public abstract class class_535Mixin {
                     --par3;
                 }
 
-                this.field_1998 = par1Block.method_455(this.world, par2 - 1, par3, par4);
-                this.field_2000 = par1Block.method_455(this.world, par2, par3, par4 - 1);
-                this.field_2001 = par1Block.method_455(this.world, par2, par3, par4 + 1);
-                this.field_2003 = par1Block.method_455(this.world, par2 + 1, par3, par4);
+                this.field_1998 = par1Block.getLight(this.world, par2 - 1, par3, par4);
+                this.field_2000 = par1Block.getLight(this.world, par2, par3, par4 - 1);
+                this.field_2001 = par1Block.getLight(this.world, par2, par3, par4 + 1);
+                this.field_2003 = par1Block.getLight(this.world, par2 + 1, par3, par4);
                 this.field_2067 = par1Block.method_465(this.world, par2 - 1, par3, par4);
                 this.field_2069 = par1Block.method_465(this.world, par2, par3, par4 - 1);
                 this.field_2070 = par1Block.method_465(this.world, par2, par3, par4 + 1);
@@ -1334,7 +1334,7 @@ public abstract class class_535Mixin {
                     this.field_1997 = this.field_1998;
                 } else {
                     this.field_2066 = par1Block.method_465(this.world, par2 - 1, par3, par4 - 1);
-                    this.field_1997 = par1Block.method_455(this.world, par2 - 1, par3, par4 - 1);
+                    this.field_1997 = par1Block.getLight(this.world, par2 - 1, par3, par4 - 1);
                 }
 
                 if (!this.field_2020 && !this.field_2019) {
@@ -1342,7 +1342,7 @@ public abstract class class_535Mixin {
                     this.field_1999 = this.field_1998;
                 } else {
                     this.field_2068 = par1Block.method_465(this.world, par2 - 1, par3, par4 + 1);
-                    this.field_1999 = par1Block.method_455(this.world, par2 - 1, par3, par4 + 1);
+                    this.field_1999 = par1Block.getLight(this.world, par2 - 1, par3, par4 + 1);
                 }
 
                 if (!this.field_2016 && !this.field_2018) {
@@ -1350,7 +1350,7 @@ public abstract class class_535Mixin {
                     this.field_2002 = this.field_2003;
                 } else {
                     this.field_2071 = par1Block.method_465(this.world, par2 + 1, par3, par4 - 1);
-                    this.field_2002 = par1Block.method_455(this.world, par2 + 1, par3, par4 - 1);
+                    this.field_2002 = par1Block.getLight(this.world, par2 + 1, par3, par4 - 1);
                 }
 
                 if (!this.field_2020 && !this.field_2018) {
@@ -1358,7 +1358,7 @@ public abstract class class_535Mixin {
                     this.field_2004 = this.field_2003;
                 } else {
                     this.field_1984 = par1Block.method_465(this.world, par2 + 1, par3, par4 + 1);
-                    this.field_2004 = par1Block.method_455(this.world, par2 + 1, par3, par4 + 1);
+                    this.field_2004 = par1Block.getLight(this.world, par2 + 1, par3, par4 + 1);
                 }
 
                 if (par1Block.boundingBoxMinY <= 0.0) {
@@ -1406,10 +1406,10 @@ public abstract class class_535Mixin {
                     ++par3;
                 }
 
-                this.field_2022 = par1Block.method_455(this.world, par2 - 1, par3, par4);
-                this.field_2026 = par1Block.method_455(this.world, par2 + 1, par3, par4);
-                this.field_2024 = par1Block.method_455(this.world, par2, par3, par4 - 1);
-                this.field_2027 = par1Block.method_455(this.world, par2, par3, par4 + 1);
+                this.field_2022 = par1Block.getLight(this.world, par2 - 1, par3, par4);
+                this.field_2026 = par1Block.getLight(this.world, par2 + 1, par3, par4);
+                this.field_2024 = par1Block.getLight(this.world, par2, par3, par4 - 1);
+                this.field_2027 = par1Block.getLight(this.world, par2, par3, par4 + 1);
                 this.field_1986 = par1Block.method_465(this.world, par2 - 1, par3, par4);
                 this.field_1990 = par1Block.method_465(this.world, par2 + 1, par3, par4);
                 this.field_1988 = par1Block.method_465(this.world, par2, par3, par4 - 1);
@@ -1419,7 +1419,7 @@ public abstract class class_535Mixin {
                     this.field_2021 = this.field_2022;
                 } else {
                     this.field_1985 = par1Block.method_465(this.world, par2 - 1, par3, par4 - 1);
-                    this.field_2021 = par1Block.method_455(this.world, par2 - 1, par3, par4 - 1);
+                    this.field_2021 = par1Block.getLight(this.world, par2 - 1, par3, par4 - 1);
                 }
 
                 if (!this.field_2008 && !this.field_2009) {
@@ -1427,7 +1427,7 @@ public abstract class class_535Mixin {
                     this.field_2025 = this.field_2026;
                 } else {
                     this.field_1989 = par1Block.method_465(this.world, par2 + 1, par3, par4 - 1);
-                    this.field_2025 = par1Block.method_455(this.world, par2 + 1, par3, par4 - 1);
+                    this.field_2025 = par1Block.getLight(this.world, par2 + 1, par3, par4 - 1);
                 }
 
                 if (!this.field_2011 && !this.field_2010) {
@@ -1435,7 +1435,7 @@ public abstract class class_535Mixin {
                     this.field_2023 = this.field_2022;
                 } else {
                     this.field_1987 = par1Block.method_465(this.world, par2 - 1, par3, par4 + 1);
-                    this.field_2023 = par1Block.method_455(this.world, par2 - 1, par3, par4 + 1);
+                    this.field_2023 = par1Block.getLight(this.world, par2 - 1, par3, par4 + 1);
                 }
 
                 if (!this.field_2011 && !this.field_2009) {
@@ -1443,7 +1443,7 @@ public abstract class class_535Mixin {
                     this.field_2028 = this.field_2026;
                 } else {
                     this.field_1992 = par1Block.method_465(this.world, par2 + 1, par3, par4 + 1);
-                    this.field_2028 = par1Block.method_455(this.world, par2 + 1, par3, par4 + 1);
+                    this.field_2028 = par1Block.getLight(this.world, par2 + 1, par3, par4 + 1);
                 }
 
                 if (par1Block.boundingBoxMaxY >= 1.0) {
@@ -1496,16 +1496,16 @@ public abstract class class_535Mixin {
                 this.field_2069 = par1Block.method_465(this.world, par2, par3 - 1, par4);
                 this.field_1988 = par1Block.method_465(this.world, par2, par3 + 1, par4);
                 this.field_1994 = par1Block.method_465(this.world, par2 + 1, par3, par4);
-                this.field_2029 = par1Block.method_455(this.world, par2 - 1, par3, par4);
-                this.field_2000 = par1Block.method_455(this.world, par2, par3 - 1, par4);
-                this.field_2024 = par1Block.method_455(this.world, par2, par3 + 1, par4);
-                this.field_2030 = par1Block.method_455(this.world, par2 + 1, par3, par4);
+                this.field_2029 = par1Block.getLight(this.world, par2 - 1, par3, par4);
+                this.field_2000 = par1Block.getLight(this.world, par2, par3 - 1, par4);
+                this.field_2024 = par1Block.getLight(this.world, par2, par3 + 1, par4);
+                this.field_2030 = par1Block.getLight(this.world, par2 + 1, par3, par4);
                 if (!this.field_2012 && !this.field_2016) {
                     this.field_2066 = this.field_1993;
                     this.field_1997 = this.field_2029;
                 } else {
                     this.field_2066 = par1Block.method_465(this.world, par2 - 1, par3 - 1, par4);
-                    this.field_1997 = par1Block.method_455(this.world, par2 - 1, par3 - 1, par4);
+                    this.field_1997 = par1Block.getLight(this.world, par2 - 1, par3 - 1, par4);
                 }
 
                 if (!this.field_2012 && !this.field_2008) {
@@ -1513,7 +1513,7 @@ public abstract class class_535Mixin {
                     this.field_2021 = this.field_2029;
                 } else {
                     this.field_1985 = par1Block.method_465(this.world, par2 - 1, par3 + 1, par4);
-                    this.field_2021 = par1Block.method_455(this.world, par2 - 1, par3 + 1, par4);
+                    this.field_2021 = par1Block.getLight(this.world, par2 - 1, par3 + 1, par4);
                 }
 
                 if (!this.field_2015 && !this.field_2016) {
@@ -1521,7 +1521,7 @@ public abstract class class_535Mixin {
                     this.field_2002 = this.field_2030;
                 } else {
                     this.field_2071 = par1Block.method_465(this.world, par2 + 1, par3 - 1, par4);
-                    this.field_2002 = par1Block.method_455(this.world, par2 + 1, par3 - 1, par4);
+                    this.field_2002 = par1Block.getLight(this.world, par2 + 1, par3 - 1, par4);
                 }
 
                 if (!this.field_2015 && !this.field_2008) {
@@ -1529,7 +1529,7 @@ public abstract class class_535Mixin {
                     this.field_2025 = this.field_2030;
                 } else {
                     this.field_1989 = par1Block.method_465(this.world, par2 + 1, par3 + 1, par4);
-                    this.field_2025 = par1Block.method_455(this.world, par2 + 1, par3 + 1, par4);
+                    this.field_2025 = par1Block.getLight(this.world, par2 + 1, par3 + 1, par4);
                 }
 
                 if (par1Block.boundingBoxMinZ <= 0.0) {
@@ -1598,16 +1598,16 @@ public abstract class class_535Mixin {
                 this.field_1996 = par1Block.method_465(this.world, par2 + 1, par3, par4);
                 this.field_2070 = par1Block.method_465(this.world, par2, par3 - 1, par4);
                 this.field_1991 = par1Block.method_465(this.world, par2, par3 + 1, par4);
-                this.field_2031 = par1Block.method_455(this.world, par2 - 1, par3, par4);
-                this.field_2032 = par1Block.method_455(this.world, par2 + 1, par3, par4);
-                this.field_2001 = par1Block.method_455(this.world, par2, par3 - 1, par4);
-                this.field_2027 = par1Block.method_455(this.world, par2, par3 + 1, par4);
+                this.field_2031 = par1Block.getLight(this.world, par2 - 1, par3, par4);
+                this.field_2032 = par1Block.getLight(this.world, par2 + 1, par3, par4);
+                this.field_2001 = par1Block.getLight(this.world, par2, par3 - 1, par4);
+                this.field_2027 = par1Block.getLight(this.world, par2, par3 + 1, par4);
                 if (!this.field_2014 && !this.field_2020) {
                     this.field_2068 = this.field_1995;
                     this.field_1999 = this.field_2031;
                 } else {
                     this.field_2068 = par1Block.method_465(this.world, par2 - 1, par3 - 1, par4);
-                    this.field_1999 = par1Block.method_455(this.world, par2 - 1, par3 - 1, par4);
+                    this.field_1999 = par1Block.getLight(this.world, par2 - 1, par3 - 1, par4);
                 }
 
                 if (!this.field_2014 && !this.field_2011) {
@@ -1615,7 +1615,7 @@ public abstract class class_535Mixin {
                     this.field_2023 = this.field_2031;
                 } else {
                     this.field_1987 = par1Block.method_465(this.world, par2 - 1, par3 + 1, par4);
-                    this.field_2023 = par1Block.method_455(this.world, par2 - 1, par3 + 1, par4);
+                    this.field_2023 = par1Block.getLight(this.world, par2 - 1, par3 + 1, par4);
                 }
 
                 if (!this.field_2013 && !this.field_2020) {
@@ -1623,7 +1623,7 @@ public abstract class class_535Mixin {
                     this.field_2004 = this.field_2032;
                 } else {
                     this.field_1984 = par1Block.method_465(this.world, par2 + 1, par3 - 1, par4);
-                    this.field_2004 = par1Block.method_455(this.world, par2 + 1, par3 - 1, par4);
+                    this.field_2004 = par1Block.getLight(this.world, par2 + 1, par3 - 1, par4);
                 }
 
                 if (!this.field_2013 && !this.field_2011) {
@@ -1631,7 +1631,7 @@ public abstract class class_535Mixin {
                     this.field_2028 = this.field_2032;
                 } else {
                     this.field_1992 = par1Block.method_465(this.world, par2 + 1, par3 + 1, par4);
-                    this.field_2028 = par1Block.method_455(this.world, par2 + 1, par3 + 1, par4);
+                    this.field_2028 = par1Block.getLight(this.world, par2 + 1, par3 + 1, par4);
                 }
 
                 if (par1Block.boundingBoxMaxZ >= 1.0) {
@@ -1700,16 +1700,16 @@ public abstract class class_535Mixin {
                 this.field_1993 = par1Block.method_465(this.world, par2, par3, par4 - 1);
                 this.field_1995 = par1Block.method_465(this.world, par2, par3, par4 + 1);
                 this.field_1986 = par1Block.method_465(this.world, par2, par3 + 1, par4);
-                this.field_1998 = par1Block.method_455(this.world, par2, par3 - 1, par4);
-                this.field_2029 = par1Block.method_455(this.world, par2, par3, par4 - 1);
-                this.field_2031 = par1Block.method_455(this.world, par2, par3, par4 + 1);
-                this.field_2022 = par1Block.method_455(this.world, par2, par3 + 1, par4);
+                this.field_1998 = par1Block.getLight(this.world, par2, par3 - 1, par4);
+                this.field_2029 = par1Block.getLight(this.world, par2, par3, par4 - 1);
+                this.field_2031 = par1Block.getLight(this.world, par2, par3, par4 + 1);
+                this.field_2022 = par1Block.getLight(this.world, par2, par3 + 1, par4);
                 if (!this.field_2012 && !this.field_2019) {
                     this.field_2066 = this.field_1993;
                     this.field_1997 = this.field_2029;
                 } else {
                     this.field_2066 = par1Block.method_465(this.world, par2, par3 - 1, par4 - 1);
-                    this.field_1997 = par1Block.method_455(this.world, par2, par3 - 1, par4 - 1);
+                    this.field_1997 = par1Block.getLight(this.world, par2, par3 - 1, par4 - 1);
                 }
 
                 if (!this.field_2014 && !this.field_2019) {
@@ -1717,7 +1717,7 @@ public abstract class class_535Mixin {
                     this.field_1999 = this.field_2031;
                 } else {
                     this.field_2068 = par1Block.method_465(this.world, par2, par3 - 1, par4 + 1);
-                    this.field_1999 = par1Block.method_455(this.world, par2, par3 - 1, par4 + 1);
+                    this.field_1999 = par1Block.getLight(this.world, par2, par3 - 1, par4 + 1);
                 }
 
                 if (!this.field_2012 && !this.field_2010) {
@@ -1725,7 +1725,7 @@ public abstract class class_535Mixin {
                     this.field_2021 = this.field_2029;
                 } else {
                     this.field_1985 = par1Block.method_465(this.world, par2, par3 + 1, par4 - 1);
-                    this.field_2021 = par1Block.method_455(this.world, par2, par3 + 1, par4 - 1);
+                    this.field_2021 = par1Block.getLight(this.world, par2, par3 + 1, par4 - 1);
                 }
 
                 if (!this.field_2014 && !this.field_2010) {
@@ -1733,7 +1733,7 @@ public abstract class class_535Mixin {
                     this.field_2023 = this.field_2031;
                 } else {
                     this.field_1987 = par1Block.method_465(this.world, par2, par3 + 1, par4 + 1);
-                    this.field_2023 = par1Block.method_455(this.world, par2, par3 + 1, par4 + 1);
+                    this.field_2023 = par1Block.getLight(this.world, par2, par3 + 1, par4 + 1);
                 }
 
                 if (par1Block.boundingBoxMinX <= 0.0) {
@@ -1802,16 +1802,16 @@ public abstract class class_535Mixin {
                 this.field_1994 = par1Block.method_465(this.world, par2, par3, par4 - 1);
                 this.field_1996 = par1Block.method_465(this.world, par2, par3, par4 + 1);
                 this.field_1990 = par1Block.method_465(this.world, par2, par3 + 1, par4);
-                this.field_2003 = par1Block.method_455(this.world, par2, par3 - 1, par4);
-                this.field_2030 = par1Block.method_455(this.world, par2, par3, par4 - 1);
-                this.field_2032 = par1Block.method_455(this.world, par2, par3, par4 + 1);
-                this.field_2026 = par1Block.method_455(this.world, par2, par3 + 1, par4);
+                this.field_2003 = par1Block.getLight(this.world, par2, par3 - 1, par4);
+                this.field_2030 = par1Block.getLight(this.world, par2, par3, par4 - 1);
+                this.field_2032 = par1Block.getLight(this.world, par2, par3, par4 + 1);
+                this.field_2026 = par1Block.getLight(this.world, par2, par3 + 1, par4);
                 if (!this.field_2018 && !this.field_2015) {
                     this.field_2071 = this.field_1994;
                     this.field_2002 = this.field_2030;
                 } else {
                     this.field_2071 = par1Block.method_465(this.world, par2, par3 - 1, par4 - 1);
-                    this.field_2002 = par1Block.method_455(this.world, par2, par3 - 1, par4 - 1);
+                    this.field_2002 = par1Block.getLight(this.world, par2, par3 - 1, par4 - 1);
                 }
 
                 if (!this.field_2018 && !this.field_2013) {
@@ -1819,7 +1819,7 @@ public abstract class class_535Mixin {
                     this.field_2004 = this.field_2032;
                 } else {
                     this.field_1984 = par1Block.method_465(this.world, par2, par3 - 1, par4 + 1);
-                    this.field_2004 = par1Block.method_455(this.world, par2, par3 - 1, par4 + 1);
+                    this.field_2004 = par1Block.getLight(this.world, par2, par3 - 1, par4 + 1);
                 }
 
                 if (!this.field_2009 && !this.field_2015) {
@@ -1827,7 +1827,7 @@ public abstract class class_535Mixin {
                     this.field_2025 = this.field_2030;
                 } else {
                     this.field_1989 = par1Block.method_465(this.world, par2, par3 + 1, par4 - 1);
-                    this.field_2025 = par1Block.method_455(this.world, par2, par3 + 1, par4 - 1);
+                    this.field_2025 = par1Block.getLight(this.world, par2, par3 + 1, par4 - 1);
                 }
 
                 if (!this.field_2009 && !this.field_2013) {
@@ -1835,7 +1835,7 @@ public abstract class class_535Mixin {
                     this.field_2028 = this.field_2032;
                 } else {
                     this.field_1992 = par1Block.method_465(this.world, par2, par3 + 1, par4 + 1);
-                    this.field_2028 = par1Block.method_455(this.world, par2, par3 + 1, par4 + 1);
+                    this.field_2028 = par1Block.getLight(this.world, par2, par3 + 1, par4 + 1);
                 }
 
                 if (par1Block.boundingBoxMaxX >= 1.0) {
@@ -1903,7 +1903,7 @@ public abstract class class_535Mixin {
      * @reason none
      */
     @Overwrite
-    public boolean method_1463(Block par1Block, int par2, int par3, int par4, float par5, float par6, float par7) {
+    public boolean renderCubeNoAO(Block par1Block, int par2, int par3, int par4, float par5, float par6, float par7) {
         this.field_2058 = false;
         Tessellator var8 = Tessellator.INSTANCE;
         boolean var9 = false;
@@ -1935,29 +1935,29 @@ public abstract class class_535Mixin {
             var25 = var13 * par7;
         }
 
-        int var26 = par1Block.method_455(this.world, par2, par3, par4);
+        int var26 = par1Block.getLight(this.world, par2, par3, par4);
         if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3 - 1, par4, 0)) {
-            var8.method_1411(par1Block.boundingBoxMinY > 0.0 ? var26 : par1Block.method_455(this.world, par2, par3 - 1, par4));
-            var8.method_1400(var17, var20, var23);
+            var8.setLight(par1Block.boundingBoxMinY > 0.0 ? var26 : par1Block.getLight(this.world, par2, par3 - 1, par4));
+            var8.color(var17, var20, var23);
             this.method_1444(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 0));
             var9 = true;
         }
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3 + 1, par4, 1)) {
-            var8.method_1411(par1Block.boundingBoxMaxY < 1.0 ? var26 : par1Block.method_455(this.world, par2, par3 + 1, par4));
-            var8.method_1400(var14, var15, var16);
+            var8.setLight(par1Block.boundingBoxMaxY < 1.0 ? var26 : par1Block.getLight(this.world, par2, par3 + 1, par4));
+            var8.color(var14, var15, var16);
             this.method_1456(par1Block, (double)par2, (double)par3, (double)par4, par1Block.method_439(this.world, par2, par3, par4, 1));
             var9 = true;
         }
 
         int var28;
         if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3, par4 - 1, 2)) {
-            var8.method_1411(par1Block.boundingBoxMinZ > 0.0 ? var26 : par1Block.method_455(this.world, par2, par3, par4 - 1));
-            var8.method_1400(var18, var21, var24);
+            var8.setLight(par1Block.boundingBoxMinZ > 0.0 ? var26 : par1Block.getLight(this.world, par2, par3, par4 - 1));
+            var8.color(var18, var21, var24);
             var28 = par1Block.method_439(this.world, par2, par3, par4, 2);
             this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, var28);
             if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
-                var8.method_1400(var18 * par5, var21 * par6, var24 * par7);
+                var8.color(var18 * par5, var21 * par6, var24 * par7);
                 this.method_1461(par1Block, (double)par2, (double)par3, (double)par4, 38);
             }
 
@@ -1965,12 +1965,12 @@ public abstract class class_535Mixin {
         }
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2, par3, par4 + 1, 3)) {
-            var8.method_1411(par1Block.boundingBoxMaxZ < 1.0 ? var26 : par1Block.method_455(this.world, par2, par3, par4 + 1));
-            var8.method_1400(var18, var21, var24);
+            var8.setLight(par1Block.boundingBoxMaxZ < 1.0 ? var26 : par1Block.getLight(this.world, par2, par3, par4 + 1));
+            var8.color(var18, var21, var24);
             var28 = par1Block.method_439(this.world, par2, par3, par4, 3);
             this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, var28);
             if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
-                var8.method_1400(var18 * par5, var21 * par6, var24 * par7);
+                var8.color(var18 * par5, var21 * par6, var24 * par7);
                 this.method_1465(par1Block, (double)par2, (double)par3, (double)par4, 38);
             }
 
@@ -1978,12 +1978,12 @@ public abstract class class_535Mixin {
         }
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2 - 1, par3, par4, 4)) {
-            var8.method_1411(par1Block.boundingBoxMinX > 0.0 ? var26 : par1Block.method_455(this.world, par2 - 1, par3, par4));
-            var8.method_1400(var19, var22, var25);
+            var8.setLight(par1Block.boundingBoxMinX > 0.0 ? var26 : par1Block.getLight(this.world, par2 - 1, par3, par4));
+            var8.color(var19, var22, var25);
             var28 = par1Block.method_439(this.world, par2, par3, par4, 4);
             this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, var28);
             if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
-                var8.method_1400(var19 * par5, var22 * par6, var25 * par7);
+                var8.color(var19 * par5, var22 * par6, var25 * par7);
                 this.method_1468(par1Block, (double)par2, (double)par3, (double)par4, 38);
             }
 
@@ -1991,12 +1991,12 @@ public abstract class class_535Mixin {
         }
 
         if (this.field_2051 || par1Block.shouldRenderSide(this.world, par2 + 1, par3, par4, 5)) {
-            var8.method_1411(par1Block.boundingBoxMaxX < 1.0 ? var26 : par1Block.method_455(this.world, par2 + 1, par3, par4));
-            var8.method_1400(var19, var22, var25);
+            var8.setLight(par1Block.boundingBoxMaxX < 1.0 ? var26 : par1Block.getLight(this.world, par2 + 1, par3, par4));
+            var8.color(var19, var22, var25);
             var28 = par1Block.method_439(this.world, par2, par3, par4, 5);
             this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, var28);
             if (((ITessellator)Tessellator.INSTANCE).defaultTexture() && field_2047 && var28 == 3 && this.field_2049 < 0) {
-                var8.method_1400(var19 * par5, var22 * par6, var25 * par7);
+                var8.color(var19 * par5, var22 * par6, var25 * par7);
                 this.method_1470(par1Block, (double)par2, (double)par3, (double)par4, 38);
             }
 
@@ -2034,57 +2034,57 @@ public abstract class class_535Mixin {
         int var14;
         if (var6 != 0 && var6 != 31 && var6 != 16 && var6 != 26) {
             if (var6 == 1) {
-                var4.method_1405();
-                var4.method_1407(0.0F, -1.0F, 0.0F);
+                var4.begin();
+                var4.normal(0.0F, -1.0F, 0.0F);
                 this.method_1445(par1Block, par2, -0.5, -0.5, -0.5);
-                var4.method_1396();
+                var4.end();
             } else if (var6 == 19) {
-                var4.method_1405();
-                var4.method_1407(0.0F, -1.0F, 0.0F);
+                var4.begin();
+                var4.normal(0.0F, -1.0F, 0.0F);
                 par1Block.setBlockItemBounds();
                 this.method_1446(par1Block, par2, par1Block.boundingBoxMaxY, -0.5, -0.5, -0.5);
-                var4.method_1396();
+                var4.end();
             } else if (var6 == 23) {
-                var4.method_1405();
-                var4.method_1407(0.0F, -1.0F, 0.0F);
+                var4.begin();
+                var4.normal(0.0F, -1.0F, 0.0F);
                 par1Block.setBlockItemBounds();
-                var4.method_1396();
+                var4.end();
             } else if (var6 == 13) {
                 par1Block.setBlockItemBounds();
                 GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
                 var7 = 0.0625F;
-                var4.method_1405();
-                var4.method_1407(0.0F, -1.0F, 0.0F);
+                var4.begin();
+                var4.normal(0.0F, -1.0F, 0.0F);
                 this.method_1444(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(0));
-                var4.method_1396();
-                var4.method_1405();
-                var4.method_1407(0.0F, 1.0F, 0.0F);
+                var4.end();
+                var4.begin();
+                var4.normal(0.0F, 1.0F, 0.0F);
                 this.method_1456(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(1));
-                var4.method_1396();
-                var4.method_1405();
-                var4.method_1407(0.0F, 0.0F, -1.0F);
-                var4.method_1410(0.0F, 0.0F, var7);
+                var4.end();
+                var4.begin();
+                var4.normal(0.0F, 0.0F, -1.0F);
+                var4.addOffset(0.0F, 0.0F, var7);
                 this.method_1461(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(2));
-                var4.method_1410(0.0F, 0.0F, -var7);
-                var4.method_1396();
-                var4.method_1405();
-                var4.method_1407(0.0F, 0.0F, 1.0F);
-                var4.method_1410(0.0F, 0.0F, -var7);
+                var4.addOffset(0.0F, 0.0F, -var7);
+                var4.end();
+                var4.begin();
+                var4.normal(0.0F, 0.0F, 1.0F);
+                var4.addOffset(0.0F, 0.0F, -var7);
                 this.method_1465(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(3));
-                var4.method_1410(0.0F, 0.0F, var7);
-                var4.method_1396();
-                var4.method_1405();
-                var4.method_1407(-1.0F, 0.0F, 0.0F);
-                var4.method_1410(var7, 0.0F, 0.0F);
+                var4.addOffset(0.0F, 0.0F, var7);
+                var4.end();
+                var4.begin();
+                var4.normal(-1.0F, 0.0F, 0.0F);
+                var4.addOffset(var7, 0.0F, 0.0F);
                 this.method_1468(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(4));
-                var4.method_1410(-var7, 0.0F, 0.0F);
-                var4.method_1396();
-                var4.method_1405();
-                var4.method_1407(1.0F, 0.0F, 0.0F);
-                var4.method_1410(-var7, 0.0F, 0.0F);
+                var4.addOffset(-var7, 0.0F, 0.0F);
+                var4.end();
+                var4.begin();
+                var4.normal(1.0F, 0.0F, 0.0F);
+                var4.addOffset(-var7, 0.0F, 0.0F);
                 this.method_1470(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(5));
-                var4.method_1410(var7, 0.0F, 0.0F);
-                var4.method_1396();
+                var4.addOffset(var7, 0.0F, 0.0F);
+                var4.end();
                 GL11.glTranslatef(0.5F, 0.5F, 0.5F);
             } else if (var6 == 22) {
                 GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
@@ -2092,15 +2092,15 @@ public abstract class class_535Mixin {
                 class_523.field_1809.method_1320(par1Block, par2, par3);
                 GL11.glEnable(32826);
             } else if (var6 == 6) {
-                var4.method_1405();
-                var4.method_1407(0.0F, -1.0F, 0.0F);
+                var4.begin();
+                var4.normal(0.0F, -1.0F, 0.0F);
                 this.method_1457(par1Block, par2, -0.5, -0.5, -0.5);
-                var4.method_1396();
+                var4.end();
             } else if (var6 == 2) {
-                var4.method_1405();
-                var4.method_1407(0.0F, -1.0F, 0.0F);
+                var4.begin();
+                var4.normal(0.0F, -1.0F, 0.0F);
                 this.method_1443(par1Block, -0.5, -0.5, -0.5, 0.0, 0.0);
-                var4.method_1396();
+                var4.end();
             } else if (var6 == 10) {
                 for(var14 = 0; var14 < 2; ++var14) {
                     if (var14 == 0) {
@@ -2112,36 +2112,36 @@ public abstract class class_535Mixin {
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-                    var4.method_1405();
-                    var4.method_1407(0.0F, -1.0F, 0.0F);
+                    var4.begin();
+                    var4.normal(0.0F, -1.0F, 0.0F);
                     this.method_1444(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(0));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 1.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 1.0F, 0.0F);
                     this.method_1456(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(1));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 0.0F, -1.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 0.0F, -1.0F);
                     this.method_1461(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(2));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 0.0F, 1.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 0.0F, 1.0F);
                     this.method_1465(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(3));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(-1.0F, 0.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(-1.0F, 0.0F, 0.0F);
                     this.method_1468(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(4));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(1.0F, 0.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(1.0F, 0.0F, 0.0F);
                     this.method_1470(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(5));
-                    var4.method_1396();
+                    var4.end();
                     GL11.glTranslatef(0.5F, 0.5F, 0.5F);
                 }
             } else if (var6 == 27) {
                 var14 = 0;
                 GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-                var4.method_1405();
+                var4.begin();
 
                 for(int var15 = 0; var15 < 8; ++var15) {
                     byte var16 = 0;
@@ -2187,21 +2187,21 @@ public abstract class class_535Mixin {
                     float var13 = 1.0F - (float)(var14 + var17) / 16.0F;
                     var14 += var17;
                     par1Block.setBoundingBox(0.5F - var11, var13, 0.5F - var11, 0.5F + var11, var12, 0.5F + var11);
-                    var4.method_1407(0.0F, -1.0F, 0.0F);
+                    var4.normal(0.0F, -1.0F, 0.0F);
                     this.method_1444(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(0));
-                    var4.method_1407(0.0F, 1.0F, 0.0F);
+                    var4.normal(0.0F, 1.0F, 0.0F);
                     this.method_1456(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(1));
-                    var4.method_1407(0.0F, 0.0F, -1.0F);
+                    var4.normal(0.0F, 0.0F, -1.0F);
                     this.method_1461(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(2));
-                    var4.method_1407(0.0F, 0.0F, 1.0F);
+                    var4.normal(0.0F, 0.0F, 1.0F);
                     this.method_1465(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(3));
-                    var4.method_1407(-1.0F, 0.0F, 0.0F);
+                    var4.normal(-1.0F, 0.0F, 0.0F);
                     this.method_1468(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(4));
-                    var4.method_1407(1.0F, 0.0F, 0.0F);
+                    var4.normal(1.0F, 0.0F, 0.0F);
                     this.method_1470(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(5));
                 }
 
-                var4.method_1396();
+                var4.end();
                 GL11.glTranslatef(0.5F, 0.5F, 0.5F);
                 par1Block.setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
             } else if (var6 == 11) {
@@ -2225,30 +2225,30 @@ public abstract class class_535Mixin {
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-                    var4.method_1405();
-                    var4.method_1407(0.0F, -1.0F, 0.0F);
+                    var4.begin();
+                    var4.normal(0.0F, -1.0F, 0.0F);
                     this.method_1444(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(0));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 1.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 1.0F, 0.0F);
                     this.method_1456(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(1));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 0.0F, -1.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 0.0F, -1.0F);
                     this.method_1461(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(2));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 0.0F, 1.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 0.0F, 1.0F);
                     this.method_1465(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(3));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(-1.0F, 0.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(-1.0F, 0.0F, 0.0F);
                     this.method_1468(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(4));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(1.0F, 0.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(1.0F, 0.0F, 0.0F);
                     this.method_1470(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(5));
-                    var4.method_1396();
+                    var4.end();
                     GL11.glTranslatef(0.5F, 0.5F, 0.5F);
                 }
 
@@ -2270,36 +2270,36 @@ public abstract class class_535Mixin {
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-                    var4.method_1405();
-                    var4.method_1407(0.0F, -1.0F, 0.0F);
+                    var4.begin();
+                    var4.normal(0.0F, -1.0F, 0.0F);
                     this.method_1444(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(0));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 1.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 1.0F, 0.0F);
                     this.method_1456(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(1));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 0.0F, -1.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 0.0F, -1.0F);
                     this.method_1461(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(2));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 0.0F, 1.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 0.0F, 1.0F);
                     this.method_1465(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(3));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(-1.0F, 0.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(-1.0F, 0.0F, 0.0F);
                     this.method_1468(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(4));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(1.0F, 0.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(1.0F, 0.0F, 0.0F);
                     this.method_1470(par1Block, 0.0, 0.0, 0.0, par1Block.method_395(5));
-                    var4.method_1396();
+                    var4.end();
                     GL11.glTranslatef(0.5F, 0.5F, 0.5F);
                 }
 
                 par1Block.setBoundingBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
             } else {
-                FMLRenderAccessLibrary.renderInventoryBlock((class_535)(Object) this, par1Block, par2, var6);
+                FMLRenderAccessLibrary.renderInventoryBlock((BlockRenderer)(Object) this, par1Block, par2, var6);
             }
         } else {
             if (var6 == 16) {
@@ -2309,10 +2309,10 @@ public abstract class class_535Mixin {
             par1Block.setBlockItemBounds();
             GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
             GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-            var4.method_1405();
-            var4.method_1407(0.0F, -1.0F, 0.0F);
+            var4.begin();
+            var4.normal(0.0F, -1.0F, 0.0F);
             this.method_1444(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(0, par2));
-            var4.method_1396();
+            var4.end();
             if (var5 && this.field_2048) {
                 var14 = par1Block.method_459(par2);
                 var8 = (float)(var14 >> 16 & 255) / 255.0F;
@@ -2321,30 +2321,30 @@ public abstract class class_535Mixin {
                 GL11.glColor4f(var8 * par3, var9 * par3, var10 * par3, 1.0F);
             }
 
-            var4.method_1405();
-            var4.method_1407(0.0F, 1.0F, 0.0F);
+            var4.begin();
+            var4.normal(0.0F, 1.0F, 0.0F);
             this.method_1456(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(1, par2));
-            var4.method_1396();
+            var4.end();
             if (var5 && this.field_2048) {
                 GL11.glColor4f(par3, par3, par3, 1.0F);
             }
 
-            var4.method_1405();
-            var4.method_1407(0.0F, 0.0F, -1.0F);
+            var4.begin();
+            var4.normal(0.0F, 0.0F, -1.0F);
             this.method_1461(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(2, par2));
-            var4.method_1396();
-            var4.method_1405();
-            var4.method_1407(0.0F, 0.0F, 1.0F);
+            var4.end();
+            var4.begin();
+            var4.normal(0.0F, 0.0F, 1.0F);
             this.method_1465(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(3, par2));
-            var4.method_1396();
-            var4.method_1405();
-            var4.method_1407(-1.0F, 0.0F, 0.0F);
+            var4.end();
+            var4.begin();
+            var4.normal(-1.0F, 0.0F, 0.0F);
             this.method_1468(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(4, par2));
-            var4.method_1396();
-            var4.method_1405();
-            var4.method_1407(1.0F, 0.0F, 0.0F);
+            var4.end();
+            var4.begin();
+            var4.normal(1.0F, 0.0F, 0.0F);
             this.method_1470(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(5, par2));
-            var4.method_1396();
+            var4.end();
             GL11.glTranslatef(0.5F, 0.5F, 0.5F);
         }
 

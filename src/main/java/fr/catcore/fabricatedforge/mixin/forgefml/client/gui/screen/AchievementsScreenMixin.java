@@ -20,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -28,16 +27,16 @@ import java.util.Random;
 @Mixin(AchievementsScreen.class)
 public class AchievementsScreenMixin extends Screen {
 
-    @Shadow protected int field_1308;
-    @Shadow protected double field_1312;
-    @Shadow protected double field_1314;
-    @Shadow protected double field_1313;
-    @Shadow protected double field_1315;
-    @Shadow @Final private static int field_1318;
-    @Shadow @Final private static int field_1319;
-    @Shadow @Final private static int field_1320;
-    @Shadow @Final private static int field_1321;
-    @Shadow protected int field_1309;
+    @Shadow protected int originX;
+    @Shadow protected double attemptedCenterX;
+    @Shadow protected double targetCenterX;
+    @Shadow protected double attemptedCenterY;
+    @Shadow protected double targetCenterY;
+    @Shadow @Final private static int MIN_PAN_X;
+    @Shadow @Final private static int MIN_PAN_Y;
+    @Shadow @Final private static int MAX_PAN_X;
+    @Shadow @Final private static int MAX_PAN_Y;
+    @Shadow protected int originY;
     @Shadow private StatHandler handler;
     @Unique
     private int currentPage = -1;
@@ -59,7 +58,7 @@ public class AchievementsScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("RETURN"))
     private void fmlAddPageTitle(CallbackInfo ci) {
-        this.buttons.add(this.button = new OptionButtonWidget(2, (this.width - this.field_1308) / 2 + 24, this.height / 2 + 74, 125, 20, AchievementPage.getTitle(this.currentPage)));
+        this.buttons.add(this.button = new OptionButtonWidget(2, (this.width - this.originX) / 2 + 24, this.height / 2 + 74, 125, 20, AchievementPage.getTitle(this.currentPage)));
     }
 
     @Inject(method = "buttonClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;buttonClicked(Lnet/minecraft/client/gui/widget/ButtonWidget;)V"))
@@ -80,28 +79,28 @@ public class AchievementsScreenMixin extends Screen {
      */
     @Overwrite
     public void method_1095(int par1, int par2, float par3) {
-        int var4 = MathHelper.floor(this.field_1312 + (this.field_1314 - this.field_1312) * (double)par3);
-        int var5 = MathHelper.floor(this.field_1313 + (this.field_1315 - this.field_1313) * (double)par3);
-        if (var4 < field_1318) {
-            var4 = field_1318;
+        int var4 = MathHelper.floor(this.attemptedCenterX + (this.targetCenterX - this.attemptedCenterX) * (double)par3);
+        int var5 = MathHelper.floor(this.attemptedCenterY + (this.targetCenterY - this.attemptedCenterY) * (double)par3);
+        if (var4 < MIN_PAN_X) {
+            var4 = MIN_PAN_X;
         }
 
-        if (var5 < field_1319) {
-            var5 = field_1319;
+        if (var5 < MIN_PAN_Y) {
+            var5 = MIN_PAN_Y;
         }
 
-        if (var4 >= field_1320) {
-            var4 = field_1320 - 1;
+        if (var4 >= MAX_PAN_X) {
+            var4 = MAX_PAN_X - 1;
         }
 
-        if (var5 >= field_1321) {
-            var5 = field_1321 - 1;
+        if (var5 >= MAX_PAN_Y) {
+            var5 = MAX_PAN_Y - 1;
         }
 
-        int var6 = this.field_1229.field_3813.getTextureFromPath("/terrain.png");
-        int var7 = this.field_1229.field_3813.getTextureFromPath("/achievement/bg.png");
-        int var8 = (this.width - this.field_1308) / 2;
-        int var9 = (this.height - this.field_1309) / 2;
+        int var6 = this.field_1229.textureManager.getTextureFromPath("/terrain.png");
+        int var7 = this.field_1229.textureManager.getTextureFromPath("/achievement/bg.png");
+        int var8 = (this.width - this.originX) / 2;
+        int var9 = (this.height - this.originY) / 2;
         int var10 = var8 + 16;
         int var11 = var9 + 17;
         this.zOffset = 0.0F;
@@ -112,7 +111,7 @@ public class AchievementsScreenMixin extends Screen {
         GL11.glDisable(2896);
         GL11.glEnable(32826);
         GL11.glEnable(2903);
-        this.field_1229.field_3813.method_1426(var6);
+        this.field_1229.textureManager.bindTexture(var6);
         int var12 = var4 + 288 >> 4;
         int var13 = var5 + 288 >> 4;
         int var14 = (var4 + 288) % 16;
@@ -173,7 +172,7 @@ public class AchievementsScreenMixin extends Screen {
                 var26 = var32.parent.column * 24 - var4 + 11 + var10;
                 var27 = var32.parent.row * 24 - var5 + 11 + var11;
                 boolean var28 = this.handler.method_1728(var32);
-                boolean var29 = this.handler.method_1735(var32);
+                boolean var29 = this.handler.hasParentAchievement(var32);
                 var30 = Math.sin((double)(Minecraft.getTime() % 600L) / 600.0 * Math.PI * 2.0) > 0.6 ? 255 : 130;
                 var41 = -16777216;
                 if (var28) {
@@ -204,7 +203,7 @@ public class AchievementsScreenMixin extends Screen {
                 if (this.handler.method_1728(var35)) {
                     var38 = 1.0F;
                     GL11.glColor4f(var38, var38, var38, 1.0F);
-                } else if (this.handler.method_1735(var35)) {
+                } else if (this.handler.hasParentAchievement(var35)) {
                     var38 = Math.sin((double)(Minecraft.getTime() % 600L) / 600.0 * Math.PI * 2.0) < 0.6 ? 0.6F : 0.8F;
                     GL11.glColor4f(var38, var38, var38, 1.0F);
                 } else {
@@ -212,7 +211,7 @@ public class AchievementsScreenMixin extends Screen {
                     GL11.glColor4f(var38, var38, var38, 1.0F);
                 }
 
-                this.field_1229.field_3813.method_1426(var7);
+                this.field_1229.textureManager.bindTexture(var7);
                 var42 = var10 + var26;
                 var41 = var11 + var27;
                 if (var35.isChallenge()) {
@@ -221,7 +220,7 @@ public class AchievementsScreenMixin extends Screen {
                     this.drawTexture(var42 - 2, var41 - 2, 0, 202, 26, 26);
                 }
 
-                if (!this.handler.method_1735(var35)) {
+                if (!this.handler.hasParentAchievement(var35)) {
                     float var40 = 0.1F;
                     GL11.glColor4f(var40, var40, var40, 1.0F);
                     var37.field_2123 = false;
@@ -229,9 +228,9 @@ public class AchievementsScreenMixin extends Screen {
 
                 GL11.glEnable(2896);
                 GL11.glEnable(2884);
-                var37.method_1546(this.field_1229.textRenderer, this.field_1229.field_3813, var35.logo, var42 + 3, var41 + 3);
+                var37.method_1546(this.field_1229.textRenderer, this.field_1229.textureManager, var35.logo, var42 + 3, var41 + 3);
                 GL11.glDisable(2896);
-                if (!this.handler.method_1735(var35)) {
+                if (!this.handler.hasParentAchievement(var35)) {
                     var37.field_2123 = true;
                 }
 
@@ -245,8 +244,8 @@ public class AchievementsScreenMixin extends Screen {
         GL11.glDisable(2929);
         GL11.glEnable(3042);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.field_1229.field_3813.method_1426(var7);
-        this.drawTexture(var8, var9, 0, 0, this.field_1308, this.field_1309);
+        this.field_1229.textureManager.bindTexture(var7);
+        this.drawTexture(var8, var9, 0, 0, this.originX, this.originY);
         GL11.glPopMatrix();
         this.zOffset = 0.0F;
         GL11.glDepthFunc(515);
@@ -258,7 +257,7 @@ public class AchievementsScreenMixin extends Screen {
             String var36 = var32.getDescription();
             var26 = par1 + 12;
             var27 = par2 - 4;
-            if (this.handler.method_1735(var32)) {
+            if (this.handler.hasParentAchievement(var32)) {
                 var42 = Math.max(this.textRenderer.getStringWidth(var34), 120);
                 var41 = this.textRenderer.getHeightSplit(var36, var42);
                 if (this.handler.method_1728(var32)) {
@@ -278,7 +277,7 @@ public class AchievementsScreenMixin extends Screen {
                 this.textRenderer.drawTrimmed(var39, var26, var27 + 12, var42, -9416624);
             }
 
-            this.textRenderer.method_956(var34, var26, var27, this.handler.method_1735(var32) ? (var32.isChallenge() ? -128 : -1) : (var32.isChallenge() ? -8355776 : -8355712));
+            this.textRenderer.method_956(var34, var26, var27, this.handler.hasParentAchievement(var32) ? (var32.isChallenge() ? -128 : -1) : (var32.isChallenge() ? -8355776 : -8355712));
         }
 
         GL11.glEnable(2929);

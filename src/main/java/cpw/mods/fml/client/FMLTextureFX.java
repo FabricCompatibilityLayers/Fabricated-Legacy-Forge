@@ -1,15 +1,15 @@
 package cpw.mods.fml.client;
 
 import cpw.mods.fml.common.FMLLog;
-import net.minecraft.client.class_534;
-import net.minecraft.client.class_584;
+import net.minecraft.client.TextureManager;
+import net.minecraft.client.Sprite;
 import net.minecraft.client.texture.ITexturePack;
 
 import java.awt.*;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class FMLTextureFX extends class_584 implements ITextureFX {
+public class FMLTextureFX extends Sprite implements ITextureFX {
     public int tileSizeBase = 16;
     public int tileSizeSquare = 256;
     public int tileSizeMask = 15;
@@ -32,7 +32,7 @@ public class FMLTextureFX extends class_584 implements ITextureFX {
     }
 
     @Override
-    public void onTexturePackChanged(class_534 engine, ITexturePack texturepack, Dimension dimensions) {
+    public void onTexturePackChanged(TextureManager engine, ITexturePack texturepack, Dimension dimensions) {
         this.onTextureDimensionsUpdate(dimensions.width, dimensions.height);
     }
 
@@ -50,7 +50,7 @@ public class FMLTextureFX extends class_584 implements ITextureFX {
         this.field_2152 = new byte[this.tileSizeSquare << 2];
     }
 
-    public boolean unregister(class_534 engine, List<class_584> effects) {
+    public boolean unregister(TextureManager engine, List<Sprite> effects) {
         effects.remove(this);
         return true;
     }

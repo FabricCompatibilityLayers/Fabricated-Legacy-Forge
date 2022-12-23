@@ -32,7 +32,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
 
     @Shadow private static int selectedTab;
 
-    @Shadow private List slots;
+    @Shadow private List<Slot> slots;
     @Shadow private Slot deleteItemSlot;
     @Shadow private static SimpleInventory inventory;
     @Shadow private TextFieldWidget searchField;
@@ -40,8 +40,8 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
     @Shadow protected abstract void search();
 
     @Shadow private float scrollPosition;
-    @Shadow private boolean field_1379;
-    @Shadow private boolean field_1378;
+    @Shadow private boolean clicking;
+    @Shadow private boolean hasScrollbar;
 
     private int tabPage = 0;
     private int maxPages = 0;
@@ -198,16 +198,16 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
         int var8 = var6 + 18;
         int var9 = var7 + 14;
         int var10 = var8 + 112;
-        if (!this.field_1379 && var4 && par1 >= var7 && par2 >= var8 && par1 < var9 && par2 < var10) {
-            this.field_1378 = this.hasScrollbar();
+        if (!this.clicking && var4 && par1 >= var7 && par2 >= var8 && par1 < var9 && par2 < var10) {
+            this.hasScrollbar = this.hasScrollbar();
         }
 
         if (!var4) {
-            this.field_1378 = false;
+            this.hasScrollbar = false;
         }
 
-        this.field_1379 = var4;
-        if (this.field_1378) {
+        this.clicking = var4;
+        if (this.hasScrollbar) {
             this.scrollPosition = ((float)(par2 - var8) - 7.5F) / ((float)(var10 - var8) - 15.0F);
             if (this.scrollPosition < 0.0F) {
                 this.scrollPosition = 0.0F;
@@ -269,9 +269,9 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
     public void drawBackground(float par1, int par2, int par3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         DiffuseLighting.enable();
-        int var4 = this.field_1229.field_3813.getTextureFromPath("/gui/allitems.png");
+        int var4 = this.field_1229.textureManager.getTextureFromPath("/gui/allitems.png");
         ItemGroup var5 = ItemGroup.itemGroups[selectedTab];
-        int var6 = this.field_1229.field_3813.getTextureFromPath("/gui/creative_inv/" + var5.getTexture());
+        int var6 = this.field_1229.textureManager.getTextureFromPath("/gui/creative_inv/" + var5.getTexture());
         ItemGroup[] var7 = ItemGroup.itemGroups;
         int var8;
         int start = this.tabPage * 10;
@@ -283,7 +283,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
         int var9;
         for(var9 = start; var9 < var8; ++var9) {
             ItemGroup var10 = var7[var9];
-            this.field_1229.field_3813.method_1426(var4);
+            this.field_1229.textureManager.bindTexture(var4);
             if (var10 != null && var10.getIndex() != selectedTab) {
                 this.renderTabIcon(var10);
             }
@@ -291,24 +291,24 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
 
         if (this.tabPage != 0) {
             if (var5 != ItemGroup.SEARCH) {
-                this.field_1229.field_3813.method_1426(var4);
+                this.field_1229.textureManager.bindTexture(var4);
                 this.renderTabIcon(ItemGroup.SEARCH);
             }
 
             if (var5 != ItemGroup.INVENTORY) {
-                this.field_1229.field_3813.method_1426(var4);
+                this.field_1229.textureManager.bindTexture(var4);
                 this.renderTabIcon(ItemGroup.INVENTORY);
             }
         }
 
-        this.field_1229.field_3813.method_1426(var6);
+        this.field_1229.textureManager.bindTexture(var6);
         this.drawTexture(this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         this.searchField.render();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int var11 = this.x + 175;
         var8 = this.y + 18;
         var9 = var8 + 112;
-        this.field_1229.field_3813.method_1426(var4);
+        this.field_1229.textureManager.bindTexture(var4);
         if (var5 != null && ((IItemGroup)var5).getTabPage() == this.tabPage || var5 == ItemGroup.SEARCH || var5 == ItemGroup.INVENTORY) {
             if (var5.hasScrollbar()) {
                 this.drawTexture(var11, var8 + (int)((float)(var9 - var8 - 17) * this.scrollPosition), 232 + (this.hasScrollbar() ? 0 : 12), 0, 12, 15);
@@ -421,8 +421,8 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
         GL11.glEnable(2896);
         GL11.glEnable(32826);
         ItemStack var10 = ((IItemGroup)par1CreativeTabs).getIconItemStack();
-        field_1346.method_1546(this.textRenderer, this.field_1229.field_3813, var10, var7, var8);
-        field_1346.method_1549(this.textRenderer, this.field_1229.field_3813, var10, var7, var8);
+        field_1346.method_1546(this.textRenderer, this.field_1229.textureManager, var10, var7, var8);
+        field_1346.method_1549(this.textRenderer, this.field_1229.textureManager, var10, var7, var8);
         GL11.glDisable(2896);
         field_1346.zOffset = 0.0F;
         this.zOffset = 0.0F;
