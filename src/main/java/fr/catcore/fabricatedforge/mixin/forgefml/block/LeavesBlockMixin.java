@@ -19,10 +19,10 @@ import java.util.Random;
 @Mixin(LeavesBlock.class)
 public abstract class LeavesBlockMixin extends BaseLeavesBlock implements IShearable {
 
-    @Shadow protected abstract void method_326(World world, int i, int j, int k);
-
     @Shadow
     int[] neighborBlockDecayInfo;
+
+    @Shadow protected abstract void method_326(World world, int i, int j, int k);
 
     protected LeavesBlockMixin(int i, int j, Material material, boolean bl) {
         super(i, j, material, bl);

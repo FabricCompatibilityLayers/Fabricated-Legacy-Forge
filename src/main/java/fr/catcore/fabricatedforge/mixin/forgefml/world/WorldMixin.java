@@ -118,7 +118,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
 
     @Shadow public abstract void method_3668(LightType lightType, int x, int y, int z, int i);
 
-    @Shadow private List field_4535;
+    @Shadow private List<Entity> field_4535;
 
     @Shadow public abstract boolean hasEntityIn(Box box, Entity exclusion);
 

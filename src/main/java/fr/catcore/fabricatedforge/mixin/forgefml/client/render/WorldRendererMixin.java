@@ -3,6 +3,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render;
 import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import fr.catcore.fabricatedforge.mixininterface.IWorldRenderer;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.*;
 import net.minecraft.client.particle.*;
@@ -39,7 +40,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Shadow public class_535 field_1919;
 
-    @Shadow public Map blockBreakingInfos;
+    @Shadow public Map<Integer, BlockBreakingInfo> blockBreakingInfos;
 
     /**
      * @author Minecraft Forge
