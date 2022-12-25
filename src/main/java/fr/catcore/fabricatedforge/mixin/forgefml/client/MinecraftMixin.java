@@ -34,7 +34,7 @@ import net.minecraft.client.util.NetworkUtils;
 import net.minecraft.client.util.Session;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.class_481;
+import net.minecraft.entity.player.ControllablePlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Connection;
 import net.minecraft.network.IntegratedConnection;
@@ -94,7 +94,7 @@ public abstract class MinecraftMixin {
 
     @Shadow public TexturePackManager texturePackManager;
 
-    @Shadow public class_534 field_3813;
+    @Shadow public TextureManager textureManager;
 
     @Shadow protected abstract void method_2915();
 
@@ -146,7 +146,7 @@ public abstract class MinecraftMixin {
 
     @Shadow private ClientTickTracker ticker;
 
-    @Shadow public class_481 playerEntity;
+    @Shadow public ControllablePlayerEntity playerEntity;
 
     @Shadow public boolean skipGameRender;
 
@@ -213,7 +213,7 @@ public abstract class MinecraftMixin {
 
     @Shadow public abstract class_469 method_2960();
 
-    @Shadow public MobEntity field_3806;
+    @Shadow public MobEntity cameraEntity;
 
     @Shadow public abstract void setCurrentServerEntry(ServerInfo info);
 
@@ -277,10 +277,10 @@ public abstract class MinecraftMixin {
         this.currentSave = new AnvilLevelStorage(new File(this.runDirectory, "saves"));
         this.options = new GameOptions((Minecraft)(Object) this, this.runDirectory);
         this.texturePackManager = new TexturePackManager(this.runDirectory, (Minecraft)(Object) this);
-        this.field_3813 = new class_534(this.texturePackManager, this.options);
+        this.textureManager = new TextureManager(this.texturePackManager, this.options);
         this.method_2915();
-        this.textRenderer = new TextRenderer(this.options, "/font/default.png", this.field_3813, false);
-        this.shadowTextRenderer = new TextRenderer(this.options, "/font/alternate.png", this.field_3813, false);
+        this.textRenderer = new TextRenderer(this.options, "/font/default.png", this.textureManager, false);
+        this.shadowTextRenderer = new TextRenderer(this.options, "/font/alternate.png", this.textureManager, false);
         FMLClientHandler.instance().beginMinecraftLoading((Minecraft)(Object) this);
         if (this.options.language != null) {
             Language.getInstance().setCode(this.options.language);
@@ -288,11 +288,11 @@ public abstract class MinecraftMixin {
             this.textRenderer.setRightToLeft(Language.hasSpecialCharacters(this.options.language));
         }
 
-        WaterColors.setColorMap(this.field_3813.method_1421("/misc/watercolor.png"));
-        GrassColors.setColorMap(this.field_3813.method_1421("/misc/grasscolor.png"));
-        FoliageColors.setColorMap(this.field_3813.method_1421("/misc/foliagecolor.png"));
+        WaterColors.setColorMap(this.textureManager.method_1421("/misc/watercolor.png"));
+        GrassColors.setColorMap(this.textureManager.method_1421("/misc/grasscolor.png"));
+        FoliageColors.setColorMap(this.textureManager.method_1421("/misc/foliagecolor.png"));
         this.gameRenderer = new GameRenderer((Minecraft)(Object) this);
-        EntityRenderDispatcher.field_2094.field_2099 = new HeldItemRenderer((Minecraft)(Object) this);
+        EntityRenderDispatcher.INSTANCE.heldItemRenderer = new HeldItemRenderer((Minecraft)(Object) this);
         this.statHandler = new StatHandler(this.session, this.runDirectory);
         AchievementsAndCriterions.TAKING_INVENTORY.setStatFormatter(new class_334((Minecraft)(Object) this));
         this.method_2915();
@@ -312,18 +312,18 @@ public abstract class MinecraftMixin {
         GL11.glMatrixMode(5888);
         this.setGlErrorMessage("Startup");
         this.soundSystem.method_1709(this.options);
-        this.field_3813.method_1416(new class_587Forged());
-        this.field_3813.method_1416(new class_590Forged());
-        this.field_3813.method_1416(new class_588Forged());
-        this.field_3813.method_1416(new CompassSpriteForged((Minecraft)(Object) this));
-        this.field_3813.method_1416(new ClockSpriteForged((Minecraft)(Object) this));
-        this.field_3813.method_1416(new class_589Forged());
-        this.field_3813.method_1416(new class_586Forged());
-        this.field_3813.method_1416(new class_585Forged(0));
-        this.field_3813.method_1416(new class_585Forged(1));
-        this.worldRenderer = new WorldRenderer((Minecraft)(Object) this, this.field_3813);
+        this.textureManager.method_1416(new class_587Forged());
+        this.textureManager.method_1416(new class_590Forged());
+        this.textureManager.method_1416(new class_588Forged());
+        this.textureManager.method_1416(new CompassSpriteForged((Minecraft)(Object) this));
+        this.textureManager.method_1416(new ClockSpriteForged((Minecraft)(Object) this));
+        this.textureManager.method_1416(new class_589Forged());
+        this.textureManager.method_1416(new class_586Forged());
+        this.textureManager.method_1416(new class_585Forged(0));
+        this.textureManager.method_1416(new class_585Forged(1));
+        this.worldRenderer = new WorldRenderer((Minecraft)(Object) this, this.textureManager);
         GL11.glViewport(0, 0, this.width, this.height);
-        this.particleManager = new ParticleManager(this.world, this.field_3813);
+        this.particleManager = new ParticleManager(this.world, this.textureManager);
         FMLClientHandler.instance().finishMinecraftLoading();
 
         try {
@@ -385,7 +385,7 @@ public abstract class MinecraftMixin {
             this.profiler.swap("preRenderErrors");
             long var7 = System.nanoTime() - var6;
             this.setGlErrorMessage("Pre render");
-            class_535.field_2047 = this.options.fancyGraphics;
+            BlockRenderer.field_2047 = this.options.fancyGraphics;
             this.profiler.swap("sound");
             this.soundSystem.updateListener(this.playerEntity, this.ticker.tickDelta);
             this.profiler.pop();
@@ -595,10 +595,10 @@ public abstract class MinecraftMixin {
             this.interactionManager.tick();
         }
 
-        GL11.glBindTexture(3553, this.field_3813.getTextureFromPath("/terrain.png"));
+        GL11.glBindTexture(3553, this.textureManager.getTextureFromPath("/terrain.png"));
         this.profiler.swap("textures");
         if (!this.paused) {
-            this.field_3813.method_1414();
+            this.textureManager.method_1414();
         }
 
         if (this.currentScreen == null && this.playerEntity != null) {
@@ -636,7 +636,7 @@ public abstract class MinecraftMixin {
                 if (var1 <= 200L) {
                     int var3 = Mouse.getEventDWheel();
                     if (var3 != 0) {
-                        this.playerEntity.inventory.method_3134(var3);
+                        this.playerEntity.inventory.scrollInHotbar(var3);
                         if (this.options.field_953) {
                             if (var3 > 0) {
                                 var3 = 1;
@@ -688,7 +688,7 @@ public abstract class MinecraftMixin {
                             }
 
                             if (Keyboard.getEventKey() == 20 && Keyboard.isKeyDown(61)) {
-                                this.field_3813.updateAnaglyph3D();
+                                this.textureManager.updateAnaglyph3D();
                             }
 
                             if (Keyboard.getEventKey() == 33 && Keyboard.isKeyDown(61)) {
@@ -891,7 +891,7 @@ public abstract class MinecraftMixin {
             this.server = null;
         }
 
-        this.field_3806 = null;
+        this.cameraEntity = null;
         this.conection = null;
         if (this.loadingScreenRenderer != null) {
             this.loadingScreenRenderer.setTitleAndTask(par2Str);
@@ -928,7 +928,7 @@ public abstract class MinecraftMixin {
             par1WorldClient.spawnEntity(this.playerEntity);
             this.playerEntity.input = new KeyboardInput(this.options);
             this.interactionManager.copyAbilities(this.playerEntity);
-            this.field_3806 = this.playerEntity;
+            this.cameraEntity = this.playerEntity;
         } else {
             this.currentSave.clearAll();
             this.playerEntity = null;
