@@ -19,7 +19,7 @@ public class EmptyMapItemMixin {
     @Overwrite
     public ItemStack onStartUse(ItemStack par1ItemStack, World par2World, PlayerEntity par3EntityPlayer) {
         ItemStack var4 = new ItemStack(Item.MAP, 1, par2World.getIntState("map"));
-        String var5 = "map_" + var4.getMeta();
+        String var5 = "map_" + var4.getData();
         MapState var6 = new MapState(var5);
         par2World.replaceState(var5, var6);
         var6.scale = 0;
