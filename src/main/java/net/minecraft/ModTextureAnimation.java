@@ -2,7 +2,7 @@ package net.minecraft;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.FMLTextureFX;
-import net.minecraft.client.class_534;
+import net.minecraft.client.TextureManager;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -83,7 +83,7 @@ public class ModTextureAnimation extends FMLTextureFX {
         }
     }
 
-    public void method_1614(class_534 renderEngine) {
+    public void method_1614(TextureManager renderEngine) {
         GL11.glBindTexture(3553, this.field_2157);
     }
 

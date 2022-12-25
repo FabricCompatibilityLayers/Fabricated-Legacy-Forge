@@ -67,7 +67,7 @@ public class GuiControlsScrollPanel extends ListWidget {
         xPosition -= 20;
         boolean flag = this._mouseX >= xPosition && this._mouseY >= yPosition && this._mouseX < xPosition + width && this._mouseY < yPosition + height;
         int k = flag ? 2 : 1;
-        GL11.glBindTexture(3553, this.mc.field_3813.getTextureFromPath("/gui/gui.png"));
+        GL11.glBindTexture(3553, this.mc.textureManager.getTextureFromPath("/gui/gui.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         this.controls.drawTexture(xPosition, yPosition, 0, 46 + k * 20, width / 2, height);
         this.controls.drawTexture(xPosition + width / 2, yPosition, 200 - width / 2, 46 + k * 20, width / 2, height);

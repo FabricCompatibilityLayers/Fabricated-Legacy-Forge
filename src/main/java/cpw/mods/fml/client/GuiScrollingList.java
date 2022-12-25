@@ -197,28 +197,28 @@ public abstract class GuiScrollingList {
         GL11.glDisable(2896);
         GL11.glDisable(2912);
         Tessellator var18 = Tessellator.INSTANCE;
-        GL11.glBindTexture(3553, this.client.field_3813.getTextureFromPath("/gui/background.png"));
+        GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath("/gui/background.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         float var17 = 32.0F;
-        var18.method_1405();
-        var18.method_1413(2105376);
-        var18.method_1399(
+        var18.begin();
+        var18.color(2105376);
+        var18.vertex(
                 (double)this.left, (double)this.bottom, 0.0, (double)((float)this.left / var17), (double)((float)(this.bottom + (int)this.scrollDistance) / var17)
         );
-        var18.method_1399(
+        var18.vertex(
                 (double)this.right,
                 (double)this.bottom,
                 0.0,
                 (double)((float)this.right / var17),
                 (double)((float)(this.bottom + (int)this.scrollDistance) / var17)
         );
-        var18.method_1399(
+        var18.vertex(
                 (double)this.right, (double)this.top, 0.0, (double)((float)this.right / var17), (double)((float)(this.top + (int)this.scrollDistance) / var17)
         );
-        var18.method_1399(
+        var18.vertex(
                 (double)this.left, (double)this.top, 0.0, (double)((float)this.left / var17), (double)((float)(this.top + (int)this.scrollDistance) / var17)
         );
-        var18.method_1396();
+        var18.end();
         int var10 = this.top + 4 - (int)this.scrollDistance;
         if (this.field_27262_q) {
             this.func_27260_a(boxRight, var10, var18);
@@ -231,18 +231,18 @@ public abstract class GuiScrollingList {
                 if (this.field_25123_p && this.isSelected(var11)) {
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                     GL11.glDisable(3553);
-                    var18.method_1405();
-                    var18.method_1413(8421504);
-                    var18.method_1399((double)boxLeft, (double)(var19 + var13 + 2), 0.0, 0.0, 1.0);
-                    var18.method_1399((double)boxRight, (double)(var19 + var13 + 2), 0.0, 1.0, 1.0);
-                    var18.method_1399((double)boxRight, (double)(var19 - 2), 0.0, 1.0, 0.0);
-                    var18.method_1399((double)boxLeft, (double)(var19 - 2), 0.0, 0.0, 0.0);
-                    var18.method_1413(0);
-                    var18.method_1399((double)(boxLeft + 1), (double)(var19 + var13 + 1), 0.0, 0.0, 1.0);
-                    var18.method_1399((double)(boxRight - 1), (double)(var19 + var13 + 1), 0.0, 1.0, 1.0);
-                    var18.method_1399((double)(boxRight - 1), (double)(var19 - 1), 0.0, 1.0, 0.0);
-                    var18.method_1399((double)(boxLeft + 1), (double)(var19 - 1), 0.0, 0.0, 0.0);
-                    var18.method_1396();
+                    var18.begin();
+                    var18.color(8421504);
+                    var18.vertex((double)boxLeft, (double)(var19 + var13 + 2), 0.0, 0.0, 1.0);
+                    var18.vertex((double)boxRight, (double)(var19 + var13 + 2), 0.0, 1.0, 1.0);
+                    var18.vertex((double)boxRight, (double)(var19 - 2), 0.0, 1.0, 0.0);
+                    var18.vertex((double)boxLeft, (double)(var19 - 2), 0.0, 0.0, 0.0);
+                    var18.color(0);
+                    var18.vertex((double)(boxLeft + 1), (double)(var19 + var13 + 1), 0.0, 0.0, 1.0);
+                    var18.vertex((double)(boxRight - 1), (double)(var19 + var13 + 1), 0.0, 1.0, 1.0);
+                    var18.vertex((double)(boxRight - 1), (double)(var19 - 1), 0.0, 1.0, 0.0);
+                    var18.vertex((double)(boxLeft + 1), (double)(var19 - 1), 0.0, 0.0, 0.0);
+                    var18.end();
                     GL11.glEnable(3553);
                 }
 
@@ -259,22 +259,22 @@ public abstract class GuiScrollingList {
         GL11.glDisable(3008);
         GL11.glShadeModel(7425);
         GL11.glDisable(3553);
-        var18.method_1405();
-        var18.method_1402(0, 0);
-        var18.method_1399((double)this.left, (double)(this.top + var20), 0.0, 0.0, 1.0);
-        var18.method_1399((double)this.right, (double)(this.top + var20), 0.0, 1.0, 1.0);
-        var18.method_1402(0, 255);
-        var18.method_1399((double)this.right, (double)this.top, 0.0, 1.0, 0.0);
-        var18.method_1399((double)this.left, (double)this.top, 0.0, 0.0, 0.0);
-        var18.method_1396();
-        var18.method_1405();
-        var18.method_1402(0, 255);
-        var18.method_1399((double)this.left, (double)this.bottom, 0.0, 0.0, 1.0);
-        var18.method_1399((double)this.right, (double)this.bottom, 0.0, 1.0, 1.0);
-        var18.method_1402(0, 0);
-        var18.method_1399((double)this.right, (double)(this.bottom - var20), 0.0, 1.0, 0.0);
-        var18.method_1399((double)this.left, (double)(this.bottom - var20), 0.0, 0.0, 0.0);
-        var18.method_1396();
+        var18.begin();
+        var18.color(0, 0);
+        var18.vertex((double)this.left, (double)(this.top + var20), 0.0, 0.0, 1.0);
+        var18.vertex((double)this.right, (double)(this.top + var20), 0.0, 1.0, 1.0);
+        var18.color(0, 255);
+        var18.vertex((double)this.right, (double)this.top, 0.0, 1.0, 0.0);
+        var18.vertex((double)this.left, (double)this.top, 0.0, 0.0, 0.0);
+        var18.end();
+        var18.begin();
+        var18.color(0, 255);
+        var18.vertex((double)this.left, (double)this.bottom, 0.0, 0.0, 1.0);
+        var18.vertex((double)this.right, (double)this.bottom, 0.0, 1.0, 1.0);
+        var18.color(0, 0);
+        var18.vertex((double)this.right, (double)(this.bottom - var20), 0.0, 1.0, 0.0);
+        var18.vertex((double)this.left, (double)(this.bottom - var20), 0.0, 0.0, 0.0);
+        var18.end();
         int var19 = this.getContentHeight() - (this.bottom - this.top - 4);
         if (var19 > 0) {
             int var13 = (this.bottom - this.top) * (this.bottom - this.top) / this.getContentHeight();
@@ -291,27 +291,27 @@ public abstract class GuiScrollingList {
                 var14 = this.top;
             }
 
-            var18.method_1405();
-            var18.method_1402(0, 255);
-            var18.method_1399((double)scrollBarXStart, (double)this.bottom, 0.0, 0.0, 1.0);
-            var18.method_1399((double)scrollBarXEnd, (double)this.bottom, 0.0, 1.0, 1.0);
-            var18.method_1399((double)scrollBarXEnd, (double)this.top, 0.0, 1.0, 0.0);
-            var18.method_1399((double)scrollBarXStart, (double)this.top, 0.0, 0.0, 0.0);
-            var18.method_1396();
-            var18.method_1405();
-            var18.method_1402(8421504, 255);
-            var18.method_1399((double)scrollBarXStart, (double)(var14 + var13), 0.0, 0.0, 1.0);
-            var18.method_1399((double)scrollBarXEnd, (double)(var14 + var13), 0.0, 1.0, 1.0);
-            var18.method_1399((double)scrollBarXEnd, (double)var14, 0.0, 1.0, 0.0);
-            var18.method_1399((double)scrollBarXStart, (double)var14, 0.0, 0.0, 0.0);
-            var18.method_1396();
-            var18.method_1405();
-            var18.method_1402(12632256, 255);
-            var18.method_1399((double)scrollBarXStart, (double)(var14 + var13 - 1), 0.0, 0.0, 1.0);
-            var18.method_1399((double)(scrollBarXEnd - 1), (double)(var14 + var13 - 1), 0.0, 1.0, 1.0);
-            var18.method_1399((double)(scrollBarXEnd - 1), (double)var14, 0.0, 1.0, 0.0);
-            var18.method_1399((double)scrollBarXStart, (double)var14, 0.0, 0.0, 0.0);
-            var18.method_1396();
+            var18.begin();
+            var18.color(0, 255);
+            var18.vertex((double)scrollBarXStart, (double)this.bottom, 0.0, 0.0, 1.0);
+            var18.vertex((double)scrollBarXEnd, (double)this.bottom, 0.0, 1.0, 1.0);
+            var18.vertex((double)scrollBarXEnd, (double)this.top, 0.0, 1.0, 0.0);
+            var18.vertex((double)scrollBarXStart, (double)this.top, 0.0, 0.0, 0.0);
+            var18.end();
+            var18.begin();
+            var18.color(8421504, 255);
+            var18.vertex((double)scrollBarXStart, (double)(var14 + var13), 0.0, 0.0, 1.0);
+            var18.vertex((double)scrollBarXEnd, (double)(var14 + var13), 0.0, 1.0, 1.0);
+            var18.vertex((double)scrollBarXEnd, (double)var14, 0.0, 1.0, 0.0);
+            var18.vertex((double)scrollBarXStart, (double)var14, 0.0, 0.0, 0.0);
+            var18.end();
+            var18.begin();
+            var18.color(12632256, 255);
+            var18.vertex((double)scrollBarXStart, (double)(var14 + var13 - 1), 0.0, 0.0, 1.0);
+            var18.vertex((double)(scrollBarXEnd - 1), (double)(var14 + var13 - 1), 0.0, 1.0, 1.0);
+            var18.vertex((double)(scrollBarXEnd - 1), (double)var14, 0.0, 1.0, 0.0);
+            var18.vertex((double)scrollBarXStart, (double)var14, 0.0, 0.0, 0.0);
+            var18.end();
         }
 
         this.func_27257_b(mouseX, mouseY);
@@ -323,20 +323,20 @@ public abstract class GuiScrollingList {
 
     private void overlayBackground(int p_22239_1_, int p_22239_2_, int p_22239_3_, int p_22239_4_) {
         Tessellator var5 = Tessellator.INSTANCE;
-        GL11.glBindTexture(3553, this.client.field_3813.getTextureFromPath("/gui/background.png"));
+        GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath("/gui/background.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         float var6 = 32.0F;
-        var5.method_1405();
-        var5.method_1402(4210752, p_22239_4_);
-        var5.method_1399(0.0, (double)p_22239_2_, 0.0, 0.0, (double)((float)p_22239_2_ / var6));
-        var5.method_1399(
+        var5.begin();
+        var5.color(4210752, p_22239_4_);
+        var5.vertex(0.0, (double)p_22239_2_, 0.0, 0.0, (double)((float)p_22239_2_ / var6));
+        var5.vertex(
                 (double)this.listWidth + 30.0, (double)p_22239_2_, 0.0, (double)((float)(this.listWidth + 30) / var6), (double)((float)p_22239_2_ / var6)
         );
-        var5.method_1402(4210752, p_22239_3_);
-        var5.method_1399(
+        var5.color(4210752, p_22239_3_);
+        var5.vertex(
                 (double)this.listWidth + 30.0, (double)p_22239_1_, 0.0, (double)((float)(this.listWidth + 30) / var6), (double)((float)p_22239_1_ / var6)
         );
-        var5.method_1399(0.0, (double)p_22239_1_, 0.0, 0.0, (double)((float)p_22239_1_ / var6));
-        var5.method_1396();
+        var5.vertex(0.0, (double)p_22239_1_, 0.0, 0.0, (double)((float)p_22239_1_ / var6));
+        var5.end();
     }
 }

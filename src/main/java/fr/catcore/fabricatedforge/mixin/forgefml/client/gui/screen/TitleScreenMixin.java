@@ -46,7 +46,7 @@ public abstract class TitleScreenMixin extends Screen {
      */
     @Overwrite
     public void init() {
-        this.field_2278 = this.field_1229.field_3813.method_1417(new BufferedImage(256, 256, 2));
+        this.field_2278 = this.field_1229.textureManager.method_1417(new BufferedImage(256, 256, 2));
         Calendar var1 = Calendar.getInstance();
         var1.setTime(new Date());
         if (var1.get(2) + 1 == 11 && var1.get(5) == 9) {
@@ -101,7 +101,7 @@ public abstract class TitleScreenMixin extends Screen {
         byte var7 = 30;
         this.fillGradient(0, 0, this.width, this.height, -2130706433, 16777215);
         this.fillGradient(0, 0, this.width, this.height, 0, Integer.MIN_VALUE);
-        GL11.glBindTexture(3553, this.field_1229.field_3813.getTextureFromPath("/title/mclogo.png"));
+        GL11.glBindTexture(3553, this.field_1229.textureManager.getTextureFromPath("/title/mclogo.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         if ((double)this.minceraftRandomNumber < 1.0E-4) {
             this.drawTexture(var6 + 0, var7 + 0, 0, 0, 99, 44);
@@ -114,7 +114,7 @@ public abstract class TitleScreenMixin extends Screen {
             this.drawTexture(var6 + 155, var7 + 0, 0, 45, 155, 44);
         }
 
-        var4.method_1413(16777215);
+        var4.color(16777215);
         GL11.glPushMatrix();
         GL11.glTranslatef((float)(this.width / 2 + 90), 70.0F, 0.0F);
         GL11.glRotatef(-20.0F, 0.0F, 0.0F, 1.0F);

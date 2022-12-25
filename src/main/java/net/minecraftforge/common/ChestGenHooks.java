@@ -115,7 +115,7 @@ public class ChestGenHooks {
 
         while(itr.hasNext()) {
             WeightedRandomChestContent cont = itr.next();
-            if (item.equalsIgnoreNbt(((IWeightedRandomChestContent)cont).getItemStack()) || item.getMeta() == -1 && item.id == ((IWeightedRandomChestContent)cont).getItemStack().id) {
+            if (item.equalsIgnoreNbt(((IWeightedRandomChestContent)cont).getItemStack()) || item.getData() == -1 && item.id == ((IWeightedRandomChestContent)cont).getItemStack().id) {
                 itr.remove();
             }
         }

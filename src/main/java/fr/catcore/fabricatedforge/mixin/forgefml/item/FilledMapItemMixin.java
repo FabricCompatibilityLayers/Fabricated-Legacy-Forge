@@ -218,7 +218,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
         if (par1ItemStack.hasNbt() && par1ItemStack.getNbt().getBoolean("map_is_scaling")) {
             MapState var4 = Item.MAP.getMapState(par1ItemStack, par2World);
             par1ItemStack.setDamage(par2World.getIntState("map"));
-            MapState var5 = new MapState("map_" + par1ItemStack.getMeta());
+            MapState var5 = new MapState("map_" + par1ItemStack.getData());
             var5.scale = (byte)(var4.scale + 1);
             if (var5.scale > 4) {
                 var5.scale = 4;

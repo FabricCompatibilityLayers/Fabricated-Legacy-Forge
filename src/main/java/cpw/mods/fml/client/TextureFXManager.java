@@ -124,7 +124,7 @@ public class TextureFXManager {
             return id;
         } else {
             int old = GL11.glGetInteger(32873);
-            effect.method_1614(this.client.field_3813);
+            effect.bind(this.client.textureManager);
             id = GL11.glGetInteger(32873);
             GL11.glBindTexture(3553, old);
             this.effectTextures.put(effect, id);
@@ -176,7 +176,7 @@ public class TextureFXManager {
     }
 
     public void loadTextures(ITexturePack texturePack) {
-        this.registerTextureOverrides(this.client.field_3813);
+        this.registerTextureOverrides(this.client.textureManager);
     }
 
     public void registerTextureOverrides(TextureManager renderer) {
@@ -232,7 +232,7 @@ public class TextureFXManager {
         while(li.hasNext()) {
             Sprite tex = li.next();
             if (tex instanceof FMLTextureFX) {
-                if (((FMLTextureFX)tex).unregister(this.client.field_3813, effects)) {
+                if (((FMLTextureFX)tex).unregister(this.client.textureManager, effects)) {
                     li.remove();
                 }
             } else {

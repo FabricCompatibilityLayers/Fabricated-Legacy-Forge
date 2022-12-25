@@ -2,7 +2,7 @@ package net.minecraft;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.FMLTextureFX;
-import net.minecraft.client.class_534;
+import net.minecraft.client.TextureManager;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -64,7 +64,7 @@ public class ModTextureStatic extends FMLTextureFX {
         }
     }
 
-    public void method_1614(class_534 par1RenderEngine) {
+    public void method_1614(TextureManager par1RenderEngine) {
         GL11.glBindTexture(3553, par1RenderEngine.getTextureFromPath(this.targetTex));
     }
 

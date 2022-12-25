@@ -2,7 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render.entity;
 
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
-import net.minecraft.client.class_535;
+import net.minecraft.client.BlockRenderer;
 import net.minecraft.client.render.block.entity.SkullBlockEntityRenderer;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
@@ -128,7 +128,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
             if (var4 != null && var4.getItem() instanceof BlockItem) {
                 IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(var4, IItemRenderer.ItemRenderType.EQUIPPED);
                 boolean is3D = customRenderer != null && customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.EQUIPPED, var4, IItemRenderer.ItemRendererHelper.BLOCK_3D);
-                if (is3D || class_535.method_1455(Block.BLOCKS[var4.id].getBlockType())) {
+                if (is3D || BlockRenderer.method_1455(Block.BLOCKS[var4.id].getBlockType())) {
                     float var5 = 0.625F;
                     GL11.glTranslatef(0.0F, -0.25F, 0.0F);
                     GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
@@ -287,7 +287,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
                     this.dispatcher.field_2099.method_1357(par1EntityPlayer, var21, var27);
                 }
             } else {
-                this.dispatcher.field_2099.method_1357(par1EntityPlayer, var21, 0);
+                this.dispatcher.heldItemRenderer.method_1357(par1EntityPlayer, var21, 0);
             }
 
             GL11.glPopMatrix();

@@ -712,7 +712,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
             var3 = par1ItemStack.method_3429() + 16;
         } else {
             if (par1ItemStack.getItem().method_3397()) {
-                return par1ItemStack.getItem().method_3369(par1ItemStack.getMeta(), par2);
+                return par1ItemStack.getItem().method_3369(par1ItemStack.getData(), par2);
             }
 
             if (this.useItem != null && par1ItemStack.id == Item.field_4349.id) {

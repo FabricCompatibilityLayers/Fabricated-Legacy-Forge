@@ -28,7 +28,7 @@ public class SmeltingRecipeRegistryMixin implements ISmeltingRecipeRegistry {
         if (item == null) {
             return null;
         } else {
-            ItemStack ret = this.metaSmeltingList.get(Arrays.asList(item.id, item.getMeta()));
+            ItemStack ret = this.metaSmeltingList.get(Arrays.asList(item.id, item.getData()));
             return ret != null ? ret : this.ORIGINAL_PRODUCT_MAP.get(item.id);
         }
     }

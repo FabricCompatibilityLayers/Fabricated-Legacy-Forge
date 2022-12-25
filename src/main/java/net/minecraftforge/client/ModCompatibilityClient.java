@@ -88,7 +88,7 @@ public class ModCompatibilityClient {
     public static Sound audioModPickBackgroundMusic(SoundSystem soundManager, Sound current) {
         Minecraft mc = FMLClientHandler.instance().getClient();
         if (mc != null && mc.world != null && audioModSoundPoolCave != null) {
-            Entity ent = mc.field_3806;
+            Entity ent = mc.cameraEntity;
             int x = MathHelper.fastFloor(ent.x);
             int y = MathHelper.fastFloor(ent.y);
             int z = MathHelper.fastFloor(ent.z);

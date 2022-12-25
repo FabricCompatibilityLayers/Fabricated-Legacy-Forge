@@ -1,7 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render.entity;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.class_535;
+import net.minecraft.client.BlockRenderer;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.SnowGolemEntityRenderer;
 import net.minecraft.client.render.entity.model.EntityModel;
@@ -37,14 +37,14 @@ public class SnowGolemEntityRendererMixin extends MobEntityRenderer {
             this.field_2138.field_1532.preRender(0.0625F);
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(var3, IItemRenderer.ItemRenderType.EQUIPPED);
             boolean is3D = customRenderer != null && customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.EQUIPPED, var3, IItemRenderer.ItemRendererHelper.BLOCK_3D);
-            if (is3D || class_535.method_1455(Block.BLOCKS[var3.id].getBlockType())) {
+            if (is3D || BlockRenderer.method_1455(Block.BLOCKS[var3.id].getBlockType())) {
                 float var4 = 0.625F;
                 GL11.glTranslatef(0.0F, -0.34375F, 0.0F);
                 GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
                 GL11.glScalef(var4, -var4, var4);
             }
 
-            this.dispatcher.field_2099.method_1357(par1EntitySnowman, var3, 0);
+            this.dispatcher.heldItemRenderer.method_1357(par1EntitySnowman, var3, 0);
             GL11.glPopMatrix();
         }
     }

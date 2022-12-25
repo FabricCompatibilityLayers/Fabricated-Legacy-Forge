@@ -8,14 +8,14 @@ import cpw.mods.fml.common.modloader.BaseModProxy;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_469;
-import net.minecraft.client.class_535;
+import net.minecraft.client.BlockRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.class_481;
+import net.minecraft.entity.player.ControllablePlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Connection;
@@ -64,7 +64,7 @@ public abstract class BaseMod implements BaseModProxy {
     }
 
     @SideOnly(Side.CLIENT)
-    public HandledScreen getContainerGUI(class_481 player, int containerID, int x, int y, int z) {
+    public HandledScreen getContainerGUI(ControllablePlayerEntity player, int containerID, int x, int y, int z) {
         return null;
     }
 
@@ -123,11 +123,11 @@ public abstract class BaseMod implements BaseModProxy {
     }
 
     @SideOnly(Side.CLIENT)
-    public void renderInvBlock(class_535 renderer, Block block, int metadata, int modelID) {
+    public void renderInvBlock(BlockRenderer renderer, Block block, int metadata, int modelID) {
     }
 
     @SideOnly(Side.CLIENT)
-    public boolean renderWorldBlock(class_535 renderer, BlockView world, int x, int y, int z, Block block, int modelID) {
+    public boolean renderWorldBlock(BlockRenderer renderer, BlockView world, int x, int y, int z, Block block, int modelID) {
         return false;
     }
 

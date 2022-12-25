@@ -98,6 +98,6 @@ public class ShapelessOreRecipe implements RecipeType {
     }
 
     private boolean checkItemEquals(ItemStack target, ItemStack input) {
-        return target.id == input.id && (target.getMeta() == -1 || target.getMeta() == input.getMeta());
+        return target.id == input.id && (target.getData() == -1 || target.getData() == input.getData());
     }
 }

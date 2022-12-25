@@ -20,7 +20,7 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
 
-    @Shadow private Minecraft field_1860;
+    @Shadow private Minecraft client;
 
     @Shadow private float field_1831;
 
@@ -64,9 +64,9 @@ public abstract class GameRendererMixin {
 
     @Shadow protected abstract void renderFog(int i, float tickDelta);
 
-    @Shadow public abstract void method_1330(double d);
+    @Shadow public abstract void beforeWorldRender(double d);
 
-    @Shadow public abstract void method_1322(double d);
+    @Shadow public abstract void afterWorldRender(double d);
 
     @Shadow protected abstract void renderWeather(float tickDelta);
 
@@ -84,11 +84,11 @@ public abstract class GameRendererMixin {
      */
     @Overwrite
     private void updateMovementFovMultiplier() {
-        if (this.field_1860.field_3806 instanceof ClientPlayerEntity) {
-            ClientPlayerEntity var1 = (ClientPlayerEntity)this.field_1860.field_3806;
+        if (this.client.cameraEntity instanceof ClientPlayerEntity) {
+            ClientPlayerEntity var1 = (ClientPlayerEntity)this.client.cameraEntity;
             this.field_1831 = var1.method_1305();
         } else {
-            this.field_1831 = this.field_1860.playerEntity.method_1305();
+            this.field_1831 = this.client.playerEntity.method_1305();
         }
 
         this.lastMovementFovMultiplier = this.movementFovMultiplier;
@@ -104,10 +104,10 @@ public abstract class GameRendererMixin {
         if (this.field_1859 > 0) {
             return 90.0F;
         } else {
-            MobEntity var3 = this.field_1860.field_3806;
+            MobEntity var3 = this.client.cameraEntity;
             float var4 = 70.0F;
             if (par2) {
-                var4 += this.field_1860.options.fov * 40.0F;
+                var4 += this.client.options.fov * 40.0F;
                 var4 *= this.lastMovementFovMultiplier + (this.movementFovMultiplier - this.lastMovementFovMultiplier) * par1;
             }
 
@@ -116,7 +116,7 @@ public abstract class GameRendererMixin {
                 var4 /= (1.0F - 500.0F / (var5 + 500.0F)) * 2.0F + 1.0F;
             }
 
-            int var6 = Camera.method_805(this.field_1860.world, var3, par1);
+            int var6 = Camera.method_805(this.client.world, var3, par1);
             if (var6 != 0 && Block.BLOCKS[var6].material == Material.WATER) {
                 var4 = var4 * 60.0F / 70.0F;
             }
@@ -131,7 +131,7 @@ public abstract class GameRendererMixin {
      */
     @Overwrite
     private void transformCamera(float par1) {
-        MobEntity var2 = this.field_1860.field_3806;
+        MobEntity var2 = this.client.cameraEntity;
         float var3 = var2.heightOffset - 1.62F;
         double var4 = var2.prevX + (var2.x - var2.prevX) * (double)par1;
         double var6 = var2.prevY + (var2.y - var2.prevY) * (double)par1 - (double)var3;
@@ -140,14 +140,14 @@ public abstract class GameRendererMixin {
         if (var2.method_2641()) {
             var3 = (float)((double)var3 + 1.0);
             GL11.glTranslatef(0.0F, 0.3F, 0.0F);
-            if (!this.field_1860.options.field_955) {
-                ForgeHooksClient.orientBedCamera(this.field_1860, var2);
+            if (!this.client.options.field_955) {
+                ForgeHooksClient.orientBedCamera(this.client, var2);
                 GL11.glRotatef(var2.prevYaw + (var2.yaw - var2.prevYaw) * par1 + 180.0F, 0.0F, -1.0F, 0.0F);
                 GL11.glRotatef(var2.prevPitch + (var2.pitch - var2.prevPitch) * par1, -1.0F, 0.0F, 0.0F);
             }
-        } else if (this.field_1860.options.perspective > 0) {
+        } else if (this.client.options.perspective > 0) {
             double var27 = (double)(this.lastThirdPersonDistance + (this.thirdPersonDistance - this.lastThirdPersonDistance) * par1);
-            if (this.field_1860.options.field_955) {
+            if (this.client.options.field_955) {
                 float var28 = this.field_1816 + (this.field_1815 - this.field_1816) * par1;
                 float var13 = this.field_1818 + (this.field_1817 - this.field_1818) * par1;
                 GL11.glTranslatef(0.0F, 0.0F, (float)(-var27));
@@ -156,7 +156,7 @@ public abstract class GameRendererMixin {
             } else {
                 float var28 = var2.yaw;
                 float var13 = var2.pitch;
-                if (this.field_1860.options.perspective == 2) {
+                if (this.client.options.perspective == 2) {
                     var13 += 180.0F;
                 }
 
@@ -171,7 +171,7 @@ public abstract class GameRendererMixin {
                     var21 *= 0.1F;
                     var22 *= 0.1F;
                     var23 *= 0.1F;
-                    BlockHitResult var24 = this.field_1860
+                    BlockHitResult var24 = this.client
                             .world
                             .rayTrace(
                                     this.field_1860.world.getVectorPool().getOrCreate(var4 + (double)var21, var6 + (double)var22, var8 + (double)var23),
@@ -188,7 +188,7 @@ public abstract class GameRendererMixin {
                     }
                 }
 
-                if (this.field_1860.options.perspective == 2) {
+                if (this.client.options.perspective == 2) {
                     GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
                 }
 
@@ -202,7 +202,7 @@ public abstract class GameRendererMixin {
             GL11.glTranslatef(0.0F, 0.0F, -0.1F);
         }
 
-        if (!this.field_1860.options.field_955) {
+        if (!this.client.options.field_955) {
             GL11.glRotatef(var2.prevPitch + (var2.pitch - var2.prevPitch) * par1, 1.0F, 0.0F, 0.0F);
             GL11.glRotatef(var2.prevYaw + (var2.yaw - var2.prevYaw) * par1 + 180.0F, 0.0F, 1.0F, 0.0F);
         }
@@ -211,7 +211,7 @@ public abstract class GameRendererMixin {
         var4 = var2.prevX + (var2.x - var2.prevX) * (double)par1;
         var6 = var2.prevY + (var2.y - var2.prevY) * (double)par1 - (double)var3;
         var8 = var2.prevZ + (var2.z - var2.prevZ) * (double)par1;
-        this.thickFog = this.field_1860.worldRenderer.hasThickFog(var4, var6, var8, par1);
+        this.thickFog = this.client.worldRenderer.hasThickFog(var4, var6, var8, par1);
     }
 
     /**
@@ -220,29 +220,29 @@ public abstract class GameRendererMixin {
      */
     @Overwrite
     public void renderWorld(float par1, long par2) {
-        this.field_1860.profiler.push("lightTex");
+        this.client.profiler.push("lightTex");
         if (this.lightmapDirty) {
             this.updateLightmap(par1);
         }
 
         GL11.glEnable(2884);
         GL11.glEnable(2929);
-        if (this.field_1860.field_3806 == null) {
-            this.field_1860.field_3806 = this.field_1860.playerEntity;
+        if (this.client.cameraEntity == null) {
+            this.client.cameraEntity = this.client.playerEntity;
         }
 
-        this.field_1860.profiler.swap("pick");
+        this.client.profiler.swap("pick");
         this.updateTargetedEntity(par1);
-        MobEntity var4 = this.field_1860.field_3806;
-        WorldRenderer var5 = this.field_1860.worldRenderer;
-        ParticleManager var6 = this.field_1860.particleManager;
+        MobEntity var4 = this.client.cameraEntity;
+        WorldRenderer var5 = this.client.worldRenderer;
+        ParticleManager var6 = this.client.particleManager;
         double var7 = var4.prevTickX + (var4.x - var4.prevTickX) * (double)par1;
         double var9 = var4.prevTickY + (var4.y - var4.prevTickY) * (double)par1;
         double var11 = var4.prevTickZ + (var4.z - var4.prevTickZ) * (double)par1;
-        this.field_1860.profiler.swap("center");
+        this.client.profiler.swap("center");
 
         for(int var13 = 0; var13 < 2; ++var13) {
-            if (this.field_1860.options.anaglyph3d) {
+            if (this.client.options.anaglyph3d) {
                 anaglyphFilter = var13;
                 if (anaglyphFilter == 0) {
                     GL11.glColorMask(false, true, true, false);
@@ -251,36 +251,36 @@ public abstract class GameRendererMixin {
                 }
             }
 
-            this.field_1860.profiler.swap("clear");
-            GL11.glViewport(0, 0, this.field_1860.width, this.field_1860.height);
+            this.client.profiler.swap("clear");
+            GL11.glViewport(0, 0, this.client.width, this.client.height);
             this.updateFog(par1);
             GL11.glClear(16640);
             GL11.glEnable(2884);
-            this.field_1860.profiler.swap("camera");
+            this.client.profiler.swap("camera");
             this.setupCamera(par1, var13);
-            Camera.update(this.field_1860.playerEntity, this.field_1860.options.perspective == 2);
-            this.field_1860.profiler.swap("frustrum");
+            Camera.update(this.client.playerEntity, this.client.options.perspective == 2);
+            this.client.profiler.swap("frustrum");
             Frustum.getInstance();
-            if (this.field_1860.options.renderDistance < 2) {
+            if (this.client.options.renderDistance < 2) {
                 this.renderFog(-1, par1);
-                this.field_1860.profiler.swap("sky");
-                var5.method_1365(par1);
+                this.client.profiler.swap("sky");
+                var5.renderSky(par1);
             }
 
             GL11.glEnable(2912);
             this.renderFog(1, par1);
-            if (this.field_1860.options.ambientOcculsion) {
+            if (this.client.options.ambientOcculsion) {
                 GL11.glShadeModel(7425);
             }
 
-            this.field_1860.profiler.swap("culling");
+            this.client.profiler.swap("culling");
             CullingCameraView var14 = new CullingCameraView();
             var14.setPos(var7, var9, var11);
-            this.field_1860.worldRenderer.method_1373(var14, par1);
+            this.client.worldRenderer.method_1373(var14, par1);
             if (var13 == 0) {
-                this.field_1860.profiler.swap("updatechunks");
+                this.client.profiler.swap("updatechunks");
 
-                while(!this.field_1860.worldRenderer.method_1375(var4, false) && par2 != 0L) {
+                while(!this.client.worldRenderer.method_1375(var4, false) && par2 != 0L) {
                     long var15 = par2 - System.nanoTime();
                     if (var15 < 0L || var15 > 1000000000L) {
                         break;
@@ -294,30 +294,30 @@ public abstract class GameRendererMixin {
 
             this.renderFog(0, par1);
             GL11.glEnable(2912);
-            GL11.glBindTexture(3553, this.field_1860.field_3813.getTextureFromPath("/terrain.png"));
+            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath("/terrain.png"));
             DiffuseLighting.disable();
-            this.field_1860.profiler.swap("terrain");
+            this.client.profiler.swap("terrain");
             var5.method_1374(var4, 0, (double)par1);
             GL11.glShadeModel(7424);
             if (this.field_1859 == 0) {
                 DiffuseLighting.enableNormally();
-                this.field_1860.profiler.swap("entities");
+                this.client.profiler.swap("entities");
                 var5.method_1370(var4.method_2663(par1), var14, par1);
-                this.method_1330((double)par1);
-                this.field_1860.profiler.swap("litParticles");
+                this.beforeWorldRender((double)par1);
+                this.client.profiler.swap("litParticles");
                 var6.method_1299(var4, par1);
                 DiffuseLighting.disable();
                 this.renderFog(0, par1);
-                this.field_1860.profiler.swap("particles");
+                this.client.profiler.swap("particles");
                 var6.renderParticles(var4, par1);
-                this.method_1322((double)par1);
-                if (this.field_1860.result != null && var4.isSubmergedIn(Material.WATER) && var4 instanceof PlayerEntity && !this.field_1860.options.hudHidden) {
+                this.afterWorldRender((double)par1);
+                if (this.client.result != null && var4.isSubmergedIn(Material.WATER) && var4 instanceof PlayerEntity && !this.client.options.hudHidden) {
                     PlayerEntity var17 = (PlayerEntity)var4;
                     GL11.glDisable(3008);
-                    this.field_1860.profiler.swap("outline");
-                    if (!ForgeHooksClient.onDrawBlockHighlight(var5, var17, this.field_1860.result, 0, var17.inventory.getMainHandStack(), par1)) {
-                        var5.method_1376(var17, this.field_1860.result, 0, var17.inventory.getMainHandStack(), par1);
-                        var5.method_1380(var17, this.field_1860.result, 0, var17.inventory.getMainHandStack(), par1);
+                    this.client.profiler.swap("outline");
+                    if (!ForgeHooksClient.onDrawBlockHighlight(var5, var17, this.client.result, 0, var17.inventory.getMainHandStack(), par1)) {
+                        var5.method_1376(var17, this.client.result, 0, var17.inventory.getMainHandStack(), par1);
+                        var5.method_1380(var17, this.client.result, 0, var17.inventory.getMainHandStack(), par1);
                     }
 
                     GL11.glEnable(3008);
@@ -331,16 +331,16 @@ public abstract class GameRendererMixin {
             this.renderFog(0, par1);
             GL11.glEnable(3042);
             GL11.glDisable(2884);
-            GL11.glBindTexture(3553, this.field_1860.field_3813.getTextureFromPath("/terrain.png"));
-            if (this.field_1860.options.fancyGraphics) {
-                this.field_1860.profiler.swap("water");
-                if (this.field_1860.options.ambientOcculsion) {
+            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath("/terrain.png"));
+            if (this.client.options.fancyGraphics) {
+                this.client.profiler.swap("water");
+                if (this.client.options.ambientOcculsion) {
                     GL11.glShadeModel(7425);
                 }
 
                 GL11.glColorMask(false, false, false, false);
                 int var18 = var5.method_1374(var4, 1, (double)par1);
-                if (this.field_1860.options.anaglyph3d) {
+                if (this.client.options.anaglyph3d) {
                     if (anaglyphFilter == 0) {
                         GL11.glColorMask(false, true, true, true);
                     } else {
@@ -356,7 +356,7 @@ public abstract class GameRendererMixin {
 
                 GL11.glShadeModel(7424);
             } else {
-                this.field_1860.profiler.swap("water");
+                this.client.profiler.swap("water");
                 var5.method_1374(var4, 1, (double)par1);
             }
 
@@ -365,47 +365,47 @@ public abstract class GameRendererMixin {
             GL11.glDisable(3042);
             if (this.zoom == 1.0
                     && var4 instanceof PlayerEntity
-                    && !this.field_1860.options.hudHidden
-                    && this.field_1860.result != null
+                    && !this.client.options.hudHidden
+                    && this.client.result != null
                     && !var4.isSubmergedIn(Material.WATER)) {
                 PlayerEntity var17 = (PlayerEntity)var4;
                 GL11.glDisable(3008);
-                this.field_1860.profiler.swap("outline");
-                if (!ForgeHooksClient.onDrawBlockHighlight(var5, var17, this.field_1860.result, 0, var17.inventory.getMainHandStack(), par1)) {
-                    var5.method_1376(var17, this.field_1860.result, 0, var17.inventory.getMainHandStack(), par1);
-                    var5.method_1380(var17, this.field_1860.result, 0, var17.inventory.getMainHandStack(), par1);
+                this.client.profiler.swap("outline");
+                if (!ForgeHooksClient.onDrawBlockHighlight(var5, var17, this.client.result, 0, var17.inventory.getMainHandStack(), par1)) {
+                    var5.method_1376(var17, this.client.result, 0, var17.inventory.getMainHandStack(), par1);
+                    var5.method_1380(var17, this.client.result, 0, var17.inventory.getMainHandStack(), par1);
                 }
 
                 GL11.glEnable(3008);
             }
 
-            this.field_1860.profiler.swap("destroyProgress");
+            this.client.profiler.swap("destroyProgress");
             GL11.glEnable(3042);
             GL11.glBlendFunc(770, 1);
             ((IWorldRenderer)var5).drawBlockDamageTexture(Tessellator.INSTANCE, var4, par1);
             GL11.glDisable(3042);
-            this.field_1860.profiler.swap("weather");
+            this.client.profiler.swap("weather");
             this.renderWeather(par1);
             GL11.glDisable(2912);
             if (var4.y >= 128.0) {
                 this.method_4300(var5, par1);
             }
 
-            this.field_1860.profiler.swap("FRenderLast");
+            this.client.profiler.swap("FRenderLast");
             ForgeHooksClient.dispatchRenderLast(var5, par1);
-            this.field_1860.profiler.swap("hand");
+            this.client.profiler.swap("hand");
             if (this.zoom == 1.0) {
                 GL11.glClear(256);
                 this.renderHand(par1, var13);
             }
 
-            if (!this.field_1860.options.anaglyph3d) {
-                this.field_1860.profiler.pop();
+            if (!this.client.options.anaglyph3d) {
+                this.client.profiler.pop();
                 return;
             }
         }
 
         GL11.glColorMask(true, true, true, false);
-        this.field_1860.profiler.pop();
+        this.client.profiler.pop();
     }
 }

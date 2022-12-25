@@ -21,7 +21,7 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.class_481;
+import net.minecraft.entity.player.ControllablePlayerEntity;
 import net.minecraft.network.Connection;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
@@ -47,7 +47,7 @@ public class ModLoaderClientHelper implements IModLoaderSidedHelper {
     public static void handleFinishLoadingFor(ModLoaderModContainer mc, Minecraft game) {
         FMLLog.finer("Handling post startup activities for ModLoader mod %s", new Object[]{mc.getModId()});
         BaseMod mod = (BaseMod)mc.getMod();
-        Map<Class<? extends Entity>, EntityRenderer> renderers = Maps.newHashMap(EntityRenderDispatcher.field_2094.renderers);
+        Map<Class<? extends Entity>, EntityRenderer> renderers = Maps.newHashMap(EntityRenderDispatcher.INSTANCE.renderers);
 
         try {
             FMLLog.finest("Requesting renderers from basemod %s", new Object[]{mc.getModId()});
@@ -63,7 +63,7 @@ public class ModLoaderClientHelper implements IModLoaderSidedHelper {
         }
 
         MapDifference<Class<? extends Entity>, EntityRenderer> difference = Maps.difference(
-                EntityRenderDispatcher.field_2094.renderers, renderers, Equivalences.identity()
+                EntityRenderDispatcher.INSTANCE.renderers, renderers, Equivalences.identity()
         );
 
         for(Map.Entry<Class<? extends Entity>, EntityRenderer> e : difference.entriesOnlyOnLeft().entrySet()) {
@@ -124,7 +124,7 @@ public class ModLoaderClientHelper implements IModLoaderSidedHelper {
     }
 
     public Object getClientGui(BaseModProxy mod, PlayerEntity player, int ID, int x, int y, int z) {
-        return ((BaseMod)mod).getContainerGUI((class_481)player, ID, x, y, z);
+        return ((BaseMod)mod).getContainerGUI((ControllablePlayerEntity)player, ID, x, y, z);
     }
 
     public Entity spawnEntity(BaseModProxy mod, EntitySpawnPacket input, EntityRegistry.EntityRegistration er) {
