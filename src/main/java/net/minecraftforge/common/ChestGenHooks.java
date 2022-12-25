@@ -126,7 +126,7 @@ public class ChestGenHooks {
                 }
 
                 cont = (WeightedRandomChestContent)itr.next();
-            } while(!item.equalsIgnoreNbt(((IWeightedRandomChestContent)cont).getItemStack()) && (item.getMeta() != -1 || item.id != ((IWeightedRandomChestContent)cont).getItemStack().id));
+            } while(!item.equalsIgnoreNbt(((IWeightedRandomChestContent)cont).getItemStack()) && (item.getData() != -1 || item.id != ((IWeightedRandomChestContent)cont).getItemStack().id));
 
             itr.remove();
         }

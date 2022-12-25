@@ -42,7 +42,7 @@ public interface ISpecialArmor {
                         prop = armor.getProperties(entity, stack, source, damage / 25.0, x).copy();
                     } else if (stack.getItem() instanceof ArmorItem && !source.bypassesArmor()) {
                         ArmorItem armor = (ArmorItem)stack.getItem();
-                        prop = new ISpecialArmor.ArmorProperties(0, (double)armor.protection / 25.0, armor.getMaxDamage() + 1 - stack.getMeta());
+                        prop = new ISpecialArmor.ArmorProperties(0, (double)armor.protection / 25.0, armor.getMaxDamage() + 1 - stack.getData());
                     }
 
                     if (prop != null) {

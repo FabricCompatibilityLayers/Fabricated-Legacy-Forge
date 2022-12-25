@@ -170,7 +170,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
             } else if (par3ItemStack == null) {
                 return false;
             } else if (this.gameMode.isCreative()) {
-                int var17 = par3ItemStack.getMeta();
+                int var17 = par3ItemStack.getData();
                 int var15 = par3ItemStack.count;
                 boolean var16 = par3ItemStack.method_3413(par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11);
                 par3ItemStack.setDamage(var17);

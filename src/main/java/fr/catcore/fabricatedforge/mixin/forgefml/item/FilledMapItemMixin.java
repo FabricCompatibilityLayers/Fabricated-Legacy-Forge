@@ -47,10 +47,10 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
      */
     @Overwrite
     public MapState getMapState(ItemStack par1ItemStack, World par2World) {
-        MapState var4 = (MapState)par2World.getOrCreateState(MapState.class, "map_" + par1ItemStack.getMeta());
+        MapState var4 = (MapState)par2World.getOrCreateState(MapState.class, "map_" + par1ItemStack.getData());
         if (var4 == null) {
             par1ItemStack.setDamage(par2World.getIntState("map"));
-            String var3 = "map_" + par1ItemStack.getMeta();
+            String var3 = "map_" + par1ItemStack.getData();
             var4 = new MapState(var3);
             var4.xCenter = par2World.getLevelProperties().getSpawnX();
             var4.zCenter = par2World.getLevelProperties().getSpawnZ();
@@ -247,7 +247,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
     @Overwrite
     public void onCraft(ItemStack par1ItemStack, World par2World, PlayerEntity par3EntityPlayer) {
         par1ItemStack.setDamage(par2World.getIntState("map"));
-        String var4 = "map_" + par1ItemStack.getMeta();
+        String var4 = "map_" + par1ItemStack.getData();
         MapState var5 = new MapState(var4);
         par2World.replaceState(var4, var5);
         var5.xCenter = MathHelper.floor(par3EntityPlayer.x);

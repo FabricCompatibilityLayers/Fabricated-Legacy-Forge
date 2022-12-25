@@ -9,14 +9,15 @@ import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Mixin(SmeltingRecipeRegistry.class)
 public class SmeltingRecipeRegistryMixin implements ISmeltingRecipeRegistry {
 
-    @Shadow private Map ORIGINAL_PRODUCT_MAP;
+    @Shadow private Map<Integer, ItemStack> ORIGINAL_PRODUCT_MAP;
     @Unique
-    private Map metaSmeltingList = new HashMap();
+    private Map<List<Integer>, ItemStack> metaSmeltingList = new HashMap();
 
     @Override
     public void addSmelting(int itemID, int metadata, ItemStack itemstack) {
@@ -28,7 +29,7 @@ public class SmeltingRecipeRegistryMixin implements ISmeltingRecipeRegistry {
         if (item == null) {
             return null;
         } else {
-            ItemStack ret = (ItemStack)this.metaSmeltingList.get(Arrays.asList(item.id, item.getMeta()));
+            ItemStack ret = (ItemStack)this.metaSmeltingList.get(Arrays.asList(item.id, item.getData()));
             return ret != null ? ret : (ItemStack)this.ORIGINAL_PRODUCT_MAP.get(item.id);
         }
     }

@@ -118,7 +118,7 @@ public class FMLClientHandler implements IFMLSidedHandler {
             }
 
             LanguageRegistry.reloadLanguageTable();
-            RenderingRegistry.instance().loadEntityRenderers(EntityRenderDispatcher.field_2094.renderers);
+            RenderingRegistry.instance().loadEntityRenderers(EntityRenderDispatcher.INSTANCE.renderers);
             this.loading = false;
             KeyBindingRegistry.instance().uploadKeyBindingsToGame(this.client.options);
         }

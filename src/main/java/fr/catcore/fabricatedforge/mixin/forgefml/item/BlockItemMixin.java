@@ -129,7 +129,7 @@ public abstract class BlockItemMixin extends Item implements IBlockItem {
 
     @Override
     public boolean placeBlockAt(ItemStack stack, PlayerEntity player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        if (!world.method_3683(x, y, z, this.blockItemId, this.getMeta(stack.getMeta()))) {
+        if (!world.method_3683(x, y, z, this.blockItemId, this.getMeta(stack.getData()))) {
             return false;
         } else {
             if (world.getBlock(x, y, z) == this.blockItemId) {

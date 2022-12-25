@@ -181,7 +181,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
     @Overwrite
     public boolean interactItem(PlayerEntity par1EntityPlayer, World par2World, ItemStack par3ItemStack) {
         int var4 = par3ItemStack.count;
-        int var5 = par3ItemStack.getMeta();
+        int var5 = par3ItemStack.getData();
         ItemStack var6 = par3ItemStack.onStartUse(par2World, par1EntityPlayer);
         if (var6 == par3ItemStack && (var6 == null || var6.count == var4) && (var6 == null || var6.getMaxUseTime() <= 0)) {
             return false;
@@ -233,7 +233,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
                 }
 
                 if (par3ItemStack != null && !result) {
-                    int meta = par3ItemStack.getMeta();
+                    int meta = par3ItemStack.getData();
                     int size = par3ItemStack.count;
                     result = par3ItemStack.method_3413(par1EntityPlayer, par2World, par4, par5, par6, par7, par8, par9, par10);
                     if (this.isCreative()) {

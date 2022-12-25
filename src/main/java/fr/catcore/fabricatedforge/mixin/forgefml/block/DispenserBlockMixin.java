@@ -58,8 +58,8 @@ public abstract class DispenserBlockMixin {
             par1World.spawnEntity(var24);
             par1World.dispatchEvent(1002, par4, par5, par6, 0);
             return 1;
-        } else if (par2ItemStack.id == Item.POTION.id && PotionItem.isThrowable(par2ItemStack.getMeta())) {
-            PotionEntity var25 = new PotionEntity(par1World, par9, par11, par13, par2ItemStack.getMeta());
+        } else if (par2ItemStack.id == Item.POTION.id && PotionItem.isThrowable(par2ItemStack.getData())) {
+            PotionEntity var25 = new PotionEntity(par1World, par9, par11, par13, par2ItemStack.getData());
             var25.method_3233((double)par7, 0.10000000149011612, (double)par8, var15 * 1.25F, (float)var16 * 0.5F);
             par1World.spawnEntity(var25);
             par1World.dispatchEvent(1002, par4, par5, par6, 0);
@@ -71,7 +71,7 @@ public abstract class DispenserBlockMixin {
             par1World.dispatchEvent(1002, par4, par5, par6, 0);
             return 1;
         } else if (par2ItemStack.id == Item.SPAWN_EGG.id) {
-            SpawnEggItem.method_3456(par1World, par2ItemStack.getMeta(), par9 + (double)par7 * 0.3, par11 - 0.3, par13 + (double)par8 * 0.3);
+            SpawnEggItem.method_3456(par1World, par2ItemStack.getData(), par9 + (double)par7 * 0.3, par11 - 0.3, par13 + (double)par8 * 0.3);
             par1World.dispatchEvent(1002, par4, par5, par6, 0);
             return 1;
         } else if (par2ItemStack.id == Item.FIREBALL.id) {

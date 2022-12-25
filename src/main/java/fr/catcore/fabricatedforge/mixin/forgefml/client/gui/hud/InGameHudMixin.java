@@ -100,18 +100,18 @@ public abstract class InGameHudMixin extends DrawableHelper {
         boolean var11;
         if (!this.field_1166.interactionManager.isSpectator()) {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GL11.glBindTexture(3553, this.field_1166.field_3813.getTextureFromPath("/gui/gui.png"));
+            GL11.glBindTexture(3553, this.field_1166.textureManager.getTextureFromPath("/gui/gui.png"));
             PlayerInventory var31 = this.field_1166.playerEntity.inventory;
             this.zOffset = -90.0F;
             this.drawTexture(var6 / 2 - 91, var7 - 22, 0, 0, 182, 22);
             this.drawTexture(var6 / 2 - 91 - 1 + var31.selectedSlot * 20, var7 - 22 - 1, 0, 22, 24, 22);
-            GL11.glBindTexture(3553, this.field_1166.field_3813.getTextureFromPath("/gui/icons.png"));
+            GL11.glBindTexture(3553, this.field_1166.textureManager.getTextureFromPath("/gui/icons.png"));
             GL11.glEnable(3042);
             GL11.glBlendFunc(775, 769);
             this.drawTexture(var6 / 2 - 7, var7 / 2 - 7, 0, 0, 16, 16);
             GL11.glDisable(3042);
-            var11 = this.field_1166.playerEntity.field_3223 / 3 % 2 == 1;
-            if (this.field_1166.playerEntity.field_3223 < 10) {
+            var11 = this.field_1166.playerEntity.timeUntilRegen / 3 % 2 == 1;
+            if (this.field_1166.playerEntity.timeUntilRegen < 10) {
                 var11 = false;
             }
 
@@ -439,7 +439,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
                 if (var19 < var39.size()) {
                     class_482 var46 = (class_482)var39.get(var19);
                     var8.method_956(var46.field_1679, var20, var47, 16777215);
-                    this.field_1166.field_3813.method_1426(this.field_1166.field_3813.getTextureFromPath("/gui/icons.png"));
+                    this.field_1166.textureManager.bindTexture(this.field_1166.textureManager.getTextureFromPath("/gui/icons.png"));
                     byte var51 = 0;
                     byte var50;
                     if (var46.field_1680 < 0) {

@@ -29,7 +29,7 @@ public class DyeItemMixin extends Item {
         } else {
             int var11;
             int var12;
-            if (par1ItemStack.getMeta() == 15) {
+            if (par1ItemStack.getData() == 15) {
                 var11 = par3World.getBlock(par4, par5, par6);
                 BonemealEvent event = new BonemealEvent(par2EntityPlayer, par3World, var11, par4, par5, par6);
                 if (MinecraftForge.EVENT_BUS.post(event)) {
@@ -129,7 +129,7 @@ public class DyeItemMixin extends Item {
 
                     return true;
                 }
-            } else if (par1ItemStack.getMeta() == 3) {
+            } else if (par1ItemStack.getData() == 3) {
                 var11 = par3World.getBlock(par4, par5, par6);
                 var12 = par3World.getBlockData(par4, par5, par6);
                 if (var11 == Block.LOG.id && LogBlock.method_495(var12) == 3) {
