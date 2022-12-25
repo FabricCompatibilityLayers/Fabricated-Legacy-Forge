@@ -1759,30 +1759,30 @@ public abstract class class_535Mixin {
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-                    var4.method_1405();
-                    var4.method_1407(0.0F, -1.0F, 0.0F);
+                    var4.begin();
+                    var4.normal(0.0F, -1.0F, 0.0F);
                     this.method_1444(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(0, par2));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 1.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 1.0F, 0.0F);
                     this.method_1456(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(1, par2));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 0.0F, -1.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 0.0F, -1.0F);
                     this.method_1461(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(2, par2));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 0.0F, 1.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 0.0F, 1.0F);
                     this.method_1465(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(3, par2));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(-1.0F, 0.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(-1.0F, 0.0F, 0.0F);
                     this.method_1468(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(4, par2));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(1.0F, 0.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(1.0F, 0.0F, 0.0F);
                     this.method_1470(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(5, par2));
-                    var4.method_1396();
+                    var4.end();
                     GL11.glTranslatef(0.5F, 0.5F, 0.5F);
                 }
 
@@ -1805,30 +1805,30 @@ public abstract class class_535Mixin {
                     }
 
                     GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-                    var4.method_1405();
-                    var4.method_1407(0.0F, -1.0F, 0.0F);
+                    var4.begin();
+                    var4.normal(0.0F, -1.0F, 0.0F);
                     this.method_1444(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(0, par2));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 1.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 1.0F, 0.0F);
                     this.method_1456(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(1, par2));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 0.0F, -1.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 0.0F, -1.0F);
                     this.method_1461(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(2, par2));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(0.0F, 0.0F, 1.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(0.0F, 0.0F, 1.0F);
                     this.method_1465(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(3, par2));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(-1.0F, 0.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(-1.0F, 0.0F, 0.0F);
                     this.method_1468(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(4, par2));
-                    var4.method_1396();
-                    var4.method_1405();
-                    var4.method_1407(1.0F, 0.0F, 0.0F);
+                    var4.end();
+                    var4.begin();
+                    var4.normal(1.0F, 0.0F, 0.0F);
                     this.method_1470(par1Block, 0.0, 0.0, 0.0, par1Block.method_396(5, par2));
-                    var4.method_1396();
+                    var4.end();
                     GL11.glTranslatef(0.5F, 0.5F, 0.5F);
                 }
 
