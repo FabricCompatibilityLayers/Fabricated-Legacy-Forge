@@ -3,7 +3,6 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render;
 import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import fr.catcore.fabricatedforge.mixininterface.IWorldRenderer;
 import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.*;
 import net.minecraft.client.particle.*;
@@ -30,7 +29,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Shadow public Minecraft client;
 
-    @Shadow @Final public class_534 field_1910;
+    @Shadow @Final public TextureManager textureManager;
 
     @Shadow private int lightSkyList;
 

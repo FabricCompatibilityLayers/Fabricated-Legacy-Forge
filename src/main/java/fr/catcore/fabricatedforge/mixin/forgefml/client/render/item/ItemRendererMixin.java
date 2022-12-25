@@ -108,9 +108,9 @@ public abstract class ItemRendererMixin extends EntityRenderer {
 
                 this.method_1529(((IItem)Item.ITEMS[var10.id]).getTextureFile());
 
-                for(int var15 = 0; var15 < ((IItem)var10.getItem()).getRenderPasses(var10.getMeta()); ++var15) {
+                for(int var15 = 0; var15 < ((IItem)var10.getItem()).getRenderPasses(var10.getData()); ++var15) {
                     this.field_2126.setSeed(187L);
-                    int var16 = var10.getItem().method_3369(var10.getMeta(), var15);
+                    int var16 = var10.getItem().method_3369(var10.getData(), var15);
                     float var17 = 1.0F;
                     if (this.field_2123) {
                         int var18 = Item.ITEMS[var10.id].getDisplayColor(var10, var15);
@@ -155,13 +155,13 @@ public abstract class ItemRendererMixin extends EntityRenderer {
      * @reason none
      */
     @Overwrite
-    public void method_1546(TextRenderer par1FontRenderer, class_534 par2RenderEngine, ItemStack par3ItemStack, int par4, int par5) {
+    public void method_1546(TextRenderer par1FontRenderer, TextureManager par2RenderEngine, ItemStack par3ItemStack, int par4, int par5) {
         int var6 = par3ItemStack.id;
-        int var7 = par3ItemStack.getMeta();
+        int var7 = par3ItemStack.getData();
         int var8 = par3ItemStack.method_3429();
-        if (par3ItemStack.getItem() instanceof BlockItem && class_535.method_1455(Block.BLOCKS[par3ItemStack.id].getBlockType())) {
+        if (par3ItemStack.getItem() instanceof BlockItem && BlockRenderer.method_1455(Block.BLOCKS[par3ItemStack.id].getBlockType())) {
             Block var15 = Block.BLOCKS[var6];
-            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(((IBlock)var15).getTextureFile()));
+            par2RenderEngine.bindTexture(par2RenderEngine.getTextureFromPath(((IBlock)var15).getTextureFile()));
             GL11.glPushMatrix();
             GL11.glTranslatef((float)(par4 - 2), (float)(par5 + 3), -3.0F + this.zOffset);
             GL11.glScalef(10.0F, 10.0F, 10.0F);
@@ -184,7 +184,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
             GL11.glPopMatrix();
         } else if (Item.ITEMS[var6].method_3397()) {
             GL11.glDisable(2896);
-            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(((IItem)Item.ITEMS[var6]).getTextureFile()));
+            par2RenderEngine.bindTexture(par2RenderEngine.getTextureFromPath(((IItem)Item.ITEMS[var6]).getTextureFile()));
 
             for(int var9 = 0; var9 < ((IItem)Item.ITEMS[var6]).getRenderPasses(var7); ++var9) {
                 int var10 = Item.ITEMS[var6].method_3369(var7, var9);
@@ -202,7 +202,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
             GL11.glEnable(2896);
         } else if (var8 >= 0) {
             GL11.glDisable(2896);
-            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(((IItem)par3ItemStack.getItem()).getTextureFile()));
+            par2RenderEngine.bindTexture(par2RenderEngine.getTextureFromPath(((IItem)par3ItemStack.getItem()).getTextureFile()));
             int var9 = Item.ITEMS[var6].getDisplayColor(par3ItemStack, 0);
             float var17 = (float)(var9 >> 16 & 0xFF) / 255.0F;
             float var16 = (float)(var9 >> 8 & 0xFF) / 255.0F;

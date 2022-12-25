@@ -174,14 +174,14 @@ public abstract class GameRendererMixin {
                     BlockHitResult var24 = this.client
                             .world
                             .rayTrace(
-                                    this.field_1860.world.getVectorPool().getOrCreate(var4 + (double)var21, var6 + (double)var22, var8 + (double)var23),
-                                    this.field_1860
+                                    this.client.world.getVectorPool().getOrCreate(var4 + (double)var21, var6 + (double)var22, var8 + (double)var23),
+                                    this.client
                                             .world
                                             .getVectorPool()
                                             .getOrCreate(var4 - var14 + (double)var21 + (double)var23, var6 - var18 + (double)var22, var8 - var16 + (double)var23)
                             );
                     if (var24 != null) {
-                        double var25 = var24.pos.distanceTo(this.field_1860.world.getVectorPool().getOrCreate(var4, var6, var8));
+                        double var25 = var24.pos.distanceTo(this.client.world.getVectorPool().getOrCreate(var4, var6, var8));
                         if (var25 < var27) {
                             var27 = var25;
                         }

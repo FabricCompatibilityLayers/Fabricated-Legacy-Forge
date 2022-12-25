@@ -29,11 +29,11 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
      */
     @Overwrite
     public MapState getMapState(ItemStack par1ItemStack, World par2World) {
-        String var3 = "map_" + par1ItemStack.getMeta();
+        String var3 = "map_" + par1ItemStack.getData();
         MapState var4 = (MapState)par2World.getOrCreateState(MapState.class, var3);
         if (var4 == null && !par2World.isClient) {
             par1ItemStack.setDamage(par2World.getIntState("map"));
-            var3 = "map_" + par1ItemStack.getMeta();
+            var3 = "map_" + par1ItemStack.getData();
             var4 = new MapState(var3);
             var4.scale = 3;
             int var5 = 128 * (1 << var4.scale);
@@ -228,7 +228,7 @@ public class FilledMapItemMixin extends NetworkSyncedItem {
             var5.zCenter = var4.zCenter;
             ((IMapState)var5).setC(((IMapState)var4).getC());
             var5.markDirty();
-            par2World.replaceState("map_" + par1ItemStack.getMeta(), var5);
+            par2World.replaceState("map_" + par1ItemStack.getData(), var5);
         }
     }
 }

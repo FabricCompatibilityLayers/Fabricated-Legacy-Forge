@@ -43,7 +43,7 @@ public class LevelGeneratorTypeMixin implements ILevelGeneratorType {
     @Override
     public LayeredBiomeSource getChunkManager(World world) {
         if ((Object)this == FLAT) {
-            FlatWorldHelper var1 = FlatWorldHelper.method_4101(world.getLevelProperties().getGeneratorOptions());
+            FlatWorldHelper var1 = FlatWorldHelper.getHelper(world.getLevelProperties().getGeneratorOptions());
             return new SingletonBiomeSource(Biome.BIOMES[var1.getBiomeId()], 0.5F, 0.5F);
         } else {
             return new LayeredBiomeSource(world);

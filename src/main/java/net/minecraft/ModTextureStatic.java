@@ -27,7 +27,7 @@ public class ModTextureStatic extends FMLTextureFX {
 
     public ModTextureStatic(int icon, int size, String target, BufferedImage image) {
         super(icon);
-        class_534 re = FMLClientHandler.instance().getClient().field_3813;
+        TextureManager re = FMLClientHandler.instance().getClient().textureManager;
         this.targetTex = target;
         this.storedSize = size;
         this.field_2156 = size;

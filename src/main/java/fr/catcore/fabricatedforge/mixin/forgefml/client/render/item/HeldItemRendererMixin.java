@@ -275,7 +275,7 @@ public abstract class HeldItemRendererMixin {
                 PlayerEntityRenderer var26 = (PlayerEntityRenderer)var24;
                 float var13 = 1.0F;
                 GL11.glScalef(var13, var13, var13);
-                var26.method_4339(this.field_1876.playerEntity);
+                var26.method_4339(this.client.playerEntity);
                 GL11.glPopMatrix();
             }
 
@@ -391,7 +391,7 @@ public abstract class HeldItemRendererMixin {
             if (var17.getItem().method_3397()) {
                 this.method_1357(var3, var17, 0);
 
-                for(int x = 1; x < ((IItem)var17.getItem()).getRenderPasses(var17.getMeta()); ++x) {
+                for(int x = 1; x < ((IItem)var17.getItem()).getRenderPasses(var17.getData()); ++x) {
                     int var25 = Item.ITEMS[var17.id].getDisplayColor(var17, x);
                     float var13 = (float)(var25 >> 16 & 0xFF) / 255.0F;
                     float var14 = (float)(var25 >> 8 & 0xFF) / 255.0F;
@@ -430,7 +430,7 @@ public abstract class HeldItemRendererMixin {
             PlayerEntityRenderer var26 = (PlayerEntityRenderer)var24;
             float var13 = 1.0F;
             GL11.glScalef(var13, var13, var13);
-            var26.method_4339(this.field_1876.playerEntity);
+            var26.method_4339(this.client.playerEntity);
             GL11.glPopMatrix();
         }
 

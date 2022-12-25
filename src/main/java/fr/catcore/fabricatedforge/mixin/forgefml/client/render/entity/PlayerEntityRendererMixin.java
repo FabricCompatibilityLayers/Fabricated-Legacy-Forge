@@ -135,7 +135,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
                     GL11.glScalef(var5, -var5, -var5);
                 }
 
-                this.dispatcher.field_2099.method_1357(par1EntityPlayer, var4, 0);
+                this.dispatcher.heldItemRenderer.method_1357(par1EntityPlayer, var4, 0);
             } else if (var4.getItem().id == Item.SKULL.id) {
                 float var5 = 1.0625F;
                 GL11.glScalef(var5, -var5, -var5);
@@ -144,7 +144,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
                     var6 = var4.getNbt().getString("SkullOwner");
                 }
 
-                SkullBlockEntityRenderer.instance.method_4363(-0.5F, 0.0F, -0.5F, 1, 180.0F, var4.getMeta(), var6);
+                SkullBlockEntityRenderer.instance.method_4363(-0.5F, 0.0F, -0.5F, 1, 180.0F, var4.getData(), var6);
             }
 
             GL11.glPopMatrix();
@@ -234,7 +234,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
 
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(var21, IItemRenderer.ItemRenderType.EQUIPPED);
             boolean is3D = customRenderer != null && customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.EQUIPPED, var21, IItemRenderer.ItemRendererHelper.BLOCK_3D);
-            if (!(var21.getItem() instanceof BlockItem) || !is3D && !class_535.method_1455(Block.BLOCKS[var21.id].getBlockType())) {
+            if (!(var21.getItem() instanceof BlockItem) || !is3D && !BlockRenderer.method_1455(Block.BLOCKS[var21.id].getBlockType())) {
                 if (var21.id == Item.field_4349.id) {
                     float var7 = 0.625F;
                     GL11.glTranslatef(0.0F, 0.125F, 0.3125F);
@@ -278,13 +278,13 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
             }
 
             if (var21.getItem().method_3397()) {
-                for(int var27 = 0; var27 < ((IItem)var21.getItem()).getRenderPasses(var21.getMeta()); ++var27) {
+                for(int var27 = 0; var27 < ((IItem)var21.getItem()).getRenderPasses(var21.getData()); ++var27) {
                     int var26 = var21.getItem().getDisplayColor(var21, var27);
                     float var28 = (float)(var26 >> 16 & 0xFF) / 255.0F;
                     float var10 = (float)(var26 >> 8 & 0xFF) / 255.0F;
                     float var11 = (float)(var26 & 0xFF) / 255.0F;
                     GL11.glColor4f(var28, var10, var11, 1.0F);
-                    this.dispatcher.field_2099.method_1357(par1EntityPlayer, var21, var27);
+                    this.dispatcher.heldItemRenderer.method_1357(par1EntityPlayer, var21, var27);
                 }
             } else {
                 this.dispatcher.heldItemRenderer.method_1357(par1EntityPlayer, var21, 0);

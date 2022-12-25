@@ -180,7 +180,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
         int var4 = par3ItemStack.count;
         int var5 = par3ItemStack.getData();
         ItemStack var6 = par3ItemStack.onStartUse(par2World, par1EntityPlayer);
-        if (var6 != par3ItemStack || var6 != null && (var6.count != var4 || var6.getMaxUseTime() > 0 || var6.getMeta() != var5)) {
+        if (var6 != par3ItemStack || var6 != null && (var6.count != var4 || var6.getMaxUseTime() > 0 || var6.getData() != var5)) {
             par1EntityPlayer.inventory.main[par1EntityPlayer.inventory.selectedSlot] = var6;
             if (this.isCreative()) {
                 var6.count = var4;

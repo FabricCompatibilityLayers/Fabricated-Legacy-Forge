@@ -129,13 +129,13 @@ public abstract class ParticleManagerMixin implements IParticleManager {
             for(Particle entry : this.effectList.get(key)) {
                 if (entry != null) {
                     Tessellator tessallator = Tessellator.INSTANCE;
-                    tessallator.method_1405();
+                    tessallator.begin();
                     if (entry.getLayer() != 3) {
-                        tessallator.method_1411(entry.getLightmapCoordinates(par2));
+                        tessallator.setLight(entry.getLightmapCoordinates(par2));
                         entry.method_1283(tessallator, par2, var3, var7, var4, var5, var6);
                     }
 
-                    tessallator.method_1396();
+                    tessallator.end();
                 }
             }
 
@@ -161,7 +161,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
             for(int var11 = 0; var11 < this.field_1735[var9].size(); ++var11) {
                 Particle var12 = (Particle)this.field_1735[var9].get(var11);
                 if (var12 != null) {
-                    var10.method_1411(var12.getLightmapCoordinates(par2));
+                    var10.setLight(var12.getLightmapCoordinates(par2));
                     var12.method_1283(var10, par2, var4, var8, var5, var6, var7);
                 }
             }

@@ -1444,7 +1444,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
                 var9 = null;
             }
 
-            return var9 != null && var9.material == Material.PART && var10 == Block.ANVIL_BLOCK
+            return var9 != null && var9.material == Material.DECORATION && var10 == Block.ANVIL_BLOCK
                     ? true
                     : par1 > 0 && var9 == null && var10.method_428((World)(Object) this, par2, par3, par4, par6);
         }

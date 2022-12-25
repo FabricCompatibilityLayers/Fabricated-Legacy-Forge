@@ -27,7 +27,7 @@ public class ModTextureAnimation extends FMLTextureFX {
 
     public ModTextureAnimation(int icon, int size, String target, BufferedImage image, int tickCount) {
         super(icon);
-        class_534 re = FMLClientHandler.instance().getClient().field_3813;
+        TextureManager re = FMLClientHandler.instance().getClient().textureManager;
         this.targetTex = target;
         this.field_2156 = size;
         this.field_2157 = re.getTextureFromPath(target);

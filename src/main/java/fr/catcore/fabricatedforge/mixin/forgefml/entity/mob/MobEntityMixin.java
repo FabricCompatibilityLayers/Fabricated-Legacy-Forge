@@ -727,7 +727,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
                                     SwordItem var9 = (SwordItem)var14.getItem();
                                     SwordItem var10 = (SwordItem)var8.getItem();
                                     if (var9.method_4632() == var10.method_4632()) {
-                                        var15 = var14.getMeta() > var8.getMeta() || var14.hasNbt() && !var8.hasNbt();
+                                        var15 = var14.getData() > var8.getData() || var14.hasNbt() && !var8.hasNbt();
                                     } else {
                                         var15 = var9.method_4632() > var10.method_4632();
                                     }
@@ -740,7 +740,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
                                 ArmorItem var16 = (ArmorItem)var14.getItem();
                                 ArmorItem var17 = (ArmorItem)var8.getItem();
                                 if (var16.protection == var17.protection) {
-                                    var15 = var14.getMeta() > var8.getMeta() || var14.hasNbt() && !var8.hasNbt();
+                                    var15 = var14.getData() > var8.getData() || var14.hasNbt() && !var8.hasNbt();
                                 } else {
                                     var15 = var16.protection > var17.protection;
                                 }
