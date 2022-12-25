@@ -1,0 +1,1642 @@
+Changelog:
+
+Build 6.0.1.355
+	cpw
+		Update FML: 8356fe9
+		8356fe9 FUUUUUU! Stupid ticking. STOP REGISTERING TICK HANDLERS IN YOUR CONSTRUC
+		6edce8b Patch a file handle leak in RegionFileCache handling when under memory p
+		ca2bbe0 Update MCP mapings again, yay bad syncs.
+		c8941a7 Updated MCP mapings.
+		5e20c03 StartServer is now useable in merged code base.
+
+Build 6.0.1.354
+	LexManos: Update FML: Updated MCP mapings, and fixed StartServer
+
+Build 6.0.1.353
+	cpw
+		Update FML: b19e882
+		b19e882 Remove some debug, closes #123
+		9d7d32a Fix up tick management outside of mod loading phases for ModLoader mods.
+		d512539 Negatively cache failed class lookups, should help with @SideOnly performance issues.
+
+Build 6.0.1.351
+	cpw
+		This update fixes some world corrupting vanilla error handling, mostly caused by
+		mods doing something derpy. Hopefully, your world saves will thank me.
+		Note that if the mod does derp, it's data is lost. It's not FML or Minecraft Forge's
+		responsibility if "DirtChest 2000 Mk5" can't write their TileEntity method correctly
+		and you lose your 100000 diamonds.
+		Update FML: a3a93f3
+		a3a93f3 Fix some whitespace issues, handle possibly bugged entities as well
+		a7eb5dc Vanilla/mod bug fixes: CME on entity processing, TileEntity resetting chunk on save/load.
+
+Build 6.0.1.350
+	LexManos: Fix cast issue when mods attempt to make fake worlds.
+	LexManos: Fix a vanilla bug related to certian seeds and stronholds.
+	LexManos: Cleanup some debug in the script, and fix version number for the current build.
+
+Build 6.0.1.349
+	LexManos: Change logs should now be bundled with downloads, as well as avalible on files.minecraftforge.net
+
+Build 6.0.1.348
+	cpw
+		Update FML:b23081d
+		b23081d Support for ModLoader 1.4.2. Good job Risu!
+		66db4ec Add in an exclusion list tag for @Mod. The backend code isn't yet implemented, but shows the basic idea.
+
+Build 6.0.1.345
+	LexManos: Fix compile issue.
+
+Build 6.0.1.355
+	LexManos: EntityLiving.experianceValue private->public for Issue #225
+	LexManos: Changeable name tag render distance for PR: 174
+	LexManos: Remove some debug code
+	LexManos: New hook to allow items to be on multiple creative tabs PR 176
+	LexManos: Fix issue where scroll bar would not render when switching tab pages.
+	LexManos: Added metadata sensitve experience to furnace recipies and added Item callback to determine experience gain.
+	LexManos: Exposed functions for adding superflat presets.
+	LexManos: New hook to allow for custom beacon support blocks.
+	covertjaguar
+		Added vanilla wood + dye to the Ore Dict
+		Should help��simplify��interaction between mods that add similar items.
+	LexManos: Added Stonghold, Village, and Spawn biome management helpers for PR 207
+
+Build 6.0.1.343
+	ShadwDrgn: Add event to cancel or change chat messages sent from server
+	ShadwDrgn: Add event to cancel or change chat messages sent from server
+
+Build 6.0.1.342
+	LexManos: Pickblock will new compare NBT data, should allow mods to refine there result better.
+	LexManos: Added system to place all configs that use Forge's Configuration function into a single file on disc. Optional config to enable this. Blame MattaBase for this idea..
+
+Build 6.0.1.341
+	LexManos: Fix ItemSeed placement to take into account the IPlantable interface.
+
+Build 6.0.1.339
+	LexManos: Added a per-world MapStorage feature that provides a method to store data files associated with a specific world, as well as fixes the issue with villagers loosing there village. {Where villagers wouldn't go inside at night}
+
+Build 6.0.1.338
+	pahimar: Update patches/common/net/minecraft/src/SlotCrafting.java.patch
+	cpw
+		Fix the accessor and type on World.getPersistentChunksFor()
+		Update FML: 8bd98c3
+		8bd98c3 Fix a small problem with the new MCP container- it can cause NPEs. Nice.
+		34cc42d Fix up some javadoc complaints
+
+Build 6.0.1.337
+	cpw
+		MCP information is now included in Minecraft Forge. They deserve the credit :)
+		Update FML: 09eade4
+		09eade4 Update build - include MCP information in the source pack
+		9bfe7df MCP deserves lots of credit. So here it is.
+
+Build 6.0.1.332
+	cpw
+		Update FML: 8006b77
+		8006b77 Fix instantiation bug
+		7cc91cf Simple InterMod comms. Send a message using FMLInterModComms.sendMessage(). Receive messages through an @IMCCallback
+		24d7285 Update for MC 1.4.2
+		cedf3d5 Duplicate Mod display screen.
+
+Build 6.0.1.331
+	LexManos: Downgrade to FML 415, issue with new IMC system.
+
+Build 6.0.1.330
+	LexManos: Update to 1.4.2, obf stayed the same, so only small revision.
+
+Build 6.0.0.329
+	LexManos: Update World patch to fix map provider issue.
+
+Build 6.0.0.328
+	cpw
+		Add an access transform for Block.setBlockBounds - should help a lot of code that uses this.
+		Update FML: d915f39
+		d915f39 Fix typo in access transformer
+		346691c Fix the merge for forge
+		6dadc1d Fix up references to minecraftDir in obf code
+		8a55f68 Update FML for Minecraft 1.4.1
+		5645fa5 First update to 1.4.1, patches need updating.
+		ff0f00f Add some null checks, and throw descriptive exception when SideTransformer prevents a class from loading.
+
+Build 6.0.0.327
+	LexManos: Update to MC 1.4.1 and Forge 6.0.0
+
+Build 5.0.0.326
+	LexManos: Fix color issues with Dyed Leather armor.
+
+Build 5.0.0.325
+	LexManos: Remove deprecated code.
+	LexManos: Cleanup mirrored things in ShapedOreRecipe to address issue 208 and issue 210
+	LexManos: Fix up the setHandeled/setHandled for events, it is now a generalized setResult, the meaning of which is defined by each event.
+
+Build 5.0.0.324
+	LexManos: Fix NPE issue when mods add null EntityFX's to be rendererd.
+
+Build 5.0.0.323
+	cpw
+		Update FML: 7a34246
+		7a34246 Ship a client only class so the merge works both sides.
+
+Build 5.0.0.322
+	cpw: Fix install.py so it can be installed properly from src distribution
+
+Build 5.0.0.321
+	cpw
+		Update FML (entire change log since last by me): 62a6b52
+		62a6b52 Fix RenderRegistry render ID - now at 36 Fix SpriteMaps - they're running out fast! Switch to forge if you can! RenderBiped now has an armo
+		b845cde Fix up FML python script for forge
+		2c36dfb Update to MCP pre 3. Fixes some weirdnesses with explosions.
+		acd880d Merge branch '1.4'
+		e6f57e5 Update for MCP release
+		b1de0fc Remove fuzz from patches for INetworkManager change
+		ad44619 Fix for new names INetworkManager and ITexturePack. I also provide refactoring scripts for both, for your use...
+		3a94211 Add a script to ignore git complaining about the eclipse workspace changing - run when you first open the eclipse workspace
+		9386e23 Update gitignore - ignore the files that will change or be deleted
+		10b318c Add in "starter" image for eclipse workspace
+		995d5b7 Eclipse workspace fixup 2?
+		bbb12c8 Clean up eclipse workspace- part 1
+		b50058e Clean up a bit of patch fuzz
+		4a0bfa9 Fix CommonHandler for rename of the server thread class
+		4d1ec66 Update with RC2 MCP. Use the joined.exc file directly since MCP now provides it.
+		b52e3d0 Fix exception for CodecMus
+		a1011c9 Fix some compilation issues. Requires resolving the worldclient abstract method
+		0ebd4f3 Inital patch update to 1.4
+		89c68c4 Moved into EntityVillager
+		e4702cb Fix line ending detection during checkout.
+		6e64fd7 We don't need logging here...
+		014b3f4 remove useless -Server projects
+		7628c67 Updated the AT config and Marker config for 1.4 obf
+		54a322c Updae build to copy files that may decompile differently but are actually the same, and updated for 1.4 values.
+		aadf396 Update MCP Merge config.
+		81e1855 Pull in MCP's 1.4 conf files.
+		5686fd4 Fix error in merging of exec's
+
+Build 5.0.0.320
+	LexManos: FML Update for 1.4
+	LexManos: Fix recompile call for 1.4 MCP change
+	LexManos: Update Forge's AT for 1.4 names.
+	LexManos: Update for new names in 1.4
+	LexManos: Remove final from 'villageCollectionObj' to allow for delayed setup of Map source objects.
+	LexManos: Moved to common where it should be
+	LexManos: No longer needed, getRenderDistance removed because Vanilla has it now, TileEntity.func_82115_m
+	LexManos: Forge spawn protection removed, now a vanilla feature.
+	LexManos: Patches that applied with little to no functional changes.
+	LexManos: Updated Render patches, Bipeds now have the ability to have helmets, of either blocks, or the new 'heads'
+	LexManos: BlockSnow now pretty much just passes harvestBlock to it's super.
+	LexManos: Entities have a new function to determine explosion strength that they create, and implemented Item frame pickblock.
+	LexManos: Patches removing forge spawn protection, now a vanilla feature.
+	LexManos: BlockCrops is now the parent class of multiple types of crops, Wheat, Potatoes, and Carrots, updated getBlockDropped patch to reflect.
+	LexManos: Removed Forge's TileEntity.getRenderDistance, now a vanilla feature:  TileEntity.func_82115_m
+	LexManos: Teleporting has a new function (func_82448_a), made it so that you can supply your own teleporter to that function, and so it works with dimension movement factors.
+	LexManos: Updated World patch, there are a lot of new things happening int he constructor, xcomp should probably vet this.
+	LexManos: Updated Forge version to 5.0.0, for 1.4
+	LexManos: Update release script for mcp changes, releases now build.
+
+Build 4.3.5.318
+	LexManos: Remove some test code.
+	LexManos: Bump version to 4.3, final for 1.3.2
+
+Build 4.2.5.317
+	LexManos: Added ability for mods to cleanly define and display new creative tabs.
+
+Build 4.2.5.316
+	cpw: Fix classloading issue preventing JRockit from running forge
+
+Build 4.2.5.315
+	cpw
+		Forge build change: the universal jar, if installed alongside a server jar file, can be executed to load forge. No server side merging required!
+		Update FML: 989ab3e
+		989ab3e Update build.xml - add a classpath to the manifest. This means the universal jar is now a server side launche
+		88f1dc9 Typos!
+
+Build 4.2.5.314
+	cpw
+		Update FML: 470a185
+		470a185 Try and avoid an NPE in crash reports
+		0029518 Fix logging problems- log death messages and re-route the server through FML logs properly.
+		fe7a832 Fix the test mod
+		a2bc30b Coremods can be specified via the command line: fml.coreMod.load=<listofcommaseparatedclasses> This will help with developing coremods
+		bae1f74 Fix classpath for server
+		887aa27 Add in the ability for a client to throw a custom exception that displays a custom gui instead of the default error message.
+		e17f267 Update FML internal classpath. Helpful for coremod devs
+		3b9972a Don't use File to separate the last element of the path. It's a URL, they're always separated by '/'
+		5c96afe Changed RelauchLibraryManager so that files with different paths on the same baseURL can be implemented in one ILibrarySet.
+		1bca393 FML as a whole is now subject to transformers.
+		27cf731 Bonus extra character. thanks randomitter!
+		94c84cd Merge pull request #116 from Vazkii/patch-1
+		c2d3195 Add Null check to FMLClientHandler.sendPacket
+
+Build 4.2.5.313
+	LexManos: Make Item.createEntity only call when its specifically a EntityItem, not a subclass of it.
+
+Build 4.2.5.312
+	LexManos: New Block hook to determine if it can be destroied by the ender dragon, for PR 199
+	LexManos: Ship forgeversion.properties with release zips. Same format as fmlversion.properties.
+	LexManos: Dll files are binary as well.
+
+Build 4.2.5.311
+	LexManos: Fill out the .gitattributes to help with line endings how they should be.
+	LexManos: Change the Crafting damage check to be the same as the usage damage check. (>= -> >)
+	LexManos: Allow hook into GuiSlot for background rendering for PR #203
+
+Build 4.2.5.310
+	cpw: Reorganize the forced chunks a bit- offload the cost of immutable map building to the mods, rather than the chunk tick
+
+Build 4.2.5.307
+	cpw: Remove @SideOnly from removePotionEffect. Hi RichardG!
+
+Build 4.2.5.306
+	LexManos: Add some accessors to teh ChunkLoader tickets.
+
+Build 6.0.1.355
+	ohai.iChun: Fix not passing right render pass to Item class.
+
+Build 4.2.5.303
+	cpw: Fix bounds checking on chunkcache. Should fix a bunch of rp2 and maybe other extended tile entity code
+
+Build 4.2.5.302
+	cpw
+		Use weak references to the worlds in our maps. WorldClient would otherwise
+		leak all over the show.
+
+Build 4.2.5.299
+	mehvids: Add some of the model subsystem to the server. The part that doesn't require openGL. This allows for systems that dual models as collision/selection boxes etc.
+	xcompwiz
+		Improves DimensionManager
+		Adds handling for unloading and hotloading of worlds, fixes some typos,
+		allows for dimensions to be unregistered (allowing save specific
+		dimension registrations), general changes to match these features.
+	xcompwiz
+		Adds world unloading and hotloading calls
+		Adds world unloaded message to MinecraftServer on save.
+		Adds world unloading calls to chunk provider/manager when all chunks are
+		unloaded.
+		Adds call in MinecraftServer getWorld to hotload world if it isn't
+		loaded.
+	xcompwiz
+		MapStorage Fix
+		Fixes setting and timing of map storage object to allow for the
+		WorldProvider to use it during initialization
+		Forces single instance of map storage object (per side)
+		Moves setting of spawn to after provider setup
+	xcompwiz
+		Lighting Time fix
+		score_under's lighting fix that limits and fairly distributes the amount
+		of time spent on recalculating lighting
+	xcompwiz
+		Server player concurrency fix
+		Fixes an issue where the server can move a player while the player is
+		moving, process the player's last move (putting the player back where
+		they were before the teleport), and then complain about the player
+		moving too fast when the client catches up to it's new position.  Also
+		fixes this issue while riding an entity.  Only affects player
+		client/server movement sync.
+	cpw
+		Remove dead WorldInfo patch. Tweak dimension code a bit for better naming, and use the new FML world loading facilities
+		Update FML: d0e7c9e
+		d0e7c9e Update patches *sigh*
+		f3e1cac Add in a savehandler strategy for reading and writing data to the world save. This service is only available to coremods via the WorldAccessConta
+		51fb513 Add in some bukkit supporting code. Most of this is unimplemented until the bukkit coremod is complete.
+		65c9fdd New stuff on the ModLoader! Risu has been busy. Closes #114
+		c1d4458 Mods can now declare a range of minecraft versions they will run against
+	cpw: Update forge to 4.2
+
+Build 4.1.4.298
+	LexManos: Fix issue where light would not properly recalculate.
+	LexManos: Fix issue where mushrooms would not check the proper soil block.
+
+Build 4.1.4.297
+	LexManos: Expanded DungeonHooks to allow for adding of custom DungeonLoot values directly, allowing for better control over the generated items.
+
+Build 4.1.4.296
+	LexManos: Made PlayerEvent.BreakSpeed fire when a player cannot harvest the block. Issues #191 and #188
+
+Build 4.1.4.295
+	cpw: Dormant chunk cache might actually work now, and not mix chunks across worlds
+	cpw
+		Update FML: ca1ca4f
+		ca1ca4f Fix maps supporting greater than byte() dimension sizing
+		15ee8bf Fix language registry additions, closes #113
+		a08b5b1 Merge pull request #112 from pahimar/master
+		8dac58f Added ability to query the Language Registry by key and language for specific localized text, as well as loading in localization text f
+
+Build 4.1.4.294
+	LexManos: Forgot comment, you see nothing...
+
+Build 6.0.1.355
+	LexManos: Fix buckets, need to rethink for bukkit compatibility.
+	LexManos: Fix vanilla bug where the player would load chunks outside its range that would be 'abandoned' and never unloaded.
+
+Build 4.1.4.292
+	cpw
+		A few requested features of ForgeChunkManager. Mods can specify a
+		chunkloading config directly in the config file, including chunk
+		loading overrides if they wish (and the config allows them).
+		Also added "player" tied tickets that bind to the player and not the
+		mod's quota.
+
+Build 4.1.4.291
+	LexManos: Missing updates from last commit
+	LexManos: Location aware version og Block.lightOpacity for PR #169
+
+Build 4.1.4.290
+	LexManos: Fix bug in last commit that caused block to not break.
+	LexManos: Added preliminarty Player Interact event heavily based on the bukkit event.
+
+Build 4.1.4.289
+	LexManos: Add PlayerEvent.HarvestCheck and PlayerEvent.BreakSpeed for dealing with things related to a player harvesting a block.
+
+Build 4.1.4.288
+	LexManos: Fix bug where breaking texture would not apply to top/bottom of beds.
+
+Build 4.1.4.287
+	cpw: Add in an "EntityEvent.EnteringChunk" event. Useful for your entity chunkloading stuff.
+
+Build 4.1.4.286
+	LexManos: Support for no BOM.
+
+Build 4.1.4.285
+	cpw
+		Update FML: f083707
+		f083707 Extreme headless mode is back!
+
+Build 6.0.1.355
+	cpw
+		Update FML: dd39ae5
+		dd7502a Fix parent child counts showing properly. Closes #107 thanks scott!
+		b36d447 It's useMetadata, not usesMetadata. thanks myrathi and psx. closes #110
+		efb1066 Fix random shuffling when manipulating biomes by using a LinkedHashSet to preserve iteration order. Closes #111
+	cpw
+		Some more tweaks to the chunkloading code. The world.load event fires slightly later- once the entity watcher is
+		set up, so entities can actually load into the server world. Also, tickets actually save and load properly
+		and null entities don't break the server
+
+Build 4.1.4.282
+	LexManos: > != >=
+
+Build 4.1.4.281
+	LexManos: Fix Configuration.getItem to return pre-shifted values suitible to pass into Item constructors.
+
+Build 4.1.4.280
+	LexManos: Fire off PlayerDestroyItemEvent for crafting contianer items that get damaged to much. PR #183
+
+Build 4.1.4.279
+	LexManos: Configuration will now attempt to detect the encoding of the file using the Byte Order Mark.
+	LexManos
+		Changed Configuration to use overloaded methods, and changed the order of arguments to be Category, Key, Value instead of Key, Category, Value to hopefully help cleanup some peopels code.
+		Added function to get a free Item id. Will only accept values that are not in the block space. Needs testing.
+		Marked all the old getOrCreate* functions as deprecated.
+
+Build 4.1.4.278
+	cpw: Fix some errors if the config is unparseable. It should log an exception and carry on with defaults.
+	cpw: Support quoting in property and category names for almost all possible characters allowed
+	cpw: Fix up some config file handling to be even more resilient.
+
+Build 4.1.4.277
+	cpw
+		More modifications to the ticket callback handling system. There are up to two callbacks during world loading now. One to allow
+		selective preference for ticket types. The other to actually allow the mod to force chunks.
+
+Build 4.1.4.276
+	cpw
+		Update FML: dd39ae5
+		dd39ae5 Try and fix the newline capture so consoles show on the server on windows again
+		b39f808 Readd ancient searge name so dan200 and computercraft can run again. REMOVE THAT CODE DAN.
+	cpw
+		Some changes to the ForgeChunkManager.
+		Null modData is allowed now.
+		The entity id is actually properly persisted in the ticket now.
+		There is a new "orderedLoadingCallback" that allows you to provide a preferred ticket loading order in case of "excess tickets". Also, tickets
+		that are not in the returned list are now unregistered.
+		There is a way to resort the chunks in the forced chunklist on a ticket now.
+		Log the dormant cache configuration
+
+Build 4.1.4.275
+	cpw: Simple chunkloading implementation
+	cpw: Working cross dimensional implementation of chunkloading for Forge.
+	cpw
+		A lot of tweaks to the chunkloading for entity behaviour. Entities are now bound by a new
+		persistent id they *all* have, on the server side.
+	cpw: Remove @SideOnly flag for function now required on the server
+	cpw: Fix NPE in ForgeChunkManager
+	cpw: And a concurrentmodificationexception in the same code
+	cpw
+		Simple chunk caching capability for the chunkloader. This will store "dormant" chunks in a
+		configurable cache, potentially saving the cost of reloading them from disk.
+	cpw: Delete some debug code
+	cpw: Some more fixes for chunkloading code. Works very reliably now.
+	cpw
+		Update FML: a2c059e
+		a2c059e Fix missing import. Thanks ichun :(
+		19316a0 Version file searching should work for directories too
+		fbc7a5c Fix bug causing NPE if non-whitelisted player joins an FML server without FML installed
+		e9cfd10 Merge pull request #103 from iChun/patch-2
+		1424883 Fixed ModTextureAnimation not updating and not binding to correct image.
+
+Build 4.1.4.274
+	LexManos: Fix patch errors in merge of last PR -.-
+
+Build 6.0.1.355
+	mitchpetrie29
+		Update patches/common/net/minecraft/src/WorldProvider.java.patch
+		Fixed WorldProvider.setDimension() setting the wrong variable.
+
+Build 4.1.4.272
+	LexManos: Fix accedental doubling of shift, Fixes saplings/flowers planting a space above where they should
+
+Build 4.1.4.271
+	LexManos: New Plant API that allows for custom plants/soils.
+
+Build 4.1.3.270
+	LexManos: Added new hooks for modifying the items generated in chests during world gen.
+
+Build 4.1.2.269
+	LexManos: Redirect a lot of functions through WorldProvider for Mystcraft, allowing them to be overriden by the provider.
+
+Build 4.1.2.268
+	covertjaguar: Fixed Entity Item render helper
+
+Build 4.1.2.267
+	ohai.iChun: Fix pick block key giving invalid spawn eggs
+	ohai.iChun: Logic derped
+	ohai.iChun: Logic derp (again)
+
+Build 4.1.2.266
+	LexManos: Added side sensitivity to standard EntityDiggingFX, added Block functions to override spawning of digging and breaking effects.
+
+Build 4.1.2.265
+	LexManos: Fix potential NPE in Custom item entity span code caused by item id misconfigurations.
+
+Build 4.1.2.264
+	LexManos: Fix recursion issue with new special item entity code.
+
+Build 4.1.2.263
+	cpw
+		Update FML: 6c746ec
+		6c746ec Tidy code
+		aacbfeb Change version.properties search slightly, allow access to found file from the preinit event
+		1513b36 Add in the capability to read an internal version as <modid>.version from a file in the zip call versi
+		35852a6 Fix up reversed assignment for version fallback
+
+Build 4.1.2.261
+	pahimar: Changes to how PotionEffects are removed, now each PotionEffect can specify which ItemStacks can remove it's effect
+	pahimar: Inverted logic derp
+
+Build 4.1.2.260
+	LexManos: Package all of paulscode/ with the universal jar to help mac users who cant understand how to merge folders -.-
+
+Build 4.1.2.259
+	LexManos: Bump version to 4.1.2 to mark the end of todays changes.
+
+Build 4.1.1.258
+	LexManos: Fix potential issue with custom events where the constructor is not visible from the EventBus class, Should never arise but meh.
+	LexManos: Read/Write config files as UTF-8 instead of ANSII, should fix issue with Turkish people.
+	LexManos: Allow for respawning in different dimensions.
+	LexManos: Move spawn fuzz to WorldProvider/WorldType, useful for VoidWorld types.
+
+Build 4.1.1.257
+	LexManos: Make EntityJoinWorldEvent Cancelable properly
+	LexManos: Move Forge init message to MinecraftForge.initalize
+	LexManos: Add ability for Items to create custom Entities for themselves when added to the world, PR: #151
+
+Build 4.1.1.256
+	admin: Allow flight,player sensitive
+
+Build 4.1.1.255
+	LexManos: Fix a few patch fuzzes
+	LexManos: Implemented isBlockFoliage for pull #141
+
+Build 4.1.1.254
+	LexManos: Clean up some javadoc warnings.
+	LexManos
+		New EntityItem related events
+		Fixed player death event in SMP
+		Added Player specific drops event
+		Added generic EntityJoinWorldEvent
+
+Build 4.1.1.253
+	LexManos: Fix FillBucketEvent to work with stacked buckets. New change in 1.3
+	LexManos: EntityLiving variation of drawBlockDamageTexture to allow for Non-player viewports.
+
+Build 4.1.1.252
+	cpw: Remove all references to ModLoader
+	cpw
+		Update FML: 89b8236
+		89b8236 Fix onConnectionClosed not being called on the client side of a connection
+
+Build 4.1.1.251
+	LexManos: Bump version to 4.1.1
+
+Build 4.0.0.250
+	cpw
+		Update FML: 290a3c9
+		290a3c9 Merge pull request #94 from iChun/patch-1
+		9485dc5 Fix handleTinyPacket using short instead of int.
+	cpw
+		Update FML: 70f55c5
+		70f55c5 Add in exclusion list for IFMLLoadingPlugin.
+		1c1716d Remove debug cruft
+		d567f79 To properly align with packet9respawn, make packet1login's dimension an int as well
+		ecd4e46 Attempt to build some protocol negotiation, and fix packet1login so that the dimension is a short, matching packet9respawn
+		16fe495 Compatibility level is now passed from server to client - and the client tracks it. This means certain packet changes can be made without b
+		4f70d23 Fix dependency checking: you can depend on specific versions of FML
+
+Build 4.0.0.249
+	cpw
+		Update FML: e6abb69
+		e6abb69 Fix up tiny packet handler to actually work
+		e862052 Allow javax to be shipped by mods. Should allow some more modloader mods to work unaltered
+		4071ad1 Add in a little bit of protocol cleanup. Start work on allowing multiple protocol versions
+		6061964 Give a way to build the packet131mapdata packet correctly populated
+		b818769 Capture and leverage Packet131MapData
+
+Build 4.0.0.248
+	LexManos: Fix placing torches and the like on inverted woden slabs.
+
+Build 4.0.0.247
+	cpw
+		Update FML: 12bc4ba
+		12bc4ba Make console logging pass through a single logging thread to avoid concurrency problems with launchers and stuff
+		8fccfa2 Overlooked chat message support *sigh*. Fixes wierd mods that communicate through custom chat messages rather than
+		a697d04 Rescan mod packages where there was a possible mod identified to try and make sure we load it. Fixes Matmos r16
+
+Build 4.0.0.246
+	cpw
+		Update FML: 9d812f1
+		9d812f1 And handle the other way to globally register an entity
+		869cf78 Fix up mods trying to register entities outside of modloading. Now you'll get a big fat warning for doing such a de
+		186680c Fix CJB mod compatibilty for real. Gui container registration can now happen in the constructor. YUK!
+		5aed6d9 Fix compatibility with ModLoader dispenser hook. Fixes a bug with IDispenseHandler too - though it means that inter
+		3d7a665 Fix headless operation, hopefully
+
+Build 6.0.1.355
+	cpw
+		Update FML: 10a7169
+		10a7169 Fix up trying to re-add stuff to the classpath when it's already there
+		0eb7180 Fix out of range entity id handling for ModLoader mods a bit more. Thanks Herobrine mod!
+		b1b4c61 Expose GuiMerchantButton
+		359cfb5 Log a big fat warning for the developer in the case the network version is not acceptable to the mod itself. (This can happen because of a bad range specifier for example)
+
+Build 4.0.0.243
+	cpw
+		Update FML: 8656fd5
+		8656fd5 Also, make missing entity not blow things up
+		25a4dcb Fix entity tracker "update" packet not computing correctly. Should work now..
+
+Build 4.0.0.242
+	cpw
+		Update FML: c90a853
+		c90a853 Fix up addRenderer to catch exceptions from the basemod, also, addrenderer now supplies a list of the default renderers from MC for editing and will note the
+		18069d8 Change download location for FML libraries to files.minecraftforge.net, add an encoding param to the javac command line to force utf 8
+		a40f4a7 Add in random jar/zip files to the classpath. UGH this is so fucking ugly it's not funny.
+		5b6460b Use a null socket and try to prefer the result of getLocalHost in the broadcast data.
+
+Build 4.0.0.240
+	cpw
+		Update FML: c0d1348
+		c0d1348 Add in an ItemRenderer null check so FML can run render adding mods
+		482c163 Inverted boolean logic. Grrr.
+		221d113 ModLoader mob spawns use packet 24- build a bypass system so that they can still use it
+		f19f426 Remove debug statements
+
+Build 4.0.0.239
+	cpw
+		Update FML: 9dd9b6e
+		9dd9b6e Fix keybindings not loading properly from gamesettings file after restart
+
+Build 4.0.0.238
+	LexManos: Fix silk touch on Ender Chests.
+
+Build 4.0.0.237
+	t.tomkins
+		Update patches/common/net/minecraft/src/NetServerHandler.java.patch
+		 Update patches/common/net/minecraft/src/NetServerHandler.java.patch
+		Server mods can now use noClip to push players through solid blocks without is being an invalid move and resetting the players position.
+		Useful for creating semi-solid blocks like quicksand.
+
+Build 4.0.0.236
+	LexManos: Fix Issue #140: Custom items not properly having texture applied for partical effects.
+
+Build 4.0.0.235
+	cpw
+		Update FML: acb0b21
+		acb0b21 Fix so we always send received packets to handlers. Renders 250 filtering useless unless i can figure a way to intercept
+
+Build 4.0.0.234
+	cpw
+		Update FML: b17dd3c
+		b17dd3c Some tests
+		fa66ffa Fix trying to load the client side packet handler, when on the server, hopefully?
+		b106420 Fix up network negotiation - now it will disconnect with a nice error screen if there are missing mods on the client vs se
+
+Build 4.0.0.233
+	cpw
+		Update FML: c971adb
+		c971adb Fix missing addCommand call: thanks "spawnwolf test command"
+		d6326de Fix a couple of modloader mods. Thanks!
+		483667c Some functionality fixes for @Instance injection.
+		8bef512 Versions now have two flavours: the @Mod(version) which is the "programmatic version" and is used for all version relationship calculatio
+		501009c Always for ML mods into "public" class accessibility - we don't call from the default package like ML does.
+		d3d4308 Add in a convenience method for getting a class instance based on existence of another Mod. Useful for soft dependencies.
+
+Build 4.0.0.232
+	cpw
+		Update FML: 2d9b88b
+		2d9b88b And more mod sorting fixes.
+		93d5934 Actually *use* the sorted mod list
+
+Build 4.0.0.231
+	LexManos: Fix FillBucketEvent to actually fire.
+
+Build 4.0.0.230
+	LexManos: Fix call to createTileEntity on blocks that extend BlockContainer.
+
+Build 4.0.0.229
+	cpw
+		Update FML: 180a279
+		180a279 Merge pull request #82 from Chicken-Bones/master
+		cf38461 The access transformer will now handle classes in packages.
+		2c85539 Reverse the meaning of state in fml.modStates system property and fmlModState.properties - it was very derpy before. Now: true is enabled, false is disabled, as you would expect
+		d651189 Actually fix the corrupt JSON problem
+		f6a8cd5 Fix isModLoaded for "disabled" mods, and the toposort as well
+		3bde961 A bit more information for dependency handling
+		6396bea Fix up handing corrupt mcmod.info
+		6bc6def Fix a problem with network ids
+		7328610 Fix up version handling properly. Hopefully, and the error screen.
+		9fcc452 Only active mods should have dependencies checked, and be sorted
+		26302a6 Fix oddity with Screen, print a version out in the sorted list!
+
+Build 4.0.0.228
+	cpw
+		Update FML: 62dbfb3
+		62dbfb3 Fix metadata
+
+Build 4.0.0.227
+	cpw
+		Update FML: b91cbe9
+		b91cbe9 Fix up versioned dependencies so they work a lot better, also add in a missing mods screen
+
+Build 4.0.0.226
+	cpw
+		Update FML: 93b8ba9
+		93b8ba9 Fix missing serverSendPacket
+		23fdbbd Trading support for ModLoader - thanks Herblore!
+		d7a74d8 Close the jar, for cleanliness sake
+		58e6dd9 Fix authors - it'll read both "authors" and "authorList" from the json now
+		907cf2d More ML compatibility - fix up dragon mounts, thanks!
+		ee48a36 Fix up loading mods that are grandchildren of BaseMod
+		c6f362b Fix entity handling for ModLoader mods, thanks parachute mod!
+
+Build 4.0.0.225
+	LexManos: Fix lighting issue for air related to 4096 fix.
+
+Build 4.0.0.224
+	LexManos: Made helper hooks for EntityLiving and EntityRenderer hooks for Optifine
+	LexManos: Removed deprecated ISpawnHandler, that never worked in 1.3.2 so noone should be using it. See FML's replacement.
+
+Build 4.0.0.223
+	cpw
+		Update FML: 6e01c59
+		6e01c59 Merge ChickenBones pull into FML - adds player trackers
+		a0cbd37 More precise error handling when an invalid class is present
+		12323e2 Fix textures not applying properly
+		789a4a3 Fix up entity spawning - hopefully they won't warp anymore.
+		a87d045 Add in a helper on the server start event for adding commands to the server.
+		82e9309 Move villager trading hook up a bit. thanks sengir.
+		8deaa37 Fix LAN to try hard to find a real network interface, not just localhost most of the time
+		b5363e3 Update build to not bother building client jar. Universal is everything now.
+
+Build 4.0.0.222
+	LexManos: Pickblock now replaces the currently selected item if it could not find a empty space.
+
+Build 4.0.0.221
+	dvrabel
+		Use original minecart drag co-efficients for regular carts.
+		Since the amount of speed lost is 1 - co-eff, rounding 0.997 to 0.99
+		makes a big difference to the distance a minecart will travel (less
+		than half of the distance in vanilla 1.25).
+
+Build 6.0.1.355
+	cpw
+		Update FML: 28a10ac
+		28a10ac Null protection for ticks() -- probably should uses EnumSet.noneOf() but you can also use null now to stop ticking. closes #77
+		c349d51 Automatic mod entity registration into the global entity list. This might break entity code out there, sorry, but this way for most entities you no longer need to manage the global mod entity stuff at all. just remove it. FML will take care of the rest (note, worlds won't load the old entities)
+		ef01745 Add in a utility function that *might* tell you the context you're running in on either client or server: FMLCommonHandler.getEffectiveSide
+		c97d6a6 Try and stop sendPacketToAllAround from being crashy
+		2062273 Mods can add mod specific crash information to the crash report now Forge needs to implement MinecraftForge.getCrashCallable
+		6e6436e Fix up dispenser handling, add in new params for the dispenser: breaks IDispenseHandler, sorry
+		38f4a22 Fix up MLProp handling for null info
+		3a8b047 GUIs working in FML for ML mods
+		52483ee Support gui opening for Shelf mod
+		dce1cbc Updated MCPMerger to annotate unique classes with there sides, and SideTransformer to null out any class that is loaded on the wrong side.
+
+Build 6.0.1.355
+	LexManos
+		Update FML to 304:
+		Client side only classes are properly annotated, and denied loading on server side
+		Added missing client side only ModLoader.getContainerGUI function
+		Guis work for FML mods now.
+		Fixed MLProp handeling of null info
+		Fix up dispenser handling, add in new params for the dispenser: breaks IDispenseHandler, sorry
+
+Build 4.0.0.217
+	LexManos: Updated onItemUseFirst call to include the new hit vector information, and updated readme.
+
+Build 4.0.0.216
+	LexManos: Added missing server side onBlockStartBreak hook, fixes Sheers.
+
+Build 4.0.0.215
+	LexManos: Fixed Forge's 4096 block filler initalization.
+
+Build 4.0.0.214
+	LexManos: Fix IndexOutOfBounds exception, Major derp.
+
+Build 4.0.0.213
+	cpw
+		Update FML: 46c563a
+		46c563a Expose more of the village construction parts for building village piece
+		1380c2e Allow access to the type "ComponentVillage"
+		71a3818 Documentation and registration for villager stuff
+		e3a343c Fix javadoc derp
+		195b1a0 Villager trading, manipulation and village enhancement. Still WIP but sh
+		69e66c3 Fix exception based logging to actually log the exception!
+
+Build 4.0.0.212
+	cpw
+		Update FML:
+		885637c Fix up keyboard events for modloader
+		90a7c8f Pickup notification
+
+Build 4.0.0.211
+	LexManos: Changed order in which EntityItemPickupEvent is called, it will no longer be called if the 'delay' on the item is still active. Also EntityItems that are in the world with invalid item stacks will now kill themselves.
+
+Build 4.0.0.210
+	mitchel.pyl: Adds a SkyProvider class that can handle the rendering of the sky
+
+Build 4.0.0.209
+	cpw
+		Move and add a few AT for forge: rail and leaves stuff mostly
+		Update FML (reorg some AT for FML vs forge):
+		2171c0c Update fml_at with new transforms
+		924a6f9 Fix derp where client sided packet handler would be created on a dedi server env
+		ad4cffb Add in support for "dummy" keybindings- ones that are added to the list but never do anything so the mod can handle it all themselves.
+		cf77ffb Don't complain about minecraft source code being in "net.minecraft.src". Derp.
+		b2fdcd7 Fix ModLoader add XP Smelting
+		094ce2a Actually register client/server packetspecs as their correct sides! fixes #71
+
+Build 4.0.0.208
+	LexManos: Fix MC packet bugs for remote servers that use blocks with ids > 256
+
+Build 4.0.0.207
+	LexManos: Fixed bug in EntityMinecart that would cause them to fall through the ground at the bottom of slopes.
+
+Build 4.0.0.206
+	cpw
+		Update FML:
+		e8cb2c1 Error if channel name is invalid - either too short, or too long
+		9c6c56c Add a connect and read timeout for downloading libraries. This should really stop the "waiting forever" at startup screen.
+		0d5affe GIANT FAT WARNINGS if you use any code in net.minecraft.src or any subpackage thereof. Get it out of there, now!
+		13f210f Fix up ML GUI ticking. Thanks sharose!
+
+Build 4.0.0.205
+	LexManos: Fixed EntityEvent.CanUpdate
+	LexManos: Fix EntityItemPickupEvent 'pop' sound spamming.
+	LexManos: Added timeout to MC's download of sound resouces.
+	LexManos: Update WorldProvider.path diff.
+
+Build 6.0.1.355
+	cpw
+		Update fml:
+		c61ad51 Organize ALL the imports
+		c0842b0 Expose the server in serverstart event
+		2851079 Fix up directory injection of log file locations
+		5197524 Refer to FMLLog, not FMLRelaunchLog
+		78efd1a Tidy up server launch - reflection not required anymore
+		eee0a99 Also, log what the directory discoverer finds for mcmod.info
+		10c96c3 And log the exception if it has a problem reading the jar file
+		07cc3fb Fix jar loader failing to inject any metadata at all if mcmod.info is not found.
+		e31f143 Change install.cmd to install.bat, why, cuz people are .... Updated readme to mention needing server and client.
+
+Build 4.0.0.200
+	LexManos: Allow white space in the property name.
+	cpw
+		Update FML to include some ML compatibility fixes. Minimap should run, assuming he
+		recompiles against standard ML interfaces.
+		This updates to official MCP 7.2, so you'll need to rebuild your workspace (some
+		small but important patches to MCP went in)
+
+Build 4.0.0.199
+	cpw: Update FML, make the .sh scripts executable
+
+Build 4.0.0.195
+	LexManos: Update FML to 285
+
+Build 4.0.0.194
+	draake: Added additional sound events to allow manipulation of a sound source at its creation.
+	draake: Removed SoundSetListenerEvent implementation.
+
+Build 4.0.0.193
+	LexManos: Fix potential index exception in ForgeDirection
+	LexManos: Whops
+
+Build 4.0.0.192
+	LexManos: Rename Orientation to ForgeDirection {Damn MCP naming a class Direction already}
+
+Build 4.0.0.191
+	LexManos: Update FML again for mod screen blending fix.
+
+Build 4.0.0.190
+	LexManos: Updated Orientation with new helper functionality.
+	LexManos: Fix ItemBlock placement, should fix RP Deployers placing blocks 1 tile down.
+	LexManos: Seperated block placmenet logic in ItemBlock as immibis requested: https://github.com/MinecraftForge/MinecraftForge/pull/110
+	LexManos: New Command event.
+	LexManos: Fix issue with default getContainerItemStack
+	LexManos: Add render distance property to TileEntity.
+
+Build 4.0.0.189
+	LexManos: Updated FML, should fix the new included eclipse workspace.
+
+Build 4.0.0.188
+	LexManos: Cleanup repo, delete old code
+	LexManos: Update FML to 278, MC 1.3.2
+	LexManos: Cleaned up forge scripts, and updated AT config for 1.3.2, deleted any reference to server specific code.
+	LexManos: Updated patches to 1.3.2
+	LexManos: Fixed bug in DimensionManager that would cause Index error for custom dimensions, also made WorldProviders aware of what dimension they are.
+
+Build 4.0.0.187
+	LexManos: Readded patch to allow for use of custom teleporter for transfering dimensions.
+
+Build 4.0.0.186
+	LexManos: Update FML with entity spawning fixes
+
+Build 4.0.0.185
+	LexManos: Updated FML, should fix 'derp?' RuntimeError
+
+Build 4.0.0.184
+	LexManos: Fix PickBlock 'ghost item' bug when picking with a item selected.
+
+Build 4.0.0.183
+	LexManos: Update FML, Tons of bug fixes and proper merging of client and server.
+	LexManos: Delete Forge server projects
+	LexManos: Update debug settings to use Client's internal MinecraftServer.main to debug dedi-server env.
+	LexManos: Update release script to create universal binary distro.
+
+Build 4.0.0.182
+	j.marini: Fix bug where default bonemeal behavior wouldn't trigger. Only return if the event was canceled.
+
+Build 4.0.0.181
+	LexManos: Update FML, new AT features, and error info.
+
+Build 4.0.0.180
+	LexManos: Fixed ItemRenderer not grabbing custom texture files properly for block items
+	LexManos: Updated FML
+	LexManos: Delete dead IGuiHandler
+	LexManos: Update AT config to expose some block functions and a few extras.
+
+Build 4.0.0.179
+	LexManos: Should fix commands.py patching not working properly first run.
+
+Build 4.0.0.178
+	LexManos
+		Updated FML, Should fix a lot of installing issues for MCP.
+		Made patches error and not apply if the target file is not found.
+		Updated Event Transformer to add a default constructor...
+		Fixed 4096 setup code in MinecraftForge.initalize()
+
+Build 4.0.0.177
+	LexManos: Fix issue in install script for users with spaces in there paths.
+
+Build 6.0.1.355
+	LexManos: Updated FML, fixed custom tool hooks, and spawn protection/player reach hooks.
+
+Build 6.0.1.355
+	LexManos: Update FML, server should run now. Still issue with NPE with no mods installed.
+
+Build 4.0.0.173
+	LexManos: Fixed Diemsnion API related NPEs, and updated FML to 231.
+
+Build 4.0.0.172
+	LexManos: Get rid of all old patches
+	LexManos: Added a better eclipse workspace for deving Forge
+	LexManos: inital push of updated setup script and cleaned up forge.py
+	LexManos: Dump old mcp config
+	LexManos: New Start.java which allows the user to login using a legit account for testing on servers.
+	LexManos: Committing inital work on generating sanitized MCP conf data.
+	LexManos: Add the direct copied files from MCP conf
+	LexManos: Add newids to that list
+	LexManos: Helper function grab all unique searge names that are shared client and server
+	LexManos: Added merging fields/methods/param csv files. And updated FML to 197
+	LexManos: Remove eclipse files from old eclipse projects
+	LexManos: Updated build.py
+	LexManos: Update FML
+	LexManos
+		Moved logo to new client folder
+		Added blank Access Transformer config for Forge
+		Implemented version storage
+		Added basic dummy FML mod container to remove the need for mod metadata file
+		Added beggining work on Forge event system
+		Updated and moved EnumHelper
+	LexManos: Updated update_patches.py, and made first patch!
+	LexManos: Moved paulscode to new client folder
+	LexManos: First push of some small patches and introduction of basic events. As well as the first cases for Forge's Access Transformer
+	LexManos: Missed a file
+	LexManos: Moved in OreDictionary stuff to new system. IOreHandler is replaced by OreDictionary.OreRegisterEvent
+	LexManos: Renamed MinecraftForge.eventBus to EVENT_BUS as it's constant.
+	LexManos: Implemented BonemealEvent (IBonemealHandler replacement), and bonemeal making grass.
+	LexManos: Implemeneted adding grass seeds, as well as IShearable for BlockTallGrass
+	LexManos: More progress on converting patches from 1.2.5
+	LexManos: Some more patch migration before bed.
+	LexManos
+		More patches converted.
+		Refactored some of the events to be a better hiarachy.
+	LexManos: A bulk of more patches converted, updated fml
+	LexManos: Moved some files.
+	LexManos: More work, moved over packet stuff, need to change everything to use new NetworkMod system
+	LexManos: More conversions, added all the entity living events.
+	LexManos: Finished World and EntityMinecart patches.
+	LexManos: Removed a lot of old files
+	LexManos: Updated Client side patches for the new Merged MCP workspace.
+	LexManos: Nope, unneeded patch
+	LexManos: Cleaned up some more, fixed infinite loop with cancelable annotation, Client now compiles and enters world just fine.
+	LexManos: Delete conf, server compile, update fml, and fix install script.
+	LexManos: Copy forge files over in install.
+	LexManos: Update fml
+	LexManos: Moved over Configuration
+	LexManos: Fix oreientation bug causing levers not being able to place.
+	LexManos: Added new pick block hook for blocks and entites to allow for better grained control of the result.
+	LexManos: Include Forge's AT config into redist zips.
+	LexManos: Update fml, impelemnted Diemsnion API stuff.
+	LexManos: Updated FML, updated patches
+
+Build 3.4.9.171
+	cpw: Normalize the repo
+	LexManos: Rebase
+	LexManos: Bumped version to 3.4.9, final commit for 1.2.5.
+
+Build 6.0.1.355
+	someh4x0r: Fix BlockTrapDoor.disableValidation on server
+
+Build 3.3.8.164
+	LexManos: Should fix NPE on older ISoundHandlers EXA: http://minecraftforge.net/forum/index.php/topic,759.html
+
+Build 3.3.8.163
+	cpw: Update fml with recent tick fix
+
+Build 3.3.8.162
+	truebrain
+		-Add: sync serverPos[XYZ] on spawning of entity
+		This fixes the issue that, up to 400 ticks from getting in range,
+		entities have a wrong offset (because server and client don't agree on
+		the position to calculate relative updates from)
+	truebrain: -Fix: check for null where needed
+	truebrain: -Codechange: applied LexManos' request
+
+Build 3.3.8.161
+	LexManos: Fixed a improper rounding in EntityMinecart
+	LexManos: Made WorldGenMinable metadata sensitive.
+
+Build 3.3.8.160
+	cpw: Update fml to 175- fixes some weird ticking behaviours for ML mods, adds in new ticking behaviours for smart mods
+
+Build 3.3.8.159
+	LexManos: Moved licenses and credits into install folder.
+	LexManos: Removed symlink files, shouldn't be in the repo.
+	LexManos: Updated some remaining scripts to call there python versions.
+
+Build 3.3.8.158
+	LexManos: Fix furnaces not smelting the proper number of results after the first one. Damn you tahg, fix this! Keeps falling through my cracks.
+
+Build 3.3.8.157
+	cpw
+		Fix server check "blockHasTileEntity" used to determine if getDescriptionPacket
+		is sent for the block to be metadata sensitive. Thanks iChun!
+
+Build 3.3.8.156
+	cpw: Fix ghost players who appear if they don't have the 4096 fix installed
+
+Build 3.3.8.155
+	LexManos: Fix container creative to not add Blocks above 256 unless it's told to.
+
+Build 3.3.8.154
+	cpw
+		Fix world provider behaviour: WorldProvider.byDimension should always return
+		a new instance- otherwise you can end up with worlds overwriting one another
+
+Build 3.3.8.153
+	LexManos: Fixed isBlockReplaceable and placing ItemBlocks'
+
+Build 3.3.8.152
+	LexManos: Fucking spelling nazis
+
+Build 3.3.8.151
+	LexManos: Fix bitmask bug related to 4096 in multi-block change.
+	LexManos: Updated FML to build 153
+
+Build 3.3.8.150
+	LexManos: Fix NPE related to server/client not having block ids synced properly.
+	LexManos: Add option to randomize potential spawn locations to have a more randomly dispersed spawn patern, useful for games like FTB vs.
+	LexManos: Added configuration option to disable the darkroom mechanic. For servers who wish to not risk destruction at one broken pipe.
+
+Build 3.3.8.148
+	LexManos: FML 150, more tick related work.
+
+Build 3.3.8.147
+	LexManos: Close inputstream
+
+Build 3.3.8.146
+	LexManos: More bugfixes related to portal generation. Should be all now.
+
+Build 3.3.8.145
+	LexManos: Some 4096 I missed in custom renderers.
+	LexManos: Updated to FML 149, should fix all ticking issues with ModLoader mods
+	LexManos: Fix Vanilla bug where nether portals would not work above 127
+
+Build 3.3.8.144
+	LexManos: Updated to FML build #142, fixed FML compilation issue causing missing files when reobfing.
+
+Build 3.3.8.143
+	LexManos: Updated release script to automatically inject version info into .info file.
+
+Build 3.3.8.142
+	LexManos: Updated to FML 141, should fix ticking issues with certian mods, and crash issue with TropiCraft
+
+Build 3.3.8.141
+	LexManos: Bumped version number for new IEntityLiving interface.
+
+Build 3.3.7.140
+	pahimar: Typo in the new EntityLivingHandler code
+
+Build 3.3.7.139
+	LexManos: Made setFailsafeFieldValue public for Rob
+	LexManos: Implemented enchanced EntityLiving events. Thanks Atomic for parts of it.
+
+Build 3.3.7.138
+	LexManos: Few more cases for 4096, thanks TrueBrain
+
+Build 3.3.7.137
+	LexManos: Forgot Configuration in 4096 change.
+
+Build 3.3.7.136
+	LexManos: Configurable kick message when you don't have forge.
+	LexManos: Initial 4096 fix based of mDiyo's work.
+
+Build 3.3.7.135
+	LexManos: Fixed bug in new entity sound hook.
+
+Build 3.3.7.133
+	LexManos: Updated to FML #135 {Fixed ModList rendering issue, and incorrect arument on crafting hook}
+	LexManos: Added new ISoundHandler.onPlaySoundAtEntity hook. Should be backwards compatible with any older ISoundHandler implementations.
+	LexManos: New onChunkUnload event for TileEntities, for psxlover.
+	LexManos: Bumped version number to 3.3.7 for full release.
+
+Build 3.2.6.132
+	LexManos: Fixed concurent modification exception in the ore registry.
+
+Build 3.2.6.131
+	LexManos: Fix for potential concurancy modification exceptions
+
+Build 3.2.6.130
+	LexManos: Fixed possible NPE when blocks havent fully initalized yet.
+
+Build 3.2.6.129
+	LexManos: Updated FML to 132, TextureFX fix, and bumped revision to 6.
+
+Build 3.2.5.128
+	LexManos: Added bouncer functions for functions we removed. Makes MagicLauncher shut up about missing functions {not actually missing}, and therefor makes users stop thinking its a life or death error.
+
+Build 3.2.5.127
+	LexManos: New Ore Dictionary recipies. Allows for simpler Ore Dictionary integration with recipies. IOreHandler should no longer be used.
+
+Build 3.2.5.126
+	LexManos: Updated to FML 130
+	LexManos: Added hackish workaround for Tessellator.textureID to provent crashing while we wait for Optifine to update.
+
+Build 3.2.5.125
+	LexManos: Server side of ITextureProvider for Block/Item for compilations sake.
+
+Build 3.2.5.124
+	LexManos: Backwards compatibility fix for ITextureProvider
+
+Build 3.2.5.123
+	LexManos: Updated FML to 121 to fix world tick issues.
+
+Build 3.2.5.122
+	LexManos: Updated MCP mapings. Moved the bulk of custom logic from RenderItem to ForgeHooksClient.
+	LexManos: All Items and Blocks now implement ITextureProvider, and have a setTextureFile(String) function, to support cleaner code in Mods and in Forge.
+	LexManos: Tag each Tessellator with it's associated texture ID.
+
+Build 3.2.5.121
+	LexManos: Added kick info to disconnect event, updated to FML 120, keybindings, better image rendering in ModList ui.
+
+Build 3.2.5.120
+	LexManos: Fix bug in cart functions where would always return null.
+
+Build 3.2.5.119
+	LexManos: Fixed some inverted logic causing tress to not gen correctly.
+
+Build 3.2.5.118
+	LexManos: Update FML to 117
+
+Build 3.2.5.117
+	LexManos: New Hooks addedf for custom tree/leaves. And better interaction with trees growing and rerplacing certain blocks. Should allow for ExtraBiomes to behave nicer, and RedPower to make there blocks un-breakable by trees.
+	LexManos: Also, new hook in last commit for blocks to determine if they are able to be replaced by ores, for any mod that adds new world gen. Bumped revision up.
+
+Build 3.2.4.116
+	LexManos: We now bundle CodexIBXM from PaulsCode. See http://paulscode.com http://www.paulscode.com/forum/index.php?topic=4.0 and the included license files for more info.
+	LexManos: Updated to FML 115, added Forge Logo to the client dist, and in-game ModInfo page.
+
+Build 3.2.4.115
+	LexManos: Updated to FML build 114
+
+Build 3.2.4.114
+	LexManos: Included fmlversion.properties in the release zips.
+
+Build 3.2.4.111
+	LexManos: Added FML ReadMe, Credits, and License to release zips
+
+Build 3.2.4.110
+	LexManos: Updated to FML Build 95
+
+Build 6.0.1.355
+	LexManos: Update FML to 92, this include full client side support, ModLoader nolonger needed.
+	LexManos: Added new source clean step to fix linux vs windows astyle issues.
+	LexManos: Cleaned up names for Minecraft Forge's text files so they dont clash with other mods. Fixed up the release script to include the license text, and executable permissions for install.sh.
+	LexManos: Added FML mod info file
+	LexManos: Updated MCP Mapings and patches.
+	LexManos: Updated patches for FML, moved some extranious code to Forge classes instead of patches.
+
+Build 3.2.3.108
+	LexManos: Bump version number for official release.
+
+Build 3.1.3.107
+	LexManos: Fixed AudioMod compatibility with MultiMC style launchers.
+
+Build 3.1.3.106
+	LexManos: Bit masked the entity ID to change the range from -127-127 to 0-255
+
+Build 3.1.3.105
+	LexManos: Updated MCP Mapings
+
+Build 3.1.3.104
+	LexManos: Added forge identifier to statistics collection.
+
+Build 3.1.3.103
+	LexManos: Fix for furnaces not smelting the final item in full stacks.
+
+Build 3.1.3.102
+	covertjaguar: static final vars are inlined during the compile step, making the version variables useless at runtime.
+	LexManos: Fixed Levers droping off the backs of stairs client side.
+
+Build 3.1.3.101
+	LexManos: New block hooks for creating custom beds.
+
+Build 3.1.3.100
+	cpw: Update to FML 74: fixes an important issue with MLProp
+
+Build 3.1.3.99
+	LexManos: Bumped revision to 3
+
+Build 3.1.2.98
+	LexManos: Fixed Vinella mob spawning bug that prevented mobs from spawning on the top most chunk. Added new Block function to determine if a Mob can naturally spawn on the block. Add new hook to allow for special case handeling on natural entity spawn.
+
+Build 3.1.2.97
+	LexManos: Fix for loading Minecart Entities in worlds that were last accessed before Forge was installed.
+
+Build 3.1.2.96
+	LexManos: Moved MLMP compatibility functions to ModCompatibilityClient, and fixed issue where no vehicles would be spawned.
+
+Build 3.1.2.95
+	LexManos
+		New ISoundHandler interface, useful for adding custom sounds and dealign with sound based events.
+		Includes basuic AudioMod compatibility.
+
+Build 3.1.2.94
+	LexManos: Fixed vinella bugs when trying to access chunk information with a y < 0
+
+Build 3.1.2.93
+	LexManos: Updated to FML build #73
+	LexManos: Added MLMP hook invocation for vehicle spawn and opening GUI's to provide compatibility for clients that have both ModLoaderMP and forge installed.
+
+Build 3.1.2.92
+	LexManos: Exposed TileEntityData packet to TileEntities. And added helper sender function.
+
+Build 3.1.2.91
+	LexManos: Added metadata sensitive Chunk constructor for Bioxx
+
+Build 3.1.2.90
+	LexManos: Added MinecraftApplet.clas to the force output list because users cant understand the concept of only replacing files they are told to. And bumped version to 3.1.2
+
+Build 3.0.1.89
+	LexManos: made the ID in PacketEntitySpawn unsigned.
+	LexManos: Added generic packet sending function to MinecraftForge class.
+	LexManos: Fixed shift-clicking issue with items that utilized the new ItemStack sensitive smelting system.
+	LexManos: Implemented a 'small' packet system for those mods that need to send rapid, small data packets and who are concered about the overhead of the 250 payload packet. It uses packet 131.
+
+Build 3.0.1.88
+	LexManos: Implemented  RichardG's Paged Achivement list GUI modifications.
+
+Build 3.0.1.87
+	t.tomkins: Edits enable use of EntityPlayer.canHarvestBlock (for PlayerAPI) when the ToolClass has no rules for the block.
+
+Build 3.0.1.86
+	LexManos: MAX_ENTITY_RADIUS Now works on the Y axis
+	LexManos: Respawning in dimensions should now properly set the dimension ID for the new player instance.
+
+Build 3.0.1.85
+	LexManos: Fix for vanilla crash for chunk generation with block ID's above 127.
+
+Build 3.0.1.84
+	cpw: Update fml to build 68: fixes a ticking issue and soft vs hard dependencies
+
+Build 3.0.1.83
+	LexManos
+		Changed entity Forge spawning code works to be more in line with normal spawning:
+		(World, double, double double) constructor is nolonger called, normal (World) constructor, and setPositionAndRotation is called afterwords.
+		yaw, pitch, and yawHead is sent (if the entity isn't a EntityLiving yawHead isn't used)
+		The datawatcher data is also sent like a normal Entity.
+
+Build 3.0.1.82
+	LexManos: Fixed bug in BlockFire's old fields.
+	LexManos: Added variable entity radius to World, to be used if a mod make really large entities.
+
+Build 3.0.1.81
+	LexManos: Fixed TileEntity bug that was causing Ghost tile entities.
+
+Build 3.0.1.80
+	LexManos: Multi-pass item rendering now uese proper render pass number.
+
+Build 3.0.1.79
+	LexManos: Added slope velocity hook for Covert
+
+Build 3.0.1.78
+	LexManos: Fixed bugs in the Dimension transfer code, Now displays proper join message, and respawning in dimensions other then 0 works.
+
+Build 3.0.1.77
+	LexManos: Try to fix jenkins build.
+
+Build 3.0.1.76
+	covertjaguar: Added a function for checking block harvest levels without having to resort to reflection.
+
+Build 3.0.1.75
+	LexManos: Added ItemStack sensitive burn time hook.
+
+Build 3.0.1.74
+	LexManos
+		Added new Item function to allow for multiple rendering passes.
+		Fixed a vinella bug where item layters would not line up for EntityItem's
+		Added new IItemRendere helper flag for 3d block translations.
+
+Build 3.0.1.73
+	cpw: Update fml to 62- provision a server console command and fix mod loading order
+	cpw: Update FML for new hooks: onPlayerLogout and onPlayerDimensionChanged
+	LexManos
+		Rewrote IItemRenderer to be a more generic and expandable version, Breaks previous interfaces, but this should be the last time the interface changes.
+		Implemented the MapRender hook ChickenBones requested.
+
+Build 3.0.0.72
+	cpw: Fix separated login/announce handler
+	cpw: FML 59: don't send a zero length register packet, add mod channels
+
+Build 3.0.0.71
+	cpw: Update to FML 57: fixes FML not calling it's login handler code
+
+Build 3.0.0.70
+	LexManos: Changed IGuiHandler's signature to be compatible with both sides. Took out ModLoaderMp reference in README.
+
+Build 3.0.0.69
+	LexManos: MCP Conf update for 1.2.5
+	LexManos: Initial patch update to FML and MC 1.2.5
+	LexManos: Deleted patches
+	LexManos: Fixed update_patches.py to now delete old patch files that have no working src relation
+	LexManos: Updated repo scripts to python, allowing more flexability and less code duplication.
+	LexManos: Finished up converting the source dist install scripts to python. Fixed a couple issues with the other scripts.
+	cpw: Update patches for FML fix.
+	cpw: Fix release script to import "inject_version"
+	cpw: Add in recent fml with fixes
+	cpw: Delete the old one too
+	LexManos: Rewrote the login code to delay full login untill forge fnishes negotiating network IDs. Should fix entities not having proper ID mapings.
+	LexManos: Added ChickenBones's request ITextureLoadHandler hook
+	LexManos: Updated patch for mapings
+	LexManos: Implemented ISaveEventHandler as ChickenBones's requested.
+	LexManos: Add server spawn protection config option as per someh4x0r's request.
+	LexManos: Couple of output fixups and added script to be executed by Jenkins during the build. First test build.
+
+Build 2.0.0.68
+	LexManos: Fix some shadowing warnings.
+	LexManos: Some cleanups to update_patches, should run properly on any system now.
+	LexManos: Add IChunkLoadHandler.canEntityUpdate() function to allow entities to update while in custom loaded chunks.
+	LexManos: Implemented a chat event handler system to allow for manipulating and handeling the various chat/command events.
+
+Build 2.0.0.67
+	LexManos: Changed update_patches script to use python for the bulk, Prevents making 1800 temporary useless files.
+	LexManos: Fixed camelcasing in IConnectionHandler, ment to do during first upgrade.
+
+Build 2.0.0.66
+	LexManos: Fixed typo bug in MinecraftForge.getEntityTrackerInfo
+
+Build 2.0.0.65
+	LexManos
+		Updated to MC: 1.2.4 MLMP: 1.2.4 v1
+		Removed all code that was marked as deprecated, IE: ICustomItemRenderer, and the functions in Configuration
+
+Build 1.4.1.64
+	LexManos: Reworked EntityPlayerMP.openGui to hopefully be more compatible with PlayerAPI
+
+Build 1.4.1.63
+	LexManos: Cleanup the EffectRenderer patches, Allows custom food items to have the proper particals. Cleaned up special case class in favor of basic java generics.
+
+Build 1.4.1.62
+	covertjaguar: Added the ability to define custom categories for config files.
+	covertjaguar: Removed createCategory() function and changed it to create categories as they are encountered.
+	LexManos: Updated MCP mapings
+	LexManos
+		Fixed a couple of bugs in the Configuration categories pull request.
+		Added helper functions to Property for standard int/boolean usage.
+	LexManos: Added rider sit pull request.
+
+Build 1.4.1.61
+	LexManos: Fixed NPE on CustomPayload packets with 0 data
+	LexManos: Changed logic in Configuration to allow for extended block ID mods easier access to change that. Just use reflection to change Configuration.configBlocks to whatever length you want.
+	LexManos: Implemented Pheenixm pull request allowing for more control over the camera.
+	LexManos
+		Added MinecraftForge.isClient() function that returns true if you are in the Minecraft Client,  (As defined as net.minecraft.client.Minecraft existing) false otherwise.
+		Fixed a typo on PacketEntitySpawn that caused speed to be assigned improperly.
+		A little code cleanup.
+
+Build 1.4.1.60
+	LexManos: Fixed a few typos that CovertJaguire found in The Forge entity handeling code. And re-wrote the connection sequance so that clients get a list of mod ids before anything else.
+
+Build 1.4.1.59
+	LexManos: Readded the deprecated interface ICustomItemRenderer. Added method to enforce deprecation cross Minecraft versions.
+
+Build 1.4.1.58
+	newthead: Added new item render interfaces to Forge client
+	newthead: Added hook for rendering equipped items
+	newthead: Clarified render option for inventory items
+	newthead: Added remaining item render hooks, and fixed a static method access
+	newthead: Added render code for inventory items and entity items.
+	newthead: Cleanup/fix item render hooks
+	newthead: Added additional flag for rendering entity item bobbing
+	newthead: Merged item rendering interfaces into a single IItemRenderer
+	newthead: Updated render hooks and registration to use the IItemRenderer interface
+	newthead: Modified patches to use new item render hooks
+	newthead: Merged item rendering interfaces into a single IItemRenderer
+	covertjaguar: Fix for network code.
+	newthead: Changed render hook checks to all use ItemStack instead of itemID
+	newthead: Reverted vanilla texture binding to an explicit if() statement based on item ID
+	LexManos: Fixed dyes showing twice in creative list
+	LexManos: Bumped version number to 1.4.1
+
+Build 1.4.0.57
+	LexManos: Fixed tile entities not properly being removed for blocks that do not extend BlockContainer, or override BlockContainer.onBlockRemoval
+
+Build 1.4.0.56
+	LexManos: Fixed excessive need for user interaction in the install script.
+	LexManos: Fixed a class to a deprecated method to fix tool effectiveness.
+
+Build 1.4.0.55
+	LexManos: Fixed IOException not found error in CovertJaguires pull request. Updated scripts so that build should now be fixed
+
+Build 1.4.0.54
+	LexManos: Reworked the workspace scripts so the build should fail on compile errors. This build should fail as a test.
+
+Build 1.4.0.53
+	covertjaguar: Added throws clause to ISpawnHandler functions to keep the functions consistent with similar functions and increase ease of use. Exceptions are already being caught everywhere these functions are called, so no further changes required.
+	LexManos: Fixed onTakenFromCrafting hooks to be called once per stack taken. Sadly due to how shift-click is handled, the passed in item stack is not garenteed to be the stack that the result was added to.
+
+Build 1.4.0.52
+	LexManos: Fixed forgotten type identifier in clean_src
+	LexManos: New EntityInteract hook for handeling player vs entity interaction on the global level vs the item level.
+	LexManos: Fixed sides of grass not getting biome colors
+	LexManos: Fixed type on patch conversion messing up tile entities
+	LexManos: Proper fix for SDK's invalid bit shifts of parameters for chunk population
+	LexManos: Made BlockStairs, BlockFarmland, and BlockStep have proper sided-solidity. Can now place torches on any solid side of those blocks.
+
+Build 1.4.0.51
+	cpw
+		Fix worldgen doubleshifting in ModLoaderMP until SDK fixes it.
+		This means mods can generate surface and nether in SMP again.
+
+Build 1.4.0.50
+	eloraam: Fixed a merge error.
+	LexManos
+		New script to fix decompile differences between windows and linux/osx.
+		Removed the MLProp special case, no longer needed as MLProp decompiles fine.
+		Updated patches to work on all systems.
+		Added warning and exit if the user does not say yes to the cleanup.
+
+Build 1.4.0.49
+	eloraam: MCP Update.  Fixed a few small bugs in the linux scripts.
+
+Build 1.4.0.48
+	LexManos: Fixed the inverted logic in the missing mod check.
+	LexManos: Fixed a wrong argument for dimensions, should fix entity tracking.
+	LexManos: Custom dimensions should now honor the canRespawnHere function for respawning.
+
+Build 1.4.0.47
+	LexManos: Fix up Configuration ids to only work for 256 ids until Jeb finishes the 4096 conversion.
+
+Build 1.4.0.46
+	LexManos: Fixed a bug where vines were not shearable.
+
+Build 1.4.0.45
+	covertjaguar: Fixed a minor bug with the Minecart Dictionary.
+
+Build 1.4.0.43
+	LexManos: 1.4.0 official release.
+
+Build 1.3.4.42
+	LexManos: Updated to MLMPv3
+
+Build 1.3.4.40
+	LexManos: Hack-fix for players getting stuck during logins. Detailed fix when bug is actually tracked down.
+	LexManos: Implemented ChickenBone's Chunk handler
+
+Build 1.3.4.39
+	LexManos: Fixed client side bonemeal on grass only making flowers
+	LexManos: Updated to latest MCP
+
+Build 1.3.4.38
+	LexManos: Fixed MLMP thinking Network mods need a client side when they dont.
+	LexManos: Fixed a generic tile entity line i missed on the server side.
+	LexManos: Removed improper tile entity negation
+
+Build 1.3.4.37
+	LexManos: Updated to SDK MLMP v2
+
+Build 1.3.4.36
+	LexManos: Fixed missing double array in MLMP's packet server side. Also, fixed the creative code again, brain failed.
+
+Build 1.3.4.35
+	LexManos: Got my comparitor turned around
+	LexManos: Updated to SDK's 1.2.3 MLMP, Mush cleaner, no longer supporting Flan's.
+
+Build 1.3.4.34
+	LexManos: Updated gitignore, fixed digging particles, fixed creative container showing to many blocks, fixed wrong argument for custom renderers.
+
+Build 1.3.4.33
+	LexManos: Updated MCP's patch files. Fixes hangs on running MC as applet.
+	LexManos: ItemBlock now implements ITextureProvider so that blocks with custom textures will showup properly when being held.
+
+Build 1.3.4.32
+	LexManos: Fixed NPE in the login handler
+	LexManos: Fixed directory issues in the setup script
+	LexManos: Cleanup of ModLoaderMP and proper update to the latest version of ModLoader
+
+Build 1.3.4.31
+	LexManos: Fixed missing space in linux scripts
+	LexManos: No longer mark forge packets as chunk packets.
+	LexManos: Updated MCP mapings files
+
+Build 1.3.4.30
+	LexManos: Updated scripts so that we use Fernflower now. Added a small python script to download fernflower for the user. And the scripts exit out if it fails.
+	LexManos: Deleted modLoaderMP.patch, unneeded now that we use Fernflower
+	LexManos: Updated eclipse project for MCP 1.2.3's inclusion of the Start folder in the src folder.
+	LexManos: Updated The Json enum helper to point to the new packaged names. And fixed a casing change in ModLoader
+	LexManos: Made mod_MinecraftForge extend NetworkMod, and changed NetworkMod to extend BaseModMP server side.
+	LexManos: Fixed unneeded imports in ForgePacket
+	LexManos: removed unneeded import, and fixed casing of args in IShearable
+	LexManos: Deleted EntityPigZombie patches, Who needed these? Why could you not do this via reflection?
+	LexManos: Conf for 1.2.3
+	LexManos: Same patch diff, files.
+	LexManos: No longer needed, bug was fixed
+	LexManos: Client side initial patch update to Fernflower and MC 1.2.3
+	LexManos: Bit of a cleanup of the client patches
+	LexManos: Couple of things I missed client side
+	LexManos: Deleted unneeded server side patches, Packet250 bug was fixed. And the others got moved to AnvilSaveHandler
+	LexManos: First push of server side patch updates for 1.2.3. MLMP is still not updated so it does not include those changes, and will not compile.
+	LexManos: Small imports cleanup
+	LexManos: Missed damageCarryover on the server
+	LexManos: Made the scripts forge updating md5s/mcp/names
+	LexManos: Updated for MLMP 1.2.3 v1
+
+Build 1.3.4.29
+	LexManos: Bumped version to 1.3.4, final commit for Minecraft v1.1
+
+Build 1.3.3.28
+	LexManos: Fixed bug in build script that caused the Minecraft/MinecraftServer classes to not be included.
+
+Build 1.3.3.27
+	LexManos: Client side of the new Dimension support.
+
+Build 1.3.3.26
+	LexManos: Fixed compile error for the spelling pull request.
+
+Build 1.3.3.25
+	thedeveducer: Fixed spelling mistake ('Frequancy')
+	LexManos: Fixed ITextureprovider for multi-textured items when rendering on the GUI.
+
+Build 1.3.3.24
+	LexManos: Fixed up Shearable blocks to play nicer with sub-classes.
+	LexManos: Fixed line endings in windows update_patches
+	LexManos: Deleted Deprecated interfaces.
+	LexManos: Ran AStyle over forge code for uniform code formatting, and refactored old code a bit to have cleaner names.
+
+Build 1.3.3.23
+	connor: People may think the server needs the mods to continue and not the client.
+
+Build 1.3.3.22
+	LexManos: Fixed a bug in update_patches that caused apostrphies to be removed. Causing the last patch to be generated incorrectly.
+
+Build 1.3.3.21
+	LexManos
+		Initial attempt at server side extra dimensions support.
+		Mods must register there dimensions on load, by calling DimensionManager.registerDimension(uniqueID, WorldProvier, boolean)
+		Mods are resposible for writing there own transporter blocks.
+		Initial commit, needs some more testing and design thoughts.
+
+Build 1.3.3.20
+	LexManos: Added new Item.getIconIndex context sensitive version.
+	LexManos: Implemented a response to Methuselah96's Arrow hook request. See IArrowNockHandler and IArrowLooseHandler
+
+Build 1.3.3.19
+	LexManos: Changed the layout of the missing mods gui a little. Still needs a lot of work to look good.
+	LexManos: Marked forge packets as 'chunk' packets. Giving them a higher priority making the initial mod list check more reliable.
+	LexManos: Introduced some debugging info into Forge packets. And a debug flag in the client and server packet handlers.
+	LexManos: Moved Client side EntityPlayer.openGui work code to EntityPlayer for compatibility between player API.
+
+Build 1.3.3.16
+	eloraam: Linux scripts fixed, TE bug fix.
+	eloraam: Fixed linux scripts, fixed TE bug.
+
+Build 1.3.3.15
+	LexManos: Exposed getters for NetServerHandler.playerEntity and NetworkManager.netHandler
+	LexManos
+		Introuduced NetworkMod, a BaseMod extension and replacement for BaseModMP. All mods that are designed to work in the server environment should extend this.
+		NetworkMods will be assigned unique ModIDs by the server, and those IDs will be sent to the client upon connection.
+		Refactored Forge packets to the net.minecraft.src.forge.packets package. And introduced the base ForgePacket class.
+		Added initial ModList request/response.
+	LexManos
+		Expanded the Mod check to test for missing mods and display a GUI screen for the client if it is missing any.
+		The client now downloads NetworkMod ID's from the server upon connecting.
+	LexManos: Implemented a generic EntityPlayer.openGui system, and the network backend for it to work on server and client.
+
+Build 1.3.3.14
+	LexManos
+		Fixed up the install scripts. The linux script no longer needs sed. Should fix some issues on OSX's without gsed.
+		Also forge sources will only be copied to sides that were downloaded.
+		Also, install scripts now prompt for input to cleanup.
+
+Build 1.3.3.13
+	LexManos: Split mod_MinecraftForge so that Clients arnt required to have MLMP installed if they don't use a MP mod.
+
+Build 1.3.3.12
+	LexManos: Update MCP Mapings
+	LexManos: Small update to update_patches.bat, to skip patch reject files.
+	LexManos: Bumped version to 1.3.3
+
+Build 1.3.2.10
+	LexManos
+		Refactored so that ISpecialArmor items do not see the factor of 25 on the damage.
+		The value returned form ISpecialArmor.getProperties is now copied, so mod items are free to re-use there return values.
+
+Build 1.3.2.9
+	LexManos
+		Reworked ISpecialArmor to provide better functionality as requested by IC2 devs.
+		Armor can now be prioritized over other armor.
+		It can deal with damaging it's own itemstacks.
+		Also impkemented the ISpecialArmor.getArmorDisplay
+
+Build 1.3.2.8
+	LexManos: Lowered the amount of build log spam, and fixed the inject_version script for use on other systems.
+	LexManos: Fixed ITextureProvider support for items that have multiple colored overlays.
+	LexManos: Added Item.onLeftClickEntity hook. Used to intercept and cancel the 'attack' action within items.
+	LexManos: Implemented item.onBlockStartBreak call for creative single player.
+	LexManos: Implimented a new IShearable system. This allows mods to create both new shear-like items/blocks. As well as new Entities/Blocks that work with other mod's shear-like items.
+
+Build 1.3.2.7
+	LexManos: Missed a caluse, ISpecialArmor should work as intended now. And not destroy Armor instanatly.
+
+Build 1.3.2.6
+	LexManos
+		Implmented Sengir's IPickupHandler.
+		http://www.mod-buildcraft.com/forums/topic/hook-intercept-item-pickups-by-player-entities/?view=all
+
+Build 1.3.2.5
+	LexManos
+		Merged in the change to ISpecialArmor to introduce the DamageSource argument.
+		As well as the concept of damage absorption vs reduction.
+
+Build 1.3.2.4
+	LexManos
+		Created a Entity tracking ans spawning system.
+		Mod creators should call MinecraftForge.registerEntity to register a entity.
+		All entity ID numbers are Mod Unique. Meaning two mods can have Entity #1.
+		Added client and server side packet handlers for the 'Forge' channel. For use in internal packets such as the new Spawn packet.
+		Updated the build scripts to copy over unique server source files now that there actually are some.
+		For modders:
+		  If you have a entity that used MLMP's 'owner' system, you should have your entity implement IThrowableEntity
+		  If you have a entity that implments MLMLP's ISpawnable, you should implement ISpawnHandler.
+		They provide the same functionality, just in a cleaner, more orginized way and will be the method used when we eventually drop MLMP.
+
+Build 1.3.2.3
+	LexManos: Fixed return value for un/registerChannel. Now returns properly indicate when un/register commands should be sent.
+
+Build 1.3.2.2
+	LexManos
+		Setup .gitignore for eclipse bin dirs.
+		Fixed line endings in install.sh
+		Added mod_MinecraftForge for simpler logging of minecraft version in crash reports
+		Added new hooks for connection events, See IConnectionHandler for more details.
+		Added Packet250CustomPayload handeling and channel registraction management, see MessageManager and IPacketHandler for more details.
+		Forge now uses unsed fields in C->S Packet1Login to identify itself. None Forge clients will get a graceful disconnect message instead of the 'Unknown packet 230'
