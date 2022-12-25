@@ -3,7 +3,7 @@ package cpw.mods.fml.client.modloader;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import net.minecraft.BaseMod;
 import net.minecraft.block.Block;
-import net.minecraft.client.class_535;
+import net.minecraft.client.BlockRenderer;
 import net.minecraft.world.BlockView;
 
 public class ModLoaderBlockRendererHandler implements ISimpleBlockRenderingHandler {
@@ -25,11 +25,11 @@ public class ModLoaderBlockRendererHandler implements ISimpleBlockRenderingHandl
         return this.render3dInInventory;
     }
 
-    public boolean renderWorldBlock(BlockView world, int x, int y, int z, Block block, int modelId, class_535 renderer) {
+    public boolean renderWorldBlock(BlockView world, int x, int y, int z, Block block, int modelId, BlockRenderer renderer) {
         return this.mod.renderWorldBlock(renderer, world, x, y, z, block, modelId);
     }
 
-    public void renderInventoryBlock(Block block, int metadata, int modelID, class_535 renderer) {
+    public void renderInventoryBlock(Block block, int metadata, int modelID, BlockRenderer renderer) {
         this.mod.renderInvBlock(renderer, block, metadata, modelID);
     }
 }

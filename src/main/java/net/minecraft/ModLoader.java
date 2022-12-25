@@ -80,7 +80,7 @@ public class ModLoader {
     }
 
     @SideOnly(Side.CLIENT)
-    public static void addAnimation(class_584 anim) {
+    public static void addAnimation(Sprite anim) {
         TextureFXManager.instance().addAnimation(anim);
     }
 
@@ -234,7 +234,7 @@ public class ModLoader {
     }
 
     @SideOnly(Side.CLIENT)
-    public static BufferedImage loadImage(class_534 renderEngine, String path) throws Exception {
+    public static BufferedImage loadImage(TextureManager renderEngine, String path) throws Exception {
         return TextureFXManager.instance().loadImageFromTexturePack(renderEngine, path);
     }
 
@@ -274,7 +274,7 @@ public class ModLoader {
     /** @deprecated */
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public static void registerAllTextureOverrides(class_534 cache) {
+    public static void registerAllTextureOverrides(TextureManager cache) {
     }
 
     public static void registerBlock(Block block) {
@@ -345,14 +345,14 @@ public class ModLoader {
     /** @deprecated */
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public static void renderInvBlock(class_535 renderer, Block block, int metadata, int modelID) {
+    public static void renderInvBlock(BlockRenderer renderer, Block block, int metadata, int modelID) {
         RenderingRegistry.instance().renderInventoryBlock(renderer, block, metadata, modelID);
     }
 
     /** @deprecated */
     @Deprecated
     @SideOnly(Side.CLIENT)
-    public static boolean renderWorldBlock(class_535 renderer, BlockView world, int x, int y, int z, Block block, int modelID) {
+    public static boolean renderWorldBlock(BlockRenderer renderer, BlockView world, int x, int y, int z, Block block, int modelID) {
         return RenderingRegistry.instance().renderWorldBlock(renderer, world, x, y, z, block, modelID);
     }
 

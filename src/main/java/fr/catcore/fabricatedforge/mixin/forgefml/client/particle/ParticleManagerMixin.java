@@ -6,7 +6,7 @@ import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import net.minecraft.block.Block;
-import net.minecraft.client.class_534;
+import net.minecraft.client.TextureManager;
 import net.minecraft.client.particle.BlockDustParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleManager;
@@ -35,8 +35,8 @@ import java.util.Random;
 @Mixin(ParticleManager.class)
 public abstract class ParticleManagerMixin implements IParticleManager {
 
-    @Shadow private List[] field_1735;
-    @Shadow private class_534 field_1736;
+    @Shadow private List<Particle>[] field_1735;
+    @Shadow private TextureManager field_1736;
     @Shadow protected World world;
     @Shadow private Random random;
 
@@ -91,15 +91,15 @@ public abstract class ParticleManagerMixin implements IParticleManager {
                 GL11.glBindTexture(3553, var9);
                 Tessellator var10 = Tessellator.INSTANCE;
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-                var10.method_1405();
+                var10.begin();
 
                 for(int var11 = 0; var11 < this.field_1735[var8].size(); ++var11) {
                     Particle var12 = (Particle)this.field_1735[var8].get(var11);
-                    var10.method_1411(var12.getLightmapCoordinates(par2));
+                    var10.setLight(var12.getLightmapCoordinates(par2));
                     var12.method_1283(var10, par2, var3, var7, var4, var5, var6);
                 }
 
-                var10.method_1396();
+                var10.end();
             }
         }
 
@@ -107,12 +107,12 @@ public abstract class ParticleManagerMixin implements IParticleManager {
             ForgeHooksClient.bindTexture(key, 0);
 
             Tessellator tessallator;
-            for (Iterator<Particle> i$ = this.effectList.get(key).iterator(); i$.hasNext(); tessallator.method_1396()) {
+            for (Iterator<Particle> i$ = this.effectList.get(key).iterator(); i$.hasNext(); tessallator.end()) {
                 Particle entry = i$.next();
                 tessallator = Tessellator.INSTANCE;
-                tessallator.method_1405();
+                tessallator.begin();
                 if (entry.getLayer() != 3) {
-                    tessallator.method_1411(entry.getLightmapCoordinates(par2));
+                    tessallator.setLight(entry.getLightmapCoordinates(par2));
                     entry.method_1283(tessallator, par2, var3, var7, var4, var5, var6);
                 }
             }

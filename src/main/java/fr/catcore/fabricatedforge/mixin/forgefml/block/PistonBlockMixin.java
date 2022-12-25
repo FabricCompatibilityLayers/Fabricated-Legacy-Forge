@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.Shadow;
 public abstract class PistonBlockMixin extends Block {
 
     @Shadow
-    public static int method_556(int i) {
+    public static int getFacing(int i) {
         return 0;
     }
 
@@ -37,7 +37,7 @@ public abstract class PistonBlockMixin extends Block {
      */
     @Overwrite
     public int method_396(int par1, int par2) {
-        int var3 = method_556(par2);
+        int var3 = getFacing(par2);
         return var3 > 5 ? this.field_439 : (par1 == var3 ? (!method_558(par2) && this.boundingBoxMinX <= 0.0 && this.boundingBoxMinY <= 0.0 && this.boundingBoxMinZ <= 0.0 && this.boundingBoxMaxX >= 1.0 && this.boundingBoxMaxY >= 1.0 && this.boundingBoxMaxZ >= 1.0 ? this.field_439 : 110) : (par1 == class_830.field_3061[var3] ? 109 : 108));
     }
 

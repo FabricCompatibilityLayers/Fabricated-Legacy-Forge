@@ -34,11 +34,11 @@ public abstract class BlockEntityRenderDispatcherMixin {
      * @reason none
      */
     @Overwrite
-    public void method_1626(BlockEntity par1TileEntity, float par2) {
+    public void render(BlockEntity par1TileEntity, float par2) {
         double dist = ((IBlockEntity)par1TileEntity).getRenderDistance();
         dist *= dist;
         if (par1TileEntity.getSquaredDistance(this.cameraX, this.cameraY, this.cameraZ) < dist) {
-            int var3 = this.world.method_3778(par1TileEntity.x, par1TileEntity.y, par1TileEntity.z, 0);
+            int var3 = this.world.getLightmapCoordinates(par1TileEntity.x, par1TileEntity.y, par1TileEntity.z, 0);
             int var4 = var3 % 65536;
             int var5 = var3 / 65536;
             GLX.gl13MultiTexCoord2f(GLX.lightmapTextureUnit, (float) var4, (float) var5);

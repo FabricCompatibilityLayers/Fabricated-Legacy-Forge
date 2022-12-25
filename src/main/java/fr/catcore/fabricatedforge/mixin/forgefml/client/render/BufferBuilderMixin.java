@@ -3,7 +3,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.class_535;
+import net.minecraft.client.BlockRenderer;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
@@ -32,9 +32,9 @@ public abstract class BufferBuilderMixin {
 
     @Shadow public boolean[] field_1791;
 
-    @Shadow public List field_1802;
+    @Shadow public List<BlockEntity> field_1802;
 
-    @Shadow public World field_1779;
+    @Shadow public World world;
 
     @Shadow public static int field_1780;
 
@@ -44,7 +44,7 @@ public abstract class BufferBuilderMixin {
 
     @Shadow protected abstract void method_1317();
 
-    @Shadow private List field_1777;
+    @Shadow private List<BlockEntity> field_1777;
 
     @Shadow public boolean field_1801;
 
@@ -74,10 +74,10 @@ public abstract class BufferBuilderMixin {
             var21.addAll(this.field_1802);
             this.field_1802.clear();
             byte var8 = 1;
-            ChunkCache var9 = new ChunkCache(this.field_1779, var1 - var8, var2 - var8, var3 - var8, var4 + var8, var5 + var8, var6 + var8);
+            ChunkCache var9 = new ChunkCache(this.world, var1 - var8, var2 - var8, var3 - var8, var4 + var8, var5 + var8, var6 + var8);
             if (!var9.isEmpty()) {
                 ++field_1780;
-                class_535 var10 = new class_535(var9);
+                BlockRenderer var10 = new BlockRenderer(var9);
                 this.field_1778 = 0;
 
                 for(int var11 = 0; var11 < 2; ++var11) {
@@ -100,15 +100,15 @@ public abstract class BufferBuilderMixin {
                                         GL11.glScalef(var19, var19, var19);
                                         GL11.glTranslatef(8.0F, 8.0F, 8.0F);
                                         ForgeHooksClient.beforeRenderPass(var11);
-                                        Tessellator.INSTANCE.method_1405();
-                                        Tessellator.INSTANCE.method_1406((double)(-this.field_1781), (double)(-this.field_1782), (double)(-this.field_1783));
+                                        Tessellator.INSTANCE.begin();
+                                        Tessellator.INSTANCE.offset((double)(-this.field_1781), (double)(-this.field_1782), (double)(-this.field_1783));
                                     }
 
                                     Block var23 = Block.BLOCKS[var18];
                                     if (var23 != null) {
                                         if (var11 == 0 && ((IBlock)var23).hasTileEntity(var9.getBlockData(var17, var15, var16))) {
                                             BlockEntity var20 = var9.getBlockEntity(var17, var15, var16);
-                                            if (BlockEntityRenderDispatcher.INSTANCE.method_1624(var20)) {
+                                            if (BlockEntityRenderDispatcher.INSTANCE.hasRenderer(var20)) {
                                                 this.field_1802.add(var20);
                                             }
                                         }
@@ -120,7 +120,7 @@ public abstract class BufferBuilderMixin {
 
                                         if (((IBlock)var23).canRenderInPass(var11)) {
                                             ForgeHooksClient.beforeBlockRender(var23, var10);
-                                            var13 |= var10.method_1458(var23, var17, var15, var16);
+                                            var13 |= var10.render(var23, var17, var15, var16);
                                             ForgeHooksClient.afterBlockRender(var23, var10);
                                         }
                                     }
@@ -131,10 +131,10 @@ public abstract class BufferBuilderMixin {
 
                     if (var14) {
                         ForgeHooksClient.afterRenderPass(var11);
-                        this.field_1778 += Tessellator.INSTANCE.method_1396();
+                        this.field_1778 += Tessellator.INSTANCE.end();
                         GL11.glPopMatrix();
                         GL11.glEndList();
-                        Tessellator.INSTANCE.method_1406(0.0, 0.0, 0.0);
+                        Tessellator.INSTANCE.offset(0.0, 0.0, 0.0);
                     } else {
                         var13 = false;
                     }

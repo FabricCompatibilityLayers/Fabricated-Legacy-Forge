@@ -31,7 +31,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Shadow public ClientWorld world;
 
-    @Shadow public Minecraft field_1918;
+    @Shadow public Minecraft client;
 
     @Shadow private int renderDistance;
 
@@ -59,7 +59,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Shadow private List<BufferBuilder> field_1911;
 
-    @Shadow public List<BlockEntity> field_1902;
+    @Shadow public List<BlockEntity> blockEntities;
 
     @Shadow private boolean field_1921;
 
@@ -100,7 +100,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Shadow private int ticks;
 
-    @Shadow @Final public class_534 field_1910;
+    @Shadow @Final public TextureManager textureManager;
 
     @Shadow private int lightSkyList;
 
@@ -108,7 +108,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Shadow private int darkSkyList;
 
-    @Shadow public class_535 field_1919;
+    @Shadow public BlockRenderer blockRenderer;
 
     @Shadow public Map<Integer, BlockBreakingInfo> blockBreakingInfos;
 
@@ -121,8 +121,8 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
     @Overwrite
     public void reload() {
         if (this.world != null) {
-            Block.LEAVES.setGraphics(this.field_1918.options.fancyGraphics);
-            this.renderDistance = this.field_1918.options.renderDistance;
+            Block.LEAVES.setGraphics(this.client.options.fancyGraphics);
+            this.renderDistance = this.client.options.renderDistance;
             int var2;
             int var3;
             BufferBuilder var5;
@@ -160,12 +160,12 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
             }
 
             this.field_1911.clear();
-            this.field_1902.clear();
+            this.blockEntities.clear();
 
             for(int var9 = 0; var9 < this.field_1914; ++var9) {
                 for(int var10 = 0; var10 < this.field_1915; ++var10) {
                     for(int var6 = 0; var6 < this.field_1916; ++var6) {
-                        this.field_1913[(var6 * this.field_1915 + var10) * this.field_1914 + var9] = new BufferBuilder(this.world, this.field_1902, var9 * 16, var10 * 16, var6 * 16, this.field_1917 + var2);
+                        this.field_1913[(var6 * this.field_1915 + var10) * this.field_1914 + var9] = new BufferBuilder(this.world, this.blockEntities, var9 * 16, var10 * 16, var6 * 16, this.field_1917 + var2);
                         if (this.field_1921) {
                             this.field_1913[(var6 * this.field_1915 + var10) * this.field_1914 + var9].field_1800 = this.field_1920.get(var3);
                         }
@@ -183,7 +183,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
             }
 
             if (this.world != null) {
-                MobEntity var11 = this.field_1918.field_3806;
+                MobEntity var11 = this.client.cameraEntity;
                 if (var11 != null) {
                     this.method_1383(MathHelper.floor(var11.x), MathHelper.floor(var11.y), MathHelper.floor(var11.z));
                     Arrays.sort(this.field_1912, new class_522(var11));
@@ -211,7 +211,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
             }
         }
 
-        if (this.field_1918.options.renderDistance != this.renderDistance) {
+        if (this.client.options.renderDistance != this.renderDistance) {
             this.reload();
         }
 
@@ -241,7 +241,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
         DiffuseLighting.disable();
         byte var17 = 0;
         int var34;
-        if (this.field_1921 && this.field_1918.options.advancedOpengl && !this.field_1918.options.anaglyph3d && par2 == 0) {
+        if (this.field_1921 && this.client.options.advancedOpengl && !this.client.options.anaglyph3d && par2 == 0) {
             byte var18 = 0;
             int var19 = 16;
             this.onResized(var18, var19);
@@ -314,7 +314,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 }
 
                 GL11.glPopMatrix();
-                if (this.field_1918.options.anaglyph3d) {
+                if (this.client.options.anaglyph3d) {
                     if (GameRenderer.anaglyphFilter == 0) {
                         GL11.glColorMask(false, true, true, true);
                     } else {
@@ -345,19 +345,19 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
      * @reason none
      */
     @Overwrite
-    public void method_1365(float par1) {
+    public void renderSky(float par1) {
         SkyProvider skyProvider;
-        if ((skyProvider = this.field_1918.world.dimension.getSkyProvider()) != null) {
-            skyProvider.render(par1, this.world, this.field_1918);
+        if ((skyProvider = this.client.world.dimension.getSkyProvider()) != null) {
+            skyProvider.render(par1, this.world, this.client);
         } else {
-            if (this.field_1918.world.dimension.dimensionType == 1) {
+            if (this.client.world.dimension.dimensionType == 1) {
                 GL11.glDisable(2912);
                 GL11.glDisable(3008);
                 GL11.glEnable(3042);
                 GL11.glBlendFunc(770, 771);
                 DiffuseLighting.disable();
                 GL11.glDepthMask(false);
-                this.field_1910.method_1426(this.field_1910.getTextureFromPath("/misc/tunnel.png"));
+                this.textureManager.bindTexture(this.textureManager.getTextureFromPath("/misc/tunnel.png"));
                 Tessellator var21 = Tessellator.INSTANCE;
 
                 for(int var22 = 0; var22 < 6; ++var22) {
@@ -382,27 +382,27 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                         GL11.glRotatef(-90.0F, 0.0F, 0.0F, 1.0F);
                     }
 
-                    var21.method_1405();
-                    var21.method_1413(2631720);
-                    var21.method_1399(-100.0, -100.0, -100.0, 0.0, 0.0);
-                    var21.method_1399(-100.0, -100.0, 100.0, 0.0, 16.0);
-                    var21.method_1399(100.0, -100.0, 100.0, 16.0, 16.0);
-                    var21.method_1399(100.0, -100.0, -100.0, 16.0, 0.0);
-                    var21.method_1396();
+                    var21.begin();
+                    var21.color(2631720);
+                    var21.vertex(-100.0, -100.0, -100.0, 0.0, 0.0);
+                    var21.vertex(-100.0, -100.0, 100.0, 0.0, 16.0);
+                    var21.vertex(100.0, -100.0, 100.0, 16.0, 16.0);
+                    var21.vertex(100.0, -100.0, -100.0, 16.0, 0.0);
+                    var21.end();
                     GL11.glPopMatrix();
                 }
 
                 GL11.glDepthMask(true);
                 GL11.glEnable(3553);
                 GL11.glEnable(3008);
-            } else if (this.field_1918.world.dimension.canPlayersSleep()) {
+            } else if (this.client.world.dimension.canPlayersSleep()) {
                 GL11.glDisable(3553);
-                Vec3d var2 = this.world.method_3631(this.field_1918.field_3806, par1);
+                Vec3d var2 = this.world.method_3631(this.client.cameraEntity, par1);
                 float var3 = (float)var2.x;
                 float var4 = (float)var2.y;
                 float var5 = (float)var2.z;
                 float var8;
-                if (this.field_1918.options.anaglyph3d) {
+                if (this.client.options.anaglyph3d) {
                     float var6 = (var3 * 30.0F + var4 * 59.0F + var5 * 11.0F) / 100.0F;
                     float var7 = (var3 * 30.0F + var4 * 70.0F) / 100.0F;
                     var8 = (var3 * 30.0F + var5 * 70.0F) / 100.0F;
@@ -442,7 +442,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                     var9 = var24[1];
                     var10 = var24[2];
                     float var13;
-                    if (this.field_1918.options.anaglyph3d) {
+                    if (this.client.options.anaglyph3d) {
                         var11 = (var8 * 30.0F + var9 * 59.0F + var10 * 11.0F) / 100.0F;
                         var12 = (var8 * 30.0F + var9 * 70.0F) / 100.0F;
                         var13 = (var8 * 30.0F + var10 * 70.0F) / 100.0F;
@@ -451,20 +451,20 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                         var10 = var13;
                     }
 
-                    var23.method_1408(6);
-                    var23.method_1401(var8, var9, var10, var24[3]);
-                    var23.method_1398(0.0, 100.0, 0.0);
+                    var23.begin(6);
+                    var23.color(var8, var9, var10, var24[3]);
+                    var23.vertex(0.0, 100.0, 0.0);
                     var26 = 16;
-                    var23.method_1401(var24[0], var24[1], var24[2], 0.0F);
+                    var23.color(var24[0], var24[1], var24[2], 0.0F);
 
                     for(var27 = 0; var27 <= var26; ++var27) {
                         var13 = (float)var27 * 3.1415927F * 2.0F / (float)var26;
                         var14 = MathHelper.sin(var13);
                         var15 = MathHelper.cos(var13);
-                        var23.method_1398((double)(var14 * 120.0F), (double)(var15 * 120.0F), (double)(-var15 * 40.0F * var24[3]));
+                        var23.vertex((double)(var14 * 120.0F), (double)(var15 * 120.0F), (double)(-var15 * 40.0F * var24[3]));
                     }
 
-                    var23.method_1396();
+                    var23.end();
                     GL11.glPopMatrix();
                     GL11.glShadeModel(7424);
                 }
@@ -481,15 +481,15 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
                 GL11.glRotatef(this.world.getSkyAngle(par1) * 360.0F, 1.0F, 0.0F, 0.0F);
                 var12 = 30.0F;
-                GL11.glBindTexture(3553, this.field_1910.getTextureFromPath("/terrain/sun.png"));
-                var23.method_1405();
-                var23.method_1399((double)(-var12), 100.0, (double)(-var12), 0.0, 0.0);
-                var23.method_1399((double)var12, 100.0, (double)(-var12), 1.0, 0.0);
-                var23.method_1399((double)var12, 100.0, (double)var12, 1.0, 1.0);
-                var23.method_1399((double)(-var12), 100.0, (double)var12, 0.0, 1.0);
-                var23.method_1396();
+                GL11.glBindTexture(3553, this.textureManager.getTextureFromPath("/terrain/sun.png"));
+                var23.begin();
+                var23.vertex((double)(-var12), 100.0, (double)(-var12), 0.0, 0.0);
+                var23.vertex((double)var12, 100.0, (double)(-var12), 1.0, 0.0);
+                var23.vertex((double)var12, 100.0, (double)var12, 1.0, 1.0);
+                var23.vertex((double)(-var12), 100.0, (double)var12, 0.0, 1.0);
+                var23.end();
                 var12 = 20.0F;
-                GL11.glBindTexture(3553, this.field_1910.getTextureFromPath("/terrain/moon_phases.png"));
+                GL11.glBindTexture(3553, this.textureManager.getTextureFromPath("/terrain/moon_phases.png"));
                 int var28 = this.world.method_3679(par1);
                 var26 = var28 % 4;
                 var27 = var28 / 4 % 2;
@@ -497,12 +497,12 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 var15 = (float)(var27 + 0) / 2.0F;
                 float var18 = (float)(var26 + 1) / 4.0F;
                 float var19 = (float)(var27 + 1) / 2.0F;
-                var23.method_1405();
-                var23.method_1399((double)(-var12), -100.0, (double)var12, (double)var18, (double)var19);
-                var23.method_1399((double)var12, -100.0, (double)var12, (double)var14, (double)var19);
-                var23.method_1399((double)var12, -100.0, (double)(-var12), (double)var14, (double)var15);
-                var23.method_1399((double)(-var12), -100.0, (double)(-var12), (double)var18, (double)var15);
-                var23.method_1396();
+                var23.begin();
+                var23.vertex((double)(-var12), -100.0, (double)var12, (double)var18, (double)var19);
+                var23.vertex((double)var12, -100.0, (double)var12, (double)var14, (double)var19);
+                var23.vertex((double)var12, -100.0, (double)(-var12), (double)var14, (double)var15);
+                var23.vertex((double)(-var12), -100.0, (double)(-var12), (double)var18, (double)var15);
+                var23.end();
                 GL11.glDisable(3553);
                 float var20 = this.world.method_3707(par1) * var8;
                 if (var20 > 0.0F) {
@@ -517,7 +517,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 GL11.glPopMatrix();
                 GL11.glDisable(3553);
                 GL11.glColor3f(0.0F, 0.0F, 0.0F);
-                double var25 = this.field_1918.playerEntity.method_2663(par1).y - this.world.getHorizonHeight();
+                double var25 = this.client.playerEntity.method_2663(par1).y - this.world.getHorizonHeight();
                 if (var25 < 0.0) {
                     GL11.glPushMatrix();
                     GL11.glTranslatef(0.0F, 12.0F, 0.0F);
@@ -526,29 +526,29 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                     var10 = 1.0F;
                     var11 = -((float)(var25 + 65.0));
                     var12 = -var10;
-                    var23.method_1405();
-                    var23.method_1402(0, 255);
-                    var23.method_1398((double)(-var10), (double)var11, (double)var10);
-                    var23.method_1398((double)var10, (double)var11, (double)var10);
-                    var23.method_1398((double)var10, (double)var12, (double)var10);
-                    var23.method_1398((double)(-var10), (double)var12, (double)var10);
-                    var23.method_1398((double)(-var10), (double)var12, (double)(-var10));
-                    var23.method_1398((double)var10, (double)var12, (double)(-var10));
-                    var23.method_1398((double)var10, (double)var11, (double)(-var10));
-                    var23.method_1398((double)(-var10), (double)var11, (double)(-var10));
-                    var23.method_1398((double)var10, (double)var12, (double)(-var10));
-                    var23.method_1398((double)var10, (double)var12, (double)var10);
-                    var23.method_1398((double)var10, (double)var11, (double)var10);
-                    var23.method_1398((double)var10, (double)var11, (double)(-var10));
-                    var23.method_1398((double)(-var10), (double)var11, (double)(-var10));
-                    var23.method_1398((double)(-var10), (double)var11, (double)var10);
-                    var23.method_1398((double)(-var10), (double)var12, (double)var10);
-                    var23.method_1398((double)(-var10), (double)var12, (double)(-var10));
-                    var23.method_1398((double)(-var10), (double)var12, (double)(-var10));
-                    var23.method_1398((double)(-var10), (double)var12, (double)var10);
-                    var23.method_1398((double)var10, (double)var12, (double)var10);
-                    var23.method_1398((double)var10, (double)var12, (double)(-var10));
-                    var23.method_1396();
+                    var23.begin();
+                    var23.color(0, 255);
+                    var23.vertex((double)(-var10), (double)var11, (double)var10);
+                    var23.vertex((double)var10, (double)var11, (double)var10);
+                    var23.vertex((double)var10, (double)var12, (double)var10);
+                    var23.vertex((double)(-var10), (double)var12, (double)var10);
+                    var23.vertex((double)(-var10), (double)var12, (double)(-var10));
+                    var23.vertex((double)var10, (double)var12, (double)(-var10));
+                    var23.vertex((double)var10, (double)var11, (double)(-var10));
+                    var23.vertex((double)(-var10), (double)var11, (double)(-var10));
+                    var23.vertex((double)var10, (double)var12, (double)(-var10));
+                    var23.vertex((double)var10, (double)var12, (double)var10);
+                    var23.vertex((double)var10, (double)var11, (double)var10);
+                    var23.vertex((double)var10, (double)var11, (double)(-var10));
+                    var23.vertex((double)(-var10), (double)var11, (double)(-var10));
+                    var23.vertex((double)(-var10), (double)var11, (double)var10);
+                    var23.vertex((double)(-var10), (double)var12, (double)var10);
+                    var23.vertex((double)(-var10), (double)var12, (double)(-var10));
+                    var23.vertex((double)(-var10), (double)var12, (double)(-var10));
+                    var23.vertex((double)(-var10), (double)var12, (double)var10);
+                    var23.vertex((double)var10, (double)var12, (double)var10);
+                    var23.vertex((double)var10, (double)var12, (double)(-var10));
+                    var23.end();
                 }
 
                 if (this.world.dimension.hasGround()) {
@@ -717,7 +717,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
         double var8 = par2EntityPlayer.prevTickZ + (par2EntityPlayer.z - par2EntityPlayer.prevTickZ) * (double)par3;
         if (!this.blockBreakingInfos.isEmpty()) {
             GL11.glBlendFunc(774, 768);
-            int var10 = this.field_1910.getTextureFromPath("/terrain.png");
+            int var10 = this.textureManager.getTextureFromPath("/terrain.png");
             GL11.glBindTexture(3553, var10);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 0.5F);
             GL11.glPushMatrix();
@@ -725,9 +725,9 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
             GL11.glPolygonOffset(-3.0F, -3.0F);
             GL11.glEnable(32823);
             GL11.glEnable(3008);
-            par1Tessellator.method_1405();
-            par1Tessellator.method_1406(-var4, -var6, -var8);
-            par1Tessellator.method_1409();
+            par1Tessellator.begin();
+            par1Tessellator.offset(-var4, -var6, -var8);
+            par1Tessellator.setFixedColor();
             Iterator var11 = this.blockBreakingInfos.values().iterator();
 
             while(var11.hasNext()) {
@@ -744,12 +744,12 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                         var20 = Block.STONE_BLOCK;
                     }
 
-                    this.field_1919.method_1451(var20, var12.method_2090(), var12.method_2091(), var12.method_2092(), 240 + var12.getStage());
+                    this.blockRenderer.render(var20, var12.method_2090(), var12.method_2091(), var12.method_2092(), 240 + var12.getStage());
                 }
             }
 
-            par1Tessellator.method_1396();
-            par1Tessellator.method_1406(0.0, 0.0, 0.0);
+            par1Tessellator.end();
+            par1Tessellator.offset(0.0, 0.0, 0.0);
             GL11.glDisable(3008);
             GL11.glPolygonOffset(0.0F, 0.0F);
             GL11.glDisable(32823);
@@ -765,22 +765,22 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
      * @reason none
      */
     @Overwrite
-    public Particle method_1379(String par1Str, double par2, double par4, double par6, double par8, double par10, double par12) {
-        if (this.field_1918 != null && this.field_1918.field_3806 != null && this.field_1918.particleManager != null) {
-            int var14 = this.field_1918.options.particle;
+    public Particle spawnParticleInternal(String par1Str, double par2, double par4, double par6, double par8, double par10, double par12) {
+        if (this.client != null && this.client.cameraEntity != null && this.client.particleManager != null) {
+            int var14 = this.client.options.particle;
             if (var14 == 1 && this.world.random.nextInt(3) == 0) {
                 var14 = 2;
             }
 
-            double var15 = this.field_1918.field_3806.x - par2;
-            double var17 = this.field_1918.field_3806.y - par4;
-            double var19 = this.field_1918.field_3806.z - par6;
+            double var15 = this.client.cameraEntity.x - par2;
+            double var17 = this.client.cameraEntity.y - par4;
+            double var19 = this.client.cameraEntity.z - par6;
             Particle var21 = null;
             Object effectObject = null;
             if (par1Str.equals("hugeexplosion")) {
-                this.field_1918.particleManager.addParticle(var21 = new ExplosionEmitterParticle(this.world, par2, par4, par6, par8, par10, par12));
+                this.client.particleManager.addParticle(var21 = new ExplosionEmitterParticle(this.world, par2, par4, par6, par8, par10, par12));
             } else if (par1Str.equals("largeexplode")) {
-                this.field_1918.particleManager.addParticle(var21 = new LargeExplosionParticle(this.field_1910, this.world, par2, par4, par6, par8, par10, par12));
+                this.client.particleManager.addParticle(var21 = new LargeExplosionParticle(this.textureManager, this.world, par2, par4, par6, par8, par10, par12));
             }
 
             if (var21 != null) {
@@ -829,7 +829,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                     } else if (par1Str.equals("lava")) {
                         var21 = new LavaEmberParticle(this.world, par2, par4, par6);
                     } else if (par1Str.equals("footstep")) {
-                        var21 = new FootstepParticle(this.field_1910, this.world, par2, par4, par6);
+                        var21 = new FootstepParticle(this.textureManager, this.world, par2, par4, par6);
                     } else if (par1Str.equals("splash")) {
                         var21 = new WaterSplashParticle(this.world, par2, par4, par6, par8, par10, par12);
                     } else if (par1Str.equals("largesmoke")) {
@@ -864,7 +864,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                     }
 
                     if (var21 != null) {
-                        ((IParticleManager)this.field_1918.particleManager).addEffect(var21, effectObject);
+                        ((IParticleManager)this.client.particleManager).addEffect(var21, effectObject);
                     }
 
                     return var21;
@@ -958,10 +958,10 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 var20 = par6 & 4095;
                 if (var20 > 0) {
                     Block var40 = Block.BLOCKS[var20];
-                    this.field_1918.soundSystem.playSound(var40.soundGroup.getHitId(), (float)par3 + 0.5F, (float)par4 + 0.5F, (float)par5 + 0.5F, (var40.soundGroup.getVolume() + 1.0F) / 2.0F, var40.soundGroup.getPitch() * 0.8F);
+                    this.client.soundSystem.playSound(var40.soundGroup.getHitId(), (float)par3 + 0.5F, (float)par4 + 0.5F, (float)par5 + 0.5F, (var40.soundGroup.getVolume() + 1.0F) / 2.0F, var40.soundGroup.getPitch() * 0.8F);
                 }
 
-                this.field_1918.particleManager.method_1294(par3, par4, par5, par6 & 4095, par6 >> 12 & 255);
+                this.client.particleManager.method_1294(par3, par4, par5, par6 & 4095, par6 >> 12 & 255);
                 break;
             case 2002:
                 var8 = (double)par3;
@@ -988,7 +988,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                     var25 = Math.cos(var23) * var39;
                     var27 = 0.01 + var7.nextDouble() * 0.5;
                     var29 = Math.sin(var23) * var39;
-                    Particle var31 = this.method_1379(var19, var8 + var25 * 0.1, var10 + 0.3, var12 + var29 * 0.1, var25, var27, var29);
+                    Particle var31 = this.spawnParticleInternal(var19, var8 + var25 * 0.1, var10 + 0.3, var12 + var29 * 0.1, var25, var27, var29);
                     if (var31 != null) {
                         float var32 = 0.75F + var7.nextFloat() * 0.25F;
                         var31.setColor(var16 * var32, var17 * var32, var18 * var32);

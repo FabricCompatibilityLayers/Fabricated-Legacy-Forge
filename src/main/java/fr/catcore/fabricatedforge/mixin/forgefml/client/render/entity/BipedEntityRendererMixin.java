@@ -2,7 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render.entity;
 
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
-import net.minecraft.client.class_535;
+import net.minecraft.client.BlockRenderer;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.model.BiPedModel;
@@ -42,7 +42,7 @@ public class BipedEntityRendererMixin extends MobEntityRenderer {
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(var3, IItemRenderer.ItemRenderType.EQUIPPED);
             boolean is3D = customRenderer != null && customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.EQUIPPED, var3, IItemRenderer.ItemRendererHelper.BLOCK_3D);
             float var4;
-            if (var3.getItem() instanceof BlockItem && (is3D || class_535.method_1455(Block.BLOCKS[var3.id].getBlockType()))) {
+            if (var3.getItem() instanceof BlockItem && (is3D || BlockRenderer.method_1455(Block.BLOCKS[var3.id].getBlockType()))) {
                 var4 = 0.5F;
                 GL11.glTranslatef(0.0F, 0.1875F, -0.3125F);
                 var4 *= 0.75F;
@@ -71,10 +71,10 @@ public class BipedEntityRendererMixin extends MobEntityRenderer {
                 GL11.glRotatef(20.0F, 0.0F, 0.0F, 1.0F);
             }
 
-            this.dispatcher.field_2099.method_1357(par1EntityLiving, var3, 0);
+            this.dispatcher.heldItemRenderer.method_1357(par1EntityLiving, var3, 0);
             if (var3.getItem().method_3397()) {
-                for(int x = 1; x < ((IItem)var3.getItem()).getRenderPasses(var3.getMeta()); ++x) {
-                    this.dispatcher.field_2099.method_1357(par1EntityLiving, var3, x);
+                for(int x = 1; x < ((IItem)var3.getItem()).getRenderPasses(var3.getData()); ++x) {
+                    this.dispatcher.heldItemRenderer.method_1357(par1EntityLiving, var3, x);
                 }
             }
 

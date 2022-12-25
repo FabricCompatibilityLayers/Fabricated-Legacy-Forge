@@ -43,7 +43,7 @@ public abstract class VillagerEntityMixin extends PassiveEntity {
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
-    public String method_2473() {
+    public String getTexture() {
         switch (this.profession()) {
             case 0:
                 return "/mob/villager/farmer.png";
@@ -56,7 +56,7 @@ public abstract class VillagerEntityMixin extends PassiveEntity {
             case 4:
                 return "/mob/villager/butcher.png";
             default:
-                return VillagerRegistry.getVillagerSkin(this.profession(), super.method_2473());
+                return VillagerRegistry.getVillagerSkin(this.profession(), super.getTexture());
         }
     }
 

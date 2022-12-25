@@ -18,25 +18,25 @@ import java.util.List;
 @Mixin(BrewingStandBlockEntity.class)
 public abstract class BrewingStandBlockEntityMixin extends BlockEntity implements Inventory, ISidedInventory {
 
-    @Shadow protected abstract boolean method_508();
+    @Shadow protected abstract boolean canBrew();
 
     @Shadow private ItemStack[] stacks;
 
-    @Shadow protected abstract int method_505(int i, ItemStack itemStack);
+    @Shadow protected abstract int getBrewEffectData(int i, ItemStack itemStack);
 
     /**
      * @author Minecraft Forge
      * @reason none
      */
     @Overwrite
-    private void method_509() {
-        if (this.method_508()) {
+    private void brew() {
+        if (this.canBrew()) {
             ItemStack var1 = this.stacks[3];
 
             for(int var2 = 0; var2 < 3; ++var2) {
                 if (this.stacks[var2] != null && this.stacks[var2].id == Item.POTION.id) {
-                    int var3 = this.stacks[var2].getMeta();
-                    int var4 = this.method_505(var3, var1);
+                    int var3 = this.stacks[var2].getData();
+                    int var4 = this.getBrewEffectData(var3, var1);
                     List var5 = Item.POTION.getPotionEffects(var3);
                     List var6 = Item.POTION.getPotionEffects(var4);
                     if ((var3 <= 0 || var5 != var6) && (var5 == null || !var5.equals(var6) && var6 != null)) {

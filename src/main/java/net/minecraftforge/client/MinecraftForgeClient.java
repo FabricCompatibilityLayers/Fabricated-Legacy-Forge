@@ -1,7 +1,7 @@
 package net.minecraftforge.client;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.class_535;
+import net.minecraft.client.BlockRenderer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
@@ -19,9 +19,9 @@ public class MinecraftForgeClient {
         ForgeHooksClient.engine().getTextureFromPath(texture);
     }
 
-    public static void renderBlock(class_535 render, Block block, int x, int y, int z) {
+    public static void renderBlock(BlockRenderer render, Block block, int x, int y, int z) {
         ForgeHooksClient.beforeBlockRender(block, render);
-        render.method_1458(block, x, y, z);
+        render.render(block, x, y, z);
         ForgeHooksClient.afterBlockRender(block, render);
     }
 
