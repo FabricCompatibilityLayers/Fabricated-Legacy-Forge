@@ -37,7 +37,7 @@ public class BlockDustParticleMixin extends Particle {
         if (this.field_1752 == Block.GRASS_BLOCK && this.side != 1) {
             return (BlockDustParticle)(Object) this;
         } else {
-            int var4 = this.field_1752.method_438(this.world, par1, par2, par3);
+            int var4 = this.field_1752.getTint(this.world, par1, par2, par3);
             this.red *= (float)(var4 >> 16 & 0xFF) / 255.0F;
             this.green *= (float)(var4 >> 8 & 0xFF) / 255.0F;
             this.blue *= (float)(var4 & 0xFF) / 255.0F;

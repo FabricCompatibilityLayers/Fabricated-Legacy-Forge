@@ -43,7 +43,7 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
         }
 
         if (!this.world.isClient) {
-            if (this.fuelTime == 0 && this.method_525()) {
+            if (this.fuelTime == 0 && this.canAcceptRecipeOutput()) {
                 this.totalFuelTime = this.fuelTime = getBurnTime(this.stacks[1]);
                 if (this.fuelTime > 0) {
                     var2 = true;
@@ -56,11 +56,11 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
                 }
             }
 
-            if (this.isFueled() && this.method_525()) {
+            if (this.isFueled() && this.canAcceptRecipeOutput()) {
                 ++this.field_547;
                 if (this.field_547 == 200) {
                     this.field_547 = 0;
-                    this.method_524();
+                    this.craftRecipe();
                     var2 = true;
                 }
             } else {
@@ -83,7 +83,7 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
      * @reason none
      */
     @Overwrite
-    private boolean method_525() {
+    private boolean canAcceptRecipeOutput() {
         if (this.stacks[0] == null) {
             return false;
         } else {
@@ -106,8 +106,8 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
      * @reason none
      */
     @Overwrite
-    public void method_524() {
-        if (this.method_525()) {
+    public void craftRecipe() {
+        if (this.canAcceptRecipeOutput()) {
             ItemStack var1 = ((ISmeltingRecipeRegistry)SmeltingRecipeRegistry.getInstance()).getSmeltingResult(this.stacks[0]);
             if (this.stacks[2] == null) {
                 this.stacks[2] = var1.copy();

@@ -2,7 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render.entity;
 
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
-import net.minecraft.client.class_535;
+import net.minecraft.client.BlockRenderer;
 import net.minecraft.client.render.block.entity.SkullBlockEntityRenderer;
 import net.minecraft.client.render.entity.BipedEntityRenderer;
 import net.minecraft.client.render.entity.MobEntityRenderer;
@@ -119,17 +119,17 @@ public abstract class BipedEntityRendererMixin extends MobEntityRenderer {
                         var7 = var5.getNbt().getString("SkullOwner");
                     }
 
-                    SkullBlockEntityRenderer.instance.method_4363(-0.5F, 0.0F, -0.5F, 1, 180.0F, var5.getMeta(), var7);
+                    SkullBlockEntityRenderer.instance.method_4363(-0.5F, 0.0F, -0.5F, 1, 180.0F, var5.getData(), var7);
                 }
             } else {
-                if (is3D || class_535.method_1455(Block.BLOCKS[var5.id].getBlockType())) {
+                if (is3D || BlockRenderer.method_1455(Block.BLOCKS[var5.id].getBlockType())) {
                     float var6 = 0.625F;
                     GL11.glTranslatef(0.0F, -0.25F, 0.0F);
                     GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
                     GL11.glScalef(var6, -var6, -var6);
                 }
 
-                this.dispatcher.field_2099.method_1357(par1EntityLiving, var5, 0);
+                this.dispatcher.heldItemRenderer.method_1357(par1EntityLiving, var5, 0);
             }
 
             GL11.glPopMatrix();
@@ -148,7 +148,7 @@ public abstract class BipedEntityRendererMixin extends MobEntityRenderer {
             GL11.glTranslatef(-0.0625F, 0.4375F, 0.0625F);
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(var4, IItemRenderer.ItemRenderType.EQUIPPED);
             boolean is3D = customRenderer != null && customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.EQUIPPED, var4, IItemRenderer.ItemRendererHelper.BLOCK_3D);
-            if (!(var4.getItem() instanceof BlockItem) || !is3D && !class_535.method_1455(Block.BLOCKS[var4.id].getBlockType())) {
+            if (!(var4.getItem() instanceof BlockItem) || !is3D && !BlockRenderer.method_1455(Block.BLOCKS[var4.id].getBlockType())) {
                 if (var4.id == Item.field_4349.id) {
                     float var6 = 0.625F;
                     GL11.glTranslatef(0.0F, 0.125F, 0.3125F);
@@ -184,10 +184,10 @@ public abstract class BipedEntityRendererMixin extends MobEntityRenderer {
                 GL11.glScalef(var6, -var6, var6);
             }
 
-            this.dispatcher.field_2099.method_1357(par1EntityLiving, var4, 0);
+            this.dispatcher.heldItemRenderer.method_1357(par1EntityLiving, var4, 0);
             if (var4.getItem().method_3397()) {
-                for(int x = 1; x < ((IItem)var4.getItem()).getRenderPasses(var4.getMeta()); ++x) {
-                    this.dispatcher.field_2099.method_1357(par1EntityLiving, var4, x);
+                for(int x = 1; x < ((IItem)var4.getItem()).getRenderPasses(var4.getData()); ++x) {
+                    this.dispatcher.heldItemRenderer.method_1357(par1EntityLiving, var4, x);
                 }
             }
 

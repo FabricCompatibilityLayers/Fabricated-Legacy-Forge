@@ -136,8 +136,8 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
-    public int method_455(BlockView par1IBlockAccess, int par2, int par3, int par4) {
-        return par1IBlockAccess.method_3778(par2, par3, par4, this.getLightValue(par1IBlockAccess, par2, par3, par4));
+    public int getLight(BlockView par1IBlockAccess, int par2, int par3, int par4) {
+        return par1IBlockAccess.getLightmapCoordinates(par2, par3, par4, this.getLightValue(par1IBlockAccess, par2, par3, par4));
     }
 
     /**

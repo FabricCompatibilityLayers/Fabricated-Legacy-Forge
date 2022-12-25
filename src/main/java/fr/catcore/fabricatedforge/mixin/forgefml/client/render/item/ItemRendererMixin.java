@@ -3,8 +3,8 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render.item;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
-import net.minecraft.client.class_534;
-import net.minecraft.client.class_535;
+import net.minecraft.client.TextureManager;
+import net.minecraft.client.BlockRenderer;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -26,7 +26,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
 
     @Shadow private Random field_2126;
 
-    @Shadow private class_535 field_2125;
+    @Shadow private BlockRenderer field_2125;
 
     @Shadow public boolean field_2123;
 
@@ -66,8 +66,8 @@ public abstract class ItemRendererMixin extends EntityRenderer {
 
         GL11.glTranslatef((float)par2, (float)par4 + var11, (float)par6);
         GL11.glEnable(32826);
-        if (!ForgeHooksClient.renderEntityItem(par1EntityItem, var10, var11, var12, this.field_2126, this.dispatcher.field_2098, this.field_2125)) {
-            if (var10.getItem() instanceof BlockItem && class_535.method_1455(Block.BLOCKS[var10.id].getBlockType())) {
+        if (!ForgeHooksClient.renderEntityItem(par1EntityItem, var10, var11, var12, this.field_2126, this.dispatcher.textureManager, this.field_2125)) {
+            if (var10.getItem() instanceof BlockItem && BlockRenderer.method_1455(Block.BLOCKS[var10.id].getBlockType())) {
                 GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
                 if (field_5197) {
                     GL11.glScalef(1.25F, 1.25F, 1.25F);
@@ -94,7 +94,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
                     }
 
                     float var24 = 1.0F;
-                    this.field_2125.method_1447(Block.BLOCKS[var10.id], var10.getMeta(), var24);
+                    this.field_2125.method_1447(Block.BLOCKS[var10.id], var10.getData(), var24);
                     GL11.glPopMatrix();
                 }
             } else if (var10.getItem().method_3397()) {
@@ -108,9 +108,9 @@ public abstract class ItemRendererMixin extends EntityRenderer {
 
                 this.method_1529(((IItem)Item.ITEMS[var10.id]).getTextureFile());
 
-                for(int var15 = 0; var15 < ((IItem)var10.getItem()).getRenderPasses(var10.getMeta()); ++var15) {
+                for(int var15 = 0; var15 < ((IItem)var10.getItem()).getRenderPasses(var10.getData()); ++var15) {
                     this.field_2126.setSeed(187L);
-                    int var16 = var10.getItem().method_3369(var10.getMeta(), var15);
+                    int var16 = var10.getItem().method_3369(var10.getData(), var15);
                     float var17 = 1.0F;
                     if (this.field_2123) {
                         int var18 = Item.ITEMS[var10.id].getDisplayColor(var10, var15);
@@ -155,13 +155,13 @@ public abstract class ItemRendererMixin extends EntityRenderer {
      * @reason none
      */
     @Overwrite
-    public void method_1546(TextRenderer par1FontRenderer, class_534 par2RenderEngine, ItemStack par3ItemStack, int par4, int par5) {
+    public void method_1546(TextRenderer par1FontRenderer, TextureManager par2RenderEngine, ItemStack par3ItemStack, int par4, int par5) {
         int var6 = par3ItemStack.id;
-        int var7 = par3ItemStack.getMeta();
+        int var7 = par3ItemStack.getData();
         int var8 = par3ItemStack.method_3429();
-        if (par3ItemStack.getItem() instanceof BlockItem && class_535.method_1455(Block.BLOCKS[par3ItemStack.id].getBlockType())) {
+        if (par3ItemStack.getItem() instanceof BlockItem && BlockRenderer.method_1455(Block.BLOCKS[par3ItemStack.id].getBlockType())) {
             Block var15 = Block.BLOCKS[var6];
-            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(((IBlock)var15).getTextureFile()));
+            par2RenderEngine.bindTexture(par2RenderEngine.getTextureFromPath(((IBlock)var15).getTextureFile()));
             GL11.glPushMatrix();
             GL11.glTranslatef((float)(par4 - 2), (float)(par5 + 3), -3.0F + this.zOffset);
             GL11.glScalef(10.0F, 10.0F, 10.0F);
@@ -184,7 +184,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
             GL11.glPopMatrix();
         } else if (Item.ITEMS[var6].method_3397()) {
             GL11.glDisable(2896);
-            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(((IItem)Item.ITEMS[var6]).getTextureFile()));
+            par2RenderEngine.bindTexture(par2RenderEngine.getTextureFromPath(((IItem)Item.ITEMS[var6]).getTextureFile()));
 
             for(int var9 = 0; var9 < ((IItem)Item.ITEMS[var6]).getRenderPasses(var7); ++var9) {
                 int var10 = Item.ITEMS[var6].method_3369(var7, var9);
@@ -202,7 +202,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
             GL11.glEnable(2896);
         } else if (var8 >= 0) {
             GL11.glDisable(2896);
-            par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath(((IItem)par3ItemStack.getItem()).getTextureFile()));
+            par2RenderEngine.bindTexture(par2RenderEngine.getTextureFromPath(((IItem)par3ItemStack.getItem()).getTextureFile()));
             int var9 = Item.ITEMS[var6].getDisplayColor(par3ItemStack, 0);
             float var17 = (float)(var9 >> 16 & 0xFF) / 255.0F;
             float var16 = (float)(var9 >> 8 & 0xFF) / 255.0F;
@@ -223,7 +223,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
      * @reason none
      */
     @Overwrite
-    public void method_4336(TextRenderer par1FontRenderer, class_534 par2RenderEngine, ItemStack par3ItemStack, int par4, int par5) {
+    public void method_4336(TextRenderer par1FontRenderer, TextureManager par2RenderEngine, ItemStack par3ItemStack, int par4, int par5) {
         if (par3ItemStack != null) {
             if (!ForgeHooksClient.renderInventoryItem(this.field_2125, par2RenderEngine, par3ItemStack, this.field_2123, this.zOffset, (float)par4, (float)par5)
             )
@@ -235,7 +235,7 @@ public abstract class ItemRendererMixin extends EntityRenderer {
                 GL11.glDepthFunc(516);
                 GL11.glDisable(2896);
                 GL11.glDepthMask(false);
-                par2RenderEngine.method_1426(par2RenderEngine.getTextureFromPath("%blur%/misc/glint.png"));
+                par2RenderEngine.bindTexture(par2RenderEngine.getTextureFromPath("%blur%/misc/glint.png"));
                 this.zOffset -= 50.0F;
                 GL11.glEnable(3042);
                 GL11.glBlendFunc(774, 774);

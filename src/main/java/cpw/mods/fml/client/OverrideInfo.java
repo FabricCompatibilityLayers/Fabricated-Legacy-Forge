@@ -1,13 +1,13 @@
 package cpw.mods.fml.client;
 
-import net.minecraft.client.class_584;
+import net.minecraft.client.Sprite;
 
 class OverrideInfo {
     public String texture;
     public String override;
     public int index;
     public int imageIndex;
-    public class_584 textureFX;
+    public Sprite textureFX;
     public boolean added;
 
     OverrideInfo() {

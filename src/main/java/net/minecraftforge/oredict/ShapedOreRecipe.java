@@ -175,7 +175,7 @@ public class ShapedOreRecipe implements RecipeType {
 
     private boolean checkItemEquals(ItemStack target, ItemStack input) {
         if ((input != null || target == null) && (input == null || target != null)) {
-            return target.id == input.id && (target.getMeta() == -1 || target.getMeta() == input.getMeta());
+            return target.id == input.id && (target.getData() == -1 || target.getData() == input.getData());
         } else {
             return false;
         }

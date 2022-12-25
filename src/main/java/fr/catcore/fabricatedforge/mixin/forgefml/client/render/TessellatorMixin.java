@@ -20,36 +20,36 @@ import java.util.Arrays;
 
 @Mixin(Tessellator.class)
 public abstract class TessellatorMixin implements ITessellator {
-    @Shadow public boolean field_1970;
-    @Shadow private int field_1953;
-    @Shadow public int field_1965;
+    @Shadow public boolean tesselating;
+    @Shadow private int count;
+    @Shadow public int format;
     @Shadow private static boolean field_1946;
-    @Shadow private IntBuffer field_1949;
-    @Shadow private int[] field_1952;
-    @Shadow private ByteBuffer field_1948;
+    @Shadow private IntBuffer bufferInt;
+    @Shadow private int[] array;
+    @Shadow private ByteBuffer buffer;
     @Shadow private boolean field_1940;
     @Shadow private int field_1942;
     @Shadow private int field_1943;
-    @Shadow private IntBuffer field_1941;
-    @Shadow private boolean field_1959;
-    @Shadow private FloatBuffer field_1950;
-    @Shadow private boolean field_1960;
-    @Shadow private ShortBuffer field_1951;
-    @Shadow private boolean field_1958;
-    @Shadow private boolean field_1961;
-    @Shadow private int field_1962;
+    @Shadow private IntBuffer vboBuffer;
+    @Shadow private boolean hasTexture;
+    @Shadow private FloatBuffer bufferFloat;
+    @Shadow private boolean hasLight;
+    @Shadow private ShortBuffer bufferShort;
+    @Shadow private boolean hasColor;
+    @Shadow private boolean hasNormal;
+    @Shadow private int arrayIdx;
 
-    @Shadow protected abstract void method_1412();
+    @Shadow protected abstract void reset();
 
-    @Shadow private int field_1963;
-    @Shadow private double field_1954;
-    @Shadow private double field_1955;
-    @Shadow private int field_1956;
-    @Shadow private int field_1957;
-    @Shadow private int field_1969;
-    @Shadow public double field_1966;
-    @Shadow public double field_1967;
-    @Shadow public double field_1968;
+    @Shadow private int vertexCount;
+    @Shadow private double u;
+    @Shadow private double v;
+    @Shadow private int light;
+    @Shadow private int color;
+    @Shadow private int normal;
+    @Shadow public double offsetX;
+    @Shadow public double offsetY;
+    @Shadow public double offsetZ;
     @Shadow public static Tessellator INSTANCE;
     private static int nativeBufferSize = 0x200000;
     private static int trivertsInBuffer = nativeBufferSize / 48 * 6;
@@ -67,7 +67,7 @@ public abstract class TessellatorMixin implements ITessellator {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void ctr2(int par1, CallbackInfo ci) {
-        this.field_1952 = null;
+        this.array = null;
     }
 
     /**
@@ -75,73 +75,73 @@ public abstract class TessellatorMixin implements ITessellator {
      * @reason none
      */
     @Overwrite
-    public int method_1396() {
-        if (!this.field_1970) {
+    public int end() {
+        if (!this.tesselating) {
             throw new IllegalStateException("Not tesselating!");
         } else {
-            this.field_1970 = false;
+            this.tesselating = false;
             int offs = 0;
 
-            while(offs < this.field_1953) {
+            while(offs < this.count) {
                 int vtc = 0;
-                if (this.field_1965 == 7 && field_1946) {
-                    vtc = Math.min(this.field_1953 - offs, trivertsInBuffer);
+                if (this.format == 7 && field_1946) {
+                    vtc = Math.min(this.count - offs, trivertsInBuffer);
                 } else {
-                    vtc = Math.min(this.field_1953 - offs, nativeBufferSize >> 5);
+                    vtc = Math.min(this.count - offs, nativeBufferSize >> 5);
                 }
 
-                field_1949.clear();
-                field_1949.put(this.field_1952, offs * 8, vtc * 8);
-                field_1948.position(0);
-                field_1948.limit(vtc * 32);
+                bufferInt.clear();
+                bufferInt.put(this.array, offs * 8, vtc * 8);
+                buffer.position(0);
+                buffer.limit(vtc * 32);
                 offs += vtc;
                 if (field_1940) {
                     this.field_1942 = (this.field_1942 + 1) % field_1943;
-                    ARBVertexBufferObject.glBindBufferARB(34962, field_1941.get(this.field_1942));
-                    ARBVertexBufferObject.glBufferDataARB(34962, field_1948, 35040);
+                    ARBVertexBufferObject.glBindBufferARB(34962, vboBuffer.get(this.field_1942));
+                    ARBVertexBufferObject.glBufferDataARB(34962, buffer, 35040);
                 }
 
-                if (this.field_1959) {
+                if (this.hasTexture) {
                     if (field_1940) {
                         GL11.glTexCoordPointer(2, 5126, 32, 12L);
                     } else {
-                        field_1950.position(3);
-                        GL11.glTexCoordPointer(2, 32, field_1950);
+                        bufferFloat.position(3);
+                        GL11.glTexCoordPointer(2, 32, bufferFloat);
                     }
 
                     GL11.glEnableClientState(32888);
                 }
 
-                if (this.field_1960) {
+                if (this.hasLight) {
                     GLX.gl13ClientActiveTexture(GLX.lightmapTextureUnit);
                     if (field_1940) {
                         GL11.glTexCoordPointer(2, 5122, 32, 28L);
                     } else {
-                        field_1951.position(14);
-                        GL11.glTexCoordPointer(2, 32, field_1951);
+                        bufferShort.position(14);
+                        GL11.glTexCoordPointer(2, 32, bufferShort);
                     }
 
                     GL11.glEnableClientState(32888);
                     GLX.gl13ClientActiveTexture(GLX.textureUnit);
                 }
 
-                if (this.field_1958) {
+                if (this.hasColor) {
                     if (field_1940) {
                         GL11.glColorPointer(4, 5121, 32, 20L);
                     } else {
-                        field_1948.position(20);
-                        GL11.glColorPointer(4, true, 32, field_1948);
+                        buffer.position(20);
+                        GL11.glColorPointer(4, true, 32, buffer);
                     }
 
                     GL11.glEnableClientState(32886);
                 }
 
-                if (this.field_1961) {
+                if (this.hasNormal) {
                     if (field_1940) {
                         GL11.glNormalPointer(5121, 32, 24L);
                     } else {
-                        field_1948.position(24);
-                        GL11.glNormalPointer(32, field_1948);
+                        buffer.position(24);
+                        GL11.glNormalPointer(32, buffer);
                     }
 
                     GL11.glEnableClientState(32885);
@@ -150,44 +150,44 @@ public abstract class TessellatorMixin implements ITessellator {
                 if (field_1940) {
                     GL11.glVertexPointer(3, 5126, 32, 0L);
                 } else {
-                    field_1950.position(0);
-                    GL11.glVertexPointer(3, 32, field_1950);
+                    bufferFloat.position(0);
+                    GL11.glVertexPointer(3, 32, bufferFloat);
                 }
 
                 GL11.glEnableClientState(32884);
-                if (this.field_1965 == 7 && field_1946) {
+                if (this.format == 7 && field_1946) {
                     GL11.glDrawArrays(4, 0, vtc);
                 } else {
-                    GL11.glDrawArrays(this.field_1965, 0, vtc);
+                    GL11.glDrawArrays(this.format, 0, vtc);
                 }
 
                 GL11.glDisableClientState(32884);
-                if (this.field_1959) {
+                if (this.hasTexture) {
                     GL11.glDisableClientState(32888);
                 }
 
-                if (this.field_1960) {
+                if (this.hasLight) {
                     GLX.gl13ClientActiveTexture(GLX.lightmapTextureUnit);
                     GL11.glDisableClientState(32888);
                     GLX.gl13ClientActiveTexture(GLX.textureUnit);
                 }
 
-                if (this.field_1958) {
+                if (this.hasColor) {
                     GL11.glDisableClientState(32886);
                 }
 
-                if (this.field_1961) {
+                if (this.hasNormal) {
                     GL11.glDisableClientState(32885);
                 }
             }
 
-            if (this.rawBufferSize > 131072 && this.field_1962 < this.rawBufferSize << 3) {
+            if (this.rawBufferSize > 131072 && this.arrayIdx < this.rawBufferSize << 3) {
                 this.rawBufferSize = 0;
-                this.field_1952 = null;
+                this.array = null;
             }
 
-            int var1 = this.field_1962 * 4;
-            this.method_1412();
+            int var1 = this.arrayIdx * 4;
+            this.reset();
             return var1;
         }
     }
@@ -197,64 +197,64 @@ public abstract class TessellatorMixin implements ITessellator {
      * @reason none
      */
     @Overwrite
-    public void method_1398(double par1, double par3, double par5) {
-        if (this.field_1962 >= this.rawBufferSize - 32) {
+    public void vertex(double par1, double par3, double par5) {
+        if (this.arrayIdx >= this.rawBufferSize - 32) {
             if (this.rawBufferSize == 0) {
                 this.rawBufferSize = 65536;
-                this.field_1952 = new int[this.rawBufferSize];
+                this.array = new int[this.rawBufferSize];
             } else {
                 this.rawBufferSize *= 2;
-                this.field_1952 = Arrays.copyOf(this.field_1952, this.rawBufferSize);
+                this.array = Arrays.copyOf(this.array, this.rawBufferSize);
             }
         }
 
-        ++this.field_1963;
-        if (this.field_1965 == 7 && field_1946 && this.field_1963 % 4 == 0) {
+        ++this.vertexCount;
+        if (this.format == 7 && field_1946 && this.vertexCount % 4 == 0) {
             for(int var7 = 0; var7 < 2; ++var7) {
                 int var8 = 8 * (3 - var7);
-                if (this.field_1959) {
-                    this.field_1952[this.field_1962 + 3] = this.field_1952[this.field_1962 - var8 + 3];
-                    this.field_1952[this.field_1962 + 4] = this.field_1952[this.field_1962 - var8 + 4];
+                if (this.hasTexture) {
+                    this.array[this.arrayIdx + 3] = this.array[this.arrayIdx - var8 + 3];
+                    this.array[this.arrayIdx + 4] = this.array[this.arrayIdx - var8 + 4];
                 }
 
-                if (this.field_1960) {
-                    this.field_1952[this.field_1962 + 7] = this.field_1952[this.field_1962 - var8 + 7];
+                if (this.hasLight) {
+                    this.array[this.arrayIdx + 7] = this.array[this.arrayIdx - var8 + 7];
                 }
 
-                if (this.field_1958) {
-                    this.field_1952[this.field_1962 + 5] = this.field_1952[this.field_1962 - var8 + 5];
+                if (this.hasColor) {
+                    this.array[this.arrayIdx + 5] = this.array[this.arrayIdx - var8 + 5];
                 }
 
-                this.field_1952[this.field_1962 + 0] = this.field_1952[this.field_1962 - var8 + 0];
-                this.field_1952[this.field_1962 + 1] = this.field_1952[this.field_1962 - var8 + 1];
-                this.field_1952[this.field_1962 + 2] = this.field_1952[this.field_1962 - var8 + 2];
-                ++this.field_1953;
-                this.field_1962 += 8;
+                this.array[this.arrayIdx + 0] = this.array[this.arrayIdx - var8 + 0];
+                this.array[this.arrayIdx + 1] = this.array[this.arrayIdx - var8 + 1];
+                this.array[this.arrayIdx + 2] = this.array[this.arrayIdx - var8 + 2];
+                ++this.count;
+                this.arrayIdx += 8;
             }
         }
 
-        if (this.field_1959) {
-            this.field_1952[this.field_1962 + 3] = Float.floatToRawIntBits((float)this.field_1954);
-            this.field_1952[this.field_1962 + 4] = Float.floatToRawIntBits((float)this.field_1955);
+        if (this.hasTexture) {
+            this.array[this.arrayIdx + 3] = Float.floatToRawIntBits((float)this.u);
+            this.array[this.arrayIdx + 4] = Float.floatToRawIntBits((float)this.v);
         }
 
-        if (this.field_1960) {
-            this.field_1952[this.field_1962 + 7] = this.field_1956;
+        if (this.hasLight) {
+            this.array[this.arrayIdx + 7] = this.light;
         }
 
-        if (this.field_1958) {
-            this.field_1952[this.field_1962 + 5] = this.field_1957;
+        if (this.hasColor) {
+            this.array[this.arrayIdx + 5] = this.color;
         }
 
-        if (this.field_1961) {
-            this.field_1952[this.field_1962 + 6] = this.field_1969;
+        if (this.hasNormal) {
+            this.array[this.arrayIdx + 6] = this.normal;
         }
 
-        this.field_1952[this.field_1962 + 0] = Float.floatToRawIntBits((float)(par1 + this.field_1966));
-        this.field_1952[this.field_1962 + 1] = Float.floatToRawIntBits((float)(par3 + this.field_1967));
-        this.field_1952[this.field_1962 + 2] = Float.floatToRawIntBits((float)(par5 + this.field_1968));
-        this.field_1962 += 8;
-        ++this.field_1953;
+        this.array[this.arrayIdx + 0] = Float.floatToRawIntBits((float)(par1 + this.offsetX));
+        this.array[this.arrayIdx + 1] = Float.floatToRawIntBits((float)(par3 + this.offsetY));
+        this.array[this.arrayIdx + 2] = Float.floatToRawIntBits((float)(par5 + this.offsetZ));
+        this.arrayIdx += 8;
+        ++this.count;
     }
 
     @Inject(method = "<clinit>", at = @At("RETURN"))

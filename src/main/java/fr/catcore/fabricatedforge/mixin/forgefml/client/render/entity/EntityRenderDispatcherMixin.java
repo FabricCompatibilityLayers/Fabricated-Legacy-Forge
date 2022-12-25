@@ -2,7 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render.entity;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
-import net.minecraft.client.class_534;
+import net.minecraft.client.TextureManager;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.options.GameOptions;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
@@ -18,11 +18,11 @@ public class EntityRenderDispatcherMixin {
 
     @Shadow public World world;
 
-    @Shadow public class_534 field_2098;
+    @Shadow public TextureManager textureManager;
 
-    @Shadow public GameOptions field_2104;
+    @Shadow public GameOptions options;
 
-    @Shadow public MobEntity field_2101;
+    @Shadow public MobEntity cameraEntity;
 
     @Shadow private TextRenderer textRenderer;
 
@@ -30,24 +30,24 @@ public class EntityRenderDispatcherMixin {
 
     @Shadow public float pitch;
 
-    @Shadow public double field_2105;
+    @Shadow public double cameraX;
 
-    @Shadow public double field_2106;
+    @Shadow public double cameraY;
 
-    @Shadow public double field_2107;
+    @Shadow public double cameraZ;
 
     /**
      * @author Minecraft Forge
      * @reason none
      */
     @Overwrite
-    public void method_1523(
-            World par1World, class_534 par2RenderEngine, TextRenderer par3FontRenderer, MobEntity par4EntityLiving, GameOptions par5GameSettings, float par6
+    public void initialize(
+            World par1World, TextureManager par2RenderEngine, TextRenderer par3FontRenderer, MobEntity par4EntityLiving, GameOptions par5GameSettings, float par6
     ) {
         this.world = par1World;
-        this.field_2098 = par2RenderEngine;
-        this.field_2104 = par5GameSettings;
-        this.field_2101 = par4EntityLiving;
+        this.textureManager = par2RenderEngine;
+        this.options = par5GameSettings;
+        this.cameraEntity = par4EntityLiving;
         this.textRenderer = par3FontRenderer;
         if (par4EntityLiving.method_2641()) {
             int x = MathHelper.floor(par4EntityLiving.x);
@@ -68,8 +68,8 @@ public class EntityRenderDispatcherMixin {
             this.yaw += 180.0F;
         }
 
-        this.field_2105 = par4EntityLiving.prevTickX + (par4EntityLiving.x - par4EntityLiving.prevTickX) * (double)par6;
-        this.field_2106 = par4EntityLiving.prevTickY + (par4EntityLiving.y - par4EntityLiving.prevTickY) * (double)par6;
-        this.field_2107 = par4EntityLiving.prevTickZ + (par4EntityLiving.z - par4EntityLiving.prevTickZ) * (double)par6;
+        this.cameraX = par4EntityLiving.prevTickX + (par4EntityLiving.x - par4EntityLiving.prevTickX) * (double)par6;
+        this.cameraY = par4EntityLiving.prevTickY + (par4EntityLiving.y - par4EntityLiving.prevTickY) * (double)par6;
+        this.cameraZ = par4EntityLiving.prevTickZ + (par4EntityLiving.z - par4EntityLiving.prevTickZ) * (double)par6;
     }
 }

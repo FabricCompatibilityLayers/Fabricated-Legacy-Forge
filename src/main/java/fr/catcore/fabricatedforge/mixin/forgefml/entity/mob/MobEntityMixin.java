@@ -276,7 +276,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
                 this.field_3309 = 1.5F;
                 boolean var3 = true;
-                if ((float)this.field_3223 > (float)this.field_3310 / 2.0F) {
+                if ((float)this.timeUntilRegen > (float)this.field_3310 / 2.0F) {
                     if (par2 <= this.field_3345) {
                         return false;
                     }
@@ -287,7 +287,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
                 } else {
                     this.field_3345 = par2;
                     this.field_3295 = this.field_3294;
-                    this.field_3223 = this.field_3310;
+                    this.timeUntilRegen = this.field_3310;
                     this.method_2653(par1DamageSource, par2);
                     this.field_3297 = this.field_3298 = 10;
                 }

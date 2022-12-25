@@ -7,8 +7,8 @@ import fr.catcore.fabricatedforge.mixininterface.IItem;
 import fr.catcore.fabricatedforge.mixininterface.ITessellator;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.class_534;
-import net.minecraft.client.class_535;
+import net.minecraft.client.TextureManager;
+import net.minecraft.client.BlockRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.texture.ITexturePack;
@@ -54,8 +54,8 @@ public class ForgeHooksClient {
         renderHandlers.put(new ForgeHooksClient.TesKey(texID, subID), handler);
     }
 
-    static class_534 engine() {
-        return FMLClientHandler.instance().getClient().field_3813;
+    static TextureManager engine() {
+        return FMLClientHandler.instance().getClient().textureManager;
     }
 
     public static void bindTexture(String texture, int subID) {
@@ -71,10 +71,10 @@ public class ForgeHooksClient {
                 unbindContext = null;
             }
 
-            if (Tessellator.INSTANCE.field_1970) {
-                int mode = Tessellator.INSTANCE.field_1965;
-                Tessellator.INSTANCE.method_1396();
-                Tessellator.INSTANCE.method_1408(mode);
+            if (Tessellator.INSTANCE.tesselating) {
+                int mode = Tessellator.INSTANCE.format;
+                Tessellator.INSTANCE.end();
+                Tessellator.INSTANCE.begin(mode);
             }
 
             GL11.glBindTexture(3553, texID);
@@ -91,15 +91,15 @@ public class ForgeHooksClient {
         if (inWorld) {
             Tessellator.INSTANCE = defaultTessellator;
         } else {
-            if (Tessellator.INSTANCE.field_1970) {
-                int mode = Tessellator.INSTANCE.field_1965;
-                Tessellator.INSTANCE.method_1396();
+            if (Tessellator.INSTANCE.tesselating) {
+                int mode = Tessellator.INSTANCE.format;
+                Tessellator.INSTANCE.end();
                 if (unbindContext != null) {
                     unbindContext.afterRenderContext();
                     unbindContext = null;
                 }
 
-                Tessellator.INSTANCE.method_1408(mode);
+                Tessellator.INSTANCE.begin(mode);
             }
 
             GL11.glBindTexture(3553, engine().getTextureFromPath("/terrain.png"));
@@ -117,8 +117,8 @@ public class ForgeHooksClient {
 
         if (inWorld && !renderTextures.contains(key)) {
             renderTextures.add(key);
-            tess.method_1405();
-            tess.method_1406(defaultTessellator.field_1966, defaultTessellator.field_1967, defaultTessellator.field_1968);
+            tess.begin();
+            tess.offset(defaultTessellator.offsetX, defaultTessellator.offsetY, defaultTessellator.offsetZ);
         }
 
         Tessellator.INSTANCE = tess;
@@ -142,11 +142,11 @@ public class ForgeHooksClient {
             GL11.glBindTexture(3553, info.texture);
             Tessellator tess = (Tessellator)tessellators.get(info);
             if (handler == null) {
-                tess.method_1396();
+                tess.end();
             } else {
                 Tessellator.INSTANCE = tess;
                 handler.beforeRenderContext();
-                tess.method_1396();
+                tess.end();
                 handler.afterRenderContext();
             }
         }
@@ -156,13 +156,13 @@ public class ForgeHooksClient {
         Tessellator.INSTANCE = defaultTessellator;
     }
 
-    public static void beforeBlockRender(Block block, class_535 render) {
+    public static void beforeBlockRender(Block block, BlockRenderer render) {
         if (!((IBlock)block).isDefaultTexture() && render.field_2049 == -1) {
             bindTexture(((IBlock)block).getTextureFile(), 0);
         }
     }
 
-    public static void afterBlockRender(Block block, class_535 render) {
+    public static void afterBlockRender(Block block, BlockRenderer render) {
         if (!((IBlock)block).isDefaultTexture() && render.field_2049 == -1) {
             unbindTexture();
         }
@@ -173,7 +173,7 @@ public class ForgeHooksClient {
     }
 
     public static boolean renderEntityItem(
-            ItemEntity entity, ItemStack item, float bobing, float rotation, Random random, class_534 engine, class_535 renderBlocks
+            ItemEntity entity, ItemStack item, float bobing, float rotation, Random random, TextureManager engine, BlockRenderer renderBlocks
     ) {
         IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(item, IItemRenderer.ItemRenderType.ENTITY);
         if (customRenderer == null) {
@@ -188,8 +188,8 @@ public class ForgeHooksClient {
             }
 
             boolean is3D = customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.ENTITY, item, IItemRenderer.ItemRendererHelper.BLOCK_3D);
-            if (item.getItem() instanceof BlockItem && (is3D || class_535.method_1455(Block.BLOCKS[item.id].getBlockType()))) {
-                engine.method_1426(engine.getTextureFromPath(((IItem)item.getItem()).getTextureFile()));
+            if (item.getItem() instanceof BlockItem && (is3D || BlockRenderer.method_1455(Block.BLOCKS[item.id].getBlockType()))) {
+                engine.bindTexture(engine.getTextureFromPath(((IItem)item.getItem()).getTextureFile()));
                 int renderType = Block.BLOCKS[item.id].getBlockType();
                 float scale = renderType != 1 && renderType != 19 && renderType != 12 && renderType != 2 ? 0.25F : 0.5F;
                 GL11.glScalef(scale, scale, scale);
@@ -210,7 +210,7 @@ public class ForgeHooksClient {
                     GL11.glPopMatrix();
                 }
             } else {
-                engine.method_1426(engine.getTextureFromPath(((IItem)item.getItem()).getTextureFile()));
+                engine.bindTexture(engine.getTextureFromPath(((IItem)item.getItem()).getTextureFile()));
                 GL11.glScalef(0.5F, 0.5F, 0.5F);
                 customRenderer.renderItem(IItemRenderer.ItemRenderType.ENTITY, item, new Object[]{renderBlocks, entity});
             }
@@ -219,12 +219,12 @@ public class ForgeHooksClient {
         }
     }
 
-    public static boolean renderInventoryItem(class_535 renderBlocks, class_534 engine, ItemStack item, boolean inColor, float zLevel, float x, float y) {
+    public static boolean renderInventoryItem(BlockRenderer renderBlocks, TextureManager engine, ItemStack item, boolean inColor, float zLevel, float x, float y) {
         IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(item, IItemRenderer.ItemRenderType.INVENTORY);
         if (customRenderer == null) {
             return false;
         } else {
-            engine.method_1426(engine.getTextureFromPath(((IItem)Item.ITEMS[item.id]).getTextureFile()));
+            engine.bindTexture(engine.getTextureFromPath(((IItem)Item.ITEMS[item.id]).getTextureFile()));
             if (customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.INVENTORY, item, IItemRenderer.ItemRendererHelper.INVENTORY_BLOCK)) {
                 GL11.glPushMatrix();
                 GL11.glTranslatef(x - 2.0F, y + 3.0F, -3.0F + zLevel);
@@ -267,7 +267,7 @@ public class ForgeHooksClient {
         }
     }
 
-    public static void renderEquippedItem(IItemRenderer customRenderer, class_535 renderBlocks, MobEntity entity, ItemStack item) {
+    public static void renderEquippedItem(IItemRenderer customRenderer, BlockRenderer renderBlocks, MobEntity entity, ItemStack item) {
         if (customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.EQUIPPED, item, IItemRenderer.ItemRendererHelper.EQUIPPED_BLOCK)) {
             GL11.glPushMatrix();
             GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
