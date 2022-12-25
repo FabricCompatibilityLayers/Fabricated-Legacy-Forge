@@ -30,7 +30,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Mixin(TextureManager.class)
-public abstract class class_534Mixin {
+public abstract class TextureManagerMixin {
 
     @Shadow public TexturePackManager packManager;
     @Shadow private HashMap<String, int[]> field_1974;
