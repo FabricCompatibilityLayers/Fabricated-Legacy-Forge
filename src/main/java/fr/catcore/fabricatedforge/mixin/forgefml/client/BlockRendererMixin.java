@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(BlockRenderer.class)
-public abstract class class_535Mixin {
+public abstract class BlockRendererMixin {
 
     @Shadow public BlockView world;
 
