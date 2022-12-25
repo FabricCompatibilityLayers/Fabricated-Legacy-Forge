@@ -146,8 +146,8 @@
   "client": [
     "client.class_469Mixin",
     "client.class_470Accessor",
-    "client.class_534Mixin",
-    "client.class_535Mixin",
+    "client.TextureManagerMixin",
+    "client.BlockRendererMixin",
     "client.class_604Mixin",
     "client.ClientBrandRetrieverMixin",
     "client.MinecraftAccessor",
