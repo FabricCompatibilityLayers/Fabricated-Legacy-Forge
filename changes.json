@@ -1,0 +1,101 @@
+{
+  "classes": {
+    "cpw": {
+      "mods": {
+        "fml": {
+          "client": {
+            "FMLClientHandler": "",
+            "GuiDupesFound": ""
+          },
+          "common": {
+            "event": {
+              "FMLEvent": "",
+              "FMLInterModComms": "",
+              "FMLStateEvent": ""
+            },
+            "modloader": {
+              "BaseModProxy": "",
+              "ModLoaderDispenseHelper": "",
+              "ModLoaderHelper": ""
+            },
+            "DuplicateModsFoundException": "",
+            "Loader": "",
+            "FMLModContainer": "",
+            "LoadController": "",
+            "LoaderState": "",
+            "Mod": "",
+            "FMLCommonHandler": "",
+            "MCPDummyContainer": ""
+          },
+          "relauncher": {
+            "FMLInjectionData": "",
+            "FMLRelauncher": "",
+            "RelaunchClassLoader": "",
+            "RelaunchLibraryManager": ""
+          }
+        }
+      }
+    },
+    "net": {
+      "minecraft": {
+        "BaseMod": "",
+        "ModLoader": ""
+      },
+      "minecraftforge": {
+        "client": {
+          "ForgeHooksClient": ""
+        },
+        "common": {
+          "ForgeVersion": "",
+          "ForgeChunkManager": "",
+          "WorldSpecificSaveHandler": "",
+          "ForgeHooks": "",
+          "Configuration": "",
+          "ForgeDummyContainer": "",
+          "BiomeManager": "",
+          "ChestGenHooks": ""
+        },
+        "event": {
+          "ServerChatEvent": ""
+        },
+        "oredict": {
+          "OreDictionary": ""
+        }
+      }
+    }
+  },
+  "patches": [
+    "AnvilChunkLoader",
+    "Block",
+    "CreativeTabs",
+    "EntityList",
+    "FurnaceRecipes",
+    "GuiContainerCreative",
+    "Item",
+    "ItemSeeds",
+    "MapGenStronghold",
+    "NetServerHandler",
+    "NetworkListenThread",
+    "RegionFileCache",
+    "RenderPlayer",
+    "ServerConfigurationManager",
+    "SlotCrafting",
+    "SlotFurnace",
+    "TileEntity",
+    "TileEntityBeacon",
+    "World",
+    "WorldChunkManager",
+    "WorldServer"
+  ],
+  "at": {
+    "fml": [],
+    "forge": [
+      "public xe.H # World/field_72993_I activeChunkSet",
+      "public ln.bc # EntityLiving/field_70728_aV experienceValue",
+      "public asr.a(Ljava/lang/String;ILxz;Ljava/util/List;[Labm;)V # GuiFlatPresets/func_82294_a",
+      "public asr.a(Ljava/lang/String;ILxz;[Labm;)V # GuiFlatPresets/func_82297_a",
+      "public xz.*() # Everything protected->public",
+      "public-f aea.e # MapGenVillage/field_75055_e villageSpawnBiomes"
+    ]
+  }
+}
