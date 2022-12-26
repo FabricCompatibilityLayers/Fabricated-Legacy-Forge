@@ -40,15 +40,16 @@ public class FMLModContainer implements ModContainer {
     private Multimap<Class<? extends Annotation>, Object> annotations;
     private DefaultArtifactVersion processedVersion;
     private boolean isNetworkMod;
-    private static final BiMap<Class<? extends FMLStateEvent>, Class<? extends Annotation>> modAnnotationTypes = ImmutableBiMap.<Class<? extends FMLStateEvent>, Class<? extends Annotation>>builder()
+    private static final BiMap<Class<? extends FMLEvent>, Class<? extends Annotation>> modAnnotationTypes = ImmutableBiMap.<Class<? extends FMLEvent>, Class<? extends Annotation>>builder()
             .put(FMLPreInitializationEvent.class, Mod.PreInit.class)
             .put(FMLInitializationEvent.class, Mod.Init.class)
             .put(FMLPostInitializationEvent.class, Mod.PostInit.class)
             .put(FMLServerStartingEvent.class, Mod.ServerStarting.class)
             .put(FMLServerStartedEvent.class, Mod.ServerStarted.class)
             .put(FMLServerStoppingEvent.class, Mod.ServerStopping.class)
+            .put(FMLInterModComms.IMCEvent.class, Mod.IMCCallback.class)
             .build();
-    private static final BiMap<Class<? extends Annotation>, Class<? extends FMLStateEvent>> modTypeAnnotations = modAnnotationTypes.inverse();
+    private static final BiMap<Class<? extends Annotation>, Class<? extends FMLEvent>> modTypeAnnotations = modAnnotationTypes.inverse();
     private String annotationDependencies;
     private VersionRange minecraftAccepted;
 
@@ -324,7 +325,7 @@ public class FMLModContainer implements ModContainer {
     }
 
     @Subscribe
-    public void handleModStateEvent(FMLStateEvent event) {
+    public void handleModStateEvent(FMLEvent event) {
         Class<? extends Annotation> annotation = (Class)modAnnotationTypes.get(event.getClass());
         if (annotation != null) {
             try {

@@ -15,7 +15,7 @@ public class FMLInjectionData {
     static String rev;
     static String build;
     static String mccversion;
-    static String mcsversion;
+    static String mcpversion;
     public static List<String> containers = new ArrayList();
 
     public FMLInjectionData() {
@@ -37,11 +37,11 @@ public class FMLInjectionData {
         minor = properties.getProperty("fmlbuild.minor.number", "missing");
         rev = properties.getProperty("fmlbuild.revision.number", "missing");
         build = properties.getProperty("fmlbuild.build.number", "missing");
-        mccversion = properties.getProperty("fmlbuild.mcclientversion", "missing");
-        mcsversion = properties.getProperty("fmlbuild.mcserverversion", "missing");
+        mccversion = properties.getProperty("fmlbuild.mcversion", "missing");
+        mcpversion = properties.getProperty("fmlbuild.mcpversion", "missing");
     }
 
     public static Object[] data() {
-        return new Object[]{major, minor, rev, build, mccversion, mcsversion, minecraftHome, containers};
+        return new Object[]{major, minor, rev, build, mccversion, mcpversion, minecraftHome, containers};
     }
 }

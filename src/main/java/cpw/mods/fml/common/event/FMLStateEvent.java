@@ -11,9 +11,6 @@ public abstract class FMLStateEvent extends FMLEvent {
 
     public abstract LoaderState.ModState getModState();
 
-    public void applyModContainer(ModContainer activeContainer) {
-    }
-
     public Side getSide() {
         return FMLCommonHandler.instance().getSide();
     }

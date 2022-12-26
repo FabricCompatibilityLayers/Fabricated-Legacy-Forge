@@ -468,8 +468,6 @@ public class RelaunchLibraryManager {
     private static void downloadFile(File libFile, String rootUrl, String realFilePath, String hash) {
         try {
             URL libDownload = new URL(String.format(rootUrl, realFilePath));
-            System.out.println("Downloading file: " + libDownload.getHost() + libDownload.getPath());
-            System.out.println("The libFile's path is " + libFile.getAbsolutePath());
             String infoString = String.format("Downloading file %s", libDownload.toString());
             downloadMonitor.updateProgressString(infoString, new Object[0]);
             FMLRelaunchLog.info(infoString, new Object[0]);

@@ -137,19 +137,20 @@ public class FMLCommonHandler {
         if (this.brandings == null) {
             ImmutableList.Builder<String> brd = ImmutableList.builder();
             brd.add(Loader.instance().getMCVersionString());
-
             brd.add("Fabric Loader " + FabricLoader.getInstance().getModContainer("fabricloader").get().getMetadata().getVersion().getFriendlyString()
                     + String.format(" (%s Mod%s)", FabricLoader.getInstance().getAllMods().size(), FabricLoader.getInstance().getAllMods().size() > 1 ? "s" : "")
             );
             brd.add("Fabricated Forge " + FabricLoader.getInstance().getModContainer("fabricated-forge").get().getMetadata().getVersion().getFriendlyString());
-
+            brd.add(Loader.instance().getMCPVersionString());
             brd.add("FML v" + Loader.instance().getFMLVersionString());
             String forgeBranding = (String)this.callForgeMethod("getBrandingVersion");
             if (!Strings.isNullOrEmpty(forgeBranding)) {
                 brd.add(forgeBranding);
             }
 
-            brd.addAll(this.sidedDelegate.getAdditionalBrandingInformation());
+            if (this.sidedDelegate != null) {
+                brd.addAll(this.sidedDelegate.getAdditionalBrandingInformation());
+            }
 
             try {
                 Properties props = new Properties();

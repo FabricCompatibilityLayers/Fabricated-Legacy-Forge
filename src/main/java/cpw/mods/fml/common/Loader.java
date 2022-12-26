@@ -6,6 +6,7 @@ import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.*;
 import cpw.mods.fml.common.discovery.ModDiscoverer;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLLoadEvent;
 import cpw.mods.fml.common.functions.ModIdFunction;
 import cpw.mods.fml.common.toposort.ModSorter;
@@ -31,7 +32,7 @@ public class Loader {
     private static String rev;
     private static String build;
     private static String mccversion;
-    private static String mcsversion;
+    private static String mcpversion;
     private ModClassLoader modClassLoader = new ModClassLoader(this.getClass().getClassLoader());
     private List<ModContainer> mods;
     private Map<String, ModContainer> namedMods;
@@ -41,6 +42,7 @@ public class Loader {
     private File canonicalModsDir;
     private LoadController modController;
     private MinecraftDummyContainer minecraft;
+    private MCPDummyContainer mcp;
     private static File minecraftDir;
     private static List<String> injectedContainers;
 
@@ -58,7 +60,7 @@ public class Loader {
         rev = (String)data[2];
         build = (String)data[3];
         mccversion = (String)data[4];
-        mcsversion = (String)data[5];
+        mcpversion = (String)data[5];
         minecraftDir = (File)data[6];
         injectedContainers = (List)data[7];
     }
@@ -73,6 +75,7 @@ public class Loader {
             throw new LoaderException();
         } else {
             this.minecraft = new MinecraftDummyContainer(actualMCVersion);
+            this.mcp = new MCPDummyContainer(MetadataCollection.from(this.getClass().getResourceAsStream("/mcpmod.info"), "MCP").getMetadataForId("mcp", null));
         }
     }
 
@@ -162,6 +165,7 @@ public class Loader {
 
     private ModDiscoverer identifyMods() {
         FMLLog.fine("Building injected Mod Containers %s", new Object[]{injectedContainers});
+        this.mods.add(new InjectedModContainer(this.mcp, new File("minecraft.jar")));
         File coremod = Constants.COREMODS_FOLDER;
 
         for(String cont : injectedContainers) {
@@ -190,7 +194,6 @@ public class Loader {
     }
 
     private void identifyDuplicates(List<ModContainer> mods) {
-        boolean foundDupe = false;
         TreeMultimap<ModContainer, File> dupsearch = TreeMultimap.create(new Loader.ModIdComparator(), Ordering.arbitrary());
 
         for(ModContainer mc : mods) {
@@ -200,16 +203,17 @@ public class Loader {
         }
 
         ImmutableMultiset<ModContainer> duplist = Multisets.copyHighestCountFirst(dupsearch.keys());
+        SetMultimap<ModContainer, File> dupes = LinkedHashMultimap.create();
 
         for(Multiset.Entry<ModContainer> e : duplist.entrySet()) {
             if (e.getCount() > 1) {
                 FMLLog.severe("Found a duplicate mod %s at %s", new Object[]{((ModContainer)e.getElement()).getModId(), dupsearch.get(e.getElement())});
-                foundDupe = true;
+                dupes.putAll(e.getElement(), dupsearch.get(e.getElement()));
             }
         }
 
-        if (foundDupe) {
-            throw new LoaderException();
+        if (!dupes.isEmpty()) {
+            throw new DuplicateModsFoundException(dupes);
         }
     }
 
@@ -284,7 +288,7 @@ public class Loader {
 
         for(File nonMod : disc.getNonModLibs()) {
             if (nonMod.isFile()) {
-                FMLLog.severe(
+                FMLLog.info(
                         "FML has found a non-mod file %s in your mods directory. It will now be injected into your classpath. This could severe stability issues, it should be removed if possible.",
                         new Object[]{nonMod.getName()}
                 );
@@ -425,6 +429,7 @@ public class Loader {
     public void initializeMods() {
         this.modController.distributeStateMessage(LoaderState.INITIALIZATION, new Object[0]);
         this.modController.transition(LoaderState.POSTINITIALIZATION);
+        this.modController.distributeStateMessage(FMLInterModComms.IMCEvent.class);
         this.modController.distributeStateMessage(LoaderState.POSTINITIALIZATION, new Object[0]);
         this.modController.transition(LoaderState.AVAILABLE);
         this.modController.distributeStateMessage(LoaderState.AVAILABLE, new Object[0]);
@@ -489,6 +494,14 @@ public class Loader {
 
     public MinecraftDummyContainer getMinecraftModContainer() {
         return this.minecraft;
+    }
+
+    public boolean hasReachedState(LoaderState state) {
+        return this.modController.hasReachedState(state);
+    }
+
+    public String getMCPVersionString() {
+        return String.format("MCP v%s", mcpversion);
     }
 
     private class ModIdComparator implements Comparator<ModContainer> {

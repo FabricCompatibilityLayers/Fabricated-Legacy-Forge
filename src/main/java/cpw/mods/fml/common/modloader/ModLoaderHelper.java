@@ -28,39 +28,55 @@ public class ModLoaderHelper {
     }
 
     public static void updateStandardTicks(BaseModProxy mod, boolean enable, boolean useClock) {
-        ModLoaderModContainer mlmc = (ModLoaderModContainer)Loader.instance().activeModContainer();
-        BaseModTicker ticker = mlmc.getGameTickHandler();
-        EnumSet<TickType> ticks = ticker.ticks();
-        if (enable && !useClock) {
-            ticks.add(TickType.RENDER);
-        } else {
-            ticks.remove(TickType.RENDER);
+        ModLoaderModContainer mlmc = (ModLoaderModContainer)Loader.instance().getReversedModObjectList().get(mod);
+        if (mlmc == null) {
+            mlmc = (ModLoaderModContainer)Loader.instance().activeModContainer();
         }
 
-        if (!enable || !useClock && !FMLCommonHandler.instance().getSide().isServer()) {
-            ticks.remove(TickType.CLIENT);
-            ticks.remove(TickType.WORLDLOAD);
+        if (mlmc == null) {
+            FMLLog.severe("Attempted to register ModLoader ticking for invalid BaseMod %s", new Object[]{mod});
         } else {
-            ticks.add(TickType.CLIENT);
-            ticks.add(TickType.WORLDLOAD);
+            BaseModTicker ticker = mlmc.getGameTickHandler();
+            EnumSet<TickType> ticks = ticker.ticks();
+            if (enable && !useClock) {
+                ticks.add(TickType.RENDER);
+            } else {
+                ticks.remove(TickType.RENDER);
+            }
+
+            if (!enable || !useClock && !FMLCommonHandler.instance().getSide().isServer()) {
+                ticks.remove(TickType.CLIENT);
+                ticks.remove(TickType.WORLDLOAD);
+            } else {
+                ticks.add(TickType.CLIENT);
+                ticks.add(TickType.WORLDLOAD);
+            }
         }
     }
 
     public static void updateGUITicks(BaseModProxy mod, boolean enable, boolean useClock) {
-        ModLoaderModContainer mlmc = (ModLoaderModContainer)Loader.instance().activeModContainer();
-        EnumSet<TickType> ticks = mlmc.getGUITickHandler().ticks();
-        if (enable && !useClock) {
-            ticks.add(TickType.RENDER);
-        } else {
-            ticks.remove(TickType.RENDER);
+        ModLoaderModContainer mlmc = (ModLoaderModContainer)Loader.instance().getReversedModObjectList().get(mod);
+        if (mlmc == null) {
+            mlmc = (ModLoaderModContainer)Loader.instance().activeModContainer();
         }
 
-        if (enable && useClock) {
-            ticks.add(TickType.CLIENT);
-            ticks.add(TickType.WORLDLOAD);
+        if (mlmc == null) {
+            FMLLog.severe("Attempted to register ModLoader ticking for invalid BaseMod %s", new Object[]{mod});
         } else {
-            ticks.remove(TickType.CLIENT);
-            ticks.remove(TickType.WORLDLOAD);
+            EnumSet<TickType> ticks = mlmc.getGUITickHandler().ticks();
+            if (enable && !useClock) {
+                ticks.add(TickType.RENDER);
+            } else {
+                ticks.remove(TickType.RENDER);
+            }
+
+            if (enable && useClock) {
+                ticks.add(TickType.CLIENT);
+                ticks.add(TickType.WORLDLOAD);
+            } else {
+                ticks.remove(TickType.CLIENT);
+                ticks.remove(TickType.WORLDLOAD);
+            }
         }
     }
 

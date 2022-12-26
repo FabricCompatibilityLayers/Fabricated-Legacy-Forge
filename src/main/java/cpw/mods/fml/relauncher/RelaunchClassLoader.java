@@ -16,6 +16,7 @@ public class RelaunchClassLoader extends URLClassLoader {
     private ClassLoader parent;
     private List<IClassTransformer> transformers;
     private Map<String, Class> cachedClasses;
+    private Set<String> invalidClasses;
     private Set<String> classLoaderExceptions = new HashSet<>();
     private Set<String> transformerExceptions = new HashSet<>();
 
@@ -24,6 +25,7 @@ public class RelaunchClassLoader extends URLClassLoader {
         this.sources = new ArrayList<>();
         this.parent = this.getClass().getClassLoader();
         this.cachedClasses = new HashMap<>(1000);
+        this.invalidClasses = new HashSet<>(1000);
         this.transformers = new ArrayList<>(2);
         Thread.currentThread().setContextClassLoader(this);
         this.addClassLoaderExclusion("java.");

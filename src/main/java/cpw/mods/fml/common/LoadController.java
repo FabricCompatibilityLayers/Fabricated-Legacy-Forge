@@ -4,6 +4,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.*;
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import cpw.mods.fml.common.event.FMLEvent;
 import cpw.mods.fml.common.event.FMLLoadEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLStateEvent;
@@ -95,7 +96,7 @@ public class LoadController {
     }
 
     @Subscribe
-    public void propogateStateMessage(FMLStateEvent stateEvent) {
+    public void propogateStateMessage(FMLEvent stateEvent) {
         if (stateEvent instanceof FMLPreInitializationEvent) {
             this.modObjectList = this.buildModObjectList();
         }
@@ -104,14 +105,16 @@ public class LoadController {
             this.activeContainer = mc;
             String modId = mc.getModId();
             stateEvent.applyModContainer(this.activeContainer());
-            FMLLog.finer("Posting state event %s to mod %s", new Object[]{stateEvent.getEventType(), modId});
+            FMLLog.finer("Sending event %s to mod %s", new Object[]{stateEvent.getEventType(), modId});
             ((EventBus)this.eventChannels.get(modId)).post(stateEvent);
-            FMLLog.finer("State event %s delivered to mod %s", new Object[]{stateEvent.getEventType(), modId});
+            FMLLog.finer("Sent event %s to mod %s", new Object[]{stateEvent.getEventType(), modId});
             this.activeContainer = null;
-            if (!this.errors.containsKey(modId)) {
-                this.modStates.put(modId, stateEvent.getModState());
-            } else {
-                this.modStates.put(modId, LoaderState.ModState.ERRORED);
+            if (stateEvent instanceof FMLStateEvent) {
+                if (!this.errors.containsKey(modId)) {
+                    this.modStates.put(modId, ((FMLStateEvent)stateEvent).getModState());
+                } else {
+                    this.modStates.put(modId, LoaderState.ModState.ERRORED);
+                }
             }
         }
     }
@@ -181,5 +184,9 @@ public class LoadController {
 
     public boolean isInState(LoaderState state) {
         return this.state == state;
+    }
+
+    boolean hasReachedState(LoaderState state) {
+        return this.state.ordinal() >= state.ordinal() && this.state != LoaderState.ERRORED;
     }
 }

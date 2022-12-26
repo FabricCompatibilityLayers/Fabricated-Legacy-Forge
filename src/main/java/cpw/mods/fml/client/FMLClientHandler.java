@@ -46,6 +46,7 @@ public class FMLClientHandler implements IFMLSidedHandler {
     private boolean loading;
     private WrongMinecraftVersionException wrongMC;
     private CustomModLoadingErrorDisplayException customError;
+    private DuplicateModsFoundException dupesFound;
 
     public FMLClientHandler() {
     }
@@ -70,7 +71,7 @@ public class FMLClientHandler implements IFMLSidedHandler {
                         .getMetadataForId("optifine", dummyOptifineMeta);
                 this.optifineContainer = new DummyModContainer(optifineMetadata);
                 FMLLog.info("Forge Mod Loader has detected optifine %s, enabling compatibility features", new Object[]{this.optifineContainer.getVersion()});
-            } catch (Exception var10) {
+            } catch (Exception var11) {
                 this.optifineContainer = null;
             }
 
@@ -78,13 +79,15 @@ public class FMLClientHandler implements IFMLSidedHandler {
                 Loader.instance().loadMods();
             } catch (WrongMinecraftVersionException var6) {
                 this.wrongMC = var6;
-            } catch (MissingModsException var7) {
-                this.modsMissing = var7;
-            } catch (CustomModLoadingErrorDisplayException var8) {
-                FMLLog.log(Level.SEVERE, var8, "A custom exception was thrown by a mod, the game will now halt", new Object[0]);
-                this.customError = var8;
-            } catch (LoaderException var9) {
-                this.haltGame("There was a severe problem during mod loading that has caused the game to fail", var9);
+            } catch (DuplicateModsFoundException var7) {
+                this.dupesFound = var7;
+            } catch (MissingModsException var8) {
+                this.modsMissing = var8;
+            } catch (CustomModLoadingErrorDisplayException var9) {
+                FMLLog.log(Level.SEVERE, var9, "A custom exception was thrown by a mod, the game will now halt", new Object[0]);
+                this.customError = var9;
+            } catch (LoaderException var10) {
+                this.haltGame("There was a severe problem during mod loading that has caused the game to fail", var10);
                 return;
             }
         }
@@ -96,7 +99,7 @@ public class FMLClientHandler implements IFMLSidedHandler {
     }
 
     public void finishMinecraftLoading() {
-        if (this.modsMissing == null && this.wrongMC == null) {
+        if (this.modsMissing == null && this.wrongMC == null && this.customError == null && this.dupesFound == null) {
             try {
                 Loader.instance().initializeMods();
             } catch (CustomModLoadingErrorDisplayException var2) {
@@ -120,6 +123,8 @@ public class FMLClientHandler implements IFMLSidedHandler {
             this.client.openScreen(new GuiWrongMinecraft(this.wrongMC));
         } else if (this.modsMissing != null) {
             this.client.openScreen(new GuiModsMissing(this.modsMissing));
+        } else if (this.dupesFound != null) {
+            this.client.openScreen(new GuiDupesFound(this.dupesFound));
         } else if (this.customError != null) {
             this.client.openScreen(new GuiCustomModLoadingErrorScreen(this.customError));
         } else {

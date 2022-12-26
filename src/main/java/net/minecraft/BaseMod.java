@@ -56,10 +56,6 @@ public abstract class BaseMod implements BaseModProxy {
     public void addRenderer(Map<Class<? extends Entity>, EntityRenderer> renderers) {
     }
 
-    public int dispenseEntity(World world, ItemStack item, Random rnd, int x, int y, int z, int xVel, int zVel, double entX, double entY, double entZ) {
-        return -1;
-    }
-
     public void generateNether(World world, Random random, int chunkX, int chunkZ) {
     }
 

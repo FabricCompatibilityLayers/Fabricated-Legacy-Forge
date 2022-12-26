@@ -24,12 +24,19 @@ public @interface Mod {
 
     String bukkitPlugin() default "";
 
+    String modExclusionList() default "";
+
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.FIELD})
     public @interface Block {
         String name();
 
         Class<?> itemTypeClass() default BlockItem.class;
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD})
+    public @interface IMCCallback {
     }
 
     @Retention(RetentionPolicy.RUNTIME)

@@ -51,8 +51,6 @@ public interface BaseModProxy {
 
     void onItemPickup(PlayerEntity arg, ItemStack arg2);
 
-    int dispenseEntity(World arg, ItemStack arg2, Random random, int i, int j, int k, int l, int m, double d, double e, double f);
-
     void serverCustomPayload(ServerPacketListener arg, CustomPayloadC2SPacket arg2);
 
     void serverChat(ServerPacketListener arg, String string);

@@ -22,6 +22,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.advancement.Achievement;
 import net.minecraft.block.Block;
+import net.minecraft.block.DispenserBlock;
+import net.minecraft.block.dispenser.DispenserBehavior;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.*;
 import net.minecraft.client.gui.screen.Screen;
@@ -36,6 +38,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
 import net.minecraft.network.class_690;
@@ -47,6 +50,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkProvider;
+import net.minecraft.world.level.LevelGeneratorType;
 
 import java.awt.image.BufferedImage;
 import java.util.Collections;
@@ -103,6 +107,10 @@ public class ModLoader {
 
     public static void addCommand(Command command) {
         ModLoaderHelper.addCommand(command);
+    }
+
+    public static void addDispenserBehavior(Item item, DispenserBehavior behavior) {
+        DispenserBlock.BEHAVIOR_REGISTRY.put(item, behavior);
     }
 
     public static void addLocalization(String key, String value) {

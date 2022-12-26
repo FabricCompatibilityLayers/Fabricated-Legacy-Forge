@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.applet.Applet;
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URLClassLoader;
 
 public class FMLRelauncher {
     private static FMLRelauncher INSTANCE;
@@ -96,7 +97,7 @@ public class FMLRelauncher {
 
     private Class<? super Object> setupNewClientHome(File minecraftHome) {
         Class<? super Object> client = ReflectionHelper.getClass(this.classLoader, new String[]{"net.minecraft.client.Minecraft"});
-        ReflectionHelper.setPrivateValue(client, null, minecraftHome, new String[]{"minecraftDir", "an"});
+        ReflectionHelper.setPrivateValue(client, null, minecraftHome, new String[]{"minecraftDir", "an", "minecraftDir"});
         return client;
     }
 
@@ -119,13 +120,16 @@ public class FMLRelauncher {
         FMLInjectionData.build(minecraftHome, this.classLoader);
         FMLRelaunchLog.minecraftHome = minecraftHome;
         FMLRelaunchLog.info(
-                "Forge Mod Loader version %s.%s.%s.%s for Minecraft client:%s, server:%s loading",
-                FMLInjectionData.major,
-                FMLInjectionData.minor,
-                FMLInjectionData.rev,
-                FMLInjectionData.build,
-                FMLInjectionData.mccversion,
-                FMLInjectionData.mcsversion);
+                "Forge Mod Loader version %s.%s.%s.%s for Minecraft %s loading",
+                new Object[]{
+                        FMLInjectionData.major,
+                        FMLInjectionData.minor,
+                        FMLInjectionData.rev,
+                        FMLInjectionData.build,
+                        FMLInjectionData.mccversion,
+                        FMLInjectionData.mcpversion
+                }
+        );
 
         try {
             RelaunchLibraryManager.handleLaunch(minecraftHome, this.classLoader);
@@ -156,17 +160,17 @@ public class FMLRelauncher {
         String str = System.getProperty("minecraft.applet.TargetDirectory");
         if (str != null) {
             str = str.replace('/', File.separatorChar);
-            ReflectionHelper.setPrivateValue(mcMaster, null, new File(str), new String[]{"minecraftDir", "an"});
+            ReflectionHelper.setPrivateValue(mcMaster, null, new File(str), new String[]{"minecraftDir", "an", "minecraftDir"});
         }
 
-        Method setupHome = ReflectionHelper.findMethod(mcMaster, null, new String[]{"getMinecraftDir", "b"}, new Class[0]);
+        Method setupHome = ReflectionHelper.findMethod(mcMaster, null, new String[]{"getMinecraftDir", "getMinecraftDir", "b"}, new Class[0]);
 
         try {
             setupHome.invoke(null);
         } catch (Exception var5) {
         }
 
-        return (File)ReflectionHelper.getPrivateValue(mcMaster, null, new String[]{"minecraftDir", "an"});
+        return (File)ReflectionHelper.getPrivateValue(mcMaster, null, new String[]{"minecraftDir", "an", "minecraftDir"});
     }
 
     public static void appletEntry(Applet minecraftApplet) {
