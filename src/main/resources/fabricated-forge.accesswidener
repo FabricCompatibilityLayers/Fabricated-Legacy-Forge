@@ -311,6 +311,35 @@ accessible field net/minecraft/structure/class_49 field_89 [Lnet/minecraft/util/
 #method net/minecraft/server/PlayerWorldManager method_2107 (IIZ)Lnet/minecraft/server/class_793;
 
 accessible field net/minecraft/world/World villageState Lnet/minecraft/village/VillageState;
+accessible field net/minecraft/world/World field_4530 Ljava/util/Set;
+
+accessible field net/minecraft/entity/mob/MobEntity experiencePoints I
+
+accessible method net/minecraft/client/gui/screen/SuperflatPresetScreen method_4249 (Ljava/lang/String;ILnet/minecraft/world/biome/Biome;Ljava/util/List;[Lnet/minecraft/world/gen/layer/FlatWorldLayer;)V
+accessible method net/minecraft/client/gui/screen/SuperflatPresetScreen method_4250 (Ljava/lang/String;ILnet/minecraft/world/biome/Biome;[Lnet/minecraft/world/gen/layer/FlatWorldLayer;)V
+
+accessible field net/minecraft/world/biome/Biome mutated Z
+accessible field net/minecraft/world/biome/Biome field_4635 Z
+accessible field net/minecraft/world/biome/Biome monsterEntries Ljava/util/List;
+accessible field net/minecraft/world/biome/Biome passiveEntries Ljava/util/List;
+accessible field net/minecraft/world/biome/Biome waterEntries Ljava/util/List;
+accessible field net/minecraft/world/biome/Biome flyingEntries Ljava/util/List;
+accessible field net/minecraft/world/biome/Biome JUNGLE_TREE_FEATURE Lnet/minecraft/world/gen/feature/JungleTreeFeature;
+accessible field net/minecraft/world/biome/Biome field_4631 Lnet/minecraft/world/gen/feature/BigTreeFeature;
+accessible field net/minecraft/world/biome/Biome field_4632 Lnet/minecraft/world/gen/feature/BirchTreeFeature;
+accessible field net/minecraft/world/biome/Biome OAK_TREE_FEATURE Lnet/minecraft/world/gen/feature/OakTreeFeature;
+
+accessible method net/minecraft/world/biome/Biome setTempratureAndDownfall (FF)Lnet/minecraft/world/biome/Biome;
+accessible method net/minecraft/world/biome/Biome method_3826 (FF)Lnet/minecraft/world/biome/Biome;
+accessible method net/minecraft/world/biome/Biome method_3839 ()Lnet/minecraft/world/biome/Biome;
+accessible method net/minecraft/world/biome/Biome <init> (I)V
+accessible method net/minecraft/world/biome/Biome createBiomePopulator ()Lnet/minecraft/world/biome/BiomeDecorator;
+accessible method net/minecraft/world/biome/Biome setMutated ()Lnet/minecraft/world/biome/Biome;
+accessible method net/minecraft/world/biome/Biome setName (Ljava/lang/String;)Lnet/minecraft/world/biome/Biome;
+accessible method net/minecraft/world/biome/Biome method_3820 (I)Lnet/minecraft/world/biome/Biome;
+accessible method net/minecraft/world/biome/Biome method_3827 (I)Lnet/minecraft/world/biome/Biome;
+
+mutable field net/minecraft/structure/VillageStructure BIOMES Ljava/util/List;
 
 #### Fabricated Forge
 accessible class net/minecraft/client/class_470
