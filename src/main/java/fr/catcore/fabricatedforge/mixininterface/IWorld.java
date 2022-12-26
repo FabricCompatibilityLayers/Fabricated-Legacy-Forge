@@ -1,6 +1,6 @@
 package fr.catcore.fabricatedforge.mixininterface;
 
-import com.google.common.collect.SetMultimap;
+import com.google.common.collect.ImmutableSetMultimap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.entity.BlockEntity;
@@ -48,7 +48,7 @@ public interface IWorld {
 
     boolean isBlockSolidOnSide(int X, int Y, int Z, ForgeDirection side, boolean _default);
 
-    SetMultimap<ChunkPos, ForgeChunkManager.Ticket> getPersistentChunks();
+    ImmutableSetMultimap<ChunkPos, ForgeChunkManager.Ticket> getPersistentChunks();
 
     LevelProperties getLevelProperties();
 

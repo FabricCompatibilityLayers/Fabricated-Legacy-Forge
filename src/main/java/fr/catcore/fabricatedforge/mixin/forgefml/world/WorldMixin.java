@@ -1,5 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.SetMultimap;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
@@ -14,6 +16,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.predicate.EntityPredicate;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.util.profiler.Profiler;
@@ -28,12 +31,15 @@ import net.minecraft.world.level.LevelProperties;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.WorldSpecificSaveHandler;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.PlaySoundAtEntityEvent;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.*;
@@ -100,7 +106,8 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Shadow public Random random;
     @Shadow
     public int field_4553;
-    @Shadow protected Set<ChunkPos> field_4530;
+    @Shadow
+    public Set<ChunkPos> field_4530;
     @Shadow private int field_4534;
 
     @Shadow public abstract void method_3736(int i, int j, int k);
@@ -127,13 +134,13 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Shadow public boolean isClient;
     @Mutable
     @Shadow @Final public VillageState villageState;
-    @Shadow @Final protected SaveHandler saveHandler;
     @Shadow protected int field_23088;
     @Unique // Public
     private static double MAX_ENTITY_RADIUS = ReflectionUtils.World_MAX_ENTITY_RADIUS;
 
     private static PersistentStateManager s_mapStorage;
     private static SaveHandler s_savehandler;
+    public PersistentStateManager perWorldStorage;
 
     /**
      * @author Minecraft Forge
@@ -156,11 +163,15 @@ public abstract class WorldMixin implements BlockView, IWorld {
         return this.dimension.biomeSource.method_3853(par1, par2);
     }
 
+    @Inject(method = "<init>(Lnet/minecraft/world/SaveHandler;Ljava/lang/String;Lnet/minecraft/world/dimension/Dimension;Lnet/minecraft/world/level/LevelInfo;Lnet/minecraft/util/profiler/Profiler;)V", at = @At("RETURN"))
+    private void moveStateManager(SaveHandler string, String dimension, Dimension levelInfo, LevelInfo profiler, Profiler par5, CallbackInfo ci) {
+        this.perWorldStorage = this.persistentStateManager;
+        this.persistentStateManager = null;
+    }
+
     @Environment(EnvType.CLIENT)
     @Override
     public void finishSetup() {
-        this.dimension.copyFromWorls((World)(Object) this);
-        this.persistentStateManager = new PersistentStateManager(this.saveHandler);
         VillageState var6 = (VillageState)this.persistentStateManager.getOrCreate(VillageState.class, "villages");
         if (var6 == null) {
             this.villageState = new VillageState((World)(Object) this);
@@ -180,6 +191,22 @@ public abstract class WorldMixin implements BlockView, IWorld {
     at = @At(value = "INVOKE", target = "Lnet/minecraft/world/SaveHandler;getLevelProperties()Lnet/minecraft/world/level/LevelProperties;"))
     private void replaceStateManager(SaveHandler saveHandler, String levelInfo, LevelInfo dimension, Dimension profiler, Profiler par5, CallbackInfo ci) {
         this.persistentStateManager = this.getMapStorage(saveHandler);
+    }
+
+    @Redirect(
+            method = "<init>(Lnet/minecraft/world/SaveHandler;Ljava/lang/String;Lnet/minecraft/world/level/LevelInfo;Lnet/minecraft/world/dimension/Dimension;Lnet/minecraft/util/profiler/Profiler;)V",
+            at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/world/World;persistentStateManager:Lnet/minecraft/world/PersistentStateManager;")
+    )
+    private PersistentStateManager replaceStateManager(World instance) {
+        if (((WorldMixin)(Object) instance).perWorldStorage == null) {
+            if (((Object) this) instanceof ServerWorld) {
+                ((WorldMixin)(Object) instance).perWorldStorage = new PersistentStateManager(new WorldSpecificSaveHandler((ServerWorld)instance, instance.getSaveHandler()));
+            } else {
+                ((WorldMixin)(Object) instance).perWorldStorage = new PersistentStateManager((SaveHandler)null);
+            }
+        }
+
+        return ((WorldMixin)(Object) instance).perWorldStorage;
     }
 
     @Override
@@ -210,7 +237,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     public boolean hasBlockEntity(int par1, int par2, int par3) {
         int var4 = this.getBlock(par1, par2, par3);
         int meta = this.getBlockData(par1, par2, par3);
-        return Block.BLOCKS[var4] != null && ((IBlock)Block.BLOCKS[var4]).hasTileEntity(meta);
+        return Block.BLOCKS[var4] != null && Block.BLOCKS[var4].hasTileEntity(meta);
     }
 
     /**
@@ -613,9 +640,10 @@ public abstract class WorldMixin implements BlockView, IWorld {
         }
 
         this.profiler.swap("remove");
-        this.loadedEntities.removeAll(this.unloadedEntities);
+        List<Entity> fml_entitiesToRemove = ImmutableList.copyOf(this.unloadedEntities);
+        this.loadedEntities.removeAll(fml_entitiesToRemove);
 
-        for(Entity var2 : this.unloadedEntities) {
+        for(Entity var2 : fml_entitiesToRemove) {
             int var3 = var2.chunkX;
             int var4 = var2.chunkZ;
             if (var2.updateNeeded && this.isChunkInsideSpawnChunks(var3, var4)) {
@@ -623,15 +651,15 @@ public abstract class WorldMixin implements BlockView, IWorld {
             }
         }
 
-        for(Entity var2 : this.unloadedEntities) {
+        for(Entity var2 : fml_entitiesToRemove) {
             this.onEntityRemoved(var2);
         }
 
-        this.unloadedEntities.clear();
+        this.unloadedEntities.removeAll(fml_entitiesToRemove);
         this.profiler.swap("regular");
 
-        for(int var91 = 0; var91 < this.loadedEntities.size(); ++var91) {
-            Entity var2 = (Entity)this.loadedEntities.get(var91);
+        for(int var101 = 0; var101 < this.loadedEntities.size(); ++var101) {
+            Entity var2 = (Entity)this.loadedEntities.get(var101);
             if (var2.vehicle != null) {
                 if (!var2.vehicle.removed && var2.vehicle.rider == var2) {
                     continue;
@@ -655,7 +683,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
                     this.getChunk(var3, var4).removeEntity(var2);
                 }
 
-                this.loadedEntities.remove(var91--);
+                this.loadedEntities.remove(var101--);
                 this.onEntityRemoved(var2);
             }
 
@@ -664,20 +692,20 @@ public abstract class WorldMixin implements BlockView, IWorld {
 
         this.profiler.swap("tileEntities");
         this.iteratingTickingBlockEntities = true;
-        Iterator var14 = this.blockEntities.iterator();
+        Iterator var15 = this.blockEntities.iterator();
 
-        while(var14.hasNext()) {
-            BlockEntity var6 = (BlockEntity)var14.next();
+        while(var15.hasNext()) {
+            BlockEntity var6 = (BlockEntity)var15.next();
             if (!var6.isRemoved() && var6.hasWorld() && this.isPosLoaded(var6.x, var6.y, var6.z)) {
                 var6.method_545();
             }
 
             if (var6.isRemoved()) {
-                var14.remove();
+                var15.remove();
                 if (this.isChunkInsideSpawnChunks(var6.x >> 4, var6.z >> 4)) {
                     Chunk var8 = this.getChunk(var6.x >> 4, var6.z >> 4);
                     if (var8 != null) {
-                        ((IChunk)var8).cleanChunkBlockTileEntity(var6.x & 15, var6.y, var6.z & 15);
+                        var8.cleanChunkBlockTileEntity(var6.x & 15, var6.y, var6.z & 15);
                     }
                 }
             }
@@ -686,7 +714,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.iteratingTickingBlockEntities = false;
         if (!this.unloadedBlockEntities.isEmpty()) {
             for(Object tile : this.unloadedBlockEntities) {
-                ((IBlockEntity)tile).onChunkUnload();
+                ((BlockEntity)tile).onChunkUnload();
             }
 
             this.blockEntities.removeAll(this.unloadedBlockEntities);
@@ -724,7 +752,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         List dest = this.iteratingTickingBlockEntities ? this.pendingBlockEntities : this.blockEntities;
 
         for(Object entity : par1Collection) {
-            if (((IBlockEntity)entity).canUpdate()) {
+            if (((BlockEntity)entity).canUpdate()) {
                 dest.add(entity);
             }
         }
@@ -850,7 +878,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Overwrite
     public void method_3603(int par1, int par2, int par3, BlockEntity par4TileEntity) {
         if (par4TileEntity != null && !par4TileEntity.isRemoved()) {
-            if (((IBlockEntity)par4TileEntity).canUpdate()) {
+            if (par4TileEntity.canUpdate()) {
                 List dest = this.iteratingTickingBlockEntities ? this.pendingBlockEntities : this.blockEntities;
                 dest.add(par4TileEntity);
             }
@@ -1154,7 +1182,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
      */
     @Overwrite
     private int method_3699(int par1, int par2, int par3, int par4, int par5, int par6) {
-        int var7 = par5 != 0 && Block.BLOCKS[par5] != null ? ((IBlock)Block.BLOCKS[par5]).getLightValue(this, par2, par3, par4) : 0;
+        int var7 = par5 != 0 && Block.BLOCKS[par5] != null ? Block.BLOCKS[par5].getLightValue(this, par2, par3, par4) : 0;
         int var8 = this.method_3667(LightType.BLOCK, par2 - 1, par3, par4) - par6;
         int var9 = this.method_3667(LightType.BLOCK, par2 + 1, par3, par4) - par6;
         int var10 = this.method_3667(LightType.BLOCK, par2, par3 - 1, par4) - par6;
@@ -1572,7 +1600,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Override
     public void addTileEntity(BlockEntity entity) {
         List dest = this.iteratingTickingBlockEntities ? this.pendingBlockEntities : this.blockEntities;
-        if (((IBlockEntity)entity).canUpdate()) {
+        if (entity.canUpdate()) {
             dest.add(entity);
         }
     }
@@ -1598,7 +1626,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     }
 
     @Override
-    public SetMultimap<ChunkPos, ForgeChunkManager.Ticket> getPersistentChunks() {
+    public ImmutableSetMultimap<ChunkPos, ForgeChunkManager.Ticket> getPersistentChunks() {
         return ForgeChunkManager.getPersistentChunksFor((World)(Object) this);
     }
 

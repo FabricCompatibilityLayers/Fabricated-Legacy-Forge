@@ -3,7 +3,6 @@ package fr.catcore.fabricatedforge.mixin.forgefml.item;
 import cpw.mods.fml.common.registry.ItemProxy;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
-import fr.catcore.fabricatedforge.mixininterface.IServerPlayerInteractionManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,6 +10,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.itemgroup.ItemGroup;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -39,6 +39,8 @@ public abstract class ItemMixin implements ItemProxy, IItem {
     @Shadow public abstract boolean isFood();
 
     @Shadow public abstract Item getRecipeRemainder();
+
+    @Shadow public abstract ItemGroup getItemGroup();
 
     protected boolean canRepair = true;
     public boolean isDefaultTexture = true;
@@ -69,7 +71,7 @@ public abstract class ItemMixin implements ItemProxy, IItem {
         double var9 = par2EntityPlayer.prevY + (par2EntityPlayer.y - par2EntityPlayer.prevY) * (double)var4 + 1.62 - (double)par2EntityPlayer.heightOffset;
         double var11 = par2EntityPlayer.prevZ + (par2EntityPlayer.z - par2EntityPlayer.prevZ) * (double)var4;
         Vec3d var13 = par1World.getVectorPool().getOrCreate(var7, var9, var11);
-        float var14 = MathHelper.cos(-var6 * (float) (Math.PI / 180.0) - (float) Math.PI);
+        float var14 = MathHelper.cos(-var6 * ((float) (Math.PI / 180.0)) - (float) Math.PI);
         float var15 = MathHelper.sin(-var6 * (float) (Math.PI / 180.0) - (float) Math.PI);
         float var16 = -MathHelper.cos(-var5 * (float) (Math.PI / 180.0));
         float var17 = MathHelper.sin(-var5 * (float) (Math.PI / 180.0));
@@ -77,7 +79,7 @@ public abstract class ItemMixin implements ItemProxy, IItem {
         float var20 = var14 * var16;
         double var21 = 5.0;
         if (par2EntityPlayer instanceof ServerPlayerEntity) {
-            var21 = ((IServerPlayerInteractionManager)((ServerPlayerEntity)par2EntityPlayer).interactionManager).getBlockReachDistance();
+            var21 = ((ServerPlayerEntity)par2EntityPlayer).interactionManager.getBlockReachDistance();
         }
 
         Vec3d var23 = var13.method_613((double)var18 * var21, (double)var17 * var21, (double)var20 * var21);
@@ -170,6 +172,16 @@ public abstract class ItemMixin implements ItemProxy, IItem {
     @Override
     public Entity createEntity(World world, Entity location, ItemStack itemstack) {
         return null;
+    }
+
+    @Override
+    public ItemGroup[] getCreativeTabs() {
+        return new ItemGroup[]{this.getItemGroup()};
+    }
+
+    @Override
+    public float getSmeltingExperience(ItemStack item) {
+        return -1.0F;
     }
 
     @Override

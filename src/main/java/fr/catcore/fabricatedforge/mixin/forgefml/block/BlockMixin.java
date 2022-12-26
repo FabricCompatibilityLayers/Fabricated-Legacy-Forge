@@ -97,6 +97,10 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
     @Shadow @Final public static Block END_STONE;
 
     @Shadow @Final public static Block COBBLESTONE_WALL;
+    @Shadow @Final public static Block EMERALD_BLOCK;
+    @Shadow @Final public static Block GOLD_BLOCK;
+    @Shadow @Final public static Block DIAMOND_BLOCK;
+    @Shadow @Final public static Block IRON_BLOCK;
     protected String currentTexture;
     public boolean isDefaultTexture;
 
@@ -497,6 +501,11 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
     @Override
     public boolean canDragonDestroy(World world, int x, int y, int z) {
         return this.id != OBSIDIAN.id && this.id != END_STONE.id && this.id != BEDROCK.id;
+    }
+
+    @Override
+    public boolean isBeaconBase(World worldObj, int x, int y, int z, int beaconX, int beaconY, int beaconZ) {
+        return this.id == EMERALD_BLOCK.id || this.id == GOLD_BLOCK.id || this.id == DIAMOND_BLOCK.id || this.id == IRON_BLOCK.id;
     }
 
     @Override

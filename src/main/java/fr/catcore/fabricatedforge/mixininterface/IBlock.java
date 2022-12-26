@@ -68,6 +68,7 @@ public interface IBlock {
     boolean isFertile(World world, int x, int y, int z);
     int getLightOpacity(World world, int x, int y, int z);
     boolean canDragonDestroy(World world, int x, int y, int z);
+    boolean isBeaconBase(World worldObj, int x, int y, int z, int beaconX, int beaconY, int beaconZ);
 
     boolean isDefaultTexture();
 }

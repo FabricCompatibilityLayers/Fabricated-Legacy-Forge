@@ -12,6 +12,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
+
 @Mixin(ItemGroup.class)
 public abstract class ItemGroupMixin implements IItemGroup {
 
@@ -56,6 +58,24 @@ public abstract class ItemGroupMixin implements IItemGroup {
             return (this.index - 12) % 10 < 5;
         } else {
             return this.index < 6;
+        }
+    }
+
+    /**
+     * @author fml
+     * @reason yes
+     */
+    @Environment(EnvType.CLIENT)
+    @Overwrite
+    public void showItems(List par1List) {
+        for(Item var5 : Item.ITEMS) {
+            if (var5 != null) {
+                for(ItemGroup tab : var5.getCreativeTabs()) {
+                    if (tab == ((Object) this)) {
+                        var5.method_3345(var5.id, (ItemGroup) (Object) this, par1List);
+                    }
+                }
+            }
         }
     }
 
