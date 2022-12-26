@@ -184,7 +184,7 @@ public class ForgeHooks {
         } else {
             for(int x = 0; x < 9; ++x) {
                 ItemStack stack = player.inventory.getInvStack(x);
-                if (stack != null && stack.equalsIgnoreNbt(result)) {
+                if (stack != null && stack.equalsIgnoreNbt(result) && ItemStack.equalsIgnoreDamage(stack, result)) {
                     player.inventory.selectedSlot = x;
                     return true;
                 }

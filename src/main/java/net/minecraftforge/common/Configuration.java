@@ -3,12 +3,16 @@ package net.minecraftforge.common;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.relauncher.FMLInjectionData;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 
 import java.io.*;
 import java.text.DateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Configuration {
     private static boolean[] configBlocks = new boolean[Block.BLOCKS.length];
@@ -19,15 +23,32 @@ public class Configuration {
     public static final String CATEGORY_ITEM = "item";
     public static final String ALLOWED_CHARS = "._-";
     public static final String DEFAULT_ENCODING = "UTF-8";
+    private static final Pattern CONFIG_START = Pattern.compile("START: \"([^\\\"]+)\"");
+    private static final Pattern CONFIG_END = Pattern.compile("END: \"([^\\\"]+)\"");
     private static final CharMatcher allowedProperties = CharMatcher.JAVA_LETTER_OR_DIGIT.or(CharMatcher.anyOf("._-"));
+    private static Configuration PARENT = null;
     File file;
     public Map<String, Map<String, Property>> categories = new TreeMap();
+    private Map<String, Configuration> children = new TreeMap();
     private Map<String, String> customCategoryComments = Maps.newHashMap();
     private boolean caseSensitiveCustomCategories;
     public String defaultEncoding = "UTF-8";
+    private String fileName = null;
+    public boolean isChild = false;
+
+    public Configuration() {
+    }
 
     public Configuration(File file) {
         this.file = file;
+        String basePath = ((File) FMLInjectionData.data()[6]).getAbsolutePath().replace(File.separatorChar, '/').replace("/.", "");
+        String path = file.getAbsolutePath().replace(File.separatorChar, '/').replace("/./", "/").replace(basePath, "");
+        if (PARENT != null) {
+            PARENT.setChild(path, this);
+            this.isChild = true;
+        } else {
+            this.load();
+        }
     }
 
     public Configuration(File file, boolean caseSensitiveCustomCategories) {
@@ -142,150 +163,182 @@ public class Configuration {
     }
 
     public void load() {
-        BufferedReader buffer = null;
+        if (PARENT == null || PARENT == this) {
+            BufferedReader buffer = null;
 
-        try {
-            if (this.file.getParentFile() != null) {
-                this.file.getParentFile().mkdirs();
-            }
+            try {
+                if (this.file.getParentFile() != null) {
+                    this.file.getParentFile().mkdirs();
+                }
 
-            if (this.file.exists() || this.file.createNewFile()) {
-                if (this.file.canRead()) {
-                    Configuration.UnicodeInputStreamReader input = new Configuration.UnicodeInputStreamReader(
-                            new FileInputStream(this.file), this.defaultEncoding
-                    );
-                    this.defaultEncoding = input.getEncoding();
-                    buffer = new BufferedReader(input);
-                    Map<String, Property> currentMap = null;
+                if (this.file.exists() || this.file.createNewFile()) {
+                    if (this.file.canRead()) {
+                        Configuration.UnicodeInputStreamReader input = new Configuration.UnicodeInputStreamReader(
+                                new FileInputStream(this.file), this.defaultEncoding
+                        );
+                        this.defaultEncoding = input.getEncoding();
+                        buffer = new BufferedReader(input);
+                        Map<String, Property> currentMap = null;
 
-                    boolean quoted;
-                    do {
-                        String line = buffer.readLine();
-                        if (line == null) {
-                            return;
-                        }
+                        while(true) {
+                            String line = buffer.readLine();
+                            if (line == null) {
+                                return;
+                            }
 
-                        int nameStart = -1;
-                        int nameEnd = -1;
-                        boolean skip = false;
-                        quoted = false;
+                            Matcher start = CONFIG_START.matcher(line);
+                            Matcher end = CONFIG_END.matcher(line);
+                            if (start.matches()) {
+                                this.fileName = start.group(1);
+                                this.categories = new TreeMap();
+                                this.customCategoryComments = Maps.newHashMap();
+                            } else if (end.matches()) {
+                                this.fileName = end.group(1);
+                                Configuration child = new Configuration();
+                                child.categories = this.categories;
+                                child.customCategoryComments = this.customCategoryComments;
+                                this.children.put(this.fileName, child);
+                            } else {
+                                int nameStart = -1;
+                                int nameEnd = -1;
+                                boolean skip = false;
+                                boolean quoted = false;
 
-                        for(int i = 0; i < line.length() && !skip; ++i) {
-                            if (Character.isLetterOrDigit(line.charAt(i)) || "._-".indexOf(line.charAt(i)) != -1 || quoted && line.charAt(i) != '"') {
-                                if (nameStart == -1) {
-                                    nameStart = i;
+                                for(int i = 0; i < line.length() && !skip; ++i) {
+                                    if (Character.isLetterOrDigit(line.charAt(i)) || "._-".indexOf(line.charAt(i)) != -1 || quoted && line.charAt(i) != '"') {
+                                        if (nameStart == -1) {
+                                            nameStart = i;
+                                        }
+
+                                        nameEnd = i;
+                                    } else if (!Character.isWhitespace(line.charAt(i))) {
+                                        switch(line.charAt(i)) {
+                                            case '"':
+                                                if (quoted) {
+                                                    quoted = false;
+                                                }
+
+                                                if (!quoted && nameStart == -1) {
+                                                    quoted = true;
+                                                }
+                                                break;
+                                            case '#':
+                                                skip = true;
+                                                break;
+                                            case '=':
+                                                String propertyName = line.substring(nameStart, nameEnd + 1);
+                                                if (currentMap == null) {
+                                                    throw new RuntimeException("property " + propertyName + " has no scope");
+                                                }
+
+                                                Property prop = new Property();
+                                                prop.setName(propertyName);
+                                                prop.value = line.substring(i + 1);
+                                                i = line.length();
+                                                currentMap.put(propertyName, prop);
+                                                break;
+                                            case '{':
+                                                String scopeName = line.substring(nameStart, nameEnd + 1);
+                                                currentMap = (Map)this.categories.get(scopeName);
+                                                if (currentMap == null) {
+                                                    currentMap = new TreeMap();
+                                                    this.categories.put(scopeName, currentMap);
+                                                }
+                                                break;
+                                            case '}':
+                                                currentMap = null;
+                                                break;
+                                            default:
+                                                throw new RuntimeException("unknown character " + line.charAt(i));
+                                        }
+                                    }
                                 }
 
-                                nameEnd = i;
-                            } else if (!Character.isWhitespace(line.charAt(i))) {
-                                switch(line.charAt(i)) {
-                                    case '"':
-                                        if (quoted) {
-                                            quoted = false;
-                                        }
-
-                                        if (!quoted && nameStart == -1) {
-                                            quoted = true;
-                                        }
-                                        break;
-                                    case '#':
-                                        skip = true;
-                                        break;
-                                    case '=':
-                                        String propertyName = line.substring(nameStart, nameEnd + 1);
-                                        if (currentMap == null) {
-                                            throw new RuntimeException("property " + propertyName + " has no scope");
-                                        }
-
-                                        Property prop = new Property();
-                                        prop.setName(propertyName);
-                                        prop.value = line.substring(i + 1);
-                                        i = line.length();
-                                        currentMap.put(propertyName, prop);
-                                        break;
-                                    case '{':
-                                        String scopeName = line.substring(nameStart, nameEnd + 1);
-                                        currentMap = (Map)this.categories.get(scopeName);
-                                        if (currentMap == null) {
-                                            currentMap = new TreeMap();
-                                            this.categories.put(scopeName, currentMap);
-                                        }
-                                        break;
-                                    case '}':
-                                        currentMap = null;
-                                        break;
-                                    default:
-                                        throw new RuntimeException("unknown character " + line.charAt(i));
+                                if (quoted) {
+                                    throw new RuntimeException("unmatched quote");
                                 }
                             }
                         }
-                    } while(!quoted);
+                    }
 
-                    throw new RuntimeException("unmatched quote");
+                    return;
                 }
-
+            } catch (IOException var24) {
+                var24.printStackTrace();
                 return;
-            }
-        } catch (IOException var22) {
-            var22.printStackTrace();
-            return;
-        } finally {
-            if (buffer != null) {
-                try {
-                    buffer.close();
-                } catch (IOException var21) {
+            } finally {
+                if (buffer != null) {
+                    try {
+                        buffer.close();
+                    } catch (IOException var23) {
+                    }
                 }
             }
         }
     }
 
     public void save() {
-        try {
-            if (this.file.getParentFile() != null) {
-                this.file.getParentFile().mkdirs();
-            }
+        if (PARENT != null && PARENT != this) {
+            PARENT.save();
+        } else {
+            try {
+                if (this.file.getParentFile() != null) {
+                    this.file.getParentFile().mkdirs();
+                }
 
-            if (!this.file.exists() && !this.file.createNewFile()) {
-                return;
-            }
+                if (!this.file.exists() && !this.file.createNewFile()) {
+                    return;
+                }
 
-            if (this.file.canWrite()) {
-                FileOutputStream fos = new FileOutputStream(this.file);
-                BufferedWriter buffer = new BufferedWriter(new OutputStreamWriter(fos, this.defaultEncoding));
-                buffer.write("# Configuration file\r\n");
-                buffer.write("# Generated on " + DateFormat.getInstance().format(new Date()) + "\r\n");
-                buffer.write("\r\n");
-
-                for(Map.Entry<String, Map<String, Property>> category : this.categories.entrySet()) {
-                    buffer.write("####################\r\n");
-                    buffer.write("# " + (String)category.getKey() + " \r\n");
-                    if (this.customCategoryComments.containsKey(category.getKey())) {
-                        buffer.write("#===================\r\n");
-                        String comment = (String)this.customCategoryComments.get(category.getKey());
-                        Splitter splitter = Splitter.onPattern("\r?\n");
-
-                        for(String commentLine : splitter.split(comment)) {
-                            buffer.write("# ");
-                            buffer.write(commentLine + "\r\n");
+                if (this.file.canWrite()) {
+                    FileOutputStream fos = new FileOutputStream(this.file);
+                    BufferedWriter buffer = new BufferedWriter(new OutputStreamWriter(fos, this.defaultEncoding));
+                    buffer.write("# Configuration file\r\n");
+                    buffer.write("# Generated on " + DateFormat.getInstance().format(new Date()) + "\r\n");
+                    buffer.write("\r\n");
+                    if (this.children.isEmpty()) {
+                        this.save(buffer);
+                    } else {
+                        for(Map.Entry<String, Configuration> entry : this.children.entrySet()) {
+                            buffer.write("START: \"" + (String)entry.getKey() + "\"\r\n");
+                            ((Configuration)entry.getValue()).save(buffer);
+                            buffer.write("END: \"" + (String)entry.getKey() + "\"\r\n\r\n");
                         }
                     }
 
-                    buffer.write("####################\r\n\r\n");
-                    String catKey = (String)category.getKey();
-                    if (!allowedProperties.matchesAllOf(catKey)) {
-                        catKey = '"' + catKey + '"';
-                    }
-
-                    buffer.write(catKey + " {\r\n");
-                    this.writeProperties(buffer, ((Map)category.getValue()).values());
-                    buffer.write("}\r\n\r\n");
+                    buffer.close();
+                    fos.close();
                 }
-
-                buffer.close();
-                fos.close();
+            } catch (IOException var5) {
+                var5.printStackTrace();
             }
-        } catch (IOException var9) {
-            var9.printStackTrace();
+        }
+    }
+
+    private void save(BufferedWriter out) throws IOException {
+        for(Map.Entry<String, Map<String, Property>> category : this.categories.entrySet()) {
+            out.write("####################\r\n");
+            out.write("# " + (String)category.getKey() + " \r\n");
+            if (this.customCategoryComments.containsKey(category.getKey())) {
+                out.write("#===================\r\n");
+                String comment = (String)this.customCategoryComments.get(category.getKey());
+                Splitter splitter = Splitter.onPattern("\r?\n");
+
+                for(String commentLine : splitter.split(comment)) {
+                    out.write("# ");
+                    out.write(commentLine + "\r\n");
+                }
+            }
+
+            out.write("####################\r\n\r\n");
+            String catKey = (String)category.getKey();
+            if (!allowedProperties.matchesAllOf(catKey)) {
+                catKey = '"' + catKey + '"';
+            }
+
+            out.write(catKey + " {\r\n");
+            this.writeProperties(out, ((Map)category.getValue()).values());
+            out.write("}\r\n\r\n");
         }
     }
 
@@ -315,6 +368,22 @@ public class Configuration {
             buffer.write("   " + propName + "=" + property.value);
             buffer.write("\r\n");
         }
+    }
+
+    private void setChild(String name, Configuration child) {
+        if (!this.children.containsKey(name)) {
+            this.children.put(name, child);
+        } else {
+            Configuration old = (Configuration)this.children.get(name);
+            child.categories = old.categories;
+            child.customCategoryComments = old.customCategoryComments;
+            child.fileName = old.fileName;
+        }
+    }
+
+    public static void enableGlobalConfig() {
+        PARENT = new Configuration(new File(Loader.instance().getConfigDir(), "global.cfg"));
+        PARENT.load();
     }
 
     static {

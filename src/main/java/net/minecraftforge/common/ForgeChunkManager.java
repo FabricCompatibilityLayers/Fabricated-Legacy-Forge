@@ -315,7 +315,7 @@ public class ForgeChunkManager {
         config.save();
     }
 
-    public static SetMultimap<ChunkPos, ForgeChunkManager.Ticket> getPersistentChunksFor(World world) {
+    public static ImmutableSetMultimap<ChunkPos, ForgeChunkManager.Ticket> getPersistentChunksFor(World world) {
         return forcedChunks.containsKey(world) ? (ImmutableSetMultimap)forcedChunks.get(world) : ImmutableSetMultimap.of();
     }
 

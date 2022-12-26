@@ -219,7 +219,9 @@ public class ForgeHooksClient {
         }
     }
 
-    public static boolean renderInventoryItem(BlockRenderer renderBlocks, TextureManager engine, ItemStack item, boolean inColor, float zLevel, float x, float y) {
+    public static boolean renderInventoryItem(
+            BlockRenderer renderBlocks, TextureManager engine, ItemStack item, boolean inColor, float zLevel, float x, float y
+    ) {
         IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(item, IItemRenderer.ItemRenderType.INVENTORY);
         if (customRenderer == null) {
             return false;
