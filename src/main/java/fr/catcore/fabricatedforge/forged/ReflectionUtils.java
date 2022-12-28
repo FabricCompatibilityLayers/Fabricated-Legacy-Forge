@@ -3,6 +3,9 @@ package fr.catcore.fabricatedforge.forged;
 import com.google.common.collect.ObjectArrays;
 import net.minecraft.world.biome.Biome;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class ReflectionUtils {
     public static double World_MAX_ENTITY_RADIUS = 2.0;
 
@@ -19,4 +22,21 @@ public class ReflectionUtils {
         Block_blockFireSpreadSpeed[id] = encouragement;
         Block_blockFlammability[id] = flammability;
     }
+
+    public static ArrayList<Biome> StrongholdStructure_allowedBiomes = new ArrayList<>(
+            Arrays.asList(
+                    Biome.DESERT,
+                    Biome.FOREST,
+                    Biome.EXTREME_HILLS,
+                    Biome.SWAMPLAND,
+                    Biome.TAIGA,
+                    Biome.ICE_PLAINS,
+                    Biome.ICE_MOUNTAINS,
+                    Biome.DESERT_HILLS,
+                    Biome.FOREST_HILLS,
+                    Biome.EXTREME_HILLS_EDGE,
+                    Biome.JUNGLE,
+                    Biome.JUNGLE_HILLS
+            )
+    );
 }

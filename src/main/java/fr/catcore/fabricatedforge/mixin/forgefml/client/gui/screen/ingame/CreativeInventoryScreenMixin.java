@@ -43,6 +43,8 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
     @Shadow private boolean clicking;
     @Shadow private boolean hasScrollbar;
 
+    @Shadow protected abstract boolean renderTabTooltipIfHovered(ItemGroup group, int mouseX, int mouseY);
+
     private int tabPage = 0;
     private int maxPages = 0;
 
@@ -307,11 +309,11 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
         var8 = this.y + 18;
         int var14 = var8 + 112;
         this.field_1229.textureManager.bindTexture(var4);
-        if (var5 != null && ((IItemGroup)var5).getTabPage() == this.tabPage || var5 == ItemGroup.SEARCH || var5 == ItemGroup.INVENTORY) {
-            if (var5.hasScrollbar()) {
-                this.drawTexture(var11, var8 + (int)((float)(var14 - var8 - 17) * this.scrollPosition), 232 + (this.hasScrollbar() ? 0 : 12), 0, 12, 15);
-            }
+        if (var5.hasScrollbar()) {
+            this.drawTexture(var11, var8 + (int)((float)(var14 - var8 - 17) * this.scrollPosition), 232 + (this.hasScrollbar() ? 0 : 12), 0, 12, 15);
+        }
 
+        if (var5 != null && var5.getTabPage() == this.tabPage || var5 == ItemGroup.SEARCH || var5 == ItemGroup.INVENTORY) {
             this.renderTabIcon(var5);
             if (var5 == ItemGroup.INVENTORY) {
                 SurvivalInventoryScreen.method_1159(
@@ -327,7 +329,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
      */
     @Overwrite
     protected boolean isClickInTab(ItemGroup par1CreativeTabs, int par2, int par3) {
-        if (((IItemGroup)par1CreativeTabs).getTabPage() != this.tabPage && par1CreativeTabs != ItemGroup.SEARCH && par1CreativeTabs != ItemGroup.INVENTORY) {
+        if (par1CreativeTabs.getTabPage() != this.tabPage && par1CreativeTabs != ItemGroup.SEARCH && par1CreativeTabs != ItemGroup.INVENTORY) {
             return false;
         } else {
             int var4 = par1CreativeTabs.getColumn();
@@ -347,36 +349,6 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
             }
 
             return par2 >= var5 && par2 <= var5 + 28 && par3 >= var7 && par3 <= var7 + 32;
-        }
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Overwrite
-    protected boolean renderTabTooltipIfHovered(ItemGroup par1CreativeTabs, int par2, int par3) {
-        int var4 = par1CreativeTabs.getColumn();
-        int var5 = 28 * var4;
-        byte var6 = 0;
-        if (var4 == 5) {
-            var5 = this.backgroundWidth - 28 + 2;
-        } else if (var4 > 0) {
-            var5 += var4;
-        }
-
-        int var7;
-        if (par1CreativeTabs.isTopRow()) {
-            var7 = var6 - 32;
-        } else {
-            var7 = var6 + this.backgroundHeight;
-        }
-
-        if (this.isPointWithinBounds(var5 + 3, var7 + 3, 23, 27, par2, par3)) {
-            this.method_1128(par1CreativeTabs.getTranslationKey(), par2, par3);
-            return true;
-        } else {
-            return false;
         }
     }
 
@@ -419,7 +391,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
         var8 += 8 + (var3 ? 1 : -1);
         GL11.glEnable(2896);
         GL11.glEnable(32826);
-        ItemStack var10 = ((IItemGroup)par1CreativeTabs).getIconItemStack();
+        ItemStack var10 = par1CreativeTabs.getIconItemStack();
         field_1346.method_4336(this.textRenderer, this.field_1229.textureManager, var10, var7, var8);
         field_1346.method_1549(this.textRenderer, this.field_1229.textureManager, var10, var7, var8);
         GL11.glDisable(2896);

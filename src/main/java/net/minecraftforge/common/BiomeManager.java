@@ -1,5 +1,6 @@
 package net.minecraftforge.common;
 
+import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.minecraft.structure.StrongholdStructure;
 import net.minecraft.structure.VillageStructure;
 import net.minecraft.world.LayeredBiomeSource;
@@ -28,14 +29,14 @@ public class BiomeManager {
     }
 
     public static void addStrongholdBiome(Biome biome) {
-        if (!StrongholdStructure.allowedBiomes.contains(biome)) {
-            StrongholdStructure.allowedBiomes.add(biome);
+        if (!ReflectionUtils.StrongholdStructure_allowedBiomes.contains(biome)) {
+            ReflectionUtils.StrongholdStructure_allowedBiomes.add(biome);
         }
     }
 
     public static void removeStrongholdBiome(Biome biome) {
-        if (StrongholdStructure.allowedBiomes.contains(biome)) {
-            StrongholdStructure.allowedBiomes.remove(biome);
+        if (ReflectionUtils.StrongholdStructure_allowedBiomes.contains(biome)) {
+            ReflectionUtils.StrongholdStructure_allowedBiomes.remove(biome);
         }
     }
 
