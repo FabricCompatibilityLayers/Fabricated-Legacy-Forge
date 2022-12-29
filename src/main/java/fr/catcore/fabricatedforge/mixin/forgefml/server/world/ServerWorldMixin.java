@@ -48,12 +48,6 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     @Shadow @Final private MinecraftServer server;
 
-    @Shadow protected abstract void method_2132();
-
-    @Shadow private class_797[] field_2815;
-
-    @Shadow private int field_2816;
-
     @Shadow public ServerChunkProvider chunkCache;
 
     @Shadow public abstract void resetIdleTimeout();
@@ -358,17 +352,11 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      * @reason none
      */
     @Overwrite
-    public void method_3654(int par1, int par2, int par3, int par4, int par5, int par6) {
-        BlockAction var7 = new BlockAction(par1, par2, par3, par4, par5, par6);
-
-        for (Object o : this.field_2815[this.field_2816]) {
-            BlockAction var9 = (BlockAction) o;
-            if (var9.equals(var7)) {
-                return;
-            }
-        }
-
-        this.field_2815[this.field_2816].add(var7);
+    protected void method_2132() throws WorldSaveException {
+        this.readSaveLock();
+        this.saveHandler.saveWorld(this.levelProperties, this.server.getPlayerManager().getUserData());
+        this.persistentStateManager.save();
+        this.getPerWorldStorage().save();
     }
 
     @Override

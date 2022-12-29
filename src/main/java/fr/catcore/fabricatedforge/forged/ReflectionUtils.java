@@ -39,4 +39,8 @@ public class ReflectionUtils {
                     Biome.JUNGLE_HILLS
             )
     );
+
+    public static ArrayList<Biome> LayeredBiomeSource_allowedBiomes = new ArrayList<>(
+            Arrays.asList(Biome.FOREST, Biome.PLAINS, Biome.TAIGA, Biome.TAIGA_HILLS, Biome.FOREST_HILLS, Biome.JUNGLE_HILLS)
+    );
 }

@@ -3,6 +3,9 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render.entity;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.BlockRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.block.entity.SkullBlockEntityRenderer;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
@@ -30,6 +33,9 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
     @Shadow private BiPedModel field_2134;
 
     @Shadow private BiPedModel field_2133;
+
+    protected static float NAME_TAG_RANGE = 64.0F;
+    protected static float NAME_TAG_RANGE_SNEAK = 32.0F;
 
     public PlayerEntityRendererMixin(EntityModel entityModel, float f) {
         super(entityModel, f);
@@ -108,6 +114,58 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
                 this.method_1529(ForgeHooksClient.getArmorTexture(var4, "/armor/" + field_2136[var6.materialId] + "_" + (par2 == 2 ? 2 : 1) + "_b.png"));
                 float var7 = 1.0F;
                 GL11.glColor3f(var7, var7, var7);
+            }
+        }
+    }
+
+    /**
+     * @author forge
+     * @reason yes
+     */
+    @Overwrite
+    protected void method_1566(PlayerEntity par1EntityPlayer, double par2, double par4, double par6) {
+        if (Minecraft.isHudEnabled() && par1EntityPlayer != this.dispatcher.cameraEntity && !par1EntityPlayer.isInvisible()) {
+            float var8 = 1.6F;
+            float var9 = 0.016666668F * var8;
+            double var10 = par1EntityPlayer.squaredDistanceTo(this.dispatcher.cameraEntity);
+            float var12 = par1EntityPlayer.isSneaking() ? NAME_TAG_RANGE_SNEAK : NAME_TAG_RANGE;
+            if (var10 < (double)(var12 * var12)) {
+                String var13 = par1EntityPlayer.username;
+                if (par1EntityPlayer.isSneaking()) {
+                    TextRenderer var14 = this.getFontRenderer();
+                    GL11.glPushMatrix();
+                    GL11.glTranslatef((float)par2 + 0.0F, (float)par4 + 2.3F, (float)par6);
+                    GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+                    GL11.glRotatef(-this.dispatcher.yaw, 0.0F, 1.0F, 0.0F);
+                    GL11.glRotatef(this.dispatcher.pitch, 1.0F, 0.0F, 0.0F);
+                    GL11.glScalef(-var9, -var9, var9);
+                    GL11.glDisable(2896);
+                    GL11.glTranslatef(0.0F, 0.25F / var9, 0.0F);
+                    GL11.glDepthMask(false);
+                    GL11.glEnable(3042);
+                    GL11.glBlendFunc(770, 771);
+                    Tessellator var15 = Tessellator.INSTANCE;
+                    GL11.glDisable(3553);
+                    var15.begin();
+                    int var16 = var14.getStringWidth(var13) / 2;
+                    var15.color(0.0F, 0.0F, 0.0F, 0.25F);
+                    var15.vertex((double)(-var16 - 1), -1.0, 0.0);
+                    var15.vertex((double)(-var16 - 1), 8.0, 0.0);
+                    var15.vertex((double)(var16 + 1), 8.0, 0.0);
+                    var15.vertex((double)(var16 + 1), -1.0, 0.0);
+                    var15.end();
+                    GL11.glEnable(3553);
+                    GL11.glDepthMask(true);
+                    var14.method_4247(var13, -var14.getStringWidth(var13) / 2, 0, 553648127);
+                    GL11.glEnable(2896);
+                    GL11.glDisable(3042);
+                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                    GL11.glPopMatrix();
+                } else if (par1EntityPlayer.method_2641()) {
+                    this.method_1565(par1EntityPlayer, var13, par2, par4 - 1.5, par6, 64);
+                } else {
+                    this.method_1565(par1EntityPlayer, var13, par2, par4, par6, 64);
+                }
             }
         }
     }
@@ -278,7 +336,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
             }
 
             if (var21.getItem().method_3397()) {
-                for(int var27 = 0; var27 < ((IItem)var21.getItem()).getRenderPasses(var21.getData()); ++var27) {
+                for(int var27 = 0; var27 < var21.getItem().getRenderPasses(var21.getData()); ++var27) {
                     int var26 = var21.getItem().getDisplayColor(var21, var27);
                     float var28 = (float)(var26 >> 16 & 0xFF) / 255.0F;
                     float var10 = (float)(var26 >> 8 & 0xFF) / 255.0F;

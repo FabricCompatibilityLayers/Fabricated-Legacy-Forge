@@ -2,10 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSetMultimap;
-import com.google.common.collect.SetMultimap;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
-import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
-import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import fr.catcore.fabricatedforge.mixininterface.IWorld;
 import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.fabricmc.api.EnvType;
@@ -1643,5 +1640,10 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Override
     public void setSpawnMonsters(boolean bool) {
         this.spawnMonsters = bool;
+    }
+
+    @Override
+    public PersistentStateManager getPerWorldStorage() {
+        return this.perWorldStorage;
     }
 }

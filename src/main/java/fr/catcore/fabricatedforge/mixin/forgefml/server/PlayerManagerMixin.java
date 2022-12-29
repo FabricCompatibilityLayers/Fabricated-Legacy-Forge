@@ -239,7 +239,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
                 );
         var4.method_3700(par1EntityPlayerMP);
         par1EntityPlayerMP.removed = false;
-        this.func_82448_a(par1EntityPlayerMP, var3, var4, var5, teleporter);
+        this.transferEntityToWorld(par1EntityPlayerMP, var3, var4, var5, teleporter);
         this.method_1986(par1EntityPlayerMP, var4);
         par1EntityPlayerMP.field_2823
                 .requestTeleport(par1EntityPlayerMP.x, par1EntityPlayerMP.y, par1EntityPlayerMP.z, par1EntityPlayerMP.yaw, par1EntityPlayerMP.pitch);
@@ -260,11 +260,11 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
      */
     @Overwrite
     public void method_4399(Entity par1Entity, int par2, ServerWorld par3WorldServer, ServerWorld par4WorldServer) {
-        this.func_82448_a(par1Entity, par2, par3WorldServer, par4WorldServer, new PortalTeleporter());
+        this.transferEntityToWorld(par1Entity, par2, par3WorldServer, par4WorldServer, new PortalTeleporter());
     }
 
     @Override
-    public void func_82448_a(Entity par1Entity, int par2, ServerWorld par3WorldServer, ServerWorld par4WorldServer, PortalTeleporter teleporter) {
+    public void transferEntityToWorld(Entity par1Entity, int par2, ServerWorld par3WorldServer, ServerWorld par4WorldServer, PortalTeleporter teleporter) {
         Dimension pOld = par3WorldServer.dimension;
         Dimension pNew = par4WorldServer.dimension;
         double moveFactor = pOld.getMovementFactor() / pNew.getMovementFactor();

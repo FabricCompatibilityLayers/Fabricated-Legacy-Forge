@@ -54,4 +54,6 @@ public interface IWorld {
 
     void setSpawnAnimals(boolean bool);
     void setSpawnMonsters(boolean bool);
+
+    PersistentStateManager getPerWorldStorage();
 }

@@ -38,10 +38,10 @@ public class CraftingResultSlotMixin extends Slot {
             if (var4 != null) {
                 this.field_4147.takeInvStack(var3, 1);
                 if (var4.getItem().isFood()) {
-                    ItemStack var5 = ((IItem)var4.getItem()).getContainerItemStack(var4);
+                    ItemStack var5 = var4.getItem().getContainerItemStack(var4);
                     if (var5.isDamageable() && var5.getData() > var5.getMaxDamage()) {
                         MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(this.player, var5));
-                        var4 = null;
+                        var5 = null;
                     }
 
                     if (var5 != null && (!var4.getItem().method_3380(var4) || !this.player.inventory.insertStack(var5))) {

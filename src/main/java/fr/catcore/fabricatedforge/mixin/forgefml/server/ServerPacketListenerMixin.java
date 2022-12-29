@@ -31,8 +31,10 @@ import net.minecraft.util.SharedConstants;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event;
 import net.minecraftforge.event.ForgeEventFactory;
+import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -307,7 +309,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 double var10 = this.player.y - ((double)var6 + 0.5) + 1.5;
                 double var12 = this.player.z - ((double)var7 + 0.5);
                 double var14 = var8 * var8 + var10 * var10 + var12 * var12;
-                double dist = ((IServerPlayerInteractionManager)this.player.interactionManager).getBlockReachDistance() + 1.0;
+                double dist = this.player.interactionManager.getBlockReachDistance() + 1.0;
                 dist *= dist;
                 if (var14 > dist) {
                     return;
@@ -389,7 +391,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 var12 = var11;
             }
 
-            double dist = ((IServerPlayerInteractionManager)this.player.interactionManager).getBlockReachDistance() + 1.0;
+            double dist = this.player.interactionManager.getBlockReachDistance() + 1.0;
             dist *= dist;
             if (this.field_2910
                     && this.player.squaredDistanceTo((double)var5 + 0.5, (double)var6 + 0.5, (double)var7 + 0.5) < dist
@@ -494,7 +496,12 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                         return;
                     }
 
-                    var2 = "<" + this.player.username + "> " + var2;
+                    ServerChatEvent event = new ServerChatEvent(this.player, var2, "<" + this.player.username + "> " + var2);
+                    if (MinecraftForge.EVENT_BUS.post(event)) {
+                        return;
+                    }
+
+                    var2 = event.line;
                     LOGGER.info(var2);
                     this.server.getPlayerManager().sendToAll(new ChatMessageS2CPacket(var2, false));
                 }

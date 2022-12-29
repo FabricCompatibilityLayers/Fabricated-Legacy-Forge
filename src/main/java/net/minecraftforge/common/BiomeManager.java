@@ -41,14 +41,14 @@ public class BiomeManager {
     }
 
     public static void addSpawnBiome(Biome biome) {
-        if (!LayeredBiomeSource.allowedBiomes.contains(biome)) {
-            LayeredBiomeSource.allowedBiomes.add(biome);
+        if (!ReflectionUtils.LayeredBiomeSource_allowedBiomes.contains(biome)) {
+            ReflectionUtils.LayeredBiomeSource_allowedBiomes.add(biome);
         }
     }
 
     public static void removeSpawnBiome(Biome biome) {
-        if (LayeredBiomeSource.allowedBiomes.contains(biome)) {
-            LayeredBiomeSource.allowedBiomes.remove(biome);
+        if (ReflectionUtils.LayeredBiomeSource_allowedBiomes.contains(biome)) {
+            ReflectionUtils.LayeredBiomeSource_allowedBiomes.remove(biome);
         }
     }
 }

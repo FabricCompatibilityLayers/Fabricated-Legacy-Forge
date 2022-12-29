@@ -8,5 +8,5 @@ import net.minecraft.server.world.ServerWorld;
 public interface IPlayerManager {
     void transferPlayerToDimension(ServerPlayerEntity par1EntityPlayerMP, int par2, PortalTeleporter teleporter);
 
-    void func_82448_a(Entity par1Entity, int par2, ServerWorld par3WorldServer, ServerWorld par4WorldServer, PortalTeleporter teleporter);
+    void transferEntityToWorld(Entity par1Entity, int par2, ServerWorld par3WorldServer, ServerWorld par4WorldServer, PortalTeleporter teleporter);
 }
