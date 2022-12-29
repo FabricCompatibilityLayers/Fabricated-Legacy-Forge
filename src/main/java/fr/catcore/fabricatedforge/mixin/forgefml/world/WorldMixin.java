@@ -3,6 +3,8 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSetMultimap;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
+import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
+import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import fr.catcore.fabricatedforge.mixininterface.IWorld;
 import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.fabricmc.api.EnvType;
@@ -234,7 +236,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     public boolean hasBlockEntity(int par1, int par2, int par3) {
         int var4 = this.getBlock(par1, par2, par3);
         int meta = this.getBlockData(par1, par2, par3);
-        return Block.BLOCKS[var4] != null && Block.BLOCKS[var4].hasTileEntity(meta);
+        return Block.BLOCKS[var4] != null && ((IBlock)Block.BLOCKS[var4]).hasTileEntity(meta);
     }
 
     /**
@@ -702,7 +704,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
                 if (this.isChunkInsideSpawnChunks(var6.x >> 4, var6.z >> 4)) {
                     Chunk var8 = this.getChunk(var6.x >> 4, var6.z >> 4);
                     if (var8 != null) {
-                        var8.cleanChunkBlockTileEntity(var6.x & 15, var6.y, var6.z & 15);
+                        ((IChunk)var8).cleanChunkBlockTileEntity(var6.x & 15, var6.y, var6.z & 15);
                     }
                 }
             }
@@ -711,7 +713,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.iteratingTickingBlockEntities = false;
         if (!this.unloadedBlockEntities.isEmpty()) {
             for(Object tile : this.unloadedBlockEntities) {
-                ((BlockEntity)tile).onChunkUnload();
+                ((IBlockEntity)tile).onChunkUnload();
             }
 
             this.blockEntities.removeAll(this.unloadedBlockEntities);
@@ -749,7 +751,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         List dest = this.iteratingTickingBlockEntities ? this.pendingBlockEntities : this.blockEntities;
 
         for(Object entity : par1Collection) {
-            if (((BlockEntity)entity).canUpdate()) {
+            if (((IBlockEntity)entity).canUpdate()) {
                 dest.add(entity);
             }
         }
@@ -875,7 +877,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Overwrite
     public void method_3603(int par1, int par2, int par3, BlockEntity par4TileEntity) {
         if (par4TileEntity != null && !par4TileEntity.isRemoved()) {
-            if (par4TileEntity.canUpdate()) {
+            if (((IBlockEntity)par4TileEntity).canUpdate()) {
                 List dest = this.iteratingTickingBlockEntities ? this.pendingBlockEntities : this.blockEntities;
                 dest.add(par4TileEntity);
             }
@@ -1179,7 +1181,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
      */
     @Overwrite
     private int method_3699(int par1, int par2, int par3, int par4, int par5, int par6) {
-        int var7 = par5 != 0 && Block.BLOCKS[par5] != null ? Block.BLOCKS[par5].getLightValue(this, par2, par3, par4) : 0;
+        int var7 = par5 != 0 && Block.BLOCKS[par5] != null ? ((IBlock)Block.BLOCKS[par5]).getLightValue(this, par2, par3, par4) : 0;
         int var8 = this.method_3667(LightType.BLOCK, par2 - 1, par3, par4) - par6;
         int var9 = this.method_3667(LightType.BLOCK, par2 + 1, par3, par4) - par6;
         int var10 = this.method_3667(LightType.BLOCK, par2, par3 - 1, par4) - par6;
@@ -1597,7 +1599,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Override
     public void addTileEntity(BlockEntity entity) {
         List dest = this.iteratingTickingBlockEntities ? this.pendingBlockEntities : this.blockEntities;
-        if (entity.canUpdate()) {
+        if (((IBlockEntity)entity).canUpdate()) {
             dest.add(entity);
         }
     }

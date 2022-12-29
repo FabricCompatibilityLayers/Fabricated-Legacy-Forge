@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.inventory.slot;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import fr.catcore.fabricatedforge.mixininterface.ISmeltingRecipeRegistry;
 import net.minecraft.advancement.AchievementsAndCriterions;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,7 +36,7 @@ public class FurnaceOutputSlotMixin extends Slot {
         par1ItemStack.onCraft(this.player.world, this.player, this.amount);
         if (!this.player.world.isClient) {
             int var2 = this.amount;
-            float var3 = SmeltingRecipeRegistry.getInstance().getExperience(par1ItemStack);
+            float var3 = ((ISmeltingRecipeRegistry)SmeltingRecipeRegistry.getInstance()).getExperience(par1ItemStack);
             if (var3 == 0.0F) {
                 var2 = 0;
             } else if (var3 < 1.0F) {

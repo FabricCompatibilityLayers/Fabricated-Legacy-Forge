@@ -3,6 +3,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.item;
 import cpw.mods.fml.common.registry.ItemProxy;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
+import fr.catcore.fabricatedforge.mixininterface.IServerPlayerInteractionManager;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -79,7 +80,7 @@ public abstract class ItemMixin implements ItemProxy, IItem {
         float var20 = var14 * var16;
         double var21 = 5.0;
         if (par2EntityPlayer instanceof ServerPlayerEntity) {
-            var21 = ((ServerPlayerEntity)par2EntityPlayer).interactionManager.getBlockReachDistance();
+            var21 = ((IServerPlayerInteractionManager)((ServerPlayerEntity)par2EntityPlayer).interactionManager).getBlockReachDistance();
         }
 
         Vec3d var23 = var13.method_613((double)var18 * var21, (double)var17 * var21, (double)var20 * var21);

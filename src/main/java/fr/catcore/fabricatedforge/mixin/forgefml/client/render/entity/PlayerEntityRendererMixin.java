@@ -336,7 +336,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
             }
 
             if (var21.getItem().method_3397()) {
-                for(int var27 = 0; var27 < var21.getItem().getRenderPasses(var21.getData()); ++var27) {
+                for(int var27 = 0; var27 < ((IItem)var21.getItem()).getRenderPasses(var21.getData()); ++var27) {
                     int var26 = var21.getItem().getDisplayColor(var21, var27);
                     float var28 = (float)(var26 >> 16 & 0xFF) / 255.0F;
                     float var10 = (float)(var26 >> 8 & 0xFF) / 255.0F;

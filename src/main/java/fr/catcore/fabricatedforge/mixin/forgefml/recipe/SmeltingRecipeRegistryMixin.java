@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.recipe;
 
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import fr.catcore.fabricatedforge.mixininterface.ISmeltingRecipeRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.SmeltingRecipeRegistry;
@@ -45,7 +46,7 @@ public class SmeltingRecipeRegistryMixin implements ISmeltingRecipeRegistry {
     @Override
     public float getExperience(ItemStack item) {
         if (item != null && item.getItem() != null) {
-            float ret = item.getItem().getSmeltingExperience(item);
+            float ret = ((IItem)item.getItem()).getSmeltingExperience(item);
             if (ret < 0.0F && this.metaExperience.containsKey(Arrays.asList(item.id, item.getData()))) {
                 ret = this.metaExperience.get(Arrays.asList(item.id, item.getData()));
             }

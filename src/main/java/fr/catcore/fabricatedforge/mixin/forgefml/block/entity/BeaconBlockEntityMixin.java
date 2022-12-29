@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block.entity;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BeaconBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
@@ -40,7 +41,7 @@ public abstract class BeaconBlockEntityMixin extends BlockEntity implements Inve
                     for(int var5 = this.z - var1; var5 <= this.z + var1; ++var5) {
                         int var6 = this.world.getBlock(var4, var2, var5);
                         Block block = Block.BLOCKS[var6];
-                        if (block == null || !block.isBeaconBase(this.world, var4, var2, var5, this.x, this.y, this.z)) {
+                        if (block == null || !((IBlock)block).isBeaconBase(this.world, var4, var2, var5, this.x, this.y, this.z)) {
                             var3 = false;
                             break;
                         }

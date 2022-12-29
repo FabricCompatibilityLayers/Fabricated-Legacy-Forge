@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.item;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -35,7 +36,7 @@ public abstract class SeedItemMixin extends Item implements IPlantable {
                 && par2EntityPlayer.method_4570(par4, par5 + 1, par6, par7, par1ItemStack)) {
             int var11 = par3World.getBlock(par4, par5, par6);
             Block soil = Block.BLOCKS[var11];
-            if (soil != null && soil.canSustainPlant(par3World, par4, par5, par6, ForgeDirection.UP, this) && par3World.isAir(par4, par5 + 1, par6)) {
+            if (soil != null && ((IBlock)soil).canSustainPlant(par3World, par4, par5, par6, ForgeDirection.UP, this) && par3World.isAir(par4, par5 + 1, par6)) {
                 par3World.method_3690(par4, par5 + 1, par6, this.plantId);
                 --par1ItemStack.count;
                 return true;

@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.item.itemgroup;
 
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import fr.catcore.fabricatedforge.mixininterface.IItemGroup;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -70,7 +71,7 @@ public abstract class ItemGroupMixin implements IItemGroup {
     public void showItems(List par1List) {
         for(Item var5 : Item.ITEMS) {
             if (var5 != null) {
-                for(ItemGroup tab : var5.getCreativeTabs()) {
+                for(ItemGroup tab : ((IItem)var5).getCreativeTabs()) {
                     if (tab == ((Object) this)) {
                         var5.method_3345(var5.id, (ItemGroup) (Object) this, par1List);
                     }
