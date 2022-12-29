@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render.entity;
 
+import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.BlockRenderer;
@@ -34,8 +35,8 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
 
     @Shadow private BiPedModel field_2133;
 
-    protected static float NAME_TAG_RANGE = 64.0F;
-    protected static float NAME_TAG_RANGE_SNEAK = 32.0F;
+    private static float NAME_TAG_RANGE = ReflectionUtils.NAME_TAG_RANGE;
+    private static float NAME_TAG_RANGE_SNEAK = ReflectionUtils.NAME_TAG_RANGE_SNEAK;
 
     public PlayerEntityRendererMixin(EntityModel entityModel, float f) {
         super(entityModel, f);
