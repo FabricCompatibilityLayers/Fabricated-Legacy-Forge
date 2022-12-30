@@ -50,7 +50,7 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
                     if (this.stacks[1] != null) {
                         --this.stacks[1].count;
                         if (this.stacks[1].count == 0) {
-                            this.stacks[1] = ((IItem)this.stacks[1].getItem()).getContainerItemStack(this.stacks[1]);
+                            this.stacks[1] = this.stacks[1].getItem().getContainerItemStack(this.stacks[1]);
                         }
                     }
                 }
@@ -87,7 +87,7 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
         if (this.stacks[0] == null) {
             return false;
         } else {
-            ItemStack var1 = ((ISmeltingRecipeRegistry)SmeltingRecipeRegistry.getInstance()).getSmeltingResult(this.stacks[0]);
+            ItemStack var1 = SmeltingRecipeRegistry.getInstance().getSmeltingResult(this.stacks[0]);
             if (var1 == null) {
                 return false;
             } else if (this.stacks[2] == null) {
@@ -108,7 +108,7 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
     @Overwrite
     public void craftRecipe() {
         if (this.canAcceptRecipeOutput()) {
-            ItemStack var1 = ((ISmeltingRecipeRegistry)SmeltingRecipeRegistry.getInstance()).getSmeltingResult(this.stacks[0]);
+            ItemStack var1 = SmeltingRecipeRegistry.getInstance().getSmeltingResult(this.stacks[0]);
             if (this.stacks[2] == null) {
                 this.stacks[2] = var1.copy();
             } else if (this.stacks[2].equalsIgnoreNbt(var1)) {
