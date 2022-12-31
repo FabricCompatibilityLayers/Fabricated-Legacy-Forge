@@ -388,8 +388,8 @@ public abstract class BlockRendererMixin {
     @Overwrite
     public boolean renderBed(Block par1Block, int par2, int par3, int par4) {
         Tessellator var5 = Tessellator.INSTANCE;
-        int var7 = ((IBlock)par1Block).getBedDirection(this.world, par2, par3, par4);
-        boolean var8 = ((IBlock)par1Block).isBedFoot(this.world, par2, par3, par4);
+        int var7 = par1Block.getBedDirection(this.world, par2, par3, par4);
+        boolean var8 = par1Block.isBedFoot(this.world, par2, par3, par4);
         float var9 = 0.5F;
         float var10 = 1.0F;
         float var11 = 0.8F;
@@ -540,7 +540,7 @@ public abstract class BlockRendererMixin {
         double var13 = (double)((float)var8 / 256.0F);
         double var15 = (double)(((float)var8 + 15.99F) / 256.0F);
         float var17 = 1.4F;
-        if (!this.world.isTopSolid(par2, par3 - 1, par4) && !((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2, par3 - 1, par4, ForgeDirection.UP)) {
+        if (!this.world.isTopSolid(par2, par3 - 1, par4) && !Block.FIRE.canBlockCatchFire(this.world, par2, par3 - 1, par4, ForgeDirection.UP)) {
             float var36 = 0.2F;
             float var19 = 0.0625F;
             if ((par2 + par3 + par4 & 1) == 1) {
@@ -556,7 +556,7 @@ public abstract class BlockRendererMixin {
                 var9 = var20;
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2 - 1, par3, par4, ForgeDirection.EAST)) {
+            if (Block.FIRE.canBlockCatchFire(this.world, par2 - 1, par3, par4, ForgeDirection.EAST)) {
                 var5.vertex((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
                 var5.vertex((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
                 var5.vertex((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
@@ -567,7 +567,7 @@ public abstract class BlockRendererMixin {
                 var5.vertex((double)((float)par2 + var36), (double)((float)par3 + var17 + var19), (double)(par4 + 1), var11, var13);
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2 + 1, par3, par4, ForgeDirection.WEST)) {
+            if (Block.FIRE.canBlockCatchFire(this.world, par2 + 1, par3, par4, ForgeDirection.WEST)) {
                 var5.vertex((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
                 var5.vertex((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
                 var5.vertex((double)(par2 + 1 - 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1), var11, var15);
@@ -578,7 +578,7 @@ public abstract class BlockRendererMixin {
                 var5.vertex((double)((float)(par2 + 1) - var36), (double)((float)par3 + var17 + var19), (double)(par4 + 0), var9, var13);
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2, par3, par4 - 1, ForgeDirection.SOUTH)) {
+            if (Block.FIRE.canBlockCatchFire(this.world, par2, par3, par4 - 1, ForgeDirection.SOUTH)) {
                 var5.vertex((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var11, var13);
                 var5.vertex((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var11, var15);
                 var5.vertex((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 0), var9, var15);
@@ -589,7 +589,7 @@ public abstract class BlockRendererMixin {
                 var5.vertex((double)(par2 + 0), (double)((float)par3 + var17 + var19), (double)((float)par4 + var36), var11, var13);
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2, par3, par4 + 1, ForgeDirection.NORTH)) {
+            if (Block.FIRE.canBlockCatchFire(this.world, par2, par3, par4 + 1, ForgeDirection.NORTH)) {
                 var5.vertex((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var9, var13);
                 var5.vertex((double)(par2 + 1), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var9, var15);
                 var5.vertex((double)(par2 + 0), (double)((float)(par3 + 0) + var19), (double)(par4 + 1 - 0), var11, var15);
@@ -600,7 +600,7 @@ public abstract class BlockRendererMixin {
                 var5.vertex((double)(par2 + 1), (double)((float)par3 + var17 + var19), (double)((float)(par4 + 1) - var36), var9, var13);
             }
 
-            if (((IFireBlock)Block.FIRE).canBlockCatchFire(this.world, par2, par3 + 1, par4, ForgeDirection.DOWN)) {
+            if (Block.FIRE.canBlockCatchFire(this.world, par2, par3 + 1, par4, ForgeDirection.DOWN)) {
                 double var20 = (double)par2 + 0.5 + 0.5;
                 double var22 = (double)par2 + 0.5 - 0.5;
                 double var24 = (double)par4 + 0.5 + 0.5;

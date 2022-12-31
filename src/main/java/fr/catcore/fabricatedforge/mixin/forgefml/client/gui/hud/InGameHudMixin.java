@@ -330,7 +330,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
         if (this.field_1166.options.debugEnabled) {
             this.field_1166.profiler.push("debug");
             GL11.glPushMatrix();
-            var8.method_956("Minecraft 1.4.1 (" + this.field_1166.fpsDebugString + ")", 2, 2, 16777215);
+            var8.method_956("Minecraft 1.4.2 (" + this.field_1166.fpsDebugString + ")", 2, 2, 16777215);
             var8.method_956(this.field_1166.getChunkDebugString(), 2, 12, 16777215);
             var8.method_956(this.field_1166.getEntitiesDebugString(), 2, 22, 16777215);
             var8.method_956(this.field_1166.method_2958(), 2, 32, 16777215);

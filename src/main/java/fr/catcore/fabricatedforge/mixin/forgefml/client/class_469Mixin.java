@@ -124,7 +124,7 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
                 } else if (par1Packet132TileEntityData.type == 4 && var2 instanceof SkullBlockEntity) {
                     var2.fromNbt(par1Packet132TileEntityData.nbt);
                 } else {
-                    ((IBlockEntity)var2).onDataPacket(this.connection, par1Packet132TileEntityData);
+                    var2.onDataPacket(this.connection, par1Packet132TileEntityData);
                 }
             }
         }

@@ -271,7 +271,6 @@ public abstract class ListWidgetMixin /*implements IListWidget*/ {
         var5.end();
     }
 
-    @Unique
     protected void drawContainerBackground(Tessellator tess) {
         GL11.glBindTexture(3553, this.field_1241.textureManager.getTextureFromPath(this.BACKGROUND_IMAGE));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

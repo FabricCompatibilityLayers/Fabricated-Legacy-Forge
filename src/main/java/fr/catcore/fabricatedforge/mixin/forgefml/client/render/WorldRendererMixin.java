@@ -438,7 +438,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                     }
 
                     if (var21 != null) {
-                        ((IParticleManager)this.client.particleManager).addEffect(var21, effectObject);
+                        this.client.particleManager.addEffect(var21, effectObject);
                     }
 
                     return var21;

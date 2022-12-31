@@ -262,7 +262,7 @@ public abstract class MinecraftMixin {
             Display.setDisplayMode(new DisplayMode(this.width, this.height));
         }
 
-        Display.setTitle("Minecraft Minecraft 1.4.1");
+        Display.setTitle("Minecraft Minecraft 1.4.2");
         System.out.println("LWJGL Version: " + Sys.getVersion());
 
         try {
@@ -500,7 +500,7 @@ public abstract class MinecraftMixin {
                 int var5 = this.result.z;
                 this.interactionManager.method_1239(var3, var4, var5, this.result.side);
                 if (this.playerEntity.method_4579(var3, var4, var5)) {
-                    ((IParticleManager)this.particleManager).addBlockHitEffects(var3, var4, var5, this.result);
+                    this.particleManager.addBlockHitEffects(var3, var4, var5, this.result);
                     this.playerEntity.method_3207();
                 }
             } else {

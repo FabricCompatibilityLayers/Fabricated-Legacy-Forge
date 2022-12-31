@@ -106,7 +106,7 @@ public abstract class BufferBuilderMixin {
 
                                     Block var23 = Block.BLOCKS[var18];
                                     if (var23 != null) {
-                                        if (var11 == 0 && ((IBlock)var23).hasTileEntity(var9.getBlockData(var17, var15, var16))) {
+                                        if (var11 == 0 && var23.hasTileEntity(var9.getBlockData(var17, var15, var16))) {
                                             BlockEntity var20 = var9.getBlockEntity(var17, var15, var16);
                                             if (BlockEntityRenderDispatcher.INSTANCE.hasRenderer(var20)) {
                                                 this.field_1802.add(var20);
@@ -118,7 +118,7 @@ public abstract class BufferBuilderMixin {
                                             var12 = true;
                                         }
 
-                                        if (((IBlock)var23).canRenderInPass(var11)) {
+                                        if (var23.canRenderInPass(var11)) {
                                             ForgeHooksClient.beforeBlockRender(var23, var10);
                                             var13 |= var10.render(var23, var17, var15, var16);
                                             ForgeHooksClient.afterBlockRender(var23, var10);

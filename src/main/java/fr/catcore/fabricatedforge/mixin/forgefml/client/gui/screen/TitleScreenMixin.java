@@ -123,7 +123,7 @@ public abstract class TitleScreenMixin extends Screen {
         GL11.glScalef(var8, var8, var8);
         this.drawCenteredString(this.textRenderer, this.splashText, 0, -8, 16776960);
         GL11.glPopMatrix();
-        String var9 = "Minecraft 1.4.1";
+        String var9 = "Minecraft 1.4.2";
         if (this.field_1229.isDemo()) {
             var9 = var9 + " Demo";
         }

@@ -280,7 +280,10 @@ public class AchievementsScreenMixin extends Screen {
 
             this.textRenderer
                     .method_956(
-                            var34, var26, var27, this.handler.hasParentAchievement(var32) ? (var32.isChallenge() ? -128 : -1) : (var32.isChallenge() ? -8355776 : -8355712)
+                            var34,
+                            var26,
+                            var27,
+                            this.handler.hasParentAchievement(var32) ? (var32.isChallenge() ? -128 : -1) : (var32.isChallenge() ? -8355776 : -8355712)
                     );
         }
 
