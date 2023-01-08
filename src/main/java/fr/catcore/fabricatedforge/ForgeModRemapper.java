@@ -136,6 +136,24 @@ public class ForgeModRemapper implements ModRemapper {
                 new VisitorInfos.MethodNamed("xcompwiz/mystcraft/Mystcraft", "registeredDims"),
                 new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/MystcraftCompat", "registeredDims")
         );
+
+        infos.registerMethodFieldIns(
+                new VisitorInfos.MethodNamed("net/minecraft/class_9", "allowedBiomes"),
+                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "StrongholdStructure_allowedBiomes")
+        );
+        infos.registerMethodFieldIns(
+                new VisitorInfos.MethodNamed("net/minecraft/class_1175", "allowedBiomes"),
+                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "LayeredBiomeSource_allowedBiomes")
+        );
+
+        infos.registerMethodFieldIns(
+                new VisitorInfos.MethodNamed("net/minecraft/class_570", "NAME_TAG_RANGE"),
+                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "NAME_TAG_RANGE")
+        );
+        infos.registerMethodFieldIns(
+                new VisitorInfos.MethodNamed("net/minecraft/class_570", "NAME_TAG_RANGE_SNEAK"),
+                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "NAME_TAG_RANGE_SNEAK")
+        );
     }
 
     @Override
@@ -160,6 +178,7 @@ public class ForgeModRemapper implements ModRemapper {
                 .put("abr")
                 .put("acu")
                 .put("acv")
+                .put("acz")
                 .put("adf")
                 .put("adj")
                 .put("ado")
@@ -201,6 +220,7 @@ public class ForgeModRemapper implements ModRemapper {
                 .put("alp")
                 .put("alq")
                 .put("als")
+                .put("alz")
                 .put("ama")
                 .put("amg")
                 .put("amm")
@@ -279,6 +299,7 @@ public class ForgeModRemapper implements ModRemapper {
                 .put("kh")
                 .put("kx")
                 .put("lb")
+                .put("lf")
                 .put("ln")
                 .put("mt")
                 .put("ol")
@@ -290,7 +311,7 @@ public class ForgeModRemapper implements ModRemapper {
                 .put("pg")
                 .put("ph")
                 .put("px")
-                .put("qb")
+                .put("qd")
                 .put("qg")
                 .put("rl")
                 .put("rm")
@@ -317,7 +338,9 @@ public class ForgeModRemapper implements ModRemapper {
                 .put("xp")
                 .put("xr")
                 .put("xt")
+                .put("ye")
                 .put("za")
+                .put("zm")
                 .put("zn")
                 .put("zr");
     }

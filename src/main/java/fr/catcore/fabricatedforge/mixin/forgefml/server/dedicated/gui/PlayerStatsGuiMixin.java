@@ -47,17 +47,21 @@ public abstract class PlayerStatsGuiMixin extends JComponent {
         this.lines[3] = "Avg sent: " + (int)this.average(this.server.field_3853) + ", Avg size: " + (int)this.average(this.server.field_3854);
         this.lines[4] = "Avg rec: " + (int)this.average(this.server.field_3855) + ", Avg size: " + (int)this.average(this.server.field_3856);
         if (this.server.worlds != null) {
-            int x = 0;
+            int var3 = 0;
 
             for(Integer id : DimensionManager.getIDs()) {
-                this.lines[5 + x] = "Lvl " + id + " tick: " + AVG_TICK_FORMAT.format(this.average((long[])this.server.getWorldTickTimes().get(id)) * 1.0E-6) + " ms";
+                this.lines[5 + var3] = "Lvl "
+                        + id
+                        + " tick: "
+                        + AVG_TICK_FORMAT.format(this.average((long[])this.server.getWorldTickTimes().get(id)) * 1.0E-6)
+                        + " ms";
                 ServerWorld world = DimensionManager.getWorld(id);
                 if (world != null && world.chunkCache != null) {
-                    this.lines[5 + x] = this.lines[5 + x] + ", " + world.chunkCache.getChunkProviderName();
-                    this.lines[5 + x] = this.lines[5 + x] + ", Vec3: " + world.getVectorPool().getIndex() + " / " + world.getVectorPool().size();
+                    this.lines[5 + var3] = this.lines[5 + var3] + ", " + world.chunkCache.getChunkProviderName();
+                    this.lines[5 + var3] = this.lines[5 + var3] + ", Vec3: " + world.getVectorPool().getIndex() + " / " + world.getVectorPool().size();
                 }
 
-                ++x;
+                ++var3;
             }
         }
 

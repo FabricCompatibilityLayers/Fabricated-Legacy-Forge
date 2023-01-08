@@ -35,9 +35,6 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
 
     @Shadow private BiPedModel field_2133;
 
-    private static float NAME_TAG_RANGE = ReflectionUtils.NAME_TAG_RANGE;
-    private static float NAME_TAG_RANGE_SNEAK = ReflectionUtils.NAME_TAG_RANGE_SNEAK;
-
     public PlayerEntityRendererMixin(EntityModel entityModel, float f) {
         super(entityModel, f);
     }
@@ -129,7 +126,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
             float var8 = 1.6F;
             float var9 = 0.016666668F * var8;
             double var10 = par1EntityPlayer.squaredDistanceTo(this.dispatcher.cameraEntity);
-            float var12 = par1EntityPlayer.isSneaking() ? NAME_TAG_RANGE_SNEAK : NAME_TAG_RANGE;
+            float var12 = par1EntityPlayer.isSneaking() ? ReflectionUtils.NAME_TAG_RANGE_SNEAK : ReflectionUtils.NAME_TAG_RANGE;
             if (var10 < (double)(var12 * var12)) {
                 String var13 = par1EntityPlayer.username;
                 if (par1EntityPlayer.isSneaking()) {
