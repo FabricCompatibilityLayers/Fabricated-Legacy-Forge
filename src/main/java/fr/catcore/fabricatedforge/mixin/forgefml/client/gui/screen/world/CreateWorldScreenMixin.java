@@ -17,6 +17,6 @@ public class CreateWorldScreenMixin extends Screen {
 
     @Inject(method = "buttonClicked", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/GameMode;setGameModeWithString(Ljava/lang/String;)Lnet/minecraft/world/GameMode;"))
     private void FMLOnGUICreateWorldPress(ButtonWidget par1, CallbackInfo ci) {
-        LevelGeneratorType.TYPES[this.generatorType].onGUICreateWorldPress();
+        ((ILevelGeneratorType)LevelGeneratorType.TYPES[this.generatorType]).onGUICreateWorldPress();
     }
 }

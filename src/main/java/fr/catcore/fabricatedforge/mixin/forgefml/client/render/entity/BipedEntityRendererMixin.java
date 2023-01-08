@@ -186,7 +186,7 @@ public abstract class BipedEntityRendererMixin extends MobEntityRenderer {
 
             this.dispatcher.heldItemRenderer.method_1357(par1EntityLiving, var4, 0);
             if (var4.getItem().method_3397()) {
-                for(int x = 1; x < var4.getItem().getRenderPasses(var4.getData()); ++x) {
+                for(int x = 1; x < ((IItem)var4.getItem()).getRenderPasses(var4.getData()); ++x) {
                     this.dispatcher.heldItemRenderer.method_1357(par1EntityLiving, var4, x);
                 }
             }
