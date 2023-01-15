@@ -5,10 +5,13 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.ShapelessRecipeType;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class ShapelessOreRecipe implements RecipeType {
     private ItemStack output = null;
@@ -46,6 +49,23 @@ public class ShapelessOreRecipe implements RecipeType {
 
                 this.input.add(OreDictionary.getOres((String)in));
             }
+        }
+    }
+
+    ShapelessOreRecipe(ShapelessRecipeType recipe, Map<ItemStack, String> replacements) {
+        this.output = recipe.getOutput();
+
+        for(ItemStack ingred : (List<ItemStack>) recipe.stacks) {
+            Object finalObj = ingred;
+
+            for(Map.Entry<ItemStack, String> replace : replacements.entrySet()) {
+                if (OreDictionary.itemMatches((ItemStack)replace.getKey(), ingred, false)) {
+                    finalObj = OreDictionary.getOres((String)replace.getValue());
+                    break;
+                }
+            }
+
+            this.input.add(finalObj);
         }
     }
 

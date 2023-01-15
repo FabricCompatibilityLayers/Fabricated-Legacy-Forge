@@ -3,13 +3,14 @@ package net.minecraftforge.oredict;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.RecipeDispatcher;
+import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.ShapedRecipeType;
+import net.minecraft.recipe.ShapelessRecipeType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class OreDictionary {
     private static int maxID = 0;
@@ -20,38 +21,71 @@ public class OreDictionary {
     }
 
     public static void initVanillaEntries() {
-        registerOre("woodLog", new ItemStack(Block.LOG, 1, 0));
-        registerOre("woodLog", new ItemStack(Block.LOG, 1, 1));
-        registerOre("woodLog", new ItemStack(Block.LOG, 1, 2));
-        registerOre("woodLog", new ItemStack(Block.LOG, 1, 3));
-        registerOre("woodPlank", new ItemStack(Block.PLANKS, 1, 0));
-        registerOre("woodPlank", new ItemStack(Block.PLANKS, 1, 1));
-        registerOre("woodPlank", new ItemStack(Block.PLANKS, 1, 2));
-        registerOre("woodPlank", new ItemStack(Block.PLANKS, 1, 3));
-        registerOre("woodSlab", new ItemStack(Block.WOODEN_SLAB, 1, 0));
-        registerOre("woodSlab", new ItemStack(Block.WOODEN_SLAB, 1, 1));
-        registerOre("woodSlab", new ItemStack(Block.WOODEN_SLAB, 1, 2));
-        registerOre("woodSlab", new ItemStack(Block.WOODEN_SLAB, 1, 3));
-        registerOre("woodStair", Block.WOODEN_STAIRS);
-        registerOre("woodStair", Block.BIRCH_STAIRS);
-        registerOre("woodStair", Block.JUNGLE_STAIRS);
-        registerOre("woodStair", Block.SPRUCE_STAIRS);
-        registerOre("dyeBlack", new ItemStack(Item.DYES, 1, 0));
-        registerOre("dyeRed", new ItemStack(Item.DYES, 1, 1));
-        registerOre("dyeGreen", new ItemStack(Item.DYES, 1, 2));
-        registerOre("dyeBrown", new ItemStack(Item.DYES, 1, 3));
-        registerOre("dyeBlue", new ItemStack(Item.DYES, 1, 4));
-        registerOre("dyePurple", new ItemStack(Item.DYES, 1, 5));
-        registerOre("dyeCyan", new ItemStack(Item.DYES, 1, 6));
-        registerOre("dyeLightGrey", new ItemStack(Item.DYES, 1, 7));
-        registerOre("dyeGrey", new ItemStack(Item.DYES, 1, 8));
-        registerOre("dyePink", new ItemStack(Item.DYES, 1, 9));
-        registerOre("dyeLime", new ItemStack(Item.DYES, 1, 10));
-        registerOre("dyeYellow", new ItemStack(Item.DYES, 1, 11));
-        registerOre("dyeLightBlue", new ItemStack(Item.DYES, 1, 12));
-        registerOre("dyeMagenta", new ItemStack(Item.DYES, 1, 13));
-        registerOre("dyeOrange", new ItemStack(Item.DYES, 1, 14));
-        registerOre("dyeWhite", new ItemStack(Item.DYES, 1, 15));
+        registerOre("logWood", new ItemStack(Block.LOG, 1, -1));
+        registerOre("plankWood", new ItemStack(Block.PLANKS, 1, -1));
+        registerOre("slabWood", new ItemStack(Block.WOODEN_SLAB, 1, -1));
+        registerOre("stairWood", Block.WOODEN_STAIRS);
+        registerOre("stairWood", Block.BIRCH_STAIRS);
+        registerOre("stairWood", Block.JUNGLE_STAIRS);
+        registerOre("stairWood", Block.SPRUCE_STAIRS);
+        registerOre("stickWood", Item.STICK);
+        Map<ItemStack, String> replacements = new HashMap();
+        replacements.put(new ItemStack(Block.PLANKS, 1, -1), "plankWood");
+        replacements.put(new ItemStack(Item.STICK), "stickWood");
+        String[] dyes = new String[]{
+                "dyeBlack",
+                "dyeRed",
+                "dyeGreen",
+                "dyeBrown",
+                "dyeBlue",
+                "dyePurple",
+                "dyeCyan",
+                "dyeLightGray",
+                "dyeGray",
+                "dyePink",
+                "dyeLime",
+                "dyeYellow",
+                "dyeLightBlue",
+                "dyeMagenta",
+                "dyeOrange",
+                "dyeWhite"
+        };
+
+        for(int i = 0; i < 16; ++i) {
+            ItemStack dye = new ItemStack(Item.DYES, 1, i);
+            registerOre(dyes[i], dye);
+            replacements.put(dye, dyes[i]);
+        }
+
+        ItemStack[] replaceStacks = (ItemStack[])replacements.keySet().toArray(new ItemStack[0]);
+        ItemStack[] exclusions = new ItemStack[]{new ItemStack(Block.LAPIS_BLOCK), new ItemStack(Item.COOKIE)};
+        List recipes = RecipeDispatcher.getInstance().getAllRecipes();
+        List<RecipeType> recipesToRemove = new ArrayList();
+        List<RecipeType> recipesToAdd = new ArrayList();
+
+        for(Object obj : recipes) {
+            if (obj instanceof ShapedRecipeType) {
+                ShapedRecipeType recipe = (ShapedRecipeType)obj;
+                ItemStack output = recipe.getOutput();
+                if ((output == null || !containsMatch(false, exclusions, output)) && containsMatch(true, recipe.ingredients, replaceStacks)) {
+                    recipesToRemove.add(recipe);
+                    recipesToAdd.add(new ShapedOreRecipe(recipe, replacements));
+                }
+            } else if (obj instanceof ShapelessRecipeType) {
+                ShapelessRecipeType recipe = (ShapelessRecipeType)obj;
+                ItemStack output = recipe.getOutput();
+                if ((output == null || !containsMatch(false, exclusions, output))
+                        && containsMatch(true, (ItemStack[])recipe.stacks.toArray(new ItemStack[0]), replaceStacks)) {
+                    recipesToRemove.add((RecipeType)obj);
+                    RecipeType newRecipe = new ShapelessOreRecipe(recipe, replacements);
+                    recipesToAdd.add(newRecipe);
+                }
+            }
+        }
+
+        recipes.removeAll(recipesToRemove);
+        recipes.addAll(recipesToAdd);
+        System.out.println(recipesToRemove.size() + " " + recipesToAdd.size());
     }
 
     public static int getOreID(String name) {
@@ -91,6 +125,26 @@ public class OreDictionary {
         }
 
         return val;
+    }
+
+    private static boolean containsMatch(boolean strict, ItemStack[] inputs, ItemStack... targets) {
+        for(ItemStack input : inputs) {
+            for(ItemStack target : targets) {
+                if (itemMatches(target, input, strict)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean itemMatches(ItemStack target, ItemStack input, boolean strict) {
+        if ((input != null || target == null) && (input == null || target != null)) {
+            return target.id == input.id && (target.getData() == -1 && !strict || target.getData() == input.getData());
+        } else {
+            return false;
+        }
     }
 
     public static void registerOre(String name, Item ore) {

@@ -1,5 +1,23 @@
 Changelog:
 
+Build 6.2.1.358
+	LexManos: Ore Dictionary Improvements, replaces vanilla recipes with OreDict recipes for some vanilla items. Thanks Covert.
+
+Build 6.2.1.357
+	LexManos: Made Item constructor public, and made setTextureFile chainable, requires mods to recompile, but as this is for 1.4.3 i'm not concerned.
+
+Build 6.2.1.356
+	cpw
+		Temporary update for 1.4.3
+		Update FML: bd2123c
+		bd2123c Clean up some patch fuzz
+		c2a603c Update joined.exc file from latest conf
+		db12af4 Update to 1.4.3
+	LexManos
+		Readdaed teleporter sensitive versions of the teleport function
+		Added per-world list of custom teleporters, Modders, use World.Load to populate this list.
+		Changed the definition of our version schemes.
+
 Build 6.0.1.355
 	cpw
 		Update FML: 8356fe9
@@ -47,7 +65,7 @@ Build 6.0.1.348
 Build 6.0.1.345
 	LexManos: Fix compile issue.
 
-Build 6.0.1.355
+Build 6.2.1.358
 	LexManos: EntityLiving.experianceValue private->public for Issue #225
 	LexManos: Changeable name tag render distance for PR: 174
 	LexManos: Remove some debug code
@@ -248,7 +266,7 @@ Build 4.2.5.307
 Build 4.2.5.306
 	LexManos: Add some accessors to teh ChunkLoader tickets.
 
-Build 6.0.1.355
+Build 6.2.1.358
 	ohai.iChun: Fix not passing right render pass to Item class.
 
 Build 4.2.5.303
@@ -323,7 +341,7 @@ Build 4.1.4.295
 Build 4.1.4.294
 	LexManos: Forgot comment, you see nothing...
 
-Build 6.0.1.355
+Build 6.2.1.358
 	LexManos: Fix buckets, need to rethink for bukkit compatibility.
 	LexManos: Fix vanilla bug where the player would load chunks outside its range that would be 'abandoned' and never unloaded.
 
@@ -360,7 +378,7 @@ Build 4.1.4.285
 		Update FML: f083707
 		f083707 Extreme headless mode is back!
 
-Build 6.0.1.355
+Build 6.2.1.358
 	cpw
 		Update FML: dd39ae5
 		dd7502a Fix parent child counts showing properly. Closes #107 thanks scott!
@@ -436,7 +454,7 @@ Build 4.1.4.275
 Build 4.1.4.274
 	LexManos: Fix patch errors in merge of last PR -.-
 
-Build 6.0.1.355
+Build 6.2.1.358
 	mitchpetrie29
 		Update patches/common/net/minecraft/src/WorldProvider.java.patch
 		Fixed WorldProvider.setDimension() setting the wrong variable.
@@ -569,7 +587,7 @@ Build 4.0.0.246
 		5aed6d9 Fix compatibility with ModLoader dispenser hook. Fixes a bug with IDispenseHandler too - though it means that inter
 		3d7a665 Fix headless operation, hopefully
 
-Build 6.0.1.355
+Build 6.2.1.358
 	cpw
 		Update FML: 10a7169
 		10a7169 Fix up trying to re-add stuff to the classpath when it's already there
@@ -716,7 +734,7 @@ Build 4.0.0.221
 		makes a big difference to the distance a minecart will travel (less
 		than half of the distance in vanilla 1.25).
 
-Build 6.0.1.355
+Build 6.2.1.358
 	cpw
 		Update FML: 28a10ac
 		28a10ac Null protection for ticks() -- probably should uses EnumSet.noneOf() but you can also use null now to stop ticking. closes #77
@@ -730,7 +748,7 @@ Build 6.0.1.355
 		52483ee Support gui opening for Shelf mod
 		dce1cbc Updated MCPMerger to annotate unique classes with there sides, and SideTransformer to null out any class that is loaded on the wrong side.
 
-Build 6.0.1.355
+Build 6.2.1.358
 	LexManos
 		Update FML to 304:
 		Client side only classes are properly annotated, and denied loading on server side
@@ -804,7 +822,7 @@ Build 4.0.0.205
 	LexManos: Added timeout to MC's download of sound resouces.
 	LexManos: Update WorldProvider.path diff.
 
-Build 6.0.1.355
+Build 6.2.1.358
 	cpw
 		Update fml:
 		c61ad51 Organize ALL the imports
@@ -906,10 +924,10 @@ Build 4.0.0.178
 Build 4.0.0.177
 	LexManos: Fix issue in install script for users with spaces in there paths.
 
-Build 6.0.1.355
+Build 6.2.1.358
 	LexManos: Updated FML, fixed custom tool hooks, and spawn protection/player reach hooks.
 
-Build 6.0.1.355
+Build 6.2.1.358
 	LexManos: Update FML, server should run now. Still issue with NPE with no mods installed.
 
 Build 4.0.0.173
@@ -973,7 +991,7 @@ Build 3.4.9.171
 	LexManos: Rebase
 	LexManos: Bumped version to 3.4.9, final commit for 1.2.5.
 
-Build 6.0.1.355
+Build 6.2.1.358
 	someh4x0r: Fix BlockTrapDoor.disableValidation on server
 
 Build 3.3.8.164
@@ -1157,7 +1175,7 @@ Build 3.2.4.111
 Build 3.2.4.110
 	LexManos: Updated to FML Build 95
 
-Build 6.0.1.355
+Build 6.2.1.358
 	LexManos: Update FML to 92, this include full client side support, ModLoader nolonger needed.
 	LexManos: Added new source clean step to fix linux vs windows astyle issues.
 	LexManos: Cleaned up names for Minecraft Forge's text files so they dont clash with other mods. Fixed up the release script to include the license text, and executable permissions for install.sh.

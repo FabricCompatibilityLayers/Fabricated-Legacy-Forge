@@ -139,15 +139,14 @@ accessible method net/minecraft/client/BlockRenderer renderCocoa (Lnet/minecraft
 extendable method net/minecraft/client/BlockRenderer renderCocoa (Lnet/minecraft/block/CocoaBlock;III)Z
 accessible method net/minecraft/client/BlockRenderer method_4318 (Lnet/minecraft/block/FlowerPotBlock;III)Z
 extendable method net/minecraft/client/BlockRenderer method_4318 (Lnet/minecraft/block/FlowerPotBlock;III)Z
-accessible method net/minecraft/client/BlockRenderer method_4314 (Lnet/minecraft/block/AnvilBlock;III)Z
-extendable method net/minecraft/client/BlockRenderer method_4314 (Lnet/minecraft/block/AnvilBlock;III)Z
+accessible method net/minecraft/client/BlockRenderer method_4313 (Lnet/minecraft/block/AnvilBlock;III)Z
+extendable method net/minecraft/client/BlockRenderer method_4313 (Lnet/minecraft/block/AnvilBlock;III)Z
 accessible method net/minecraft/client/BlockRenderer method_4316 (Lnet/minecraft/block/AnvilBlock;IIIIZ)Z
-accessible method net/minecraft/client/BlockRenderer method_4316 (Lnet/minecraft/block/AnvilBlock;IIIIZ)Z
+extendable method net/minecraft/client/BlockRenderer method_4316 (Lnet/minecraft/block/AnvilBlock;IIIIZ)Z
 accessible method net/minecraft/client/BlockRenderer method_4315 (Lnet/minecraft/block/AnvilBlock;IIIIFFFFZZI)F
 extendable method net/minecraft/client/BlockRenderer method_4315 (Lnet/minecraft/block/AnvilBlock;IIIIFFFFZZI)F
 accessible method net/minecraft/client/BlockRenderer method_4317 (Lnet/minecraft/block/BeaconBlock;III)Z
 extendable method net/minecraft/client/BlockRenderer method_4317 (Lnet/minecraft/block/BeaconBlock;III)Z
-extendable method net/minecraft/client/BlockRenderer method_4316 (Lnet/minecraft/block/AnvilBlock;IIIIZ)Z
 
 accessible field net/minecraft/client/render/entity/PlayerEntityRenderer field_2136 [Ljava/lang/String;
 mutable field net/minecraft/client/render/entity/PlayerEntityRenderer field_2136 [Ljava/lang/String;
@@ -277,6 +276,7 @@ accessible field net/minecraft/block/entity/BlockEntity world Lnet/minecraft/wor
 
 accessible field net/minecraft/block/BaseLeavesBlock fancyGraphics Z
 
+accessible method net/minecraft/item/Item <init> (I)V
 accessible method net/minecraft/item/Item setMaxDamage (I)Lnet/minecraft/item/Item;
 extendable method net/minecraft/item/Item method_3378 (Lnet/minecraft/item/ItemStack;)I
 
@@ -340,6 +340,12 @@ accessible method net/minecraft/world/biome/Biome method_3820 (I)Lnet/minecraft/
 accessible method net/minecraft/world/biome/Biome method_3827 (I)Lnet/minecraft/world/biome/Biome;
 
 mutable field net/minecraft/structure/VillageStructure BIOMES Ljava/util/List;
+
+accessible field net/minecraft/recipe/ShapedRecipeType ingredients [Lnet/minecraft/item/ItemStack;
+accessible field net/minecraft/recipe/ShapedRecipeType width I
+accessible field net/minecraft/recipe/ShapedRecipeType height I
+
+accessible field net/minecraft/recipe/ShapelessRecipeType stacks Ljava/util/List;
 
 #### Fabricated Forge
 accessible class net/minecraft/client/class_470

@@ -74,7 +74,7 @@ public class GuiModList extends Screen {
     }
 
     public int drawLine(String line, int offset, int shifty) {
-        this.textRenderer.method_4247(line, offset, shifty, 14151146);
+        this.textRenderer.draw(line, offset, shifty, 14151146);
         return shifty + 10;
     }
 

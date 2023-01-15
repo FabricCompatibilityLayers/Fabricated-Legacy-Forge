@@ -22,6 +22,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.class_739;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSaveHandler;
 import net.minecraft.world.level.LevelProperties;
@@ -269,9 +270,9 @@ public class FMLCommonHandler {
         this.crashCallables.add(callable);
     }
 
-    public void enhanceCrashReport(CrashReport crashReport) {
+    public void enhanceCrashReport(CrashReport crashReport, CrashReportSection category) {
         for(ICrashCallable call : this.crashCallables) {
-            crashReport.method_22519(call.getLabel(), call);
+            category.add(call.getLabel(), call);
         }
     }
 
@@ -296,7 +297,7 @@ public class FMLCommonHandler {
             if (!this.handlerSet.contains(handler)) {
                 this.handlerSet.add(handler);
                 Map<String, NbtElement> additionalProperties = Maps.newHashMap();
-                ((ILevelProperties)worldInfo).setAdditionalProperties(additionalProperties);
+                worldInfo.setAdditionalProperties(additionalProperties);
 
                 for(ModContainer mc : Loader.instance().getModList()) {
                     if (mc instanceof InjectedModContainer) {

@@ -5,11 +5,13 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.ShapedRecipeType;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class ShapedOreRecipe implements RecipeType {
     private static final int MAX_CRAFT_GRID_WIDTH = 3;
@@ -101,6 +103,27 @@ public class ShapedOreRecipe implements RecipeType {
 
             for(char chr : shape.toCharArray()) {
                 this.input[x++] = itemMap.get(chr);
+            }
+        }
+    }
+
+    ShapedOreRecipe(ShapedRecipeType recipe, Map<ItemStack, String> replacements) {
+        this.output = recipe.getOutput();
+        this.width = recipe.width;
+        this.height = recipe.height;
+        this.input = new Object[recipe.ingredients.length];
+
+        for(int i = 0; i < this.input.length; ++i) {
+            ItemStack ingred = recipe.ingredients[i];
+            if (ingred != null) {
+                this.input[i] = recipe.ingredients[i];
+
+                for(Map.Entry<ItemStack, String> replace : replacements.entrySet()) {
+                    if (OreDictionary.itemMatches((ItemStack)replace.getKey(), ingred, true)) {
+                        this.input[i] = OreDictionary.getOres((String)replace.getValue());
+                        break;
+                    }
+                }
             }
         }
     }

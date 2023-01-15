@@ -2,9 +2,9 @@ package net.minecraftforge.common;
 
 public class ForgeVersion {
     public static final int majorVersion = 6;
-    public static final int minorVersion = 0;
+    public static final int minorVersion = 2;
     public static final int revisionVersion = 1;
-    public static final int buildVersion = 355;
+    public static final int buildVersion = 358;
 
     public ForgeVersion() {
     }
