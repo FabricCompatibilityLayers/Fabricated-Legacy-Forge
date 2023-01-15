@@ -3,99 +3,194 @@
     "cpw": {
       "mods": {
         "fml": {
-          "client": {
-            "FMLClientHandler": "",
-            "GuiDupesFound": ""
-          },
+          "client": [
+            "GuiModList",
+            "GuiSlotModList"
+          ],
+          "_common": [
+            "FMLCommonHandler"
+          ],
           "common": {
-            "event": {
-              "FMLEvent": "",
-              "FMLInterModComms": "",
-              "FMLStateEvent": ""
-            },
-            "modloader": {
-              "BaseModProxy": "",
-              "ModLoaderDispenseHelper": "",
-              "ModLoaderHelper": ""
-            },
-            "DuplicateModsFoundException": "",
-            "Loader": "",
-            "FMLModContainer": "",
-            "LoadController": "",
-            "LoaderState": "",
-            "Mod": "",
-            "FMLCommonHandler": "",
-            "MCPDummyContainer": ""
-          },
-          "relauncher": {
-            "FMLInjectionData": "",
-            "FMLRelauncher": "",
-            "RelaunchClassLoader": "",
-            "RelaunchLibraryManager": ""
+            "asm": {
+              "transformers": [
+                "MCPMerger"
+              ]
+            }
           }
         }
       }
     },
     "net": {
       "minecraft": {
-        "BaseMod": "",
-        "ModLoader": ""
+        "_block": [
+          "AbstractButtonBlock",
+          "Block",
+          "ChestBlock",
+          "DoorBlock",
+          "LadderBlock",
+          "LeverBlock",
+          "LogBlock",
+          "TorchBlock",
+          "TrapdoorBlock",
+          "TripwireHookBlock",
+          "VineBlock"
+        ],
+        "block": {
+          "entity": [
+            "BlockEntity"
+          ]
+        },
+        "_client": [
+          "BlockRenderer",
+          "class_469",
+          "Minecraft"
+        ],
+        "client": {
+          "gui": {
+            "hud": [
+              "InGameHud"
+            ],
+            "_screen": [
+              "AchievementsScreen",
+              "TitleScreen"
+            ],
+            "screen": {
+              "ingame": [
+                "CreativeInventoryScreen"
+              ]
+            },
+            "widget": [
+              "ListWidget"
+            ]
+          },
+          "network": [
+            "ClientPlayerInteractionManager"
+          ],
+          "options": [
+            "GameOptions"
+          ],
+          "particle": [
+            "ParticleManager"
+          ],
+          "_render": [
+            "GameRenderer",
+            "WorldRenderer"
+          ],
+          "render": {
+            "_entity": [
+              "BipedEntityRenderer",
+              "EntityRenderDispatcher",
+              "PlayerEntityRenderer"
+            ],
+            "entity": {
+              "model": [
+                "EntityModel"
+              ]
+            }
+          },
+          "sound": [
+            "SoundSystem"
+          ],
+          "world": [
+            "ClientWorld"
+          ]
+        },
+        "_entity": [
+          "Entity",
+          "EntityTracker",
+          "ItemEntity",
+          "MobSpawnerHelper",
+          "TrackedEntityInstance"
+        ],
+        "entity": {
+          "mob": [
+            "MobEntity",
+            "SlimeEntity"
+          ],
+          "passive": [
+            "OcelotEntity",
+            "SheepEntity"
+          ],
+          "player": [
+            "PlayerEntity",
+            "ServerPlayerEntity"
+          ],
+          "vehicle": [
+            "AbstractMinecartEntity"
+          ]
+        },
+        "item": [
+          "BlockItem",
+          "DyeItem",
+          "Item"
+        ],
+        "network": [
+          "IntegratedConnection",
+          "OutboundConnection",
+          "PendingConnection"
+        ],
+        "_server": [
+          "ListenThread",
+          "MinecraftServer",
+          "PlayerManager",
+          "ServerPacketListener"
+        ],
+        "server": {
+          "dedicated": [
+            "MinecraftDedicatedServer"
+          ],
+          "integrated": [
+            "IntegratedServer"
+          ],
+          "network": [
+            "PacketListenerManager"
+          ],
+          "world": [
+            "ServerWorld"
+          ]
+        },
+        "util": {
+          "crash": [
+            "CrashReport"
+          ]
+        },
+        "_world": [
+          "World"
+        ],
+        "world": {
+          "chunk": [
+            "ServerChunkProvider"
+          ],
+          "explosion": [
+            "Explosion"
+          ],
+          "level": [
+            "LevelGeneratorType",
+            "LevelProperties"
+          ]
+        }
       },
       "minecraftforge": {
-        "client": {
-          "ForgeHooksClient": ""
-        },
-        "common": {
-          "ForgeVersion": "",
-          "ForgeChunkManager": "",
-          "WorldSpecificSaveHandler": "",
-          "ForgeHooks": "",
-          "Configuration": "",
-          "ForgeDummyContainer": "",
-          "BiomeManager": "",
-          "ChestGenHooks": ""
-        },
-        "event": {
-          "ServerChatEvent": ""
-        },
-        "oredict": {
-          "OreDictionary": ""
-        }
+        "common": [
+          "ForgeDummyContainer",
+          "ForgeVersion"
+        ],
+        "oredict": [
+          "OreDictionary",
+          "ShapedOreRecipe",
+          "ShapelessOreRecipe"
+        ]
       }
     }
   },
-  "patches": [
-    "AnvilChunkLoader",
-    "Block",
-    "CreativeTabs",
-    "EntityList",
-    "FurnaceRecipes",
-    "GuiContainerCreative",
-    "Item",
-    "ItemSeeds",
-    "MapGenStronghold",
-    "NetServerHandler",
-    "NetworkListenThread",
-    "RegionFileCache",
-    "RenderPlayer",
-    "ServerConfigurationManager",
-    "SlotCrafting",
-    "SlotFurnace",
-    "TileEntity",
-    "TileEntityBeacon",
-    "World",
-    "WorldChunkManager",
-    "WorldServer"
-  ],
   "at": {
     "fml": [],
     "forge": [
-      "public xe.H # World/field_72993_I activeChunkSet",
-      "public ln.bc # EntityLiving/field_70728_aV experienceValue",
-      "public asr.a(Ljava/lang/String;ILxz;Ljava/util/List;[Labm;)V # GuiFlatPresets/func_82294_a",
-      "public asr.a(Ljava/lang/String;ILxz;[Labm;)V # GuiFlatPresets/func_82297_a",
-      "public xz.*() # Everything protected->public",
-      "public-f aea.e # MapGenVillage/field_75055_e villageSpawnBiomes"
+      "public uk.<init>(I)V #MD:Item/<init>(I) #Constructor",
+      "public+f wk.d #FD:ShapedRecipes/field_77574_d #recipeItems",
+      "public+f wk.b #FD:ShapedRecipes/field_77576_b #recipeWidth",
+      "public+f wk.c #FD:ShapedRecipes/field_77577_c #recipeHeight",
+      "public wl.b #FD:ShapelessRecipes/field_77579_b #recipeItems"
     ]
   }
 }
