@@ -53,25 +53,25 @@ public abstract class TripwireHookBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public void method_4185(World par1World, int par2, int par3, int par4, int par5, float par6, float par7, float par8) {
-        byte var9 = 0;
+    public int method_4185(World par1World, int par2, int par3, int par4, int par5, float par6, float par7, float par8, int par9) {
+        byte var10 = 0;
         if (par5 == 2 && par1World.isBlockSolidOnSide(par2, par3, par4 + 1, ForgeDirection.WEST, true)) {
-            var9 = 2;
+            var10 = 2;
         }
 
         if (par5 == 3 && par1World.isBlockSolidOnSide(par2, par3, par4 - 1, ForgeDirection.EAST, true)) {
-            var9 = 0;
+            var10 = 0;
         }
 
         if (par5 == 4 && par1World.isBlockSolidOnSide(par2 + 1, par3, par4, ForgeDirection.NORTH, true)) {
-            var9 = 1;
+            var10 = 1;
         }
 
         if (par5 == 5 && par1World.isBlockSolidOnSide(par2 - 1, par3, par4, ForgeDirection.SOUTH, true)) {
-            var9 = 3;
+            var10 = 3;
         }
 
-        this.method_496(par1World, par2, par3, par4, this.id, var9, false, -1, 0);
+        return var10;
     }
 
     /**

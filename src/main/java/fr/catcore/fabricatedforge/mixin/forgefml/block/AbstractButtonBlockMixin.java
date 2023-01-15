@@ -48,24 +48,24 @@ public abstract class AbstractButtonBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public void method_4185(World par1World, int par2, int par3, int par4, int par5, float par6, float par7, float par8) {
-        int var9 = par1World.getBlockData(par2, par3, par4);
-        int var10 = var9 & 8;
-        var9 &= 7;
+    public int method_4185(World par1World, int par2, int par3, int par4, int par5, float par6, float par7, float par8, int par9) {
+        int var10 = par1World.getBlockData(par2, par3, par4);
+        int var11 = var10 & 8;
+        var10 &= 7;
         ForgeDirection dir = ForgeDirection.getOrientation(par5);
         if (dir == ForgeDirection.NORTH && par1World.isBlockSolidOnSide(par2, par3, par4 + 1, ForgeDirection.NORTH)) {
-            var9 = 4;
+            var10 = 4;
         } else if (dir == ForgeDirection.SOUTH && par1World.isBlockSolidOnSide(par2, par3, par4 - 1, ForgeDirection.SOUTH)) {
-            var9 = 3;
+            var10 = 3;
         } else if (dir == ForgeDirection.WEST && par1World.isBlockSolidOnSide(par2 + 1, par3, par4, ForgeDirection.WEST)) {
-            var9 = 2;
+            var10 = 2;
         } else if (dir == ForgeDirection.EAST && par1World.isBlockSolidOnSide(par2 - 1, par3, par4, ForgeDirection.EAST)) {
-            var9 = 1;
+            var10 = 1;
         } else {
-            var9 = this.method_284(par1World, par2, par3, par4);
+            var10 = this.method_284(par1World, par2, par3, par4);
         }
 
-        par1World.method_3672(par2, par3, par4, var9 + var10);
+        return var10 + var11;
     }
 
     /**

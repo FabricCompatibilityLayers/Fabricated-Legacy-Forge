@@ -389,9 +389,10 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
     }
 
     @Override
-    public void setTextureFile(String texture) {
+    public Block setTextureFile(String texture) {
         this.currentTexture = texture;
         this.isDefaultTexture = false;
+        return (Block)(Object) this;
     }
 
     @Override

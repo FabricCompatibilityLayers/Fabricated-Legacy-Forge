@@ -45,6 +45,7 @@ import net.minecraft.stat.StatHandler;
 import net.minecraft.util.Language;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResultType;
 import net.minecraft.util.math.Box;
@@ -262,7 +263,7 @@ public abstract class MinecraftMixin {
             Display.setDisplayMode(new DisplayMode(this.width, this.height));
         }
 
-        Display.setTitle("Minecraft Minecraft 1.4.2");
+        Display.setTitle("Minecraft Minecraft 1.4.3");
         System.out.println("LWJGL Version: " + Sys.getVersion());
 
         try {
@@ -303,7 +304,7 @@ public abstract class MinecraftMixin {
         AchievementsAndCriterions.TAKING_INVENTORY.setStatFormatter(new class_334((Minecraft)(Object) this));
         this.method_2915();
         Mouse.create();
-        this.mouse = new MouseInput(this.canvas);
+        this.mouse = new MouseInput(this.canvas, this.options);
         this.setGlErrorMessage("Pre startup");
         GL11.glEnable(3553);
         GL11.glShadeModel(7425);
@@ -500,7 +501,7 @@ public abstract class MinecraftMixin {
                 int var5 = this.result.z;
                 this.interactionManager.method_1239(var3, var4, var5, this.result.side);
                 if (this.playerEntity.method_4579(var3, var4, var5)) {
-                    ((IParticleManager)this.particleManager).addBlockHitEffects(var3, var4, var5, this.result);
+                    this.particleManager.addBlockHitEffects(var3, var4, var5, this.result);
                     this.playerEntity.method_3207();
                 }
             } else {
@@ -710,8 +711,8 @@ public abstract class MinecraftMixin {
                             }
 
                             if (Keyboard.getEventKey() == 33 && Keyboard.isKeyDown(61)) {
-                                boolean var4 = Keyboard.isKeyDown(42) | Keyboard.isKeyDown(54);
-                                this.options.setOption(GameOption.RENDER_DISTANCE, var4 ? -1 : 1);
+                                boolean var5 = Keyboard.isKeyDown(42) | Keyboard.isKeyDown(54);
+                                this.options.setOption(GameOption.RENDER_DISTANCE, var5 ? -1 : 1);
                             }
 
                             if (Keyboard.getEventKey() == 30 && Keyboard.isKeyDown(61)) {
@@ -721,6 +722,10 @@ public abstract class MinecraftMixin {
                             if (Keyboard.getEventKey() == 35 && Keyboard.isKeyDown(61)) {
                                 this.options.advancedItemTooltips = !this.options.advancedItemTooltips;
                                 this.options.save();
+                            }
+
+                            if (Keyboard.getEventKey() == 48 && Keyboard.isKeyDown(61)) {
+                                EntityRenderDispatcher.renderHitboxes = !EntityRenderDispatcher.renderHitboxes;
                             }
 
                             if (Keyboard.getEventKey() == 25 && Keyboard.isKeyDown(61)) {
@@ -749,9 +754,9 @@ public abstract class MinecraftMixin {
                             }
                         }
 
-                        for(int var5 = 0; var5 < 9; ++var5) {
-                            if (Keyboard.getEventKey() == 2 + var5) {
-                                this.playerEntity.inventory.selectedSlot = var5;
+                        for(int var6 = 0; var6 < 9; ++var6) {
+                            if (Keyboard.getEventKey() == 2 + var6) {
+                                this.playerEntity.inventory.selectedSlot = var6;
                             }
                         }
 
@@ -760,9 +765,9 @@ public abstract class MinecraftMixin {
                                 this.method_2938(0);
                             }
 
-                            for(int var6 = 0; var6 < 9; ++var6) {
-                                if (Keyboard.getEventKey() == 2 + var6) {
-                                    this.method_2938(var6 + 1);
+                            for(int var71 = 0; var71 < 9; ++var71) {
+                                if (Keyboard.getEventKey() == 2 + var71) {
+                                    this.method_2938(var71 + 1);
                                 }
                             }
                         }
@@ -770,7 +775,7 @@ public abstract class MinecraftMixin {
                 }
             }
 
-            boolean var4 = this.options.chatVisibility != 2;
+            boolean var5 = this.options.chatVisibility != 2;
 
             while(this.options.keyInventory.wasPressed()) {
                 this.openScreen(new SurvivalInventoryScreen(this.playerEntity));
@@ -780,11 +785,11 @@ public abstract class MinecraftMixin {
                 this.playerEntity.method_4580();
             }
 
-            while(this.options.keyChat.wasPressed() && var4) {
+            while(this.options.keyChat.wasPressed() && var5) {
                 this.openScreen(new ChatScreen());
             }
 
-            if (this.currentScreen == null && this.options.keyCommand.wasPressed() && var4) {
+            if (this.currentScreen == null && this.options.keyCommand.wasPressed() && var5) {
                 this.openScreen(new ChatScreen("/"));
             }
 
@@ -852,7 +857,20 @@ public abstract class MinecraftMixin {
 
             if (!this.paused) {
                 this.world.setMobSpawning(this.world.difficulty > 0, true);
-                this.world.tick();
+
+                try {
+                    this.world.tick();
+                } catch (Throwable var41) {
+                    CrashReport var2 = CrashReport.create(var41, "Exception in world tick");
+                    if (this.world == null) {
+                        CrashReportSection var7 = var2.addElement("Affected level");
+                        var7.add("Problem", "Level is null!");
+                    } else {
+                        this.world.addToCrashReport(var2);
+                    }
+
+                    throw new CrashException(var2);
+                }
             }
 
             this.profiler.swap("animateTick");

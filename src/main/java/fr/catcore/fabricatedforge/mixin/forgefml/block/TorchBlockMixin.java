@@ -28,7 +28,7 @@ public abstract class TorchBlockMixin extends Block {
             return true;
         } else {
             int var5 = par1World.getBlock(par2, par3, par4);
-            return Block.BLOCKS[var5] != null && ((IBlock)Block.BLOCKS[var5]).canPlaceTorchOnTop(par1World, par2, par3, par4);
+            return Block.BLOCKS[var5] != null && Block.BLOCKS[var5].canPlaceTorchOnTop(par1World, par2, par3, par4);
         }
     }
 
@@ -50,29 +50,29 @@ public abstract class TorchBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public void method_4185(World par1World, int par2, int par3, int par4, int par5, float par6, float par7, float par8) {
-        int var9 = par1World.getBlockData(par2, par3, par4);
+    public int method_4185(World par1World, int par2, int par3, int par4, int par5, float par6, float par7, float par8, int par9) {
+        int var10 = par9;
         if (par5 == 1 && this.method_489(par1World, par2, par3 - 1, par4)) {
-            var9 = 5;
+            var10 = 5;
         }
 
         if (par5 == 2 && par1World.isBlockSolidOnSide(par2, par3, par4 + 1, ForgeDirection.NORTH, true)) {
-            var9 = 4;
+            var10 = 4;
         }
 
         if (par5 == 3 && par1World.isBlockSolidOnSide(par2, par3, par4 - 1, ForgeDirection.SOUTH, true)) {
-            var9 = 3;
+            var10 = 3;
         }
 
         if (par5 == 4 && par1World.isBlockSolidOnSide(par2 + 1, par3, par4, ForgeDirection.WEST, true)) {
-            var9 = 2;
+            var10 = 2;
         }
 
         if (par5 == 5 && par1World.isBlockSolidOnSide(par2 - 1, par3, par4, ForgeDirection.EAST, true)) {
-            var9 = 1;
+            var10 = 1;
         }
 
-        par1World.method_3672(par2, par3, par4, var9);
+        return var10;
     }
 
     /**

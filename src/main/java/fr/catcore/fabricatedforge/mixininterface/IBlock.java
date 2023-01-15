@@ -2,6 +2,7 @@ package fr.catcore.fabricatedforge.mixininterface;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.entity.Entity;
@@ -53,7 +54,7 @@ public interface IBlock {
     boolean isWood(World world, int x, int y, int z);
     boolean isGenMineableReplaceable(World world, int x, int y, int z);
     String getTextureFile();
-    void setTextureFile(String texture);
+    Block setTextureFile(String texture);
     float getExplosionResistance(Entity par1Entity, World world, int x, int y, int z, double explosionX, double explosionY, double explosionZ);
     boolean canConnectRedstone(BlockView world, int x, int y, int z, int side);
     boolean canPlaceTorchOnTop(World world, int x, int y, int z);

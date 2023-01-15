@@ -51,41 +51,35 @@ public abstract class LeverBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    public void method_4185(World par1World, int par2, int par3, int par4, int par5, float par6, float par7, float par8) {
-        int var9 = par1World.getBlockData(par2, par3, par4);
-        int var10 = var9 & 8;
-        var9 &= 7;
-        var9 = -1;
+    public int method_4185(World par1World, int par2, int par3, int par4, int par5, float par6, float par7, float par8, int par9) {
+        int var11 = par9 & 8;
+        int var10 = par9 & 7;
+        var10 = -1;
         if (par5 == 0 && par1World.isBlockSolidOnSide(par2, par3 + 1, par4, ForgeDirection.DOWN)) {
-            var9 = par1World.random.nextBoolean() ? 0 : 7;
+            var10 = par1World.random.nextBoolean() ? 0 : 7;
         }
 
         if (par5 == 1 && par1World.isBlockSolidOnSide(par2, par3 - 1, par4, ForgeDirection.UP)) {
-            var9 = 5 + par1World.random.nextInt(2);
+            var10 = 5 + par1World.random.nextInt(2);
         }
 
         if (par5 == 2 && par1World.isBlockSolidOnSide(par2, par3, par4 + 1, ForgeDirection.NORTH)) {
-            var9 = 4;
+            var10 = 4;
         }
 
         if (par5 == 3 && par1World.isBlockSolidOnSide(par2, par3, par4 - 1, ForgeDirection.SOUTH)) {
-            var9 = 3;
+            var10 = 3;
         }
 
         if (par5 == 4 && par1World.isBlockSolidOnSide(par2 + 1, par3, par4, ForgeDirection.WEST)) {
-            var9 = 2;
+            var10 = 2;
         }
 
         if (par5 == 5 && par1World.isBlockSolidOnSide(par2 - 1, par3, par4, ForgeDirection.EAST)) {
-            var9 = 1;
+            var10 = 1;
         }
 
-        if (var9 == -1) {
-            this.canStayPlaced(par1World, par2, par3, par4, par1World.getBlockData(par2, par3, par4), 0);
-            par1World.method_3690(par2, par3, par4, 0);
-        } else {
-            par1World.method_3672(par2, par3, par4, var9 + var10);
-        }
+        return var10 + var11;
     }
 
     /**

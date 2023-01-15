@@ -1,6 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.block.StairsBlock;
 import net.minecraft.block.TrapdoorBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.World;
@@ -54,7 +56,7 @@ public abstract class TrapdoorBlockMixin extends Block {
             }
 
             boolean var9 = par1World.isAnyFacePowered(par2, par3, par4);
-            if (var9 || par5 > 0 && Block.BLOCKS[par5].emitsRedstonePower() || par5 == 0) {
+            if (var9 || par5 > 0 && Block.BLOCKS[par5].emitsRedstonePower()) {
                 this.method_491(par1World, par2, par3, par4, var9);
             }
         }
@@ -105,7 +107,10 @@ public abstract class TrapdoorBlockMixin extends Block {
             return false;
         } else {
             Block var1 = Block.BLOCKS[par0];
-            return var1 != null && var1.material.isOpaque() && var1.renderAsNormalBlock() || var1 == Block.GLOWSTONE;
+            return var1 != null && var1.material.isOpaque() && var1.renderAsNormalBlock()
+                    || var1 == Block.GLOWSTONE
+                    || var1 instanceof SlabBlock
+                    || var1 instanceof StairsBlock;
         }
     }
 }
