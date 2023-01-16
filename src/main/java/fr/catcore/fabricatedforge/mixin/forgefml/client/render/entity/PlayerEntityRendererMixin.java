@@ -154,7 +154,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
                     var15.end();
                     GL11.glEnable(3553);
                     GL11.glDepthMask(true);
-                    var14.method_4247(var13, -var14.getStringWidth(var13) / 2, 0, 553648127);
+                    var14.draw(var13, -var14.getStringWidth(var13) / 2, 0, 553648127);
                     GL11.glEnable(2896);
                     GL11.glDisable(3042);
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -177,6 +177,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
         float var3 = 1.0F;
         GL11.glColor3f(var3, var3, var3);
         super.method_1569(par1EntityPlayer, par2);
+        super.method_4338(par1EntityPlayer, par2);
         ItemStack var4 = par1EntityPlayer.inventory.getArmor(3);
         if (var4 != null) {
             GL11.glPushMatrix();
@@ -330,11 +331,11 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
                 var7 *= 0.75F;
                 GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
                 GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
-                GL11.glScalef(var7, -var7, var7);
+                GL11.glScalef(-var7, -var7, var7);
             }
 
             if (var21.getItem().method_3397()) {
-                for(int var27 = 0; var27 < ((IItem)var21.getItem()).getRenderPasses(var21.getData()); ++var27) {
+                for(int var27 = 0; var27 < var21.getItem().getRenderPasses(var21.getData()); ++var27) {
                     int var26 = var21.getItem().getDisplayColor(var21, var27);
                     float var28 = (float)(var26 >> 16 & 0xFF) / 255.0F;
                     float var10 = (float)(var26 >> 8 & 0xFF) / 255.0F;
@@ -343,6 +344,11 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
                     this.dispatcher.heldItemRenderer.method_1357(par1EntityPlayer, var21, var27);
                 }
             } else {
+                int var27 = var21.getItem().getDisplayColor(var21, 0);
+                float var8 = (float)(var27 >> 16 & 0xFF) / 255.0F;
+                float var28 = (float)(var27 >> 8 & 0xFF) / 255.0F;
+                float var10 = (float)(var27 & 0xFF) / 255.0F;
+                GL11.glColor4f(var8, var28, var10, 1.0F);
                 this.dispatcher.heldItemRenderer.method_1357(par1EntityPlayer, var21, 0);
             }
 

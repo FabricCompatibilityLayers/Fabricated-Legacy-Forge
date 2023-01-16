@@ -19,6 +19,9 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtDouble;
 import net.minecraft.nbt.NbtFloat;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
@@ -84,6 +87,11 @@ public abstract class EntityMixin implements IEntity {
 
     @Shadow public abstract float getEyeHeight();
 
+    @Shadow private boolean invulnerable;
+    @Shadow public int netherPortalCooldown;
+
+    @Shadow public abstract void populateCrashReport(CrashReportSection section);
+
     @Unique
     private NbtCompound customEntityData;
     public boolean captureDrops = false;
@@ -121,24 +129,33 @@ public abstract class EntityMixin implements IEntity {
      */
     @Overwrite
     public void writePlayerData(NbtCompound par1NBTTagCompound) {
-        par1NBTTagCompound.put("Pos", this.toListNbt(this.x, this.y + (double)this.field_3214, this.z));
-        par1NBTTagCompound.put("Motion", this.toListNbt(this.velocityX, this.velocityY, this.velocityZ));
-        par1NBTTagCompound.put("Rotation", this.toListNbt(this.yaw, this.pitch));
-        par1NBTTagCompound.putFloat("FallDistance", this.fallDistance);
-        par1NBTTagCompound.putShort("Fire", (short)this.fireTicks);
-        par1NBTTagCompound.putShort("Air", (short)this.getAir());
-        par1NBTTagCompound.putBoolean("OnGround", this.onGround);
-        par1NBTTagCompound.putInt("Dimension", this.dimension);
-        if (this.persistentID != null) {
-            par1NBTTagCompound.putLong("PersistentIDMSB", this.persistentID.getMostSignificantBits());
-            par1NBTTagCompound.putLong("PersistentIDLSB", this.persistentID.getLeastSignificantBits());
-        }
+        try {
+            par1NBTTagCompound.put("Pos", this.toListNbt(this.x, this.y + (double)this.field_3214, this.z));
+            par1NBTTagCompound.put("Motion", this.toListNbt(this.velocityX, this.velocityY, this.velocityZ));
+            par1NBTTagCompound.put("Rotation", this.toListNbt(this.yaw, this.pitch));
+            par1NBTTagCompound.putFloat("FallDistance", this.fallDistance);
+            par1NBTTagCompound.putShort("Fire", (short)this.fireTicks);
+            par1NBTTagCompound.putShort("Air", (short)this.getAir());
+            par1NBTTagCompound.putBoolean("OnGround", this.onGround);
+            par1NBTTagCompound.putInt("Dimension", this.dimension);
+            par1NBTTagCompound.putBoolean("Invulnerable", this.invulnerable);
+            par1NBTTagCompound.putInt("PortalCooldown", this.netherPortalCooldown);
+            if (this.persistentID != null) {
+                par1NBTTagCompound.putLong("PersistentIDMSB", this.persistentID.getMostSignificantBits());
+                par1NBTTagCompound.putLong("PersistentIDLSB", this.persistentID.getLeastSignificantBits());
+            }
 
-        if (this.customEntityData != null) {
-            par1NBTTagCompound.put("ForgeData", this.customEntityData);
-        }
+            if (this.customEntityData != null) {
+                par1NBTTagCompound.put("ForgeData", this.customEntityData);
+            }
 
-        this.writeCustomDataToNbt(par1NBTTagCompound);
+            this.writeCustomDataToNbt(par1NBTTagCompound);
+        } catch (Throwable var5) {
+            CrashReport var3 = CrashReport.create(var5, "Saving entity NBT");
+            CrashReportSection var4 = var3.addElement("Entity being saved");
+            this.populateCrashReport(var4);
+            throw new CrashException(var3);
+        }
     }
 
     /**
@@ -147,45 +164,54 @@ public abstract class EntityMixin implements IEntity {
      */
     @Overwrite
     public void fromNbt(NbtCompound par1NBTTagCompound) {
-        NbtList var2 = par1NBTTagCompound.getList("Pos");
-        NbtList var3 = par1NBTTagCompound.getList("Motion");
-        NbtList var4 = par1NBTTagCompound.getList("Rotation");
-        this.velocityX = ((NbtDouble)var3.method_1218(0)).value;
-        this.velocityY = ((NbtDouble)var3.method_1218(1)).value;
-        this.velocityZ = ((NbtDouble)var3.method_1218(2)).value;
-        if (Math.abs(this.velocityX) > 10.0) {
-            this.velocityX = 0.0;
-        }
+        try {
+            NbtList var2 = par1NBTTagCompound.getList("Pos");
+            NbtList var6 = par1NBTTagCompound.getList("Motion");
+            NbtList var7 = par1NBTTagCompound.getList("Rotation");
+            this.velocityX = ((NbtDouble)var6.method_1218(0)).value;
+            this.velocityY = ((NbtDouble)var6.method_1218(1)).value;
+            this.velocityZ = ((NbtDouble)var6.method_1218(2)).value;
+            if (Math.abs(this.velocityX) > 10.0) {
+                this.velocityX = 0.0;
+            }
 
-        if (Math.abs(this.velocityY) > 10.0) {
-            this.velocityY = 0.0;
-        }
+            if (Math.abs(this.velocityY) > 10.0) {
+                this.velocityY = 0.0;
+            }
 
-        if (Math.abs(this.velocityZ) > 10.0) {
-            this.velocityZ = 0.0;
-        }
+            if (Math.abs(this.velocityZ) > 10.0) {
+                this.velocityZ = 0.0;
+            }
 
-        this.prevX = this.prevTickX = this.x = ((NbtDouble)var2.method_1218(0)).value;
-        this.prevY = this.prevTickY = this.y = ((NbtDouble)var2.method_1218(1)).value;
-        this.prevZ = this.prevTickZ = this.z = ((NbtDouble)var2.method_1218(2)).value;
-        this.prevYaw = this.yaw = ((NbtFloat)var4.method_1218(0)).value;
-        this.prevPitch = this.pitch = ((NbtFloat)var4.method_1218(1)).value;
-        this.fallDistance = par1NBTTagCompound.getFloat("FallDistance");
-        this.fireTicks = par1NBTTagCompound.getShort("Fire");
-        this.setAir(par1NBTTagCompound.getShort("Air"));
-        this.onGround = par1NBTTagCompound.getBoolean("OnGround");
-        this.dimension = par1NBTTagCompound.getInt("Dimension");
-        this.updatePosition(this.x, this.y, this.z);
-        this.setRotation(this.yaw, this.pitch);
-        if (par1NBTTagCompound.contains("ForgeData")) {
-            this.customEntityData = par1NBTTagCompound.getCompound("ForgeData");
-        }
+            this.prevX = this.prevTickX = this.x = ((NbtDouble)var2.method_1218(0)).value;
+            this.prevY = this.prevTickY = this.y = ((NbtDouble)var2.method_1218(1)).value;
+            this.prevZ = this.prevTickZ = this.z = ((NbtDouble)var2.method_1218(2)).value;
+            this.prevYaw = this.yaw = ((NbtFloat)var7.method_1218(0)).value;
+            this.prevPitch = this.pitch = ((NbtFloat)var7.method_1218(1)).value;
+            this.fallDistance = par1NBTTagCompound.getFloat("FallDistance");
+            this.fireTicks = par1NBTTagCompound.getShort("Fire");
+            this.setAir(par1NBTTagCompound.getShort("Air"));
+            this.onGround = par1NBTTagCompound.getBoolean("OnGround");
+            this.dimension = par1NBTTagCompound.getInt("Dimension");
+            this.invulnerable = par1NBTTagCompound.getBoolean("Invulnerable");
+            this.netherPortalCooldown = par1NBTTagCompound.getInt("PortalCooldown");
+            this.updatePosition(this.x, this.y, this.z);
+            this.setRotation(this.yaw, this.pitch);
+            if (par1NBTTagCompound.contains("ForgeData")) {
+                this.customEntityData = par1NBTTagCompound.getCompound("ForgeData");
+            }
 
-        if (par1NBTTagCompound.contains("PersistentIDMSB") && par1NBTTagCompound.contains("PersistentIDLSB")) {
-            this.persistentID = new UUID(par1NBTTagCompound.getLong("PersistentIDMSB"), par1NBTTagCompound.getLong("PersistentIDLSB"));
-        }
+            if (par1NBTTagCompound.contains("PersistentIDMSB") && par1NBTTagCompound.contains("PersistentIDLSB")) {
+                this.persistentID = new UUID(par1NBTTagCompound.getLong("PersistentIDMSB"), par1NBTTagCompound.getLong("PersistentIDLSB"));
+            }
 
-        this.readCustomDataFromNbt(par1NBTTagCompound);
+            this.readCustomDataFromNbt(par1NBTTagCompound);
+        } catch (Throwable var51) {
+            CrashReport var3 = CrashReport.create(var51, "Loading entity NBT");
+            CrashReportSection var4 = var3.addElement("Entity being loaded");
+            this.populateCrashReport(var4);
+            throw new CrashException(var3);
+        }
     }
 
     /**

@@ -125,7 +125,7 @@ public abstract class ListWidgetMixin /*implements IListWidget*/ {
                 this.field_1253 = (float)par2;
             }
         } else {
-            while(Mouse.next()) {
+            while(!this.field_1241.options.touchScreen && Mouse.next()) {
                 int var16 = Mouse.getEventDWheel();
                 if (var16 != 0) {
                     if (var16 > 0) {

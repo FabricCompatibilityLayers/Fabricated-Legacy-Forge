@@ -109,6 +109,8 @@ public abstract class ParticleManagerMixin implements IParticleManager {
                 GL11.glBindTexture(3553, var9);
                 Tessellator var10 = Tessellator.INSTANCE;
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                GL11.glEnable(3042);
+                GL11.glBlendFunc(770, 771);
                 var10.begin();
 
                 for(int var11 = 0; var11 < this.field_1735[var8].size(); ++var11) {
@@ -120,6 +122,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
                 }
 
                 var10.end();
+                GL11.glDisable(3042);
             }
         }
 
@@ -149,7 +152,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
      */
     @Overwrite
     public void method_1299(Entity par1Entity, float par2) {
-        float var4 = MathHelper.cos(par1Entity.yaw * (float) (Math.PI / 180.0));
+        float var4 = MathHelper.cos(par1Entity.yaw * ((float) (Math.PI / 180.0)));
         float var5 = MathHelper.sin(par1Entity.yaw * (float) (Math.PI / 180.0));
         float var6 = -var5 * MathHelper.sin(par1Entity.pitch * (float) (Math.PI / 180.0));
         float var7 = var4 * MathHelper.sin(par1Entity.pitch * (float) (Math.PI / 180.0));

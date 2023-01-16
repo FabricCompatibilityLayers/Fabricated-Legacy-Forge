@@ -120,7 +120,11 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
      */
     @Overwrite
     public Box getHardCollisionBox(Entity par1Entity) {
-        return getCollisionHandler() != null ? getCollisionHandler().getCollisionBox((AbstractMinecartEntity)(Object) this, par1Entity) : par1Entity.boundingBox;
+        if (getCollisionHandler() != null) {
+            return getCollisionHandler().getCollisionBox((AbstractMinecartEntity)(Object) this, par1Entity);
+        } else {
+            return par1Entity.isPushable() ? par1Entity.boundingBox : null;
+        }
     }
 
     /**
@@ -147,7 +151,11 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
      */
     @Overwrite
     public boolean damage(DamageSource par1DamageSource, int par2) {
-        if (!this.world.isClient && !this.removed) {
+        if (this.world.isClient || this.removed) {
+            return true;
+        } else if (this.method_4447()) {
+            return false;
+        } else {
             this.setDamageWobbleSide(-this.getDamageWobbleSide());
             this.setDamageWobbleTicks(10);
             this.scheduleVelocityUpdate();
@@ -165,8 +173,6 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                 this.dropCartAsItem();
             }
 
-            return true;
-        } else {
             return true;
         }
     }
@@ -228,6 +234,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
             double var6 = 0.0078125;
             int var8 = this.world.getBlock(var1, var2, var3);
             if (this.canUseRail() && RailBlock.method_354(var8)) {
+                this.fallDistance = 0.0F;
                 Vec3d var9 = this.snapPositionToRail(this.x, this.y, this.z);
                 int var10 = ((IRailBlock)Block.BLOCKS[var8]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var1, var2, var3);
                 this.y = (double)var2;
@@ -632,13 +639,13 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
                         double var18 = par1Entity.velocityX + this.velocityX;
                         double var20 = par1Entity.velocityZ + this.velocityZ;
-                        if (((IAbstractMinecartEntity)par1Entity).isPoweredCart() && !this.isPoweredCart()) {
+                        if (((AbstractMinecartEntity)par1Entity).isPoweredCart() && !this.isPoweredCart()) {
                             this.velocityX *= 0.2F;
                             this.velocityZ *= 0.2F;
                             this.addVelocity(par1Entity.velocityX - var2, 0.0, par1Entity.velocityZ - var4);
                             par1Entity.velocityX *= 0.95F;
                             par1Entity.velocityZ *= 0.95F;
-                        } else if (!((IAbstractMinecartEntity)par1Entity).isPoweredCart() && this.isPoweredCart()) {
+                        } else if (!((AbstractMinecartEntity)par1Entity).isPoweredCart() && this.isPoweredCart()) {
                             par1Entity.velocityX *= 0.2F;
                             par1Entity.velocityZ *= 0.2F;
                             par1Entity.addVelocity(this.velocityX + var2, 0.0, this.velocityZ + var4);

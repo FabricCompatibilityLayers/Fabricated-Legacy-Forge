@@ -428,17 +428,20 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                         var21.setMiscTexture(82);
                         var21.setColor(1.0F, 1.0F, 1.0F);
                     } else if (par1Str.startsWith("iconcrack_")) {
-                        int var25 = Integer.parseInt(par1Str.substring(par1Str.indexOf("_") + 1));
-                        var21 = new SnowballParticle(this.world, par2, par4, par6, par8, par10, par12, Item.ITEMS[var25]);
-                        effectObject = Item.ITEMS[var25];
+                        int var27 = Integer.parseInt(par1Str.substring(par1Str.indexOf("_") + 1));
+                        var21 = new SnowballParticle(this.world, par2, par4, par6, par8, par10, par12, Item.ITEMS[var27]);
+                        effectObject = Item.ITEMS[var27];
                     } else if (par1Str.startsWith("tilecrack_")) {
-                        int var25 = Integer.parseInt(par1Str.substring(par1Str.indexOf("_") + 1));
-                        var21 = new BlockDustParticle(this.world, par2, par4, par6, par8, par10, par12, Block.BLOCKS[var25], 0, 0);
+                        String[] var28 = par1Str.split("_", 3);
+                        int var25 = Integer.parseInt(var28[1]);
+                        int var26 = Integer.parseInt(var28[2]);
+                        var21 = new BlockDustParticle(this.world, par2, par4, par6, par8, par10, par12, Block.BLOCKS[var25], 0, var26);
                         effectObject = Block.BLOCKS[var25];
                     }
 
                     if (var21 != null) {
-                        ((IParticleManager)this.client.particleManager).addEffect(var21, effectObject);
+                        this.client.particleManager.addParticle(var21);
+                        this.client.particleManager.addEffect(var21, effectObject);
                     }
 
                     return var21;

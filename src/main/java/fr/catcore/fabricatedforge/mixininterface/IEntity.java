@@ -23,9 +23,6 @@ public interface IEntity {
     // Non Forge APIs
     void captureDrops(boolean captureDrops);
     boolean captureDrops();
-
     ArrayList<ItemEntity> getCapturedDrops();
-
-    // Non Forge APIs
     Random getRandom();
 }

@@ -32,12 +32,13 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Shadow public int pickupDelay;
 
-    @Shadow public abstract boolean tryMerge(ItemEntity other);
-
     @Shadow public int age;
     @Shadow private int health;
 
     @Shadow public ItemStack field_23087;
+
+    @Shadow protected abstract void tryMerge();
+
     public int lifespan = 6000;
 
     public ItemEntityMixin(World world) {
@@ -46,7 +47,7 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Inject(method = "<init>(Lnet/minecraft/world/World;DDDLnet/minecraft/item/ItemStack;)V", at = @At("RETURN"))
     private void fmlCtr(World par1World, double par2, double par4, double par6, ItemStack par8ItemStack, CallbackInfo ci) {
-        this.lifespan = par8ItemStack.getItem() == null ? 6000 : ((IItem)par8ItemStack.getItem()).getEntityLifespan(par8ItemStack, par1World);
+        this.lifespan = par8ItemStack.getItem() == null ? 6000 : par8ItemStack.getItem().getEntityLifespan(par8ItemStack, par1World);
     }
 
     /**
@@ -64,7 +65,7 @@ public abstract class ItemEntityMixin extends Entity {
         this.prevY = this.y;
         this.prevZ = this.z;
         this.velocityY -= 0.04F;
-        this.pushOutOfBlocks(this.x, (this.boundingBox.minY + this.boundingBox.maxY) / 2.0, this.z);
+        this.noClip = this.pushOutOfBlocks(this.x, (this.boundingBox.minY + this.boundingBox.maxY) / 2.0, this.z);
         this.move(this.velocityX, this.velocityY, this.velocityZ);
         boolean var1 = (int)this.prevX != (int)this.x || (int)this.prevY != (int)this.y || (int)this.prevZ != (int)this.z;
         if (var1) {
@@ -72,28 +73,26 @@ public abstract class ItemEntityMixin extends Entity {
                 this.velocityY = 0.2F;
                 this.velocityX = (double)((this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
                 this.velocityZ = (double)((this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
-                this.world.playSound(this, "random.fizz", 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
+                this.playSound("random.fizz", 0.4F, 2.0F + this.random.nextFloat() * 0.4F);
             }
 
             if (!this.world.isClient) {
-                for(ItemEntity var3 : (List<ItemEntity>)this.world.getEntitiesInBox(ItemEntity.class, this.boundingBox.expand(0.5, 0.0, 0.5))) {
-                    this.tryMerge(var3);
-                }
+                this.tryMerge();
             }
         }
 
-        float var4 = 0.98F;
+        float var2 = 0.98F;
         if (this.onGround) {
-            var4 = 0.58800006F;
-            int var5 = this.world.getBlock(MathHelper.floor(this.x), MathHelper.floor(this.boundingBox.minY) - 1, MathHelper.floor(this.z));
-            if (var5 > 0) {
-                var4 = Block.BLOCKS[var5].slipperiness * 0.98F;
+            var2 = 0.58800006F;
+            int var3 = this.world.getBlock(MathHelper.floor(this.x), MathHelper.floor(this.boundingBox.minY) - 1, MathHelper.floor(this.z));
+            if (var3 > 0) {
+                var2 = Block.BLOCKS[var3].slipperiness * 0.98F;
             }
         }
 
-        this.velocityX *= (double)var4;
+        this.velocityX *= (double)var2;
         this.velocityY *= 0.98F;
-        this.velocityZ *= (double)var4;
+        this.velocityZ *= (double)var2;
         if (this.onGround) {
             this.velocityY *= -0.5;
         }
@@ -183,7 +182,7 @@ public abstract class ItemEntityMixin extends Entity {
                 }
 
                 GameRegistry.onPickupNotification(par1EntityPlayer, (ItemEntity)(Object) this);
-                this.world.playSound(this, "random.pop", 0.2F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
+                this.playSound("random.pop", 0.2F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
                 par1EntityPlayer.method_3162(this, var2);
                 if (this.field_23087.count <= 0) {
                     this.remove();

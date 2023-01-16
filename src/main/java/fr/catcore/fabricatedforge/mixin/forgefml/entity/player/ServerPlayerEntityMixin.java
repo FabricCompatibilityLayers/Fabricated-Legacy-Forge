@@ -16,6 +16,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
@@ -47,6 +48,8 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
 
     @Shadow @Final public List removedEntities;
 
+    @Shadow public abstract ServerWorld getServerWorld();
+
     public ServerPlayerEntityMixin(World world) {
         super(world);
     }
@@ -74,7 +77,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
         --this.spawnProtectionTicks;
         this.openScreenHandler.sendContentUpdates();
         if (!this.loadedChunks.isEmpty()) {
-            ArrayList var1 = new ArrayList();
+            ArrayList<Chunk> var1 = new ArrayList();
             Iterator var2 = this.loadedChunks.iterator();
             ArrayList<BlockEntity> var3 = new ArrayList();
 
@@ -93,6 +96,10 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
                 for(BlockEntity var5 : var3) {
                     this.updateBlockEntity(var5);
                 }
+
+                for(Chunk var10 : var1) {
+                    this.getServerWorld().getEntityTracker().method_4410((ServerPlayerEntity)(Object) this, var10);
+                }
             }
         }
 
@@ -100,10 +107,10 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
             int var6 = Math.min(this.removedEntities.size(), 127);
             int[] var7 = new int[var6];
             Iterator<Integer> var8 = this.removedEntities.iterator();
-            int var10 = 0;
+            int var11 = 0;
 
-            while(var8.hasNext() && var10 < var6) {
-                var7[var10++] = var8.next();
+            while(var8.hasNext() && var11 < var6) {
+                var7[var11++] = var8.next();
                 var8.remove();
             }
 

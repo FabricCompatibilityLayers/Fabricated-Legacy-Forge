@@ -303,11 +303,11 @@ public abstract class InGameHudMixin extends DrawableHelper {
             String var35 = "" + this.field_1166.playerEntity.experienceLevel;
             int var40 = (var6 - var8.getStringWidth(var35)) / 2;
             int var38 = var7 - 31 - 4;
-            var8.method_4247(var35, var40 + 1, var38, 0);
-            var8.method_4247(var35, var40 - 1, var38, 0);
-            var8.method_4247(var35, var40, var38 + 1, 0);
-            var8.method_4247(var35, var40, var38 - 1, 0);
-            var8.method_4247(var35, var40, var38, var12);
+            var8.draw(var35, var40 + 1, var38, 0);
+            var8.draw(var35, var40 - 1, var38, 0);
+            var8.draw(var35, var40, var38 + 1, 0);
+            var8.draw(var35, var40, var38 - 1, 0);
+            var8.draw(var35, var40, var38, var12);
             this.field_1166.profiler.pop();
         }
 
@@ -330,7 +330,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
         if (this.field_1166.options.debugEnabled) {
             this.field_1166.profiler.push("debug");
             GL11.glPushMatrix();
-            var8.method_956("Minecraft 1.4.2 (" + this.field_1166.fpsDebugString + ")", 2, 2, 16777215);
+            var8.method_956("Minecraft 1.4.3 (" + this.field_1166.fpsDebugString + ")", 2, 2, 16777215);
             var8.method_956(this.field_1166.getChunkDebugString(), 2, 12, 16777215);
             var8.method_956(this.field_1166.getEntitiesDebugString(), 2, 22, 16777215);
             var8.method_956(this.field_1166.method_2958(), 2, 32, 16777215);
@@ -418,7 +418,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
                     var13 = Color.HSBtoRGB(var33 / 50.0F, 0.7F, 0.6F) & 16777215;
                 }
 
-                var8.method_4247(this.overlayMessage, -var8.getStringWidth(this.overlayMessage) / 2, -4, var13 + (var12 << 24));
+                var8.draw(this.overlayMessage, -var8.getStringWidth(this.overlayMessage) / 2, -4, var13 + (var12 << 24));
                 GL11.glDisable(3042);
                 GL11.glPopMatrix();
             }

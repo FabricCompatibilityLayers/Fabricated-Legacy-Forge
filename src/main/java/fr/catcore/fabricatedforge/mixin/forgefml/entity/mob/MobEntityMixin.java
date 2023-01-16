@@ -118,13 +118,13 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
     @Shadow protected abstract void method_4472(boolean bl, int i);
 
-    @Shadow public int field_23096;
-
     @Shadow private ItemStack[] field_5336;
 
-    @Shadow protected boolean field_23097;
-
     @Shadow public abstract void method_2651();
+
+    @Shadow public abstract void method_4486(int i);
+
+    @Shadow public abstract int method_4477();
 
     public MobEntityMixin(World world) {
         super(world);
@@ -151,16 +151,17 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
                         this.field_5336[var1] = var2 == null ? null : var2.copy();
                     }
                 }
-            }
 
-            if (this.field_23096 > 0) {
-                if (this.field_3334 <= 0) {
-                    this.field_3334 = 60;
-                }
+                int var121 = this.method_4477();
+                if (var121 > 0) {
+                    if (this.field_3334 <= 0) {
+                        this.field_3334 = 20 * (30 - var121);
+                    }
 
-                --this.field_3334;
-                if (this.field_3334 <= 0) {
-                    --this.field_23096;
+                    --this.field_3334;
+                    if (this.field_3334 <= 0) {
+                        this.method_4486(var121 - 1);
+                    }
                 }
             }
 
@@ -261,6 +262,8 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
     public boolean damage(DamageSource par1DamageSource, int par2) {
         if (ForgeHooks.onLivingAttack((MobEntity)(Object) this, par1DamageSource, par2)) {
             return false;
+        } else if (this.method_4447()) {
+            return false;
         } else if (this.world.isClient) {
             return false;
         } else {
@@ -334,12 +337,12 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
                 if (this.field_3294 <= 0) {
                     if (var3) {
-                        this.world.playSound(this, this.method_2605(), this.method_2602(), this.method_2665());
+                        this.playSound(this.method_2605(), this.method_2602(), this.method_2665());
                     }
 
                     this.dropInventory(par1DamageSource);
                 } else if (var3) {
-                    this.world.playSound(this, this.method_2604(), this.method_2602(), this.method_2665());
+                    this.playSound(this.method_2604(), this.method_2602(), this.method_2665());
                 }
 
                 return true;
@@ -353,7 +356,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
      */
     @Overwrite
     protected void method_2653(DamageSource par1DamageSource, int par2) {
-        if (!this.field_23097) {
+        if (!this.method_4447()) {
             par2 = ForgeHooks.onLivingHurt((MobEntity)(Object) this, par1DamageSource, par2);
             if (par2 <= 0) {
                 return;
@@ -426,16 +429,16 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
             int var2 = MathHelper.ceil(par1 - 3.0F);
             if (var2 > 0) {
                 if (var2 > 4) {
-                    this.world.playSound(this, "damage.fallbig", 1.0F, 1.0F);
+                    this.playSound("damage.fallbig", 1.0F, 1.0F);
                 } else {
-                    this.world.playSound(this, "damage.fallsmall", 1.0F, 1.0F);
+                    this.playSound("damage.fallsmall", 1.0F, 1.0F);
                 }
 
                 this.damage(DamageSource.FALL, var2);
                 int var3 = this.world.getBlock(MathHelper.floor(this.x), MathHelper.floor(this.y - 0.2F - (double)this.heightOffset), MathHelper.floor(this.z));
                 if (var3 > 0) {
                     BlockSoundGroup var4 = Block.BLOCKS[var3].soundGroup;
-                    this.world.playSound(this, var4.getStepId(), var4.getVolume() * 0.5F, var4.getPitch() * 0.75F);
+                    this.playSound(var4.getStepId(), var4.getVolume() * 0.5F, var4.getPitch() * 0.75F);
                 }
             }
         }
@@ -466,7 +469,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
         }
 
         if (this.isSprinting()) {
-            float var1 = this.yaw * ((float) (Math.PI / 180.0));
+            float var1 = this.yaw * (float) (Math.PI / 180.0);
             this.velocityX -= (double)(MathHelper.sin(var1) * 0.2F);
             this.velocityZ += (double)(MathHelper.cos(var1) * 0.2F);
         }
@@ -482,7 +485,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
             while(potionKey.hasNext()) {
                 Integer key = (Integer)potionKey.next();
                 StatusEffectInstance effect = (StatusEffectInstance)this.field_3335.get(key);
-                if (((IStatusEffectInstance)effect).isCurativeItem(curativeItem)) {
+                if (effect.isCurativeItem(curativeItem)) {
                     potionKey.remove();
                     this.method_2649(effect);
                 }

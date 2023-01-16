@@ -110,6 +110,8 @@ public abstract class GameOptionsMixin {
 
     @Shadow public abstract void onPlayerModelPartChange();
 
+    @Shadow public boolean touchScreen;
+
     /**
      * @author Minecraft Forge
      * @reason none
@@ -227,6 +229,7 @@ public abstract class GameOptionsMixin {
                 var1.println("advancedItemTooltips:" + this.advancedItemTooltips);
                 var1.println("pauseOnLostFocus:" + this.pauseOnLostFocus);
                 var1.println("showCape:" + this.field_5053);
+                var1.println("touchscreen:" + this.touchScreen);
 
                 for(KeyBinding var5 : this.keysAll) {
                     var1.println("key_" + var5.translationKey + ":" + var5.code);

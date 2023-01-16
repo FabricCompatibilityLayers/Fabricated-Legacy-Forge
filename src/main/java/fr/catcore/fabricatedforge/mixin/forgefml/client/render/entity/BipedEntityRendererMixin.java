@@ -181,12 +181,12 @@ public abstract class BipedEntityRendererMixin extends MobEntityRenderer {
                 var6 *= 0.75F;
                 GL11.glRotatef(20.0F, 1.0F, 0.0F, 0.0F);
                 GL11.glRotatef(45.0F, 0.0F, 1.0F, 0.0F);
-                GL11.glScalef(var6, -var6, var6);
+                GL11.glScalef(-var6, -var6, var6);
             }
 
             this.dispatcher.heldItemRenderer.method_1357(par1EntityLiving, var4, 0);
             if (var4.getItem().method_3397()) {
-                for(int x = 1; x < ((IItem)var4.getItem()).getRenderPasses(var4.getData()); ++x) {
+                for(int x = 1; x < var4.getItem().getRenderPasses(var4.getData()); ++x) {
                     this.dispatcher.heldItemRenderer.method_1357(par1EntityLiving, var4, x);
                 }
             }
