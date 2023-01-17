@@ -5,6 +5,9 @@ import fr.catcore.fabricatedforge.mixininterface.IServerChunkProvider;
 import fr.catcore.fabricatedforge.mixininterface.IWorld;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.LongObjectStorage;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.chunk.Chunk;
@@ -81,7 +84,16 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
                 if (this.chunkGenerator == null) {
                     var5 = this.empty;
                 } else {
-                    var5 = this.chunkGenerator.getChunk(par1, par2);
+                    try {
+                        var5 = this.chunkGenerator.getChunk(par1, par2);
+                    } catch (Throwable var9) {
+                        CrashReport var7 = CrashReport.create(var9, "Exception generating new chunk");
+                        CrashReportSection var8 = var7.addElement("Chunk to be generated");
+                        var8.add("Location", String.format("%d,%d", par1, par2));
+                        var8.add("Position hash", var3);
+                        var8.add("Generator", this.chunkGenerator.getChunkProviderName());
+                        throw new CrashException(var7);
+                    }
                 }
             }
 
@@ -121,7 +133,7 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
     @Overwrite
     public boolean tickChunks() {
         if (!this.world.savingDisabled) {
-            for(ChunkPos forced : ((IWorld)this.world).getPersistentChunks().keySet()) {
+            for(ChunkPos forced : this.world.getPersistentChunks().keySet()) {
                 this.chunksToUnload.remove(ChunkPos.getIdFromCoords(forced.x, forced.z));
             }
 
