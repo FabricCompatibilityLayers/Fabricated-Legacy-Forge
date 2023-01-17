@@ -28,7 +28,7 @@ public class LogBlockMixin extends Block {
                     for(int var11 = -var7; var11 <= var7; ++var11) {
                         int var12 = par1World.getBlock(par2 + var9, par3 + var10, par4 + var11);
                         if (Block.BLOCKS[var12] != null) {
-                            Block.BLOCKS[var12].beginLeavesDecay(par1World, par2 + var9, par3 + var10, par4 + var11);
+                            ((IBlock)Block.BLOCKS[var12]).beginLeavesDecay(par1World, par2 + var9, par3 + var10, par4 + var11);
                         }
                     }
                 }

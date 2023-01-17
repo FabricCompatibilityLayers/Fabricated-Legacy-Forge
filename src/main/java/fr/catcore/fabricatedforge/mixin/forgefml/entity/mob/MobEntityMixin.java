@@ -485,7 +485,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
             while(potionKey.hasNext()) {
                 Integer key = (Integer)potionKey.next();
                 StatusEffectInstance effect = (StatusEffectInstance)this.field_3335.get(key);
-                if (effect.isCurativeItem(curativeItem)) {
+                if (((IStatusEffectInstance)effect).isCurativeItem(curativeItem)) {
                     potionKey.remove();
                     this.method_2649(effect);
                 }

@@ -313,7 +313,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
             this.drawTexture(var11, var8 + (int)((float)(var14 - var8 - 17) * this.scrollPosition), 232 + (this.hasScrollbar() ? 0 : 12), 0, 12, 15);
         }
 
-        if (var5 != null && var5.getTabPage() == this.tabPage || var5 == ItemGroup.SEARCH || var5 == ItemGroup.INVENTORY) {
+        if (var5 != null && ((IItemGroup)var5).getTabPage() == this.tabPage || var5 == ItemGroup.SEARCH || var5 == ItemGroup.INVENTORY) {
             this.renderTabIcon(var5);
             if (var5 == ItemGroup.INVENTORY) {
                 SurvivalInventoryScreen.method_1159(
@@ -329,7 +329,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
      */
     @Overwrite
     protected boolean isClickInTab(ItemGroup par1CreativeTabs, int par2, int par3) {
-        if (par1CreativeTabs.getTabPage() != this.tabPage && par1CreativeTabs != ItemGroup.SEARCH && par1CreativeTabs != ItemGroup.INVENTORY) {
+        if (((IItemGroup)par1CreativeTabs).getTabPage() != this.tabPage && par1CreativeTabs != ItemGroup.SEARCH && par1CreativeTabs != ItemGroup.INVENTORY) {
             return false;
         } else {
             int var4 = par1CreativeTabs.getColumn();
@@ -391,7 +391,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
         var8 += 8 + (var3 ? 1 : -1);
         GL11.glEnable(2896);
         GL11.glEnable(32826);
-        ItemStack var10 = par1CreativeTabs.getIconItemStack();
+        ItemStack var10 = ((IItemGroup)par1CreativeTabs).getIconItemStack();
         field_1346.method_4336(this.textRenderer, this.field_1229.textureManager, var10, var7, var8);
         field_1346.method_1549(this.textRenderer, this.field_1229.textureManager, var10, var7, var8);
         GL11.glDisable(2896);

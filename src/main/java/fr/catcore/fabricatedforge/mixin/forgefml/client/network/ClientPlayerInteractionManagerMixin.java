@@ -41,7 +41,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
     @Overwrite
     public boolean method_1223(int par1, int par2, int par3, int par4) {
         ItemStack stack = this.field_1646.playerEntity.getMainHandStack();
-        if (stack != null && stack.getItem() != null && stack.getItem().onBlockStartBreak(stack, par1, par2, par3, this.field_1646.playerEntity)) {
+        if (stack != null && stack.getItem() != null && ((IItem)stack.getItem()).onBlockStartBreak(stack, par1, par2, par3, this.field_1646.playerEntity)) {
             return false;
         } else if (this.gameMode.isAdventure() && !this.field_1646.playerEntity.method_4579(par1, par2, par3)) {
             return false;
@@ -53,7 +53,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
             } else {
                 var5.dispatchEvent(2001, par1, par2, par3, var6.id + (var5.getBlockData(par1, par2, par3) << 12));
                 int var7 = var5.getBlockData(par1, par2, par3);
-                boolean var8 = var6.removeBlockByPlayer(var5, this.field_1646.playerEntity, par1, par2, par3);
+                boolean var8 = ((IBlock)var6).removeBlockByPlayer(var5, this.field_1646.playerEntity, par1, par2, par3);
                 if (var8) {
                     var6.onDestroyed(var5, par1, par2, par3, var7);
                 }
@@ -88,7 +88,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
         int var13 = par2World.getBlock(par4, par5, par6);
         if (par3ItemStack != null
                 && par3ItemStack.getItem() != null
-                && par3ItemStack.getItem().onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11)) {
+                && ((IItem)par3ItemStack.getItem()).onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11)) {
             return true;
         } else {
             if (var13 > 0 && Block.BLOCKS[var13].onActivated(par2World, par4, par5, par6, par1EntityPlayer, par7, var9, var10, var11)) {

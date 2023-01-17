@@ -47,7 +47,7 @@ public abstract class ItemEntityMixin extends Entity {
 
     @Inject(method = "<init>(Lnet/minecraft/world/World;DDDLnet/minecraft/item/ItemStack;)V", at = @At("RETURN"))
     private void fmlCtr(World par1World, double par2, double par4, double par6, ItemStack par8ItemStack, CallbackInfo ci) {
-        this.lifespan = par8ItemStack.getItem() == null ? 6000 : par8ItemStack.getItem().getEntityLifespan(par8ItemStack, par1World);
+        this.lifespan = par8ItemStack.getItem() == null ? 6000 : ((IItem)par8ItemStack.getItem()).getEntityLifespan(par8ItemStack, par1World);
     }
 
     /**

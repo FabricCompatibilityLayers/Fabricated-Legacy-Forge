@@ -501,7 +501,7 @@ public abstract class MinecraftMixin {
                 int var5 = this.result.z;
                 this.interactionManager.method_1239(var3, var4, var5, this.result.side);
                 if (this.playerEntity.method_4579(var3, var4, var5)) {
-                    this.particleManager.addBlockHitEffects(var3, var4, var5, this.result);
+                    ((IParticleManager)this.particleManager).addBlockHitEffects(var3, var4, var5, this.result);
                     this.playerEntity.method_3207();
                 }
             } else {

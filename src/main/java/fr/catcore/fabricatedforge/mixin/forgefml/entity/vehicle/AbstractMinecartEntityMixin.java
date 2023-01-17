@@ -639,13 +639,13 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
                         double var18 = par1Entity.velocityX + this.velocityX;
                         double var20 = par1Entity.velocityZ + this.velocityZ;
-                        if (((AbstractMinecartEntity)par1Entity).isPoweredCart() && !this.isPoweredCart()) {
+                        if (((IAbstractMinecartEntity)par1Entity).isPoweredCart() && !this.isPoweredCart()) {
                             this.velocityX *= 0.2F;
                             this.velocityZ *= 0.2F;
                             this.addVelocity(par1Entity.velocityX - var2, 0.0, par1Entity.velocityZ - var4);
                             par1Entity.velocityX *= 0.95F;
                             par1Entity.velocityZ *= 0.95F;
-                        } else if (!((AbstractMinecartEntity)par1Entity).isPoweredCart() && this.isPoweredCart()) {
+                        } else if (!((IAbstractMinecartEntity)par1Entity).isPoweredCart() && this.isPoweredCart()) {
                             par1Entity.velocityX *= 0.2F;
                             par1Entity.velocityZ *= 0.2F;
                             par1Entity.addVelocity(this.velocityX + var2, 0.0, this.velocityZ + var4);

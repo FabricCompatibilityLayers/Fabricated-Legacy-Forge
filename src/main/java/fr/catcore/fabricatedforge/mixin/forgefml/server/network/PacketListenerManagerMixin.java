@@ -40,7 +40,7 @@ public class PacketListenerManagerMixin {
                     throw new CrashException(var4);
                 }
 
-                FMLLog.log(Level.SEVERE, var5, "A critical server error occured handling a packet, kicking %s", new Object[]{var2.getPlayer().id});
+                FMLLog.log(Level.SEVERE, var5, "A critical server error occured handling a packet, kicking %s", new Object[]{((IPacketListener)var2).getPlayer().id});
                 LOGGER.log(Level.WARNING, "Failed to handle packet for " + var2.player.getTranslationKey() + "/" + var2.player.getIp() + ": " + var5, var5);
                 var2.disconnect("Internal server error");
             }

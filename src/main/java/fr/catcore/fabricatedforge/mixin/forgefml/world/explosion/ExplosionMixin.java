@@ -74,7 +74,7 @@ public class ExplosionMixin {
                                 Block var26 = Block.BLOCKS[var25];
                                 float var27 = this.causingEntity != null
                                         ? this.causingEntity.method_4444((Explosion)(Object) this, var26, var22, var23, var24)
-                                        : var26.getExplosionResistance(this.causingEntity, this.world, var22, var23, var24, this.x, this.y, this.z);
+                                        : ((IBlock)var26).getExplosionResistance(this.causingEntity, this.world, var22, var23, var24, this.x, this.y, this.z);
                                 var14 -= (var27 + 0.3F) * var21;
                             }
 
