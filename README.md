@@ -2,7 +2,7 @@
 
 Load Forge/ModLoader mods as if they were Fabric Loader mods.
 
-Supported Minecraft versions: 1.3.2, 1.4.0, 1.4.1 and 1.4.2.
+Supported Minecraft versions: 1.3.2, 1.4.0, 1.4.1, 1.4.2 and 1.4.3.
 
 This mod requires [Mod-Remapping-API](https://modrinth.com/mod/mod-remapping-api).
 
