@@ -6,13 +6,19 @@ import fr.catcore.fabricatedforge.mixininterface.IThreadedAnvilChunkStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LightningBoltEntity;
+import net.minecraft.entity.MobSpawnerHelper;
+import net.minecraft.entity.PortalTeleporter;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.PlayerWorldManager;
 import net.minecraft.server.world.BlockAction;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ProgressListener;
 import net.minecraft.util.ScheduledTick;
 import net.minecraft.util.class_797;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.profiler.Profiler;
@@ -22,6 +28,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ServerChunkProvider;
+import net.minecraft.world.chunk.ThreadedAnvilChunkStorage;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.gen.feature.BonusChestFeature;
 import net.minecraft.world.level.LevelInfo;
@@ -52,15 +59,85 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     @Shadow public abstract void resetIdleTimeout();
 
+    @Shadow protected abstract void method_2131();
+
+    @Shadow @Final private PortalTeleporter portalTeleporter;
+
+    @Shadow @Final private PlayerWorldManager playerWorldManager;
+
+    @Shadow protected abstract void awakenPlayers();
+
+    @Shadow public abstract boolean isReady();
+
     public ServerWorldMixin(SaveHandler saveHandler, String string, Dimension dimension, LevelInfo levelInfo, Profiler profiler) {
         super(saveHandler, string, dimension, levelInfo, profiler);
     }
 
     protected Set<ChunkPos> doneChunks = new HashSet<>();
+    public List<PortalTeleporter> customTeleporters = new ArrayList<>();
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void fmlCtr(MinecraftServer par1MinecraftServer, SaveHandler par2ISaveHandler, String par3Str, int par4, LevelInfo par5WorldSettings, Profiler par6Profiler, CallbackInfo ci) {
         DimensionManager.setWorld(par4, (ServerWorld)(Object) this);
+    }
+
+    /**
+     * @author Minecraft Forge
+     * @reason none
+     */
+    @Overwrite
+    public void tick() {
+        super.tick();
+        if (this.getLevelProperties().isHardcore() && this.difficulty < 3) {
+            this.difficulty = 3;
+        }
+
+        this.dimension.biomeSource.method_3859();
+        if (this.isReady()) {
+            boolean var1 = false;
+            if (this.spawnAnimals && this.difficulty >= 1) {
+            }
+
+            if (!var1) {
+                long var2 = this.levelProperties.getTimeOfDay() + 24000L;
+                this.levelProperties.setDayTime(var2 - var2 % 24000L);
+                this.awakenPlayers();
+            }
+        }
+
+        this.profiler.push("mobSpawner");
+        if (this.getGameRules().getBoolean("doMobSpawning")) {
+            MobSpawnerHelper.tickSpawners((ServerWorld)(Object) this, this.spawnAnimals, this.spawnMonsters, this.levelProperties.getTime() % 400L == 0L);
+        }
+
+        this.profiler.swap("chunkSource");
+        this.chunkProvider.tickChunks();
+        int var4 = this.method_3597(1.0F);
+        if (var4 != this.ambientDarkness) {
+            this.ambientDarkness = var4;
+        }
+
+        this.method_2131();
+        this.levelProperties.setTime(this.levelProperties.getTime() + 1L);
+        this.levelProperties.setDayTime(this.levelProperties.getTimeOfDay() + 1L);
+        this.profiler.swap("tickPending");
+        this.method_3644(false);
+        this.profiler.swap("tickTiles");
+        this.tickBlocks();
+        this.profiler.swap("chunkMap");
+        this.playerWorldManager.method_2111();
+        this.profiler.swap("village");
+        this.villageState.method_2839();
+        this.zombieSiegeManager.method_2835();
+        this.profiler.swap("portalForcer");
+        this.portalTeleporter.method_4698(this.getLastUpdateTime());
+
+        for(PortalTeleporter tele : this.customTeleporters) {
+            tele.method_4698(this.getLastUpdateTime());
+        }
+
+        this.profiler.pop();
+        this.method_2131();
     }
 
     /**
@@ -246,7 +323,22 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
                 if (this.isRegionLoaded(var4.x - var5, var4.y - var5, var4.z - var5, var4.x + var5, var4.y + var5, var4.z + var5)) {
                     int var6 = this.getBlock(var4.x, var4.y, var4.z);
                     if (var6 == var4.blockId && var6 > 0) {
-                        Block.BLOCKS[var6].onTick(this, var4.x, var4.y, var4.z, this.random);
+                        try {
+                            Block.BLOCKS[var6].onTick(this, var4.x, var4.y, var4.z, this.random);
+                        } catch (Throwable var14) {
+                            CrashReport var8 = CrashReport.create(var14, "Exception while ticking a block");
+                            CrashReportSection var9 = var8.addElement("Block being ticked");
+
+                            int var10;
+                            try {
+                                var10 = this.getBlockData(var4.x, var4.y, var4.z);
+                            } catch (Throwable var13) {
+                                var10 = -1;
+                            }
+
+                            CrashReportSection.addBlock(var9, var4.x, var4.y, var4.z, var6, var10);
+                            throw new CrashException(var8);
+                        }
                     }
                 }
             }
@@ -361,6 +453,6 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     @Override
     public File getChunkSaveLocation() {
-        return ((IThreadedAnvilChunkStorage)((IServerChunkProvider)this.chunkCache).getChunkWriter()).getSaveLocation();
+        return ((ThreadedAnvilChunkStorage)this.chunkCache.getChunkWriter()).getSaveLocation();
     }
 }

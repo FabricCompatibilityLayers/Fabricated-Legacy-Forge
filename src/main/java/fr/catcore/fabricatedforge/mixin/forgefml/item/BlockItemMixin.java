@@ -48,7 +48,7 @@ public abstract class BlockItemMixin extends Item implements IBlockItem {
         } else if (var11 != Block.VINE.id
                 && var11 != Block.TALLGRASS.id
                 && var11 != Block.DEADBUSH.id
-                && (Block.BLOCKS[var11] == null || !((IBlock)Block.BLOCKS[var11]).isBlockReplaceable(par3World, par4, par5, par6))) {
+                && (Block.BLOCKS[var11] == null || !Block.BLOCKS[var11].isBlockReplaceable(par3World, par4, par5, par6))) {
             if (par7 == 0) {
                 --par5;
             }
@@ -82,7 +82,9 @@ public abstract class BlockItemMixin extends Item implements IBlockItem {
             return false;
         } else if (par3World.method_3602(this.blockItemId, par4, par5, par6, false, par7, par2EntityPlayer)) {
             Block var12 = Block.BLOCKS[this.blockItemId];
-            if (this.placeBlockAt(par1ItemStack, par2EntityPlayer, par3World, par4, par5, par6, par7, par8, par9, par10)) {
+            int var13 = this.getMeta(par1ItemStack.getData());
+            int var14 = Block.BLOCKS[this.blockItemId].method_4185(par3World, par4, par5, par6, par7, par8, par9, par10, var13);
+            if (this.placeBlockAt(par1ItemStack, par2EntityPlayer, par3World, par4, par5, par6, par7, par8, par9, par10, var14)) {
                 par3World.playSound(
                         (double)((float)par4 + 0.5F),
                         (double)((float)par5 + 0.5F),
@@ -113,7 +115,7 @@ public abstract class BlockItemMixin extends Item implements IBlockItem {
         } else if (var8 != Block.VINE.id
                 && var8 != Block.TALLGRASS.id
                 && var8 != Block.DEADBUSH.id
-                && (Block.BLOCKS[var8] == null || !((IBlock)Block.BLOCKS[var8]).isBlockReplaceable(par1World, par2, par3, par4))) {
+                && (Block.BLOCKS[var8] == null || !Block.BLOCKS[var8].isBlockReplaceable(par1World, par2, par3, par4))) {
             if (par5 == 0) {
                 --par3;
             }
@@ -143,13 +145,15 @@ public abstract class BlockItemMixin extends Item implements IBlockItem {
     }
 
     @Override
-    public boolean placeBlockAt(ItemStack stack, PlayerEntity player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        if (!world.method_3683(x, y, z, this.blockItemId, this.getMeta(stack.getData()))) {
+    public boolean placeBlockAt(
+            ItemStack stack, PlayerEntity player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ, int metadata
+    ) {
+        if (!world.method_3683(x, y, z, this.blockItemId, metadata)) {
             return false;
         } else {
             if (world.getBlock(x, y, z) == this.blockItemId) {
-                Block.BLOCKS[this.blockItemId].method_4185(world, x, y, z, side, hitX, hitY, hitZ);
                 Block.BLOCKS[this.blockItemId].method_419(world, x, y, z, player);
+                Block.BLOCKS[this.blockItemId].method_4186(world, x, y, z, metadata);
             }
 
             return true;

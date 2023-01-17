@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 @Mixin(ListenThread.class)
 public abstract class ListenThreadMixin extends Thread {
 
-    @Shadow @Final private List field_2744;
+    @Shadow @Final private List<PendingConnection> field_2744;
 
     @Shadow private static Logger LOGGER;
 
@@ -34,8 +34,8 @@ public abstract class ListenThreadMixin extends Thread {
                     var3.tick();
                 } catch (Exception var7) {
                     var3.disconnect("Internal server error");
-                    FMLLog.log(Level.SEVERE, var7, "Error handling login related packet - connection from %s refused", new Object[]{var3.username});
-                    LOGGER.log(Level.WARNING, "Failed to handle packet: " + var7, var7);
+                    FMLLog.log(Level.SEVERE, var7, "Error handling login related packet - connection from %s refused", new Object[]{var3.method_2196()});
+                    LOGGER.log(Level.WARNING, "Failed to handle packet for " + var3.method_2196() + ": " + var7, var7);
                 }
 
                 if (var3.field_2883) {

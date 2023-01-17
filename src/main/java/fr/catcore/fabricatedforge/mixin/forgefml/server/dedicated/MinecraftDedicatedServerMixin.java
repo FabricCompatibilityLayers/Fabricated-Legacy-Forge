@@ -53,7 +53,7 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
             var1.setDaemon(true);
             var1.start();
             LogFileWriter.method_1974();
-            field_3848.info("Starting minecraft server version 1.4.2");
+            field_3848.info("Starting minecraft server version 1.4.3");
             if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L) {
                 field_3848.warning("To start the server with more ram, launch it as \"java -Xmx1024M -Xms1024M -jar minecraft_server.jar\"");
             }
@@ -74,6 +74,12 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
             this.setFlightEnabled(this.abstractPropertiesHandler.getBooleanOrDefault("allow-flight", false));
             this.method_3043(this.abstractPropertiesHandler.getOrDefault("texture-pack", ""));
             this.setMotd(this.abstractPropertiesHandler.getOrDefault("motd", "A Minecraft Server"));
+            if (this.abstractPropertiesHandler.getIntOrDefault("difficulty", 1) < 0) {
+                this.abstractPropertiesHandler.set("difficulty", 0);
+            } else if (this.abstractPropertiesHandler.getIntOrDefault("difficulty", 1) > 3) {
+                this.abstractPropertiesHandler.set("difficulty", 3);
+            }
+
             this.shouldGenerateStructures = this.abstractPropertiesHandler.getBooleanOrDefault("generate-structures", true);
             int var2 = this.abstractPropertiesHandler.getIntOrDefault("gamemode", GameMode.SURVIVAL.getGameModeId());
             this.field_2736 = LevelInfo.method_3754(var2);

@@ -72,7 +72,7 @@ public abstract class ItemMixin implements ItemProxy, IItem {
         double var9 = par2EntityPlayer.prevY + (par2EntityPlayer.y - par2EntityPlayer.prevY) * (double)var4 + 1.62 - (double)par2EntityPlayer.heightOffset;
         double var11 = par2EntityPlayer.prevZ + (par2EntityPlayer.z - par2EntityPlayer.prevZ) * (double)var4;
         Vec3d var13 = par1World.getVectorPool().getOrCreate(var7, var9, var11);
-        float var14 = MathHelper.cos(-var6 * ((float) (Math.PI / 180.0)) - (float) Math.PI);
+        float var14 = MathHelper.cos(-var6 * (float) (Math.PI / 180.0) - (float) Math.PI);
         float var15 = MathHelper.sin(-var6 * (float) (Math.PI / 180.0) - (float) Math.PI);
         float var16 = -MathHelper.cos(-var5 * (float) (Math.PI / 180.0));
         float var17 = MathHelper.sin(-var5 * (float) (Math.PI / 180.0));
@@ -80,7 +80,7 @@ public abstract class ItemMixin implements ItemProxy, IItem {
         float var20 = var14 * var16;
         double var21 = 5.0;
         if (par2EntityPlayer instanceof ServerPlayerEntity) {
-            var21 = ((IServerPlayerInteractionManager)((ServerPlayerEntity)par2EntityPlayer).interactionManager).getBlockReachDistance();
+            var21 = ((ServerPlayerEntity)par2EntityPlayer).interactionManager.getBlockReachDistance();
         }
 
         Vec3d var23 = var13.method_613((double)var18 * var21, (double)var17 * var21, (double)var20 * var21);
@@ -146,13 +146,14 @@ public abstract class ItemMixin implements ItemProxy, IItem {
 
     @Override
     public String getTextureFile() {
-        return (Object)this instanceof BlockItem ? ((IBlock)Block.BLOCKS[((BlockItem)(Object)this).method_3464()]).getTextureFile() : this.currentTexture;
+        return (Object) this instanceof BlockItem ? Block.BLOCKS[((BlockItem)(Object)this).method_3464()].getTextureFile() : this.currentTexture;
     }
 
     @Override
-    public void setTextureFile(String texture) {
+    public Item setTextureFile(String texture) {
         this.currentTexture = texture;
         this.isDefaultTexture = false;
+        return (Item)(Object) this;
     }
 
     @Override

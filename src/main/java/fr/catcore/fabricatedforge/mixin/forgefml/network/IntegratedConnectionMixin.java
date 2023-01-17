@@ -16,7 +16,7 @@ import java.util.List;
 @Mixin(IntegratedConnection.class)
 public abstract class IntegratedConnectionMixin implements Connection {
 
-    @Shadow @Final private List packetQueue;
+    @Shadow @Final private List<Packet> packetQueue;
 
     @Shadow private PacketListener packetListener;
 

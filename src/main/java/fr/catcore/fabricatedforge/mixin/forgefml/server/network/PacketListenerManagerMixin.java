@@ -2,8 +2,11 @@ package fr.catcore.fabricatedforge.mixin.forgefml.server.network;
 
 import cpw.mods.fml.common.FMLLog;
 import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
+import net.minecraft.network.IntegratedConnection;
 import net.minecraft.server.ServerPacketListener;
 import net.minecraft.server.network.PacketListenerManager;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -31,10 +34,14 @@ public class PacketListenerManagerMixin {
 
             try {
                 var2.tick();
-            } catch (Exception var4) {
-                FMLLog.log(Level.SEVERE, var4, "A critical server error occured handling a packet, kicking %s",
-                        new Object[]{((IPacketListener)var2).getPlayer().id});
-                LOGGER.log(Level.WARNING, "Failed to handle packet: " + var4, var4);
+            } catch (Exception var5) {
+                if (var2.connection instanceof IntegratedConnection) {
+                    CrashReport var4 = CrashReport.create(var5, "Ticking memory connection");
+                    throw new CrashException(var4);
+                }
+
+                FMLLog.log(Level.SEVERE, var5, "A critical server error occured handling a packet, kicking %s", new Object[]{var2.getPlayer().id});
+                LOGGER.log(Level.WARNING, "Failed to handle packet for " + var2.player.getTranslationKey() + "/" + var2.player.getIp() + ": " + var5, var5);
                 var2.disconnect("Internal server error");
             }
 

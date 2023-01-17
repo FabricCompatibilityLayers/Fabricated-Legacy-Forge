@@ -22,7 +22,7 @@ public interface IItem {
     int getIconIndex(ItemStack stack, int renderPass, PlayerEntity player, ItemStack usingItem, int useRemaining);
     int getRenderPasses(int metadata);
     String getTextureFile();
-    void setTextureFile(String texture);
+    Item setTextureFile(String texture);
     ItemStack getContainerItemStack(ItemStack itemStack);
     int getEntityLifespan(ItemStack itemStack, World world);
     boolean hasCustomEntity(ItemStack stack);

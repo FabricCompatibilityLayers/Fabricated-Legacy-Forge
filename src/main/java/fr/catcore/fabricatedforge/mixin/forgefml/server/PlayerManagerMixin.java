@@ -53,7 +53,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
 
     @Shadow protected abstract void savePlayerData(ServerPlayerEntity player);
 
-    @Shadow @Final public List players;
+    @Shadow @Final public List<ServerPlayerEntity> players;
 
     @Shadow public abstract void method_2009(ServerPlayerEntity player);
 
@@ -218,7 +218,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
      */
     @Overwrite
     public void teleportToDimension(ServerPlayerEntity par1EntityPlayerMP, int par2) {
-        this.transferPlayerToDimension(par1EntityPlayerMP, par2, new PortalTeleporter());
+        this.transferPlayerToDimension(par1EntityPlayerMP, par2, this.server.getWorld(par2).getPortalTeleporter());
     }
 
     @Override
@@ -260,7 +260,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
      */
     @Overwrite
     public void method_4399(Entity par1Entity, int par2, ServerWorld par3WorldServer, ServerWorld par4WorldServer) {
-        this.transferEntityToWorld(par1Entity, par2, par3WorldServer, par4WorldServer, new PortalTeleporter());
+        this.transferEntityToWorld(par1Entity, par2, par3WorldServer, par4WorldServer, par4WorldServer.getPortalTeleporter());
     }
 
     @Override
@@ -274,6 +274,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
         double var13 = par1Entity.y;
         double var15 = par1Entity.z;
         float var17 = par1Entity.yaw;
+        par3WorldServer.profiler.push("moving");
         if (par1Entity.dimension == 1) {
             BlockPos var18;
             if (par2 == 1) {
@@ -291,15 +292,19 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
             }
         }
 
+        par3WorldServer.profiler.pop();
         if (par2 != 1) {
+            par3WorldServer.profiler.push("placing");
             var5 = (double)MathHelper.clamp((int)var5, -29999872, 29999872);
             var7 = (double)MathHelper.clamp((int)var7, -29999872, 29999872);
             if (par1Entity.isAlive()) {
                 par4WorldServer.spawnEntity(par1Entity);
                 par1Entity.refreshPositionAndAngles(var5, par1Entity.y, var7, par1Entity.yaw, par1Entity.pitch);
                 par4WorldServer.checkChunk(par1Entity, false);
-                teleporter.method_4699(par4WorldServer, par1Entity, var11, var13, var15, var17);
+                teleporter.method_4699(par1Entity, var11, var13, var15, var17);
             }
+
+            par3WorldServer.profiler.pop();
         }
 
         par1Entity.setWorld(par4WorldServer);

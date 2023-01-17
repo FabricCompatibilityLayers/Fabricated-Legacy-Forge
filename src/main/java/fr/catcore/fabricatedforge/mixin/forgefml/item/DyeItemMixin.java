@@ -82,7 +82,7 @@ public class DyeItemMixin extends Item {
                             if (!par3World.isClient) {
                                 --par1ItemStack.count;
 
-                                label139:
+                                label135:
                                 for(int var12 = 0; var12 < 128; ++var12) {
                                     int var13 = par4;
                                     int var14 = par5 + 1;
@@ -93,7 +93,7 @@ public class DyeItemMixin extends Item {
                                         var14 += (RANDOM.nextInt(3) - 1) * RANDOM.nextInt(3) / 2;
                                         var15 += RANDOM.nextInt(3) - 1;
                                         if (par3World.getBlock(var13, var14 - 1, var15) != Block.GRASS_BLOCK.id || par3World.isBlockSolid(var13, var14, var15)) {
-                                            continue label139;
+                                            continue label135;
                                         }
                                     }
 
@@ -161,11 +161,8 @@ public class DyeItemMixin extends Item {
                     }
 
                     if (par3World.isAir(par4, par5, par6)) {
-                        par3World.method_3690(par4, par5, par6, Block.COCOA.id);
-                        if (par3World.getBlock(par4, par5, par6) == Block.COCOA.id) {
-                            Block.BLOCKS[Block.COCOA.id].method_4185(par3World, par4, par5, par6, par7, par8, par9, par10);
-                        }
-
+                        int var13 = Block.BLOCKS[Block.COCOA.id].method_4185(par3World, par4, par5, par6, par7, par8, par9, par10, 0);
+                        par3World.method_3683(par4, par5, par6, Block.COCOA.id, var13);
                         if (!par2EntityPlayer.abilities.creativeMode) {
                             --par1ItemStack.count;
                         }

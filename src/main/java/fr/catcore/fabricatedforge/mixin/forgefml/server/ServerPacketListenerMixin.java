@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.WritableBookItem;
 import net.minecraft.item.WrittenBookItem;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.network.Connection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.PacketListener;
@@ -50,7 +51,8 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
 
     @Shadow private MinecraftServer server;
 
-    @Shadow private ServerPlayerEntity player;
+    @Shadow
+    public ServerPlayerEntity player;
 
     @Shadow private boolean hasMoved;
 
@@ -309,7 +311,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 double var10 = this.player.y - ((double)var6 + 0.5) + 1.5;
                 double var12 = this.player.z - ((double)var7 + 0.5);
                 double var14 = var8 * var8 + var10 * var10 + var12 * var12;
-                double dist = ((IServerPlayerInteractionManager)this.player.interactionManager).getBlockReachDistance() + 1.0;
+                double dist = this.player.interactionManager.getBlockReachDistance() + 1.0;
                 dist *= dist;
                 if (var14 > dist) {
                     return;
@@ -391,7 +393,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 var12 = var11;
             }
 
-            double dist = ((IServerPlayerInteractionManager)this.player.interactionManager).getBlockReachDistance() + 1.0;
+            double dist = this.player.interactionManager.getBlockReachDistance() + 1.0;
             dist *= dist;
             if (this.field_2910
                     && this.player.squaredDistanceTo((double)var5 + 0.5, (double)var6 + 0.5, (double)var7 + 0.5) < dist
@@ -564,7 +566,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
 
                 ItemStack var4 = this.player.inventory.getMainHandStack();
                 if (var3 != null && var3.id == Item.WRITABLE_BOOK.id && var3.id == var4.id) {
-                    var4.setNbt(var3.getNbt());
+                    var4.putSubNbt("pages", var3.getNbt().getList("pages"));
                 }
             } catch (Exception var141) {
                 var141.printStackTrace();
@@ -579,7 +581,9 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
 
                 ItemStack var201 = this.player.inventory.getMainHandStack();
                 if (var19 != null && var19.id == Item.WRITTEN_BOOK.id && var201.id == Item.WRITABLE_BOOK.id) {
-                    var201.setNbt(var19.getNbt());
+                    var201.putSubNbt("author", new NbtString("author", this.player.username));
+                    var201.putSubNbt("title", new NbtString("title", var19.getNbt().getString("title")));
+                    var201.putSubNbt("pages", var19.getNbt().getList("pages"));
                     var201.id = Item.WRITTEN_BOOK.id;
                 }
             } catch (Exception var131) {

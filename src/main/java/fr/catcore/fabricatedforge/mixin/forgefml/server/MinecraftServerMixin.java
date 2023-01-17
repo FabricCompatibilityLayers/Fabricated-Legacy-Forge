@@ -356,8 +356,23 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
 
                 this.profiler.push("tick");
                 FMLCommonHandler.instance().onPreWorldTick(var4);
-                var4.tick();
-                var4.tickEntities();
+
+                try {
+                    var4.tick();
+                } catch (Throwable var11) {
+                    CrashReport var6 = CrashReport.create(var11, "Exception ticking world");
+                    var4.addToCrashReport(var6);
+                    throw new CrashException(var6);
+                }
+
+                try {
+                    var4.tickEntities();
+                } catch (Throwable var10) {
+                    CrashReport var6 = CrashReport.create(var10, "Exception ticking world entities");
+                    var4.addToCrashReport(var6);
+                    throw new CrashException(var6);
+                }
+
                 FMLCommonHandler.instance().onPostWorldTick(var4);
                 this.profiler.pop();
                 this.profiler.push("tracker");
@@ -377,8 +392,8 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
         this.playerManager.updatePlayerLatency();
         this.profiler.swap("tickables");
 
-        for(Tickable var6 : this.tickables) {
-            var6.tick();
+        for(Tickable var10 : this.tickables) {
+            var10.tick();
         }
 
         this.profiler.pop();
