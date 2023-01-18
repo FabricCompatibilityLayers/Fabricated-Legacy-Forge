@@ -1,4 +1,7 @@
+import com.diffplug.gradle.spotless.JavaExtension
+
 plugins {
+	id 'com.diffplug.spotless' version "6.12.0"
 	id 'fabric-loom' version "1.0-SNAPSHOT" // To use chocoloom, change the version to a commit hash
 	id 'maven-publish'
 }
@@ -95,9 +98,14 @@ java {
 }
 
 jar {
+	from("licensing.md")
 	from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}" }
 	}
+	from("LICENSE-fml.txt")
+	from("CREDITS-fml.txt")
+	from("MinecraftForge-Credits.txt")
+	from("MinecraftForge-License.txt")
 }
 
 // configure the maven publication
@@ -112,5 +120,17 @@ publishing {
 	repositories {
 		// uncomment to publish to the local maven
 		// mavenLocal()
+	}
+}
+
+spotless {
+	format('fml', JavaExtension) {
+		licenseHeaderFile(rootProject.file("HEADER_FML"))
+		target 'src/*/java/cpw/mods/**/*.java', 'src/*/java/net/minecraft/*.java'
+	}
+
+	format('forge', JavaExtension) {
+		licenseHeaderFile(rootProject.file("HEADER_FORGE"))
+		target 'src/*/java/net/minecraftforge/**/*.java'
 	}
 }
