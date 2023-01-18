@@ -95,9 +95,14 @@ java {
 }
 
 jar {
+	from("licensing.md")
 	from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}" }
 	}
+	from("LICENSE-fml.txt")
+	from("CREDITS-fml.txt")
+	from("MinecraftForge-Credits.txt")
+	from("MinecraftForge-License.txt")
 }
 
 // configure the maven publication
