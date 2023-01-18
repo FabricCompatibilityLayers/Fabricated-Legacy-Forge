@@ -126,8 +126,7 @@ publishing {
 spotless {
 	format('fml', JavaExtension) {
 		licenseHeaderFile(rootProject.file("HEADER_FML"))
-		target 'src/*/java/cpw/mods/**/*.java'
-		target 'src/*/java/net/minecraft/*.java'
+		target 'src/*/java/cpw/mods/**/*.java', 'src/*/java/net/minecraft/*.java'
 	}
 
 	format('forge', JavaExtension) {
