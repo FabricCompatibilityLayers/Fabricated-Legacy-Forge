@@ -1,3 +1,7 @@
+/**
+ * This software is provided under the terms of the Minecraft Forge Public
+ * License v1.0.
+ */
 package net.minecraftforge.oredict;
 
 import net.minecraft.block.Block;
