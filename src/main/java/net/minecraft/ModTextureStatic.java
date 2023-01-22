@@ -28,7 +28,7 @@ public class ModTextureStatic extends FMLTextureFX {
     private String targetTex = null;
     private int storedSize;
     private BufferedImage overrideData = null;
-    private int needApply = 2;
+    private int needApply = 10;
 
     public ModTextureStatic(int icon, int target, BufferedImage image) {
         this(icon, 1, target, image);
@@ -48,6 +48,7 @@ public class ModTextureStatic extends FMLTextureFX {
         this.overrideData = image;
     }
 
+    @Override
     public void setup() {
         super.setup();
         int sWidth = this.overrideData.getWidth();
@@ -66,6 +67,7 @@ public class ModTextureStatic extends FMLTextureFX {
         this.update();
     }
 
+    @Override
     public void method_1613() {
         if (this.oldanaglyph != this.field_2154) {
             this.update();
@@ -77,12 +79,13 @@ public class ModTextureStatic extends FMLTextureFX {
         }
     }
 
-    public void method_1614(TextureManager par1RenderEngine) {
+    @Override
+    public void bind(TextureManager par1RenderEngine) {
         GL11.glBindTexture(3553, par1RenderEngine.getTextureFromPath(this.targetTex));
     }
 
     public void update() {
-        this.needApply = 2;
+        this.needApply = 10;
 
         for(int idx = 0; idx < this.pixels.length; ++idx) {
             int i = idx * 4;

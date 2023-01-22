@@ -17,6 +17,7 @@ import net.minecraftforge.event.Event;
 import java.util.*;
 
 public class OreDictionary {
+    private static boolean hasInit = false;
     private static int maxID = 0;
     private static HashMap<String, Integer> oreIDs = new HashMap();
     private static HashMap<Integer, ArrayList<ItemStack>> oreStacks = new HashMap();
@@ -25,14 +26,19 @@ public class OreDictionary {
     }
 
     public static void initVanillaEntries() {
-        registerOre("logWood", new ItemStack(Block.LOG, 1, -1));
-        registerOre("plankWood", new ItemStack(Block.PLANKS, 1, -1));
-        registerOre("slabWood", new ItemStack(Block.WOODEN_SLAB, 1, -1));
-        registerOre("stairWood", Block.WOODEN_STAIRS);
-        registerOre("stairWood", Block.BIRCH_STAIRS);
-        registerOre("stairWood", Block.JUNGLE_STAIRS);
-        registerOre("stairWood", Block.SPRUCE_STAIRS);
-        registerOre("stickWood", Item.STICK);
+        if (!hasInit) {
+            registerOre("logWood", new ItemStack(Block.LOG, 1, -1));
+            registerOre("plankWood", new ItemStack(Block.PLANKS, 1, -1));
+            registerOre("slabWood", new ItemStack(Block.WOODEN_SLAB, 1, -1));
+            registerOre("stairWood", Block.WOODEN_STAIRS);
+            registerOre("stairWood", Block.BIRCH_STAIRS);
+            registerOre("stairWood", Block.JUNGLE_STAIRS);
+            registerOre("stairWood", Block.SPRUCE_STAIRS);
+            registerOre("stickWood", Item.STICK);
+            registerOre("treeSapling", new ItemStack(Block.SAPLING, 1, -1));
+            registerOre("treeLeaves", new ItemStack(Block.LEAVES, 1, -1));
+        }
+
         Map<ItemStack, String> replacements = new HashMap();
         replacements.put(new ItemStack(Block.PLANKS, 1, -1), "plankWood");
         replacements.put(new ItemStack(Item.STICK), "stickWood");
@@ -57,10 +63,14 @@ public class OreDictionary {
 
         for(int i = 0; i < 16; ++i) {
             ItemStack dye = new ItemStack(Item.DYES, 1, i);
-            registerOre(dyes[i], dye);
+            if (!hasInit) {
+                registerOre(dyes[i], dye);
+            }
+
             replacements.put(dye, dyes[i]);
         }
 
+        hasInit = true;
         ItemStack[] replaceStacks = (ItemStack[])replacements.keySet().toArray(new ItemStack[0]);
         ItemStack[] exclusions = new ItemStack[]{new ItemStack(Block.LAPIS_BLOCK), new ItemStack(Item.COOKIE)};
         List recipes = RecipeDispatcher.getInstance().getAllRecipes();
@@ -89,7 +99,9 @@ public class OreDictionary {
 
         recipes.removeAll(recipesToRemove);
         recipes.addAll(recipesToAdd);
-        System.out.println(recipesToRemove.size() + " " + recipesToAdd.size());
+        if (recipesToRemove.size() > 0) {
+            System.out.println("Replaced " + recipesToRemove.size() + " ore recipies");
+        }
     }
 
     public static int getOreID(String name) {

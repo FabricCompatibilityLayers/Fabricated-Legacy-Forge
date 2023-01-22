@@ -17,7 +17,17 @@ public enum ForgeDirection {
     public final int offsetY;
     public final int offsetZ;
     public final int flag;
-    public static final int[] opposite = new int[]{1, 0, 3, 2, 5, 4, 6};
+    public static final ForgeDirection[] VALID_DIRECTIONS = new ForgeDirection[]{DOWN, UP, NORTH, SOUTH, WEST, EAST};
+    public static final int[] OPPOSITES = new int[]{1, 0, 3, 2, 5, 4, 6};
+    public static final int[][] ROTATION_MATRIX = new int[][]{
+            {0, 1, 4, 5, 2, 3, 6},
+            {0, 1, 5, 4, 3, 2, 6},
+            {5, 4, 2, 3, 0, 1, 6},
+            {4, 5, 2, 3, 1, 0, 6},
+            {2, 3, 0, 1, 4, 5, 6},
+            {3, 2, 1, 0, 4, 5, 6},
+            {0, 1, 2, 3, 4, 5, 6}
+    };
 
     private ForgeDirection(int x, int y, int z) {
         this.offsetX = x;
@@ -27,10 +37,14 @@ public enum ForgeDirection {
     }
 
     public static ForgeDirection getOrientation(int id) {
-        return id >= 0 && id < values().length ? values()[id] : UNKNOWN;
+        return id >= 0 && id < VALID_DIRECTIONS.length ? VALID_DIRECTIONS[id] : UNKNOWN;
     }
 
     public ForgeDirection getOpposite() {
-        return getOrientation(opposite[this.ordinal()]);
+        return getOrientation(OPPOSITES[this.ordinal()]);
+    }
+
+    public ForgeDirection getRotation(ForgeDirection axis) {
+        return getOrientation(ROTATION_MATRIX[axis.ordinal()][this.ordinal()]);
     }
 }

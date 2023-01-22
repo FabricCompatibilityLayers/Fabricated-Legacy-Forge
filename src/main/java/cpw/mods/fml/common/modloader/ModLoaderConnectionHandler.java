@@ -42,7 +42,7 @@ public class ModLoaderConnectionHandler implements IConnectionHandler {
     }
 
     public void connectionClosed(Connection manager) {
-        if (!ModLoaderHelper.sidedHelper.clientConnectionClosed(manager, this.mod)) {
+        if (ModLoaderHelper.sidedHelper == null || !ModLoaderHelper.sidedHelper.clientConnectionClosed(manager, this.mod)) {
             this.mod.serverDisconnect();
             this.mod.onClientLogout(manager);
         }

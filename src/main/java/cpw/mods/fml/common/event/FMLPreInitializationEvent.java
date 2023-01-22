@@ -13,14 +13,12 @@
  */
 package cpw.mods.fml.common.event;
 
-import cpw.mods.fml.common.FMLModContainer;
-import cpw.mods.fml.common.LoaderState;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.ModMetadata;
+import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.discovery.ASMDataTable;
 
 import java.io.File;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 public class FMLPreInitializationEvent extends FMLStateEvent {
     private ModMetadata modMetadata;
@@ -69,5 +67,11 @@ public class FMLPreInitializationEvent extends FMLStateEvent {
 
     public Properties getVersionProperties() {
         return this.modContainer instanceof FMLModContainer ? ((FMLModContainer)this.modContainer).searchForVersionProperties() : null;
+    }
+
+    public Logger getModLog() {
+        Logger log = Logger.getLogger(this.modContainer.getModId());
+        log.setParent(FMLLog.getLogger());
+        return log;
     }
 }

@@ -31,6 +31,7 @@ public class PlayerInteractEvent extends PlayerEvent {
     }
 
     public void setCanceled(boolean cancel) {
+        super.setCanceled(cancel);
         this.useBlock = cancel ? Result.DENY : (this.useBlock == Result.DENY ? Result.DEFAULT : this.useBlock);
         this.useItem = cancel ? Result.DENY : (this.useItem == Result.DENY ? Result.DEFAULT : this.useItem);
     }

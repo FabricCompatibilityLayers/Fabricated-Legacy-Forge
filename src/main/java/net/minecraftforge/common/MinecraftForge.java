@@ -11,6 +11,7 @@ import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.EventBus;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Arrays;
 import java.util.List;
@@ -90,6 +91,7 @@ public class MinecraftForge {
 
         EndermanEntity.field_3919 = temp;
         EVENT_BUS.register(INTERNAL_HANDLER);
+        OreDictionary.getOreName(0);
     }
 
     public static String getBrandingVersion() {

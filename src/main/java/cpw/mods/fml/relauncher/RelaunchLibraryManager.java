@@ -168,11 +168,9 @@ public class RelaunchLibraryManager {
                                     }
 
                                     if (!download) {
-                                        downloadMonitor.updateProgressString("Found library file %s present and correct in lib dir\n", new Object[]{libName});
+                                        downloadMonitor.updateProgressString("Found library file %s present and correct in lib dir", new Object[]{libName});
                                     } else {
-                                        downloadMonitor.updateProgressString(
-                                                "Library file %s was downloaded and verified successfully\n", new Object[]{libName}
-                                        );
+                                        downloadMonitor.updateProgressString("Library file %s was downloaded and verified successfully", new Object[]{libName});
                                     }
 
                                     try {
@@ -481,9 +479,8 @@ public class RelaunchLibraryManager {
     private static void downloadFile(File libFile, String rootUrl, String realFilePath, String hash) {
         try {
             URL libDownload = new URL(String.format(rootUrl, realFilePath));
-            String infoString = String.format("Downloading file %s", libDownload.toString());
-            downloadMonitor.updateProgressString(infoString, new Object[0]);
-            FMLRelaunchLog.info(infoString, new Object[0]);
+            downloadMonitor.updateProgressString("Downloading file %s", new Object[]{libDownload.toString()});
+            FMLRelaunchLog.info("Downloading file %s", new Object[]{libDownload.toString()});
             URLConnection connection = libDownload.openConnection();
             connection.setConnectTimeout(5000);
             connection.setReadTimeout(5000);
@@ -492,18 +489,18 @@ public class RelaunchLibraryManager {
             performDownload(connection.getInputStream(), sizeGuess, hash, libFile);
             downloadMonitor.updateProgressString("Download complete", new Object[0]);
             FMLRelaunchLog.info("Download complete", new Object[0]);
-        } catch (Exception var8) {
+        } catch (Exception var7) {
             if (downloadMonitor.shouldStopIt()) {
                 FMLRelaunchLog.warning("You have stopped the downloading operation before it could complete", new Object[0]);
-            } else if (var8 instanceof RuntimeException) {
-                throw (RuntimeException)var8;
+            } else if (var7 instanceof RuntimeException) {
+                throw (RuntimeException)var7;
             } else {
                 FMLRelaunchLog.severe(
                         "There was a problem downloading the file %s automatically. Perhaps you have an environment without internet access. You will need to download the file manually or restart and let it try again\n",
                         new Object[]{libFile.getName()}
                 );
                 libFile.delete();
-                throw new RuntimeException("A download error occured", var8);
+                throw new RuntimeException("A download error occured", var7);
             }
         }
     }
