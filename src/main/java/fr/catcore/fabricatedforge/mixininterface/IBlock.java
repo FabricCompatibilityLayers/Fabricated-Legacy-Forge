@@ -39,7 +39,9 @@ public interface IBlock {
     boolean hasTileEntity(int metadata);
     BlockEntity createTileEntity(World world, int metadata);
     int quantityDropped(int meta, int fortune, Random random);
-    ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune);
+    default ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune) {
+        return new ArrayList<>(); // Fix compile error in CropBlock mixin.
+    }
     boolean canSilkHarvest(World world, PlayerEntity player, int x, int y, int z, int metadata);
     boolean canCreatureSpawn(EntityCategory type, World world, int x, int y, int z);
     boolean isBed(World world, int x, int y, int z, MobEntity player);

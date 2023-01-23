@@ -1,7 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
 import cpw.mods.fml.common.network.FMLNetworkHandler;
-import fr.catcore.fabricatedforge.mixininterface.Iclass_604;
 import net.minecraft.client.class_604;
 import net.minecraft.client.util.NetworkUtils;
 import net.minecraft.server.ListenThread;
@@ -13,9 +12,10 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 @Mixin(class_604.class)
-public abstract class class_604Mixin extends PacketListenerManager implements Iclass_604 {
+public abstract class class_604Mixin extends PacketListenerManager {
 
     @Shadow private ListenThread field_2216;
 
@@ -44,7 +44,7 @@ public abstract class class_604Mixin extends PacketListenerManager implements Ic
             }
 
             try {
-                this.field_2216 = new ListenThread(this, null, var1);
+                this.field_2216 = new ListenThread(this, (InetAddress)null, var1);
                 this.field_2216.start();
             } catch (Exception var3) {
                 throw var3;
@@ -52,10 +52,5 @@ public abstract class class_604Mixin extends PacketListenerManager implements Ic
         }
 
         return FMLNetworkHandler.computeLocalHost().getHostAddress() + ":" + this.field_2216.getPort();
-    }
-
-    @Override
-    public MinecraftServer getServerForge() {
-        return this.getServer();
     }
 }

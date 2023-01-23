@@ -227,14 +227,12 @@ public abstract class TextureManagerMixin {
     public void method_1414() {
         int var1 = -1;
 
-        for(Sprite var3 : this.field_1978) {
+        for(int var2 = 0; var2 < this.field_1978.size(); ++var2) {
+            Sprite var3 = (Sprite)this.field_1978.get(var2);
             var3.field_2154 = this.options.anaglyph3d;
             if (TextureFXManager.instance().onUpdateTextureEffect(var3)) {
                 var1 = this.method_4309(var3, var1);
             }
-
-            var3.method_1613();
-            var1 = this.method_4309(var3, var1);
         }
     }
 

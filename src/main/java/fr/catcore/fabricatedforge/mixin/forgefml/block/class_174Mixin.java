@@ -45,9 +45,9 @@ public abstract class class_174Mixin {
     private void overwriteCtr(RailBlock par1BlockRail, World par2World, int par3, int par4, int par5, CallbackInfo ci) {
         int var6 = par2World.getBlock(par3, par4, par5);
         RailBlock target = (RailBlock)Block.BLOCKS[var6];
-        int var7 = ((IRailBlock)target).getBasicRailMetadata(par2World, null, par3, par4, par5);
-        this.field_310 = !((IRailBlock)target).isFlexibleRail(par2World, par3, par4, par5);
-        this.canMakeSlopes = ((IRailBlock)target).canMakeSlopes(par2World, par3, par4, par5);
+        int var7 = target.getBasicRailMetadata(par2World, null, par3, par4, par5);
+        this.field_310 = !target.isFlexibleRail(par2World, par3, par4, par5);
+        this.canMakeSlopes = target.canMakeSlopes(par2World, par3, par4, par5);
         this.method_358(var7);
     }
 
@@ -237,12 +237,12 @@ public abstract class class_174Mixin {
         if (par2 || this.field_306.getBlockData(this.field_307, this.field_308, this.field_309) != var8) {
             this.field_306.method_3672(this.field_307, this.field_308, this.field_309, var8);
 
-            for(Vec3i var10 : this.field_311) {
-                class_174 var11 = this.method_361(var10);
-                if (var11 != null) {
-                    ((class_174Mixin) (Object) var11).method_357();
-                    if (((class_174Mixin) (Object) var11).method_367((class_174) (Object) this)) {
-                        ((class_174Mixin) (Object) var11).method_368((class_174) (Object) this);
+            for(int var9 = 0; var9 < this.field_311.size(); ++var9) {
+                class_174 var10 = this.method_361((Vec3i)this.field_311.get(var9));
+                if (var10 != null) {
+                    ((class_174Mixin)(Object) var10).method_357();
+                    if (((class_174Mixin)(Object) var10).method_367((class_174)(Object) this)) {
+                        ((class_174Mixin)(Object) var10).method_368((class_174)(Object) this);
                     }
                 }
             }

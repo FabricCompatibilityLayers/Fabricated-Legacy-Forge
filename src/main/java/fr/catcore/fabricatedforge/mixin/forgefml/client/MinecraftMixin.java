@@ -46,6 +46,9 @@ import net.minecraft.util.Language;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
+import net.minecraft.util.crash.provider.client.HandlingScreenNameProvider;
+import net.minecraft.util.crash.provider.client.LaunchedVersionProvider;
+import net.minecraft.util.crash.provider.client.TickingScreenNameProvider;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResultType;
 import net.minecraft.util.math.Box;
@@ -226,6 +229,8 @@ public abstract class MinecraftMixin {
 
     @Shadow private long f3CTime;
 
+    @Shadow protected abstract int getMaxFramerate();
+
     @Inject(method = "openScreen", at = @At("HEAD"), cancellable = true)
     private void fix_openScreen(Screen par1, CallbackInfo ci) {
         if (par1 instanceof FatalErrorScreenForged) {
@@ -263,7 +268,7 @@ public abstract class MinecraftMixin {
             Display.setDisplayMode(new DisplayMode(this.width, this.height));
         }
 
-        Display.setTitle("Minecraft Minecraft 1.4.3");
+        Display.setTitle("Minecraft Minecraft 1.4.4");
         System.out.println("LWJGL Version: " + Sys.getVersion());
 
         try {
@@ -477,9 +482,8 @@ public abstract class MinecraftMixin {
             }
 
             this.profiler.pop();
-            if (this.options.maxFramerate > 0) {
-                GameRenderer var10000 = this.gameRenderer;
-                Display.sync(GameRenderer.method_1328(this.options.maxFramerate));
+            if (this.getMaxFramerate() > 0) {
+                Display.sync(GameRenderer.method_1328(this.getMaxFramerate()));
             }
         }
     }
@@ -501,7 +505,7 @@ public abstract class MinecraftMixin {
                 int var5 = this.result.z;
                 this.interactionManager.method_1239(var3, var4, var5, this.result.side);
                 if (this.playerEntity.method_4579(var3, var4, var5)) {
-                    ((IParticleManager)this.particleManager).addBlockHitEffects(var3, var4, var5, this.result);
+                    this.particleManager.addBlockHitEffects(var3, var4, var5, this.result);
                     this.playerEntity.method_3207();
                 }
             } else {
@@ -623,10 +627,33 @@ public abstract class MinecraftMixin {
         }
 
         if (this.currentScreen != null) {
-            this.currentScreen.handleInput();
+            try {
+                this.currentScreen.handleInput();
+            } catch (Throwable var8) {
+                CrashReport var2 = CrashReport.create(var8, "Updating screen events");
+                CrashReportSection var3 = var2.addElement("Affected screen");
+                var3.add("Screen name", new HandlingScreenNameProvider((Minecraft)(Object) this));
+                throw new CrashException(var2);
+            }
+
             if (this.currentScreen != null) {
-                this.currentScreen.field_1235.method_1164();
-                this.currentScreen.tick();
+                try {
+                    this.currentScreen.field_1235.method_1164();
+                } catch (Throwable var71) {
+                    CrashReport var2 = CrashReport.create(var71, "Ticking screen particles");
+                    CrashReportSection var3 = var2.addElement("Affected screen");
+                    var3.add("Screen name", new TickingScreenNameProvider((Minecraft)(Object) this));
+                    throw new CrashException(var2);
+                }
+
+                try {
+                    this.currentScreen.tick();
+                } catch (Throwable var6) {
+                    CrashReport var2 = CrashReport.create(var6, "Ticking screen");
+                    CrashReportSection var3 = var2.addElement("Affected screen");
+                    var3.add("Screen name", new LaunchedVersionProvider((Minecraft)(Object) this));
+                    throw new CrashException(var2);
+                }
             }
         }
 
@@ -641,19 +668,19 @@ public abstract class MinecraftMixin {
 
                 long var1 = getTime() - this.sysTime;
                 if (var1 <= 200L) {
-                    int var3 = Mouse.getEventDWheel();
-                    if (var3 != 0) {
-                        this.playerEntity.inventory.scrollInHotbar(var3);
+                    int var10 = Mouse.getEventDWheel();
+                    if (var10 != 0) {
+                        this.playerEntity.inventory.scrollInHotbar(var10);
                         if (this.options.field_953) {
-                            if (var3 > 0) {
-                                var3 = 1;
+                            if (var10 > 0) {
+                                var10 = 1;
                             }
 
-                            if (var3 < 0) {
-                                var3 = -1;
+                            if (var10 < 0) {
+                                var10 = -1;
                             }
 
-                            this.options.field_956 += (float)var3 * 0.25F;
+                            this.options.field_956 += (float)var10 * 0.25F;
                         }
                     }
 
@@ -711,8 +738,8 @@ public abstract class MinecraftMixin {
                             }
 
                             if (Keyboard.getEventKey() == 33 && Keyboard.isKeyDown(61)) {
-                                boolean var5 = Keyboard.isKeyDown(42) | Keyboard.isKeyDown(54);
-                                this.options.setOption(GameOption.RENDER_DISTANCE, var5 ? -1 : 1);
+                                boolean var8 = Keyboard.isKeyDown(42) | Keyboard.isKeyDown(54);
+                                this.options.setOption(GameOption.RENDER_DISTANCE, var8 ? -1 : 1);
                             }
 
                             if (Keyboard.getEventKey() == 30 && Keyboard.isKeyDown(61)) {
@@ -754,9 +781,9 @@ public abstract class MinecraftMixin {
                             }
                         }
 
-                        for(int var6 = 0; var6 < 9; ++var6) {
-                            if (Keyboard.getEventKey() == 2 + var6) {
-                                this.playerEntity.inventory.selectedSlot = var6;
+                        for(int var9 = 0; var9 < 9; ++var9) {
+                            if (Keyboard.getEventKey() == 2 + var9) {
+                                this.playerEntity.inventory.selectedSlot = var9;
                             }
                         }
 
@@ -765,9 +792,9 @@ public abstract class MinecraftMixin {
                                 this.method_2938(0);
                             }
 
-                            for(int var71 = 0; var71 < 9; ++var71) {
-                                if (Keyboard.getEventKey() == 2 + var71) {
-                                    this.method_2938(var71 + 1);
+                            for(int var18 = 0; var18 < 9; ++var18) {
+                                if (Keyboard.getEventKey() == 2 + var18) {
+                                    this.method_2938(var18 + 1);
                                 }
                             }
                         }
@@ -775,7 +802,7 @@ public abstract class MinecraftMixin {
                 }
             }
 
-            boolean var5 = this.options.chatVisibility != 2;
+            boolean var8 = this.options.chatVisibility != 2;
 
             while(this.options.keyInventory.wasPressed()) {
                 this.openScreen(new SurvivalInventoryScreen(this.playerEntity));
@@ -785,11 +812,11 @@ public abstract class MinecraftMixin {
                 this.playerEntity.method_4580();
             }
 
-            while(this.options.keyChat.wasPressed() && var5) {
+            while(this.options.keyChat.wasPressed() && var8) {
                 this.openScreen(new ChatScreen());
             }
 
-            if (this.currentScreen == null && this.options.keyCommand.wasPressed() && var5) {
+            if (this.currentScreen == null && this.options.keyCommand.wasPressed() && var8) {
                 this.openScreen(new ChatScreen("/"));
             }
 
@@ -860,11 +887,11 @@ public abstract class MinecraftMixin {
 
                 try {
                     this.world.tick();
-                } catch (Throwable var41) {
-                    CrashReport var2 = CrashReport.create(var41, "Exception in world tick");
+                } catch (Throwable var91) {
+                    CrashReport var2 = CrashReport.create(var91, "Exception in world tick");
                     if (this.world == null) {
-                        CrashReportSection var7 = var2.addElement("Affected level");
-                        var7.add("Problem", "Level is null!");
+                        CrashReportSection var3 = var2.addElement("Affected level");
+                        var3.add("Problem", "Level is null!");
                     } else {
                         this.world.addToCrashReport(var2);
                     }

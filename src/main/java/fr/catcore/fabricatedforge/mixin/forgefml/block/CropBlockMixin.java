@@ -45,9 +45,9 @@ public abstract class CropBlockMixin extends FlowerBlock {
             for(int var18 = par4 - 1; var18 <= par4 + 1; ++var18) {
                 int var19 = par1World.getBlock(var17, par3 - 1, var18);
                 float var20 = 0.0F;
-                if (BLOCKS[var19] != null && ((IBlock)BLOCKS[var19]).canSustainPlant(par1World, var17, par3 - 1, var18, ForgeDirection.UP, this)) {
+                if (BLOCKS[var19] != null && BLOCKS[var19].canSustainPlant(par1World, var17, par3 - 1, var18, ForgeDirection.UP, this)) {
                     var20 = 1.0F;
-                    if (((IBlock)BLOCKS[var19]).isFertile(par1World, var17, par3 - 1, var18)) {
+                    if (BLOCKS[var19].isFertile(par1World, var17, par3 - 1, var18)) {
                         var20 = 3.0F;
                     }
                 }
@@ -78,18 +78,7 @@ public abstract class CropBlockMixin extends FlowerBlock {
 
     @Override
     public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune) {
-        ArrayList<ItemStack> ret = new ArrayList();
-        if (metadata == 7) {
-            int count = ((IBlock)this).quantityDropped(metadata, fortune, world.random);
-
-            for(int i = 0; i < count; ++i) {
-                int id = this.method_398(metadata, world.random, 0);
-                if (id > 0) {
-                    ret.add(new ItemStack(id, 1, this.method_431(metadata)));
-                }
-            }
-        }
-
+        ArrayList<ItemStack> ret = super.getBlockDropped(world, x, y, z, metadata, fortune);
         if (metadata >= 7) {
             for(int n = 0; n < 3 + fortune; ++n) {
                 if (world.random.nextInt(15) <= metadata) {

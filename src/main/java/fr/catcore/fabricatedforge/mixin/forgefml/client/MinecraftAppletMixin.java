@@ -69,6 +69,7 @@ public class MinecraftAppletMixin extends Applet implements IMinecraftApplet {
         this.setLayout(new BorderLayout());
         this.add(this.canvas, "Center");
         this.canvas.setFocusable(true);
+        this.canvas.setFocusTraversalKeysEnabled(false);
         this.validate();
     }
 

@@ -28,7 +28,7 @@ public abstract class TorchBlockMixin extends Block {
             return true;
         } else {
             int var5 = par1World.getBlock(par2, par3, par4);
-            return Block.BLOCKS[var5] != null && ((IBlock)Block.BLOCKS[var5]).canPlaceTorchOnTop(par1World, par2, par3, par4);
+            return Block.BLOCKS[var5] != null && Block.BLOCKS[var5].canPlaceTorchOnTop(par1World, par2, par3, par4);
         }
     }
 
@@ -81,16 +81,18 @@ public abstract class TorchBlockMixin extends Block {
      */
     @Overwrite
     public void breakNaturally(World par1World, int par2, int par3, int par4) {
-        if (par1World.isBlockSolidOnSide(par2 - 1, par3, par4, ForgeDirection.EAST, true)) {
-            par1World.method_3672(par2, par3, par4, 1);
-        } else if (par1World.isBlockSolidOnSide(par2 + 1, par3, par4, ForgeDirection.WEST, true)) {
-            par1World.method_3672(par2, par3, par4, 2);
-        } else if (par1World.isBlockSolidOnSide(par2, par3, par4 - 1, ForgeDirection.SOUTH, true)) {
-            par1World.method_3672(par2, par3, par4, 3);
-        } else if (par1World.isBlockSolidOnSide(par2, par3, par4 + 1, ForgeDirection.NORTH, true)) {
-            par1World.method_3672(par2, par3, par4, 4);
-        } else if (this.method_489(par1World, par2, par3 - 1, par4)) {
-            par1World.method_3672(par2, par3, par4, 5);
+        if (par1World.getBlockData(par2, par3, par4) == 0) {
+            if (par1World.isBlockSolidOnSide(par2 - 1, par3, par4, ForgeDirection.EAST, true)) {
+                par1World.method_3672(par2, par3, par4, 1);
+            } else if (par1World.isBlockSolidOnSide(par2 + 1, par3, par4, ForgeDirection.WEST, true)) {
+                par1World.method_3672(par2, par3, par4, 2);
+            } else if (par1World.isBlockSolidOnSide(par2, par3, par4 - 1, ForgeDirection.SOUTH, true)) {
+                par1World.method_3672(par2, par3, par4, 3);
+            } else if (par1World.isBlockSolidOnSide(par2, par3, par4 + 1, ForgeDirection.NORTH, true)) {
+                par1World.method_3672(par2, par3, par4, 4);
+            } else if (this.method_489(par1World, par2, par3 - 1, par4)) {
+                par1World.method_3672(par2, par3, par4, 5);
+            }
         }
 
         this.method_490(par1World, par2, par3, par4);
