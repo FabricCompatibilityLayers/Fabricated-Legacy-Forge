@@ -308,7 +308,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
     @Override
     public void addEffect(Particle effect, Object obj) {
         if (obj != null && (obj instanceof Block || obj instanceof Item)) {
-            if (obj instanceof Item && ((Item)obj).isDefaultTexture()) {
+            if (obj instanceof Item && ((IItem)obj).isDefaultTexture()) {
                 this.method_22512(effect);
             } else if (obj instanceof Block && ((Block)obj).isDefaultTexture()) {
                 this.method_22512(effect);

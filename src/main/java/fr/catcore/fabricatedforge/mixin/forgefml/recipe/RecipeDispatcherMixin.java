@@ -43,7 +43,7 @@ public class RecipeDispatcherMixin {
             }
         }
 
-        if (var3 == 2 && var4.id == var5.id && var4.count == 1 && var5.count == 1 && Item.ITEMS[var4.id].isRepairable()) {
+        if (var3 == 2 && var4.id == var5.id && var4.count == 1 && var5.count == 1 && ((IItem)Item.ITEMS[var4.id]).isRepairable()) {
             Item var11 = Item.ITEMS[var4.id];
             int var13 = var11.getMaxDamage() - var4.getDamage();
             int var8 = var11.getMaxDamage() - var5.getDamage();

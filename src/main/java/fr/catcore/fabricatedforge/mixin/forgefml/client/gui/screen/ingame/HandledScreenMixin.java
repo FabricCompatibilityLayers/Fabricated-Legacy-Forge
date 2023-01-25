@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.gui.screen.ingame;
 
+import fr.catcore.fabricatedforge.mixininterface.ISlot;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -41,7 +42,7 @@ public class HandledScreenMixin extends Screen {
             int var6 = par1Slot.method_3297();
             if (var6 >= 0) {
                 GL11.glDisable(2896);
-                this.field_1229.textureManager.bindTexture(this.field_1229.textureManager.getTextureFromPath(par1Slot.getBackgroundIconTexture()));
+                this.field_1229.textureManager.bindTexture(this.field_1229.textureManager.getTextureFromPath(((ISlot)par1Slot).getBackgroundIconTexture()));
                 this.drawTexture(var2, var3, var6 % 16 * 16, var6 / 16 * 16, 16, 16);
                 GL11.glEnable(2896);
                 var5 = true;

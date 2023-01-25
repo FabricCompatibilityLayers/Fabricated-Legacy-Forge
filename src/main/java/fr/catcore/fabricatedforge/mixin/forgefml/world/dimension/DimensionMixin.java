@@ -144,7 +144,7 @@ public class DimensionMixin implements IDimension {
     public BlockPos getRandomizedSpawnPoint() {
         BlockPos var5 = new BlockPos(this.world.getWorldSpawnPos());
         boolean isAdventure = this.world.getLevelProperties().getGamemode() == GameMode.ADVENTURE;
-        int spawnFuzz = this.generatorType.getSpawnFuzz();
+        int spawnFuzz = ((ILevelGeneratorType)this.generatorType).getSpawnFuzz();
         int spawnFuzzHalf = spawnFuzz / 2;
         if (!this.isNether && !isAdventure) {
             var5.x += this.world.random.nextInt(spawnFuzz) - spawnFuzzHalf;
