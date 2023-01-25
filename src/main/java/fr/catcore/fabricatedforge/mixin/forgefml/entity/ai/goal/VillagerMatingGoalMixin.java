@@ -23,7 +23,7 @@ public class VillagerMatingGoalMixin {
      */
     @Overwrite
     private void method_2759() {
-        VillagerEntity var1 = new VillagerEntity(this.world);
+        VillagerEntity var1 = this.villager.breed(this.mate);
         this.mate.setAge(6000);
         this.villager.setAge(6000);
         var1.setAge(-24000);

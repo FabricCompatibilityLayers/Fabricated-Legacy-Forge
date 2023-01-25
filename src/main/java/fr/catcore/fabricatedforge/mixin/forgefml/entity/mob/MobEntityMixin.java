@@ -1,7 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity.mob;
 
 import fr.catcore.fabricatedforge.mixininterface.IMobEntity;
-import fr.catcore.fabricatedforge.mixininterface.IStatusEffectInstance;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -11,6 +10,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.passive.PigEntity;
 import net.minecraft.entity.passive.WolfEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -105,7 +105,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
 
     @Shadow public abstract StatusEffectInstance method_2627(StatusEffect statusEffect);
 
-    @Shadow protected HashMap field_3335;
+    @Shadow protected HashMap<Integer, StatusEffectInstance> field_3335;
 
     @Shadow protected abstract void method_2649(StatusEffectInstance statusEffectInstance);
 
@@ -485,12 +485,17 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
             while(potionKey.hasNext()) {
                 Integer key = (Integer)potionKey.next();
                 StatusEffectInstance effect = (StatusEffectInstance)this.field_3335.get(key);
-                if (((IStatusEffectInstance)effect).isCurativeItem(curativeItem)) {
+                if (effect.isCurativeItem(curativeItem)) {
                     potionKey.remove();
                     this.method_2649(effect);
                 }
             }
         }
+    }
+
+    @Override
+    public boolean shouldRiderFaceForward(PlayerEntity player) {
+        return (Object)this instanceof PigEntity;
     }
 
     @Override

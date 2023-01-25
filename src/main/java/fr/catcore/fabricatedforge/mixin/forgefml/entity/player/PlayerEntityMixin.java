@@ -120,6 +120,12 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
 
     @Shadow public abstract ItemEntity dropStack(ItemStack stack, boolean bl);
 
+    @Shadow public float prevStrideDistance;
+
+    @Shadow public float strideDistance;
+
+    @Shadow protected abstract void method_3212(double d, double e, double f);
+
     public PlayerEntityMixin(World world) {
         super(world);
     }
@@ -134,7 +140,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         if (this.useItem != null) {
             ItemStack var1 = this.inventory.getMainHandStack();
             if (var1 == this.useItem) {
-                ((IItem)this.useItem.getItem()).onUsingItemTick(this.useItem, (PlayerEntity)(Object) this, this.itemUseTicks);
+                this.useItem.getItem().onUsingItemTick(this.useItem, (PlayerEntity)(Object) this, this.itemUseTicks);
                 if (this.itemUseTicks <= 25 && this.itemUseTicks % 4 == 0) {
                     this.drink(var1, 5);
                 }
@@ -232,6 +238,28 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
      * @reason none
      */
     @Overwrite
+    public void tickRiding() {
+        double var1 = this.x;
+        double var3 = this.y;
+        double var5 = this.z;
+        float var7 = this.yaw;
+        float var8 = this.pitch;
+        super.tickRiding();
+        this.prevStrideDistance = this.strideDistance;
+        this.strideDistance = 0.0F;
+        this.method_3212(this.x - var1, this.y - var3, this.z - var5);
+        if (this.vehicle instanceof MobEntity && ((MobEntity)this.vehicle).shouldRiderFaceForward((PlayerEntity)(Object) this)) {
+            this.pitch = var8;
+            this.yaw = var7;
+            this.field_3313 = ((MobEntity)this.vehicle).field_3313;
+        }
+    }
+
+    /**
+     * @author Minecraft Forge
+     * @reason none
+     */
+    @Overwrite
     public void dropInventory(DamageSource par1DamageSource) {
         super.dropInventory(par1DamageSource);
         this.setBounds(0.2F, 0.2F);
@@ -278,7 +306,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         if (stack == null) {
             return null;
         } else {
-            return ((IItem)stack.getItem()).onDroppedByPlayer(stack, (PlayerEntity)(Object) this)
+            return stack.getItem().onDroppedByPlayer(stack, (PlayerEntity)(Object) this)
                     ? ForgeHooks.onPlayerTossEvent((PlayerEntity)(Object) this, this.inventory.takeInvStack(this.inventory.selectedSlot, 1))
                     : null;
         }
@@ -318,7 +346,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     @Override
     public float getCurrentPlayerStrVsBlock(Block par1Block, int meta) {
         ItemStack stack = this.inventory.getMainHandStack();
-        float var2 = stack == null ? 1.0F : ((IItem)stack.getItem()).getStrVsBlock(stack, par1Block, meta);
+        float var2 = stack == null ? 1.0F : stack.getItem().getStrVsBlock(stack, par1Block, meta);
         int var3 = EnchantmentHelper.method_4652(this);
         if (var3 > 0 && ForgeHooks.canHarvestBlock(par1Block, (PlayerEntity)(Object) this, meta)) {
             var2 += (float)(var3 * var3 + 1);
@@ -429,7 +457,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     public void attack(Entity par1Entity) {
         if (!MinecraftForge.EVENT_BUS.post(new AttackEntityEvent((PlayerEntity)(Object) this, par1Entity))) {
             ItemStack stack = this.getMainHandStack();
-            if (stack == null || !((IItem)stack.getItem()).onLeftClickEntity(stack, (PlayerEntity)(Object) this, par1Entity)) {
+            if (stack == null || !stack.getItem().onLeftClickEntity(stack, (PlayerEntity)(Object) this, par1Entity)) {
                 if (par1Entity.isAttackable() && !par1Entity.handleAttack(this)) {
                     int var2 = this.inventory.method_3127(par1Entity);
                     if (this.method_2581(StatusEffect.STRENGTH)) {
@@ -464,8 +492,15 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
                         }
 
                         var2 += var4;
-                        boolean var6 = par1Entity.damage(DamageSource.player((PlayerEntity)(Object) this), var2);
-                        if (var6) {
+                        boolean var6 = false;
+                        int var7 = EnchantmentHelper.method_4646(this);
+                        if (par1Entity instanceof MobEntity && var7 > 0 && !par1Entity.isOnFire()) {
+                            var6 = true;
+                            par1Entity.setOnFireFor(1);
+                        }
+
+                        boolean var8 = par1Entity.damage(DamageSource.player((PlayerEntity)(Object) this), var2);
+                        if (var8) {
                             if (var3 > 0) {
                                 par1Entity.addVelocity(
                                         (double)(-MathHelper.sin(this.yaw * (float) Math.PI / 180.0F) * (float)var3 * 0.5F),
@@ -492,10 +527,10 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
                             this.method_2669(par1Entity);
                         }
 
-                        ItemStack var7 = this.getMainHandStack();
-                        if (var7 != null && par1Entity instanceof MobEntity) {
-                            var7.method_3412((MobEntity)par1Entity, (PlayerEntity)(Object) this);
-                            if (var7.count <= 0) {
+                        ItemStack var9 = this.getMainHandStack();
+                        if (var9 != null && par1Entity instanceof MobEntity) {
+                            var9.method_3412((MobEntity)par1Entity, (PlayerEntity)(Object) this);
+                            if (var9.count <= 0) {
                                 this.removeSelectedSlotItem();
                             }
                         }
@@ -506,9 +541,10 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
                             }
 
                             this.incrementStat(Stats.DAMAGE_DEALT, var2);
-                            int var8 = EnchantmentHelper.method_4646(this, (MobEntity)par1Entity);
-                            if (var8 > 0 && var6) {
-                                par1Entity.setOnFireFor(var8 * 4);
+                            if (var7 > 0 && var8) {
+                                par1Entity.setOnFireFor(var7 * 4);
+                            } else if (var6) {
+                                par1Entity.extinguish();
                             }
                         }
 
@@ -569,7 +605,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
                 int var5 = BedBlock.getRotation(var9);
                 Block block = Block.BLOCKS[this.world.getBlock(par1, par2, par3)];
                 if (block != null) {
-                    var5 = ((IBlock)block).getBedDirection(this.world, par1, par2, par3);
+                    var5 = block.getBedDirection(this.world, par1, par2, par3);
                 }
 
                 float var10 = 0.5F;
@@ -617,9 +653,9 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         BlockPos var4 = this.field_3992;
         BlockPos var5 = this.field_3992;
         Block block = var4 == null ? null : Block.BLOCKS[this.world.getBlock(var4.x, var4.y, var4.z)];
-        if (var4 != null && block != null && ((IBlock)block).isBed(this.world, var4.x, var4.y, var4.z, this)) {
-            ((IBlock)block).setBedOccupied(this.world, var4.x, var4.y, var4.z, (PlayerEntity)(Object) this, false);
-            var5 = ((IBlock)block).getBedSpawnPosition(this.world, var4.x, var4.y, var4.z, (PlayerEntity)(Object) this);
+        if (var4 != null && block != null && block.isBed(this.world, var4.x, var4.y, var4.z, this)) {
+            block.setBedOccupied(this.world, var4.x, var4.y, var4.z, (PlayerEntity)(Object) this, false);
+            var5 = block.getBedSpawnPosition(this.world, var4.x, var4.y, var4.z, (PlayerEntity)(Object) this);
             if (var5 == null) {
                 var5 = new BlockPos(var4.x, var4.y + 1, var4.z);
             }
@@ -651,7 +687,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     private boolean method_3213() {
         BlockPos c = this.field_3992;
         int blockID = this.world.getBlock(c.x, c.y, c.z);
-        return Block.BLOCKS[blockID] != null && ((IBlock)Block.BLOCKS[blockID]).isBed(this.world, c.x, c.y, c.z, this);
+        return Block.BLOCKS[blockID] != null && Block.BLOCKS[blockID].isBed(this.world, c.x, c.y, c.z, this);
     }
 
     /**
@@ -666,14 +702,14 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         var3.getOrGenerateChunk(par1ChunkCoordinates.x - 3 >> 4, par1ChunkCoordinates.z + 3 >> 4);
         var3.getOrGenerateChunk(par1ChunkCoordinates.x + 3 >> 4, par1ChunkCoordinates.z + 3 >> 4);
         Block block = Block.BLOCKS[par0World.getBlock(par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z)];
-        if (block != null && ((IBlock)block).isBed(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, null)) {
+        if (block != null && block.isBed(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, null)) {
             Material var4 = par0World.getMaterial(par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z);
             Material var5 = par0World.getMaterial(par1ChunkCoordinates.x, par1ChunkCoordinates.y + 1, par1ChunkCoordinates.z);
             boolean var6 = !var4.isSolid() && !var4.isFluid();
             boolean var7 = !var5.isSolid() && !var5.isFluid();
             return par2 && var6 && var7 ? par1ChunkCoordinates : null;
         } else {
-            return ((IBlock)block).getBedSpawnPosition(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, null);
+            return block.getBedSpawnPosition(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, null);
         }
     }
 
@@ -689,7 +725,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
             int y = this.field_3992.y;
             int z = this.field_3992.z;
             Block block = Block.BLOCKS[this.world.getBlock(x, y, z)];
-            int var2 = block == null ? 0 : ((IBlock)block).getBedDirection(this.world, x, y, z);
+            int var2 = block == null ? 0 : block.getBedDirection(this.world, x, y, z);
             switch(var2) {
                 case 0:
                     return 90.0F;
@@ -717,7 +753,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
             var3 = par1ItemStack.method_3429() + 16;
         } else {
             if (par1ItemStack.getItem().method_3397()) {
-                return par1ItemStack.getItem().method_3369(par1ItemStack.getData(), par2);
+                return par1ItemStack.getItem().getIconFromItemStackForMultiplePasses(par1ItemStack, par2);
             }
 
             if (this.useItem != null && par1ItemStack.id == Item.field_4349.id) {
@@ -735,7 +771,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
                 }
             }
 
-            var3 = ((IItem)par1ItemStack.getItem()).getIconIndex(par1ItemStack, par2, (PlayerEntity)(Object) this, this.useItem, this.itemUseTicks);
+            var3 = par1ItemStack.getItem().getIconIndex(par1ItemStack, par2, (PlayerEntity)(Object) this, this.useItem, this.itemUseTicks);
         }
 
         return var3;

@@ -92,11 +92,9 @@ public abstract class EntityMixin implements IEntity {
 
     @Shadow public abstract void populateCrashReport(CrashReportSection section);
 
-    @Unique
     private NbtCompound customEntityData;
     public boolean captureDrops = false;
     public ArrayList<ItemEntity> capturedDrops = new ArrayList<>();
-    @Unique
     private UUID persistentID;
 
     /**

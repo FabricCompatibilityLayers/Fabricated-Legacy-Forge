@@ -40,13 +40,13 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
 
     @Shadow private int spawnProtectionTicks;
 
-    @Shadow @Final public List loadedChunks;
+    @Shadow @Final public List<ChunkPos> loadedChunks;
 
     @Shadow public ServerPacketListener field_2823;
 
     @Shadow protected abstract void updateBlockEntity(BlockEntity blockEntity);
 
-    @Shadow @Final public List removedEntities;
+    @Shadow @Final public List<Integer> removedEntities;
 
     @Shadow public abstract ServerWorld getServerWorld();
 
@@ -76,45 +76,46 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
         this.interactionManager.tick();
         --this.spawnProtectionTicks;
         this.openScreenHandler.sendContentUpdates();
-        if (!this.loadedChunks.isEmpty()) {
-            ArrayList<Chunk> var1 = new ArrayList();
-            Iterator var2 = this.loadedChunks.iterator();
-            ArrayList<BlockEntity> var3 = new ArrayList();
 
-            while(var2.hasNext() && var1.size() < 5) {
-                ChunkPos var4 = (ChunkPos)var2.next();
-                var2.remove();
-                if (var4 != null && this.world.isPosLoaded(var4.x << 4, 0, var4.z << 4)) {
-                    var1.add(this.world.getChunk(var4.x, var4.z));
-                    var3.addAll(((ServerWorld)this.world).method_2134(var4.x * 16, 0, var4.z * 16, var4.x * 16 + 15, 256, var4.z * 16 + 15));
+        while(!this.removedEntities.isEmpty()) {
+            int var1 = Math.min(this.removedEntities.size(), 127);
+            int[] var2 = new int[var1];
+            Iterator<Integer> var3 = this.removedEntities.iterator();
+            int var4 = 0;
+
+            while(var3.hasNext() && var4 < var1) {
+                var2[var4++] = var3.next();
+                var3.remove();
+            }
+
+            this.field_2823.sendPacket(new DestroyEntityS2CPacket(var2));
+        }
+
+        if (!this.loadedChunks.isEmpty()) {
+            ArrayList<Chunk> var6 = new ArrayList();
+            Iterator var7 = this.loadedChunks.iterator();
+            ArrayList<BlockEntity> var8 = new ArrayList();
+
+            while(var7.hasNext() && var6.size() < 5) {
+                ChunkPos var9 = (ChunkPos)var7.next();
+                var7.remove();
+                if (var9 != null && this.world.isPosLoaded(var9.x << 4, 0, var9.z << 4)) {
+                    var6.add(this.world.getChunk(var9.x, var9.z));
+                    var8.addAll(((ServerWorld)this.world).method_2134(var9.x * 16, 0, var9.z * 16, var9.x * 16 + 15, 256, var9.z * 16 + 15));
                 }
             }
 
-            if (!var1.isEmpty()) {
-                this.field_2823.sendPacket(new class_687(var1));
+            if (!var6.isEmpty()) {
+                this.field_2823.sendPacket(new class_687(var6));
 
-                for(BlockEntity var5 : var3) {
+                for(BlockEntity var5 : var8) {
                     this.updateBlockEntity(var5);
                 }
 
-                for(Chunk var10 : var1) {
+                for(Chunk var10 : var6) {
                     this.getServerWorld().getEntityTracker().method_4410((ServerPlayerEntity)(Object) this, var10);
                 }
             }
-        }
-
-        if (!this.removedEntities.isEmpty()) {
-            int var6 = Math.min(this.removedEntities.size(), 127);
-            int[] var7 = new int[var6];
-            Iterator<Integer> var8 = this.removedEntities.iterator();
-            int var11 = 0;
-
-            while(var8.hasNext() && var11 < var6) {
-                var7[var11++] = var8.next();
-                var8.remove();
-            }
-
-            this.field_2823.sendPacket(new DestroyEntityS2CPacket(var7));
         }
     }
 
