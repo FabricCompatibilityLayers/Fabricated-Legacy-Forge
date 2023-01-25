@@ -334,11 +334,11 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
             Particle var21 = null;
             Object effectObject = null;
             if (par1Str.equals("hugeexplosion")) {
-                this.client.particleManager.addParticle(var21 = new ExplosionEmitterParticle(this.world, par2, par4, par6, par8, par10, par12));
+                this.client.particleManager.method_22512(var21 = new ExplosionEmitterParticle(this.world, par2, par4, par6, par8, par10, par12));
             } else if (par1Str.equals("largeexplode")) {
                 this.client
                         .particleManager
-                        .addParticle(var21 = new LargeExplosionParticle(this.textureManager, this.world, par2, par4, par6, par8, par10, par12));
+                        .method_22512(var21 = new LargeExplosionParticle(this.textureManager, this.world, par2, par4, par6, par8, par10, par12));
             }
 
             if (var21 != null) {
@@ -435,13 +435,12 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                         String[] var28 = par1Str.split("_", 3);
                         int var25 = Integer.parseInt(var28[1]);
                         int var26 = Integer.parseInt(var28[2]);
-                        var21 = new BlockDustParticle(this.world, par2, par4, par6, par8, par10, par12, Block.BLOCKS[var25], 0, var26);
+                        var21 = new BlockDustParticle(this.world, par2, par4, par6, par8, par10, par12, Block.BLOCKS[var25], 0, var26).method_4297(var26);
                         effectObject = Block.BLOCKS[var25];
                     }
 
                     if (var21 != null) {
-                        this.client.particleManager.addParticle(var21);
-                        ((IParticleManager)this.client.particleManager).addEffect(var21, effectObject);
+                        this.client.particleManager.addEffect(var21, effectObject);
                     }
 
                     return var21;

@@ -53,7 +53,7 @@ public class EntityRenderDispatcherMixin {
             int x = MathHelper.floor(par4EntityLiving.x);
             int y = MathHelper.floor(par4EntityLiving.y);
             int z = MathHelper.floor(par4EntityLiving.z);
-            IBlock block = Block.BLOCKS[par1World.getBlock(x, y, z)];
+            Block block = Block.BLOCKS[par1World.getBlock(x, y, z)];
             if (block != null && block.isBed(par1World, x, y, z, par4EntityLiving)) {
                 int var9 = block.getBedDirection(par1World, x, y, z);
                 this.yaw = (float)(var9 * 90 + 180);

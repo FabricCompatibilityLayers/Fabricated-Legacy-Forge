@@ -147,6 +147,7 @@
     "world.level.LevelPropertiesMixin"
   ],
   "client": [
+    "class_5115Accessor",
     "client.BlockRendererMixin",
     "client.class_469Mixin",
     "client.class_470Accessor",
@@ -161,6 +162,7 @@
     "client.gui.screen.AchievementsScreenMixin",
     "client.gui.screen.TitleScreenMixin",
     "client.gui.screen.ingame.CreativeInventoryScreenMixin",
+    "client.gui.screen.ingame.HandledScreenMixin",
     "client.gui.screen.options.ControlsOptionsScreenMixin",
     "client.gui.screen.world.CreateWorldScreenMixin",
     "client.gui.widget.ListWidgetMixin",

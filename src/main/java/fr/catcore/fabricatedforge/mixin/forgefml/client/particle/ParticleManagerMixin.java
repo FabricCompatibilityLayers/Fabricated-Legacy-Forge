@@ -2,10 +2,12 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.particle;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import fr.catcore.fabricatedforge.mixin.forgefml.class_5115Accessor;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import net.minecraft.block.Block;
+import net.minecraft.class_5115;
 import net.minecraft.client.TextureManager;
 import net.minecraft.client.particle.BlockDustParticle;
 import net.minecraft.client.particle.Particle;
@@ -14,6 +16,9 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -41,9 +46,13 @@ public abstract class ParticleManagerMixin implements IParticleManager {
     @Shadow protected World world;
     @Shadow private Random random;
 
-    @Shadow public abstract void addParticle(Particle particle);
+    @Shadow
+    protected abstract void addParticle(Particle particle);
 
-    @Unique
+    @Shadow private List<Particle> field_23093;
+
+    @Shadow public abstract void method_22512(Particle particle);
+
     private Multimap<String, Particle> effectList = ArrayListMultimap.create();
 
     /**
@@ -53,15 +62,25 @@ public abstract class ParticleManagerMixin implements IParticleManager {
     @Overwrite
     public void tick() {
         for(int var1 = 0; var1 < 4; ++var1) {
-            for(int var2 = 0; var2 < this.field_1735[var1].size(); ++var2) {
-                Particle var3 = (Particle)this.field_1735[var1].get(var2);
-                if (var3 != null) {
-                    var3.tick();
-                }
+            Particle var2 = null;
 
-                if (var3 == null || var3.removed) {
-                    this.field_1735[var1].remove(var2--);
+            try {
+                for(int var3 = 0; var3 < this.field_1735[var1].size(); ++var3) {
+                    var2 = (Particle)this.field_1735[var1].get(var3);
+                    if (var2 != null) {
+                        var2.tick();
+                    }
+
+                    if (var2 == null || var2.removed) {
+                        this.field_1735[var1].remove(var3--);
+                    }
                 }
+            } catch (Throwable var6) {
+                CrashReport var4 = CrashReport.create(var6, "Uncaught exception while ticking particles");
+                CrashReportSection var5 = var4.addElement("Particle engine details");
+                var5.add("Last ticked particle", class_5115Accessor.newInstance((ParticleManager)(Object) this, var2));
+                var5.add("Texture index", var1);
+                throw new CrashException(var4);
             }
         }
 
@@ -74,6 +93,14 @@ public abstract class ParticleManagerMixin implements IParticleManager {
                 itr.remove();
             }
         }
+
+        Iterator var8 = this.field_23093.iterator();
+
+        while(var8.hasNext()) {
+            this.addParticle((Particle)var8.next());
+        }
+
+        this.field_23093.clear();
     }
 
     /**
@@ -281,10 +308,10 @@ public abstract class ParticleManagerMixin implements IParticleManager {
     @Override
     public void addEffect(Particle effect, Object obj) {
         if (obj != null && (obj instanceof Block || obj instanceof Item)) {
-            if (obj instanceof Item && ((IItem)obj).isDefaultTexture()) {
-                this.addParticle(effect);
-            } else if (obj instanceof Block && ((IBlock)obj).isDefaultTexture()) {
-                this.addParticle(effect);
+            if (obj instanceof Item && ((Item)obj).isDefaultTexture()) {
+                this.method_22512(effect);
+            } else if (obj instanceof Block && ((Block)obj).isDefaultTexture()) {
+                this.method_22512(effect);
             } else {
                 String texture = "/terrain.png";
                 if (effect.getLayer() == 0) {
@@ -297,7 +324,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
                 this.effectList.put(texture, effect);
             }
         } else {
-            this.addParticle(effect);
+            this.method_22512(effect);
         }
     }
 

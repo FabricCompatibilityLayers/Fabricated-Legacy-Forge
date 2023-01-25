@@ -231,14 +231,14 @@ public abstract class GameOptionsMixin {
                 var1.println("showCape:" + this.field_5053);
                 var1.println("touchscreen:" + this.touchScreen);
 
-                for(KeyBinding var5 : this.keysAll) {
-                    var1.println("key_" + var5.translationKey + ":" + var5.code);
+                for(int var2 = 0; var2 < this.keysAll.length; ++var2) {
+                    var1.println("key_" + this.keysAll[var2].translationKey + ":" + this.keysAll[var2].code);
                 }
 
                 var1.close();
-            } catch (Exception var61) {
+            } catch (Exception var31) {
                 System.out.println("Failed to save options");
-                var61.printStackTrace();
+                var31.printStackTrace();
             }
 
             this.onPlayerModelPartChange();

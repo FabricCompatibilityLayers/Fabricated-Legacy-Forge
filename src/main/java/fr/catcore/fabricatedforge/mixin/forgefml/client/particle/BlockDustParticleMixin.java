@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BlockDustParticleMixin extends Particle {
 
     @Shadow private Block field_1752;
-    @Unique
+
     private int side;
 
     public BlockDustParticleMixin(World world, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
