@@ -83,7 +83,8 @@
       "net/minecraft/server/MinecraftServer": ["fr/catcore/fabricatedforge/mixininterface/IMinecraftServer"],
       "net/minecraft/class_1205": ["fr/catcore/fabricatedforge/mixininterface/IThreadedAnvilChunkStorage"],
       "net/minecraft/class_847": ["fr/catcore/fabricatedforge/mixininterface/IWeightedRandomChestContent"],
-      "net/minecraft/class_1239": ["fr/catcore/fabricatedforge/mixininterface/IOreFeature"]
+      "net/minecraft/class_1239": ["fr/catcore/fabricatedforge/mixininterface/IOreFeature"],
+      "net/minecraft/class_1026": ["fr/catcore/fabricatedforge/mixininterface/ISlot"]
     }
   }
 }

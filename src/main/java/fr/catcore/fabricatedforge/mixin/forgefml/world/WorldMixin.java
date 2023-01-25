@@ -418,8 +418,9 @@ public abstract class WorldMixin implements BlockView, IWorld {
         if (!MinecraftForge.EVENT_BUS.post(event)) {
             par2Str = event.name;
             if (par1Entity != null && par2Str != null) {
-                for(WorldEventListener var6 : this.eventListeners) {
-                    var6.playSound(par2Str, par1Entity.x, par1Entity.y - (double)par1Entity.heightOffset, par1Entity.z, par3, par4);
+                for(int var5 = 0; var5 < this.eventListeners.size(); ++var5) {
+                    ((WorldEventListener)this.eventListeners.get(var5))
+                            .playSound(par2Str, par1Entity.x, par1Entity.y - (double)par1Entity.heightOffset, par1Entity.z, par3, par4);
                 }
             }
         }
@@ -658,22 +659,23 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.profiler.swap("remove");
         this.loadedEntities.removeAll(this.unloadedEntities);
 
-        for(Entity var2 : this.unloadedEntities) {
+        for(int var141 = 0; var141 < this.unloadedEntities.size(); ++var141) {
+            Entity var2 = (Entity)this.unloadedEntities.get(var141);
             int var3 = var2.chunkX;
-            int var14 = var2.chunkZ;
-            if (var2.updateNeeded && this.isChunkInsideSpawnChunks(var3, var14)) {
-                this.getChunk(var3, var14).removeEntity(var2);
+            int var13 = var2.chunkZ;
+            if (var2.updateNeeded && this.isChunkInsideSpawnChunks(var3, var13)) {
+                this.getChunk(var3, var13).removeEntity(var2);
             }
         }
 
-        for(Entity var2 : this.unloadedEntities) {
-            this.onEntityRemoved(var2);
+        for(int var151 = 0; var151 < this.unloadedEntities.size(); ++var151) {
+            this.onEntityRemoved((Entity)this.unloadedEntities.get(var151));
         }
 
         this.profiler.swap("regular");
 
-        for(int var141 = 0; var141 < this.loadedEntities.size(); ++var141) {
-            Entity var2 = (Entity)this.loadedEntities.get(var141);
+        for(int var16 = 0; var16 < this.loadedEntities.size(); ++var16) {
+            Entity var2 = (Entity)this.loadedEntities.get(var16);
             if (var2.vehicle != null) {
                 if (!var2.vehicle.removed && var2.vehicle.rider == var2) {
                     continue;
@@ -687,8 +689,8 @@ public abstract class WorldMixin implements BlockView, IWorld {
             if (!var2.removed) {
                 try {
                     this.checkChunk(var2);
-                } catch (Throwable var12) {
-                    CrashReport var4 = CrashReport.create(var12, "Ticking entity");
+                } catch (Throwable var121) {
+                    CrashReport var4 = CrashReport.create(var121, "Ticking entity");
                     CrashReportSection var5 = var4.addElement("Entity being ticked");
                     if (var2 == null) {
                         var5.add("Entity", "~~NULL~~");
@@ -704,12 +706,12 @@ public abstract class WorldMixin implements BlockView, IWorld {
             this.profiler.push("remove");
             if (var2.removed) {
                 int var3 = var2.chunkX;
-                int var14x = var2.chunkZ;
-                if (var2.updateNeeded && this.isChunkInsideSpawnChunks(var3, var14x)) {
-                    this.getChunk(var3, var14x).removeEntity(var2);
+                int var13 = var2.chunkZ;
+                if (var2.updateNeeded && this.isChunkInsideSpawnChunks(var3, var13)) {
+                    this.getChunk(var3, var13).removeEntity(var2);
                 }
 
-                this.loadedEntities.remove(var141--);
+                this.loadedEntities.remove(var16--);
                 this.onEntityRemoved(var2);
             }
 
@@ -718,32 +720,32 @@ public abstract class WorldMixin implements BlockView, IWorld {
 
         this.profiler.swap("tileEntities");
         this.iteratingTickingBlockEntities = true;
-        Iterator var23 = this.blockEntities.iterator();
+        Iterator var14 = this.blockEntities.iterator();
 
-        while(var23.hasNext()) {
-            BlockEntity var10 = (BlockEntity)var23.next();
-            if (!var10.isRemoved() && var10.hasWorld() && this.isPosLoaded(var10.x, var10.y, var10.z)) {
+        while(var14.hasNext()) {
+            BlockEntity var9 = (BlockEntity)var14.next();
+            if (!var9.isRemoved() && var9.hasWorld() && this.isPosLoaded(var9.x, var9.y, var9.z)) {
                 try {
-                    var10.method_545();
-                } catch (Throwable var111) {
-                    CrashReport var4 = CrashReport.create(var111, "Ticking tile entity");
+                    var9.method_545();
+                } catch (Throwable var11) {
+                    CrashReport var4 = CrashReport.create(var11, "Ticking tile entity");
                     CrashReportSection var5 = var4.addElement("Tile entity being ticked");
-                    if (var10 == null) {
+                    if (var9 == null) {
                         var5.add("Tile entity", "~~NULL~~");
                     } else {
-                        var10.populateCrashReport(var5);
+                        var9.populateCrashReport(var5);
                     }
 
                     throw new CrashException(var4);
                 }
             }
 
-            if (var10.isRemoved()) {
-                var23.remove();
-                if (this.isChunkInsideSpawnChunks(var10.x >> 4, var10.z >> 4)) {
-                    Chunk var12 = this.getChunk(var10.x >> 4, var10.z >> 4);
-                    if (var12 != null) {
-                        ((IChunk)var12).cleanChunkBlockTileEntity(var10.x & 15, var10.y, var10.z & 15);
+            if (var9.isRemoved()) {
+                var14.remove();
+                if (this.isChunkInsideSpawnChunks(var9.x >> 4, var9.z >> 4)) {
+                    Chunk var11 = this.getChunk(var9.x >> 4, var9.z >> 4);
+                    if (var11 != null) {
+                        var11.cleanChunkBlockTileEntity(var9.x & 15, var9.y, var9.z & 15);
                     }
                 }
             }
@@ -752,7 +754,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.iteratingTickingBlockEntities = false;
         if (!this.unloadedBlockEntities.isEmpty()) {
             for(Object tile : this.unloadedBlockEntities) {
-                ((IBlockEntity)tile).onChunkUnload();
+                ((BlockEntity)tile).onChunkUnload();
             }
 
             this.blockEntities.removeAll(this.unloadedBlockEntities);
@@ -761,15 +763,16 @@ public abstract class WorldMixin implements BlockView, IWorld {
 
         this.profiler.swap("pendingTileEntities");
         if (!this.pendingBlockEntities.isEmpty()) {
-            for(BlockEntity var13 : this.pendingBlockEntities) {
-                if (!var13.isRemoved()) {
-                    if (!this.blockEntities.contains(var13)) {
-                        this.blockEntities.add(var13);
+            for(int var10 = 0; var10 < this.pendingBlockEntities.size(); ++var10) {
+                BlockEntity var12 = (BlockEntity)this.pendingBlockEntities.get(var10);
+                if (!var12.isRemoved()) {
+                    if (!this.blockEntities.contains(var12)) {
+                        this.blockEntities.add(var12);
                     }
-                } else if (this.isChunkInsideSpawnChunks(var13.x >> 4, var13.z >> 4)) {
-                    Chunk var15 = this.getChunk(var13.x >> 4, var13.z >> 4);
+                } else if (this.isChunkInsideSpawnChunks(var12.x >> 4, var12.z >> 4)) {
+                    Chunk var15 = this.getChunk(var12.x >> 4, var12.z >> 4);
                     if (var15 != null) {
-                        var15.addBlockEntity(var13.x & 15, var13.y, var13.z & 15, var13);
+                        var15.addBlockEntity(var12.x & 15, var12.y, var12.z & 15, var12);
                     }
                 }
             }

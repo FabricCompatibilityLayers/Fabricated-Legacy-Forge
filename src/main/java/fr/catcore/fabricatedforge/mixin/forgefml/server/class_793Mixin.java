@@ -76,9 +76,10 @@ public abstract class class_793Mixin {
                 for(int var3 = 0; var3 < 16; ++var3) {
                     if ((this.field_2800 & 1 << var3) != 0) {
                         int var4 = var3 << 4;
+                        List var5 = this.field_2795.getWorld().method_2134(var1, var4, var2, var1 + 16, var4 + 16, var2 + 16);
 
-                        for(BlockEntity var7 : (List<BlockEntity>)this.field_2795.getWorld().method_2134(var1, var4, var2, var1 + 15, var4 + 16, var2 + 15)) {
-                            this.method_2119(var7);
+                        for(int var6 = 0; var6 < var5.size(); ++var6) {
+                            this.method_2119((BlockEntity)var5.get(var6));
                         }
                     }
                 }

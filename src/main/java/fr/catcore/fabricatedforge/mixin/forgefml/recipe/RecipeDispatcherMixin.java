@@ -43,21 +43,22 @@ public class RecipeDispatcherMixin {
             }
         }
 
-        if (var3 == 2 && var4.id == var5.id && var4.count == 1 && var5.count == 1 && ((IItem)Item.ITEMS[var4.id]).isRepairable()) {
-            Item var13 = Item.ITEMS[var4.id];
-            int var14 = var13.getMaxDamage() - var4.getDamage();
-            int var8 = var13.getMaxDamage() - var5.getDamage();
-            int var9 = var14 + var8 + var13.getMaxDamage() * 5 / 100;
-            int var10 = var13.getMaxDamage() - var9;
+        if (var3 == 2 && var4.id == var5.id && var4.count == 1 && var5.count == 1 && Item.ITEMS[var4.id].isRepairable()) {
+            Item var11 = Item.ITEMS[var4.id];
+            int var13 = var11.getMaxDamage() - var4.getDamage();
+            int var8 = var11.getMaxDamage() - var5.getDamage();
+            int var9 = var13 + var8 + var11.getMaxDamage() * 5 / 100;
+            int var10 = var11.getMaxDamage() - var9;
             if (var10 < 0) {
                 var10 = 0;
             }
 
             return new ItemStack(var4.id, 1, var10);
         } else {
-            for(RecipeType var12 : this.recipes) {
-                if (var12.matches(par1InventoryCrafting, par2World)) {
-                    return var12.getResult(par1InventoryCrafting);
+            for(int var121 = 0; var121 < this.recipes.size(); ++var121) {
+                RecipeType var12x = (RecipeType)this.recipes.get(var121);
+                if (var12x.matches(par1InventoryCrafting, par2World)) {
+                    return var12x.getResult(par1InventoryCrafting);
                 }
             }
 

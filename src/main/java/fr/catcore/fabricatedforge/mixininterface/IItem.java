@@ -29,6 +29,7 @@ public interface IItem {
     Entity createEntity(World world, Entity location, ItemStack itemstack);
     ItemGroup[] getCreativeTabs();
     float getSmeltingExperience(ItemStack item);
+    int getIconFromItemStackForMultiplePasses(ItemStack stack, int pass);
 
     // Non Forge APIs
     boolean isDefaultTexture();

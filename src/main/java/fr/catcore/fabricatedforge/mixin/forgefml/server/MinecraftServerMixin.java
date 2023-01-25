@@ -191,10 +191,11 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
             field_3848.info("Saving worlds");
             this.saveWorlds(false);
 
-            for(ServerWorld var4 : this.worlds) {
-                MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(var4));
-                var4.close();
-                DimensionManager.setWorld(var4.dimension.dimensionType, null);
+            for(int var1 = 0; var1 < this.worlds.length; ++var1) {
+                ServerWorld var2 = this.worlds[var1];
+                MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(var2));
+                var2.close();
+                DimensionManager.setWorld(var2.dimension.dimensionType, null);
             }
 
             if (this.snooper != null && this.snooper.isActive()) {
@@ -338,8 +339,10 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
     @Overwrite
     public void tick() {
         this.profiler.push("levels");
+        Integer[] ids = DimensionManager.getIDs();
 
-        for(Integer id : DimensionManager.getIDs()) {
+        for(int x = 0; x < ids.length; ++x) {
+            int id = ids[x];
             long var2 = System.nanoTime();
             if (id == 0 || this.isNetherAllowed()) {
                 ServerWorld var4 = DimensionManager.getWorld(id);
@@ -392,8 +395,8 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
         this.playerManager.updatePlayerLatency();
         this.profiler.swap("tickables");
 
-        for(Tickable var10 : this.tickables) {
-            var10.tick();
+        for(int var1 = 0; var1 < this.tickables.size(); ++var1) {
+            ((Tickable)this.tickables.get(var1)).tick();
         }
 
         this.profiler.pop();

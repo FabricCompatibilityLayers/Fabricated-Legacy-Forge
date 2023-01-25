@@ -43,6 +43,8 @@ public abstract class ItemMixin implements ItemProxy, IItem {
 
     @Shadow public abstract ItemGroup getItemGroup();
 
+    @Shadow public abstract int method_3369(int i, int j);
+
     protected boolean canRepair = true;
     public boolean isDefaultTexture = true;
     private String currentTexture = "/gui/items.png";
@@ -184,6 +186,11 @@ public abstract class ItemMixin implements ItemProxy, IItem {
     @Override
     public float getSmeltingExperience(ItemStack item) {
         return -1.0F;
+    }
+
+    @Override
+    public int getIconFromItemStackForMultiplePasses(ItemStack stack, int pass) {
+        return this.method_3369(stack.getData(), pass);
     }
 
     @Override

@@ -458,8 +458,8 @@ public abstract class ChunkMixin implements IChunk {
         this.loaded = true;
         this.world.addBlockEntities(this.blockEntities.values());
 
-        for(List var4 : this.entities) {
-            this.world.loadEntities(var4);
+        for(int var1 = 0; var1 < this.entities.length; ++var1) {
+            this.world.loadEntities(this.entities[var1]);
         }
 
         MinecraftForge.EVENT_BUS.post(new ChunkEvent.Load((Chunk)(Object) this));
@@ -477,8 +477,8 @@ public abstract class ChunkMixin implements IChunk {
             this.world.queueBlockEntity(var2);
         }
 
-        for(List var4 : this.entities) {
-            this.world.unloadEntities(var4);
+        for(int var3 = 0; var3 < this.entities.length; ++var3) {
+            this.world.unloadEntities(this.entities[var3]);
         }
 
         MinecraftForge.EVENT_BUS.post(new ChunkEvent.Unload((Chunk)(Object) this));
@@ -501,7 +501,10 @@ public abstract class ChunkMixin implements IChunk {
         }
 
         for(int var6 = var4; var6 <= var5; ++var6) {
-            for(Entity var9 : this.entities[var6]) {
+            List var7 = this.entities[var6];
+
+            for(int var8 = 0; var8 < var7.size(); ++var8) {
+                Entity var9 = (Entity)var7.get(var8);
                 if (var9 != par1Entity && var9.boundingBox.intersects(par2AxisAlignedBB)) {
                     par3List.add(var9);
                     Entity[] var10 = var9.getParts();
@@ -539,7 +542,10 @@ public abstract class ChunkMixin implements IChunk {
         }
 
         for(int var7 = var5; var7 <= var6; ++var7) {
-            for(Entity var10 : this.entities[var7]) {
+            List var8 = this.entities[var7];
+
+            for(int var9 = 0; var9 < var8.size(); ++var9) {
+                Entity var10 = (Entity)var8.get(var9);
                 if (par1Class.isAssignableFrom(var10.getClass())
                         && var10.boundingBox.intersects(par2AxisAlignedBB)
                         && (par4IEntitySelector == null || par4IEntitySelector.test(var10))) {
