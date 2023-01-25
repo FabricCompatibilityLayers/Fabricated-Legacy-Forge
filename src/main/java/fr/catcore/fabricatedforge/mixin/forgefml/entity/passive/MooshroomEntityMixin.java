@@ -3,6 +3,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.entity.passive;
 import net.minecraft.block.Block;
 import net.minecraft.entity.passive.CowEntity;
 import net.minecraft.entity.passive.MooshroomEntity;
+import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -40,6 +41,15 @@ public abstract class MooshroomEntityMixin extends CowEntity implements IShearab
         }
 
         return super.method_2537(par1EntityPlayer);
+    }
+
+    /**
+     * @author aaa
+     * @reason aa
+     */
+    @Overwrite(aliases = {"method_4517"})
+    public CowEntity breed(PassiveEntity par1EntityAgeable) {
+        return ((MooshroomEntity)(Object) this).breed(par1EntityAgeable);
     }
 
     @Override
