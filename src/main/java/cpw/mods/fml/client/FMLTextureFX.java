@@ -14,6 +14,7 @@
 package cpw.mods.fml.client;
 
 import cpw.mods.fml.common.FMLLog;
+import fr.catcore.fabricatedforge.mixininterface.IFMLTextureFX;
 import net.minecraft.client.TextureManager;
 import net.minecraft.client.Sprite;
 import net.minecraft.client.texture.ITexturePack;
@@ -22,13 +23,13 @@ import java.awt.*;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class FMLTextureFX extends Sprite implements ITextureFX {
+public class FMLTextureFX extends Sprite implements ITextureFX, IFMLTextureFX {
     public int tileSizeBase = 16;
     public int tileSizeSquare = 256;
     public int tileSizeMask = 15;
     public int tileSizeSquareMask = 255;
     public boolean errored = false;
-    protected Logger log = FMLLog.getLogger();
+    public Logger log = FMLLog.getLogger();
 
     public FMLTextureFX(int icon) {
         super(icon);
@@ -59,7 +60,13 @@ public class FMLTextureFX extends Sprite implements ITextureFX {
         this.setup();
     }
 
-    protected void setup() {
+    @Override
+    public void setup() {
+        this.callFMLSetup();
+    }
+
+    @Override
+    public void callFMLSetup() {
         this.field_2152 = new byte[this.tileSizeSquare << 2];
     }
 
