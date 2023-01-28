@@ -4,9 +4,11 @@
  */
 package net.minecraftforge.common;
 
+import cpw.mods.fml.common.FMLLog;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -31,9 +33,26 @@ public class ForgeInternalHandler {
 
         Entity entity = event.entity;
         if (entity.getClass().equals(ItemEntity.class)) {
-            ItemStack item = ((ItemEntity)entity).field_23087;
-            if (item != null && ((IItem)item.getItem()).hasCustomEntity(item)) {
-                Entity newEntity = ((IItem)item.getItem()).createEntity(event.world, entity, item);
+            ItemStack stack = ((ItemEntity)entity).field_23087;
+            if (stack == null) {
+                entity.remove();
+                event.setCanceled(true);
+                return;
+            }
+
+            Item item = stack.getItem();
+            if (item == null) {
+                FMLLog.warning(
+                        "Attempted to add a EntityItem to the world with a invalid item: ID %d at (%2.2f,  %2.2f, %2.2f), this is most likely a config issue between you and the server. Please double check your configs",
+                        new Object[]{stack.id, entity.x, entity.y, entity.z}
+                );
+                entity.remove();
+                event.setCanceled(true);
+                return;
+            }
+
+            if (item.hasCustomEntity(stack)) {
+                Entity newEntity = item.createEntity(event.world, entity, stack);
                 if (newEntity != null) {
                     entity.remove();
                     event.setCanceled(true);
@@ -55,5 +74,12 @@ public class ForgeInternalHandler {
     )
     public void onDimensionSave(WorldEvent.Save event) {
         ForgeChunkManager.saveWorld(event.world);
+    }
+
+    @ForgeSubscribe(
+            priority = EventPriority.HIGHEST
+    )
+    public void onDimensionUnload(WorldEvent.Unload event) {
+        ForgeChunkManager.unloadWorld(event.world);
     }
 }

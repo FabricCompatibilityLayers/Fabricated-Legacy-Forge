@@ -125,6 +125,22 @@ public class OreDictionary {
         return "Unknown";
     }
 
+    public static int getOreID(ItemStack itemStack) {
+        if (itemStack == null) {
+            return -1;
+        } else {
+            for(int oreID : oreStacks.keySet()) {
+                for(ItemStack target : oreStacks.get(oreID)) {
+                    if (itemStack.id == target.id && (target.getData() == -1 || itemStack.getData() == target.getData())) {
+                        return oreID;
+                    }
+                }
+            }
+
+            return -1;
+        }
+    }
+
     public static ArrayList<ItemStack> getOres(String name) {
         return getOres(getOreID(name));
     }
