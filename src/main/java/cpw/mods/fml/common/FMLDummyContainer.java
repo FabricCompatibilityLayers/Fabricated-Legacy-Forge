@@ -14,6 +14,8 @@
 package cpw.mods.fml.common;
 
 import com.google.common.eventbus.EventBus;
+import cpw.mods.fml.common.registry.GameData;
+import cpw.mods.fml.common.registry.ItemData;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
@@ -23,6 +25,7 @@ import net.minecraft.world.level.LevelProperties;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 public class FMLDummyContainer extends DummyModContainer implements WorldAccessContainer {
     public FMLDummyContainer() {
@@ -56,6 +59,9 @@ public class FMLDummyContainer extends DummyModContainer implements WorldAccessC
         }
 
         fmlData.put("ModList", list);
+        NbtList itemList = new NbtList();
+        GameData.writeItemData(itemList);
+        fmlData.put("ModItemData", itemList);
         return fmlData;
     }
 
@@ -77,6 +83,14 @@ public class FMLDummyContainer extends DummyModContainer implements WorldAccessC
                     );
                 }
             }
+        }
+
+        if (tag.contains("ModItemData")) {
+            NbtList modList = tag.getList("ModItemData");
+            Set<ItemData> worldSaveItems = GameData.buildWorldItemData(modList);
+            GameData.validateWorldSave(worldSaveItems);
+        } else {
+            GameData.validateWorldSave(null);
         }
     }
 }

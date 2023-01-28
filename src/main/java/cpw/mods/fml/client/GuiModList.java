@@ -44,16 +44,19 @@ public class GuiModList extends Screen {
         FMLClientHandler.instance().addSpecialModEntries(this.mods);
 
         for(ModContainer mod : Loader.instance().getModList()) {
-            if (mod.getMetadata() != null && !Strings.isNullOrEmpty(mod.getMetadata().parent)) {
+            if (mod.getMetadata() != null && mod.getMetadata().parentMod == null && !Strings.isNullOrEmpty(mod.getMetadata().parent)) {
                 String parentMod = mod.getMetadata().parent;
                 ModContainer parentContainer = (ModContainer)Loader.instance().getIndexedModList().get(parentMod);
-                if (parentContainer != null && mod.getMetadata().parentMod == null) {
+                if (parentContainer != null) {
                     mod.getMetadata().parentMod = parentContainer;
                     parentContainer.getMetadata().childMods.add(mod);
                     continue;
                 }
+            } else if (mod.getMetadata() != null && mod.getMetadata().parentMod != null) {
+                continue;
             }
-            mods.add(mod);
+
+            this.mods.add(mod);
         }
 
         for (net.fabricmc.loader.api.ModContainer container : FabricLoader.getInstance().getAllMods()) {
@@ -118,7 +121,9 @@ public class GuiModList extends Screen {
                 this.textRenderer.method_956(this.selectedMod.getMetadata().name, offset, shifty, 16777215);
                 shifty += 12;
                 shifty = this.drawLine(String.format("Version: %s (%s)", this.selectedMod.getDisplayVersion(), this.selectedMod.getVersion()), offset, shifty);
-                shifty = this.drawLine(String.format("Mod State: %s", Loader.instance().getModState(this.selectedMod)), offset, shifty);
+                shifty = this.drawLine(
+                        String.format("Mod ID: '%s' Mod State: %s", this.selectedMod.getModId(), Loader.instance().getModState(this.selectedMod)), offset, shifty
+                );
                 if (!this.selectedMod.getMetadata().credits.isEmpty()) {
                     shifty = this.drawLine(String.format("Credits: %s", this.selectedMod.getMetadata().credits), offset, shifty);
                 }

@@ -52,7 +52,7 @@ import java.util.*;
 
 public class FMLNetworkHandler {
     private static final int FML_HASH = Hashing.murmur3_32().hashString("FML").asInt();
-    private static final int PROTOCOL_VERSION = 1;
+    private static final int PROTOCOL_VERSION = 2;
     private static final FMLNetworkHandler INSTANCE = new FMLNetworkHandler();
     static final int LOGIN_RECEIVED = 1;
     static final int CONNECTION_VALID = 2;
@@ -83,18 +83,20 @@ public class FMLNetworkHandler {
     }
 
     private void handleFMLPacket(CustomPayloadC2SPacket packet, Connection network, PacketListener netHandler) {
-        FMLPacket pkt = FMLPacket.readPacket(packet.field_2455);
-        String userName = "";
-        if (netHandler instanceof PendingConnection) {
-            userName = ((PendingConnection)netHandler).username;
-        } else {
-            PlayerEntity pl = netHandler.getPlayer();
-            if (pl != null) {
-                userName = pl.getUsername();
+        FMLPacket pkt = FMLPacket.readPacket(network, packet.field_2455);
+        if (pkt != null) {
+            String userName = "";
+            if (netHandler instanceof PendingConnection) {
+                userName = ((PendingConnection)netHandler).username;
+            } else {
+                PlayerEntity pl = netHandler.getPlayer();
+                if (pl != null) {
+                    userName = pl.getUsername();
+                }
             }
-        }
 
-        pkt.execute(network, this, netHandler, userName);
+            pkt.execute(network, this, netHandler, userName);
+        }
     }
 
     public static void onConnectionReceivedFromClient(PendingConnection netLoginHandler, MinecraftServer server, SocketAddress address, String userName) {
@@ -160,10 +162,10 @@ public class FMLNetworkHandler {
 
     public static void handleLoginPacketOnServer(PendingConnection handler, class_690 login) {
         if (login.entityId == FML_HASH) {
-            if (login.dimension == 1) {
+            if (login.dimension == PROTOCOL_VERSION) {
                 FMLLog.finest("Received valid FML login packet from %s", new Object[]{handler.connection.getAddress()});
                 instance().loginStates.put(handler, 1);
-            } else if (login.dimension != 1) {
+            } else if (login.dimension != PROTOCOL_VERSION) {
                 FMLLog.finest("Received incorrect FML (%x) login packet from %s", new Object[]{login.dimension, handler.connection.getAddress()});
                 instance().loginStates.put(handler, -1);
             }
@@ -184,7 +186,7 @@ public class FMLNetworkHandler {
         FMLCommonHandler.instance().getSidedDelegate().setClientCompatibilityLevel((byte)0);
         class_690 fake = new class_690();
         fake.entityId = FML_HASH;
-        fake.dimension = 1;
+        fake.dimension = PROTOCOL_VERSION;
         fake.gameMode = GameMode.NOT_SET;
         fake.levelType = LevelGeneratorType.TYPES[0];
         return fake;
@@ -335,7 +337,7 @@ public class FMLNetworkHandler {
     }
 
     public static int getCompatibilityLevel() {
-        return 1;
+        return PROTOCOL_VERSION;
     }
 
     public static boolean vanillaLoginPacketCompatibility() {

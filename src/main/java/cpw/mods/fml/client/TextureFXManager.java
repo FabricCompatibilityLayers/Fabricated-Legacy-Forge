@@ -141,6 +141,7 @@ public class TextureFXManager {
             id = GL11.glGetInteger(32873);
             GL11.glBindTexture(3553, old);
             this.effectTextures.put(effect, id);
+            effect.field_2155 = id;
             return id;
         }
     }
@@ -243,7 +244,7 @@ public class TextureFXManager {
         ListIterator<Sprite> li = this.addedTextureFX.listIterator();
 
         while(li.hasNext()) {
-            Sprite tex = li.next();
+            Sprite tex = (Sprite)li.next();
             if (tex instanceof FMLTextureFX) {
                 if (((FMLTextureFX)tex).unregister(this.client.textureManager, effects)) {
                     li.remove();

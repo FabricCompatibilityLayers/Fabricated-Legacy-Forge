@@ -13,13 +13,18 @@
  */
 package cpw.mods.fml.server;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.MapDifference;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.network.EntitySpawnAdjustmentPacket;
 import cpw.mods.fml.common.network.EntitySpawnPacket;
 import cpw.mods.fml.common.network.ModMissingPacket;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameData;
+import cpw.mods.fml.common.registry.ItemData;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.Connection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
@@ -45,6 +50,7 @@ public class FMLServerHandler implements IFMLSidedHandler {
     public void finishServerLoading() {
         Loader.instance().initializeMods();
         LanguageRegistry.reloadLanguageTable();
+        GameData.initializeServerGate(1);
     }
 
     public void haltGame(String message, Throwable exception) {
@@ -60,7 +66,7 @@ public class FMLServerHandler implements IFMLSidedHandler {
     }
 
     public List<String> getAdditionalBrandingInformation() {
-        return null;
+        return ImmutableList.of();
     }
 
     public Side getSide() {
@@ -92,5 +98,12 @@ public class FMLServerHandler implements IFMLSidedHandler {
 
     public byte getClientCompatibilityLevel() {
         return 0;
+    }
+
+    public boolean shouldServerShouldBeKilledQuietly() {
+        return false;
+    }
+
+    public void disconnectIDMismatch(MapDifference<Integer, ItemData> s, PacketListener handler, Connection mgr) {
     }
 }

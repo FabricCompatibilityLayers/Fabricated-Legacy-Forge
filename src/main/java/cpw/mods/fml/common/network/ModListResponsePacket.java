@@ -21,7 +21,9 @@ import com.google.common.io.ByteStreams;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.registry.GameData;
 import fr.catcore.fabricatedforge.mixininterface.IPendingConnection;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.network.Connection;
 import net.minecraft.network.PendingConnection;
 import net.minecraft.network.listener.PacketListener;
@@ -111,17 +113,25 @@ public class ModListResponsePacket extends FMLPacket {
             pkt.field_2455 = FMLPacket.makePacket(Type.MOD_IDENTIFIERS, new Object[]{netHandler});
             Logger.getLogger("Minecraft").info(String.format("User %s connecting with mods %s", userName, this.modVersions.keySet()));
             FMLLog.info("User %s connecting with mods %s", new Object[]{userName, this.modVersions.keySet()});
+            pkt.field_2454 = pkt.field_2455.length;
+            network.send(pkt);
+            NbtList itemList = new NbtList();
+            GameData.writeItemData(itemList);
+            byte[][] registryPackets = FMLPacket.makePacketSet(Type.MOD_IDMAP, new Object[]{itemList});
+
+            for(int i = 0; i < registryPackets.length; ++i) {
+                network.send(PacketDispatcher.getPacket("FML", registryPackets[i]));
+            }
         } else {
             pkt.field_2455 = FMLPacket.makePacket(Type.MOD_MISSING, new Object[]{missingClientMods, versionIncorrectMods});
             Logger.getLogger("Minecraft")
                     .info(String.format("User %s connection failed: missing %s, bad versions %s", userName, missingClientMods, versionIncorrectMods));
             FMLLog.info("User %s connection failed: missing %s, bad versions %s", new Object[]{userName, missingClientMods, versionIncorrectMods});
             FMLNetworkHandler.setHandlerState((PendingConnection)netHandler, -2);
+            pkt.field_2454 = pkt.field_2455.length;
+            network.send(pkt);
         }
 
-        pkt.field_2454 = pkt.field_2455.length;
-        network.send(pkt);
-        // reset the continuation flag - we have completed extra negotiation and the login should complete now
         ((IPendingConnection) netHandler).method_2189_fabric(true);
     }
 }

@@ -84,7 +84,7 @@ public class LoadController {
             FMLLog.severe("Fatal errors were detected during the transition from %s to %s. Loading cannot continue", new Object[]{oldState, desiredState});
             StringBuilder sb = new StringBuilder();
             this.printModStates(sb);
-            FMLLog.severe(sb.toString(), new Object[0]);
+            FMLLog.getLogger().severe(sb.toString());
             FMLLog.severe("The following problems were captured during this phase", new Object[0]);
 
             for(Map.Entry<String, Throwable> error : this.errors.entries()) {

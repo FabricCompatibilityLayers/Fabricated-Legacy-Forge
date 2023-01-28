@@ -14,7 +14,9 @@
 package cpw.mods.fml.client;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.MapDifference;
 import cpw.mods.fml.client.modloader.ModLoaderClientHelper;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -22,22 +24,21 @@ import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.network.EntitySpawnAdjustmentPacket;
 import cpw.mods.fml.common.network.EntitySpawnPacket;
 import cpw.mods.fml.common.network.ModMissingPacket;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
-import cpw.mods.fml.common.registry.IThrowableEntity;
-import cpw.mods.fml.common.registry.LanguageRegistry;
+import cpw.mods.fml.common.registry.*;
 import fr.catcore.fabricatedforge.forged.FabricModContainer;
 import fr.catcore.fabricatedforge.mixininterface.Iclass_469;
 import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_469;
+import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.Connection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
@@ -60,6 +61,7 @@ public class FMLClientHandler implements IFMLSidedHandler {
     private WrongMinecraftVersionException wrongMC;
     private CustomModLoadingErrorDisplayException customError;
     private DuplicateModsFoundException dupesFound;
+    private boolean serverShouldBeKilledQuietly;
 
     public FMLClientHandler() {
     }
@@ -170,7 +172,9 @@ public class FMLClientHandler implements IFMLSidedHandler {
     }
 
     public List<String> getAdditionalBrandingInformation() {
-        return this.optifineContainer != null ? Collections.singletonList(String.format("Optifine %s", this.optifineContainer.getVersion())) : Collections.emptyList();
+        return (List<String>)(this.optifineContainer != null
+                ? Arrays.asList(String.format("Optifine %s", this.optifineContainer.getVersion()))
+                : ImmutableList.of());
     }
 
     public Side getSide() {
@@ -252,6 +256,7 @@ public class FMLClientHandler implements IFMLSidedHandler {
     }
 
     public void beginServerLoading(MinecraftServer server) {
+        this.serverShouldBeKilledQuietly = false;
     }
 
     public void finishServerLoading() {
@@ -285,5 +290,46 @@ public class FMLClientHandler implements IFMLSidedHandler {
 
     public byte getClientCompatibilityLevel() {
         return ReflectionUtils.class_469_connectionCompatibilityLevel;
+    }
+
+    public void warnIDMismatch(MapDifference<Integer, ItemData> idDifferences, boolean mayContinue) {
+        GuiIdMismatchScreen mismatch = new GuiIdMismatchScreen(idDifferences, mayContinue);
+        this.client.openScreen(mismatch);
+    }
+
+    public void callbackIdDifferenceResponse(boolean response) {
+        if (response) {
+            this.serverShouldBeKilledQuietly = false;
+            GameData.releaseGate(true);
+            this.client.continueWorldLoading();
+        } else {
+            this.serverShouldBeKilledQuietly = true;
+            GameData.releaseGate(false);
+            this.client.connect((ClientWorld)null);
+            this.client.openScreen(null);
+        }
+    }
+
+    public boolean shouldServerShouldBeKilledQuietly() {
+        return this.serverShouldBeKilledQuietly;
+    }
+
+    public void disconnectIDMismatch(MapDifference<Integer, ItemData> s, PacketListener toKill, Connection mgr) {
+        boolean criticalMismatch = !s.entriesOnlyOnLeft().isEmpty();
+
+        for(Map.Entry<Integer, MapDifference.ValueDifference<ItemData>> mismatch : s.entriesDiffering().entrySet()) {
+            MapDifference.ValueDifference<ItemData> vd = (MapDifference.ValueDifference)mismatch.getValue();
+            if (!((ItemData)vd.leftValue()).mayDifferByOrdinal((ItemData)vd.rightValue())) {
+                criticalMismatch = true;
+            }
+        }
+
+        if (criticalMismatch) {
+            ((class_469)toKill).method_1204();
+            ConnectScreen.forceTermination((ConnectScreen)this.client.currentScreen);
+            mgr.applyQueuedPackets();
+            this.client.connect((ClientWorld)null);
+            this.warnIDMismatch(s, false);
+        }
     }
 }

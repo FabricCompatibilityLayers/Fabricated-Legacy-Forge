@@ -38,6 +38,7 @@ public class MCPMerger {
     private static Hashtable<String, MCPMerger.ClassInfo> servers = new Hashtable();
     private static HashSet<String> copyToServer = new HashSet();
     private static HashSet<String> copyToClient = new HashSet();
+    private static HashSet<String> dontAnnotate = new HashSet();
     private static final boolean DEBUG = false;
 
     public MCPMerger() {
@@ -112,12 +113,17 @@ public class MCPMerger {
             String line;
             while((line = br.readLine()) != null) {
                 line = line.split("#")[0];
-                boolean toClient = line.charAt(0) == '<';
+                char cmd = line.charAt(0);
                 line = line.substring(1).trim();
-                if (toClient) {
-                    copyToClient.add(line);
-                } else {
-                    copyToServer.add(line);
+                switch(cmd) {
+                    case '!':
+                        dontAnnotate.add(line);
+                        break;
+                    case '<':
+                        copyToClient.add(line);
+                        break;
+                    case '>':
+                        copyToServer.add(line);
                 }
             }
 
@@ -186,11 +192,7 @@ public class MCPMerger {
             }
 
             for(Map.Entry<String, ZipEntry> entry : sClasses.entrySet()) {
-                if (!copyToClient.contains(entry.getKey())) {
-                    copyClass(sInJar, (ZipEntry)entry.getValue(), null, sOutJar, false);
-                } else {
-                    copyClass(sInJar, (ZipEntry)entry.getValue(), cOutJar, sOutJar, false);
-                }
+                copyClass(sInJar, (ZipEntry)entry.getValue(), cOutJar, sOutJar, false);
             }
 
             for(String name : new String[]{SideOnly.class.getName(), Side.class.getName()}) {
@@ -242,7 +244,7 @@ public class MCPMerger {
         ClassReader reader = new ClassReader(readEntry(inJar, entry));
         ClassNode classNode = new ClassNode();
         reader.accept(classNode, 0);
-        if (!classNode.name.equals("beg")) {
+        if (!dontAnnotate.contains(classNode.name)) {
             if (classNode.visibleAnnotations == null) {
                 classNode.visibleAnnotations = new ArrayList();
             }

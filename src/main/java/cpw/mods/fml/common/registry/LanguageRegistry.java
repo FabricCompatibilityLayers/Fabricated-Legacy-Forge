@@ -13,6 +13,7 @@
  */
 package cpw.mods.fml.common.registry;
 
+import cpw.mods.fml.common.FMLLog;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -138,6 +139,7 @@ public class LanguageRegistry {
 
             this.addStringLocalization(langPack, lang);
         } catch (IOException var15) {
+            FMLLog.getLogger().severe("Unable to load localization from file: " + localizationFile);
             var15.printStackTrace();
         } finally {
             try {

@@ -19,6 +19,7 @@ import com.google.common.collect.*;
 import cpw.mods.fml.common.network.EntitySpawnAdjustmentPacket;
 import cpw.mods.fml.common.network.EntitySpawnPacket;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.ItemData;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.server.FMLServerHandler;
 import fr.catcore.fabricatedforge.mixininterface.ILevelProperties;
@@ -28,6 +29,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
+import net.minecraft.network.Connection;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
 import net.minecraft.server.ListenThread;
@@ -310,7 +312,7 @@ public class FMLCommonHandler {
             if (!this.handlerSet.contains(handler)) {
                 this.handlerSet.add(handler);
                 Map<String, NbtElement> additionalProperties = Maps.newHashMap();
-                ((ILevelProperties)worldInfo).setAdditionalProperties(additionalProperties);
+                worldInfo.setAdditionalProperties(additionalProperties);
 
                 for(ModContainer mc : Loader.instance().getModList()) {
                     if (mc instanceof InjectedModContainer) {
@@ -322,5 +324,13 @@ public class FMLCommonHandler {
                 }
             }
         }
+    }
+
+    public boolean shouldServerBeKilledQuietly() {
+        return this.sidedDelegate.shouldServerShouldBeKilledQuietly();
+    }
+
+    public void disconnectIDMismatch(MapDifference<Integer, ItemData> serverDifference, PacketListener toKill, Connection network) {
+        this.sidedDelegate.disconnectIDMismatch(serverDifference, toKill, network);
     }
 }

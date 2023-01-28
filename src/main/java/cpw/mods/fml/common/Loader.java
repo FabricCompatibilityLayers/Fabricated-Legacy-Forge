@@ -498,7 +498,7 @@ public class Loader {
     }
 
     public ModContainer activeModContainer() {
-        return this.modController.activeContainer();
+        return this.modController != null ? this.modController.activeContainer() : null;
     }
 
     public boolean isInState(LoaderState state) {
@@ -510,7 +510,7 @@ public class Loader {
     }
 
     public boolean hasReachedState(LoaderState state) {
-        return this.modController.hasReachedState(state);
+        return this.modController != null ? this.modController.hasReachedState(state) : false;
     }
 
     public String getMCPVersionString() {

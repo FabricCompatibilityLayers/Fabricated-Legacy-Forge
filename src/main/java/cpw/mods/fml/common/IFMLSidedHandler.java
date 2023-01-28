@@ -13,11 +13,14 @@
  */
 package cpw.mods.fml.common;
 
+import com.google.common.collect.MapDifference;
 import cpw.mods.fml.common.network.EntitySpawnAdjustmentPacket;
 import cpw.mods.fml.common.network.EntitySpawnPacket;
 import cpw.mods.fml.common.network.ModMissingPacket;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.ItemData;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.Connection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.PacketListener;
 import net.minecraft.network.packet.s2c.play.MapUpdateS2CPacket;
@@ -53,4 +56,8 @@ public interface IFMLSidedHandler {
     void setClientCompatibilityLevel(byte b);
 
     byte getClientCompatibilityLevel();
+
+    boolean shouldServerShouldBeKilledQuietly();
+
+    void disconnectIDMismatch(MapDifference<Integer, ItemData> mapDifference, PacketListener arg, Connection arg2);
 }
