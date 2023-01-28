@@ -1,207 +1,26 @@
 {
   "classes": {
-    "modloader": [
-      "ModTextureStatic"
-    ],
-    "cpw.mods.fml": {
-      "client": [
-        "GuiModList"
-      ],
-      "common": {
-        "asm.transformers": [
-          "MCPMerger"
-        ],
-        "event": [
-          "FMLPreInitializationEvent"
-        ],
-        "modloader": [
-          "ModLoaderConnectionHandler"
-        ]
-      },
-      "relauncher": [
-        "RelaunchLibraryManager"
-      ]
-    },
-    "net": {
-      "minecraft": {
-        "block": [
-          "class_174",
-          "CropBlock",
-          "RedstoneWireBlock",
-          "TorchBlock"
-        ],
-        "client": {
-          ".": [
-            "class_469",
-            "class_604",
-            "Minecraft",
-            "MinecraftApplet",
-            "ResourceDownloadThread",
-            "TextureManager"
-          ],
-          "gui": {
-            "hud": [
-              "InGameHud"
-            ],
-            "screen": {
-              ".": [
-                "TitleScreen"
-              ],
-              "ingame": [
-                "HandledScreen" // Added
-              ]
-            }
-          },
-          "options": [
-            "GameOptions"
-          ],
-          "particle": [
-            "BlockDustParticle",
-            "ParticleManager"
-          ],
-          "render": {
-            ".": [
-              "GameRenderer",
-              "ModelBox",
-              "WorldRenderer"
-            ],
-            "entity": [
-              "EntityRenderDispatcher"
-            ],
-            "item": [
-              "ItemRenderer"
-            ],
-            "model": [
-              "ModelPart"
-            ]
-          },
-          "sound": [
-            "SoundSystem"
-          ]
-        },
-        "enchantment": [
-          "Enchantment",
-          "EnchantmentHelper"
-        ],
-        "entity": {
-          ".": [
-            "Entity",
-            "EntityTracker",
-            "EntityType",
-            "TrackedEntityInstance"
-          ],
-          "ai.goal": [
-            "VillagerMatingGoal"
-          ],
-          "boss.dragon": [
-            "EnderDragonEntity"
-          ],
-          "mob": [
-            "MobEntity"
-          ],
-          "passive": [
-            "MooshroomEntity",
-            "OcelotEntity",
-            "SheepEntity",
-            "VillagerEntity"
-          ],
-          "player": [
-            "PlayerEntity",
-            "ServerPlayerEntity"
-          ],
-          "vehicle": [
-            "AbstractMinecartEntity"
-          ]
-        },
-        "inventory.slot": [
-          "Slot" // Added
-        ],
-        "item": [
-          "Item",
-          "ToolItem"
-        ],
-        "network": [
-          "PendingConnection"
-        ],
-        "recipe": [
-          "RecipeDispatcher"
-        ],
-        "screen": [
-          "FurnaceScreenHandler"
-        ],
-        "server": {
-          ".": [
-            "class_793",
-            "ListenThread",
-            "MinecraftServer",
-            "PlayerManager"
-          ],
-          "dedicated": {
-            ".": [
-              "MinecraftDedicatedServer"
-            ],
-            "gui": [
-              "PlayerStatsGui"
-            ]
-          },
-          "integrated": [
-            "IntegratedServer"
-          ],
-          "world": [
-            "ServerWorld"
-          ]
-        },
-        "util.crash": [
-          "CrashReport"
-        ],
-        "world": {
-          ".": [
-            "World"
-          ],
-          "chunk": [
-            "Chunk",
-            "RegionIo", // Removed
-            "ServerChunkProvider",
-            "ThreadedAnvilChunkStorage"
-          ],
-          "dimension": [
-            "Dimension"
-          ],
-          "level": [
-            "LevelGeneratorType"
-          ]
-        }
-      },
-      "minecraftforge": {
-        "common": [
-          "ForgeDirection",
-          "ForgeDummyContainer",
-          "ForgeVersion",
-          "MinecraftForge"
-        ],
-        "event.entity.player": [
-          "PlayerInteractEvent"
-        ],
-        "liquids": [ // Added
-          "IBlockLiquid",
-          "ILiquid",
-          "ILiquidTank",
-          "ITankContainer",
-          "LiquidContainerData",
-          "LiquidContainerRegistry",
-          "LiquidDictionary",
-          "LiquidEvent",
-          "LiquidStack",
-          "LiquidTank"
-        ],
-        "oredict": [
-          "OreDictionary"
-        ]
-      }
-    }
+
   },
   "at": {
-    "fml": [],
-    "forge": []
+    "fml": [
+      "protected asy.a #FD:GuiYesNo/field_73942_a #guiScreen"
+    ],
+    "forge": [
+      "public aaf.d #FD:AnvilChunkLoader/field_75825_d",
+      "public im.e #FD:ChunkProviderServer/field_73247_e",
+      "public ik.a(IIZ)Lil; #MD:PlayerManager/func_72690_a #getOrCreateChunkWatcher",
+
+      "# PlayerInstance",
+      "public il #CL:PlayerInstance",
+
+      "# GuiContainer",
+      "protected auy.a(Lsq;)V #MD:GuiContainer/func_74192_a #drawSlotInventory",
+      "# BlockButton",
+      "protected aiy.o(Lxv;III)V #MD:BlockButton/func_82535_o #checkActivation",
+      "protected-f aiy.a #FD:BlockButton/field_82537_a #sensible",
+      "# BiomeDecorator",
+      "public yv.* #FD:EntityMinecart/* # All private -> protected"
+    ]
   }
 }
