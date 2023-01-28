@@ -1,64 +1,64 @@
-package fr.catcore.fabricatedforge.forged;
+package fr.catcore.fabricatedforge.mixin.forgefml.client.texture;
 
-import cpw.mods.fml.client.FMLTextureFX;
+import fr.catcore.fabricatedforge.mixininterface.IFMLTextureFX;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.Item;
+import net.minecraft.client.texture.CompassSprite;
 import net.minecraft.util.math.BlockPos;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-public class CompassSpriteForged extends FMLTextureFX {
-    private Minecraft field_2148;
-    private int[] field_2149 = new int[256];
-    public double field_2150;
-    public double field_2151;
-    public static CompassSpriteForged field_5222;
-    public static int stileSizeBase = 16;
-    public static int stileSizeSquare = 256;
-    public static int stileSizeMask = 15;
-    public static int stileSizeSquareMask = 255;
+@Mixin(CompassSprite.class)
+public class CompassSpriteMixin implements IFMLTextureFX {
+    @Shadow private int[] field_2149;
+    @Shadow private Minecraft field_2148;
+    @Shadow public static CompassSprite field_5222;
 
-    public CompassSpriteForged(Minecraft par1Minecraft) {
-        super(Item.COMPASS.method_3343(0));
-        this.field_2148 = par1Minecraft;
-        this.field_2157 = 1;
+    private static int stileSizeBase = 16;
+    private static int stileSizeSquare = 256;
+    private static int stileSizeMask = 15;
+    private static int stileSizeSquareMask = 255;
+
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void injectCtr(CallbackInfo ci) {
         this.setup();
     }
 
     @Override
     public void setup() {
-        super.setup();
-        stileSizeBase = this.tileSizeBase;
-        stileSizeSquare = this.tileSizeSquare;
-        stileSizeMask = this.tileSizeMask;
-        stileSizeSquareMask = this.tileSizeSquareMask;
-        this.field_2149 = new int[this.tileSizeSquare];
+        this.callFMLSetup();
+        stileSizeBase = getThis().tileSizeBase;
+        stileSizeSquare = getThis().tileSizeSquare;
+        stileSizeMask = getThis().tileSizeMask;
+        stileSizeSquareMask = getThis().tileSizeSquareMask;
+        this.field_2149 = new int[getThis().tileSizeSquare];
 
         try {
             BufferedImage var2 = ImageIO.read(this.field_2148.texturePackManager.getCurrentTexturePack().openStream("/gui/items.png"));
-            int var3 = this.field_2153 % 16 * this.tileSizeBase;
-            int var4 = this.field_2153 / 16 * this.tileSizeBase;
-            var2.getRGB(var3, var4, this.tileSizeBase, this.tileSizeBase, this.field_2149, 0, this.tileSizeBase);
+            int var3 = getThis().field_2153 % 16 * getThis().tileSizeBase;
+            int var4 = getThis().field_2153 / 16 * getThis().tileSizeBase;
+            var2.getRGB(var3, var4, getThis().tileSizeBase, getThis().tileSizeBase, this.field_2149, 0, getThis().tileSizeBase);
         } catch (IOException var41) {
             var41.printStackTrace();
         }
 
-        field_5222 = this;
+        field_5222 = (CompassSprite)(Object) this;
     }
 
-    @Override
-    public void method_1613() {
-        if (this.field_2148.world != null && this.field_2148.playerEntity != null) {
-            method_4361(this.field_2148.playerEntity.x, this.field_2148.playerEntity.z, (double)this.field_2148.playerEntity.yaw, false, false);
-        } else {
-            method_4361(0.0, 0.0, 0.0, true, false);
-        }
-    }
-
+    /**
+     * @author forge
+     * @reason fmltexturefx
+     */
+    @Overwrite
     public static void method_4361(double par0, double par2, double par4, boolean par6, boolean par7) {
-        int[] var8 = field_5222.field_2149;
+        int[] var8 = ((CompassSpriteMixin)(Object)field_5222).field_2149;
         byte[] var9 = field_5222.field_2152;
 
         for(int var10 = 0; var10 < stileSizeSquare; ++var10) {
@@ -82,12 +82,12 @@ public class CompassSpriteForged extends FMLTextureFX {
         }
 
         double var27 = 0.0;
-        if (field_5222.field_2148.world != null && !par6) {
-            BlockPos var29 = field_5222.field_2148.world.getWorldSpawnPos();
+        if (((CompassSpriteMixin)(Object)field_5222).field_2148.world != null && !par6) {
+            BlockPos var29 = ((CompassSpriteMixin)(Object)field_5222).field_2148.world.getWorldSpawnPos();
             double var28 = (double)var29.x - par0;
             double var32 = (double)var29.z - par2;
             var27 = (par4 - 90.0) * Math.PI / 180.0 - Math.atan2(var32, var28);
-            if (!field_5222.field_2148.world.dimension.canPlayersSleep()) {
+            if (!((CompassSpriteMixin)(Object)field_5222).field_2148.world.dimension.canPlayersSleep()) {
                 var27 = Math.random() * Math.PI * 2.0;
             }
         }
