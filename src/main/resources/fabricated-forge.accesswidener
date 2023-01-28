@@ -14,6 +14,7 @@ accessible field net/minecraft/client/TextureManager field_1978 Ljava/util/List;
 
 accessible field net/minecraft/client/render/entity/EntityRenderDispatcher renderers Ljava/util/Map;
 
+# net/minecraft/client/BlockRenderer.*
 accessible field net/minecraft/client/BlockRenderer field_5184 D
 accessible field net/minecraft/client/BlockRenderer field_5185 D
 accessible field net/minecraft/client/BlockRenderer field_5186 D
@@ -202,6 +203,8 @@ accessible field net/minecraft/entity/passive/VillagerEntity field_3947 Ljava/ut
 
 accessible class net/minecraft/client/class_424
 
+accessible field net/minecraft/client/gui/screen/ConfirmScreen field_1077 Lnet/minecraft/client/gui/screen/Screen;
+
 #### Forge
 accessible method net/minecraft/block/class_174 method_360 (Lnet/minecraft/block/class_174;)I
 
@@ -238,7 +241,7 @@ accessible field net/minecraft/client/sound/SoundSystem soundsLoader Lnet/minecr
 accessible field net/minecraft/client/sound/SoundSystem bgmusicLoader Lnet/minecraft/client/sound/SoundLoader;
 accessible field net/minecraft/client/sound/SoundSystem musicLoader Lnet/minecraft/client/sound/SoundLoader;
 
-## -> protected
+## net/minecraft/entity/vehicle/AbstractMinecartEntity.* -> protected
 accessible field net/minecraft/entity/vehicle/AbstractMinecartEntity field_3906 [Lnet/minecraft/item/ItemStack;
 accessible field net/minecraft/entity/vehicle/AbstractMinecartEntity field_3907 I
 accessible field net/minecraft/entity/vehicle/AbstractMinecartEntity yawFlipped Z
@@ -305,10 +308,11 @@ accessible field net/minecraft/structure/class_24 field_48 [Lnet/minecraft/util/
 
 accessible field net/minecraft/structure/class_49 field_89 [Lnet/minecraft/util/WeightedRandomChestContent;
 
-### idk what default means
-#field net/minecraft/world/chunk/ThreadedAnvilChunkStorage saveLocation Ljava/io/File;
-#field net/minecraft/world/chunk/ServerChunkProvider chunkWriter Lnet/minecraft/world/chunk/ChunkStorage;
-#method net/minecraft/server/PlayerWorldManager method_2107 (IIZ)Lnet/minecraft/server/class_793;
+accessible field net/minecraft/world/chunk/ThreadedAnvilChunkStorage saveLocation Ljava/io/File;
+accessible field net/minecraft/world/chunk/ServerChunkProvider chunkWriter Lnet/minecraft/world/chunk/ChunkStorage;
+accessible method net/minecraft/server/PlayerWorldManager method_2107 (IIZ)Lnet/minecraft/server/class_793;
+
+accessible class net/minecraft/server/class_793
 
 accessible field net/minecraft/world/World villageState Lnet/minecraft/village/VillageState;
 accessible field net/minecraft/world/World field_4530 Ljava/util/Set;
@@ -318,6 +322,7 @@ accessible field net/minecraft/entity/mob/MobEntity experiencePoints I
 accessible method net/minecraft/client/gui/screen/SuperflatPresetScreen method_4249 (Ljava/lang/String;ILnet/minecraft/world/biome/Biome;Ljava/util/List;[Lnet/minecraft/world/gen/layer/FlatWorldLayer;)V
 accessible method net/minecraft/client/gui/screen/SuperflatPresetScreen method_4250 (Ljava/lang/String;ILnet/minecraft/world/biome/Biome;[Lnet/minecraft/world/gen/layer/FlatWorldLayer;)V
 
+# net/minecraft/world/biome/Biome.*
 accessible field net/minecraft/world/biome/Biome mutated Z
 accessible field net/minecraft/world/biome/Biome field_4635 Z
 accessible field net/minecraft/world/biome/Biome monsterEntries Ljava/util/List;
@@ -347,11 +352,60 @@ accessible field net/minecraft/recipe/ShapedRecipeType height I
 
 accessible field net/minecraft/recipe/ShapelessRecipeType stacks Ljava/util/List;
 
+accessible method net/minecraft/client/gui/screen/ingame/HandledScreen drawSlot (Lnet/minecraft/inventory/slot/Slot;)V
+
+accessible method net/minecraft/block/AbstractButtonBlock method_4163 (Lnet/minecraft/world/World;III)V
+
+accessible field net/minecraft/block/AbstractButtonBlock wooden Z
+mutable field net/minecraft/block/AbstractButtonBlock wooden Z
+
+# net/minecraft/world/biome/BiomeDecorator.*
+accessible field net/minecraft/world/biome/BiomeDecorator world Lnet/minecraft/world/World;
+accessible field net/minecraft/world/biome/BiomeDecorator random Ljava/util/Random;
+accessible field net/minecraft/world/biome/BiomeDecorator field_4689 I
+accessible field net/minecraft/world/biome/BiomeDecorator field_4690 I
+accessible field net/minecraft/world/biome/BiomeDecorator field_4691 Lnet/minecraft/world/biome/Biome;
+accessible field net/minecraft/world/biome/BiomeDecorator clayFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator sandDiskFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator gravelDiskFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator dirtFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator gravelFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator coalOreFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator ironOreFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator goldOreFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator field_4700 Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator field_4701 Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator lapisOreFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator field_4703 Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator field_4704 Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator brownMushroomFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator redMushroomFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator hugeMushroomFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator sugarcaneFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator cactusFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator lilyPadFeature Lnet/minecraft/world/gen/feature/Feature;
+accessible field net/minecraft/world/biome/BiomeDecorator lilyPadsPerChunk I
+accessible field net/minecraft/world/biome/BiomeDecorator treesPerChunk I
+accessible field net/minecraft/world/biome/BiomeDecorator flowersPerChunk I
+accessible field net/minecraft/world/biome/BiomeDecorator grassPerChunk I
+accessible field net/minecraft/world/biome/BiomeDecorator deadBushesPerChunk I
+accessible field net/minecraft/world/biome/BiomeDecorator mushroomsPerChunk I
+accessible field net/minecraft/world/biome/BiomeDecorator sugarcanePerChunk I
+accessible field net/minecraft/world/biome/BiomeDecorator cactusPerChunk I
+accessible field net/minecraft/world/biome/BiomeDecorator gravelDisksPerChunk I
+accessible field net/minecraft/world/biome/BiomeDecorator sandDisksPerChunk I
+accessible field net/minecraft/world/biome/BiomeDecorator clayPerChunk I
+accessible field net/minecraft/world/biome/BiomeDecorator hugeMushroomsPerChunk I
+
+accessible method net/minecraft/world/biome/BiomeDecorator method_3846 ()V
+accessible method net/minecraft/world/biome/BiomeDecorator generateOre (ILnet/minecraft/world/gen/feature/Feature;II)V
+accessible method net/minecraft/world/biome/BiomeDecorator method_3850 (ILnet/minecraft/world/gen/feature/Feature;II)V
+accessible method net/minecraft/world/biome/BiomeDecorator generateOres ()V
+
 #### Fabricated Forge
 accessible class net/minecraft/client/class_470
 accessible class net/minecraft/client/class_416
 accessible class net/minecraft/client/class_417
-accessible class net/minecraft/server/class_793
 accessible class net/minecraft/server/dedicated/class_772
 accessible class net/minecraft/util/class_797
 accessible class net/minecraft/structure/class_8
