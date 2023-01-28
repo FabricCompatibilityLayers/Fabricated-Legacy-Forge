@@ -225,6 +225,10 @@ public abstract class MinecraftMixin {
 
     @Shadow private long f3CTime;
 
+    @Shadow private class_587 field_3793;
+
+    @Shadow private class_590 field_3792;
+
     @Inject(method = "openScreen", at = @At("HEAD"), cancellable = true)
     private void fix_openScreen(Screen par1, CallbackInfo ci) {
         if (par1 instanceof FatalErrorScreenForged) {
@@ -318,15 +322,15 @@ public abstract class MinecraftMixin {
         GL11.glMatrixMode(5888);
         this.setGlErrorMessage("Startup");
         this.soundSystem.method_1709(this.options);
-        this.textureManager.method_1416(new class_587Forged());
-        this.textureManager.method_1416(new class_590Forged());
-        this.textureManager.method_1416(new class_588Forged());
-        this.textureManager.method_1416(new CompassSpriteForged((Minecraft)(Object) this));
-        this.textureManager.method_1416(new ClockSpriteForged((Minecraft)(Object) this));
-        this.textureManager.method_1416(new class_589Forged());
-        this.textureManager.method_1416(new class_586Forged());
-        this.textureManager.method_1416(new class_585Forged(0));
-        this.textureManager.method_1416(new class_585Forged(1));
+        this.textureManager.method_1416(this.field_3793);
+        this.textureManager.method_1416(this.field_3792);
+        this.textureManager.method_1416(new NetherPortalSprite());
+        this.textureManager.method_1416(new CompassSprite((Minecraft)(Object) this));
+        this.textureManager.method_1416(new ClockSprite((Minecraft)(Object) this));
+        this.textureManager.method_1416(new class_589());
+        this.textureManager.method_1416(new class_586());
+        this.textureManager.method_1416(new FireSprite(0));
+        this.textureManager.method_1416(new FireSprite(1));
         this.worldRenderer = new WorldRenderer((Minecraft)(Object) this, this.textureManager);
         GL11.glViewport(0, 0, this.width, this.height);
         this.particleManager = new ParticleManager(this.world, this.textureManager);

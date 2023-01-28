@@ -1,36 +1,44 @@
-package fr.catcore.fabricatedforge.forged;
+package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
-import cpw.mods.fml.client.FMLTextureFX;
-import net.minecraft.block.Block;
+import fr.catcore.fabricatedforge.mixininterface.IFMLTextureFX;
+import net.minecraft.client.NetherPortalSprite;
 import net.minecraft.util.math.MathHelper;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
 
-public class class_588Forged extends FMLTextureFX {
-    private int field_2169 = 0;
-    private byte[][] field_2170;
+@Mixin(NetherPortalSprite.class)
+public class NetherPortalSpriteMixin implements IFMLTextureFX {
+    @Shadow private byte[][] field_2170;
 
-    public class_588Forged() {
-        super(Block.NETHER_PORTAL.field_439);
+    @Shadow private int field_2169;
+
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void injectCtr(CallbackInfo ci) {
         this.setup();
     }
 
     @Override
     public void setup() {
-        super.setup();
-        this.field_2170 = new byte[32][this.tileSizeSquare << 4];
+        this.callFMLSetup();
+        this.field_2170 = new byte[32][getThis().tileSizeSquare << 4];
         Random var1 = new Random(100L);
 
         for(int var2 = 0; var2 < 32; ++var2) {
-            for(int var3 = 0; var3 < this.tileSizeBase; ++var3) {
-                for(int var4 = 0; var4 < this.tileSizeBase; ++var4) {
+            for(int var3 = 0; var3 < getThis().tileSizeBase; ++var3) {
+                for(int var4 = 0; var4 < getThis().tileSizeBase; ++var4) {
                     float var5 = 0.0F;
 
                     for(int var6 = 0; var6 < 2; ++var6) {
-                        float var7 = (float)(var6 * this.tileSizeBase) * 0.5F;
-                        float var8 = (float)(var6 * this.tileSizeBase) * 0.5F;
-                        float var9 = ((float)var3 - var7) / (float)this.tileSizeBase * 2.0F;
-                        float var10 = ((float)var4 - var8) / (float)this.tileSizeBase * 2.0F;
+                        float var7 = (float)(var6 * getThis().tileSizeBase) * 0.5F;
+                        float var8 = (float)(var6 * getThis().tileSizeBase) * 0.5F;
+                        float var9 = ((float)var3 - var7) / (float)getThis().tileSizeBase * 2.0F;
+                        float var10 = ((float)var4 - var8) / (float)getThis().tileSizeBase * 2.0F;
                         if (var9 < -1.0F) {
                             var9 += 2.0F;
                         }
@@ -60,7 +68,7 @@ public class class_588Forged extends FMLTextureFX {
                     int var13 = (int)(var5 * var5 * 200.0F + 55.0F);
                     int var14x = (int)(var5 * var5 * var5 * var5 * 255.0F);
                     int var15 = (int)(var5 * 100.0F + 155.0F);
-                    int var16 = var4 * this.tileSizeBase + var3;
+                    int var16 = var4 * getThis().tileSizeBase + var3;
                     this.field_2170[var2][var16 * 4 + 0] = (byte)var13;
                     this.field_2170[var2][var16 * 4 + 1] = (byte)var14x;
                     this.field_2170[var2][var16 * 4 + 2] = (byte)var141;
@@ -70,17 +78,21 @@ public class class_588Forged extends FMLTextureFX {
         }
     }
 
-    @Override
+    /**
+     * @author forge
+     * @reason fmltexturefx
+     */
+    @Overwrite
     public void method_1613() {
         ++this.field_2169;
         byte[] var1 = this.field_2170[this.field_2169 & 31];
 
-        for(int var2 = 0; var2 < this.tileSizeSquare; ++var2) {
+        for(int var2 = 0; var2 < getThis().tileSizeSquare; ++var2) {
             int var3 = var1[var2 * 4 + 0] & 255;
             int var4 = var1[var2 * 4 + 1] & 255;
             int var5 = var1[var2 * 4 + 2] & 255;
             int var6 = var1[var2 * 4 + 3] & 255;
-            if (this.field_2154) {
+            if (getThis().field_2154) {
                 int var7 = (var3 * 30 + var4 * 59 + var5 * 11) / 100;
                 int var8 = (var3 * 30 + var4 * 70) / 100;
                 int var9 = (var3 * 30 + var5 * 70) / 100;
@@ -89,10 +101,10 @@ public class class_588Forged extends FMLTextureFX {
                 var5 = var9;
             }
 
-            this.field_2152[var2 * 4 + 0] = (byte)var3;
-            this.field_2152[var2 * 4 + 1] = (byte)var4;
-            this.field_2152[var2 * 4 + 2] = (byte)var5;
-            this.field_2152[var2 * 4 + 3] = (byte)var6;
+            getThis().field_2152[var2 * 4 + 0] = (byte)var3;
+            getThis().field_2152[var2 * 4 + 1] = (byte)var4;
+            getThis().field_2152[var2 * 4 + 2] = (byte)var5;
+            getThis().field_2152[var2 * 4 + 3] = (byte)var6;
         }
     }
 }
