@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "fr.catcore.fabricatedforge.mixin.forgefml",
   "compatibilityLevel": "JAVA_8",
+  "plugin": "fr.catcore.fabricatedforge.mixin.FabricatedForgeMixinPlugin",
   "server": [
     "server.dedicated.gui.PlayerStatsGuiMixin"
   ],
@@ -151,11 +152,17 @@
     "client.BlockRendererMixin",
     "client.class_469Mixin",
     "client.class_470Accessor",
+    "client.class_586Mixin",
+    "client.class_587Mixin",
+    "client.class_589Mixin",
+    "client.class_590Mixin",
     "client.class_604Mixin",
     "client.ClientBrandRetrieverMixin",
+    "client.FireSpriteMixin",
     "client.MinecraftAccessor",
     "client.MinecraftAppletMixin",
     "client.MinecraftMixin",
+    "client.NetherPortalSpriteMixin",
     "client.ResourceDownloadThreadMixin",
     "client.TextureManagerMixin",
     "client.gui.hud.InGameHudMixin",
@@ -184,6 +191,8 @@
     "client.render.item.ItemRendererMixin",
     "client.sound.SoundLoaderMixin",
     "client.sound.SoundSystemMixin",
+    "client.texture.ClockSpriteMixin",
+    "client.texture.CompassSpriteMixin",
     "client.world.ClientWorldMixin"
   ],
   "injectors": {

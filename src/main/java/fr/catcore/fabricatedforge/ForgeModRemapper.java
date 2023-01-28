@@ -48,57 +48,6 @@ public class ForgeModRemapper implements ModRemapper {
         mappings.add("ModTextureAnimation", "net/minecraft/ModTextureAnimation");
         mappings.add("ModTextureStatic", "net/minecraft/ModTextureStatic");
         mappings.add("TradeEntry", "net/minecraft/TradeEntry");
-
-        // Forge cursed overwrites mappings
-        mappings.add(getOfficialClassName("net/minecraft/class_585"), "fr/catcore/fabricatedforge/forged/class_585Forged")
-                .field("a", "field_2158", "[F")
-                .field("b", "field_2159", "[F");
-
-        mappings.add(getOfficialClassName("net/minecraft/class_586"), "fr/catcore/fabricatedforge/forged/class_586Forged")
-                .field("a", "field_2160", "[F")
-                .field("b", "field_2161", "[F")
-                .field("c", "field_2162", "[F")
-                .field("j", "field_2163", "[F")
-                .field("k", "field_2164", "I");
-
-        mappings.add(getOfficialClassName("net/minecraft/class_587"), "fr/catcore/fabricatedforge/forged/class_587Forged")
-                .field("a", "field_2165", "[F")
-                .field("b", "field_2166", "[F")
-                .field("c", "field_2167", "[F")
-                .field("j", "field_2168", "[F");
-
-        mappings.add(getOfficialClassName("net/minecraft/class_588"), "fr/catcore/fabricatedforge/forged/class_588Forged")
-                .field("a", "field_2169", "I")
-                .field("b", "field_2170", "[[B");
-
-        mappings.add(getOfficialClassName("net/minecraft/class_589"), "fr/catcore/fabricatedforge/forged/class_589Forged")
-                .field("a", "field_2171", "[F")
-                .field("b", "field_2172", "[F")
-                .field("c", "field_2173", "[F")
-                .field("j", "field_2174", "[F")
-                .field("k", "field_2175", "I");
-
-        mappings.add(getOfficialClassName("net/minecraft/class_590"), "fr/catcore/fabricatedforge/forged/class_590Forged")
-                .field("a", "field_2176", "[F")
-                .field("b", "field_2177", "[F")
-                .field("c", "field_2178", "[F")
-                .field("j", "field_2179", "[F")
-                .field("k", "field_2180", "I");
-
-        mappings.add(getOfficialClassName("net/minecraft/class_582"), "fr/catcore/fabricatedforge/forged/ClockSpriteForged")
-                .field("a", "field_2143", "Lnet/minecraft/client/Minecraft;")
-                .field("b", "field_2144", "[I")
-                .field("c", "field_2145", "[I")
-                .field("j", "field_2146", "D")
-                .field("k", "field_2147", "D");
-
-        mappings.add(getOfficialClassName("net/minecraft/class_583"), "fr/catcore/fabricatedforge/forged/CompassSpriteForged")
-                .field("j", "field_2148", "Lnet/minecraft/client/Minecraft;")
-                .field("k", "field_2149", "[I")
-                .field("a", "field_2150", "D")
-                .field("b", "field_2151", "D")
-                .field("c", "field_5222", "L" + getOfficialClassName("net/minecraft/class_583") + ";")
-                .method("a", "method_4361", "(DDDZZ)V");
     }
 
     private String getOfficialClassName(String className) {
