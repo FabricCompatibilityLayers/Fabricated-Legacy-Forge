@@ -103,6 +103,12 @@ public class ForgeModRemapper implements ModRemapper {
                 new VisitorInfos.MethodNamed("net/minecraft/class_570", "NAME_TAG_RANGE_SNEAK"),
                 new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "NAME_TAG_RANGE_SNEAK")
         );
+
+
+        infos.registerMethodFieldIns(
+                new VisitorInfos.MethodNamed("net/minecraft/class_988", "PERSISTED_NBT_TAG"),
+                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "PERSISTED_NBT_TAG")
+        );
     }
 
     @Override

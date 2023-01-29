@@ -46,4 +46,6 @@ public class ReflectionUtils {
 
     public static float NAME_TAG_RANGE = 64.0F;
     public static float NAME_TAG_RANGE_SNEAK = 32.0F;
+
+    public static final String PERSISTED_NBT_TAG = "PlayerPersisted";
 }

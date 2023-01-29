@@ -195,7 +195,12 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
                 ServerWorld var2 = this.worlds[var1];
                 MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(var2));
                 var2.close();
-                DimensionManager.setWorld(var2.dimension.dimensionType, null);
+            }
+
+            ServerWorld[] tmp = this.worlds;
+
+            for(ServerWorld world : tmp) {
+                DimensionManager.setWorld(world.dimension.dimensionType, null);
             }
 
             if (this.snooper != null && this.snooper.isActive()) {
@@ -246,37 +251,51 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
                 }
 
                 FMLCommonHandler.instance().handleServerStopping();
-            } else {
-                this.setCrashReport((CrashReport)null);
-            }
-        } catch (Throwable var48) {
-            var48.printStackTrace();
-            field_3848.log(Level.SEVERE, "Encountered an unexpected exception " + var48.getClass().getSimpleName(), var48);
-            CrashReport var2 = null;
-            if (var48 instanceof CrashException) {
-                var2 = this.populateCrashReport(((CrashException)var48).getReport());
-            } else {
-                var2 = this.populateCrashReport(new CrashReport("Exception in server tick loop", var48));
+                return;
             }
 
-            File var3 = new File(
-                    new File(this.getRunDirectory(), "crash-reports"), "crash-" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + "-server.txt"
-            );
-            if (var2.saveTo(var3)) {
-                field_3848.severe("This crash report has been saved to: " + var3.getAbsolutePath());
-            } else {
-                field_3848.severe("We were unable to save this crash report to disk.");
-            }
+            this.setCrashReport((CrashReport)null);
+            return;
+        } catch (Throwable var67) {
+            if (!FMLCommonHandler.instance().shouldServerBeKilledQuietly()) {
+                var67.printStackTrace();
+                field_3848.log(Level.SEVERE, "Encountered an unexpected exception " + var67.getClass().getSimpleName(), var67);
+                CrashReport var2 = null;
+                if (var67 instanceof CrashException) {
+                    var2 = this.populateCrashReport(((CrashException)var67).getReport());
+                } else {
+                    var2 = this.populateCrashReport(new CrashReport("Exception in server tick loop", var67));
+                }
 
-            this.setCrashReport(var2);
+                File var3 = new File(
+                        new File(this.getRunDirectory(), "crash-reports"),
+                        "crash-" + new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss").format(new Date()) + "-server.txt"
+                );
+                if (var2.saveTo(var3)) {
+                    field_3848.severe("This crash report has been saved to: " + var3.getAbsolutePath());
+                } else {
+                    field_3848.severe("We were unable to save this crash report to disk.");
+                }
+
+                this.setCrashReport(var2);
+                return;
+            }
         } finally {
-            try {
-                this.stopServer();
-                this.stopped = true;
-            } catch (Throwable var461) {
-                var461.printStackTrace();
-            } finally {
-                this.exit();
+            label535: {
+                try {
+                    if (!FMLCommonHandler.instance().shouldServerBeKilledQuietly()) {
+                        this.stopServer();
+                        this.stopped = true;
+                        break label535;
+                    }
+                } catch (Throwable var65) {
+                    var65.printStackTrace();
+                    break label535;
+                } finally {
+                    this.exit();
+                }
+
+                return;
             }
         }
     }
@@ -423,7 +442,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
      */
     @Overwrite
     public String getServerModName() {
-        return "forge,fml on fabric";
+        return "fml on fabric";
     }
 
     /**

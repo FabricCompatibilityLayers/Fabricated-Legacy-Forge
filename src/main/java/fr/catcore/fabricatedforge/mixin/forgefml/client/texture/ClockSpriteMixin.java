@@ -55,6 +55,7 @@ public class ClockSpriteMixin implements IFMLTextureFX {
 
             var2.getRGB(0, 0, getThis().tileSizeBase, getThis().tileSizeBase, this.field_2145, 0, getThis().tileSizeBase);
         } catch (Exception var6) {
+            var6.printStackTrace();
             getThis().log.log(Level.WARNING, String.format("A problem occurred with the watch texture: animation will be disabled"), var6);
             getThis().setErrored(true);
         }

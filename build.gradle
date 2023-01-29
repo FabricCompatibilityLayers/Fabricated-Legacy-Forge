@@ -51,6 +51,7 @@ dependencies {
 	modImplementation("net.legacyfabric.legacy-fabric-api:legacy-fabric-logger-api-v1:${project.logger_api}")
 
 	implementation(include(group: "local", name: "argo", version: "2.25"))
+	implementation(include(group: "local", name: "bcprov-jdk15on", version: "147"))
 	implementation(include(group: "local", name: "guava", version: "12.0.1"))
 
 	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))

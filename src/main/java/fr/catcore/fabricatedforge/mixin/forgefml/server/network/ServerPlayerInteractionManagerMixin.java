@@ -156,7 +156,6 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
                         var7.method_3417(this.world, var4, par1, par2, par3, this.player);
                         if (var7.count == 0) {
                             this.player.removeSelectedSlotItem();
-                            MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(this.player, var7));
                         }
                     }
 

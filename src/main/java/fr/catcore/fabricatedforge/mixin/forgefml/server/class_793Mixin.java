@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server;
 
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.BlockUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.ChunkBlockUpdateS2CPacket;
@@ -8,6 +9,8 @@ import net.minecraft.network.packet.s2c.play.ChunkUpdateS2CPacket;
 import net.minecraft.server.PlayerWorldManager;
 import net.minecraft.server.class_793;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.ChunkWatchEvent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -33,6 +36,32 @@ public abstract class class_793Mixin {
     @Shadow public abstract void method_2120(Packet packet);
 
     @Shadow protected abstract void method_2119(BlockEntity blockEntity);
+
+    @Shadow @Final public List<ServerPlayerEntity> field_2796;
+
+    /**
+     * @author forge
+     * @reason hook
+     */
+    @Overwrite
+    public void method_2124(ServerPlayerEntity par1EntityPlayerMP) {
+        if (this.field_2796.contains(par1EntityPlayerMP)) {
+            par1EntityPlayerMP.field_2823
+                    .sendPacket(new ChunkUpdateS2CPacket(this.field_2795.getWorld().getChunk(this.field_2797.x, this.field_2797.z), true, 0));
+            this.field_2796.remove(par1EntityPlayerMP);
+            par1EntityPlayerMP.loadedChunks.remove(this.field_2797);
+            MinecraftForge.EVENT_BUS.post(new ChunkWatchEvent.UnWatch(this.field_2797, par1EntityPlayerMP));
+            if (this.field_2796.isEmpty()) {
+                long var2 = (long)this.field_2797.x + 2147483647L | (long)this.field_2797.z + 2147483647L << 32;
+                ((PlayerWorldManagerAccessor) this.field_2795).getPlayerInstancesById().remove(var2);
+                if (this.field_2799 > 0) {
+                    ((PlayerWorldManagerAccessor) this.field_2795).getField_2792().remove(this);
+                }
+
+                this.field_2795.getWorld().chunkCache.scheduleUnload(this.field_2797.x, this.field_2797.z);
+            }
+        }
+    }
 
     /**
      * @author Minecraft Forge
@@ -76,7 +105,7 @@ public abstract class class_793Mixin {
                 for(int var3 = 0; var3 < 16; ++var3) {
                     if ((this.field_2800 & 1 << var3) != 0) {
                         int var4 = var3 << 4;
-                        List var5 = this.field_2795.getWorld().method_2134(var1, var4, var2, var1 + 16, var4 + 16, var2 + 16);
+                        List var5 = this.field_2795.getWorld().method_2134(var1, var4, var2, var1 + 15, var4 + 16, var2 + 15);
 
                         for(int var6 = 0; var6 < var5.size(); ++var6) {
                             this.method_2119((BlockEntity)var5.get(var6));

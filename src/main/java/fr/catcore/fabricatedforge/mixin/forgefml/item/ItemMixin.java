@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.item;
 
+import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.ItemProxy;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
@@ -51,6 +52,7 @@ public abstract class ItemMixin implements ItemProxy, IItem {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void fmlCtr(int par1, CallbackInfo ci) {
+        GameData.newItemAdded((Item)(Object) this);
         if (!((Object)this instanceof BlockItem)) {
             this.isDefaultTexture = "/gui/items.png".equals(this.getTextureFile());
         }

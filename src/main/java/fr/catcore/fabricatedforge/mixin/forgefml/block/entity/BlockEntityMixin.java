@@ -2,10 +2,14 @@ package fr.catcore.fabricatedforge.mixin.forgefml.block.entity;
 
 import cpw.mods.fml.common.FMLLog;
 import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
+import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Connection;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.util.crash.CrashReportSection;
+import net.minecraft.util.crash.provider.world.BlockEntityNameProvider;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -16,6 +20,16 @@ import java.util.logging.Level;
 @Mixin(BlockEntity.class)
 public abstract class BlockEntityMixin implements IBlockEntity {
     @Shadow private static Map<String, Class> stringClassMap;
+
+    @Shadow public int x;
+
+    @Shadow public int y;
+
+    @Shadow public int z;
+
+    @Shadow public Block block;
+
+    @Shadow public int dataValue;
 
     /**
      * @author forge
@@ -54,6 +68,16 @@ public abstract class BlockEntityMixin implements IBlockEntity {
         return var1;
     }
 
+    /**
+     * @author forge
+     * @reason additional null check
+     */
+    @Overwrite
+    public void populateCrashReport(CrashReportSection par1CrashReportCategory) {
+        par1CrashReportCategory.add("Name", new BlockEntityNameProvider((BlockEntity)(Object) this));
+        CrashReportSection.addBlock(par1CrashReportCategory, this.x, this.y, this.z, this.block != null ? this.block.id : 0, this.dataValue);
+    }
+
     @Override
     public boolean canUpdate() {
         return true;
@@ -65,5 +89,10 @@ public abstract class BlockEntityMixin implements IBlockEntity {
 
     @Override
     public void onChunkUnload() {
+    }
+
+    @Override
+    public boolean shouldRefresh(int oldID, int newID, int oldMeta, int newMeta, World world, int x, int y, int z) {
+        return true;
     }
 }

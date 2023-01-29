@@ -25,8 +25,10 @@ import net.minecraft.entity.player.PlayerAbilities;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.projectile.FishingBobberEntity;
+import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
@@ -125,6 +127,16 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     @Shadow public float strideDistance;
 
     @Shadow protected abstract void method_3212(double d, double e, double f);
+
+    @Shadow public int experienceLevel;
+
+    @Shadow public int totalExperience;
+
+    @Shadow public float experienceProgress;
+
+    @Shadow public abstract void setScore(int score);
+
+    @Shadow private EnderChestInventory enderChest;
 
     public PlayerEntityMixin(World world) {
         super(world);
@@ -703,13 +715,14 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         var3.getOrGenerateChunk(par1ChunkCoordinates.x + 3 >> 4, par1ChunkCoordinates.z + 3 >> 4);
         Block block = Block.BLOCKS[par0World.getBlock(par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z)];
         if (block != null && block.isBed(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, null)) {
+            BlockPos var8 = block.getBedSpawnPosition(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, null);
+            return var8;
+        } else {
             Material var4 = par0World.getMaterial(par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z);
             Material var5 = par0World.getMaterial(par1ChunkCoordinates.x, par1ChunkCoordinates.y + 1, par1ChunkCoordinates.z);
             boolean var6 = !var4.isSolid() && !var4.isFluid();
             boolean var7 = !var5.isSolid() && !var5.isFluid();
             return par2 && var6 && var7 ? par1ChunkCoordinates : null;
-        } else {
-            return block.getBedSpawnPosition(par0World, par1ChunkCoordinates.x, par1ChunkCoordinates.y, par1ChunkCoordinates.z, null);
         }
     }
 
@@ -775,6 +788,36 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         }
 
         return var3;
+    }
+
+    /**
+     * @author forge
+     * @reason persistent data
+     */
+    @Overwrite
+    public void copyFrom(PlayerEntity par1EntityPlayer, boolean par2) {
+        if (par2) {
+            this.inventory.copy(par1EntityPlayer.inventory);
+            this.field_3294 = ((PlayerEntityMixin)(Object)par1EntityPlayer).field_3294;
+            this.hungerManager = ((PlayerEntityMixin)(Object)par1EntityPlayer).hungerManager;
+            this.experienceLevel = par1EntityPlayer.experienceLevel;
+            this.totalExperience = par1EntityPlayer.totalExperience;
+            this.experienceProgress = par1EntityPlayer.experienceProgress;
+            this.setScore(par1EntityPlayer.getScore());
+            this.lastNetherPortalAxis = ((PlayerEntityMixin)(Object)par1EntityPlayer).lastNetherPortalAxis;
+        } else if (this.world.getGameRules().getBoolean("keepInventory")) {
+            this.inventory.copy(par1EntityPlayer.inventory);
+            this.experienceLevel = par1EntityPlayer.experienceLevel;
+            this.totalExperience = par1EntityPlayer.totalExperience;
+            this.experienceProgress = par1EntityPlayer.experienceProgress;
+            this.setScore(par1EntityPlayer.getScore());
+        }
+
+        this.enderChest = ((PlayerEntityMixin)(Object)par1EntityPlayer).enderChest;
+        NbtCompound old = par1EntityPlayer.getEntityData();
+        if (old.contains("PlayerPersisted")) {
+            this.getEntityData().put("PlayerPersisted", old.getCompound("PlayerPersisted"));
+        }
     }
 
     @Override

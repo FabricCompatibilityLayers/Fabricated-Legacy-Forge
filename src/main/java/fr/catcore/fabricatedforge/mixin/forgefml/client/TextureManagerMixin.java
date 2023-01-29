@@ -254,9 +254,9 @@ public abstract class TextureManagerMixin {
             TextureFXManager.instance().scaleTextureFXData(par1TextureFX.field_2152, this.field_1977, tWidth, tLen);
         }
 
-        if (par1TextureFX.field_2153 != par2) {
+        if (par1TextureFX.field_2155 != par2) {
             par1TextureFX.bind((TextureManager)(Object) this);
-            par2 = par1TextureFX.field_2153;
+            par2 = par1TextureFX.field_2155;
         }
 
         for(int var3 = 0; var3 < par1TextureFX.field_2156; ++var3) {

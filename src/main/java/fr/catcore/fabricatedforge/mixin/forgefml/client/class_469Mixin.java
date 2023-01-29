@@ -86,18 +86,13 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
                 .openScreen(new DisconnectedScreen("disconnect.disconnected", "disconnect.genericReason", new Object[]{par1Packet255KickDisconnect.reason}));
     }
 
-    @Inject(method = "sendPacketAndDisconnect", at = @At(value = "RETURN"))
-    private void FMLOnConnectionClosed(Packet par1, CallbackInfo ci) {
-        if (!this.disconnected) FMLNetworkHandler.onConnectionClosed(this.connection, this.getPlayer());
-    }
-
     /**
      * @author Minecraft Forge
      * @reason none
      */
     @Overwrite
     public void onChatMessage(ChatMessageS2CPacket par1Packet3Chat) {
-        par1Packet3Chat = FMLNetworkHandler.handleChatMessage(this, par1Packet3Chat);
+        FMLNetworkHandler.onConnectionClosed(this.connection, this.getPlayer());
         ClientChatReceivedEvent event = new ClientChatReceivedEvent(par1Packet3Chat.message);
         if (!MinecraftForge.EVENT_BUS.post(event) && event.message != null) {
             this.field_1623.inGameHud.getChatHud().method_898(par1Packet3Chat.message);

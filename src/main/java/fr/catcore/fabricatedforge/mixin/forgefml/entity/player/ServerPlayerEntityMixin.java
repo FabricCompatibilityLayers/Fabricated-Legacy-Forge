@@ -20,6 +20,7 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerDropsEvent;
+import net.minecraftforge.event.world.ChunkWatchEvent;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -114,6 +115,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
 
                 for(Chunk var10 : var6) {
                     this.getServerWorld().getEntityTracker().method_4410((ServerPlayerEntity)(Object) this, var10);
+                    MinecraftForge.EVENT_BUS.post(new ChunkWatchEvent.Watch(var10.getChunkPos(), (ServerPlayerEntity)(Object) this));
                 }
             }
         }

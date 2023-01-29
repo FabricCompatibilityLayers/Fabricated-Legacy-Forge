@@ -1,11 +1,13 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.FlowerBlock;
 import net.minecraft.block.NetherWartBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
@@ -15,6 +17,16 @@ import java.util.ArrayList;
 public class NetherWartBlockMixin extends FlowerBlock {
     protected NetherWartBlockMixin(int i, int j, Material material) {
         super(i, j, material);
+    }
+
+    /**
+     * @author forge
+     * @reason add hooks
+     */
+    @Overwrite
+    public boolean canStayPlaced(World par1World, int par2, int par3, int par4) {
+        Block block = Block.BLOCKS[par1World.getBlock(par2, par3 - 1, par4)];
+        return block != null && block.canSustainPlant(par1World, par2, par3 - 1, par4, ForgeDirection.UP, this);
     }
 
     /**

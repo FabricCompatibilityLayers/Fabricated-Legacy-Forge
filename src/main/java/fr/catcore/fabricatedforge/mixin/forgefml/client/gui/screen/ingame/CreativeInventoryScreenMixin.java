@@ -45,7 +45,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
 
     @Shadow protected abstract boolean renderTabTooltipIfHovered(ItemGroup group, int mouseX, int mouseY);
 
-    private int tabPage = 0;
+    private static int tabPage = 0;
     private int maxPages = 0;
 
     public CreativeInventoryScreenMixin(ScreenHandler screenHandler) {
@@ -59,7 +59,6 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
             if (tabCount > 12) {
                 this.buttons.add(new ButtonWidget(101, this.x, this.y - 50, 20, 20, "<"));
                 this.buttons.add(new ButtonWidget(102, this.x + this.backgroundWidth - 20, this.y - 50, 20, 20, ">"));
-                this.tabPage = 0;
                 this.maxPages = (tabCount - 12) / 10 + 1;
             }
         }
@@ -221,9 +220,9 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
 
         super.render(par1, par2, par3);
         ItemGroup[] var11 = ItemGroup.itemGroups;
-        int start = this.tabPage * 10;
-        int var12 = Math.min(var11.length, (this.tabPage + 1) * 10 + 2);
-        if (this.tabPage != 0) {
+        int start = tabPage * 10;
+        int var12 = Math.min(var11.length, (tabPage + 1) * 10 + 2);
+        if (tabPage != 0) {
             start += 2;
         }
 
@@ -248,7 +247,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
         }
 
         if (this.maxPages != 0) {
-            String page = String.format("%d / %d", this.tabPage + 1, this.maxPages + 1);
+            String page = String.format("%d / %d", tabPage + 1, this.maxPages + 1);
             int width = this.textRenderer.getStringWidth(page);
             GL11.glDisable(2896);
             this.zOffset = 300.0F;
@@ -275,9 +274,9 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
         int var6 = this.field_1229.textureManager.getTextureFromPath("/gui/creative_inv/" + var5.getTexture());
         ItemGroup[] var7 = ItemGroup.itemGroups;
         int var8 = var7.length;
-        int start = this.tabPage * 10;
-        var8 = Math.min(var7.length, (this.tabPage + 1) * 10 + 2);
-        if (this.tabPage != 0) {
+        int start = tabPage * 10;
+        var8 = Math.min(var7.length, (tabPage + 1) * 10 + 2);
+        if (tabPage != 0) {
             start += 2;
         }
 
@@ -289,7 +288,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
             }
         }
 
-        if (this.tabPage != 0) {
+        if (tabPage != 0) {
             if (var5 != ItemGroup.SEARCH) {
                 this.field_1229.textureManager.bindTexture(var4);
                 this.renderTabIcon(ItemGroup.SEARCH);
@@ -313,7 +312,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
             this.drawTexture(var11, var8 + (int)((float)(var14 - var8 - 17) * this.scrollPosition), 232 + (this.hasScrollbar() ? 0 : 12), 0, 12, 15);
         }
 
-        if (var5 != null && ((IItemGroup)var5).getTabPage() == this.tabPage || var5 == ItemGroup.SEARCH || var5 == ItemGroup.INVENTORY) {
+        if (var5 != null && ((IItemGroup)var5).getTabPage() == tabPage || var5 == ItemGroup.SEARCH || var5 == ItemGroup.INVENTORY) {
             this.renderTabIcon(var5);
             if (var5 == ItemGroup.INVENTORY) {
                 SurvivalInventoryScreen.method_1159(
@@ -329,7 +328,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
      */
     @Overwrite
     protected boolean isClickInTab(ItemGroup par1CreativeTabs, int par2, int par3) {
-        if (((IItemGroup)par1CreativeTabs).getTabPage() != this.tabPage && par1CreativeTabs != ItemGroup.SEARCH && par1CreativeTabs != ItemGroup.INVENTORY) {
+        if (((IItemGroup)par1CreativeTabs).getTabPage() != tabPage && par1CreativeTabs != ItemGroup.SEARCH && par1CreativeTabs != ItemGroup.INVENTORY) {
             return false;
         } else {
             int var4 = par1CreativeTabs.getColumn();
@@ -402,9 +401,9 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
     @Inject(method = "buttonClicked", at = @At("RETURN"))
     private void fmlOnButtonClick(ButtonWidget par1GuiButton, CallbackInfo ci) {
         if (par1GuiButton.id == 101) {
-            this.tabPage = Math.max(this.tabPage - 1, 0);
+            tabPage = Math.max(tabPage - 1, 0);
         } else if (par1GuiButton.id == 102) {
-            this.tabPage = Math.min(this.tabPage + 1, this.maxPages);
+            tabPage = Math.min(tabPage + 1, this.maxPages);
         }
     }
 }

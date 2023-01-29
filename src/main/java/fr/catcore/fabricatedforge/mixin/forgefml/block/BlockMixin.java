@@ -145,6 +145,17 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
     }
 
     /**
+     * @author forge
+     * @reason add default behavior
+     */
+    @Overwrite
+    public void method_411(World par1World, int par2, int par3, int par4, int par5, int par6) {
+        if (this.hasTileEntity(par6) && !((Object)this instanceof BlockWithEntity)) {
+            par1World.method_3725(par2, par3, par4);
+        }
+    }
+
+    /**
      * @author Minecraft Forge
      * @reason none
      */
@@ -474,10 +485,10 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
                     return world.getMaterial(x, y, z) == Material.WATER && world.getBlockData(x, y, z) == 0;
                 case Beach:
                     boolean isBeach = this.id == GRASS_BLOCK.id || this.id == DIRT.id || this.id == SAND_BLOCK.id;
-                    boolean hasWater = world.getMaterial(x - 1, y - 1, z) == Material.WATER
-                            || world.getMaterial(x + 1, y - 1, z) == Material.WATER
-                            || world.getMaterial(x, y - 1, z - 1) == Material.WATER
-                            || world.getMaterial(x, y - 1, z + 1) == Material.WATER;
+                    boolean hasWater = world.getMaterial(x - 1, y, z) == Material.WATER
+                            || world.getMaterial(x + 1, y, z) == Material.WATER
+                            || world.getMaterial(x, y, z - 1) == Material.WATER
+                            || world.getMaterial(x, y, z + 1) == Material.WATER;
                     return isBeach && hasWater;
                 default:
                     return false;

@@ -21,6 +21,7 @@ public class WeightedRandomChestContentMixin implements IWeightedRandomChestCont
 
     @Shadow private int min;
 
+    @Shadow private int max;
     public ItemStack itemStack;
 
     @Inject(method = "<init>", at = @At("RETURN"))
@@ -39,7 +40,7 @@ public class WeightedRandomChestContentMixin implements IWeightedRandomChestCont
         for(int var4 = 0; var4 < par3; ++var4) {
             WeightedRandomChestContent var5 = (WeightedRandomChestContent)Weighting.getRandom(par0Random, par1ArrayOfWeightedRandomChestContent);
             ItemStack[] stacks = ChestGenHooks.generateStacks(par0Random, ((IWeightedRandomChestContent)var5).getItemStack(),
-                    ((IWeightedRandomChestContent)var5).getMinCount(), ((IWeightedRandomChestContent)var5).getMinCount());
+                    ((WeightedRandomChestContentMixin)(Object)var5).min, ((WeightedRandomChestContentMixin)(Object)var5).max);
 
             for(ItemStack item : stacks) {
                 par2TileEntityChest.setInvStack(par0Random.nextInt(par2TileEntityChest.getInvSize()), item);
@@ -58,7 +59,7 @@ public class WeightedRandomChestContentMixin implements IWeightedRandomChestCont
         for(int var4 = 0; var4 < par3; ++var4) {
             WeightedRandomChestContent var5 = (WeightedRandomChestContent)Weighting.getRandom(par0Random, par1ArrayOfWeightedRandomChestContent);
             ItemStack[] stacks = ChestGenHooks.generateStacks(par0Random, ((IWeightedRandomChestContent)var5).getItemStack(),
-                    ((IWeightedRandomChestContent)var5).getMinCount(), ((IWeightedRandomChestContent)var5).getMinCount());
+                    ((WeightedRandomChestContentMixin)(Object)var5).min, ((WeightedRandomChestContentMixin)(Object)var5).max);
 
             for(ItemStack item : stacks) {
                 par2TileEntityDispenser.setInvStack(par0Random.nextInt(par2TileEntityDispenser.getInvSize()), item);
@@ -69,11 +70,6 @@ public class WeightedRandomChestContentMixin implements IWeightedRandomChestCont
     @Override
     public ItemStack getItemStack() {
         return itemStack;
-    }
-
-    @Override
-    public int getMinCount() {
-        return min;
     }
 
     @Override

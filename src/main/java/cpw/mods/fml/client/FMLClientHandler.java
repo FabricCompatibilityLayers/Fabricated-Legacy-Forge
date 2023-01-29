@@ -326,7 +326,7 @@ public class FMLClientHandler implements IFMLSidedHandler {
 
         if (criticalMismatch) {
             ((class_469)toKill).method_1204();
-            ConnectScreen.forceTermination((ConnectScreen)this.client.currentScreen);
+            ((ConnectScreen)this.client.currentScreen).forceTermination();
             mgr.applyQueuedPackets();
             this.client.connect((ClientWorld)null);
             this.warnIDMismatch(s, false);

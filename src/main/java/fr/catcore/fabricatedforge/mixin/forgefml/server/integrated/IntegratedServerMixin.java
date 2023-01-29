@@ -66,7 +66,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
      */
     @Overwrite
     protected boolean setupServer() {
-        field_3848.info("Starting integrated minecraft server version 1.4.4");
+        field_3848.info("Starting integrated minecraft server version 1.4.5");
         this.setOnlineMode(false);
         this.setSpawnAnimals(true);
         this.setSpawnNpcs(true);

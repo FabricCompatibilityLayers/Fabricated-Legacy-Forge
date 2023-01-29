@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.decoration.ItemFrameEntity;
 import net.minecraft.entity.decoration.painting.PaintingEntity;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
@@ -19,11 +20,14 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtDouble;
 import net.minecraft.nbt.NbtFloat;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.spongepowered.asm.mixin.*;
@@ -92,10 +96,156 @@ public abstract class EntityMixin implements IEntity {
 
     @Shadow public abstract void populateCrashReport(CrashReportSection section);
 
+    @Shadow public int ticksAlive;
+    @Shadow public float prevHorizontalSpeed;
+    @Shadow public float horizontalSpeed;
+
+    @Shadow public abstract int getMaxNetherPortalTime();
+
+    @Shadow protected boolean changingDimension;
+    @Shadow private int netherPortalTime;
+
+    @Shadow public abstract int getDefaultNetherPortalCooldown();
+
+    @Shadow public abstract void teleportToDimension(int dimensionId);
+
+    @Shadow public abstract boolean isSprinting();
+
+    @Shadow public abstract boolean isTouchingWater();
+
+    @Shadow public float heightOffset;
+    @Shadow public float width;
+
+    @Shadow public abstract boolean updateWaterState();
+
+    @Shadow protected boolean isFireImmune;
+
+    @Shadow public abstract boolean damage(DamageSource source, int damage);
+
+    @Shadow public abstract boolean method_2469();
+
+    @Shadow protected abstract void setOnFireFromLava();
+
+    @Shadow protected abstract void destroy();
+
+    @Shadow protected abstract void setFlag(int index, boolean value);
+
+    @Shadow private boolean firstUpdate;
     private NbtCompound customEntityData;
     public boolean captureDrops = false;
     public ArrayList<ItemEntity> capturedDrops = new ArrayList<>();
     private UUID persistentID;
+
+    /**
+     * @author forge
+     * @reason additional check
+     */
+    @Overwrite
+    public void baseTick() {
+        this.world.profiler.push("entityBaseTick");
+        if (this.vehicle != null && this.vehicle.removed) {
+            this.vehicle = null;
+        }
+
+        ++this.ticksAlive;
+        this.prevHorizontalSpeed = this.horizontalSpeed;
+        this.prevX = this.x;
+        this.prevY = this.y;
+        this.prevZ = this.z;
+        this.prevPitch = this.pitch;
+        this.prevYaw = this.yaw;
+        if (!this.world.isClient && this.world instanceof ServerWorld) {
+            this.world.profiler.push("portal");
+            MinecraftServer var1 = ((ServerWorld)this.world).getServer();
+            int var2 = this.getMaxNetherPortalTime();
+            if (this.changingDimension) {
+                if (var1.isNetherAllowed()) {
+                    if (this.vehicle == null && this.netherPortalTime++ >= var2) {
+                        this.netherPortalTime = var2;
+                        this.netherPortalCooldown = this.getDefaultNetherPortalCooldown();
+                        byte var3;
+                        if (this.world.dimension.dimensionType == -1) {
+                            var3 = 0;
+                        } else {
+                            var3 = -1;
+                        }
+
+                        this.teleportToDimension(var3);
+                    }
+
+                    this.changingDimension = false;
+                }
+            } else {
+                if (this.netherPortalTime > 0) {
+                    this.netherPortalTime -= 4;
+                }
+
+                if (this.netherPortalTime < 0) {
+                    this.netherPortalTime = 0;
+                }
+            }
+
+            if (this.netherPortalCooldown > 0) {
+                --this.netherPortalCooldown;
+            }
+
+            this.world.profiler.pop();
+        }
+
+        if (this.isSprinting() && !this.isTouchingWater()) {
+            int var5 = MathHelper.floor(this.x);
+            int var2 = MathHelper.floor(this.y - 0.2F - (double)this.heightOffset);
+            int var6 = MathHelper.floor(this.z);
+            int var4 = this.world.getBlock(var5, var2, var6);
+            if (var4 > 0) {
+                this.world
+                        .spawnParticle(
+                                "tilecrack_" + var4 + "_" + this.world.getBlockData(var5, var2, var6),
+                                this.x + ((double)this.random.nextFloat() - 0.5) * (double)this.width,
+                                this.boundingBox.minY + 0.1,
+                                this.z + ((double)this.random.nextFloat() - 0.5) * (double)this.width,
+                                -this.velocityX * 4.0,
+                                1.5,
+                                -this.velocityZ * 4.0
+                        );
+            }
+        }
+
+        this.updateWaterState();
+        if (this.world.isClient) {
+            this.fireTicks = 0;
+        } else if (this.fireTicks > 0) {
+            if (this.isFireImmune) {
+                this.fireTicks -= 4;
+                if (this.fireTicks < 0) {
+                    this.fireTicks = 0;
+                }
+            } else {
+                if (this.fireTicks % 20 == 0) {
+                    this.damage(DamageSource.ON_FIRE, 1);
+                }
+
+                --this.fireTicks;
+            }
+        }
+
+        if (this.method_2469()) {
+            this.setOnFireFromLava();
+            this.fallDistance *= 0.5F;
+        }
+
+        if (this.y < -64.0) {
+            this.destroy();
+        }
+
+        if (!this.world.isClient) {
+            this.setFlag(0, this.fireTicks > 0);
+            this.setFlag(2, this.vehicle != null && this.vehicle.shouldRiderSit());
+        }
+
+        this.firstUpdate = false;
+        this.world.profiler.pop();
+    }
 
     /**
      * @author Minecraft Forge

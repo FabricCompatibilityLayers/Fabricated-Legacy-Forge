@@ -41,6 +41,10 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
     @Shadow public Map<Integer, BlockBreakingInfo> blockBreakingInfos;
 
+    @Shadow private int ticks;
+
+    @Shadow public abstract void method_1382(float tickDelta);
+
     /**
      * @author Minecraft Forge
      * @reason none
@@ -259,6 +263,99 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
     }
 
     /**
+     * @author forge
+     * @reason hooks
+     */
+    @Overwrite
+    public void method_1377(float par1) {
+        SkyProvider renderer = null;
+        if ((renderer = this.world.dimension.getCloudRenderer()) != null) {
+            renderer.render(par1, this.world, this.client);
+        } else {
+            if (this.client.world.dimension.canPlayersSleep()) {
+                if (this.client.options.fancyGraphics) {
+                    this.method_1382(par1);
+                } else {
+                    GL11.glDisable(2884);
+                    float var2 = (float)(this.client.cameraEntity.prevTickY + (this.client.cameraEntity.y - this.client.cameraEntity.prevTickY) * (double)par1);
+                    byte var3 = 32;
+                    int var4 = 256 / var3;
+                    Tessellator var5 = Tessellator.INSTANCE;
+                    GL11.glBindTexture(3553, this.textureManager.getTextureFromPath("/environment/clouds.png"));
+                    GL11.glEnable(3042);
+                    GL11.glBlendFunc(770, 771);
+                    Vec3d var6 = this.world.getCloudColor(par1);
+                    float var7 = (float)var6.x;
+                    float var8 = (float)var6.y;
+                    float var9 = (float)var6.z;
+                    if (this.client.options.anaglyph3d) {
+                        float var10 = (var7 * 30.0F + var8 * 59.0F + var9 * 11.0F) / 100.0F;
+                        float var11 = (var7 * 30.0F + var8 * 70.0F) / 100.0F;
+                        float var12 = (var7 * 30.0F + var9 * 70.0F) / 100.0F;
+                        var7 = var10;
+                        var8 = var11;
+                        var9 = var12;
+                    }
+
+                    float var10 = 4.8828125E-4F;
+                    double var24 = (double)((float)this.ticks + par1);
+                    double var13 = this.client.cameraEntity.prevX
+                            + (this.client.cameraEntity.x - this.client.cameraEntity.prevX) * (double)par1
+                            + var24 * 0.03F;
+                    double var15 = this.client.cameraEntity.prevZ + (this.client.cameraEntity.z - this.client.cameraEntity.prevZ) * (double)par1;
+                    int var17 = MathHelper.floor(var13 / 2048.0);
+                    int var18 = MathHelper.floor(var15 / 2048.0);
+                    var13 -= (double)(var17 * 2048);
+                    var15 -= (double)(var18 * 2048);
+                    float var19 = this.world.dimension.getCloudHeight() - var2 + 0.33F;
+                    float var20 = (float)(var13 * (double)var10);
+                    float var21 = (float)(var15 * (double)var10);
+                    var5.begin();
+                    var5.color(var7, var8, var9, 0.8F);
+
+                    for(int var22 = -var3 * var4; var22 < var3 * var4; var22 += var3) {
+                        for(int var23 = -var3 * var4; var23 < var3 * var4; var23 += var3) {
+                            var5.vertex(
+                                    (double)(var22 + 0),
+                                    (double)var19,
+                                    (double)(var23 + var3),
+                                    (double)((float)(var22 + 0) * var10 + var20),
+                                    (double)((float)(var23 + var3) * var10 + var21)
+                            );
+                            var5.vertex(
+                                    (double)(var22 + var3),
+                                    (double)var19,
+                                    (double)(var23 + var3),
+                                    (double)((float)(var22 + var3) * var10 + var20),
+                                    (double)((float)(var23 + var3) * var10 + var21)
+                            );
+                            var5.vertex(
+                                    (double)(var22 + var3),
+                                    (double)var19,
+                                    (double)(var23 + 0),
+                                    (double)((float)(var22 + var3) * var10 + var20),
+                                    (double)((float)(var23 + 0) * var10 + var21)
+                            );
+                            var5.vertex(
+                                    (double)(var22 + 0),
+                                    (double)var19,
+                                    (double)(var23 + 0),
+                                    (double)((float)(var22 + 0) * var10 + var20),
+                                    (double)((float)(var23 + 0) * var10 + var21)
+                            );
+                        }
+                    }
+
+                    var5.end();
+                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                    GL11.glDisable(3042);
+                    GL11.glEnable(2884);
+                }
+            }
+        }
+    }
+
+    /**
      * @author Minecraft Forge
      * @reason none
      */
@@ -334,11 +431,11 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
             Particle var21 = null;
             Object effectObject = null;
             if (par1Str.equals("hugeexplosion")) {
-                this.client.particleManager.method_22512(var21 = new ExplosionEmitterParticle(this.world, par2, par4, par6, par8, par10, par12));
+                this.client.particleManager.addParticle(var21 = new ExplosionEmitterParticle(this.world, par2, par4, par6, par8, par10, par12));
             } else if (par1Str.equals("largeexplode")) {
                 this.client
                         .particleManager
-                        .method_22512(var21 = new LargeExplosionParticle(this.textureManager, this.world, par2, par4, par6, par8, par10, par12));
+                        .addParticle(var21 = new LargeExplosionParticle(this.textureManager, this.world, par2, par4, par6, par8, par10, par12));
             }
 
             if (var21 != null) {

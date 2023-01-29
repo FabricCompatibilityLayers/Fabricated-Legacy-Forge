@@ -15,6 +15,9 @@ import net.minecraftforge.common.IShearable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 @Mixin(ShearsItem.class)
 public class ShearsItemMixin extends Item {
 
@@ -47,13 +50,16 @@ public class ShearsItemMixin extends Item {
         } else {
             IShearable target = (IShearable)entity;
             if (target.isShearable(itemstack, entity.world, (int)entity.x, (int)entity.y, (int)entity.z)) {
-                for(ItemStack stack : target.onSheared(
+                ArrayList<ItemStack> drops = target.onSheared(
                         itemstack, entity.world, (int)entity.x, (int)entity.y, (int)entity.z, EnchantmentHelper.getLevel(Enchantment.FORTUNE.id, itemstack)
-                )) {
+                );
+                Random rand = new Random();
+
+                for(ItemStack stack : drops) {
                     ItemEntity ent = entity.dropItem(stack, 1.0F);
-                    ent.velocityY += (double)(entity.getRandom().nextFloat() * 0.05F);
-                    ent.velocityX += (double)((entity.getRandom().nextFloat() - entity.getRandom().nextFloat()) * 0.1F);
-                    ent.velocityZ += (double)((entity.getRandom().nextFloat() - entity.getRandom().nextFloat()) * 0.1F);
+                    ent.velocityY += (double)(rand.nextFloat() * 0.05F);
+                    ent.velocityX += (double)((rand.nextFloat() - rand.nextFloat()) * 0.1F);
+                    ent.velocityZ += (double)((rand.nextFloat() - rand.nextFloat()) * 0.1F);
                 }
 
                 itemstack.method_3406(1, entity);
@@ -72,11 +78,16 @@ public class ShearsItemMixin extends Item {
             if (Block.BLOCKS[id] instanceof IShearable) {
                 IShearable target = (IShearable)Block.BLOCKS[id];
                 if (target.isShearable(itemstack, player.world, x, y, z)) {
-                    for(ItemStack stack : target.onSheared(itemstack, player.world, x, y, z, EnchantmentHelper.getLevel(Enchantment.FORTUNE.id, itemstack))) {
+                    ArrayList<ItemStack> drops = target.onSheared(
+                            itemstack, player.world, x, y, z, EnchantmentHelper.getLevel(Enchantment.FORTUNE.id, itemstack)
+                    );
+                    Random rand = new Random();
+
+                    for(ItemStack stack : drops) {
                         float f = 0.7F;
-                        double d = (double)(player.getRandom().nextFloat() * f) + (double)(1.0F - f) * 0.5;
-                        double d1 = (double)(player.getRandom().nextFloat() * f) + (double)(1.0F - f) * 0.5;
-                        double d2 = (double)(player.getRandom().nextFloat() * f) + (double)(1.0F - f) * 0.5;
+                        double d = (double)(rand.nextFloat() * f) + (double)(1.0F - f) * 0.5;
+                        double d1 = (double)(rand.nextFloat() * f) + (double)(1.0F - f) * 0.5;
+                        double d2 = (double)(rand.nextFloat() * f) + (double)(1.0F - f) * 0.5;
                         ItemEntity entityitem = new ItemEntity(player.world, (double)x + d, (double)y + d1, (double)z + d2, stack);
                         entityitem.pickupDelay = 10;
                         player.world.spawnEntity(entityitem);

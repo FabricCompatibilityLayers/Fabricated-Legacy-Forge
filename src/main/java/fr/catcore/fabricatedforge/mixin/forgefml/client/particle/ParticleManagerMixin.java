@@ -47,11 +47,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
     @Shadow private Random random;
 
     @Shadow
-    protected abstract void addParticle(Particle particle);
-
-    @Shadow private List<Particle> field_23093;
-
-    @Shadow public abstract void method_22512(Particle particle);
+    public abstract void addParticle(Particle particle);
 
     private Multimap<String, Particle> effectList = ArrayListMultimap.create();
 
@@ -93,14 +89,6 @@ public abstract class ParticleManagerMixin implements IParticleManager {
                 itr.remove();
             }
         }
-
-        Iterator var8 = this.field_23093.iterator();
-
-        while(var8.hasNext()) {
-            this.addParticle((Particle)var8.next());
-        }
-
-        this.field_23093.clear();
     }
 
     /**
@@ -309,9 +297,9 @@ public abstract class ParticleManagerMixin implements IParticleManager {
     public void addEffect(Particle effect, Object obj) {
         if (obj != null && (obj instanceof Block || obj instanceof Item)) {
             if (obj instanceof Item && ((IItem)obj).isDefaultTexture()) {
-                this.method_22512(effect);
+                this.addParticle(effect);
             } else if (obj instanceof Block && ((Block)obj).isDefaultTexture()) {
-                this.method_22512(effect);
+                this.addParticle(effect);
             } else {
                 String texture = "/terrain.png";
                 if (effect.getLayer() == 0) {
@@ -324,7 +312,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
                 this.effectList.put(texture, effect);
             }
         } else {
-            this.method_22512(effect);
+            this.addParticle(effect);
         }
     }
 

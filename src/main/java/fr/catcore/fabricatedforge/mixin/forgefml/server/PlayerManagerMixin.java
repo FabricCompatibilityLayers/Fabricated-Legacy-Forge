@@ -145,8 +145,10 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
     @Overwrite
     public ServerPlayerEntity respawnPlayer(ServerPlayerEntity par1EntityPlayerMP, int par2, boolean par3) {
         World world = this.server.getWorld(par2);
-        if (world == null || !world.dimension.containsWorldSpawn()) {
+        if (world == null) {
             par2 = 0;
+        } else if (!world.dimension.containsWorldSpawn()) {
+            par2 = world.dimension.getRespawnDimension(par1EntityPlayerMP);
         }
 
         par1EntityPlayerMP.getServerWorld().getEntityTracker().method_2096(par1EntityPlayerMP);

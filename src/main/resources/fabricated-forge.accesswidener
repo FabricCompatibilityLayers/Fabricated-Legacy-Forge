@@ -402,6 +402,8 @@ accessible method net/minecraft/world/biome/BiomeDecorator generateOre (ILnet/mi
 accessible method net/minecraft/world/biome/BiomeDecorator method_3850 (ILnet/minecraft/world/gen/feature/Feature;II)V
 accessible method net/minecraft/world/biome/BiomeDecorator generateOres ()V
 
+accessible field net/minecraft/server/class_793 field_2796 Ljava/util/List;
+
 #### Fabricated Forge
 accessible class net/minecraft/client/class_470
 accessible class net/minecraft/client/class_416
@@ -414,3 +416,6 @@ accessible class net/minecraft/structure/class_31
 accessible class net/minecraft/structure/class_25
 accessible class net/minecraft/util/LogFormatter
 accessible class net/minecraft/class_5115
+accessible class net/minecraft/util/crash/provider/world/BlockEntityNameProvider
+accessible method net/minecraft/util/crash/provider/world/BlockEntityNameProvider <init> (Lnet/minecraft/block/entity/BlockEntity;)V
+accessible class net/minecraft/network/class_266

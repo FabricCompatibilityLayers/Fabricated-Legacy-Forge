@@ -1,12 +1,16 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
+import com.google.common.collect.MapDifference;
 import com.mojang.blaze3d.platform.GLX;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.registry.GameData;
+import cpw.mods.fml.common.registry.ItemData;
 import cpw.mods.fml.relauncher.ArgsWrapper;
 import cpw.mods.fml.relauncher.FMLRelauncher;
 import fr.catcore.fabricatedforge.forged.*;
+import fr.catcore.fabricatedforge.mixininterface.IMinecraft;
 import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import net.minecraft.advancement.AchievementsAndCriterions;
 import net.minecraft.client.*;
@@ -42,6 +46,8 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.IntegratedConnection;
 import net.minecraft.server.integrated.IntegratedServer;
 import net.minecraft.stat.StatHandler;
+import net.minecraft.stat.Stats;
+import net.minecraft.util.CommonI18n;
 import net.minecraft.util.Language;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
@@ -55,6 +61,9 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.util.snooper.Snooper;
+import net.minecraft.world.SaveHandler;
+import net.minecraft.world.level.LevelInfo;
+import net.minecraft.world.level.LevelProperties;
 import net.minecraft.world.level.storage.AnvilLevelStorage;
 import net.minecraft.world.level.storage.LevelStorageAccess;
 import net.minecraftforge.common.ForgeHooks;
@@ -76,10 +85,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 
 @Mixin(Minecraft.class)
-public abstract class MinecraftMixin {
+public abstract class MinecraftMixin implements IMinecraft {
 
     @Shadow public Canvas canvas;
 
@@ -235,6 +245,12 @@ public abstract class MinecraftMixin {
 
     @Shadow private class_590 field_3792;
 
+    @Shadow public abstract void printCrashReport(CrashReport crashReport);
+
+    @Shadow public abstract CrashReport addSystemDetailsToCrashReport(CrashReport crashReport);
+
+    @Shadow public abstract void connect(ClientWorld world);
+
     @Inject(method = "openScreen", at = @At("HEAD"), cancellable = true)
     private void fix_openScreen(Screen par1, CallbackInfo ci) {
         if (par1 instanceof FatalErrorScreenForged) {
@@ -272,7 +288,7 @@ public abstract class MinecraftMixin {
             Display.setDisplayMode(new DisplayMode(this.width, this.height));
         }
 
-        Display.setTitle("Minecraft Minecraft 1.4.4");
+        Display.setTitle("Minecraft Minecraft 1.4.5");
         System.out.println("LWJGL Version: " + Sys.getVersion());
 
         try {
@@ -922,6 +938,68 @@ public abstract class MinecraftMixin {
         FMLCommonHandler.instance().onPostClientTick();
         this.profiler.pop();
         this.sysTime = getTime();
+    }
+
+    /**
+     * @author forge
+     * @reason hooks
+     */
+    @Overwrite
+    public void method_2935(String par1Str, String par2Str, LevelInfo par3WorldSettings) {
+        this.connect((ClientWorld)null);
+        System.gc();
+        SaveHandler var4 = this.currentSave.createSaveHandler(par1Str, false);
+        LevelProperties var5 = var4.getLevelProperties();
+        if (var5 == null && par3WorldSettings != null) {
+            this.statHandler.method_1730(Stats.WORLDS_CREATED, 1);
+            var5 = new LevelProperties(par3WorldSettings, par1Str);
+            var4.saveWorld(var5);
+        }
+
+        if (par3WorldSettings == null) {
+            par3WorldSettings = new LevelInfo(var5);
+        }
+
+        this.statHandler.method_1730(Stats.GAME_STARTED, 1);
+        GameData.initializeServerGate(2);
+        this.server = new IntegratedServer((Minecraft)(Object) this, par1Str, par2Str, par3WorldSettings);
+        this.server.startServerThread();
+        MapDifference<Integer, ItemData> idDifferences = GameData.gateWorldLoadingForValidation();
+        if (idDifferences != null) {
+            FMLClientHandler.instance().warnIDMismatch(idDifferences, true);
+        } else {
+            GameData.releaseGate(true);
+            this.continueWorldLoading();
+        }
+    }
+
+    @Override
+    public void continueWorldLoading() {
+        this.isIntegratedServerRunning = true;
+        this.loadingScreenRenderer.setTitle(CommonI18n.translate("menu.loadingLevel"));
+
+        while(!this.server.isLoading()) {
+            String var6 = this.server.getServerOperation();
+            if (var6 != null) {
+                this.loadingScreenRenderer.setTask(CommonI18n.translate(var6));
+            } else {
+                this.loadingScreenRenderer.setTask("");
+            }
+
+            try {
+                Thread.sleep(200L);
+            } catch (InterruptedException var4) {
+            }
+        }
+
+        this.openScreen((Screen)null);
+
+        try {
+            class_469 var10 = new class_469((Minecraft)(Object) this, this.server);
+            this.conection = var10.method_1205();
+        } catch (Exception var3) {
+            this.printCrashReport(this.addSystemDetailsToCrashReport(new CrashReport("Connecting to integrated server", var3)));
+        }
     }
 
     /**
