@@ -36,6 +36,9 @@ public class WorldSaveHandlerMixin {
                 FMLCommonHandler.instance().handleWorldDataLoad((WorldSaveHandler)(Object) this, worldInfo, var2);
                 return worldInfo;
             } catch (Exception var7) {
+                if (FMLCommonHandler.instance().shouldServerBeKilledQuietly()) {
+                    throw (RuntimeException)var7;
+                }
                 var7.printStackTrace();
             }
         }

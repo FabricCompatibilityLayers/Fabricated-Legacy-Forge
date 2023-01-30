@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.biome.Biome;
@@ -27,7 +28,17 @@ public interface IDimension {
     @Environment(EnvType.CLIENT)
     void setSkyProvider(SkyProvider skyProvider);
 
+    @Environment(EnvType.CLIENT)
+    SkyProvider getCloudRenderer();
+
+    @Environment(EnvType.CLIENT)
+    void setCloudRenderer(SkyProvider renderer);
+
     BlockPos getRandomizedSpawnPoint();
+
+    boolean shouldMapSpin(String entity, double x, double y, double z);
+
+    int getRespawnDimension(ServerPlayerEntity player);
 
     Biome getBiomeGenForCoords(int x, int z);
 

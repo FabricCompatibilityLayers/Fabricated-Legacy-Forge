@@ -44,7 +44,8 @@ public abstract class ServerChunkProviderMixin implements ChunkProvider, IServer
 
     @Shadow protected abstract void method_2126(Chunk chunk);
 
-    @Shadow private ChunkStorage chunkWriter;
+    @Shadow
+    public ChunkStorage chunkWriter;
 
     /**
      * @author Minecraft Forge

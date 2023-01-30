@@ -6,6 +6,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
@@ -38,6 +39,7 @@ public class DimensionMixin implements IDimension {
     @Shadow public String generatorOptions;
 
     private SkyProvider skyProvider = null;
+    private SkyProvider cloudRenderer = null;
 
     /**
      * @author Minecraft Forge
@@ -140,6 +142,18 @@ public class DimensionMixin implements IDimension {
         this.skyProvider = skyProvider;
     }
 
+    @Environment(EnvType.CLIENT)
+    @Override
+    public SkyProvider getCloudRenderer() {
+        return this.cloudRenderer;
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void setCloudRenderer(SkyProvider renderer) {
+        this.cloudRenderer = renderer;
+    }
+
     @Override
     public BlockPos getRandomizedSpawnPoint() {
         BlockPos var5 = new BlockPos(this.world.getWorldSpawnPos());
@@ -153,6 +167,16 @@ public class DimensionMixin implements IDimension {
         }
 
         return var5;
+    }
+
+    @Override
+    public boolean shouldMapSpin(String entity, double x, double y, double z) {
+        return this.dimensionType < 0;
+    }
+
+    @Override
+    public int getRespawnDimension(ServerPlayerEntity player) {
+        return 0;
     }
 
     @Override

@@ -427,6 +427,32 @@ public abstract class WorldMixin implements BlockView, IWorld {
     }
 
     /**
+     * @author forge
+     * @reason hook
+     */
+    @Overwrite
+    public void playSound(PlayerEntity par1EntityPlayer, String par2Str, float par3, float par4) {
+        PlaySoundAtEntityEvent event = new PlaySoundAtEntityEvent(par1EntityPlayer, par2Str, par3, par4);
+        if (!MinecraftForge.EVENT_BUS.post(event)) {
+            par2Str = event.name;
+            if (par1EntityPlayer != null && par2Str != null) {
+                for(int var5 = 0; var5 < this.eventListeners.size(); ++var5) {
+                    ((WorldEventListener)this.eventListeners.get(var5))
+                            .playSound(
+                                    par1EntityPlayer,
+                                    par2Str,
+                                    par1EntityPlayer.x,
+                                    par1EntityPlayer.y - (double)par1EntityPlayer.heightOffset,
+                                    par1EntityPlayer.z,
+                                    par3,
+                                    par4
+                            );
+                }
+            }
+        }
+    }
+
+    /**
      * @author Minecraft Forge
      * @reason none
      */
@@ -672,6 +698,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
             this.onEntityRemoved((Entity)this.unloadedEntities.get(var151));
         }
 
+        this.unloadedEntities.clear();
         this.profiler.swap("regular");
 
         for(int var16 = 0; var16 < this.loadedEntities.size(); ++var16) {
@@ -745,22 +772,22 @@ public abstract class WorldMixin implements BlockView, IWorld {
                 if (this.isChunkInsideSpawnChunks(var9.x >> 4, var9.z >> 4)) {
                     Chunk var11 = this.getChunk(var9.x >> 4, var9.z >> 4);
                     if (var11 != null) {
-                        ((IChunk)var11).cleanChunkBlockTileEntity(var9.x & 15, var9.y, var9.z & 15);
+                        var11.cleanChunkBlockTileEntity(var9.x & 15, var9.y, var9.z & 15);
                     }
                 }
             }
         }
 
-        this.iteratingTickingBlockEntities = false;
         if (!this.unloadedBlockEntities.isEmpty()) {
             for(Object tile : this.unloadedBlockEntities) {
-                ((IBlockEntity)tile).onChunkUnload();
+                ((BlockEntity)tile).onChunkUnload();
             }
 
             this.blockEntities.removeAll(this.unloadedBlockEntities);
             this.unloadedBlockEntities.clear();
         }
 
+        this.iteratingTickingBlockEntities = false;
         this.profiler.swap("pendingTileEntities");
         if (!this.pendingBlockEntities.isEmpty()) {
             for(int var10 = 0; var10 < this.pendingBlockEntities.size(); ++var10) {
@@ -772,7 +799,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
                 } else if (this.isChunkInsideSpawnChunks(var12.x >> 4, var12.z >> 4)) {
                     Chunk var15 = this.getChunk(var12.x >> 4, var12.z >> 4);
                     if (var15 != null) {
-                        var15.addBlockEntity(var12.x & 15, var12.y, var12.z & 15, var12);
+                        var15.cleanChunkBlockTileEntity(var12.x & 15, var12.y, var12.z & 15);
                     }
                 }
             }

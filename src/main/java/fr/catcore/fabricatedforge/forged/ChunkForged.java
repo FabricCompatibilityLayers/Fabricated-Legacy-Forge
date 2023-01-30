@@ -37,4 +37,28 @@ public class ChunkForged extends Chunk {
             }
         }
     }
+
+    public ChunkForged(World world, short[] ids, byte[] metadata, int chunkX, int chunkZ) {
+        this(world, chunkX, chunkZ);
+        int max = ids.length / 256;
+
+        for(int y = 0; y < max; ++y) {
+            for(int z = 0; z < 16; ++z) {
+                for(int x = 0; x < 16; ++x) {
+                    int idx = y << 8 | z << 4 | x;
+                    int id = ids[idx] & 16777215;
+                    int meta = metadata[idx];
+                    if (id != 0) {
+                        int storageBlock = y >> 4;
+                        if (((IChunk)this).getChunkSection(storageBlock) == null) {
+                            ((IChunk)this).setChunkSection(storageBlock, new ChunkSection(storageBlock << 4));
+                        }
+
+                        ((IChunk)this).getChunkSection(storageBlock).setBlock(x, y & 15, z, id);
+                        ((IChunk)this).getChunkSection(storageBlock).setBlockData(x, y & 15, z, meta);
+                    }
+                }
+            }
+        }
+    }
 }

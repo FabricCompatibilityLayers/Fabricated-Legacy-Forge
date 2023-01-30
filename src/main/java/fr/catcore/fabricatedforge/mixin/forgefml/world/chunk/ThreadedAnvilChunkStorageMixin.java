@@ -28,7 +28,8 @@ import java.util.logging.Level;
 
 @Mixin(ThreadedAnvilChunkStorage.class)
 public abstract class ThreadedAnvilChunkStorageMixin implements IThreadedAnvilChunkStorage {
-    @Shadow @Final private File saveLocation;
+    @Shadow @Final
+    public File saveLocation;
 
     @Shadow protected abstract Chunk getChunk(World world, NbtCompound nbt);
 

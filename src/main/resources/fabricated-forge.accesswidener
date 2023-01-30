@@ -419,3 +419,6 @@ accessible class net/minecraft/class_5115
 accessible class net/minecraft/util/crash/provider/world/BlockEntityNameProvider
 accessible method net/minecraft/util/crash/provider/world/BlockEntityNameProvider <init> (Lnet/minecraft/block/entity/BlockEntity;)V
 accessible class net/minecraft/network/class_266
+accessible class net/minecraft/util/crash/provider/SuspiciousClassesProvider
+accessible class net/minecraft/util/crash/class_1390
+accessible method net/minecraft/util/crash/class_1390 <init> (Lnet/minecraft/util/crash/provider/SuspiciousClassesProvider;)V
