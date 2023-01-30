@@ -51,8 +51,8 @@ public class ForgeInternalHandler {
                 return;
             }
 
-            if (item.hasCustomEntity(stack)) {
-                Entity newEntity = item.createEntity(event.world, entity, stack);
+            if (((IItem)item).hasCustomEntity(stack)) {
+                Entity newEntity = ((IItem)item).createEntity(event.world, entity, stack);
                 if (newEntity != null) {
                     entity.remove();
                     event.setCanceled(true);

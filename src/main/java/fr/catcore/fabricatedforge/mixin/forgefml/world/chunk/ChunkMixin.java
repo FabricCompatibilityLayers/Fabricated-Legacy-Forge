@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
+import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.fabricmc.api.EnvType;
@@ -205,7 +206,7 @@ public abstract class ChunkMixin implements IChunk {
                 if (!this.world.isClient) {
                     Block.BLOCKS[var8].method_411(this.world, var12, par2, var13, var8, var9);
                 } else if (Block.BLOCKS[var8] != null && Block.BLOCKS[var8].hasTileEntity(var9)) {
-                    BlockEntity te = this.world.getBlockEntity(var12, par2, var13);
+                    IBlockEntity te = this.world.getBlockEntity(var12, par2, var13);
                     if (te != null && te.shouldRefresh(var8, par4, var9, par5, this.world, var12, par2, var13)) {
                         this.world.method_3725(var12, par2, var13);
                     }

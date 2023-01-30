@@ -312,7 +312,7 @@ public class FMLCommonHandler {
             if (!this.handlerSet.contains(handler)) {
                 this.handlerSet.add(handler);
                 Map<String, NbtElement> additionalProperties = Maps.newHashMap();
-                worldInfo.setAdditionalProperties(additionalProperties);
+                ((ILevelProperties)worldInfo).setAdditionalProperties(additionalProperties);
 
                 for(ModContainer mc : Loader.instance().getModList()) {
                     if (mc instanceof InjectedModContainer) {

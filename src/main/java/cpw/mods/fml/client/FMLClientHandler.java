@@ -26,6 +26,7 @@ import cpw.mods.fml.common.network.EntitySpawnPacket;
 import cpw.mods.fml.common.network.ModMissingPacket;
 import cpw.mods.fml.common.registry.*;
 import fr.catcore.fabricatedforge.forged.FabricModContainer;
+import fr.catcore.fabricatedforge.mixininterface.IConnectScreen;
 import fr.catcore.fabricatedforge.mixininterface.Iclass_469;
 import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.fabricmc.loader.api.FabricLoader;
@@ -326,7 +327,7 @@ public class FMLClientHandler implements IFMLSidedHandler {
 
         if (criticalMismatch) {
             ((class_469)toKill).method_1204();
-            ((ConnectScreen)this.client.currentScreen).forceTermination();
+            ((IConnectScreen)this.client.currentScreen).forceTermination();
             mgr.applyQueuedPackets();
             this.client.connect((ClientWorld)null);
             this.warnIDMismatch(s, false);

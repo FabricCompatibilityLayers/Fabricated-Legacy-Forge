@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.structure;
 
+import fr.catcore.fabricatedforge.mixininterface.Iclass_50;
 import net.minecraft.block.Block;
 import net.minecraft.structure.class_50;
 import net.minecraft.structure.class_53;
@@ -20,7 +21,7 @@ public class class_53Mixin {
      */
     @Overwrite
     protected int method_114(int par1, int par2) {
-        BiomeEvent.GetVillageBlockID event = new BiomeEvent.GetVillageBlockID(this.field_102.getBiome(), par1, par2);
+        BiomeEvent.GetVillageBlockID event = new BiomeEvent.GetVillageBlockID(((Iclass_50)this.field_102).getBiome(), par1, par2);
         MinecraftForge.TERRAIN_GEN_BUS.post(event);
         if (event.getResult() == Event.Result.DENY) {
             return event.replacement;
@@ -61,7 +62,7 @@ public class class_53Mixin {
      */
     @Overwrite
     protected int method_115(int par1, int par2) {
-        BiomeEvent.GetVillageBlockMeta event = new BiomeEvent.GetVillageBlockMeta(this.field_102.getBiome(), par1, par2);
+        BiomeEvent.GetVillageBlockMeta event = new BiomeEvent.GetVillageBlockMeta(((Iclass_50)this.field_102).getBiome(), par1, par2);
         MinecraftForge.TERRAIN_GEN_BUS.post(event);
         if (event.getResult() == Event.Result.DENY) {
             return event.replacement;

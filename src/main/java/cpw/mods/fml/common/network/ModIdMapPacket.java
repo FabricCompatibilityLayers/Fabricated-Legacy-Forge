@@ -73,7 +73,7 @@ public class ModIdMapPacket extends FMLPacket {
             if (serverDifference != null) {
                 FMLCommonHandler.instance().disconnectIDMismatch(serverDifference, netHandler, network);
             }
-        } catch (IOException var10) {
+        } catch (Exception var10) {
         }
     }
 }

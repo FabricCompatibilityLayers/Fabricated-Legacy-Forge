@@ -164,11 +164,11 @@ public class GameRegistry {
     }
 
     public static void addBiome(Biome biome) {
-        LevelGeneratorType.DEFAULT.addNewBiome(biome);
+        ((ILevelGeneratorType)LevelGeneratorType.DEFAULT).addNewBiome(biome);
     }
 
     public static void removeBiome(Biome biome) {
-        LevelGeneratorType.DEFAULT.removeBiome(biome);
+        ((ILevelGeneratorType)LevelGeneratorType.DEFAULT).removeBiome(biome);
     }
 
     public static void registerFuelHandler(IFuelHandler handler) {

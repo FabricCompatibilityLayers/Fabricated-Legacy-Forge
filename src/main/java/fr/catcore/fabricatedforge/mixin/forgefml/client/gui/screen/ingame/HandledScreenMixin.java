@@ -26,7 +26,7 @@ public class HandledScreenMixin extends Screen {
      * @reason slot background icon texture overwrite.
      */
     @Overwrite
-    private void drawSlot(Slot par1Slot) {
+    public final void drawSlot(Slot par1Slot) {
         int var2 = par1Slot.x;
         int var3 = par1Slot.y;
         ItemStack var4 = par1Slot.getStack();
