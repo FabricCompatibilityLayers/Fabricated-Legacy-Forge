@@ -1,5 +1,7 @@
 package fr.catcore.fabricatedforge.mixin;
 
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
@@ -11,6 +13,8 @@ import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+
+import static org.objectweb.asm.Opcodes.*;
 
 public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
     @Override
@@ -69,15 +73,42 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
             case "net.minecraft.class_590":
                 for (MethodNode node : targetClass.methods) {
                     if (Objects.equals(node.name, "<init>")) {
-                        int invSpe = Opcodes.INVOKESPECIAL;
                         for(AbstractInsnNode insNode : node.instructions) {
-                            if (insNode instanceof MethodInsnNode && insNode.getOpcode() == invSpe) {
+                            if (insNode instanceof MethodInsnNode && insNode.getOpcode() == INVOKESPECIAL) {
                                 MethodInsnNode mTheNode = (MethodInsnNode) insNode;
                                 if (Objects.equals(mTheNode.owner, "net/minecraft/class_584")) mTheNode.owner = "cpw/mods/fml/client/FMLTextureFX";
                             }
                         }
                     }
                 }
+                break;
+            case "net.minecraft.class_1041":
+                // getNextID
+                MethodVisitor getNextIDVisitor = targetClass.visitMethod(ACC_PUBLIC + ACC_STATIC, "getNextID", "()I", null, null);
+                getNextIDVisitor.visitFieldInsn(GETSTATIC, "net/minecraft/class_1041", "field_4173", "[Lnet/minecraft/class_1041;");
+                getNextIDVisitor.visitInsn(ARRAYLENGTH);
+                getNextIDVisitor.visitInsn(IRETURN);
+                getNextIDVisitor.visitMaxs(1, 0);
+                getNextIDVisitor.visitEnd();
+
+                // <init>
+                MethodVisitor initVisitor = targetClass.visitMethod(ACC_PUBLIC, "<init>", "(Ljava/lang/String;)V", null, null);
+                Label l0 = new Label();
+                initVisitor.visitLabel(l0);
+                initVisitor.visitVarInsn(ALOAD, 0);
+                initVisitor.visitMethodInsn(INVOKESTATIC, "net/minecraft/class_1041", "getNextID", "()I", false);
+                initVisitor.visitVarInsn(ALOAD, 1);
+                initVisitor.visitMethodInsn(INVOKESPECIAL, "net/minecraft/class_1041", "<init>", "(ILjava/lang/String;)V", false);
+                Label l1 = new Label();
+                initVisitor.visitLabel(l1);
+                initVisitor.visitInsn(RETURN);
+                Label l2 = new Label();
+                initVisitor.visitLabel(l2);
+                initVisitor.visitLocalVariable("this", "Lnet/minecraft/class_1041;", null, l0, l2, 0);
+                initVisitor.visitLocalVariable("label", "Ljava/lang/String;", null, l0, l2, 1);
+                initVisitor.visitMaxs(3, 2);
+                initVisitor.visitEnd();
+
                 break;
             default:
                 break;
