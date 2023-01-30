@@ -331,7 +331,7 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
                     initVisitor.visitLocalVariable("z", "I", null, l6, l7, 8);
                     initVisitor.visitLocalVariable("x", "I", null, l3, l4, 7);
                     initVisitor.visitLocalVariable("this", "Lnet/minecraft/class_1196;", null, l0, l21, 0);
-                    initVisitor.visitLocalVariable("world", "net/minecraft/class_1150", null, l0, l21, 1);
+                    initVisitor.visitLocalVariable("world", "Lnet/minecraft/class_1150;", null, l0, l21, 1);
                     initVisitor.visitLocalVariable("ids", "[B", null, l0, l21, 2);
                     initVisitor.visitLocalVariable("metadata", "[B", null, l0, l21, 3);
                     initVisitor.visitLocalVariable("chunkX", "I", null, l0, l21, 4);
