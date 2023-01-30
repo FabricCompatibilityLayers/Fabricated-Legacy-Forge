@@ -322,6 +322,7 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
                     initVisitor.visitFrame(F_CHOP, 1, new Object[0], 0, new Object[0]);
                     initVisitor.visitInsn(RETURN);
                     Label l21 = new Label();
+                    initVisitor.visitLabel(l21);
                     initVisitor.visitLocalVariable("var10", "I", null, l17, l15, 13);
                     initVisitor.visitLocalVariable("idx", "I", null, l12, l15, 10);
                     initVisitor.visitLocalVariable("id", "I", null, l13, l15, 11);
