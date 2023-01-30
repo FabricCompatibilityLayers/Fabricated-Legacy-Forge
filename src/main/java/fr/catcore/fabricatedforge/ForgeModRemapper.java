@@ -52,7 +52,6 @@ public class ForgeModRemapper implements ModRemapper {
     @Override
     public void registerVisitors(VisitorInfos infos) {
         Map<VisitorInfos.Type, VisitorInfos.Type> types = new HashMap<>();
-        types.put(new VisitorInfos.Type("net/minecraft/class_1196"), new VisitorInfos.Type("fr/catcore/fabricatedforge/forged/ChunkForged"));
 
         for (Map.Entry<VisitorInfos.Type, VisitorInfos.Type> entry : types.entrySet()) {
             infos.registerSuperType(entry.getKey(), entry.getValue());
