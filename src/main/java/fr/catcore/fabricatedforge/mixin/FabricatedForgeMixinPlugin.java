@@ -136,7 +136,7 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
                     Label l3 = new Label();
                     initVisitor.visitLabel(l3);
                     initVisitor.visitVarInsn(ALOAD, 0);
-                    initVisitor.visitVarInsn(ILOAD, 2);
+                    initVisitor.visitVarInsn(ILOAD, 3);
                     initVisitor.visitFieldInsn(PUTFIELD, "net/minecraft/class_847", "field_3108", "I");
                     Label l4 = new Label();
                     initVisitor.visitLabel(l4);
