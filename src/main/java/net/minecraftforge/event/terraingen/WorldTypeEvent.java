@@ -1,3 +1,7 @@
+/**
+ * This software is provided under the terms of the Minecraft Forge Public
+ * License v1.0.
+ */
 package net.minecraftforge.event.terraingen;
 
 import net.minecraft.world.biome.layer.Layer;
