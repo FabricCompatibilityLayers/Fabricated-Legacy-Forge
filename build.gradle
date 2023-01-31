@@ -2,7 +2,7 @@ import com.diffplug.gradle.spotless.JavaExtension
 
 plugins {
 	id 'com.diffplug.spotless' version "6.12.0"
-	id 'fabric-loom' version "1.0-SNAPSHOT" // To use chocoloom, change the version to a commit hash
+	id 'fabric-loom' version "1.1-SNAPSHOT" // To use chocoloom, change the version to a commit hash
 	id 'maven-publish'
 }
 
