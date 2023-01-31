@@ -52,7 +52,16 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
             CHUNK_SECTION_SET_BLOCK_DESC = "(IIII)V",
             CHUNK_SECTION_INIT = "(I)V",
             CHUNK_INIT = "(" + WORLD_DESC + "II)V",
-            CHUNK_INIT_NEW = "(" + WORLD_DESC + "[B[BII)V"
+            CHUNK_INIT_NEW = "(" + WORLD_DESC + "[B[BII)V",
+            ABSTRACT_MINECART_ENTITY = "net/minecraft/class_965",
+            ABSTRACT_MINECART_ENTITY_DESC = to(ABSTRACT_MINECART_ENTITY),
+            ABSTRACT_MINECART_ENTITY_INIT = "(" + WORLD_DESC + ")V",
+            ABSTRACT_MINECART_ENTITY_INIT_NEW = "(" + WORLD_DESC + "I)V",
+            ABSTRACT_MINECART_ENTITY_TYPE = "field_3897",
+            ORE_FEATURE = "net/minecraft/class_1239",
+            ORE_FEATURE_DESC = to(ORE_FEATURE),
+            ORE_FEATURE_INIT = "(II)V",
+            ORE_FEATURE_INIT_NEW = "(III)V"
                     ;
 
     private static String to(String s) {
@@ -387,24 +396,24 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
             case "net.minecraft.class_965": // AbstractMinecartEntity
                 {
                     // <init>(Lnet/minecraft/world/World;I)V
-                    MethodVisitor initVisitor = targetClass.visitMethod(ACC_PUBLIC, "<init>", "(Lnet/minecraft/class_1150;I)V", null, null);
+                    MethodVisitor initVisitor = targetClass.visitMethod(ACC_PUBLIC, INIT, ABSTRACT_MINECART_ENTITY_INIT_NEW, null, null);
                     Label l0 = new Label();
                     initVisitor.visitLabel(l0);
                     initVisitor.visitVarInsn(ALOAD, 0);
                     initVisitor.visitVarInsn(ALOAD, 1);
-                    initVisitor.visitMethodInsn(INVOKESPECIAL, "net/minecraft/class_965", "<init>", "(Lnet/minecraft/class_1150;)V", false);
+                    initVisitor.visitMethodInsn(INVOKESPECIAL, ABSTRACT_MINECART_ENTITY, INIT, ABSTRACT_MINECART_ENTITY_INIT, false);
                     Label l1 = new Label();
                     initVisitor.visitLabel(l1);
                     initVisitor.visitVarInsn(ALOAD, 0);
                     initVisitor.visitVarInsn(ILOAD, 2);
-                    initVisitor.visitFieldInsn(PUTFIELD, "net/minecraft/class_965", "field_3897", "I");
+                    initVisitor.visitFieldInsn(PUTFIELD, ABSTRACT_MINECART_ENTITY, ABSTRACT_MINECART_ENTITY_TYPE, "I");
                     Label l2 = new Label();
                     initVisitor.visitLabel(l2);
                     initVisitor.visitInsn(RETURN);
                     Label l3 = new Label();
                     initVisitor.visitLabel(l3);
-                    initVisitor.visitLocalVariable("this", "Lnet/minecraft/class_965;", null, l0, l3, 0);
-                    initVisitor.visitLocalVariable("world", "Lnet/minecraft/class_1150;", null, l0, l3, 1);
+                    initVisitor.visitLocalVariable(THIS, ABSTRACT_MINECART_ENTITY_DESC, null, l0, l3, 0);
+                    initVisitor.visitLocalVariable("world", WORLD_DESC, null, l0, l3, 1);
                     initVisitor.visitLocalVariable("type", "I", null, l0, l3, 2);
                     initVisitor.visitMaxs(2, 3);
                     initVisitor.visitEnd();
@@ -413,23 +422,24 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
             case "net.minecraft.class_1239": // OreFeature
                 {
                     // <init>(III)V
-                    MethodVisitor initVisitor = targetClass.visitMethod(ACC_PUBLIC, "<init>", "(III)V", null, null);
+                    MethodVisitor initVisitor = targetClass.visitMethod(ACC_PUBLIC, INIT, ORE_FEATURE_INIT_NEW, null, null);
                     Label l0 = new Label();
                     initVisitor.visitLabel(l0);
                     initVisitor.visitVarInsn(ALOAD, 0);
                     initVisitor.visitVarInsn(ILOAD, 1);
                     initVisitor.visitVarInsn(ILOAD, 3);
+                    initVisitor.visitMethodInsn(INVOKESPECIAL, ORE_FEATURE, INIT, ORE_FEATURE_INIT, false);
                     Label l1 = new Label();
                     initVisitor.visitLabel(l1);
                     initVisitor.visitVarInsn(ALOAD, 0);
                     initVisitor.visitVarInsn(ILOAD, 2);
-                    initVisitor.visitFieldInsn(PUTFIELD, "net/minecraft/class_1239", "minableBlockMeta", "I");
+                    initVisitor.visitFieldInsn(PUTFIELD, ORE_FEATURE, "minableBlockMeta", "I");
                     Label l2 = new Label();
                     initVisitor.visitLabel(l2);
                     initVisitor.visitInsn(RETURN);
                     Label l3 = new Label();
                     initVisitor.visitLabel(l3);
-                    initVisitor.visitLocalVariable("this", "Lnet/minecraft/class_1239;", null, l0, l3, 0);
+                    initVisitor.visitLocalVariable(THIS, ORE_FEATURE_DESC, null, l0, l3, 0);
                     initVisitor.visitLocalVariable("id", "I", null, l0, l3, 1);
                     initVisitor.visitLocalVariable("meta", "I", null, l0, l3, 2);
                     initVisitor.visitLocalVariable("number", "I", null, l0, l3, 3);
