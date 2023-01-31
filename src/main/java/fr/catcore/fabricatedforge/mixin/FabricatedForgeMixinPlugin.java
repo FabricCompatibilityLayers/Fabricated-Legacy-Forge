@@ -53,6 +53,7 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
             CHUNK_SECTION_INIT = "(I)V",
             CHUNK_INIT = "(" + WORLD_DESC + "II)V",
             CHUNK_INIT_NEW = "(" + WORLD_DESC + "[B[BII)V",
+            CHUNK_INIT_NEW2 = "(" + WORLD_DESC + "[S[BII)V",
             ABSTRACT_MINECART_ENTITY = "net/minecraft/class_965",
             ABSTRACT_MINECART_ENTITY_DESC = to(ABSTRACT_MINECART_ENTITY),
             ABSTRACT_MINECART_ENTITY_INIT = "(" + WORLD_DESC + ")V",
@@ -394,14 +395,14 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
                 }
                 {
                     // <init>(Lnet/minecraft/world/World;[S[BII)V
-                    MethodVisitor initVisitor = targetClass.visitMethod(ACC_PUBLIC, "<init>", "(Lnet/minecraft/class_1150;[S[BII)V", null, null);
+                    MethodVisitor initVisitor = targetClass.visitMethod(ACC_PUBLIC, INIT, CHUNK_INIT_NEW2, null, null);
                     Label l0 = new Label();
                     initVisitor.visitLabel(l0);
                     initVisitor.visitVarInsn(ALOAD, 0);
                     initVisitor.visitVarInsn(ALOAD, 1);
                     initVisitor.visitVarInsn(ILOAD, 4);
                     initVisitor.visitVarInsn(ILOAD, 5);
-                    initVisitor.visitMethodInsn(INVOKESPECIAL, "net/minecraft/class_1196", "<init>", "(Lnet/minecraft/class_1150;II)V", false);
+                    initVisitor.visitMethodInsn(INVOKESPECIAL, CHUNK, INIT, CHUNK_INIT, false);
                     Label l1 = new Label();
                     initVisitor.visitLabel(l1);
                     initVisitor.visitVarInsn(ALOAD, 2);
@@ -417,8 +418,8 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
                     Label l4 = new Label();
                     initVisitor.visitLabel(l3);
                     initVisitor.visitFrame(F_FULL, 8, new Object[]{
-                            "net/minecraft/class_1196",
-                            "net/minecraft/class_1150",
+                            CHUNK,
+                            WORLD,
                             "[B", "[S", INTEGER, INTEGER, INTEGER, INTEGER
                     }, 0, new Object[0]);
                     initVisitor.visitVarInsn(ILOAD, 7);
@@ -487,33 +488,33 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
                     Label l18 = new Label();
                     initVisitor.visitLabel(l17);
                     initVisitor.visitVarInsn(ALOAD, 0);
-                    initVisitor.visitFieldInsn(GETFIELD, "net/minecraft/class_1196", "field_4740", "[Lnet/minecraft/class_1197;");
+                    initVisitor.visitFieldInsn(GETFIELD, CHUNK, CHUNK_CHUNK_SECTIONS, CHUNK_CHUNK_SECTIONS_DESC);
                     initVisitor.visitVarInsn(ILOAD, 13);
                     initVisitor.visitInsn(AALOAD);
                     initVisitor.visitJumpInsn(IFNONNULL, l18);
                     Label l19 = new Label();
                     initVisitor.visitLabel(l19);
                     initVisitor.visitVarInsn(ALOAD, 0);
-                    initVisitor.visitFieldInsn(GETFIELD, "net/minecraft/class_1196", "field_4740", "[Lnet/minecraft/class_1197;");
+                    initVisitor.visitFieldInsn(GETFIELD, CHUNK, CHUNK_CHUNK_SECTIONS, CHUNK_CHUNK_SECTIONS_DESC);
                     initVisitor.visitVarInsn(ILOAD, 13);
-                    initVisitor.visitTypeInsn(NEW, "net/minecraft/class_1197");
+                    initVisitor.visitTypeInsn(NEW, CHUNK_SECTION);
                     initVisitor.visitInsn(DUP);
                     initVisitor.visitVarInsn(ILOAD, 13);
                     initVisitor.visitInsn(ICONST_4);
                     initVisitor.visitInsn(ISHL);
-                    initVisitor.visitMethodInsn(INVOKESPECIAL, "net/minecraft/class_1197", "<init>", "(I)V", false);
+                    initVisitor.visitMethodInsn(INVOKESPECIAL, CHUNK_SECTION, INIT, CHUNK_SECTION_INIT, false);
                     initVisitor.visitInsn(AASTORE);
 
                     initVisitor.visitLabel(l18);
                     initVisitor.visitFrame(F_FULL, 14, new Object[]{
-                            "net/minecraft/class_1196",
-                            "net/minecraft/class_1150",
+                            CHUNK,
+                            WORLD,
                             "[S", "[B",
                             INTEGER, INTEGER, INTEGER, INTEGER, INTEGER,
                             INTEGER, INTEGER, INTEGER, INTEGER, INTEGER
                     }, 0, new Object[0]);
                     initVisitor.visitVarInsn(ALOAD, 0);
-                    initVisitor.visitFieldInsn(GETFIELD, "net/minecraft/class_1196", "field_4740", "[Lnet/minecraft/class_1197;");
+                    initVisitor.visitFieldInsn(GETFIELD, CHUNK, CHUNK_CHUNK_SECTIONS, CHUNK_CHUNK_SECTIONS_DESC);
                     initVisitor.visitVarInsn(ILOAD, 13);
                     initVisitor.visitInsn(AALOAD);
                     initVisitor.visitVarInsn(ILOAD, 9);
@@ -522,11 +523,11 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
                     initVisitor.visitInsn(IAND);
                     initVisitor.visitVarInsn(ILOAD, 8);
                     initVisitor.visitVarInsn(ILOAD, 11);
-                    initVisitor.visitMethodInsn(INVOKEVIRTUAL, "net/minecraft/class_1197", "method_3927", "(IIII)V", false);
+                    initVisitor.visitMethodInsn(INVOKEVIRTUAL, CHUNK_SECTION, CHUNK_SECTION_SET_BLOCK, CHUNK_SECTION_SET_BLOCK_DESC, false);
                     Label l20 = new Label();
                     initVisitor.visitLabel(l20);
                     initVisitor.visitVarInsn(ALOAD, 0);
-                    initVisitor.visitFieldInsn(GETFIELD, "net/minecraft/class_1196", "field_4740", "[Lnet/minecraft/class_1197;");
+                    initVisitor.visitFieldInsn(GETFIELD, CHUNK, CHUNK_CHUNK_SECTIONS, CHUNK_CHUNK_SECTIONS_DESC);
                     initVisitor.visitVarInsn(ILOAD, 13);
                     initVisitor.visitInsn(AALOAD);
                     initVisitor.visitVarInsn(ILOAD, 9);
@@ -535,12 +536,12 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
                     initVisitor.visitInsn(IAND);
                     initVisitor.visitVarInsn(ILOAD, 8);
                     initVisitor.visitVarInsn(ILOAD, 12);
-                    initVisitor.visitMethodInsn(INVOKEVIRTUAL, "net/minecraft/class_1197", "method_3927", "(IIII)V", false);
+                    initVisitor.visitMethodInsn(INVOKEVIRTUAL, CHUNK_SECTION, CHUNK_SECTION_SET_BLOCK, CHUNK_SECTION_SET_BLOCK_DESC, false);
 
                     initVisitor.visitLabel(l15);
                     initVisitor.visitFrame(F_FULL, 10, new Object[]{
-                            "net/minecraft/class_1196",
-                            "net/minecraft/class_1150",
+                            CHUNK,
+                            WORLD,
                             "[S", "[B",
                             INTEGER, INTEGER, INTEGER,
                             INTEGER, INTEGER, INTEGER,
@@ -570,8 +571,8 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
                     initVisitor.visitLocalVariable("x", "I", null, l9, l10, 7);
                     initVisitor.visitLocalVariable("z", "I", null, l6, l7, 8);
                     initVisitor.visitLocalVariable("y", "I", null, l3, l4, 9);
-                    initVisitor.visitLocalVariable("this", "Lnet/minecraft/class_1196;", null, l0, l21, 0);
-                    initVisitor.visitLocalVariable("world", "Lnet/minecraft/class_1150;", null, l0, l21, 1);
+                    initVisitor.visitLocalVariable(THIS, CHUNK_DESC, null, l0, l21, 0);
+                    initVisitor.visitLocalVariable("world", WORLD_DESC, null, l0, l21, 1);
                     initVisitor.visitLocalVariable("ids", "[S", null, l0, l21, 2);
                     initVisitor.visitLocalVariable("metadata", "[B", null, l0, l21, 3);
                     initVisitor.visitLocalVariable("chunkX", "I", null, l0, l21, 4);
