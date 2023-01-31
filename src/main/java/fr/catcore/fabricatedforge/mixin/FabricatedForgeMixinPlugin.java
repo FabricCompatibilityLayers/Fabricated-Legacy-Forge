@@ -367,6 +367,33 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
                     initVisitor.visitEnd();
                 }
                 break;
+            case "net.minecraft.class_1239": // OreFeature
+                {
+                    // <init>(III)V
+                    MethodVisitor initVisitor = targetClass.visitMethod(ACC_PUBLIC, "<init>", "(III)V", null, null);
+                    Label l0 = new Label();
+                    initVisitor.visitLabel(l0);
+                    initVisitor.visitVarInsn(ALOAD, 0);
+                    initVisitor.visitVarInsn(ILOAD, 1);
+                    initVisitor.visitVarInsn(ILOAD, 3);
+                    Label l1 = new Label();
+                    initVisitor.visitLabel(l1);
+                    initVisitor.visitVarInsn(ALOAD, 0);
+                    initVisitor.visitVarInsn(ILOAD, 2);
+                    initVisitor.visitFieldInsn(PUTFIELD, "net/minecraft/class_1239", "minableBlockMeta", "I");
+                    Label l2 = new Label();
+                    initVisitor.visitLabel(l2);
+                    initVisitor.visitInsn(RETURN);
+                    Label l3 = new Label();
+                    initVisitor.visitLabel(l3);
+                    initVisitor.visitLocalVariable("this", "Lnet/minecraft/class_1239;", null, l0, l3, 0);
+                    initVisitor.visitLocalVariable("id", "I", null, l0, l3, 1);
+                    initVisitor.visitLocalVariable("meta", "I", null, l0, l3, 2);
+                    initVisitor.visitLocalVariable("number", "I", null, l0, l3, 3);
+                    initVisitor.visitMaxs(3, 4);
+                    initVisitor.visitEnd();
+                }
+                break;
             default:
                 break;
         }
