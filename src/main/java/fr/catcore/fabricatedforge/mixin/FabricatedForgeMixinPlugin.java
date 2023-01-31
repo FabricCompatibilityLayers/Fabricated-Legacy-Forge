@@ -341,6 +341,32 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
                     initVisitor.visitEnd();
                 }
                 break;
+            case "net.minecraft.class_965": // AbstractMinecartEntity
+                {
+                    // <init>(Lnet/minecraft/world/World;I)V
+                    MethodVisitor initVisitor = targetClass.visitMethod(ACC_PUBLIC, "<init>", "(Lnet/minecraft/class_1150;I)V", null, null);
+                    Label l0 = new Label();
+                    initVisitor.visitLabel(l0);
+                    initVisitor.visitVarInsn(ALOAD, 0);
+                    initVisitor.visitVarInsn(ALOAD, 1);
+                    initVisitor.visitMethodInsn(INVOKESPECIAL, "net/minecraft/class_965", "<init>", "(Lnet/minecraft/class_1150;)V", false);
+                    Label l1 = new Label();
+                    initVisitor.visitLabel(l1);
+                    initVisitor.visitVarInsn(ALOAD, 0);
+                    initVisitor.visitVarInsn(ILOAD, 2);
+                    initVisitor.visitFieldInsn(PUTFIELD, "net/minecraft/class_965", "field_3897", "I");
+                    Label l2 = new Label();
+                    initVisitor.visitLabel(l2);
+                    initVisitor.visitInsn(RETURN);
+                    Label l3 = new Label();
+                    initVisitor.visitLabel(l3);
+                    initVisitor.visitLocalVariable("this", "Lnet/minecraft/class_965;", null, l0, l3, 0);
+                    initVisitor.visitLocalVariable("world", "Lnet/minecraft/class_1150;", null, l0, l3, 1);
+                    initVisitor.visitLocalVariable("type", "I", null, l0, l3, 2);
+                    initVisitor.visitMaxs(2, 3);
+                    initVisitor.visitEnd();
+                }
+                break;
             default:
                 break;
         }
