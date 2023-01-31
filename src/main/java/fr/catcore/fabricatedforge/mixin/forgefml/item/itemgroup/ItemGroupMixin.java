@@ -85,11 +85,6 @@ public abstract class ItemGroupMixin implements IItemGroup {
         return this.index > 11 ? (this.index - 12) / 10 + 1 : 0;
     }
 
-//    // Public
-//    private static int getNextID() {
-//        return itemGroups.length;
-//    }
-
     @Override
     public ItemStack getIconItemStack() {
         return new ItemStack(this.method_3320());
