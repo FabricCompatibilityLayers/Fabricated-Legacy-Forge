@@ -17,8 +17,8 @@ def displayVersion = version + "+" + project.minecraft_version
 group = project.maven_group
 
 def debug = true
-def branch = System.getenv("GITHUB_REF_NAME") == null ? "forge-" : System.getenv("GITHUB_REF_NAME")
-if (!branch.startsWith("forge-")) {
+def branch = System.getenv("GITHUB_REF_NAME") == null ? "-forge" : System.getenv("GITHUB_REF_NAME")
+if (!branch.endsWith("-forge")) {
 	debug = false
 }
 
