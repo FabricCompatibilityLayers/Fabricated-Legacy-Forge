@@ -1,6 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.util;
 
 import fr.catcore.fabricatedforge.mixininterface.IWeightedRandomChestContent;
+import fr.catcore.modremapperapi.api.mixin.NewConstructor;
+import fr.catcore.modremapperapi.api.mixin.SuperConstructor;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.item.ItemStack;
@@ -17,9 +19,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Random;
 
 @Mixin(WeightedRandomChestContent.class)
-public class WeightedRandomChestContentMixin implements IWeightedRandomChestContent {
+public abstract class WeightedRandomChestContentMixin implements IWeightedRandomChestContent {
 
     @Shadow private int min;
+    @Shadow private int max;
 
     @Shadow private int max;
     public ItemStack itemStack;
@@ -27,6 +30,17 @@ public class WeightedRandomChestContentMixin implements IWeightedRandomChestCont
     @Inject(method = "<init>", at = @At("RETURN"))
     private void fmlCtr(int par1, int par2, int par3, int par4, int par5, CallbackInfo ci) {
         this.itemStack = new ItemStack(par1, 1, par2);
+    }
+
+    @SuperConstructor
+    public abstract void weight$ctr(int weight);
+
+    @NewConstructor
+    public void forge$ctr(ItemStack stack, int min, int max, int weight) {
+        weight$ctr(weight);
+        this.itemStack = stack;
+        this.min = min;
+        this.max = max;
     }
 
     /**

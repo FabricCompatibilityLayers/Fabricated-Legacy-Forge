@@ -34,7 +34,7 @@
   "depends": {
     "fabricloader": ">0.14.3",
     "minecraft": "1.4.5",
-    "mod-remapping-api": ">=1.6.2"
+    "mod-remapping-api": ">=1.7.1"
   },
   "custom": {
     "loom:injected_interfaces": {

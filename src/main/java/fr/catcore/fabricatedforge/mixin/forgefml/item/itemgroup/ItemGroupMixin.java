@@ -2,6 +2,9 @@ package fr.catcore.fabricatedforge.mixin.forgefml.item.itemgroup;
 
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import fr.catcore.fabricatedforge.mixininterface.IItemGroup;
+import fr.catcore.modremapperapi.api.mixin.NewConstructor;
+import fr.catcore.modremapperapi.api.mixin.Public;
+import fr.catcore.modremapperapi.api.mixin.ShadowConstructor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.item.Item;
@@ -36,6 +39,14 @@ public abstract class ItemGroupMixin implements IItemGroup {
 
             itemGroups = tmp;
         }
+    }
+
+    @ShadowConstructor
+    public abstract void vanilla$ctr(int id, String label);
+
+    @NewConstructor
+    public void forge$ctr(String label) {
+        vanilla$ctr(getNextID(), label);
     }
 
     /**
@@ -83,6 +94,11 @@ public abstract class ItemGroupMixin implements IItemGroup {
     @Override
     public int getTabPage() {
         return this.index > 11 ? (this.index - 12) / 10 + 1 : 0;
+    }
+
+    @Public
+    private static int getNextID() {
+        return itemGroups.length;
     }
 
     @Override

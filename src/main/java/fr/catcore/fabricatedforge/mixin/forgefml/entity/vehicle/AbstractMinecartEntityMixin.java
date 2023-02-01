@@ -2,6 +2,9 @@ package fr.catcore.fabricatedforge.mixin.forgefml.entity.vehicle;
 
 import fr.catcore.fabricatedforge.mixininterface.IAbstractMinecartEntity;
 import fr.catcore.fabricatedforge.mixininterface.IRailBlock;
+import fr.catcore.modremapperapi.api.mixin.NewConstructor;
+import fr.catcore.modremapperapi.api.mixin.Public;
+import fr.catcore.modremapperapi.api.mixin.ShadowConstructor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -87,15 +90,20 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
         super(world);
     }
 
-    // Public
+    @Public
     private static float defaultMaxSpeedRail = 0.4F;
+    @Public
     private static float defaultMaxSpeedGround = 0.4F;
+    @Public
     private static float defaultMaxSpeedAirLateral = 0.4F;
+    @Public
     private static float defaultMaxSpeedAirVertical = -1.0F;
+    @Public
     private static double defaultDragRidden = 0.997F;
+    @Public
     private static double defaultDragEmpty = 0.96F;
+    @Public
     private static double defaultDragAir = 0.95F;
-    // Not public
     protected boolean canUseRail = true;
     protected boolean canBePushed = true;
     private static IMinecartCollisionHandler collisionHandler = null;
@@ -112,6 +120,15 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
         this.maxSpeedAirLateral = defaultMaxSpeedAirLateral;
         this.maxSpeedAirVertical = defaultMaxSpeedAirVertical;
         this.dragAir = defaultDragAir;
+    }
+
+    @ShadowConstructor
+    public abstract void vanilla$ctr(World world);
+
+    @NewConstructor
+    public void forge$ctr(World world, int type) {
+        vanilla$ctr(world);
+        this.field_3897 = type;
     }
 
     /**
@@ -780,12 +797,12 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
         return this.field_3897;
     }
 
-    // public
+    @Public
     private static IMinecartCollisionHandler getCollisionHandler() {
         return collisionHandler;
     }
 
-    // public
+    @Public
     private static void setCollisionHandler(IMinecartCollisionHandler handler) {
         collisionHandler = handler;
     }

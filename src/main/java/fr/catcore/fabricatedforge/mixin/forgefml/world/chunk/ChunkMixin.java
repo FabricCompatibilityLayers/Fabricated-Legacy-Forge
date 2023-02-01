@@ -4,6 +4,8 @@ import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import fr.catcore.fabricatedforge.forged.ReflectionUtils;
+import fr.catcore.modremapperapi.api.mixin.NewConstructor;
+import fr.catcore.modremapperapi.api.mixin.ShadowConstructor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -95,6 +97,34 @@ public abstract class ChunkMixin implements IChunk {
                         }
 
                         this.chunkSections[var10].setBlock(var6, var8 & 15, var7, var9);
+                    }
+                }
+            }
+        }
+    }
+
+    @ShadowConstructor
+    public abstract void vanilla$ctr(World world, int chunkX, int chunkZ);
+
+    @NewConstructor
+    public void forge$ctr(World world, byte[] ids, byte[] metadata, int chunkX, int chunkZ) {
+        vanilla$ctr(world, chunkX, chunkZ);
+        int var5 = ids.length / 256;
+
+        for(int x = 0; x < 16; ++x) {
+            for(int z = 0; z < 16; ++z) {
+                for(int y = 0; y < var5; ++y) {
+                    int idx = x << 11 | z << 7 | y;
+                    int id = ids[idx] & 255;
+                    int meta = metadata[idx];
+                    if (id != 0) {
+                        int var10 = y >> 4;
+                        if (this.chunkSections[var10] == null) {
+                            this.chunkSections[var10] = new ChunkSection(var10 << 4);
+                        }
+
+                        this.chunkSections[var10].setBlock(x, y & 15, z, id);
+                        this.chunkSections[var10].setBlockData(x, y & 15, z, meta);
                     }
                 }
             }
