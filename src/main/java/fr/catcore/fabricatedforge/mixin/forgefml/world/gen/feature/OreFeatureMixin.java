@@ -2,6 +2,8 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IOreFeature;
+import fr.catcore.modremapperapi.api.mixin.NewConstructor;
+import fr.catcore.modremapperapi.api.mixin.ShadowConstructor;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -24,6 +26,15 @@ public abstract class OreFeatureMixin extends Feature implements IOreFeature {
     @Override
     public void setMinableBlockMeta(int minableBlockMeta) {
         this.minableBlockMeta = minableBlockMeta;
+    }
+
+    @ShadowConstructor
+    public abstract void vanilla$ctr(int id, int number);
+
+    @NewConstructor
+    public void forge$ctr(int id, int meta, int number) {
+        vanilla$ctr(id, number);
+        this.minableBlockMeta = meta;
     }
 
     /**
