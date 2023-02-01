@@ -1,6 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.texture;
 
+import cpw.mods.fml.client.FMLTextureFX;
 import fr.catcore.fabricatedforge.mixininterface.IFMLTextureFX;
+import fr.catcore.modremapperapi.api.mixin.ChangeSuperClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.texture.CompassSprite;
 import net.minecraft.util.math.BlockPos;
@@ -16,6 +18,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 @Mixin(CompassSprite.class)
+@ChangeSuperClass(FMLTextureFX.class)
 public class CompassSpriteMixin implements IFMLTextureFX {
     @Shadow private int[] field_2149;
 
