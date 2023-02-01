@@ -1,6 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
+import cpw.mods.fml.client.FMLTextureFX;
 import fr.catcore.fabricatedforge.mixininterface.IFMLTextureFX;
+import fr.catcore.modremapperapi.api.mixin.ChangeSuperClass;
 import net.minecraft.client.NetherPortalSprite;
 import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Random;
 
 @Mixin(NetherPortalSprite.class)
+@ChangeSuperClass(FMLTextureFX.class)
 public class NetherPortalSpriteMixin implements IFMLTextureFX {
     @Shadow private byte[][] field_2170;
 
