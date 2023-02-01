@@ -23,8 +23,6 @@ public abstract class WeightedRandomChestContentMixin implements IWeightedRandom
 
     @Shadow private int min;
     @Shadow private int max;
-
-    @Shadow private int max;
     public ItemStack itemStack;
 
     @Inject(method = "<init>", at = @At("RETURN"))

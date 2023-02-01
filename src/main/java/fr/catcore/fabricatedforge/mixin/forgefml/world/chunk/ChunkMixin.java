@@ -131,6 +131,31 @@ public abstract class ChunkMixin implements IChunk {
         }
     }
 
+    @NewConstructor
+    public void forge$ctr(World world, short[] ids, byte[] metadata, int chunkX, int chunkZ) {
+        vanilla$ctr(world, chunkX, chunkZ);
+        int max = ids.length / 256;
+
+        for(int y = 0; y < max; ++y) {
+            for(int z = 0; z < 16; ++z) {
+                for(int x = 0; x < 16; ++x) {
+                    int idx = y << 8 | z << 4 | x;
+                    int id = ids[idx] & 16777215;
+                    int meta = metadata[idx];
+                    if (id != 0) {
+                        int storageBlock = y >> 4;
+                        if (this.chunkSections[storageBlock] == null) {
+                            this.chunkSections[storageBlock] = new ChunkSection(storageBlock << 4);
+                        }
+
+                        this.chunkSections[storageBlock].setBlock(x, y & 15, z, id);
+                        this.chunkSections[storageBlock].setBlockData(x, y & 15, z, meta);
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * @author Minecraft Forge
      * @reason none
