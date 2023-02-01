@@ -2,6 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
 import cpw.mods.fml.client.FMLTextureFX;
 import fr.catcore.fabricatedforge.mixininterface.IFMLTextureFX;
+import fr.catcore.modremapperapi.api.mixin.ChangeSuperClass;
 import net.minecraft.client.class_586;
 import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,6 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(class_586.class)
+@ChangeSuperClass(FMLTextureFX.class)
 public abstract class class_586Mixin implements IFMLTextureFX {
     @Shadow protected float[] field_2160;
 
