@@ -160,7 +160,7 @@ accessible field net/minecraft/util/Language code Ljava/lang/String;
 
 accessible field net/minecraft/client/render/block/entity/BlockEntityRenderDispatcher renderers Ljava/util/Map;
 
-accessible method net/minecraft/recipe/RecipeDispatcher method_3495 (Lnet/minecraft/item/ItemStack;[Ljava/lang/Object;)V
+accessible method net/minecraft/recipe/RecipeDispatcher registerShapedRecipe (Lnet/minecraft/item/ItemStack;[Ljava/lang/Object;)Lnet/minecraft/recipe/ShapedRecipeType;
 accessible method net/minecraft/recipe/RecipeDispatcher registerShapelessRecipe (Lnet/minecraft/item/ItemStack;[Ljava/lang/Object;)V
 
 accessible field net/minecraft/util/collection/Weight weight I
@@ -291,6 +291,11 @@ accessible method net/minecraft/entity/player/PlayerEntity closeHandledScreen ()
 
 accessible method net/minecraft/entity/player/ControllablePlayerEntity spawnItemEntity (Lnet/minecraft/entity/ItemEntity;)V
 
+# net/minecraft/util/WeightedRandomChestContent.*
+accessible field net/minecraft/util/WeightedRandomChestContent content Lnet/minecraft/item/ItemStack;
+accessible field net/minecraft/util/WeightedRandomChestContent min I
+accessible field net/minecraft/util/WeightedRandomChestContent max I
+
 accessible field net/minecraft/server/world/ServerWorld field_2817 [Lnet/minecraft/util/WeightedRandomChestContent;
 
 accessible field net/minecraft/structure/MineshaftPieces field_4910 [Lnet/minecraft/util/WeightedRandomChestContent;
@@ -404,6 +409,22 @@ accessible method net/minecraft/world/biome/BiomeDecorator generateOres ()V
 
 accessible field net/minecraft/server/class_793 field_2796 Ljava/util/List;
 
+mutable field net/minecraft/item/itemgroup/ItemGroup itemGroups [Lnet/minecraft/item/itemgroup/ItemGroup;
+
+accessible method net/minecraft/network/Packet addPacketType (IZZLjava/lang/Class;)V
+
+accessible method net/minecraft/world/WorldSaveHandler method_198 ()Ljava/io/File;
+
+accessible method net/minecraft/world/World onEntityRemoved (Lnet/minecraft/entity/Entity;)V
+accessible field net/minecraft/world/World rainGradientPrev F
+accessible field net/minecraft/world/World rainGradient F
+accessible field net/minecraft/world/World thunderGradient F
+accessible field net/minecraft/world/World thunderGradientPrev F
+
+accessible method net/minecraft/client/world/ClientWorld onEntityRemoved (Lnet/minecraft/entity/Entity;)V
+
+accessible method net/minecraft/server/world/ServerWorld onEntityRemoved (Lnet/minecraft/entity/Entity;)V
+
 #### Fabricated Forge
 accessible class net/minecraft/client/class_470
 accessible class net/minecraft/client/class_416
@@ -415,7 +436,6 @@ accessible class net/minecraft/structure/class_7
 accessible class net/minecraft/structure/class_31
 accessible class net/minecraft/structure/class_25
 accessible class net/minecraft/util/LogFormatter
-accessible class net/minecraft/class_5115
 accessible class net/minecraft/util/crash/provider/world/BlockEntityNameProvider
 accessible method net/minecraft/util/crash/provider/world/BlockEntityNameProvider <init> (Lnet/minecraft/block/entity/BlockEntity;)V
 accessible class net/minecraft/network/class_266

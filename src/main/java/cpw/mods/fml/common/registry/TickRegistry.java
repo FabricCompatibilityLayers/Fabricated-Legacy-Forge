@@ -16,7 +16,7 @@ package cpw.mods.fml.common.registry;
 import com.google.common.collect.Queues;
 import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.Side;
+import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.common.SingleIntervalHandler;
 
 import java.util.List;

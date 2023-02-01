@@ -11,17 +11,21 @@
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-package cpw.mods.fml.common.asm;
+package cpw.mods.fml.relauncher;
 
-import cpw.mods.fml.common.Side;
+public enum Side {
+    CLIENT,
+    SERVER,
+    BUKKIT;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+    private Side() {
+    }
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.CONSTRUCTOR})
-public @interface SideOnly {
-    Side value();
+    public boolean isServer() {
+        return !this.isClient();
+    }
+
+    public boolean isClient() {
+        return this == CLIENT;
+    }
 }

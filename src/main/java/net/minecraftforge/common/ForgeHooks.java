@@ -72,6 +72,23 @@ public class ForgeHooks {
         }
     }
 
+    public static boolean canToolHarvestBlock(Block block, int metadata, ItemStack stack) {
+        if (stack == null) {
+            return false;
+        } else {
+            List info = (List)toolClasses.get(stack.getItem());
+            if (info == null) {
+                return false;
+            } else {
+                Object[] tmp = info.toArray();
+                String toolClass = (String)tmp[0];
+                int harvestLevel = (int) tmp[1];
+                Integer blockHarvestLevel = (Integer)toolHarvestLevels.get(Arrays.asList(block, metadata, toolClass));
+                return blockHarvestLevel != null && blockHarvestLevel <= harvestLevel;
+            }
+        }
+    }
+
     public static float blockStrength(Block block, PlayerEntity player, World world, int x, int y, int z) {
         int metadata = world.getBlockData(x, y, z);
         float hardness = block.method_471(world, x, y, z);

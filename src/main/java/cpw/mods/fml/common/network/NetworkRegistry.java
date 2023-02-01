@@ -19,7 +19,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.google.common.collect.*;
 import cpw.mods.fml.common.*;
-import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.Connection;

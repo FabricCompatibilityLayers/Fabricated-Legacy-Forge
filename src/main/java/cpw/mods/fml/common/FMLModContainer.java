@@ -33,6 +33,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.security.cert.Certificate;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.zip.ZipEntry;
@@ -61,10 +62,14 @@ public class FMLModContainer implements ModContainer {
             .put(FMLServerStartedEvent.class, Mod.ServerStarted.class)
             .put(FMLServerStoppingEvent.class, Mod.ServerStopping.class)
             .put(FMLInterModComms.IMCEvent.class, Mod.IMCCallback.class)
+            .put(FMLFingerprintViolationEvent.class, Mod.FingerprintWarning.class)
             .build();
     private static final BiMap<Class<? extends Annotation>, Class<? extends FMLEvent>> modTypeAnnotations = modAnnotationTypes.inverse();
     private String annotationDependencies;
     private VersionRange minecraftAccepted;
+    private boolean fingerprintNotPresent;
+    private Set<String> sourceFingerprints;
+    private Certificate certificate;
 
     public FMLModContainer(String className, File modSource, Map<String, Object> modDescriptor) {
         this.className = className;
@@ -324,16 +329,57 @@ public class FMLModContainer implements ModContainer {
             ModClassLoader modClassLoader = event.getModClassLoader();
             modClassLoader.addFile(this.source);
             Class<?> clazz = Class.forName(this.className, true, modClassLoader);
-            ASMDataTable asmHarvestedAnnotations = event.getASMHarvestedData();
-            asmHarvestedAnnotations.getAnnotationsFor(this);
+            Certificate[] certificates = clazz.getProtectionDomain().getCodeSource().getCertificates();
+            int len = 0;
+            if (certificates != null) {
+                len = certificates.length;
+            }
+
+            ImmutableList.Builder<String> certBuilder = ImmutableList.builder();
+
+            for(int i = 0; i < len; ++i) {
+                certBuilder.add(CertificateHelper.getFingerprint(certificates[i]));
+            }
+
+            ImmutableList<String> certList = certBuilder.build();
+            this.sourceFingerprints = ImmutableSet.copyOf(certList);
+            String expectedFingerprint = (String)this.descriptor.get("certificateFingerprint");
+            this.fingerprintNotPresent = true;
+            if (expectedFingerprint != null && !expectedFingerprint.isEmpty()) {
+                if (!this.sourceFingerprints.contains(expectedFingerprint)) {
+                    Level warnLevel = Level.SEVERE;
+                    if (this.source.isDirectory()) {
+                        warnLevel = Level.FINER;
+                    }
+
+                    FMLLog.log(
+                            warnLevel,
+                            "The mod %s is expecting signature %s for source %s, however there is no signature matching that description",
+                            new Object[]{this.getModId(), expectedFingerprint, this.source.getName()}
+                    );
+                } else {
+                    this.certificate = certificates[certList.indexOf(expectedFingerprint)];
+                    this.fingerprintNotPresent = false;
+                }
+            }
+
             this.annotations = this.gatherAnnotations(clazz);
             this.isNetworkMod = FMLNetworkHandler.instance().registerNetworkMod(this, clazz, event.getASMHarvestedData());
             this.modInstance = clazz.newInstance();
+            if (this.fingerprintNotPresent) {
+                this.eventBus
+                        .post(
+                                new FMLFingerprintViolationEvent(
+                                        this.source.isDirectory(), this.source, ImmutableSet.copyOf(this.sourceFingerprints), expectedFingerprint
+                                )
+                        );
+            }
+
             ProxyInjector.inject(this, event.getASMHarvestedData(), FMLCommonHandler.instance().getSide());
             this.processFieldAnnotations(event.getASMHarvestedData());
-        } catch (Throwable var5) {
-            this.controller.errorOccurred(this, var5);
-            Throwables.propagateIfPossible(var5);
+        } catch (Throwable var10) {
+            this.controller.errorOccurred(this, var10);
+            Throwables.propagateIfPossible(var10);
         }
     }
 
@@ -375,5 +421,9 @@ public class FMLModContainer implements ModContainer {
 
     public VersionRange acceptableMinecraftVersionRange() {
         return this.minecraftAccepted;
+    }
+
+    public Certificate getSigningCertificate() {
+        return this.certificate;
     }
 }

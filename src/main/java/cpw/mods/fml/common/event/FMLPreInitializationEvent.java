@@ -17,6 +17,8 @@ import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.discovery.ASMDataTable;
 
 import java.io.File;
+import java.security.CodeSource;
+import java.security.cert.Certificate;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -73,5 +75,12 @@ public class FMLPreInitializationEvent extends FMLStateEvent {
         Logger log = Logger.getLogger(this.modContainer.getModId());
         log.setParent(FMLLog.getLogger());
         return log;
+    }
+
+    @Deprecated
+    public Certificate[] getFMLSigningCertificates() {
+        CodeSource codeSource = this.getClass().getClassLoader().getParent().getClass().getProtectionDomain().getCodeSource();
+        Certificate[] certs = codeSource.getCertificates();
+        return certs == null ? new Certificate[0] : certs;
     }
 }

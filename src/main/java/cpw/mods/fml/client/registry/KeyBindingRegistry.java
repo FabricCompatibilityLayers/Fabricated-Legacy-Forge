@@ -16,7 +16,7 @@ package cpw.mods.fml.client.registry;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.Side;
+import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.registry.TickRegistry;
 import net.minecraft.client.options.GameOptions;
@@ -26,7 +26,6 @@ import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public class KeyBindingRegistry {

@@ -14,6 +14,8 @@
 package cpw.mods.fml.common.registry;
 
 import com.google.common.base.Function;
+import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -25,9 +27,14 @@ import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.file.Files;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.logging.Level;
 
 public class GameData {
     private static Map<Integer, ItemData> idMap = Maps.newHashMap();
@@ -36,8 +43,34 @@ public class GameData {
     private static MapDifference<Integer, ItemData> difference;
     private static boolean shouldContinue = true;
     private static boolean isSaveValid = true;
+    private static Map<String, String> ignoredMods;
 
     public GameData() {
+    }
+
+    private static boolean isModIgnoredForIdValidation(String modId) {
+        if (ignoredMods == null) {
+            File f = new File(Loader.instance().getConfigDir(), "fmlIDChecking.properties");
+            if (f.exists()) {
+                Properties p = new Properties();
+
+                try {
+                    p.load(Files.newInputStream(f.toPath()));
+                    ignoredMods = Maps.fromProperties(p);
+                    if (ignoredMods.size() > 0) {
+                        FMLLog.warning("Using non-empty ignored mods configuration file %s", new Object[]{ignoredMods.keySet()});
+                    }
+                } catch (Exception var4) {
+                    Throwables.propagateIfPossible(var4);
+                    FMLLog.log(Level.SEVERE, var4, "Failed to read ignored ID checker mods properties file", new Object[0]);
+                    ignoredMods = ImmutableMap.of();
+                }
+            } else {
+                ignoredMods = ImmutableMap.of();
+            }
+        }
+
+        return ignoredMods.containsKey(modId);
     }
 
     public static void newItemAdded(Item item) {
@@ -56,14 +89,16 @@ public class GameData {
         ItemData itemData = new ItemData(item, mc);
         if (idMap.containsKey(item.id)) {
             ItemData id = (ItemData)idMap.get(item.id);
-            FMLLog.warning(
-                    "[ItemTracker] The mod %s is attempting to overwrite existing item at %d (%s from %s) with %s",
+            FMLLog.info(
+                    "[ItemTracker] The mod %s is overwriting existing item at %d (%s from %s) with %s",
                     new Object[]{mc.getModId(), id.getItemId(), id.getItemType(), id.getModId(), itemType}
             );
         }
 
         idMap.put(item.id, itemData);
-        FMLLog.fine("[ItemTracker] Adding item %s(%d) owned by %s", new Object[]{item.getClass().getName(), item.id, mc.getModId()});
+        if (!"Minecraft".equals(mc.getModId())) {
+            FMLLog.fine("[ItemTracker] Adding item %s(%d) owned by %s", new Object[]{item.getClass().getName(), item.id, mc.getModId()});
+        }
     }
 
     public static void validateWorldSave(Set<ItemData> worldSaveItems) {
@@ -74,7 +109,7 @@ public class GameData {
 
             try {
                 clientValidationLatch.await();
-            } catch (InterruptedException var4) {
+            } catch (InterruptedException var6) {
             }
         } else {
             Function<? super ItemData, Integer> idMapFunction = new Function<ItemData, Integer>() {
@@ -92,7 +127,29 @@ public class GameData {
                 FMLLog.severe("FML has detected item discrepancies", new Object[0]);
                 FMLLog.severe("Missing items : %s", new Object[]{difference.entriesOnlyOnLeft()});
                 FMLLog.severe("Mismatched items : %s", new Object[]{difference.entriesDiffering()});
-                isSaveValid = false;
+                boolean foundNonIgnored = false;
+
+                for(ItemData diff : difference.entriesOnlyOnLeft().values()) {
+                    if (!isModIgnoredForIdValidation(diff.getModId())) {
+                        foundNonIgnored = true;
+                    }
+                }
+
+                for(MapDifference.ValueDifference<ItemData> diff : difference.entriesDiffering().values()) {
+                    if (!isModIgnoredForIdValidation(((ItemData)diff.leftValue()).getModId())
+                            && !isModIgnoredForIdValidation(((ItemData)diff.rightValue()).getModId())) {
+                        foundNonIgnored = true;
+                    }
+                }
+
+                if (!foundNonIgnored) {
+                    FMLLog.severe(
+                            "FML is ignoring these ID discrepancies because of configuration. YOUR GAME WILL NOW PROBABLY CRASH. HOPEFULLY YOU WON'T HAVE CORRUPTED YOUR WORLD. BLAME %s",
+                            new Object[]{ignoredMods.keySet()}
+                    );
+                }
+
+                isSaveValid = !foundNonIgnored;
                 serverValidationLatch.countDown();
             }
 
@@ -101,7 +158,7 @@ public class GameData {
                 if (!shouldContinue) {
                     throw new RuntimeException("This server instance is going to stop abnormally because of a fatal ID mismatch");
                 }
-            } catch (InterruptedException var5) {
+            } catch (InterruptedException var7) {
             }
         }
     }

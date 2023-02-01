@@ -22,6 +22,7 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.world.WorldSaveHandler;
 import net.minecraft.world.level.LevelProperties;
 
+import java.security.cert.Certificate;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
@@ -92,5 +93,10 @@ public class FMLDummyContainer extends DummyModContainer implements WorldAccessC
         } else {
             GameData.validateWorldSave(null);
         }
+    }
+
+    public Certificate getSigningCertificate() {
+        Certificate[] certificates = this.getClass().getProtectionDomain().getCodeSource().getCertificates();
+        return certificates != null ? certificates[0] : null;
     }
 }

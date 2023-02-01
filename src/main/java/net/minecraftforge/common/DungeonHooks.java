@@ -6,6 +6,7 @@ package net.minecraftforge.common;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.util.collection.Weight;
 import net.minecraft.util.collection.Weighting;
 
@@ -14,19 +15,9 @@ import java.util.Iterator;
 import java.util.Random;
 
 public class DungeonHooks {
-    private static int dungeonLootAttempts = 8;
     private static ArrayList<DungeonHooks.DungeonMob> dungeonMobs = new ArrayList();
-    private static ArrayList<DungeonHooks.DungeonLoot> dungeonLoot = new ArrayList();
 
     public DungeonHooks() {
-    }
-
-    public static void setDungeonLootTries(int number) {
-        dungeonLootAttempts = number;
-    }
-
-    public static int getDungeonLootTries() {
-        return dungeonLootAttempts;
     }
 
     public static float addDungeonMob(String name, int rarity) {
@@ -60,97 +51,83 @@ public class DungeonHooks {
         return mob == null ? "" : mob.type;
     }
 
+    @Deprecated
+    public static void setDungeonLootTries(int number) {
+        ChestGenHooks.getInfo("dungeonChest").setMax(number);
+        ChestGenHooks.getInfo("dungeonChest").setMin(number);
+    }
+
+    @Deprecated
+    public static int getDungeonLootTries() {
+        return ChestGenHooks.getInfo("dungeonChest").getMax();
+    }
+
+    @Deprecated
+    public void addDungeonLoot(DungeonHooks.DungeonLoot loot) {
+        ChestGenHooks.getInfo("dungeonChest").addItem(loot);
+    }
+
+    @Deprecated
+    public boolean removeDungeonLoot(DungeonHooks.DungeonLoot loot) {
+        return ChestGenHooks.getInfo("dungeonChest").contents.remove(loot);
+    }
+
+    @Deprecated
     public static void addDungeonLoot(ItemStack item, int rarity) {
         addDungeonLoot(item, rarity, 1, 1);
     }
 
+    @Deprecated
     public static float addDungeonLoot(ItemStack item, int rarity, int minCount, int maxCount) {
-        for(DungeonHooks.DungeonLoot loot : dungeonLoot) {
-            if (loot.equals(item, minCount, maxCount)) {
-                return (float)(loot.weight += rarity);
-            }
-        }
-
-        dungeonLoot.add(new DungeonHooks.DungeonLoot(rarity, item, minCount, maxCount));
+        ChestGenHooks.addDungeonLoot(ChestGenHooks.getInfo("dungeonChest"), item, rarity, minCount, maxCount);
         return (float)rarity;
     }
 
+    @Deprecated
     public static void removeDungeonLoot(ItemStack item) {
-        removeDungeonLoot(item, -1, 0);
+        ChestGenHooks.removeItem("dungeonChest", item);
     }
 
+    @Deprecated
     public static void removeDungeonLoot(ItemStack item, int minCount, int maxCount) {
-        ArrayList<DungeonHooks.DungeonLoot> lootTmp = (ArrayList)dungeonLoot.clone();
-        if (minCount < 0) {
-            for(DungeonHooks.DungeonLoot loot : lootTmp) {
-                if (loot.equals(item)) {
-                    dungeonLoot.remove(loot);
-                }
-            }
-        } else {
-            for(DungeonHooks.DungeonLoot loot : lootTmp) {
-                if (loot.equals(item, minCount, maxCount)) {
-                    dungeonLoot.remove(loot);
-                }
-            }
-        }
+        ChestGenHooks.removeItem("dungeonChest", item);
     }
 
+    @Deprecated
     public static ItemStack getRandomDungeonLoot(Random rand) {
-        DungeonHooks.DungeonLoot ret = (DungeonHooks.DungeonLoot)Weighting.getRandom(rand, dungeonLoot);
-        return ret != null ? ret.generateStack(rand) : null;
-    }
-
-    public void addDungeonLoot(DungeonHooks.DungeonLoot loot) {
-        dungeonLoot.add(loot);
-    }
-
-    public boolean removeDungeonLoot(DungeonHooks.DungeonLoot loot) {
-        return dungeonLoot.remove(loot);
+        return ChestGenHooks.getOneItem("dungeonChest", rand);
     }
 
     static {
         addDungeonMob("Skeleton", 100);
         addDungeonMob("Zombie", 200);
         addDungeonMob("Spider", 100);
-        addDungeonLoot(new ItemStack(Item.SADDLE), 100);
-        addDungeonLoot(new ItemStack(Item.IRON_INGOT), 100, 1, 4);
-        addDungeonLoot(new ItemStack(Item.BREAD), 100);
-        addDungeonLoot(new ItemStack(Item.WHEAT), 100, 1, 4);
-        addDungeonLoot(new ItemStack(Item.GUNPOWDER), 100, 1, 4);
-        addDungeonLoot(new ItemStack(Item.STRING), 100, 1, 4);
-        addDungeonLoot(new ItemStack(Item.BUCKET), 100);
-        addDungeonLoot(new ItemStack(Item.GOLDEN_APPLE), 1);
-        addDungeonLoot(new ItemStack(Item.REDSTONE), 40, 1, 4);
-        addDungeonLoot(new ItemStack(Item.RECORD_13), 5);
-        addDungeonLoot(new ItemStack(Item.RECORD_CAT), 5);
-        addDungeonLoot(new ItemStack(Item.DYES, 1, 3), 100);
     }
 
-    public static class DungeonLoot extends Weight {
-        private ItemStack itemStack;
-        private int minCount = 1;
-        private int maxCount = 1;
-
+    @Deprecated
+    public static class DungeonLoot extends WeightedRandomChestContent {
+        @Deprecated
         public DungeonLoot(int weight, ItemStack item, int min, int max) {
-            super(weight);
-            this.itemStack = item;
-            this.minCount = min;
-            this.maxCount = max;
+            super(item, weight, min, max);
         }
 
+        @Deprecated
         public ItemStack generateStack(Random rand) {
-            ItemStack ret = this.itemStack.copy();
-            ret.count = this.minCount + rand.nextInt(this.maxCount - this.minCount + 1);
+            int min = this.min;
+            int max = this.max;
+            ItemStack ret = this.content.copy();
+            ret.count = min + rand.nextInt(max - min + 1);
             return ret;
         }
 
         public boolean equals(ItemStack item, int min, int max) {
-            return min == this.minCount && max == this.maxCount && item.equalsIgnoreNbt(this.itemStack);
+            int minCount = this.min;
+            int maxCount = this.max;
+            return min == minCount && max == maxCount && item.equalsIgnoreNbt(this.content) && ItemStack.equalsIgnoreDamage(item, this.content);
         }
 
         public boolean equals(ItemStack item) {
-            return item.equalsIgnoreNbt(this.itemStack);
+            return item.equalsIgnoreNbt(this.content) && ItemStack.equalsIgnoreDamage(item, this.content);
         }
     }
 

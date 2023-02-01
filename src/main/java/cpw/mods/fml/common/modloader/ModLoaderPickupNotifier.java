@@ -25,6 +25,6 @@ public class ModLoaderPickupNotifier implements IPickupNotifier {
     }
 
     public void notifyPickup(ItemEntity item, PlayerEntity player) {
-        this.mod.onItemPickup(player, item.field_23087);
+        this.mod.onItemPickup(player, item.method_4548());
     }
 }

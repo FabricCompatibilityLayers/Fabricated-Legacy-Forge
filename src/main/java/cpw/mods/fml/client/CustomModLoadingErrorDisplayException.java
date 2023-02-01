@@ -14,13 +14,12 @@
 package cpw.mods.fml.client;
 
 import cpw.mods.fml.common.IFMLHandledException;
-import cpw.mods.fml.common.Side;
-import cpw.mods.fml.common.asm.SideOnly;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import fr.catcore.fabricatedforge.forged.FatalErrorScreenForged;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.FatalErrorScreen;
 
 @Environment(EnvType.CLIENT)
 @SideOnly(Side.CLIENT)

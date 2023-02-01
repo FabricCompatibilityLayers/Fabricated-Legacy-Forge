@@ -5,10 +5,12 @@
 package net.minecraftforge.common;
 
 import fr.catcore.fabricatedforge.mixininterface.IWeightedRandomChestContent;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.structure.*;
 import net.minecraft.util.WeightedRandomChestContent;
+import net.minecraft.util.collection.Weighting;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,12 +27,13 @@ public class ChestGenHooks {
     public static final String STRONGHOLD_CROSSING = "strongholdCrossing";
     public static final String VILLAGE_BLACKSMITH = "villageBlacksmith";
     public static final String BONUS_CHEST = "bonusChest";
+    public static final String DUNGEON_CHEST = "dungeonChest";
     private static final HashMap<String, ChestGenHooks> chestInfo = new HashMap();
     private static boolean hasInit = false;
     private String category;
     private int countMin = 0;
     private int countMax = 0;
-    private ArrayList<WeightedRandomChestContent> contents = new ArrayList();
+    ArrayList<WeightedRandomChestContent> contents = new ArrayList();
 
     private static void init() {
         if (!hasInit) {
@@ -43,7 +46,36 @@ public class ChestGenHooks {
             addInfo("strongholdCrossing", class_24.field_48, 1, 5);
             addInfo("villageBlacksmith", class_49.field_89, 3, 9);
             addInfo("bonusChest", ServerWorld.field_2817, 10, 10);
+            ItemStack book = new ItemStack(Item.ENCHANTED_BOOK, 1, 0);
+            WeightedRandomChestContent tmp = new WeightedRandomChestContent(book, 1, 1, 1);
+            getInfo("mineshaftCorridor").addItem(tmp);
+            getInfo("pyramidDesertyChest").addItem(tmp);
+            getInfo("pyramidJungleChest").addItem(tmp);
+            getInfo("strongholdCorridor").addItem(tmp);
+            getInfo("strongholdLibrary").addItem(new WeightedRandomChestContent(book, 1, 5, 2));
+            getInfo("strongholdCrossing").addItem(tmp);
+            ChestGenHooks d = new ChestGenHooks("dungeonChest");
+            d.countMin = 8;
+            d.countMax = 8;
+            chestInfo.put("dungeonChest", d);
+            addDungeonLoot(d, new ItemStack(Item.SADDLE), 100, 1, 1);
+            addDungeonLoot(d, new ItemStack(Item.IRON_INGOT), 100, 1, 4);
+            addDungeonLoot(d, new ItemStack(Item.BREAD), 100, 1, 1);
+            addDungeonLoot(d, new ItemStack(Item.WHEAT), 100, 1, 4);
+            addDungeonLoot(d, new ItemStack(Item.GUNPOWDER), 100, 1, 4);
+            addDungeonLoot(d, new ItemStack(Item.STRING), 100, 1, 4);
+            addDungeonLoot(d, new ItemStack(Item.BUCKET), 100, 1, 1);
+            addDungeonLoot(d, new ItemStack(Item.GOLDEN_APPLE), 1, 1, 1);
+            addDungeonLoot(d, new ItemStack(Item.REDSTONE), 40, 1, 4);
+            addDungeonLoot(d, new ItemStack(Item.RECORD_13), 5, 1, 1);
+            addDungeonLoot(d, new ItemStack(Item.RECORD_CAT), 5, 1, 1);
+            addDungeonLoot(d, new ItemStack(Item.DYES, 1, 3), 100, 1, 1);
+            addDungeonLoot(d, book, 100, 1, 1);
         }
+    }
+
+    static void addDungeonLoot(ChestGenHooks dungeon, ItemStack item, int weight, int min, int max) {
+        dungeon.addItem(new WeightedRandomChestContent(item, min, max, weight));
     }
 
     private static void addInfo(String category, WeightedRandomChestContent[] items, int min, int max) {
@@ -79,8 +111,8 @@ public class ChestGenHooks {
         return ret;
     }
 
-    public static WeightedRandomChestContent[] getItems(String category) {
-        return getInfo(category).getItems();
+    public static WeightedRandomChestContent[] getItems(String category, Random rnd) {
+        return getInfo(category).getItems(rnd);
     }
 
     public static int getCount(String category, Random rand) {
@@ -93,6 +125,10 @@ public class ChestGenHooks {
 
     public static void removeItem(String category, ItemStack item) {
         getInfo(category).removeItem(item);
+    }
+
+    public static ItemStack getOneItem(String category, Random rand) {
+        return getInfo(category).getOneItem(rand);
     }
 
     public ChestGenHooks(String category) {
@@ -118,19 +154,38 @@ public class ChestGenHooks {
         Iterator<WeightedRandomChestContent> itr = this.contents.iterator();
 
         while(itr.hasNext()) {
-            WeightedRandomChestContent cont = itr.next();
-            if (item.equalsIgnoreNbt(((IWeightedRandomChestContent)cont).getItemStack()) || item.getData() == -1 && item.id == ((IWeightedRandomChestContent)cont).getItemStack().id) {
+            WeightedRandomChestContent cont = (WeightedRandomChestContent)itr.next();
+            if (item.equalsIgnoreNbt(cont.content) || item.getData() == -1 && item.id == cont.content.id) {
                 itr.remove();
             }
         }
     }
 
-    public WeightedRandomChestContent[] getItems() {
-        return (WeightedRandomChestContent[])this.contents.toArray(new WeightedRandomChestContent[this.contents.size()]);
+    public WeightedRandomChestContent[] getItems(Random rnd) {
+        ArrayList<WeightedRandomChestContent> ret = new ArrayList();
+
+        for(WeightedRandomChestContent orig : this.contents) {
+            Item item = orig.content.getItem();
+            if (item != null) {
+                WeightedRandomChestContent n = item.getChestGenBase(this, rnd, orig);
+                if (n != null) {
+                    ret.add(n);
+                }
+            }
+        }
+
+        return (WeightedRandomChestContent[])ret.toArray(new WeightedRandomChestContent[ret.size()]);
     }
 
     public int getCount(Random rand) {
         return this.countMin < this.countMax ? this.countMin + rand.nextInt(this.countMax - this.countMin) : this.countMin;
+    }
+
+    public ItemStack getOneItem(Random rand) {
+        WeightedRandomChestContent[] items = this.getItems(rand);
+        WeightedRandomChestContent item = (WeightedRandomChestContent) Weighting.getRandom(rand, items);
+        ItemStack[] stacks = generateStacks(rand, item.content, item.min, item.max);
+        return stacks.length > 0 ? stacks[0] : null;
     }
 
     public int getMin() {

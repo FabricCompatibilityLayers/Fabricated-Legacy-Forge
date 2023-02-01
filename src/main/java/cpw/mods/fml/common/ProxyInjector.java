@@ -14,10 +14,9 @@
 package cpw.mods.fml.common;
 
 import cpw.mods.fml.common.discovery.ASMDataTable;
+import cpw.mods.fml.relauncher.Side;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 

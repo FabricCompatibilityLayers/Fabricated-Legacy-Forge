@@ -13,7 +13,7 @@
  */
 package cpw.mods.fml.common.asm.transformers;
 
-import cpw.mods.fml.common.asm.SideOnly;
+import cpw.mods.fml.relauncher.SideOnly;
 import cpw.mods.fml.relauncher.FMLRelauncher;
 import cpw.mods.fml.relauncher.IClassTransformer;
 import org.objectweb.asm.ClassReader;

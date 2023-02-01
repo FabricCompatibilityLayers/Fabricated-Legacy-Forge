@@ -316,6 +316,17 @@ public class Loader {
 
         this.modController.transition(LoaderState.CONSTRUCTING);
         this.modController.distributeStateMessage(LoaderState.CONSTRUCTING, new Object[]{this.modClassLoader, disc.getASMTable()});
+        FMLLog.fine("Mod signature data:", new Object[0]);
+
+        for(ModContainer mod : this.getActiveModList()) {
+            FMLLog.fine(
+                    "\t%s(%s:%s): %s (%s)",
+                    new Object[]{
+                            mod.getModId(), mod.getName(), mod.getVersion(), mod.getSource().getName(), CertificateHelper.getFingerprint(mod.getSigningCertificate())
+                    }
+            );
+        }
+
         this.modController.transition(LoaderState.PREINITIALIZATION);
         this.modController.distributeStateMessage(LoaderState.PREINITIALIZATION, new Object[]{disc.getASMTable(), this.canonicalConfigDir});
         this.modController.transition(LoaderState.INITIALIZATION);

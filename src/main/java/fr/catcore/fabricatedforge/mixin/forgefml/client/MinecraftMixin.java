@@ -4,7 +4,7 @@ import com.google.common.collect.MapDifference;
 import com.mojang.blaze3d.platform.GLX;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Side;
+import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.common.registry.GameData;
 import cpw.mods.fml.common.registry.ItemData;
 import cpw.mods.fml.relauncher.ArgsWrapper;
@@ -85,7 +85,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 
 @Mixin(Minecraft.class)

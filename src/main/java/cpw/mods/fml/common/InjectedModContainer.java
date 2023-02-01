@@ -19,6 +19,7 @@ import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.VersionRange;
 
 import java.io.File;
+import java.security.cert.Certificate;
 import java.util.List;
 import java.util.Set;
 
@@ -109,5 +110,9 @@ public class InjectedModContainer implements ModContainer {
 
     public WorldAccessContainer getWrappedWorldAccessContainer() {
         return this.wrappedContainer instanceof WorldAccessContainer ? (WorldAccessContainer)this.wrappedContainer : null;
+    }
+
+    public Certificate getSigningCertificate() {
+        return this.wrappedContainer.getSigningCertificate();
     }
 }

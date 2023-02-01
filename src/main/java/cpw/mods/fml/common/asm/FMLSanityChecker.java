@@ -13,6 +13,8 @@
  */
 package cpw.mods.fml.common.asm;
 
+import cpw.mods.fml.common.CertificateHelper;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.relauncher.IFMLCallHook;
 import cpw.mods.fml.relauncher.RelaunchClassLoader;
 import org.objectweb.asm.ClassReader;
@@ -21,15 +23,45 @@ import org.objectweb.asm.FieldVisitor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.security.CodeSource;
+import java.security.cert.Certificate;
 import java.util.Map;
 
 public class FMLSanityChecker implements IFMLCallHook {
+    private static final String FMLFINGERPRINT = "AE:F6:54:79:96:E9:1B:D1:59:70:6C:B4:6B:F5:4A:89:C5:CE:08:1D".toLowerCase().replace(":", "");
+    private static final String FORGEFINGERPRINT = "DE:4C:F8:A3:F3:BC:15:63:58:10:04:4C:39:24:0B:F9:68:04:EA:7D".toLowerCase().replace(":", "");
     private RelaunchClassLoader cl;
 
     public FMLSanityChecker() {
     }
 
     public Void call() throws Exception {
+        CodeSource codeSource = this.getClass().getProtectionDomain().getCodeSource();
+        boolean goodFML = false;
+        if (codeSource.getLocation().getProtocol().equals("jar")) {
+            Certificate[] certificates = codeSource.getCertificates();
+            if (certificates != null) {
+                for(Certificate cert : certificates) {
+                    String fingerprint = CertificateHelper.getFingerprint(cert);
+                    if (fingerprint.equals(FMLFINGERPRINT)) {
+                        FMLLog.info("Found valid fingerprint for FML. Certificate fingerprint %s", new Object[]{fingerprint});
+                        goodFML = true;
+                    } else if (fingerprint.equals(FORGEFINGERPRINT)) {
+                        FMLLog.info("Found valid fingerprint for Minecraft Forge. Certificate fingerprint %s", new Object[]{fingerprint});
+                        goodFML = true;
+                    } else {
+                        FMLLog.severe("Found invalid fingerprint for FML: %s", new Object[]{fingerprint});
+                    }
+                }
+            }
+        } else {
+            goodFML = true;
+        }
+
+        if (!goodFML) {
+            FMLLog.severe("FML appears to be missing any signature data. This is not a good thing", new Object[0]);
+        }
+
         byte[] mlClass = this.cl.getClassBytes("ModLoader");
         if (mlClass == null) {
             return null;

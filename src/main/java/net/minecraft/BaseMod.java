@@ -14,9 +14,9 @@
 package net.minecraft;
 
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.Side;
+import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.common.TickType;
-import cpw.mods.fml.common.asm.SideOnly;
+import cpw.mods.fml.relauncher.SideOnly;
 import cpw.mods.fml.common.modloader.BaseModProxy;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

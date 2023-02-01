@@ -1,7 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server;
 
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Side;
+import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.ArgsWrapper;
 import cpw.mods.fml.relauncher.FMLRelauncher;
 import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;

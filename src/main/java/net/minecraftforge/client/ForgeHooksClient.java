@@ -197,7 +197,7 @@ public class ForgeHooksClient {
                 int renderType = Block.BLOCKS[item.id].getBlockType();
                 float scale = renderType != 1 && renderType != 19 && renderType != 12 && renderType != 2 ? 0.25F : 0.5F;
                 GL11.glScalef(scale, scale, scale);
-                int size = entity.field_23087.count;
+                int size = item.count;
                 int count = size > 20 ? 4 : (size > 5 ? 3 : (size > 1 ? 2 : 1));
 
                 for(int j = 0; j < count; ++j) {

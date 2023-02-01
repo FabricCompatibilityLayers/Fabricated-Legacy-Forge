@@ -7,12 +7,6 @@ package net.minecraftforge.liquids;
 public interface ILiquidTank {
     LiquidStack getLiquid();
 
-    @Deprecated
-    void setLiquid(LiquidStack liquidStack);
-
-    @Deprecated
-    void setCapacity(int i);
-
     int getCapacity();
 
     int fill(LiquidStack liquidStack, boolean bl);

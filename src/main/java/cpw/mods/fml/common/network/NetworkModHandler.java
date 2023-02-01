@@ -17,7 +17,7 @@ import com.google.common.base.Strings;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.Side;
+import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.common.discovery.ASMDataTable;
 import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 import cpw.mods.fml.common.versioning.InvalidVersionSpecificationException;
@@ -25,7 +25,6 @@ import cpw.mods.fml.common.versioning.VersionRange;
 import net.minecraft.item.Item;
 
 import java.lang.reflect.Method;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 

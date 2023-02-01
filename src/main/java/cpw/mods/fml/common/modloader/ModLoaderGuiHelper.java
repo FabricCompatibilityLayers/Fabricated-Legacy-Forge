@@ -13,19 +13,23 @@
  */
 package cpw.mods.fml.common.modloader;
 
+import com.google.common.collect.Sets;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.world.World;
 
+import java.util.Set;
+
 public class ModLoaderGuiHelper implements IGuiHandler {
     private BaseModProxy mod;
-    private int id;
+    private Set<Integer> ids;
     private ScreenHandler container;
+    private int currentID;
 
-    ModLoaderGuiHelper(BaseModProxy mod, int id) {
+    ModLoaderGuiHelper(BaseModProxy mod) {
         this.mod = mod;
-        this.id = id;
+        this.ids = Sets.newHashSet();
     }
 
     public Object getServerGuiElement(int ID, PlayerEntity player, World world, int x, int y, int z) {
@@ -36,11 +40,16 @@ public class ModLoaderGuiHelper implements IGuiHandler {
         return ModLoaderHelper.getClientSideGui(this.mod, player, ID, x, y, z);
     }
 
-    public void injectContainer(ScreenHandler container) {
+    public void injectContainerAndID(ScreenHandler container, int ID) {
         this.container = container;
+        this.currentID = ID;
     }
 
     public Object getMod() {
         return this.mod;
+    }
+
+    public void associateId(int additionalID) {
+        this.ids.add(additionalID);
     }
 }

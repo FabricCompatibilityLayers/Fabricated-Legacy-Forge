@@ -39,11 +39,6 @@ public abstract class LiquidDictionary {
         }
     }
 
-    @Deprecated
-    public Map<String, LiquidStack> getDefinedLiquids() {
-        return getLiquids();
-    }
-
     public static Map<String, LiquidStack> getLiquids() {
         return ImmutableMap.copyOf(liquids);
     }

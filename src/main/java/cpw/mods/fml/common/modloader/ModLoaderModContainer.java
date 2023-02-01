@@ -31,6 +31,7 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 import cpw.mods.fml.common.versioning.VersionRange;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.command.Command;
 
 import java.io.File;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.security.cert.Certificate;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -454,5 +456,9 @@ public class ModLoaderModContainer implements ModContainer {
 
     public VersionRange acceptableMinecraftVersionRange() {
         return Loader.instance().getMinecraftModContainer().getStaticVersionRange();
+    }
+
+    public Certificate getSigningCertificate() {
+        return null;
     }
 }

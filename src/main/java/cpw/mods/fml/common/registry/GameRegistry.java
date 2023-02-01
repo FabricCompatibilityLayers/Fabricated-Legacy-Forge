@@ -144,7 +144,7 @@ public class GameRegistry {
     }
 
     public static void addRecipe(ItemStack output, Object... params) {
-        RecipeDispatcher.getInstance().method_3495(output, params);
+        RecipeDispatcher.getInstance().registerShapedRecipe(output, params);
     }
 
     public static void addShapelessRecipe(ItemStack output, Object... params) {

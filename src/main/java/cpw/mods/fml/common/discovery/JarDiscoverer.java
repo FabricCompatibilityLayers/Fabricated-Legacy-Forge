@@ -48,29 +48,31 @@ public class JarDiscoverer implements ITypeDiscoverer {
             }
 
             for(ZipEntry ze : Collections.list(jar.entries())) {
-                Matcher match = classFile.matcher(ze.getName());
-                if (match.matches()) {
-                    ASMModParser modParser;
-                    try {
-                        modParser = new ASMModParser(jar.getInputStream(ze));
-                    } catch (LoaderException var21) {
-                        FMLLog.log(
-                                Level.SEVERE,
-                                var21,
-                                "There was a problem reading the entry %s in the jar %s - probably a corrupt zip",
-                                new Object[]{ze.getName(), candidate.getModContainer().getPath()}
-                        );
-                        jar.close();
-                        throw var21;
-                    }
+                if (ze.getName() == null || !ze.getName().startsWith("__MACOSX")) {
+                    Matcher match = classFile.matcher(ze.getName());
+                    if (match.matches()) {
+                        ASMModParser modParser;
+                        try {
+                            modParser = new ASMModParser(jar.getInputStream(ze));
+                        } catch (LoaderException var21) {
+                            FMLLog.log(
+                                    Level.SEVERE,
+                                    var21,
+                                    "There was a problem reading the entry %s in the jar %s - probably a corrupt zip",
+                                    new Object[]{ze.getName(), candidate.getModContainer().getPath()}
+                            );
+                            jar.close();
+                            throw var21;
+                        }
 
-                    modParser.validate();
-                    modParser.sendToTable(table, candidate);
-                    ModContainer container = ModContainerFactory.instance().build(modParser, candidate.getModContainer(), candidate);
-                    if (container != null) {
-                        table.addContainer(container);
-                        foundMods.add(container);
-                        container.bindMetadata(mc);
+                        modParser.validate();
+                        modParser.sendToTable(table, candidate);
+                        ModContainer container = ModContainerFactory.instance().build(modParser, candidate.getModContainer(), candidate);
+                        if (container != null) {
+                            table.addContainer(container);
+                            foundMods.add(container);
+                            container.bindMetadata(mc);
+                        }
                     }
                 }
             }

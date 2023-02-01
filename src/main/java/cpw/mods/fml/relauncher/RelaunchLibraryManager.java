@@ -13,6 +13,7 @@
  */
 package cpw.mods.fml.relauncher;
 
+import cpw.mods.fml.common.CertificateHelper;
 import fr.catcore.fabricatedforge.Constants;
 
 import java.io.*;
@@ -35,7 +36,6 @@ public class RelaunchLibraryManager {
     private static Map<IFMLLoadingPlugin, File> pluginLocations;
     private static List<IFMLLoadingPlugin> loadPlugins;
     private static List<ILibrarySet> libraries;
-    private static final String HEXES = "0123456789abcdef";
     private static ByteBuffer downloadBuffer = ByteBuffer.allocateDirect(4194304);
     static IDownloadDisplay downloadMonitor;
 
@@ -571,19 +571,6 @@ public class RelaunchLibraryManager {
     }
 
     private static String generateChecksum(ByteBuffer buffer) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-1");
-            digest.update(buffer);
-            byte[] chksum = digest.digest();
-            StringBuilder hex = new StringBuilder(2 * chksum.length);
-
-            for(byte b : chksum) {
-                hex.append("0123456789abcdef".charAt((b & 240) >> 4)).append("0123456789abcdef".charAt(b & 15));
-            }
-
-            return hex.toString();
-        } catch (Exception var8) {
-            return null;
-        }
+        return CertificateHelper.getFingerprint(buffer);
     }
 }

@@ -70,7 +70,7 @@ public class ForgeChunkManager {
         if (world instanceof ServerWorld) {
             dormantChunkCache.put(world, CacheBuilder.newBuilder().maximumSize((long)dormantChunkCacheSize).build());
             ServerWorld worldServer = (ServerWorld)world;
-            File chunkDir = ((IServerWorld)worldServer).getChunkSaveLocation();
+            File chunkDir = worldServer.getChunkSaveLocation();
             File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
             if (chunkLoaderData.exists() && chunkLoaderData.isFile()) {
                 ArrayListMultimap<String, ForgeChunkManager.Ticket> loadedTickets = ArrayListMultimap.create();
@@ -230,18 +230,8 @@ public class ForgeChunkManager {
         return chunkConstraints.containsKey(modId) && overridesEnabled ? chunkConstraints.get(modId) : defaultMaxChunks;
     }
 
-    @Deprecated
-    public static int ticketCountAvaliableFor(String username) {
-        return ticketCountAvailableFor(username);
-    }
-
     public static int ticketCountAvailableFor(String username) {
         return playerTicketLength - playerTickets.get(username).size();
-    }
-
-    @Deprecated
-    public static ForgeChunkManager.Ticket requestPlayerTicket(Object mod, PlayerEntity player, World world, ForgeChunkManager.Type type) {
-        return requestPlayerTicket(mod, player.getTranslationKey(), world, type);
     }
 
     public static ForgeChunkManager.Ticket requestPlayerTicket(Object mod, String player, World world, ForgeChunkManager.Type type) {
@@ -377,7 +367,7 @@ public class ForgeChunkManager {
     static void saveWorld(World world) {
         if (world instanceof ServerWorld) {
             ServerWorld worldServer = (ServerWorld)world;
-            File chunkDir = ((IServerWorld)worldServer).getChunkSaveLocation();
+            File chunkDir = worldServer.getChunkSaveLocation();
             File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
             NbtCompound forcedChunkData = new NbtCompound();
             NbtList ticketList = new NbtList();
@@ -623,7 +613,7 @@ public class ForgeChunkManager {
             return this.ticketType;
         }
 
-        public ImmutableSet<ChunkPos> getChunkList() {
+        public ImmutableSet getChunkList() {
             return ImmutableSet.copyOf(this.requestedChunks);
         }
     }

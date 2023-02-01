@@ -15,33 +15,78 @@ package cpw.mods.fml.common.event;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.LoaderState;
-import cpw.mods.fml.common.ModContainer;
+import cpw.mods.fml.common.*;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 
 public class FMLInterModComms {
-    private static ArrayListMultimap<String, IMCMessage> modMessages = ArrayListMultimap.create();
+    private static final ImmutableList<FMLInterModComms.IMCMessage> emptyIMCList = ImmutableList.of();
+    private static ArrayListMultimap<String, FMLInterModComms.IMCMessage> modMessages = ArrayListMultimap.create();
 
     public FMLInterModComms() {
     }
 
+    public static boolean sendMessage(String modId, String key, NbtCompound value) {
+        return enqueueStartupMessage(modId, new FMLInterModComms.IMCMessage(key, value));
+    }
+
+    public static boolean sendMessage(String modId, String key, ItemStack value) {
+        return enqueueStartupMessage(modId, new FMLInterModComms.IMCMessage(key, value));
+    }
+
     public static boolean sendMessage(String modId, String key, String value) {
+        return enqueueStartupMessage(modId, new FMLInterModComms.IMCMessage(key, value));
+    }
+
+    public static void sendRuntimeMessage(Object sourceMod, String modId, String key, NbtCompound value) {
+        enqueueMessage(sourceMod, modId, new FMLInterModComms.IMCMessage(key, value));
+    }
+
+    public static void sendRuntimeMessage(Object sourceMod, String modId, String key, ItemStack value) {
+        enqueueMessage(sourceMod, modId, new FMLInterModComms.IMCMessage(key, value));
+    }
+
+    public static void sendRuntimeMessage(Object sourceMod, String modId, String key, String value) {
+        enqueueMessage(sourceMod, modId, new FMLInterModComms.IMCMessage(key, value));
+    }
+
+    private static boolean enqueueStartupMessage(String modTarget, FMLInterModComms.IMCMessage message) {
         if (Loader.instance().activeModContainer() == null) {
             return false;
         } else {
-            modMessages.put(modId, new FMLInterModComms.IMCMessage(Loader.instance().activeModContainer().getModId(), key, value));
-            return Loader.isModLoaded(modId) && !Loader.instance().hasReachedState(LoaderState.POSTINITIALIZATION);
+            enqueueMessage(Loader.instance().activeModContainer(), modTarget, message);
+            return Loader.isModLoaded(modTarget) && !Loader.instance().hasReachedState(LoaderState.POSTINITIALIZATION);
         }
     }
 
+    private static void enqueueMessage(Object sourceMod, String modTarget, FMLInterModComms.IMCMessage message) {
+        ModContainer mc;
+        if (sourceMod instanceof ModContainer) {
+            mc = (ModContainer)sourceMod;
+        } else {
+            mc = FMLCommonHandler.instance().findContainerFor(sourceMod);
+        }
+
+        if (mc != null && Loader.isModLoaded(modTarget)) {
+            message.setSender(mc);
+            modMessages.put(modTarget, message);
+        }
+    }
+
+    public static ImmutableList<FMLInterModComms.IMCMessage> fetchRuntimeMessages(Object forMod) {
+        ModContainer mc = FMLCommonHandler.instance().findContainerFor(forMod);
+        return mc != null ? ImmutableList.copyOf(modMessages.removeAll(mc)) : emptyIMCList;
+    }
+
     public static class IMCEvent extends FMLEvent {
-        private ImmutableList<IMCMessage> currentList;
+        private ImmutableList<FMLInterModComms.IMCMessage> currentList;
 
         public IMCEvent() {
         }
 
         public void applyModContainer(ModContainer activeContainer) {
-            this.currentList = ImmutableList.copyOf(FMLInterModComms.modMessages.get(activeContainer.getModId()));
+            this.currentList = ImmutableList.copyOf(FMLInterModComms.modMessages.removeAll(activeContainer.getModId()));
+            FMLLog.finest("Attempting to deliver %d IMC messages to mod %s", new Object[]{this.currentList.size(), activeContainer.getModId()});
         }
 
         public ImmutableList<FMLInterModComms.IMCMessage> getMessages() {
@@ -50,18 +95,53 @@ public class FMLInterModComms {
     }
 
     public static final class IMCMessage {
-        public final String sender;
+        private String sender;
         public final String key;
-        public final String value;
+        private Object value;
 
-        private IMCMessage(String sender, String key, String value) {
+        private IMCMessage(String key, Object value) {
             this.key = key;
             this.value = value;
-            this.sender = sender;
         }
 
         public String toString() {
             return this.sender;
+        }
+
+        public String getSender() {
+            return this.sender;
+        }
+
+        void setSender(ModContainer activeModContainer) {
+            this.sender = activeModContainer.getModId();
+        }
+
+        public String getStringValue() {
+            return (String)this.value;
+        }
+
+        public NbtCompound getNBTValue() {
+            return (NbtCompound)this.value;
+        }
+
+        public ItemStack getItemStackValue() {
+            return (ItemStack)this.value;
+        }
+
+        public Class<?> getMessageType() {
+            return this.value.getClass();
+        }
+
+        public boolean isStringMessage() {
+            return String.class.isAssignableFrom(this.getMessageType());
+        }
+
+        public boolean isItemStackMessage() {
+            return ItemStack.class.isAssignableFrom(this.getMessageType());
+        }
+
+        public boolean isNBTMessage() {
+            return NbtCompound.class.isAssignableFrom(this.getMessageType());
         }
     }
 }

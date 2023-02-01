@@ -17,6 +17,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.MultiServerWorld;
 import net.minecraft.world.SaveHandler;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldSaveHandler;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.dimension.OverworldDimension;
 import net.minecraft.world.dimension.TheEndDimension;
@@ -25,6 +26,7 @@ import net.minecraft.world.level.LevelInfo;
 import net.minecraft.world.level.storage.WorldSaveException;
 import net.minecraftforge.event.world.WorldEvent;
 
+import java.io.File;
 import java.util.*;
 import java.util.logging.Level;
 
@@ -272,6 +274,10 @@ public class DimensionManager {
                 }
             }
         }
+    }
+
+    public static File getCurrentSaveRootDirectory() {
+        return getWorld(0) != null ? ((WorldSaveHandler)getWorld(0).getSaveHandler()).method_198() : null;
     }
 
     static {

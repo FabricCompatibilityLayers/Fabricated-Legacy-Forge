@@ -18,6 +18,7 @@ import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.VersionRange;
 
 import java.io.File;
+import java.security.cert.Certificate;
 import java.util.List;
 import java.util.Set;
 
@@ -59,4 +60,6 @@ public interface ModContainer {
     String getDisplayVersion();
 
     VersionRange acceptableMinecraftVersionRange();
+
+    Certificate getSigningCertificate();
 }

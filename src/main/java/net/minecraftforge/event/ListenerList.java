@@ -140,6 +140,10 @@ public class ListenerList {
         }
 
         private void buildCache() {
+            if (this.parent != null && this.parent.shouldRebuild()) {
+                this.parent.buildCache();
+            }
+
             ArrayList<IEventListener> ret = new ArrayList();
 
             for(EventPriority value : EventPriority.values()) {

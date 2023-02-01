@@ -34,7 +34,8 @@ import java.util.Map;
 
 public class ModLoaderHelper {
     public static IModLoaderSidedHelper sidedHelper;
-    private static Map<Integer, ModLoaderGuiHelper> guiHelpers = Maps.newHashMap();
+    private static Map<BaseModProxy, ModLoaderGuiHelper> guiHelpers = Maps.newHashMap();
+    private static Map<Integer, ModLoaderGuiHelper> guiIDs = Maps.newHashMap();
     private static ModLoaderVillageTradeHandler[] tradeHelpers = new ModLoaderVillageTradeHandler[6];
 
     public ModLoaderHelper() {
@@ -124,14 +125,20 @@ public class ModLoaderHelper {
     }
 
     public static void buildGuiHelper(BaseModProxy mod, int id) {
-        ModLoaderGuiHelper handler = new ModLoaderGuiHelper(mod, id);
-        guiHelpers.put(id, handler);
-        NetworkRegistry.instance().registerGuiHandler(mod, handler);
+        ModLoaderGuiHelper handler = (ModLoaderGuiHelper)guiHelpers.get(mod);
+        if (handler == null) {
+            handler = new ModLoaderGuiHelper(mod);
+            guiHelpers.put(mod, handler);
+            NetworkRegistry.instance().registerGuiHandler(mod, handler);
+        }
+
+        handler.associateId(id);
+        guiIDs.put(id, handler);
     }
 
     public static void openGui(int id, PlayerEntity player, ScreenHandler container, int x, int y, int z) {
-        ModLoaderGuiHelper helper = (ModLoaderGuiHelper)guiHelpers.get(id);
-        helper.injectContainer(container);
+        ModLoaderGuiHelper helper = (ModLoaderGuiHelper)guiIDs.get(id);
+        helper.injectContainerAndID(container, id);
         player.openGui(helper.getMod(), id, player.world, x, y, z);
     }
 

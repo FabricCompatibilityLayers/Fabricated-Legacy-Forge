@@ -39,12 +39,19 @@ public @interface Mod {
 
     String modExclusionList() default "";
 
+    String certificateFingerprint() default "";
+
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.FIELD})
     public @interface Block {
         String name();
 
         Class<?> itemTypeClass() default BlockItem.class;
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD})
+    public @interface FingerprintWarning {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
