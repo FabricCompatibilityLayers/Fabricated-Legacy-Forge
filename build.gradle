@@ -3,7 +3,9 @@ import com.diffplug.gradle.spotless.JavaExtension
 plugins {
 	id 'com.diffplug.spotless' version "6.12.0"
 	id 'fabric-loom' version "1.1-SNAPSHOT" // To use chocoloom, change the version to a commit hash
+	id 'legacy-looming' version "1.1-SNAPSHOT" // Version must be the same as fabric-loom's
 	id 'maven-publish'
+	id "com.modrinth.minotaur" version "2.+"
 }
 
 sourceCompatibility = JavaVersion.VERSION_1_8
@@ -11,13 +13,16 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 archivesBaseName = project.archives_base_name + "-" + project.minecraft_version
 version = project.mod_version
+def displayVersion = version + "+" + project.minecraft_version
 group = project.maven_group
 
+def debug = true
+def branch = System.getenv("GITHUB_REF_NAME") == null ? "forge-" : System.getenv("GITHUB_REF_NAME")
+if (!branch.startsWith("forge-")) {
+	debug = false
+}
+
 repositories {
-	maven {
-		name = "legacy-fabric"
-		url = "https://repo.legacyfabric.net/repository/legacyfabric"
-	}
 	maven {
 		name = "Modrinth"
 		url = "https://api.modrinth.com/maven"
@@ -48,30 +53,12 @@ dependencies {
 
 	modApi("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
 
-	modImplementation("net.legacyfabric.legacy-fabric-api:legacy-fabric-logger-api-v1:${project.logger_api}")
+	modImplementation(legacyFabricApi.module("legacy-fabric-logger-api-v1", "1.9.0+1.8.9"))
 
 	implementation(include(group: "local", name: "argo", version: "2.25"))
 	implementation(include(group: "local", name: "guava", version: "12.0.1"))
 
 	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
-
-	if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-		implementation 'org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209'
-		implementation 'org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209'
-		implementation 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
-	}
-}
-
-if (System.getProperty("os.name").toLowerCase().contains("mac")) {
-	configurations.all {
-		resolutionStrategy {
-			dependencySubstitution {
-				substitute module('org.lwjgl.lwjgl:lwjgl_util:2.9.2-nightly-201408222') with module('org.lwjgl.lwjgl:lwjgl_util:2.9.4-nightly-20150209')
-				substitute module('org.lwjgl.lwjgl:lwjgl:2.9.2-nightly-201408222') with module('org.lwjgl.lwjgl:lwjgl:2.9.4-nightly-20150209')
-			}
-			force 'org.lwjgl.lwjgl:lwjgl-platform:2.9.4-nightly-20150209'
-		}
-	}
 }
 
 processResources {
@@ -132,5 +119,21 @@ spotless {
 	format('forge', JavaExtension) {
 		licenseHeaderFile(rootProject.file("HEADER_FORGE"))
 		target 'src/*/java/net/minecraftforge/**/*.java'
+	}
+}
+
+modrinth {
+	token = System.getenv("MODRINTH_TOKEN") == null ? "dev" : System.getenv("MODRINTH_TOKEN") // This is the default. Remember to have the MODRINTH_TOKEN environment variable set or else this will fail, or set it to whatever you want - just make sure it stays private!
+	projectId = "JpHZ1Cyv" // This can be the project ID or the slug. Either will work!
+	versionName = displayVersion
+	changelog = "Update to Mod-Remapping-API 1.7.1 and use ASM Magic."
+	uploadFile = remapJar
+	gameVersions = [project.minecraft_version] // Must be an array, even with only one version
+	debugMode = debug
+	dependencies { // A special DSL for creating dependencies
+		// scope.type
+		// The scope can be `required`, `optional`, `incompatible`, or `embedded`
+		// The type can either be `project` or `version`
+		required.version "eRGeQXjD", project.mod_remapping_api
 	}
 }
