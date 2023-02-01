@@ -6,13 +6,15 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.itemgroup.ItemGroup;
+import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ChestGenHooks;
+
+import java.util.Random;
 
 public interface IItem {
     boolean onDroppedByPlayer(ItemStack item, PlayerEntity player);
     boolean onItemUseFirst(ItemStack stack, PlayerEntity player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ);
-    @Deprecated
-    boolean onItemUseFirst(ItemStack stack, PlayerEntity player, World world, int x, int y, int z, int side);
     float getStrVsBlock(ItemStack itemstack, Block block, int metadata);
     boolean isRepairable();
     Item setNoRepair();
@@ -29,7 +31,11 @@ public interface IItem {
     Entity createEntity(World world, Entity location, ItemStack itemstack);
     ItemGroup[] getCreativeTabs();
     float getSmeltingExperience(ItemStack item);
-    int getIconFromItemStackForMultiplePasses(ItemStack stack, int pass);
+    int getIconIndex(ItemStack stack, int pass);
+
+    WeightedRandomChestContent getChestGenBase(ChestGenHooks chest, Random rnd, WeightedRandomChestContent original);
+
+    boolean shouldPassSneakingClickToBlock(World par2World, int par4, int par5, int par6);
 
     // Non Forge APIs
     boolean isDefaultTexture();

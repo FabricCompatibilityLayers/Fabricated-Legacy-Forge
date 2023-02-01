@@ -22,7 +22,8 @@ import java.util.List;
 public abstract class ItemGroupMixin implements IItemGroup {
 
     @Mutable
-    @Shadow @Final public static ItemGroup[] itemGroups;
+    @Shadow
+    public static ItemGroup[] itemGroups;
 
     @Shadow @Final private int index;
 

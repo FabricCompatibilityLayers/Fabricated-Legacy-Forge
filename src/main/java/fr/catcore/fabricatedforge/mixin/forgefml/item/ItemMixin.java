@@ -10,18 +10,23 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.EnchantedBookItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.itemgroup.ItemGroup;
+import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ChestGenHooks;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Random;
 
 @Mixin(Item.class)
 public abstract class ItemMixin implements ItemProxy, IItem {
@@ -98,13 +103,6 @@ public abstract class ItemMixin implements ItemProxy, IItem {
 
     @Override
     public boolean onItemUseFirst(ItemStack stack, PlayerEntity player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        return this.onItemUseFirst(stack, player, world, x, y, z, side);
-    }
-
-    /** @deprecated */
-    @Deprecated
-    @Override
-    public boolean onItemUseFirst(ItemStack stack, PlayerEntity player, World world, int x, int y, int z, int side) {
         return false;
     }
 
@@ -191,8 +189,18 @@ public abstract class ItemMixin implements ItemProxy, IItem {
     }
 
     @Override
-    public int getIconFromItemStackForMultiplePasses(ItemStack stack, int pass) {
+    public int getIconIndex(ItemStack stack, int pass) {
         return this.method_3369(stack.getData(), pass);
+    }
+
+    @Override
+    public WeightedRandomChestContent getChestGenBase(ChestGenHooks chest, Random rnd, WeightedRandomChestContent original) {
+        return (Object)this instanceof EnchantedBookItem ? ((EnchantedBookItem)(Object)this).method_4606(rnd, original.min, original.max, original.weight) : original;
+    }
+
+    @Override
+    public boolean shouldPassSneakingClickToBlock(World par2World, int par4, int par5, int par6) {
+        return false;
     }
 
     @Override

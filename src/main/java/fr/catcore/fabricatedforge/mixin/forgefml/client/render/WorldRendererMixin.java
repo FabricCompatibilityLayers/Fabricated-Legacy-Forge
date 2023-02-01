@@ -13,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.client.SkyProvider;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
@@ -51,8 +52,8 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
      */
     @Overwrite
     public void renderSky(float par1) {
-        SkyProvider skyProvider = null;
-        if ((skyProvider = this.client.world.dimension.getSkyProvider()) != null) {
+        IRenderHandler skyProvider = null;
+        if ((skyProvider = this.client.world.dimension.getSkyRenderer()) != null) {
             skyProvider.render(par1, this.world, this.client);
         } else {
             if (this.client.world.dimension.dimensionType == 1) {
@@ -268,7 +269,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
      */
     @Overwrite
     public void method_1377(float par1) {
-        SkyProvider renderer = null;
+        IRenderHandler renderer = null;
         if ((renderer = this.world.dimension.getCloudRenderer()) != null) {
             renderer.render(par1, this.world, this.client);
         } else {
@@ -436,6 +437,8 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                 this.client
                         .particleManager
                         .addParticle(var21 = new LargeExplosionParticle(this.textureManager, this.world, par2, par4, par6, par8, par10, par12));
+            } else if (par1Str.equals("fireworksSpark")) {
+                this.client.particleManager.addParticle(var21 = new class_1340(this.world, par2, par4, par6, par8, par10, par12, this.client.particleManager));
             }
 
             if (var21 != null) {
@@ -537,7 +540,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                     }
 
                     if (var21 != null) {
-                        ((IParticleManager)this.client.particleManager).addEffect(var21, effectObject);
+                        this.client.particleManager.addEffect(var21, effectObject);
                     }
 
                     return var21;

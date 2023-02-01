@@ -4,7 +4,9 @@ import cpw.mods.fml.common.registry.VillagerRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.item.Item;
@@ -109,6 +111,13 @@ public abstract class VillagerEntityMixin extends PassiveEntity {
                 method_3110(var2, Block.GLASS_BLOCK.id, this.random, this.method_4566(0.2F));
                 method_3110(var2, Item.COMPASS.id, this.random, this.method_4566(0.2F));
                 method_3110(var2, Item.CLOCK.id, this.random, this.method_4566(0.2F));
+                if (this.random.nextFloat() < this.method_4566(0.07F)) {
+                    Enchantment var8 = Enchantment.field_5457[this.random.nextInt(Enchantment.field_5457.length)];
+                    int var10 = MathHelper.nextInt(this.random, var8.getMinimumLevel(), var8.getMaximumLevel());
+                    ItemStack var11 = Item.ENCHANTED_BOOK.getAsItemStack(new EnchantmentLevelEntry(var8, var10));
+                    int var6 = 2 + this.random.nextInt(5 + var10 * 10) + 3 * var10;
+                    var2.add(new TradeOffer(new ItemStack(Item.BOOK), new ItemStack(Item.EMERALD, var6), var11));
+                }
                 break;
             case 2:
                 method_3110(var2, Item.EYE_OF_ENDER.id, this.random, this.method_4566(0.3F));
@@ -188,8 +197,8 @@ public abstract class VillagerEntityMixin extends PassiveEntity {
             this.offers = new TraderOfferList();
         }
 
-        for(int var8 = 0; var8 < par1 && var8 < var2.size(); ++var8) {
-            this.offers.method_3562((TradeOffer)var2.get(var8));
+        for(int var9 = 0; var9 < par1 && var9 < var2.size(); ++var9) {
+            this.offers.method_3562((TradeOffer)var2.get(var9));
         }
     }
 

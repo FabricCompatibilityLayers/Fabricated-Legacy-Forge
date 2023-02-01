@@ -112,6 +112,12 @@ public abstract class GameOptionsMixin {
 
     @Shadow public boolean touchScreen;
 
+    @Shadow public int overrideWidth;
+
+    @Shadow public int overrideHeight;
+
+    @Shadow public boolean heldItemTooltips;
+
     /**
      * @author Minecraft Forge
      * @reason none
@@ -230,6 +236,9 @@ public abstract class GameOptionsMixin {
                 var1.println("pauseOnLostFocus:" + this.pauseOnLostFocus);
                 var1.println("showCape:" + this.field_5053);
                 var1.println("touchscreen:" + this.touchScreen);
+                var1.println("overrideWidth:" + this.overrideWidth);
+                var1.println("overrideHeight:" + this.overrideHeight);
+                var1.println("heldItemTooltips:" + this.heldItemTooltips);
 
                 for(int var2 = 0; var2 < this.keysAll.length; ++var2) {
                     var1.println("key_" + this.keysAll[var2].translationKey + ":" + this.keysAll[var2].code);

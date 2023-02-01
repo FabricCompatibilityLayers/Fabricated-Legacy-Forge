@@ -287,7 +287,7 @@ public abstract class MinecraftMixin implements IMinecraft {
             Display.setDisplayMode(new DisplayMode(this.width, this.height));
         }
 
-        Display.setTitle("Minecraft Minecraft 1.4.5");
+        Display.setTitle("Minecraft Minecraft 1.4.6");
         System.out.println("LWJGL Version: " + Sys.getVersion());
 
         try {
@@ -419,6 +419,10 @@ public abstract class MinecraftMixin implements IMinecraft {
             BlockRenderer.field_2047 = this.options.fancyGraphics;
             this.profiler.swap("sound");
             this.soundSystem.updateListener(this.playerEntity, this.ticker.tickDelta);
+            if (!this.paused) {
+                this.soundSystem.method_4377();
+            }
+
             this.profiler.pop();
             this.profiler.push("render");
             this.profiler.push("display");
@@ -828,7 +832,7 @@ public abstract class MinecraftMixin implements IMinecraft {
             }
 
             while(this.options.keyDrop.wasPressed()) {
-                this.playerEntity.method_4580();
+                this.playerEntity.dropSelectedItem(Screen.hasControlDown());
             }
 
             while(this.options.keyChat.wasPressed() && var8) {

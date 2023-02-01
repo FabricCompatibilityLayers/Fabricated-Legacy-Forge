@@ -45,10 +45,6 @@ public abstract class ClientWorldMixin extends World {
     @Override
     public void updateWeatherBody() {
         if (!this.dimension.isNether) {
-            if (this.field_23088 > 0) {
-                --this.field_23088;
-            }
-
             this.rainGradientPrev = this.rainGradient;
             if (this.levelProperties.isRaining()) {
                 this.rainGradient = (float)((double)this.rainGradient + 0.01);

@@ -275,7 +275,8 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
                 return false;
             } else {
                 if ((par1DamageSource == DamageSource.ANVIL || par1DamageSource == DamageSource.FALLING_BLOCK) && this.method_4484(4) != null) {
-                    par2 = (int)((float)par2 * 0.55F);
+                    this.method_4484(4).method_3406(par2 * 4 + this.random.nextInt(par2 * 2), (MobEntity)(Object) this);
+                    par2 = (int)((float)par2 * 0.75F);
                 }
 
                 this.field_3309 = 1.5F;

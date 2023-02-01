@@ -59,6 +59,10 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
     @Shadow @Final private ChatHud chatHud;
 
+    @Shadow private int heldItemTooltipFade;
+
+    @Shadow private ItemStack heldItem;
+
     /**
      * @author Minecraft Forge
      * @reason none
@@ -207,7 +211,7 @@ public abstract class InGameHudMixin extends DrawableHelper {
 
                 this.field_1166.profiler.swap("food");
 
-                for(int var69 = 0; var69 < 10; ++var69) {
+                for(int var72 = 0; var72 < 10; ++var72) {
                     int var26 = var47;
                     int var51 = 16;
                     byte var52 = 0;
@@ -224,32 +228,32 @@ public abstract class InGameHudMixin extends DrawableHelper {
                         var52 = 1;
                     }
 
-                    int var29 = var19 - var69 * 8 - 9;
+                    int var29 = var19 - var72 * 8 - 9;
                     this.drawTexture(var29, var26, 16 + var52 * 9, 27, 9, 9);
                     if (var14) {
-                        if (var69 * 2 + 1 < var17) {
+                        if (var72 * 2 + 1 < var17) {
                             this.drawTexture(var29, var26, var51 + 54, 27, 9, 9);
                         }
 
-                        if (var69 * 2 + 1 == var17) {
+                        if (var72 * 2 + 1 == var17) {
                             this.drawTexture(var29, var26, var51 + 63, 27, 9, 9);
                         }
                     }
 
-                    if (var69 * 2 + 1 < var16) {
+                    if (var72 * 2 + 1 < var16) {
                         this.drawTexture(var29, var26, var51 + 36, 27, 9, 9);
                     }
 
-                    if (var69 * 2 + 1 == var16) {
+                    if (var72 * 2 + 1 == var16) {
                         this.drawTexture(var29, var26, var51 + 45, 27, 9, 9);
                     }
                 }
 
                 this.field_1166.profiler.swap("air");
                 if (this.field_1166.playerEntity.isSubmergedIn(Material.WATER)) {
-                    int var70 = this.field_1166.playerEntity.getAir();
-                    int var26 = MathHelper.ceil((double)(var70 - 2) * 10.0 / 300.0);
-                    int var51 = MathHelper.ceil((double)var70 * 10.0 / 300.0) - var26;
+                    int var73 = this.field_1166.playerEntity.getAir();
+                    int var26 = MathHelper.ceil((double)(var73 - 2) * 10.0 / 300.0);
+                    int var51 = MathHelper.ceil((double)var73 * 10.0 / 300.0) - var26;
 
                     for(int var28 = 0; var28 < var26 + var51; ++var28) {
                         if (var28 < var26) {
@@ -300,48 +304,76 @@ public abstract class InGameHudMixin extends DrawableHelper {
             this.field_1166.profiler.push("expLevel");
             boolean var11 = false;
             int var12 = var11 ? 16777215 : 8453920;
-            String var35 = "" + this.field_1166.playerEntity.experienceLevel;
-            int var40 = (var6 - var8.getStringWidth(var35)) / 2;
-            int var38 = var7 - 31 - 4;
-            var8.draw(var35, var40 + 1, var38, 0);
-            var8.draw(var35, var40 - 1, var38, 0);
-            var8.draw(var35, var40, var38 + 1, 0);
-            var8.draw(var35, var40, var38 - 1, 0);
-            var8.draw(var35, var40, var38, var12);
+            String var34 = "" + this.field_1166.playerEntity.experienceLevel;
+            int var38 = (var6 - var8.getStringWidth(var34)) / 2;
+            int var37 = var7 - 31 - 4;
+            var8.draw(var34, var38 + 1, var37, 0);
+            var8.draw(var34, var38 - 1, var37, 0);
+            var8.draw(var34, var38, var37 + 1, 0);
+            var8.draw(var34, var38, var37 - 1, 0);
+            var8.draw(var34, var38, var37, var12);
+            this.field_1166.profiler.pop();
+        }
+
+        if (this.field_1166.options.heldItemTooltips) {
+            this.field_1166.profiler.push("toolHighlight");
+            if (this.heldItemTooltipFade > 0 && this.heldItem != null) {
+                String var35 = this.heldItem.getCustomName();
+                int var12 = (var6 - var8.getStringWidth(var35)) / 2;
+                int var13 = var7 - 59;
+                if (!this.field_1166.interactionManager.hasStatusBars()) {
+                    var13 += 14;
+                }
+
+                int var38 = (int)((float)this.heldItemTooltipFade * 256.0F / 10.0F);
+                if (var38 > 255) {
+                    var38 = 255;
+                }
+
+                if (var38 > 0) {
+                    GL11.glPushMatrix();
+                    GL11.glEnable(3042);
+                    GL11.glBlendFunc(770, 771);
+                    var8.method_956(var35, var12, var13, 16777215 + (var38 << 24));
+                    GL11.glDisable(3042);
+                    GL11.glPopMatrix();
+                }
+            }
+
             this.field_1166.profiler.pop();
         }
 
         if (this.field_1166.isDemo()) {
             this.field_1166.profiler.push("demo");
-            String var36 = "";
+            String var35 = "";
             if (this.field_1166.world.getLastUpdateTime() >= 120500L) {
-                var36 = CommonI18n.translate("demo.demoExpired");
+                var35 = CommonI18n.translate("demo.demoExpired");
             } else {
-                var36 = String.format(
+                var35 = String.format(
                         CommonI18n.translate("demo.remainingTime"), ChatUtil.ticksToString((int)(120500L - this.field_1166.world.getLastUpdateTime()))
                 );
             }
 
-            int var12 = var8.getStringWidth(var36);
-            var8.method_956(var36, var6 - var12 - 10, 5, 16777215);
+            int var12 = var8.getStringWidth(var35);
+            var8.method_956(var35, var6 - var12 - 10, 5, 16777215);
             this.field_1166.profiler.pop();
         }
 
         if (this.field_1166.options.debugEnabled) {
             this.field_1166.profiler.push("debug");
             GL11.glPushMatrix();
-            var8.method_956("Minecraft 1.4.5 (" + this.field_1166.fpsDebugString + ")", 2, 2, 16777215);
+            var8.method_956("Minecraft 1.4.6 (" + this.field_1166.fpsDebugString + ")", 2, 2, 16777215);
             var8.method_956(this.field_1166.getChunkDebugString(), 2, 12, 16777215);
             var8.method_956(this.field_1166.getEntitiesDebugString(), 2, 22, 16777215);
             var8.method_956(this.field_1166.method_2958(), 2, 32, 16777215);
             var8.method_956(this.field_1166.getWorldDebugString(), 2, 42, 16777215);
-            long var41 = Runtime.getRuntime().maxMemory();
-            long var34 = Runtime.getRuntime().totalMemory();
+            long var36 = Runtime.getRuntime().maxMemory();
+            long var40 = Runtime.getRuntime().totalMemory();
             long var42 = Runtime.getRuntime().freeMemory();
-            long var43 = var34 - var42;
-            String var45 = "Used memory: " + var43 * 100L / var41 + "% (" + var43 / 1024L / 1024L + "MB) of " + var41 / 1024L / 1024L + "MB";
+            long var43 = var40 - var42;
+            String var45 = "Used memory: " + var43 * 100L / var36 + "% (" + var43 / 1024L / 1024L + "MB) of " + var36 / 1024L / 1024L + "MB";
             this.drawWithShadow(var8, var45, var6 - var8.getStringWidth(var45) - 2, 2, 14737632);
-            var45 = "Allocated memory: " + var34 * 100L / var41 + "% (" + var34 / 1024L / 1024L + "MB)";
+            var45 = "Allocated memory: " + var40 * 100L / var36 + "% (" + var40 / 1024L / 1024L + "MB)";
             this.drawWithShadow(var8, var45, var6 - var8.getStringWidth(var45) - 2, 12, 14737632);
             int var47 = MathHelper.floor(this.field_1166.playerEntity.x);
             int var22 = MathHelper.floor(this.field_1166.playerEntity.y);
@@ -438,28 +470,28 @@ public abstract class InGameHudMixin extends DrawableHelper {
         if (this.field_1166.options.keyPlayerList.pressed
                 && (!this.field_1166.isIntegratedServerRunning() || this.field_1166.playerEntity.field_1667.field_1618.size() > 1)) {
             this.field_1166.profiler.push("playerList");
-            class_469 var37 = this.field_1166.playerEntity.field_1667;
-            List var39 = var37.field_1618;
-            int var13 = var37.field_1619;
-            int var40 = var13;
+            class_469 var41 = this.field_1166.playerEntity.field_1667;
+            List var39 = var41.field_1618;
+            int var13 = var41.field_1619;
+            int var38 = var13;
 
-            int var38;
-            for(var38 = 1; var40 > 20; var40 = (var13 + var38 - 1) / var38) {
-                ++var38;
+            int var37;
+            for(var37 = 1; var38 > 20; var38 = (var13 + var37 - 1) / var37) {
+                ++var37;
             }
 
-            int var16 = 300 / var38;
+            int var16 = 300 / var37;
             if (var16 > 150) {
                 var16 = 150;
             }
 
-            int var17 = (var6 - var38 * var16) / 2;
+            int var17 = (var6 - var37 * var16) / 2;
             byte var44 = 10;
-            fill(var17 - 1, var44 - 1, var17 + var16 * var38, var44 + 9 * var40, Integer.MIN_VALUE);
+            fill(var17 - 1, var44 - 1, var17 + var16 * var37, var44 + 9 * var38, Integer.MIN_VALUE);
 
             for(int var19 = 0; var19 < var13; ++var19) {
-                int var20 = var17 + var19 % var38 * var16;
-                int var47 = var44 + var19 / var38 * 9;
+                int var20 = var17 + var19 % var37 * var16;
+                int var47 = var44 + var19 / var37 * 9;
                 fill(var20, var47, var20 + var16 - 1, var47 + 8, 553648127);
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 GL11.glEnable(3008);

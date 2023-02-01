@@ -67,6 +67,8 @@ public abstract class EntityTrackerMixin {
                 this.startTracking(par1Entity, 64, 10, true);
             } else if (par1Entity instanceof ExperienceBottleEntity) {
                 this.startTracking(par1Entity, 64, 10, true);
+            } else if (par1Entity instanceof FireworkRocketEntity) {
+                this.startTracking(par1Entity, 64, 10, true);
             } else if (par1Entity instanceof ItemEntity) {
                 this.startTracking(par1Entity, 64, 20, true);
             } else if (par1Entity instanceof AbstractMinecartEntity) {

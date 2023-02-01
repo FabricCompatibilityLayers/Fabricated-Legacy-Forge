@@ -31,7 +31,7 @@ public abstract class BeaconBlockEntityMixin extends BlockEntity implements Inve
 
             for(int var1 = 1; var1 <= 4; this.levels = var1++) {
                 int var2 = this.y - var1;
-                if (var2 < 1) {
+                if (var2 < 0) {
                     break;
                 }
 

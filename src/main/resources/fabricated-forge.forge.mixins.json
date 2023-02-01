@@ -16,6 +16,7 @@
     "block.ChestBlockMixin",
     "block.class_174Accessor",
     "block.class_174Mixin",
+    "block.CocoaBlockMixin",
     "block.CropBlockMixin",
     "block.DoorBlockMixin",
     "block.FarmlandBlockMixin",
@@ -34,6 +35,7 @@
     "block.RailBlockMixin",
     "block.RedstoneWireBlockMixin",
     "block.SaplingBlockMixin",
+    "block.SkullBlockMixin",
     "block.SnowLayerBlockMixin",
     "block.StemBlockMixin",
     "block.SugarCaneBlockMixin",
@@ -72,6 +74,7 @@
     "item.BlockItemMixin",
     "item.BowItemMixin",
     "item.BucketItemMixin",
+    "item.CropItemMixin",
     "item.DyeItemMixin",
     "item.EmptyMapItemMixin",
     "item.FilledMapItemMixin",
@@ -163,8 +166,8 @@
     "world.level.LevelPropertiesMixin"
   ],
   "client": [
-    "class_5115Accessor",
     "client.BlockRendererMixin",
+    "client.class_1341Mixin",
     "client.class_469Mixin",
     "client.class_470Accessor",
     "client.class_586Mixin",

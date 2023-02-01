@@ -20,6 +20,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Tickable;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
@@ -220,16 +222,54 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
             this.world.spawnParticle("largesmoke", this.x, this.y + 0.8, this.z, 0.0, 0.0, 0.0);
         }
 
+        if (!this.world.isClient && this.world instanceof ServerWorld) {
+            this.world.profiler.push("portal");
+            MinecraftServer var1 = ((ServerWorld)this.world).getServer();
+            int var2 = this.getMaxNetherPortalTime();
+            if (this.changingDimension) {
+                if (var1.isNetherAllowed()) {
+                    if (this.vehicle == null && this.netherPortalTime++ >= var2) {
+                        this.netherPortalTime = var2;
+                        this.netherPortalCooldown = this.getDefaultNetherPortalCooldown();
+                        byte var3;
+                        if (this.world.dimension.dimensionType == -1) {
+                            var3 = 0;
+                        } else {
+                            var3 = -1;
+                        }
+
+                        this.teleportToDimension(var3);
+                    }
+
+                    this.changingDimension = false;
+                }
+            } else {
+                if (this.netherPortalTime > 0) {
+                    this.netherPortalTime -= 4;
+                }
+
+                if (this.netherPortalTime < 0) {
+                    this.netherPortalTime = 0;
+                }
+            }
+
+            if (this.netherPortalCooldown > 0) {
+                --this.netherPortalCooldown;
+            }
+
+            this.world.profiler.pop();
+        }
+
         if (this.world.isClient) {
             if (this.clientInterpolationSteps > 0) {
-                double var45 = this.x + (this.clientX - this.x) / (double)this.clientInterpolationSteps;
-                double var46 = this.y + (this.clientY - this.y) / (double)this.clientInterpolationSteps;
+                double var46 = this.x + (this.clientX - this.x) / (double)this.clientInterpolationSteps;
+                double var48 = this.y + (this.clientY - this.y) / (double)this.clientInterpolationSteps;
                 double var5 = this.z + (this.clientZ - this.z) / (double)this.clientInterpolationSteps;
                 double var7 = MathHelper.wrapDegrees(this.clientYaw - (double)this.yaw);
                 this.yaw = (float)((double)this.yaw + var7 / (double)this.clientInterpolationSteps);
                 this.pitch = (float)((double)this.pitch + (this.clientPitch - (double)this.pitch) / (double)this.clientInterpolationSteps);
                 --this.clientInterpolationSteps;
-                this.updatePosition(var45, var46, var5);
+                this.updatePosition(var46, var48, var5);
                 this.setRotation(this.yaw, this.pitch);
             } else {
                 this.updatePosition(this.x, this.y, this.z);
@@ -240,25 +280,25 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
             this.prevY = this.y;
             this.prevZ = this.z;
             this.velocityY -= 0.04F;
-            int var1 = MathHelper.floor(this.x);
+            int var45 = MathHelper.floor(this.x);
             int var2 = MathHelper.floor(this.y);
-            int var3 = MathHelper.floor(this.z);
-            if (RailBlock.method_355(this.world, var1, var2 - 1, var3)) {
+            int var47 = MathHelper.floor(this.z);
+            if (RailBlock.method_355(this.world, var45, var2 - 1, var47)) {
                 --var2;
             }
 
             double var4 = 0.4;
             double var6 = 0.0078125;
-            int var8 = this.world.getBlock(var1, var2, var3);
+            int var8 = this.world.getBlock(var45, var2, var47);
             if (this.canUseRail() && RailBlock.method_354(var8)) {
                 this.fallDistance = 0.0F;
                 Vec3d var9 = this.snapPositionToRail(this.x, this.y, this.z);
-                int var10 = ((IRailBlock)Block.BLOCKS[var8]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var1, var2, var3);
+                int var10 = ((RailBlock)Block.BLOCKS[var8]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var45, var2, var47);
                 this.y = (double)var2;
                 boolean var11 = false;
                 boolean var12 = false;
                 if (var8 == Block.POWERED_RAIL.id) {
-                    var11 = (this.world.getBlockData(var1, var2, var3) & 8) != 0;
+                    var11 = (this.world.getBlockData(var45, var2, var47) & 8) != 0;
                     var12 = !var11;
                 }
 
@@ -308,18 +348,18 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                 }
 
                 double var24 = 0.0;
-                double var26 = (double)var1 + 0.5 + (double)var13[0][0] * 0.5;
-                double var28 = (double)var3 + 0.5 + (double)var13[0][2] * 0.5;
-                double var30 = (double)var1 + 0.5 + (double)var13[1][0] * 0.5;
-                double var32 = (double)var3 + 0.5 + (double)var13[1][2] * 0.5;
+                double var26 = (double)var45 + 0.5 + (double)var13[0][0] * 0.5;
+                double var28 = (double)var47 + 0.5 + (double)var13[0][2] * 0.5;
+                double var30 = (double)var45 + 0.5 + (double)var13[1][0] * 0.5;
+                double var32 = (double)var47 + 0.5 + (double)var13[1][2] * 0.5;
                 var14 = var30 - var26;
                 var16 = var32 - var28;
                 if (var14 == 0.0) {
-                    this.x = (double)var1 + 0.5;
-                    var24 = this.z - (double)var3;
+                    this.x = (double)var45 + 0.5;
+                    var24 = this.z - (double)var47;
                 } else if (var16 == 0.0) {
-                    this.z = (double)var3 + 0.5;
-                    var24 = this.x - (double)var1;
+                    this.z = (double)var47 + 0.5;
+                    var24 = this.x - (double)var45;
                 } else {
                     double var34 = this.x - var26;
                     double var36 = this.z - var28;
@@ -329,37 +369,37 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                 this.x = var26 + var14 * var24;
                 this.z = var28 + var16 * var24;
                 this.updatePosition(this.x, this.y + (double)this.heightOffset, this.z);
-                this.moveMinecartOnRail(var1, var2, var3);
-                if (var13[0][1] != 0 && MathHelper.floor(this.x) - var1 == var13[0][0] && MathHelper.floor(this.z) - var3 == var13[0][2]) {
+                this.moveMinecartOnRail(var45, var2, var47);
+                if (var13[0][1] != 0 && MathHelper.floor(this.x) - var45 == var13[0][0] && MathHelper.floor(this.z) - var47 == var13[0][2]) {
                     this.updatePosition(this.x, this.y + (double)var13[0][1], this.z);
-                } else if (var13[1][1] != 0 && MathHelper.floor(this.x) - var1 == var13[1][0] && MathHelper.floor(this.z) - var3 == var13[1][2]) {
+                } else if (var13[1][1] != 0 && MathHelper.floor(this.x) - var45 == var13[1][0] && MathHelper.floor(this.z) - var47 == var13[1][2]) {
                     this.updatePosition(this.x, this.y + (double)var13[1][1], this.z);
                 }
 
                 this.applyDragAndPushForces();
-                Vec3d var52 = this.snapPositionToRail(this.x, this.y, this.z);
-                if (var52 != null && var9 != null) {
-                    double var39 = (var9.y - var52.y) * 0.05;
+                Vec3d var54 = this.snapPositionToRail(this.x, this.y, this.z);
+                if (var54 != null && var9 != null) {
+                    double var39 = (var9.y - var54.y) * 0.05;
                     var22 = Math.sqrt(this.velocityX * this.velocityX + this.velocityZ * this.velocityZ);
                     if (var22 > 0.0) {
                         this.velocityX = this.velocityX / var22 * (var22 + var39);
                         this.velocityZ = this.velocityZ / var22 * (var22 + var39);
                     }
 
-                    this.updatePosition(this.x, var52.y, this.z);
+                    this.updatePosition(this.x, var54.y, this.z);
                 }
 
-                int var51 = MathHelper.floor(this.x);
-                int var53 = MathHelper.floor(this.z);
-                if (var51 != var1 || var53 != var3) {
+                int var53 = MathHelper.floor(this.x);
+                int var55 = MathHelper.floor(this.z);
+                if (var53 != var45 || var55 != var47) {
                     var22 = Math.sqrt(this.velocityX * this.velocityX + this.velocityZ * this.velocityZ);
-                    this.velocityX = var22 * (double)(var51 - var1);
-                    this.velocityZ = var22 * (double)(var53 - var3);
+                    this.velocityX = var22 * (double)(var53 - var45);
+                    this.velocityZ = var22 * (double)(var55 - var47);
                 }
 
                 this.updatePushForces();
                 if (this.shouldDoRailFunctions()) {
-                    ((IRailBlock)Block.BLOCKS[var8]).onMinecartPass(this.world, (AbstractMinecartEntity)(Object) this, var1, var2, var3);
+                    ((RailBlock)Block.BLOCKS[var8]).onMinecartPass(this.world, (AbstractMinecartEntity)(Object)this, var45, var2, var47);
                 }
 
                 if (var11 && this.shouldDoRailFunctions()) {
@@ -369,36 +409,36 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
                         this.velocityX += this.velocityX / var41 * var43;
                         this.velocityZ += this.velocityZ / var41 * var43;
                     } else if (var10 == 1) {
-                        if (this.world.isBlockSolid(var1 - 1, var2, var3)) {
+                        if (this.world.isBlockSolid(var45 - 1, var2, var47)) {
                             this.velocityX = 0.02;
-                        } else if (this.world.isBlockSolid(var1 + 1, var2, var3)) {
+                        } else if (this.world.isBlockSolid(var45 + 1, var2, var47)) {
                             this.velocityX = -0.02;
                         }
                     } else if (var10 == 0) {
-                        if (this.world.isBlockSolid(var1, var2, var3 - 1)) {
+                        if (this.world.isBlockSolid(var45, var2, var47 - 1)) {
                             this.velocityZ = 0.02;
-                        } else if (this.world.isBlockSolid(var1, var2, var3 + 1)) {
+                        } else if (this.world.isBlockSolid(var45, var2, var47 + 1)) {
                             this.velocityZ = -0.02;
                         }
                     }
                 }
             } else {
-                this.moveMinecartOffRail(var1, var2, var3);
+                this.moveMinecartOffRail(var45, var2, var47);
             }
 
             this.checkBlockCollision();
             this.pitch = 0.0F;
-            double var47 = this.prevX - this.x;
-            double var48 = this.prevZ - this.z;
-            if (var47 * var47 + var48 * var48 > 0.001) {
-                this.yaw = (float)(Math.atan2(var48, var47) * 180.0 / Math.PI);
+            double var49 = this.prevX - this.x;
+            double var50 = this.prevZ - this.z;
+            if (var49 * var49 + var50 * var50 > 0.001) {
+                this.yaw = (float)(Math.atan2(var50, var49) * 180.0 / Math.PI);
                 if (this.yawFlipped) {
                     this.yaw += 180.0F;
                 }
             }
 
-            double var49 = (double)MathHelper.wrapDegrees(this.yaw - this.prevYaw);
-            if (var49 < -170.0 || var49 >= 170.0) {
+            double var51 = (double)MathHelper.wrapDegrees(this.yaw - this.prevYaw);
+            if (var51 < -170.0 || var51 >= 170.0) {
                 this.yaw += 180.0F;
                 this.yawFlipped = !this.yawFlipped;
             }
@@ -406,15 +446,15 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
             this.setRotation(this.yaw, this.pitch);
             Box box = null;
             if (getCollisionHandler() != null) {
-                box = getCollisionHandler().getMinecartCollisionBox((AbstractMinecartEntity)(Object) this);
+                box = getCollisionHandler().getMinecartCollisionBox((AbstractMinecartEntity)(Object)this);
             } else {
                 box = this.boundingBox.expand(0.2, 0.0, 0.2);
             }
 
             List var15 = this.world.getEntitiesIn(this, box);
             if (var15 != null && !var15.isEmpty()) {
-                for(int var50 = 0; var50 < var15.size(); ++var50) {
-                    Entity var17 = (Entity)var15.get(var50);
+                for(int var52 = 0; var52 < var15.size(); ++var52) {
+                    Entity var17 = (Entity)var15.get(var52);
                     if (var17 != this.rider && var17.isPushable() && var17 instanceof AbstractMinecartEntity) {
                         var17.pushAwayFrom(this);
                     }
@@ -430,7 +470,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
             }
 
             this.updateFuel();
-            MinecraftForge.EVENT_BUS.post(new MinecartUpdateEvent((AbstractMinecartEntity)(Object) this, (float)var1, (float)var2, (float)var3));
+            MinecraftForge.EVENT_BUS.post(new MinecartUpdateEvent((AbstractMinecartEntity)(Object) this, (float)var45, (float)var2, (float)var47));
         }
     }
 

@@ -2,12 +2,10 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.particle;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
-import fr.catcore.fabricatedforge.mixin.forgefml.class_5115Accessor;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import net.minecraft.block.Block;
-import net.minecraft.class_5115;
 import net.minecraft.client.TextureManager;
 import net.minecraft.client.particle.BlockDustParticle;
 import net.minecraft.client.particle.Particle;
@@ -16,9 +14,6 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
-import net.minecraft.util.crash.CrashException;
-import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
@@ -28,7 +23,6 @@ import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -58,25 +52,15 @@ public abstract class ParticleManagerMixin implements IParticleManager {
     @Overwrite
     public void tick() {
         for(int var1 = 0; var1 < 4; ++var1) {
-            Particle var2 = null;
-
-            try {
-                for(int var3 = 0; var3 < this.field_1735[var1].size(); ++var3) {
-                    var2 = (Particle)this.field_1735[var1].get(var3);
-                    if (var2 != null) {
-                        var2.tick();
-                    }
-
-                    if (var2 == null || var2.removed) {
-                        this.field_1735[var1].remove(var3--);
-                    }
+            for(int var2 = 0; var2 < this.field_1735[var1].size(); ++var2) {
+                Particle var3 = (Particle)this.field_1735[var1].get(var2);
+                if (var3 != null) {
+                    var3.tick();
                 }
-            } catch (Throwable var6) {
-                CrashReport var4 = CrashReport.create(var6, "Uncaught exception while ticking particles");
-                CrashReportSection var5 = var4.addElement("Particle engine details");
-                var5.add("Last ticked particle", class_5115Accessor.newInstance((ParticleManager)(Object) this, var2));
-                var5.add("Texture index", var1);
-                throw new CrashException(var4);
+
+                if (var3 == null || var3.removed) {
+                    this.field_1735[var1].remove(var2--);
+                }
             }
         }
 
@@ -126,6 +110,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 GL11.glEnable(3042);
                 GL11.glBlendFunc(770, 771);
+                GL11.glAlphaFunc(516, 0.003921569F);
                 var10.begin();
 
                 for(int var11 = 0; var11 < this.field_1735[var8].size(); ++var11) {
@@ -138,6 +123,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
 
                 var10.end();
                 GL11.glDisable(3042);
+                GL11.glAlphaFunc(516, 0.1F);
             }
         }
 
@@ -167,7 +153,7 @@ public abstract class ParticleManagerMixin implements IParticleManager {
      */
     @Overwrite
     public void method_1299(Entity par1Entity, float par2) {
-        float var4 = MathHelper.cos(par1Entity.yaw * ((float) (Math.PI / 180.0)));
+        float var4 = MathHelper.cos(par1Entity.yaw * (float) (Math.PI / 180.0));
         float var5 = MathHelper.sin(par1Entity.yaw * (float) (Math.PI / 180.0));
         float var6 = -var5 * MathHelper.sin(par1Entity.pitch * (float) (Math.PI / 180.0));
         float var7 = var4 * MathHelper.sin(par1Entity.pitch * (float) (Math.PI / 180.0));

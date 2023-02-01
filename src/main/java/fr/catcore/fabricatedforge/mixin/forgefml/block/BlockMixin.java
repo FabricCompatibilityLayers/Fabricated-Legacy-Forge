@@ -323,20 +323,14 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
     @Override
     public boolean canCreatureSpawn(EntityCategory type, World world, int x, int y, int z) {
         int meta = world.getBlockData(x, y, z);
-        if (((Object)this) instanceof StoneSlabBlock) {
-            if (!MinecraftForge.SPAWNER_ALLOW_ON_INVERTED) {
-                return isSolid(this.id);
-            } else {
-                return (meta & 8) == 8 || this.hasTransparency();
-            }
-        } else if (((Object)this) instanceof StairsBlock) {
-            if (MinecraftForge.SPAWNER_ALLOW_ON_INVERTED) {
+        if (!((Object)this instanceof StoneSlabBlock)) {
+            if ((Object)this instanceof StairsBlock) {
                 return (meta & 4) != 0;
             } else {
-                return isSolid(this.id);
+                return this.isBlockSolidOnSide(world, x, y, z, ForgeDirection.UP);
             }
         } else {
-            return this.isBlockSolidOnSide(world, x, y, z, ForgeDirection.UP);
+            return (meta & 8) == 8 || this.hasTransparency();
         }
     }
 

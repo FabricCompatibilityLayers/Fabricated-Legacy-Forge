@@ -247,13 +247,14 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
     @Overwrite
     public void spawnParticles(World par1World, int par2, int par3, int par4, Random par5Random) {
         if (par5Random.nextInt(24) == 0) {
-            par1World.method_3648(
+            par1World.playSound(
                     (double)((float)par2 + 0.5F),
                     (double)((float)par3 + 0.5F),
                     (double)((float)par4 + 0.5F),
                     "fire.fire",
                     1.0F + par5Random.nextFloat(),
-                    par5Random.nextFloat() * 0.7F + 0.3F
+                    par5Random.nextFloat() * 0.7F + 0.3F,
+                    false
             );
         }
 

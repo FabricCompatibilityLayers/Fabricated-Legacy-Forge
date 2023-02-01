@@ -35,9 +35,11 @@ public abstract class ItemEntityMixin extends Entity {
     @Shadow public int age;
     @Shadow private int health;
 
-    @Shadow public ItemStack field_23087;
-
     @Shadow protected abstract void tryMerge();
+
+    @Shadow public abstract ItemStack method_4548();
+
+    @Shadow public abstract void setItemStack(ItemStack itemStack);
 
     public int lifespan = 6000;
 
@@ -68,7 +70,7 @@ public abstract class ItemEntityMixin extends Entity {
         this.noClip = this.pushOutOfBlocks(this.x, (this.boundingBox.minY + this.boundingBox.maxY) / 2.0, this.z);
         this.move(this.velocityX, this.velocityY, this.velocityZ);
         boolean var1 = (int)this.prevX != (int)this.x || (int)this.prevY != (int)this.y || (int)this.prevZ != (int)this.z;
-        if (var1) {
+        if (var1 || this.ticksAlive % 25 == 0) {
             if (this.world.getMaterial(MathHelper.floor(this.x), MathHelper.floor(this.y), MathHelper.floor(this.z)) == Material.LAVA) {
                 this.velocityY = 0.2F;
                 this.velocityX = (double)((this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
@@ -98,18 +100,21 @@ public abstract class ItemEntityMixin extends Entity {
         }
 
         ++this.age;
+        ItemStack item = this.getDataTracker().getStack(10);
         if (!this.world.isClient && this.age >= this.lifespan) {
-            ItemExpireEvent event = new ItemExpireEvent(
-                    (ItemEntity)(Object) this, this.field_23087.getItem() == null ? 6000 : ((IItem)this.field_23087.getItem()).getEntityLifespan(this.field_23087, this.world)
-            );
-            if (MinecraftForge.EVENT_BUS.post(event)) {
-                this.lifespan += event.extraLife;
+            if (item != null) {
+                ItemExpireEvent event = new ItemExpireEvent((ItemEntity)(Object) this, item.getItem() == null ? 6000 : item.getItem().getEntityLifespan(item, this.world));
+                if (MinecraftForge.EVENT_BUS.post(event)) {
+                    this.lifespan += event.extraLife;
+                } else {
+                    this.remove();
+                }
             } else {
                 this.remove();
             }
         }
 
-        if (this.field_23087 == null || this.field_23087.count <= 0) {
+        if (item != null && item.count <= 0) {
             this.remove();
         }
     }
@@ -123,8 +128,8 @@ public abstract class ItemEntityMixin extends Entity {
         par1NBTTagCompound.putShort("Health", (short)((byte)this.health));
         par1NBTTagCompound.putShort("Age", (short)this.age);
         par1NBTTagCompound.putInt("Lifespan", this.lifespan);
-        if (this.field_23087 != null) {
-            par1NBTTagCompound.put("Item", this.field_23087.toNbt(new NbtCompound()));
+        if (this.method_4548() != null) {
+            par1NBTTagCompound.put("Item", this.method_4548().toNbt(new NbtCompound()));
         }
     }
 
@@ -137,8 +142,9 @@ public abstract class ItemEntityMixin extends Entity {
         this.health = par1NBTTagCompound.getShort("Health") & 255;
         this.age = par1NBTTagCompound.getShort("Age");
         NbtCompound var2 = par1NBTTagCompound.getCompound("Item");
-        this.field_23087 = ItemStack.fromNbt(var2);
-        if (this.field_23087 == null || this.field_23087.count <= 0) {
+        this.setItemStack(ItemStack.fromNbt(var2));
+        ItemStack item = this.getDataTracker().getStack(10);
+        if (item == null || item.count <= 0) {
             this.remove();
         }
 
@@ -163,28 +169,29 @@ public abstract class ItemEntityMixin extends Entity {
                 return;
             }
 
-            int var2 = this.field_23087.count;
-            if (this.pickupDelay <= 0 && (event.getResult() == Event.Result.ALLOW || var2 <= 0 || par1EntityPlayer.inventory.insertStack(this.field_23087))) {
-                if (this.field_23087.id == Block.LOG.id) {
+            ItemStack var2 = this.method_4548();
+            int var3 = var2.count;
+            if (this.pickupDelay <= 0 && (event.getResult() == Event.Result.ALLOW || var3 <= 0 || par1EntityPlayer.inventory.insertStack(var2))) {
+                if (var2.id == Block.LOG.id) {
                     par1EntityPlayer.incrementStat(AchievementsAndCriterions.GETTING_WOOD);
                 }
 
-                if (this.field_23087.id == Item.LEATHER.id) {
+                if (var2.id == Item.LEATHER.id) {
                     par1EntityPlayer.incrementStat(AchievementsAndCriterions.KILL_COW);
                 }
 
-                if (this.field_23087.id == Item.DIAMOND.id) {
+                if (var2.id == Item.DIAMOND.id) {
                     par1EntityPlayer.incrementStat(AchievementsAndCriterions.DIAMONDS);
                 }
 
-                if (this.field_23087.id == Item.BLAZE_ROD.id) {
+                if (var2.id == Item.BLAZE_ROD.id) {
                     par1EntityPlayer.incrementStat(AchievementsAndCriterions.BLAZE_ROD);
                 }
 
                 GameRegistry.onPickupNotification(par1EntityPlayer, (ItemEntity)(Object) this);
                 this.playSound("random.pop", 0.2F, ((this.random.nextFloat() - this.random.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-                par1EntityPlayer.method_3162(this, var2);
-                if (this.field_23087.count <= 0) {
+                par1EntityPlayer.method_3162(this, var3);
+                if (var2.count <= 0) {
                     this.remove();
                 }
             }

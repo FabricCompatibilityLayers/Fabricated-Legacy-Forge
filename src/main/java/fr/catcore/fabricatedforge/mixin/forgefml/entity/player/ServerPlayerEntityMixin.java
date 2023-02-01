@@ -128,7 +128,7 @@ public abstract class ServerPlayerEntityMixin extends PlayerEntity implements Sc
     @Overwrite
     public void dropInventory(DamageSource par1DamageSource) {
         if (!ForgeHooks.onLivingDeath(this, par1DamageSource)) {
-            this.server.getPlayerManager().sendToAll(new ChatMessageS2CPacket(par1DamageSource.method_2420(this)));
+            this.server.getPlayerManager().method_4401(par1DamageSource.method_2420(this));
             if (!this.world.getGameRules().getBoolean("keepInventory")) {
                 this.captureDrops(true);
                 this.getCapturedDrops().clear();

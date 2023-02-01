@@ -40,6 +40,20 @@ public abstract class TitleScreenMixin extends Screen {
 
     @Shadow protected abstract void method_1724(int i, int j, Language language);
 
+    @Shadow private String oldGl1;
+
+    @Shadow private int oldGl1Width;
+
+    @Shadow private int oldGl2Width;
+
+    @Shadow private int oldGlLeft;
+
+    @Shadow private int oldGlTop;
+
+    @Shadow private int oldGlRight;
+
+    @Shadow private int oldGlBottom;
+
     /**
      * @author Minecraft Forge
      * @reason none
@@ -79,6 +93,22 @@ public abstract class TitleScreenMixin extends Screen {
         }
 
         this.buttons.add(new LanguageButton(5, this.width / 2 - 124, var4 + 72 + 12));
+        this.oldGl1 = "";
+        String var5 = System.getProperty("os_architecture");
+        String var6 = System.getProperty("java_version");
+        if ("ppc".equalsIgnoreCase(var5)) {
+            this.oldGl1 = "§lNotice!§r PowerPC compatibility will be dropped in Minecraft 1.6";
+        } else if (var6 != null && var6.startsWith("1.5")) {
+            this.oldGl1 = "§lNotice!§r Java 1.5 compatibility will be dropped in Minecraft 1.6";
+        }
+
+        this.oldGl1Width = this.textRenderer.getStringWidth(this.oldGl1);
+        this.oldGl2Width = this.textRenderer.getStringWidth("Please click §nhere§r for more information.");
+        int var7 = Math.max(this.oldGl1Width, this.oldGl2Width);
+        this.oldGlLeft = (this.width - var7) / 2;
+        this.oldGlTop = ((ButtonWidget)this.buttons.get(0)).y - 24;
+        this.oldGlRight = this.oldGlLeft + var7;
+        this.oldGlBottom = this.oldGlTop + 24;
     }
 
     @Inject(method = "buttonClicked", at = @At("RETURN"))
@@ -123,7 +153,7 @@ public abstract class TitleScreenMixin extends Screen {
         GL11.glScalef(var8, var8, var8);
         this.drawCenteredString(this.textRenderer, this.splashText, 0, -8, 16776960);
         GL11.glPopMatrix();
-        String var9 = "Minecraft 1.4.5";
+        String var9 = "Minecraft 1.4.6";
         if (this.field_1229.isDemo()) {
             var9 = var9 + " Demo";
         }
@@ -139,6 +169,18 @@ public abstract class TitleScreenMixin extends Screen {
 
         String var10 = "Copyright Mojang AB. Do not distribute!";
         this.drawWithShadow(this.textRenderer, var10, this.width - this.textRenderer.getStringWidth(var10) - 2, this.height - 10, 16777215);
+        if (this.oldGl1 != null && this.oldGl1.length() > 0) {
+            fill(this.oldGlLeft - 2, this.oldGlTop - 2, this.oldGlRight + 2, this.oldGlBottom - 1, 1428160512);
+            this.drawWithShadow(this.textRenderer, this.oldGl1, this.oldGlLeft, this.oldGlTop, 16777215);
+            this.drawWithShadow(
+                    this.textRenderer,
+                    "Please click §nhere§r for more information.",
+                    (this.width - this.oldGl2Width) / 2,
+                    ((ButtonWidget)this.buttons.get(0)).y - 12,
+                    16777215
+            );
+        }
+
         super.render(par1, par2, par3);
     }
 }

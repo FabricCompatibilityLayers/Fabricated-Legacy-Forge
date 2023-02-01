@@ -85,19 +85,21 @@ public abstract class ClientPlayerInteractionManagerMixin {
         float var10 = (float)par8Vec3.y - (float)par5;
         float var11 = (float)par8Vec3.z - (float)par6;
         boolean var12 = false;
-        int var13 = par2World.getBlock(par4, par5, par6);
         if (par3ItemStack != null
                 && par3ItemStack.getItem() != null
-                && ((IItem)par3ItemStack.getItem()).onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11)) {
+                && par3ItemStack.getItem().onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11)) {
             return true;
         } else {
-            if (var13 > 0 && Block.BLOCKS[var13].onActivated(par2World, par4, par5, par6, par1EntityPlayer, par7, var9, var10, var11)) {
-                var12 = true;
+            if (!par1EntityPlayer.isSneaking() || par1EntityPlayer.method_2640() == null) {
+                int var13 = par2World.getBlock(par4, par5, par6);
+                if (var13 > 0 && Block.BLOCKS[var13].onActivated(par2World, par4, par5, par6, par1EntityPlayer, par7, var9, var10, var11)) {
+                    var12 = true;
+                }
             }
 
             if (!var12 && par3ItemStack != null && par3ItemStack.getItem() instanceof BlockItem) {
-                BlockItem var14 = (BlockItem)par3ItemStack.getItem();
-                if (!var14.method_3463(par2World, par4, par5, par6, par7, par1EntityPlayer, par3ItemStack)) {
+                BlockItem var16 = (BlockItem)par3ItemStack.getItem();
+                if (!var16.method_3463(par2World, par4, par5, par6, par7, par1EntityPlayer, par3ItemStack)) {
                     return false;
                 }
             }
@@ -109,12 +111,12 @@ public abstract class ClientPlayerInteractionManagerMixin {
             } else if (par3ItemStack == null) {
                 return false;
             } else if (this.gameMode.isCreative()) {
-                int var17 = par3ItemStack.getData();
-                int var15 = par3ItemStack.count;
-                boolean var16 = par3ItemStack.method_3413(par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11);
-                par3ItemStack.setDamage(var17);
-                par3ItemStack.count = var15;
-                return var16;
+                int var13 = par3ItemStack.getData();
+                int var14 = par3ItemStack.count;
+                boolean var15 = par3ItemStack.method_3413(par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11);
+                par3ItemStack.setDamage(var13);
+                par3ItemStack.count = var14;
+                return var15;
             } else if (!par3ItemStack.method_3413(par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11)) {
                 return false;
             } else {

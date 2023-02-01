@@ -22,16 +22,17 @@ public class EnchantmentHelperMixin {
     public static Map method_3528(int par0, ItemStack par1ItemStack) {
         Item var2 = par1ItemStack.getItem();
         HashMap var3 = null;
+        boolean var4 = par1ItemStack.id == Item.BOOK.id;
 
-        for(Enchantment var7 : Enchantment.ALL_ENCHANTMENTS) {
-            if (var7 != null && var7.canEnchantItem(par1ItemStack)) {
-                for(int var8 = var7.getMinimumLevel(); var8 <= var7.getMaximumLevel(); ++var8) {
-                    if (par0 >= var7.getMinimumPower(var8) && par0 <= var7.getMaximumPower(var8)) {
+        for(Enchantment var8 : Enchantment.ALL_ENCHANTMENTS) {
+            if (var8 != null && (var8.canApplyAtEnchantingTable(par1ItemStack) || var4)) {
+                for(int var9 = var8.getMinimumLevel(); var9 <= var8.getMaximumLevel(); ++var9) {
+                    if (par0 >= var8.getMinimumPower(var9) && par0 <= var8.getMaximumPower(var9)) {
                         if (var3 == null) {
                             var3 = new HashMap();
                         }
 
-                        var3.put(var7.id, new EnchantmentLevelEntry(var7, var8));
+                        var3.put(var8.id, new EnchantmentLevelEntry(var8, var9));
                     }
                 }
             }

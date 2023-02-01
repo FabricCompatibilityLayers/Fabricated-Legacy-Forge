@@ -58,13 +58,13 @@ public abstract class HeldItemRendererMixin {
         GL11.glPushMatrix();
         IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(par2ItemStack, IItemRenderer.ItemRenderType.EQUIPPED);
         if (customRenderer != null) {
-            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath(((IItem)par2ItemStack.getItem()).getTextureFile()));
+            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath(par2ItemStack.getItem().getTextureFile()));
             ForgeHooksClient.renderEquippedItem(customRenderer, this.blockRenderer, par1EntityLiving, par2ItemStack);
         } else if (par2ItemStack.getItem() instanceof BlockItem && BlockRenderer.method_1455(Block.BLOCKS[par2ItemStack.id].getBlockType())) {
-            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath(((IItem)par2ItemStack.getItem()).getTextureFile()));
+            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath(par2ItemStack.getItem().getTextureFile()));
             this.blockRenderer.method_1447(Block.BLOCKS[par2ItemStack.id], par2ItemStack.getData(), 1.0F);
         } else {
-            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath(((IItem)par2ItemStack.getItem()).getTextureFile()));
+            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath(par2ItemStack.getItem().getTextureFile()));
             Tessellator var5 = Tessellator.INSTANCE;
             int var6 = par1EntityLiving.method_2630(par2ItemStack, par3);
             float var7 = ((float)(var6 % 16 * 16) + 0.0F) / 256.0F;
@@ -80,7 +80,7 @@ public abstract class HeldItemRendererMixin {
             GL11.glRotatef(50.0F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(335.0F, 0.0F, 0.0F, 1.0F);
             GL11.glTranslatef(-0.9375F, -0.0625F, 0.0F);
-            this.method_4306(var5, var8, var9, var7, var10);
+            method_4306(var5, var8, var9, var7, var10, 0.0625F);
             if (par2ItemStack != null && par2ItemStack.hasEnchantmentGlint() && par3 == 0) {
                 GL11.glDepthFunc(514);
                 GL11.glDisable(2896);
@@ -96,14 +96,14 @@ public abstract class HeldItemRendererMixin {
                 float var16 = (float)(Minecraft.getTime() % 3000L) / 3000.0F * 8.0F;
                 GL11.glTranslatef(var16, 0.0F, 0.0F);
                 GL11.glRotatef(-50.0F, 0.0F, 0.0F, 1.0F);
-                this.method_4306(var5, 0.0F, 0.0F, 1.0F, 1.0F);
+                method_4306(var5, 0.0F, 0.0F, 1.0F, 1.0F, 0.0625F);
                 GL11.glPopMatrix();
                 GL11.glPushMatrix();
                 GL11.glScalef(var15, var15, var15);
                 var16 = (float)(Minecraft.getTime() % 4873L) / 4873.0F * 8.0F;
                 GL11.glTranslatef(-var16, 0.0F, 0.0F);
                 GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F);
-                this.method_4306(var5, 0.0F, 0.0F, 1.0F, 1.0F);
+                method_4306(var5, 0.0F, 0.0F, 1.0F, 1.0F, 0.0625F);
                 GL11.glPopMatrix();
                 GL11.glMatrixMode(5888);
                 GL11.glDisable(3042);
@@ -122,82 +122,81 @@ public abstract class HeldItemRendererMixin {
      * @reason none
      */
     @Overwrite
-    private void method_4306(Tessellator par1Tessellator, float par2, float par3, float par4, float par5) {
+    public static void method_4306(Tessellator par0Tessellator, float par1, float par2, float par3, float par4, float par5) {
         float var6 = 1.0F;
-        float var7 = 0.0625F;
-        par1Tessellator.begin();
-        par1Tessellator.normal(0.0F, 0.0F, 1.0F);
-        par1Tessellator.vertex(0.0, 0.0, 0.0, (double)par2, (double)par5);
-        par1Tessellator.vertex((double)var6, 0.0, 0.0, (double)par4, (double)par5);
-        par1Tessellator.vertex((double)var6, 1.0, 0.0, (double)par4, (double)par3);
-        par1Tessellator.vertex(0.0, 1.0, 0.0, (double)par2, (double)par3);
-        par1Tessellator.end();
-        par1Tessellator.begin();
-        par1Tessellator.normal(0.0F, 0.0F, -1.0F);
-        par1Tessellator.vertex(0.0, 1.0, (double)(0.0F - var7), (double)par2, (double)par3);
-        par1Tessellator.vertex((double)var6, 1.0, (double)(0.0F - var7), (double)par4, (double)par3);
-        par1Tessellator.vertex((double)var6, 0.0, (double)(0.0F - var7), (double)par4, (double)par5);
-        par1Tessellator.vertex(0.0, 0.0, (double)(0.0F - var7), (double)par2, (double)par5);
-        par1Tessellator.end();
-        par1Tessellator.begin();
-        par1Tessellator.normal(-1.0F, 0.0F, 0.0F);
+        par0Tessellator.begin();
+        par0Tessellator.normal(0.0F, 0.0F, 1.0F);
+        par0Tessellator.vertex(0.0, 0.0, 0.0, (double)par1, (double)par4);
+        par0Tessellator.vertex((double)var6, 0.0, 0.0, (double)par3, (double)par4);
+        par0Tessellator.vertex((double)var6, 1.0, 0.0, (double)par3, (double)par2);
+        par0Tessellator.vertex(0.0, 1.0, 0.0, (double)par1, (double)par2);
+        par0Tessellator.end();
+        par0Tessellator.begin();
+        par0Tessellator.normal(0.0F, 0.0F, -1.0F);
+        par0Tessellator.vertex(0.0, 1.0, (double)(0.0F - par5), (double)par1, (double)par2);
+        par0Tessellator.vertex((double)var6, 1.0, (double)(0.0F - par5), (double)par3, (double)par2);
+        par0Tessellator.vertex((double)var6, 0.0, (double)(0.0F - par5), (double)par3, (double)par4);
+        par0Tessellator.vertex(0.0, 0.0, (double)(0.0F - par5), (double)par1, (double)par4);
+        par0Tessellator.end();
+        par0Tessellator.begin();
+        par0Tessellator.normal(-1.0F, 0.0F, 0.0F);
         int tileSize = TextureFXManager.instance().getTextureDimensions(GL11.glGetInteger(32873)).width / 16;
         float tx = 1.0F / (float)(32 * tileSize);
         float tz = 1.0F / (float)tileSize;
 
-        for(int var8 = 0; var8 < tileSize; ++var8) {
-            float var9 = (float)var8 / (float)tileSize;
-            float var10 = par2 + (par4 - par2) * var9 - tx;
-            float var11 = var6 * var9;
-            par1Tessellator.vertex((double)var11, 0.0, (double)(0.0F - var7), (double)var10, (double)par5);
-            par1Tessellator.vertex((double)var11, 0.0, 0.0, (double)var10, (double)par5);
-            par1Tessellator.vertex((double)var11, 1.0, 0.0, (double)var10, (double)par3);
-            par1Tessellator.vertex((double)var11, 1.0, (double)(0.0F - var7), (double)var10, (double)par3);
+        for(int var7 = 0; var7 < tileSize; ++var7) {
+            float var8 = (float)var7 / (float)tileSize;
+            float var9 = par1 + (par3 - par1) * var8 - tx;
+            float var10 = var6 * var8;
+            par0Tessellator.vertex((double)var10, 0.0, (double)(0.0F - par5), (double)var9, (double)par4);
+            par0Tessellator.vertex((double)var10, 0.0, 0.0, (double)var9, (double)par4);
+            par0Tessellator.vertex((double)var10, 1.0, 0.0, (double)var9, (double)par2);
+            par0Tessellator.vertex((double)var10, 1.0, (double)(0.0F - par5), (double)var9, (double)par2);
         }
 
-        par1Tessellator.end();
-        par1Tessellator.begin();
-        par1Tessellator.normal(1.0F, 0.0F, 0.0F);
+        par0Tessellator.end();
+        par0Tessellator.begin();
+        par0Tessellator.normal(1.0F, 0.0F, 0.0F);
+
+        for(int var14 = 0; var14 < tileSize; ++var14) {
+            float var8 = (float)var14 / (float)tileSize;
+            float var9 = par1 + (par3 - par1) * var8 - tx;
+            float var10 = var6 * var8 + tz;
+            par0Tessellator.vertex((double)var10, 1.0, (double)(0.0F - par5), (double)var9, (double)par2);
+            par0Tessellator.vertex((double)var10, 1.0, 0.0, (double)var9, (double)par2);
+            par0Tessellator.vertex((double)var10, 0.0, 0.0, (double)var9, (double)par4);
+            par0Tessellator.vertex((double)var10, 0.0, (double)(0.0F - par5), (double)var9, (double)par4);
+        }
+
+        par0Tessellator.end();
+        par0Tessellator.begin();
+        par0Tessellator.normal(0.0F, 1.0F, 0.0F);
 
         for(int var15 = 0; var15 < tileSize; ++var15) {
-            float var9 = (float)var15 / (float)tileSize;
-            float var10 = par2 + (par4 - par2) * var9 - tx;
-            float var11 = var6 * var9 + tz;
-            par1Tessellator.vertex((double)var11, 1.0, (double)(0.0F - var7), (double)var10, (double)par3);
-            par1Tessellator.vertex((double)var11, 1.0, 0.0, (double)var10, (double)par3);
-            par1Tessellator.vertex((double)var11, 0.0, 0.0, (double)var10, (double)par5);
-            par1Tessellator.vertex((double)var11, 0.0, (double)(0.0F - var7), (double)var10, (double)par5);
+            float var8 = (float)var15 / (float)tileSize;
+            float var9 = par4 + (par2 - par4) * var8 - tx;
+            float var10 = var6 * var8 + tz;
+            par0Tessellator.vertex(0.0, (double)var10, 0.0, (double)par1, (double)var9);
+            par0Tessellator.vertex((double)var6, (double)var10, 0.0, (double)par3, (double)var9);
+            par0Tessellator.vertex((double)var6, (double)var10, (double)(0.0F - par5), (double)par3, (double)var9);
+            par0Tessellator.vertex(0.0, (double)var10, (double)(0.0F - par5), (double)par1, (double)var9);
         }
 
-        par1Tessellator.end();
-        par1Tessellator.begin();
-        par1Tessellator.normal(0.0F, 1.0F, 0.0F);
+        par0Tessellator.end();
+        par0Tessellator.begin();
+        par0Tessellator.normal(0.0F, -1.0F, 0.0F);
 
         for(int var16 = 0; var16 < tileSize; ++var16) {
-            float var9 = (float)var16 / (float)tileSize;
-            float var10 = par5 + (par3 - par5) * var9 - tx;
-            float var11 = var6 * var9 + tz;
-            par1Tessellator.vertex(0.0, (double)var11, 0.0, (double)par2, (double)var10);
-            par1Tessellator.vertex((double)var6, (double)var11, 0.0, (double)par4, (double)var10);
-            par1Tessellator.vertex((double)var6, (double)var11, (double)(0.0F - var7), (double)par4, (double)var10);
-            par1Tessellator.vertex(0.0, (double)var11, (double)(0.0F - var7), (double)par2, (double)var10);
+            float var8 = (float)var16 / (float)tileSize;
+            float var9 = par4 + (par2 - par4) * var8 - tx;
+            float var10 = var6 * var8;
+            par0Tessellator.vertex((double)var6, (double)var10, 0.0, (double)par3, (double)var9);
+            par0Tessellator.vertex(0.0, (double)var10, 0.0, (double)par1, (double)var9);
+            par0Tessellator.vertex(0.0, (double)var10, (double)(0.0F - par5), (double)par1, (double)var9);
+            par0Tessellator.vertex((double)var6, (double)var10, (double)(0.0F - par5), (double)par3, (double)var9);
         }
 
-        par1Tessellator.end();
-        par1Tessellator.begin();
-        par1Tessellator.normal(0.0F, -1.0F, 0.0F);
-
-        for(int var17 = 0; var17 < tileSize; ++var17) {
-            float var9 = (float)var17 / (float)tileSize;
-            float var10 = par5 + (par3 - par5) * var9 - tx;
-            float var11 = var6 * var9;
-            par1Tessellator.vertex((double)var6, (double)var11, 0.0, (double)par4, (double)var10);
-            par1Tessellator.vertex(0.0, (double)var11, 0.0, (double)par2, (double)var10);
-            par1Tessellator.vertex(0.0, (double)var11, (double)(0.0F - var7), (double)par2, (double)var10);
-            par1Tessellator.vertex((double)var6, (double)var11, (double)(0.0F - var7), (double)par4, (double)var10);
-        }
-
-        par1Tessellator.end();
+        par0Tessellator.end();
     }
 
     /**

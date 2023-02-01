@@ -14,6 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.command.CommandSource;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.ThornsEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -313,14 +314,15 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
      * @reason none
      */
     @Overwrite
-    public ItemEntity method_4580() {
+    public ItemEntity dropSelectedItem(boolean par1) {
         ItemStack stack = this.inventory.getMainHandStack();
         if (stack == null) {
             return null;
+        } else if (!stack.getItem().onDroppedByPlayer(stack, (PlayerEntity)(Object) this)) {
+            return null;
         } else {
-            return ((IItem)stack.getItem()).onDroppedByPlayer(stack, (PlayerEntity)(Object) this)
-                    ? ForgeHooks.onPlayerTossEvent((PlayerEntity)(Object) this, this.inventory.takeInvStack(this.inventory.selectedSlot, 1))
-                    : null;
+            int count = par1 && this.inventory.getMainHandStack() != null ? this.inventory.getMainHandStack().count : 1;
+            return ForgeHooks.onPlayerTossEvent((PlayerEntity)(Object) this, this.inventory.takeInvStack(this.inventory.selectedSlot, count));
         }
     }
 
@@ -358,10 +360,17 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     @Override
     public float getCurrentPlayerStrVsBlock(Block par1Block, int meta) {
         ItemStack stack = this.inventory.getMainHandStack();
-        float var2 = stack == null ? 1.0F : ((IItem)stack.getItem()).getStrVsBlock(stack, par1Block, meta);
+        float var2 = stack == null ? 1.0F : stack.getItem().getStrVsBlock(stack, par1Block, meta);
         int var3 = EnchantmentHelper.method_4652(this);
-        if (var3 > 0 && ForgeHooks.canHarvestBlock(par1Block, (PlayerEntity)(Object) this, meta)) {
-            var2 += (float)(var3 * var3 + 1);
+        ItemStack var4 = this.inventory.getMainHandStack();
+        if (var3 > 0 && var4 != null) {
+            float var5 = (float)(var3 * var3 + 1);
+            boolean canHarvest = ForgeHooks.canToolHarvestBlock(par1Block, meta, var4);
+            if (!canHarvest && var2 <= 1.0F) {
+                var2 += var5 * 0.08F;
+            } else {
+                var2 += var5;
+            }
         }
 
         if (this.method_2581(StatusEffect.HASTE)) {
@@ -537,6 +546,9 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
                             }
 
                             this.method_2669(par1Entity);
+                            if (par1Entity instanceof MobEntity) {
+                                ThornsEnchantment.method_4661(this, (MobEntity)par1Entity, this.random);
+                            }
                         }
 
                         ItemStack var9 = this.getMainHandStack();
@@ -766,7 +778,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
             var3 = par1ItemStack.method_3429() + 16;
         } else {
             if (par1ItemStack.getItem().method_3397()) {
-                return ((IItem)par1ItemStack.getItem()).getIconFromItemStackForMultiplePasses(par1ItemStack, par2);
+                return par1ItemStack.getItem().getIconIndex(par1ItemStack, par2);
             }
 
             if (this.useItem != null && par1ItemStack.id == Item.field_4349.id) {

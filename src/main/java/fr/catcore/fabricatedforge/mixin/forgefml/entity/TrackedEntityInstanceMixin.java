@@ -1,7 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity;
 
 import cpw.mods.fml.common.network.FMLNetworkHandler;
-import net.minecraft.class_5114;
 import net.minecraft.entity.*;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.decoration.ItemFrameEntity;
@@ -71,7 +70,7 @@ public abstract class TrackedEntityInstanceMixin {
                     this.players.add(par1EntityPlayerMP);
                     Packet var6 = this.method_2182();
                     par1EntityPlayerMP.field_2823.sendPacket(var6);
-                    if (this.trackedEntity instanceof ItemFrameEntity) {
+                    if (!this.trackedEntity.getDataTracker().isEmpty()) {
                         par1EntityPlayerMP.field_2823
                                 .sendPacket(new EntityTrackerUpdateS2CPacket(this.trackedEntity.id, this.trackedEntity.getDataTracker(), true));
                     }
@@ -155,12 +154,7 @@ public abstract class TrackedEntityInstanceMixin {
         if (pkt != null) {
             return pkt;
         } else if (this.trackedEntity instanceof ItemEntity) {
-            ItemEntity var9 = (ItemEntity)this.trackedEntity;
-            class_5114 var10 = new class_5114(var9);
-            var9.x = (double)var10.field_23078 / 32.0;
-            var9.y = (double)var10.field_23079 / 32.0;
-            var9.z = (double)var10.field_23080 / 32.0;
-            return var10;
+            return new EntitySpawnS2CPacket(this.trackedEntity, 2, 1);
         } else if (this.trackedEntity instanceof ServerPlayerEntity) {
             return new PlayerSpawnS2CPacket((PlayerEntity)this.trackedEntity);
         } else {
@@ -200,6 +194,8 @@ public abstract class TrackedEntityInstanceMixin {
                 return new EntitySpawnS2CPacket(this.trackedEntity, 65);
             } else if (this.trackedEntity instanceof EyeOfEnderEntity) {
                 return new EntitySpawnS2CPacket(this.trackedEntity, 72);
+            } else if (this.trackedEntity instanceof FireworkRocketEntity) {
+                return new EntitySpawnS2CPacket(this.trackedEntity, 76);
             } else if (this.trackedEntity instanceof ExplosiveProjectileEntity) {
                 ExplosiveProjectileEntity var6 = (ExplosiveProjectileEntity)this.trackedEntity;
                 EntitySpawnS2CPacket var2 = null;

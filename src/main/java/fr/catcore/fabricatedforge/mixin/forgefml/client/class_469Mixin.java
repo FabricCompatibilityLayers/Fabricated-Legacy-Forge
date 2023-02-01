@@ -87,12 +87,25 @@ public abstract class class_469Mixin extends PacketListener implements Iclass_46
     }
 
     /**
+     * @author forge
+     * @reason hook
+     */
+    @Overwrite
+    public void sendPacketAndDisconnect(Packet par1Packet) {
+        if (!this.disconnected) {
+            this.connection.send(par1Packet);
+            this.connection.scheduleDisconnect();
+            FMLNetworkHandler.onConnectionClosed(this.connection, this.getPlayer());
+        }
+    }
+
+    /**
      * @author Minecraft Forge
      * @reason none
      */
     @Overwrite
     public void onChatMessage(ChatMessageS2CPacket par1Packet3Chat) {
-        FMLNetworkHandler.onConnectionClosed(this.connection, this.getPlayer());
+        par1Packet3Chat = FMLNetworkHandler.handleChatMessage(this, par1Packet3Chat);
         ClientChatReceivedEvent event = new ClientChatReceivedEvent(par1Packet3Chat.message);
         if (!MinecraftForge.EVENT_BUS.post(event) && event.message != null) {
             this.field_1623.inGameHud.getChatHud().method_898(par1Packet3Chat.message);
