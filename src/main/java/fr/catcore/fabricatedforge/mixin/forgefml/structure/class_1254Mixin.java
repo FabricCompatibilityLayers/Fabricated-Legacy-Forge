@@ -67,11 +67,11 @@ public abstract class class_1254Mixin extends StructurePiece {
                 this.method_65(par1World, par3StructureBoundingBox, par2Random, 0.05F, 1, 2, var10 + 1, Block.TORCH.id, 0);
                 ChestGenHooks info = ChestGenHooks.getInfo("mineshaftCorridor");
                 if (par2Random.nextInt(100) == 0) {
-                    this.method_69(par1World, par3StructureBoundingBox, par2Random, 2, 0, var10 - 1, info.getItems(), info.getCount(par2Random));
+                    this.method_69(par1World, par3StructureBoundingBox, par2Random, 2, 0, var10 - 1, info.getItems(par2Random), info.getCount(par2Random));
                 }
 
                 if (par2Random.nextInt(100) == 0) {
-                    this.method_69(par1World, par3StructureBoundingBox, par2Random, 0, 0, var10 + 1, info.getItems(), info.getCount(par2Random));
+                    this.method_69(par1World, par3StructureBoundingBox, par2Random, 0, 0, var10 + 1, info.getItems(par2Random), info.getCount(par2Random));
                 }
 
                 if (this.field_4912 && !this.field_4913) {

@@ -115,10 +115,10 @@ public abstract class class_19Mixin extends class_31 {
             }
 
             ChestGenHooks info = ChestGenHooks.getInfo("strongholdLibrary");
-            this.method_69(par1World, par3StructureBoundingBox, par2Random, 3, 3, 5, info.getItems(), info.getCount(par2Random));
+            this.method_69(par1World, par3StructureBoundingBox, par2Random, 3, 3, 5, info.getItems(par2Random), info.getCount(par2Random));
             if (this.field_39) {
                 this.method_56(par1World, 0, 0, 12, 9, 1, par3StructureBoundingBox);
-                this.method_69(par1World, par3StructureBoundingBox, par2Random, 12, 8, 1, info.getItems(), info.getCount(par2Random));
+                this.method_69(par1World, par3StructureBoundingBox, par2Random, 12, 8, 1, info.getItems(par2Random), info.getCount(par2Random));
             }
 
             return true;

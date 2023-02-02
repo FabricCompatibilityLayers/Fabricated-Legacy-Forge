@@ -47,13 +47,13 @@ public class class_5Mixin extends class_8 {
             this.method_62(par1World, par3StructureBoundingBox, var4 + 1, var4, var4 + 1, this.field_14 - 2 - var4, var4, this.field_16 - 2 - var4, 0, 0, false);
         }
 
-        for(int var13 = 0; var13 < this.field_14; ++var13) {
+        for(int var14 = 0; var14 < this.field_14; ++var14) {
             for(int var5 = 0; var5 < this.field_16; ++var5) {
-                this.method_72(par1World, Block.SANDSTONE.id, 0, var13, -5, var5, par3StructureBoundingBox);
+                this.method_72(par1World, Block.SANDSTONE.id, 0, var14, -5, var5, par3StructureBoundingBox);
             }
         }
 
-        int var14 = this.method_75(Block.SANDSTONE_STAIRS.id, 3);
+        int var15 = this.method_75(Block.SANDSTONE_STAIRS.id, 3);
         int var5 = this.method_75(Block.SANDSTONE_STAIRS.id, 2);
         int var6 = this.method_75(Block.SANDSTONE_STAIRS.id, 0);
         int var7 = this.method_75(Block.SANDSTONE_STAIRS.id, 1);
@@ -61,13 +61,13 @@ public class class_5Mixin extends class_8 {
         byte var9 = 11;
         this.method_62(par1World, par3StructureBoundingBox, 0, 0, 0, 4, 9, 4, Block.SANDSTONE.id, 0, false);
         this.method_62(par1World, par3StructureBoundingBox, 1, 10, 1, 3, 10, 3, Block.SANDSTONE.id, Block.SANDSTONE.id, false);
-        this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var14, 2, 10, 0, par3StructureBoundingBox);
+        this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var15, 2, 10, 0, par3StructureBoundingBox);
         this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var5, 2, 10, 4, par3StructureBoundingBox);
         this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var6, 0, 10, 2, par3StructureBoundingBox);
         this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var7, 4, 10, 2, par3StructureBoundingBox);
         this.method_62(par1World, par3StructureBoundingBox, this.field_14 - 5, 0, 0, this.field_14 - 1, 9, 4, Block.SANDSTONE.id, 0, false);
         this.method_62(par1World, par3StructureBoundingBox, this.field_14 - 4, 10, 1, this.field_14 - 2, 10, 3, Block.SANDSTONE.id, Block.SANDSTONE.id, false);
-        this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var14, this.field_14 - 3, 10, 0, par3StructureBoundingBox);
+        this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var15, this.field_14 - 3, 10, 0, par3StructureBoundingBox);
         this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var5, this.field_14 - 3, 10, 4, par3StructureBoundingBox);
         this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var6, this.field_14 - 5, 10, 2, par3StructureBoundingBox);
         this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var7, this.field_14 - 1, 10, 2, par3StructureBoundingBox);
@@ -106,10 +106,10 @@ public class class_5Mixin extends class_8 {
         this.method_56(par1World, 0, 0, this.field_14 - 7, 6, 10, par3StructureBoundingBox);
         this.method_62(par1World, par3StructureBoundingBox, 2, 4, 4, 2, 6, 4, 0, 0, false);
         this.method_62(par1World, par3StructureBoundingBox, this.field_14 - 3, 4, 4, this.field_14 - 3, 6, 4, 0, 0, false);
-        this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var14, 2, 4, 5, par3StructureBoundingBox);
-        this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var14, 2, 3, 4, par3StructureBoundingBox);
-        this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var14, this.field_14 - 3, 4, 5, par3StructureBoundingBox);
-        this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var14, this.field_14 - 3, 3, 4, par3StructureBoundingBox);
+        this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var15, 2, 4, 5, par3StructureBoundingBox);
+        this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var15, 2, 3, 4, par3StructureBoundingBox);
+        this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var15, this.field_14 - 3, 4, 5, par3StructureBoundingBox);
+        this.method_56(par1World, Block.SANDSTONE_STAIRS.id, var15, this.field_14 - 3, 3, 4, par3StructureBoundingBox);
         this.method_62(par1World, par3StructureBoundingBox, 1, 1, 3, 2, 2, 3, Block.SANDSTONE.id, Block.SANDSTONE.id, false);
         this.method_62(par1World, par3StructureBoundingBox, this.field_14 - 3, 1, 3, this.field_14 - 2, 2, 3, Block.SANDSTONE.id, Block.SANDSTONE.id, false);
         this.method_56(par1World, Block.SANDSTONE_STAIRS.id, 0, 1, 1, 2, par3StructureBoundingBox);
@@ -144,52 +144,52 @@ public class class_5Mixin extends class_8 {
         this.method_56(par1World, Block.WOOL.id, var8, 10, 0, 13, par3StructureBoundingBox);
         this.method_56(par1World, Block.WOOL.id, var9, 10, 0, 10, par3StructureBoundingBox);
 
-        for(int var16 = 0; var16 <= this.field_14 - 1; var16 += this.field_14 - 1) {
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var16, 2, 1, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var16, 2, 2, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var16, 2, 3, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var16, 3, 1, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var16, 3, 2, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var16, 3, 3, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var16, 4, 1, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 1, var16, 4, 2, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var16, 4, 3, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var16, 5, 1, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var16, 5, 2, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var16, 5, 3, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var16, 6, 1, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 1, var16, 6, 2, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var16, 6, 3, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var16, 7, 1, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var16, 7, 2, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var16, 7, 3, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var16, 8, 1, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var16, 8, 2, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var16, 8, 3, par3StructureBoundingBox);
+        for(int var17 = 0; var17 <= this.field_14 - 1; var17 += this.field_14 - 1) {
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var17, 2, 1, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var17, 2, 2, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var17, 2, 3, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var17, 3, 1, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var17, 3, 2, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var17, 3, 3, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var17, 4, 1, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 1, var17, 4, 2, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var17, 4, 3, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var17, 5, 1, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var17, 5, 2, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var17, 5, 3, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var17, 6, 1, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 1, var17, 6, 2, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var17, 6, 3, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var17, 7, 1, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var17, 7, 2, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var17, 7, 3, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var17, 8, 1, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var17, 8, 2, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var17, 8, 3, par3StructureBoundingBox);
         }
 
-        for(int var17 = 2; var17 <= this.field_14 - 3; var17 += this.field_14 - 3 - 2) {
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var17 - 1, 2, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var17, 2, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var17 + 1, 2, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var17 - 1, 3, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var17, 3, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var17 + 1, 3, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var17 - 1, 4, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 1, var17, 4, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var17 + 1, 4, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var17 - 1, 5, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var17, 5, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var17 + 1, 5, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var17 - 1, 6, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 1, var17, 6, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var17 + 1, 6, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var17 - 1, 7, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var17, 7, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.WOOL.id, var8, var17 + 1, 7, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var17 - 1, 8, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var17, 8, 0, par3StructureBoundingBox);
-            this.method_56(par1World, Block.SANDSTONE.id, 2, var17 + 1, 8, 0, par3StructureBoundingBox);
+        for(int var18 = 2; var18 <= this.field_14 - 3; var18 += this.field_14 - 3 - 2) {
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var18 - 1, 2, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var18, 2, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var18 + 1, 2, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var18 - 1, 3, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var18, 3, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var18 + 1, 3, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var18 - 1, 4, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 1, var18, 4, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var18 + 1, 4, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var18 - 1, 5, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var18, 5, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var18 + 1, 5, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var18 - 1, 6, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 1, var18, 6, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var18 + 1, 6, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var18 - 1, 7, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var18, 7, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.WOOL.id, var8, var18 + 1, 7, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var18 - 1, 8, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var18, 8, 0, par3StructureBoundingBox);
+            this.method_56(par1World, Block.SANDSTONE.id, 2, var18 + 1, 8, 0, par3StructureBoundingBox);
         }
 
         this.method_61(par1World, par3StructureBoundingBox, 8, 4, 0, 12, 6, 0, Block.SANDSTONE.id, 2, Block.SANDSTONE.id, 2, false);
@@ -221,20 +221,14 @@ public class class_5Mixin extends class_8 {
         this.method_56(par1World, 0, 0, 10, -10, 12, par3StructureBoundingBox);
         this.method_56(par1World, Block.SANDSTONE.id, 1, 10, -10, 13, par3StructureBoundingBox);
         this.method_56(par1World, Block.SANDSTONE.id, 2, 10, -11, 13, par3StructureBoundingBox);
+        ChestGenHooks info = ChestGenHooks.getInfo("pyramidDesertyChest");
 
-        for(int var18 = 0; var18 < 4; ++var18) {
-            if (!this.field_5[var18]) {
-                int var11 = Axis.OFFSET_X[var18] * 2;
-                int var12 = Axis.OFFSET_Z[var18] * 2;
-                this.field_5[var18] = this.method_69(
-                        par1World,
-                        par3StructureBoundingBox,
-                        par2Random,
-                        10 + var11,
-                        -11,
-                        10 + var12,
-                        ChestGenHooks.getItems("pyramidDesertyChest"),
-                        ChestGenHooks.getCount("pyramidDesertyChest", par2Random)
+        for(int var19 = 0; var19 < 4; ++var19) {
+            if (!this.field_5[var19]) {
+                int var11 = Axis.OFFSET_X[var19] * 2;
+                int var12 = Axis.OFFSET_Z[var19] * 2;
+                this.field_5[var19] = this.method_69(
+                        par1World, par3StructureBoundingBox, par2Random, 10 + var11, -11, 10 + var12, info.getItems(par2Random), info.getCount(par2Random)
                 );
             }
         }

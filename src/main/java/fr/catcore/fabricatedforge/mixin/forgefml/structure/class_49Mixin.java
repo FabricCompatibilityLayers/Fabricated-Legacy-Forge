@@ -86,7 +86,7 @@ public abstract class class_49Mixin extends class_53 {
                         5,
                         1,
                         5,
-                        ChestGenHooks.getItems("villageBlacksmith"),
+                        ChestGenHooks.getItems("villageBlacksmith", par2Random),
                         ChestGenHooks.getCount("villageBlacksmith", par2Random)
                 );
             }

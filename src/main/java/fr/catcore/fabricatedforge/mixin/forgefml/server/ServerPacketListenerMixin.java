@@ -286,73 +286,73 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
     public void onPlayerAction(PlayerActionC2SPacket par1Packet14BlockDig) {
         ServerWorld var2 = this.server.getWorld(this.player.dimension);
         if (par1Packet14BlockDig.action == 4) {
-            this.player.method_4580();
+            this.player.dropSelectedItem(false);
+        } else if (par1Packet14BlockDig.action == 3) {
+            this.player.dropSelectedItem(true);
         } else if (par1Packet14BlockDig.action == 5) {
             this.player.stopUsingItem();
         } else {
-            boolean var3 = var2.dimension.dimensionType != 0
+            int var3 = this.server.getSpawnProtectionRadius();
+            boolean var4 = var2.dimension.dimensionType != 0
                     || this.server.getPlayerManager().getAdmins().isEmpty()
                     || this.server.getPlayerManager().canCheat(this.player.username)
+                    || var3 <= 0
                     || this.server.isSinglePlayer();
-            boolean var4 = false;
+            boolean var5 = false;
             if (par1Packet14BlockDig.action == 0) {
-                var4 = true;
+                var5 = true;
+            }
+
+            if (par1Packet14BlockDig.action == 1) {
+                var5 = true;
             }
 
             if (par1Packet14BlockDig.action == 2) {
-                var4 = true;
+                var5 = true;
             }
 
-            int var5 = par1Packet14BlockDig.x;
-            int var6 = par1Packet14BlockDig.y;
-            int var7 = par1Packet14BlockDig.z;
-            if (var4) {
-                double var8 = this.player.x - ((double)var5 + 0.5);
-                double var10 = this.player.y - ((double)var6 + 0.5) + 1.5;
-                double var12 = this.player.z - ((double)var7 + 0.5);
-                double var14 = var8 * var8 + var10 * var10 + var12 * var12;
-                double dist = ((IServerPlayerInteractionManager)this.player.interactionManager).getBlockReachDistance() + 1.0;
+            int var6 = par1Packet14BlockDig.x;
+            int var7 = par1Packet14BlockDig.y;
+            int var8 = par1Packet14BlockDig.z;
+            if (var5) {
+                double var9 = this.player.x - ((double)var6 + 0.5);
+                double var11 = this.player.y - ((double)var7 + 0.5) + 1.5;
+                double var13 = this.player.z - ((double)var8 + 0.5);
+                double var15 = var9 * var9 + var11 * var11 + var13 * var13;
+                double dist = this.player.interactionManager.getBlockReachDistance() + 1.0;
                 dist *= dist;
-                if (var14 > dist) {
+                if (var15 > dist) {
                     return;
                 }
 
-                if (var6 >= this.server.getWorldHeight()) {
+                if (var7 >= this.server.getWorldHeight()) {
                     return;
                 }
             }
 
-            BlockPos var19 = var2.getWorldSpawnPos();
-            int var9 = MathHelper.abs(var5 - var19.x);
-            int var20 = MathHelper.abs(var7 - var19.z);
-            if (var9 > var20) {
-                var20 = var9;
+            BlockPos var17 = var2.getWorldSpawnPos();
+            int var10 = MathHelper.abs(var6 - var17.x);
+            int var18 = MathHelper.abs(var8 - var17.z);
+            if (var10 > var18) {
+                var18 = var10;
             }
 
             if (par1Packet14BlockDig.action == 0) {
-                if (var20 <= this.server.getSpawnProtectionRadius() && !var3) {
-                    ForgeEventFactory.onPlayerInteract(this.player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, var5, var6, var7, 0);
-                    this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var5, var6, var7, var2));
+                if (var18 <= var3 && !var4) {
+                    ForgeEventFactory.onPlayerInteract(this.player, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, var6, var7, var8, 0);
+                    this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var6, var7, var8, var2));
                 } else {
-                    this.player.interactionManager.method_2167(var5, var6, var7, par1Packet14BlockDig.side);
+                    this.player.interactionManager.method_2167(var6, var7, var8, par1Packet14BlockDig.side);
                 }
             } else if (par1Packet14BlockDig.action == 2) {
-                this.player.interactionManager.method_2166(var5, var6, var7);
-                if (var2.getBlock(var5, var6, var7) != 0) {
-                    this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var5, var6, var7, var2));
+                this.player.interactionManager.method_2166(var6, var7, var8);
+                if (var2.getBlock(var6, var7, var8) != 0) {
+                    this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var6, var7, var8, var2));
                 }
             } else if (par1Packet14BlockDig.action == 1) {
-                this.player.interactionManager.method_2175(var5, var6, var7);
-                if (var2.getBlock(var5, var6, var7) != 0) {
-                    this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var5, var6, var7, var2));
-                }
-            } else if (par1Packet14BlockDig.action == 3) {
-                double var11 = this.player.x - ((double)var5 + 0.5);
-                double var13 = this.player.y - ((double)var6 + 0.5);
-                double var15 = this.player.z - ((double)var7 + 0.5);
-                double var17 = var11 * var11 + var13 * var13 + var15 * var15;
-                if (var17 < 256.0) {
-                    this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var5, var6, var7, var2));
+                this.player.interactionManager.method_2175(var6, var7, var8);
+                if (var2.getBlock(var6, var7, var8) != 0) {
+                    this.player.field_2823.sendPacket(new BlockUpdateS2CPacket(var6, var7, var8, var2));
                 }
             }
         }
@@ -371,9 +371,11 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
         int var6 = par1Packet15Place.getY();
         int var7 = par1Packet15Place.getZ();
         int var8 = par1Packet15Place.getSide();
-        boolean var9 = var2.dimension.dimensionType != 0
+        int var9 = this.server.getSpawnProtectionRadius();
+        boolean var10 = var2.dimension.dimensionType != 0
                 || this.server.getPlayerManager().getAdmins().isEmpty()
                 || this.server.getPlayerManager().canCheat(this.player.username)
+                || var9 <= 0
                 || this.server.isSinglePlayer();
         if (par1Packet15Place.getSide() == 255) {
             if (var3 == null) {
@@ -386,18 +388,16 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
             }
         } else if (par1Packet15Place.getY() < this.server.getWorldHeight() - 1
                 || par1Packet15Place.getSide() != 1 && par1Packet15Place.getY() < this.server.getWorldHeight()) {
-            BlockPos var10 = var2.getWorldSpawnPos();
-            int var11 = MathHelper.abs(var5 - var10.x);
-            int var12 = MathHelper.abs(var7 - var10.z);
-            if (var11 > var12) {
-                var12 = var11;
+            BlockPos var11 = var2.getWorldSpawnPos();
+            int var12 = MathHelper.abs(var5 - var11.x);
+            int var13 = MathHelper.abs(var7 - var11.z);
+            if (var12 > var13) {
+                var13 = var12;
             }
 
-            double dist = ((IServerPlayerInteractionManager)this.player.interactionManager).getBlockReachDistance() + 1.0;
+            double dist = this.player.interactionManager.getBlockReachDistance() + 1.0;
             dist *= dist;
-            if (this.field_2910
-                    && this.player.squaredDistanceTo((double)var5 + 0.5, (double)var6 + 0.5, (double)var7 + 0.5) < dist
-                    && (var12 > this.server.getSpawnProtectionRadius() || var9)) {
+            if (this.field_2910 && this.player.squaredDistanceTo((double)var5 + 0.5, (double)var6 + 0.5, (double)var7 + 0.5) < dist && (var13 > var9 || var10)) {
                 this.player
                         .interactionManager
                         .method_2170(
@@ -458,11 +458,11 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
         if (var3 == null || var3.getMaxUseTime() == 0) {
             this.player.skipPacketSlotUpdates = true;
             this.player.inventory.main[this.player.inventory.selectedSlot] = ItemStack.copyOf(this.player.inventory.main[this.player.inventory.selectedSlot]);
-            Slot var13 = this.player.openScreenHandler.getSlot(this.player.inventory, this.player.inventory.selectedSlot);
+            Slot var14 = this.player.openScreenHandler.getSlot(this.player.inventory, this.player.inventory.selectedSlot);
             this.player.openScreenHandler.sendContentUpdates();
             this.player.skipPacketSlotUpdates = false;
             if (!ItemStack.equalsAll(this.player.inventory.getMainHandStack(), par1Packet15Place.getStack())) {
-                this.sendPacket(new ScreenHandlerSlotUpdateS2CPacket(this.player.openScreenHandler.syncId, var13.id, this.player.inventory.getMainHandStack()));
+                this.sendPacket(new ScreenHandlerSlotUpdateS2CPacket(this.player.openScreenHandler.syncId, var14.id, this.player.inventory.getMainHandStack()));
             }
         }
     }

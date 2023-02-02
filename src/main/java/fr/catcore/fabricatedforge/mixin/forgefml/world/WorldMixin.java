@@ -1,12 +1,12 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSetMultimap;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import fr.catcore.fabricatedforge.mixininterface.IWorld;
 import fr.catcore.fabricatedforge.forged.ReflectionUtils;
+import fr.catcore.modremapperapi.api.mixin.Public;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -90,7 +90,8 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Shadow public List<Entity> entities;
     @Shadow protected List<Entity> unloadedEntities;
 
-    @Shadow protected abstract void onEntityRemoved(Entity entity);
+    @Shadow
+    public abstract void onEntityRemoved(Entity entity);
 
     @Shadow public abstract void checkChunk(Entity entity);
 
@@ -101,10 +102,14 @@ public abstract class WorldMixin implements BlockView, IWorld {
 
     @Shadow public abstract boolean isRegionLoaded(int minX, int minY, int minZ, int maxX, int maxY, int maxZ);
 
-    @Shadow protected float rainGradient;
-    @Shadow protected float thunderGradient;
-    @Shadow protected float thunderGradientPrev;
-    @Shadow protected float rainGradientPrev;
+    @Shadow
+    public float rainGradient;
+    @Shadow
+    public float thunderGradient;
+    @Shadow
+    public float thunderGradientPrev;
+    @Shadow
+    public float rainGradientPrev;
     @Shadow public Random random;
     @Shadow
     public int field_4553;
@@ -136,8 +141,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Shadow public boolean isClient;
     @Mutable
     @Shadow @Final public VillageState villageState;
-    @Shadow protected int field_23088;
-    @Unique // Public
+    @Public
     private static double MAX_ENTITY_RADIUS = ReflectionUtils.World_MAX_ENTITY_RADIUS;
 
     private static PersistentStateManager s_mapStorage;
@@ -664,6 +668,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
             Entity var2 = (Entity)this.entities.get(var1);
 
             try {
+                ++var2.ticksAlive;
                 var2.tick();
             } catch (Throwable var131) {
                 CrashReport var4 = CrashReport.create(var131, "Ticking entity");
@@ -770,7 +775,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
             if (var9.isRemoved()) {
                 var14.remove();
                 if (this.isChunkInsideSpawnChunks(var9.x >> 4, var9.z >> 4)) {
-                    IChunk var11 = this.getChunk(var9.x >> 4, var9.z >> 4);
+                    Chunk var11 = this.getChunk(var9.x >> 4, var9.z >> 4);
                     if (var11 != null) {
                         var11.cleanChunkBlockTileEntity(var9.x & 15, var9.y, var9.z & 15);
                     }
@@ -780,7 +785,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
 
         if (!this.unloadedBlockEntities.isEmpty()) {
             for(Object tile : this.unloadedBlockEntities) {
-                ((IBlockEntity)tile).onChunkUnload();
+                ((BlockEntity)tile).onChunkUnload();
             }
 
             this.blockEntities.removeAll(this.unloadedBlockEntities);
@@ -797,7 +802,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
                         this.blockEntities.add(var12);
                     }
                 } else if (this.isChunkInsideSpawnChunks(var12.x >> 4, var12.z >> 4)) {
-                    IChunk var15 = this.getChunk(var12.x >> 4, var12.z >> 4);
+                    Chunk var15 = this.getChunk(var12.x >> 4, var12.z >> 4);
                     if (var15 != null) {
                         var15.cleanChunkBlockTileEntity(var12.x & 15, var12.y, var12.z & 15);
                     }
@@ -853,6 +858,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
                 if (par1Entity.vehicle != null) {
                     par1Entity.tickRiding();
                 } else {
+                    ++par1Entity.ticksAlive;
                     par1Entity.tick();
                 }
             }
@@ -1048,10 +1054,6 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Override
     public void updateWeatherBody() {
         if (!this.dimension.isNether) {
-            if (this.field_23088 > 0) {
-                --this.field_23088;
-            }
-
             int var1 = this.levelProperties.getThunderTime();
             if (var1 <= 0) {
                 if (this.levelProperties.isThundering()) {
@@ -1674,17 +1676,17 @@ public abstract class WorldMixin implements BlockView, IWorld {
     }
 
     @Override
-    public boolean isBlockSolidOnSide(int X, int Y, int Z, ForgeDirection side) {
-        return this.isBlockSolidOnSide(X, Y, Z, side, false);
+    public boolean isBlockSolidOnSide(int x, int y, int z, ForgeDirection side) {
+        return this.isBlockSolidOnSide(x, y, z, side, false);
     }
 
     @Override
-    public boolean isBlockSolidOnSide(int X, int Y, int Z, ForgeDirection side, boolean _default) {
-        if (X >= -30000000 && Z >= -30000000 && X < 30000000 && Z < 30000000) {
-            Chunk var5 = this.chunkProvider.getChunk(X >> 4, Z >> 4);
+    public boolean isBlockSolidOnSide(int x, int y, int z, ForgeDirection side, boolean _default) {
+        if (x >= -30000000 && z >= -30000000 && x < 30000000 && z < 30000000) {
+            Chunk var5 = this.chunkProvider.getChunk(x >> 4, z >> 4);
             if (var5 != null && !var5.isEmpty()) {
-                Block block = Block.BLOCKS[this.getBlock(X, Y, Z)];
-                return block == null ? false : ((IBlock)block).isBlockSolidOnSide((World)(Object) this, X, Y, Z, side);
+                Block block = Block.BLOCKS[this.getBlock(x, y, z)];
+                return block == null ? false : block.isBlockSolidOnSide((World)(Object) this, x, y, z, side);
             } else {
                 return _default;
             }

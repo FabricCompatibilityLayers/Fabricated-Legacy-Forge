@@ -217,7 +217,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
             return false;
         } else {
             Item item = par3ItemStack != null ? par3ItemStack.getItem() : null;
-            if (item != null && ((IItem)item).onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, par8, par9, par10)) {
+            if (item != null && item.onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, par8, par9, par10)) {
                 if (par3ItemStack.count <= 0) {
                     ForgeEventFactory.onPlayerDestroyItem(this.player, par3ItemStack);
                 }
@@ -227,7 +227,12 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
                 int var11 = par2World.getBlock(par4, par5, par6);
                 Block block = Block.BLOCKS[var11];
                 boolean result = false;
-                if (block != null) {
+                if (block != null
+                        && (
+                        !par1EntityPlayer.isSneaking()
+                                || par1EntityPlayer.method_2640() == null
+                                || par1EntityPlayer.method_2640().getItem().shouldPassSneakingClickToBlock(par2World, par4, par5, par6)
+                )) {
                     if (event.useBlock != Event.Result.DENY) {
                         result = block.onActivated(par2World, par4, par5, par6, par1EntityPlayer, par7, par8, par9, par10);
                     } else {
@@ -236,7 +241,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
                     }
                 }
 
-                if (par3ItemStack != null && !result) {
+                if (par3ItemStack != null && !result && event.useItem != Event.Result.DENY) {
                     int meta = par3ItemStack.getData();
                     int size = par3ItemStack.count;
                     result = par3ItemStack.method_3413(par1EntityPlayer, par2World, par4, par5, par6, par7, par8, par9, par10);

@@ -53,7 +53,7 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
             var1.setDaemon(true);
             var1.start();
             LogFileWriter.method_1974();
-            field_3848.info("Starting minecraft server version 1.4.5");
+            field_3848.info("Starting minecraft server version 1.4.6");
             if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L) {
                 field_3848.warning("To start the server with more ram, launch it as \"java -Xmx1024M -Xms1024M -jar minecraft_server.jar\"");
             }

@@ -164,7 +164,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
             this.doneChunks.clear();
         }
 
-        long time = -System.currentTimeMillis();
+        long startTime = System.nanoTime();
 
         while(var3.hasNext()) {
             ChunkPos var4 = (ChunkPos)var3.next();
@@ -174,7 +174,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
             Chunk var7 = this.getChunk(var4.x, var4.z);
             this.method_3605(var5, var6, var7);
             this.profiler.swap("tickChunk");
-            if (System.currentTimeMillis() + time <= 4L && this.doneChunks.add(var4)) {
+            if (System.nanoTime() - startTime <= 4000000L && this.doneChunks.add(var4)) {
                 var7.tick();
             }
 
@@ -187,7 +187,6 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
                 int var11 = this.getSurfaceY(var9, var10);
                 if (this.isBeingRainedOn(var9, var11, var10)) {
                     this.addEntity(new LightningBoltEntity(this, (double)var9, (double)var11, (double)var10));
-                    this.field_23088 = 2;
                 }
             }
 
@@ -406,7 +405,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      */
     @Overwrite
     protected void placeBonusChest() {
-        BonusChestFeature var1 = new BonusChestFeature(ChestGenHooks.getItems("bonusChest"), ChestGenHooks.getCount("bonusChest", this.random));
+        BonusChestFeature var1 = new BonusChestFeature(ChestGenHooks.getItems("bonusChest", this.random), ChestGenHooks.getCount("bonusChest", this.random));
 
         for(int var2 = 0; var2 < 10; ++var2) {
             int var3 = this.levelProperties.getSpawnX() + this.random.nextInt(6) - this.random.nextInt(6);

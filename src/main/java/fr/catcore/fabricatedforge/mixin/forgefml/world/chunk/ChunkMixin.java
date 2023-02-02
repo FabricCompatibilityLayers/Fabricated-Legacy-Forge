@@ -93,7 +93,7 @@ public abstract class ChunkMixin implements IChunk {
                     if (var9 != 0) {
                         int var10 = var8 >> 4;
                         if (this.chunkSections[var10] == null) {
-                            this.chunkSections[var10] = new ChunkSection(var10 << 4);
+                            this.chunkSections[var10] = new ChunkSection(var10 << 4, !world.dimension.isNether);
                         }
 
                         this.chunkSections[var10].setBlock(var6, var8 & 15, var7, var9);
@@ -120,7 +120,7 @@ public abstract class ChunkMixin implements IChunk {
                     if (id != 0) {
                         int var10 = y >> 4;
                         if (this.chunkSections[var10] == null) {
-                            this.chunkSections[var10] = new ChunkSection(var10 << 4);
+                            this.chunkSections[var10] = new ChunkSection(var10 << 4, !world.dimension.isNether);
                         }
 
                         this.chunkSections[var10].setBlock(x, y & 15, z, id);
@@ -145,7 +145,7 @@ public abstract class ChunkMixin implements IChunk {
                     if (id != 0) {
                         int storageBlock = y >> 4;
                         if (this.chunkSections[storageBlock] == null) {
-                            this.chunkSections[storageBlock] = new ChunkSection(storageBlock << 4);
+                            this.chunkSections[storageBlock] = new ChunkSection(storageBlock << 4, !world.dimension.isNether);
                         }
 
                         this.chunkSections[storageBlock].setBlock(x, y & 15, z, id);
@@ -246,7 +246,7 @@ public abstract class ChunkMixin implements IChunk {
                     return false;
                 }
 
-                var10 = this.chunkSections[par2 >> 4] = new ChunkSection(par2 >> 4 << 4);
+                var10 = this.chunkSections[par2 >> 4] = new ChunkSection(par2 >> 4 << 4, !world.dimension.isNether);
                 var11 = par2 >= var7;
             }
 
@@ -354,7 +354,7 @@ public abstract class ChunkMixin implements IChunk {
                 ? (this.isAboveHighestBlock(par2, par3, par4) ? par1EnumSkyBlock.defaultValue : 0)
                 : (
                 par1EnumSkyBlock == LightType.SKY
-                        ? var5.getSkyLight(par2, par3 & 15, par4)
+                        ? (this.world.dimension.isNether ? 0 : var5.getSkyLight(par2, par3 & 15, par4))
                         : (par1EnumSkyBlock == LightType.BLOCK ? var5.getBlockLight(par2, par3 & 15, par4) : par1EnumSkyBlock.defaultValue)
         );
     }
@@ -368,7 +368,7 @@ public abstract class ChunkMixin implements IChunk {
         if (par3 >> 4 < this.chunkSections.length && par3 >> 4 >= 0) {
             ChunkSection var6 = this.chunkSections[par3 >> 4];
             if (var6 == null) {
-                var6 = this.chunkSections[par3 >> 4] = new ChunkSection(par3 >> 4 << 4);
+                var6 = this.chunkSections[par3 >> 4] = new ChunkSection(par3 >> 4 << 4, !this.world.dimension.isNether);
                 this.calculateSkyLight();
             }
 
@@ -628,60 +628,63 @@ public abstract class ChunkMixin implements IChunk {
         }
 
         int var5 = 0;
+        boolean var6 = !this.world.dimension.isNether;
 
-        for(int var6 = 0; var6 < this.chunkSections.length; ++var6) {
-            if ((par2 & 1 << var6) != 0) {
-                if (this.chunkSections[var6] == null) {
-                    this.chunkSections[var6] = new ChunkSection(var6 << 4);
+        for(int var7 = 0; var7 < this.chunkSections.length; ++var7) {
+            if ((par2 & 1 << var7) != 0) {
+                if (this.chunkSections[var7] == null) {
+                    this.chunkSections[var7] = new ChunkSection(var7 << 4, var6);
                 }
 
-                byte[] var7 = this.chunkSections[var6].getBlocks();
-                System.arraycopy(par1ArrayOfByte, var5, var7, 0, var7.length);
-                var5 += var7.length;
-            } else if (par4 && this.chunkSections[var6] != null) {
-                this.chunkSections[var6] = null;
-            }
-        }
-
-        for(int var17 = 0; var17 < this.chunkSections.length; ++var17) {
-            if ((par2 & 1 << var17) != 0 && this.chunkSections[var17] != null) {
-                ChunkNibbleArray var8 = this.chunkSections[var17].getBlockData();
-                System.arraycopy(par1ArrayOfByte, var5, var8.bytes, 0, var8.bytes.length);
-                var5 += var8.bytes.length;
+                byte[] var8 = this.chunkSections[var7].getBlocks();
+                System.arraycopy(par1ArrayOfByte, var5, var8, 0, var8.length);
+                var5 += var8.length;
+            } else if (par4 && this.chunkSections[var7] != null) {
+                this.chunkSections[var7] = null;
             }
         }
 
         for(int var18 = 0; var18 < this.chunkSections.length; ++var18) {
             if ((par2 & 1 << var18) != 0 && this.chunkSections[var18] != null) {
-                ChunkNibbleArray var8 = this.chunkSections[var18].getBlockLight();
-                System.arraycopy(par1ArrayOfByte, var5, var8.bytes, 0, var8.bytes.length);
-                var5 += var8.bytes.length;
+                ChunkNibbleArray var9 = this.chunkSections[var18].getBlockData();
+                System.arraycopy(par1ArrayOfByte, var5, var9.bytes, 0, var9.bytes.length);
+                var5 += var9.bytes.length;
             }
         }
 
         for(int var19 = 0; var19 < this.chunkSections.length; ++var19) {
             if ((par2 & 1 << var19) != 0 && this.chunkSections[var19] != null) {
-                ChunkNibbleArray var8 = this.chunkSections[var19].getSkyLight();
-                System.arraycopy(par1ArrayOfByte, var5, var8.bytes, 0, var8.bytes.length);
-                var5 += var8.bytes.length;
+                ChunkNibbleArray var9 = this.chunkSections[var19].getBlockLight();
+                System.arraycopy(par1ArrayOfByte, var5, var9.bytes, 0, var9.bytes.length);
+                var5 += var9.bytes.length;
             }
         }
 
-        for(int var20 = 0; var20 < this.chunkSections.length; ++var20) {
-            if ((par3 & 1 << var20) != 0) {
-                if (this.chunkSections[var20] == null) {
+        if (var6) {
+            for(int var20 = 0; var20 < this.chunkSections.length; ++var20) {
+                if ((par2 & 1 << var20) != 0 && this.chunkSections[var20] != null) {
+                    ChunkNibbleArray var9 = this.chunkSections[var20].getSkyLight();
+                    System.arraycopy(par1ArrayOfByte, var5, var9.bytes, 0, var9.bytes.length);
+                    var5 += var9.bytes.length;
+                }
+            }
+        }
+
+        for(int var21 = 0; var21 < this.chunkSections.length; ++var21) {
+            if ((par3 & 1 << var21) != 0) {
+                if (this.chunkSections[var21] == null) {
                     var5 += 2048;
                 } else {
-                    ChunkNibbleArray var8 = this.chunkSections[var20].method_3944();
-                    if (var8 == null) {
-                        var8 = this.chunkSections[var20].method_3948();
+                    ChunkNibbleArray var9 = this.chunkSections[var21].method_3944();
+                    if (var9 == null) {
+                        var9 = this.chunkSections[var21].method_3948();
                     }
 
-                    System.arraycopy(par1ArrayOfByte, var5, var8.bytes, 0, var8.bytes.length);
-                    var5 += var8.bytes.length;
+                    System.arraycopy(par1ArrayOfByte, var5, var9.bytes, 0, var9.bytes.length);
+                    var5 += var9.bytes.length;
                 }
-            } else if (par4 && this.chunkSections[var20] != null && this.chunkSections[var20].method_3944() != null) {
-                this.chunkSections[var20].method_3943();
+            } else if (par4 && this.chunkSections[var21] != null && this.chunkSections[var21].method_3944() != null) {
+                this.chunkSections[var21].method_3943();
             }
         }
 
@@ -690,9 +693,9 @@ public abstract class ChunkMixin implements IChunk {
             int var10000 = var5 + this.biomeArray.length;
         }
 
-        for(int var21 = 0; var21 < this.chunkSections.length; ++var21) {
-            if (this.chunkSections[var21] != null && (par2 & 1 << var21) != 0) {
-                this.chunkSections[var21].calculateCounts();
+        for(int var22 = 0; var22 < this.chunkSections.length; ++var22) {
+            if (this.chunkSections[var22] != null && (par2 & 1 << var22) != 0) {
+                this.chunkSections[var22].calculateCounts();
             }
         }
 

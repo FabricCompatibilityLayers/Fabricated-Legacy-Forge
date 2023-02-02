@@ -97,6 +97,7 @@
     "network.listener.PacketListenerMixin",
     "network.packet.s2c.play.ChunkUpdateS2CPacketMixin",
     "network.packet.s2c.play.class_687Mixin",
+    "recipe.FireworkRecipeTypeMixin",
     "recipe.RecipeDispatcherMixin",
     "recipe.SmeltingRecipeRegistryMixin",
     "screen.FurnaceScreenHandlerMixin",

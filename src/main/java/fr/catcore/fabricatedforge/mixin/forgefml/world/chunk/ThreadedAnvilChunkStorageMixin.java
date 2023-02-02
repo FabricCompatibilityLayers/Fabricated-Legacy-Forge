@@ -109,84 +109,90 @@ public abstract class ThreadedAnvilChunkStorageMixin implements IThreadedAnvilCh
         par3NBTTagCompound.putBoolean("TerrainPopulated", par1Chunk.terrainPopulated);
         ChunkSection[] var4 = par1Chunk.getBlockStorage();
         NbtList var5 = new NbtList("Sections");
+        boolean var6 = !par2World.dimension.isNether;
 
-        for(ChunkSection var9 : var4) {
-            if (var9 != null) {
-                NbtCompound var10 = new NbtCompound();
-                var10.putByte("Y", (byte)(var9.getYOffset() >> 4 & 0xFF));
-                var10.putByteArray("Blocks", var9.getBlocks());
-                if (var9.method_3944() != null) {
-                    var10.putByteArray("Add", var9.method_3944().bytes);
+        for(ChunkSection var10 : var4) {
+            if (var10 != null) {
+                NbtCompound var11 = new NbtCompound();
+                var11.putByte("Y", (byte)(var10.getYOffset() >> 4 & 0xFF));
+                var11.putByteArray("Blocks", var10.getBlocks());
+                if (var10.method_3944() != null) {
+                    var11.putByteArray("Add", var10.method_3944().bytes);
                 }
 
-                var10.putByteArray("Data", var9.getBlockData().bytes);
-                var10.putByteArray("SkyLight", var9.getSkyLight().bytes);
-                var10.putByteArray("BlockLight", var9.getBlockLight().bytes);
-                var5.method_1217(var10);
+                var11.putByteArray("Data", var10.getBlockData().bytes);
+                var11.putByteArray("BlockLight", var10.getBlockLight().bytes);
+                if (var6) {
+                    var11.putByteArray("SkyLight", var10.getSkyLight().bytes);
+                } else {
+                    var11.putByteArray("SkyLight", new byte[var10.getBlockLight().bytes.length]);
+                }
+
+                var5.method_1217(var11);
             }
         }
 
         par3NBTTagCompound.put("Sections", var5);
         par3NBTTagCompound.putByteArray("Biomes", par1Chunk.getBiomeArray());
         par1Chunk.containsEntities = false;
-        NbtList var15 = new NbtList();
+        NbtList var16 = new NbtList();
 
-        for(int var21 = 0; var21 < par1Chunk.entities.length; ++var21) {
-            for(Entity var19 : (List<Entity>) par1Chunk.entities[var21]) {
+        for(int var22 = 0; var22 < par1Chunk.entities.length; ++var22) {
+            for(Entity var21 : (List<Entity>) par1Chunk.entities[var22]) {
                 par1Chunk.containsEntities = true;
-                NbtCompound var10 = new NbtCompound();
+                NbtCompound var11 = new NbtCompound();
 
                 try {
-                    if (var19.saveToNbt(var10)) {
-                        var15.method_1217(var10);
+                    if (var21.saveToNbt(var11)) {
+                        var16.method_1217(var11);
                     }
-                } catch (Exception var201) {
+                } catch (Exception var23) {
                     FMLLog.log(
                             Level.SEVERE,
-                            var201,
+                            var23,
                             "An Entity type %s has thrown an exception trying to write state. It will not persist. Report this to the mod author",
-                            new Object[]{var19.getClass().getName()}
+                            new Object[]{var21.getClass().getName()}
                     );
                 }
             }
         }
 
-        par3NBTTagCompound.put("Entities", var15);
-        NbtList var16 = new NbtList();
+        par3NBTTagCompound.put("Entities", var16);
+        NbtList var17 = new NbtList();
 
-        for(BlockEntity var21 : (Collection<BlockEntity>) par1Chunk.blockEntities.values()) {
-            NbtCompound var10 = new NbtCompound();
+        for(BlockEntity var22 : (Collection<BlockEntity>) par1Chunk.blockEntities.values()) {
+            NbtCompound var11 = new NbtCompound();
 
             try {
-                var21.toNbt(var10);
-                var16.method_1217(var10);
-            } catch (Exception var19) {
+                var22.toNbt(var11);
+                var17.method_1217(var11);
+            } catch (Exception var201) {
                 FMLLog.log(
                         Level.SEVERE,
-                        var19,
+                        var201,
                         "A TileEntity type %s has throw an exception trying to write state. It will not persist. Report this to the mod author",
-                        new Object[]{var21.getClass().getName()}
+                        new Object[]{var22.getClass().getName()}
                 );
             }
         }
 
-        par3NBTTagCompound.put("TileEntities", var16);
-        List<ScheduledTick> var18 = par2World.getScheduledTicks(par1Chunk, false);
-        if (var18 != null) {
-            long var20 = par2World.getLastUpdateTime();
-            NbtList var11 = new NbtList();
+        par3NBTTagCompound.put("TileEntities", var17);
+        List<ScheduledTick> var20 = par2World.getScheduledTicks(par1Chunk, false);
+        if (var20 != null) {
+            long var19 = par2World.getLastUpdateTime();
+            NbtList var12 = new NbtList();
 
-            for(ScheduledTick var13 : var18) {
-                NbtCompound var14 = new NbtCompound();
-                var14.putInt("i", var13.blockId);
-                var14.putInt("x", var13.x);
-                var14.putInt("y", var13.y);
-                var14.putInt("z", var13.z);
-                var14.putInt("t", (int)(var13.time - var20));
-                var11.method_1217(var14);
+            for(ScheduledTick var14 : var20) {
+                NbtCompound var15 = new NbtCompound();
+                var15.putInt("i", var14.blockId);
+                var15.putInt("x", var14.x);
+                var15.putInt("y", var14.y);
+                var15.putInt("z", var14.z);
+                var15.putInt("t", (int)(var14.time - var19));
+                var12.method_1217(var15);
             }
 
-            par3NBTTagCompound.put("TileTicks", var11);
+            par3NBTTagCompound.put("TileTicks", var12);
         }
     }
 

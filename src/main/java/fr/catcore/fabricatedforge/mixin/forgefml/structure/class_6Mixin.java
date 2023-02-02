@@ -157,7 +157,7 @@ public abstract class class_6Mixin extends class_8 {
             ChestGenHooks chest = ChestGenHooks.getInfo("pyramidJungleChest");
             if (!this.field_9) {
                 this.field_9 = this.method_68(
-                        par1World, par3StructureBoundingBox, par2Random, 3, -2, 1, 2, dispenser.getItems(), dispenser.getCount(par2Random)
+                        par1World, par3StructureBoundingBox, par2Random, 3, -2, 1, 2, dispenser.getItems(par2Random), dispenser.getCount(par2Random)
                 );
             }
 
@@ -174,14 +174,14 @@ public abstract class class_6Mixin extends class_8 {
             this.method_56(par1World, Block.field_408.id, 0, 9, -2, 4, par3StructureBoundingBox);
             if (!this.field_10) {
                 this.field_10 = this.method_68(
-                        par1World, par3StructureBoundingBox, par2Random, 9, -2, 3, 4, dispenser.getItems(), dispenser.getCount(par2Random)
+                        par1World, par3StructureBoundingBox, par2Random, 9, -2, 3, 4, dispenser.getItems(par2Random), dispenser.getCount(par2Random)
                 );
             }
 
             this.method_56(par1World, Block.VINE.id, 15, 8, -1, 3, par3StructureBoundingBox);
             this.method_56(par1World, Block.VINE.id, 15, 8, -2, 3, par3StructureBoundingBox);
             if (!this.field_7) {
-                this.field_7 = this.method_69(par1World, par3StructureBoundingBox, par2Random, 8, -3, 3, chest.getItems(), chest.getCount(par2Random));
+                this.field_7 = this.method_69(par1World, par3StructureBoundingBox, par2Random, 8, -3, 3, chest.getItems(par2Random), chest.getCount(par2Random));
             }
 
             this.method_56(par1World, Block.MOSSY_COBBLESTONE.id, 0, 9, -3, 2, par3StructureBoundingBox);
@@ -212,7 +212,9 @@ public abstract class class_6Mixin extends class_8 {
             this.method_56(par1World, Block.field_355.id, this.method_75(Block.field_355.id, 4), 10, -1, 8, par3StructureBoundingBox);
             this.method_56(par1World, Block.field_447.id, this.method_75(Block.field_447.id, 2), 10, -2, 10, par3StructureBoundingBox);
             if (!this.field_8) {
-                this.field_8 = this.method_69(par1World, par3StructureBoundingBox, par2Random, 9, -3, 10, chest.getItems(), chest.getCount(par2Random));
+                this.field_8 = this.method_69(
+                        par1World, par3StructureBoundingBox, par2Random, 9, -3, 10, chest.getItems(par2Random), chest.getCount(par2Random)
+                );
             }
 
             return true;

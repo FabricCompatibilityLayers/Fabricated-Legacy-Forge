@@ -9,7 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.client.SkyProvider;
+import net.minecraftforge.client.IRenderHandler;
 
 public interface IDimension {
     void setDimension(int dim);
@@ -23,16 +23,16 @@ public interface IDimension {
     double getMovementFactor();
 
     @Environment(EnvType.CLIENT)
-    SkyProvider getSkyProvider();
+    IRenderHandler getSkyRenderer();
 
     @Environment(EnvType.CLIENT)
-    void setSkyProvider(SkyProvider skyProvider);
+    void setSkyRenderer(IRenderHandler skyRenderer);
 
     @Environment(EnvType.CLIENT)
-    SkyProvider getCloudRenderer();
+    IRenderHandler getCloudRenderer();
 
     @Environment(EnvType.CLIENT)
-    void setCloudRenderer(SkyProvider renderer);
+    void setCloudRenderer(IRenderHandler renderer);
 
     BlockPos getRandomizedSpawnPoint();
 

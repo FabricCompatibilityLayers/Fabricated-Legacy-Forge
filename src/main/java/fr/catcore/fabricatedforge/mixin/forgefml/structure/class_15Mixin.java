@@ -60,7 +60,7 @@ public abstract class class_15Mixin extends class_31 {
                             3,
                             2,
                             3,
-                            ChestGenHooks.getItems("strongholdCorridor"),
+                            ChestGenHooks.getItems("strongholdCorridor", par2Random),
                             ChestGenHooks.getCount("strongholdCorridor", par2Random)
                     );
                 }

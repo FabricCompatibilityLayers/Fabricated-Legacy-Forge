@@ -5,9 +5,11 @@ import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.entity.MobSpawnerBlockEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.DungeonFeature;
 import net.minecraft.world.gen.feature.Feature;
+import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DungeonHooks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -51,30 +53,30 @@ public abstract class DungeonFeatureMixin extends Feature {
         }
 
         if (var9 >= 1 && var9 <= 5) {
-            for(int var181 = par3 - var7 - 1; var181 <= par3 + var7 + 1; ++var181) {
+            for(int var17 = par3 - var7 - 1; var17 <= par3 + var7 + 1; ++var17) {
                 for(int var11 = par4 + var6; var11 >= par4 - 1; --var11) {
                     for(int var12 = par5 - var8 - 1; var12 <= par5 + var8 + 1; ++var12) {
-                        if (var181 != par3 - var7 - 1
+                        if (var17 != par3 - var7 - 1
                                 && var11 != par4 - 1
                                 && var12 != par5 - var8 - 1
-                                && var181 != par3 + var7 + 1
+                                && var17 != par3 + var7 + 1
                                 && var11 != par4 + var6 + 1
                                 && var12 != par5 + var8 + 1) {
-                            par1World.method_3690(var181, var11, var12, 0);
-                        } else if (var11 >= 0 && !par1World.getMaterial(var181, var11 - 1, var12).isSolid()) {
-                            par1World.method_3690(var181, var11, var12, 0);
-                        } else if (par1World.getMaterial(var181, var11, var12).isSolid()) {
+                            par1World.method_3690(var17, var11, var12, 0);
+                        } else if (var11 >= 0 && !par1World.getMaterial(var17, var11 - 1, var12).isSolid()) {
+                            par1World.method_3690(var17, var11, var12, 0);
+                        } else if (par1World.getMaterial(var17, var11, var12).isSolid()) {
                             if (var11 == par4 - 1 && par2Random.nextInt(4) != 0) {
-                                par1World.method_3690(var181, var11, var12, Block.MOSSY_COBBLESTONE.id);
+                                par1World.method_3690(var17, var11, var12, Block.MOSSY_COBBLESTONE.id);
                             } else {
-                                par1World.method_3690(var181, var11, var12, Block.STONE_BRICKS.id);
+                                par1World.method_3690(var17, var11, var12, Block.STONE_BRICKS.id);
                             }
                         }
                     }
                 }
             }
 
-            for(int var191 = 0; var191 < 2; ++var191) {
+            for(int var18 = 0; var18 < 2; ++var18) {
                 for(int var11 = 0; var11 < 3; ++var11) {
                     int var12 = par3 + par2Random.nextInt(var7 * 2 + 1) - var7;
                     int var14 = par5 + par2Random.nextInt(var8 * 2 + 1) - var8;
@@ -100,12 +102,8 @@ public abstract class DungeonFeatureMixin extends Feature {
                             par1World.method_3690(var12, par4, var14, Block.field_407.id);
                             ChestBlockEntity var16 = (ChestBlockEntity)par1World.getBlockEntity(var12, par4, var14);
                             if (var16 != null) {
-                                for(int var17 = 0; var17 < DungeonHooks.getDungeonLootTries(); ++var17) {
-                                    ItemStack var18 = DungeonHooks.getRandomDungeonLoot(par2Random);
-                                    if (var18 != null) {
-                                        var16.setInvStack(par2Random.nextInt(var16.getInvSize()), var18);
-                                    }
-                                }
+                                ChestGenHooks info = ChestGenHooks.getInfo("dungeonChest");
+                                WeightedRandomChestContent.method_2379(par2Random, info.getItems(par2Random), var16, info.getCount(par2Random));
                             }
                             break;
                         }
@@ -116,7 +114,7 @@ public abstract class DungeonFeatureMixin extends Feature {
             par1World.method_3690(par3, par4, par5, Block.SPAWNER.id);
             MobSpawnerBlockEntity var19 = (MobSpawnerBlockEntity)par1World.getBlockEntity(par3, par4, par5);
             if (var19 != null) {
-                var19.method_527(DungeonHooks.getRandomDungeonMob(par2Random));
+                var19.method_527(this.getRandomSpawnerMob(par2Random));
             } else {
                 System.err.println("Failed to fetch mob spawner entity at (" + par3 + ", " + par4 + ", " + par5 + ")");
             }
@@ -125,5 +123,23 @@ public abstract class DungeonFeatureMixin extends Feature {
         } else {
             return false;
         }
+    }
+
+    /**
+     * @author forge
+     * @reason hook
+     */
+    @Overwrite
+    private ItemStack method_4030(Random par1Random) {
+        return ChestGenHooks.getOneItem("dungeonChest", par1Random);
+    }
+
+    /**
+     * @author forge
+     * @reason hook
+     */
+    @Overwrite
+    private String getRandomSpawnerMob(Random par1Random) {
+        return DungeonHooks.getRandomDungeonMob(par1Random);
     }
 }

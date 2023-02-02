@@ -12,6 +12,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.class_690;
 import net.minecraft.network.class_716;
+import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import net.minecraft.network.packet.s2c.play.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
@@ -105,6 +106,7 @@ public abstract class PlayerManagerMixin implements IPlayerManager {
         );
         var6.sendPacket(new PlayerSpawnPositionChangeS2CPacket(var5.x, var5.y, var5.z));
         var6.sendPacket(new PlayerAbilitiesS2CPacket(par2EntityPlayerMP.abilities));
+        var6.sendPacket(new UpdateSelectedSlotC2SPacket(par2EntityPlayerMP.inventory.selectedSlot));
         this.sendWorldInfo(par2EntityPlayerMP, var4);
         this.sendToAll(new ChatMessageS2CPacket("§e" + par2EntityPlayerMP.username + " joined the game."));
         this.sendPlayerList(par2EntityPlayerMP);

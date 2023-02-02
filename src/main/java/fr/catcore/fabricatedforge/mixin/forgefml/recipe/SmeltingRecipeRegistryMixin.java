@@ -21,12 +21,6 @@ public class SmeltingRecipeRegistryMixin implements ISmeltingRecipeRegistry {
     private HashMap<List<Integer>, ItemStack> metaSmeltingList = new HashMap<>();
     private HashMap<List<Integer>, Float> metaExperience = new HashMap<>();
 
-    @Deprecated
-    @Override
-    public void addSmelting(int itemID, int metadata, ItemStack itemstack) {
-        this.addSmelting(itemID, metadata, itemstack, 0.0F);
-    }
-
     @Override
     public void addSmelting(int itemID, int metadata, ItemStack itemstack, float experience) {
         this.metaSmeltingList.put(Arrays.asList(itemID, metadata), itemstack);

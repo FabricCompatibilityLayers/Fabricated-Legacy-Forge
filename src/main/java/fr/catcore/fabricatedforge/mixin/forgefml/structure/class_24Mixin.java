@@ -122,7 +122,7 @@ public abstract class class_24Mixin extends class_31 {
                             3,
                             4,
                             8,
-                            ChestGenHooks.getItems("strongholdCrossing"),
+                            ChestGenHooks.getItems("strongholdCrossing", par2Random),
                             ChestGenHooks.getCount("strongholdCrossing", par2Random)
                     );
             }

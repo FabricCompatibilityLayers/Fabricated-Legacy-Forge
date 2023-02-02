@@ -2,6 +2,7 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world.explosion;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.ProtectionEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -74,7 +75,7 @@ public class ExplosionMixin {
                                 Block var26 = Block.BLOCKS[var25];
                                 float var27 = this.causingEntity != null
                                         ? this.causingEntity.method_4444((Explosion)(Object) this, var26, var22, var23, var24)
-                                        : ((IBlock)var26).getExplosionResistance(this.causingEntity, this.world, var22, var23, var24, this.x, this.y, this.z);
+                                        : var26.getExplosionResistance(this.causingEntity, this.world, var22, var23, var24, this.x, this.y, this.z);
                                 var14 -= (var27 + 0.3F) * var21;
                             }
 
@@ -93,38 +94,39 @@ public class ExplosionMixin {
 
         this.affectedBlocks.addAll(var2);
         this.power *= 2.0F;
-        int var281 = MathHelper.floor(this.x - (double)this.power - 1.0);
+        int var291 = MathHelper.floor(this.x - (double)this.power - 1.0);
         int var4 = MathHelper.floor(this.x + (double)this.power + 1.0);
         int var5 = MathHelper.floor(this.y - (double)this.power - 1.0);
-        int var28x = MathHelper.floor(this.y + (double)this.power + 1.0);
+        int var29x = MathHelper.floor(this.y + (double)this.power + 1.0);
         int var7 = MathHelper.floor(this.z - (double)this.power - 1.0);
-        int var29 = MathHelper.floor(this.z + (double)this.power + 1.0);
+        int var30 = MathHelper.floor(this.z + (double)this.power + 1.0);
         List var9 = this.world
                 .getEntitiesIn(
-                        this.causingEntity, Box.getLocalPool().getOrCreate((double)var281, (double)var5, (double)var7, (double)var4, (double)var28x, (double)var29)
+                        this.causingEntity, Box.getLocalPool().getOrCreate((double)var291, (double)var5, (double)var7, (double)var4, (double)var29x, (double)var30)
                 );
-        Vec3d var30 = this.world.getVectorPool().getOrCreate(this.x, this.y, this.z);
+        Vec3d var31 = this.world.getVectorPool().getOrCreate(this.x, this.y, this.z);
 
         for(int var11 = 0; var11 < var9.size(); ++var11) {
-            Entity var31 = (Entity)var9.get(var11);
-            double var13 = var31.distanceTo(this.x, this.y, this.z) / (double)this.power;
+            Entity var32 = (Entity)var9.get(var11);
+            double var13 = var32.distanceTo(this.x, this.y, this.z) / (double)this.power;
             if (var13 <= 1.0) {
-                double var15 = var31.x - this.x;
-                double var17 = var31.y + (double)var31.getEyeHeight() - this.y;
-                double var19 = var31.z - this.z;
-                double var33 = (double)MathHelper.sqrt(var15 * var15 + var17 * var17 + var19 * var19);
-                if (var33 != 0.0) {
-                    var15 /= var33;
-                    var17 /= var33;
-                    var19 /= var33;
-                    double var32 = (double)this.world.method_3612(var30, var31.boundingBox);
-                    double var34 = (1.0 - var13) * var32;
-                    var31.damage(DamageSource.field_3138, (int)((var34 * var34 + var34) / 2.0 * 8.0 * (double)this.power + 1.0));
-                    var31.velocityX += var15 * var34;
-                    var31.velocityY += var17 * var34;
-                    var31.velocityZ += var19 * var34;
-                    if (var31 instanceof PlayerEntity) {
-                        this.affectedPlayers.put((PlayerEntity)var31, this.world.getVectorPool().getOrCreate(var15 * var34, var17 * var34, var19 * var34));
+                double var15 = var32.x - this.x;
+                double var17 = var32.y + (double)var32.getEyeHeight() - this.y;
+                double var19 = var32.z - this.z;
+                double var34 = (double)MathHelper.sqrt(var15 * var15 + var17 * var17 + var19 * var19);
+                if (var34 != 0.0) {
+                    var15 /= var34;
+                    var17 /= var34;
+                    var19 /= var34;
+                    double var33 = (double)this.world.method_3612(var31, var32.boundingBox);
+                    double var35 = (1.0 - var13) * var33;
+                    var32.damage(DamageSource.field_3138, (int)((var35 * var35 + var35) / 2.0 * 8.0 * (double)this.power + 1.0));
+                    double var36 = ProtectionEnchantment.method_4658(var32, var35);
+                    var32.velocityX += var15 * var36;
+                    var32.velocityY += var17 * var36;
+                    var32.velocityZ += var19 * var36;
+                    if (var32 instanceof PlayerEntity) {
+                        this.affectedPlayers.put((PlayerEntity)var32, this.world.getVectorPool().getOrCreate(var15 * var35, var17 * var35, var19 * var35));
                     }
                 }
             }

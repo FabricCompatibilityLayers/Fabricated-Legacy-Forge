@@ -20,7 +20,7 @@ import net.minecraft.world.dimension.TheEndDimension;
 import net.minecraft.world.dimension.TheNetherDimension;
 import net.minecraft.world.level.LevelGeneratorType;
 import net.minecraft.world.level.LevelProperties;
-import net.minecraftforge.client.SkyProvider;
+import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.common.DimensionManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -38,8 +38,8 @@ public class DimensionMixin implements IDimension {
     @Shadow public int dimensionType;
     @Shadow public String generatorOptions;
 
-    private SkyProvider skyProvider = null;
-    private SkyProvider cloudRenderer = null;
+    private IRenderHandler skyRenderer = null;
+    private IRenderHandler cloudRenderer = null;
 
     /**
      * @author Minecraft Forge
@@ -132,25 +132,25 @@ public class DimensionMixin implements IDimension {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public SkyProvider getSkyProvider() {
-        return this.skyProvider;
+    public IRenderHandler getSkyRenderer() {
+        return this.skyRenderer;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void setSkyProvider(SkyProvider skyProvider) {
-        this.skyProvider = skyProvider;
+    public void setSkyRenderer(IRenderHandler skyRenderer) {
+        this.skyRenderer = skyRenderer;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public SkyProvider getCloudRenderer() {
+    public IRenderHandler getCloudRenderer() {
         return this.cloudRenderer;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public void setCloudRenderer(SkyProvider renderer) {
+    public void setCloudRenderer(IRenderHandler renderer) {
         this.cloudRenderer = renderer;
     }
 
