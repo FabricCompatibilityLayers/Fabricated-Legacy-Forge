@@ -4,6 +4,8 @@
  */
 package net.minecraftforge.common;
 
+import cpw.mods.fml.common.FMLLog;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.WeightedRandomChestContent;
@@ -120,6 +122,11 @@ public class DungeonHooks {
             return ret;
         }
 
+        protected final ItemStack[] generateChestContent(Random random, Inventory newInventory) {
+            FMLLog.warning("Some mod is still using DungeonHooks.DungonLoot, tell them to stop! %s", new Object[]{this});
+            return new ItemStack[]{this.generateStack(random)};
+        }
+
         public boolean equals(ItemStack item, int min, int max) {
             int minCount = this.min;
             int maxCount = this.max;
@@ -140,7 +147,7 @@ public class DungeonHooks {
         }
 
         public boolean equals(Object target) {
-            return target instanceof DungeonHooks.DungeonMob ? this.type.equals(((DungeonHooks.DungeonMob)target).type) : false;
+            return target instanceof DungeonHooks.DungeonMob && this.type.equals(((DungeonHooks.DungeonMob)target).type);
         }
     }
 }

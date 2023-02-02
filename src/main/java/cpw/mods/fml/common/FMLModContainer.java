@@ -58,9 +58,11 @@ public class FMLModContainer implements ModContainer {
             .put(FMLPreInitializationEvent.class, Mod.PreInit.class)
             .put(FMLInitializationEvent.class, Mod.Init.class)
             .put(FMLPostInitializationEvent.class, Mod.PostInit.class)
+            .put(FMLServerAboutToStartEvent.class, Mod.ServerAboutToStart.class)
             .put(FMLServerStartingEvent.class, Mod.ServerStarting.class)
             .put(FMLServerStartedEvent.class, Mod.ServerStarted.class)
             .put(FMLServerStoppingEvent.class, Mod.ServerStopping.class)
+            .put(FMLServerStoppedEvent.class, Mod.ServerStopped.class)
             .put(FMLInterModComms.IMCEvent.class, Mod.IMCCallback.class)
             .put(FMLFingerprintViolationEvent.class, Mod.FingerprintWarning.class)
             .build();
@@ -104,7 +106,9 @@ public class FMLModContainer implements ModContainer {
         }
 
         if (!this.overridesMetadata && this.modMetadata.useDependencyInformation) {
-            FMLLog.finest(
+            FMLLog.log(
+                    this.getModId(),
+                    Level.FINEST,
                     "Using mcmod dependency info : %s %s %s",
                     new Object[]{this.modMetadata.requiredMods, this.modMetadata.dependencies, this.modMetadata.dependants}
             );
@@ -117,11 +121,13 @@ public class FMLModContainer implements ModContainer {
             this.modMetadata.requiredMods = requirements;
             this.modMetadata.dependencies = dependencies;
             this.modMetadata.dependants = dependants;
-            FMLLog.finest("Parsed dependency info : %s %s %s", new Object[]{requirements, dependencies, dependants});
+            FMLLog.log(this.getModId(), Level.FINEST, "Parsed dependency info : %s %s %s", new Object[]{requirements, dependencies, dependants});
         }
 
         if (Strings.isNullOrEmpty(this.modMetadata.name)) {
-            FMLLog.info("Mod %s is missing the required element 'name'. Substituting %s", new Object[]{this.getModId(), this.getModId()});
+            FMLLog.log(
+                    this.getModId(), Level.INFO, "Mod %s is missing the required element 'name'. Substituting %s", new Object[]{this.getModId(), this.getModId()}
+            );
             this.modMetadata.name = this.getModId();
         }
 
@@ -130,12 +136,19 @@ public class FMLModContainer implements ModContainer {
             Properties versionProps = this.searchForVersionProperties();
             if (versionProps != null) {
                 this.internalVersion = versionProps.getProperty(this.getModId() + ".version");
-                FMLLog.fine("Found version %s for mod %s in version.properties, using", new Object[]{this.internalVersion, this.getModId()});
+                FMLLog.log(
+                        this.getModId(),
+                        Level.FINE,
+                        "Found version %s for mod %s in version.properties, using",
+                        new Object[]{this.internalVersion, this.getModId()}
+                );
             }
         }
 
         if (Strings.isNullOrEmpty(this.internalVersion) && !Strings.isNullOrEmpty(this.modMetadata.version)) {
-            FMLLog.warning(
+            FMLLog.log(
+                    this.getModId(),
+                    Level.WARNING,
                     "Mod %s is missing the required element 'version' and a version.properties file could not be found. Falling back to metadata version %s",
                     new Object[]{this.getModId(), this.modMetadata.version}
             );
@@ -143,7 +156,12 @@ public class FMLModContainer implements ModContainer {
         }
 
         if (Strings.isNullOrEmpty(this.internalVersion)) {
-            FMLLog.warning("Mod %s is missing the required element 'version' and no fallback can be found. Substituting '1.0'.", new Object[]{this.getModId()});
+            FMLLog.log(
+                    this.getModId(),
+                    Level.WARNING,
+                    "Mod %s is missing the required element 'version' and no fallback can be found. Substituting '1.0'.",
+                    new Object[]{this.getModId()}
+            );
             this.modMetadata.version = this.internalVersion = "1.0";
         }
 
@@ -157,7 +175,9 @@ public class FMLModContainer implements ModContainer {
 
     public Properties searchForVersionProperties() {
         try {
-            FMLLog.fine(
+            FMLLog.log(
+                    this.getModId(),
+                    Level.FINE,
                     "Attempting to load the file version.properties from %s to locate a version number for %s",
                     new Object[]{this.getSource().getName(), this.getModId()}
             );
@@ -184,7 +204,7 @@ public class FMLModContainer implements ModContainer {
             return version;
         } catch (Exception var4) {
             Throwables.propagateIfPossible(var4);
-            FMLLog.fine("Failed to find a usable version.properties file", new Object[0]);
+            FMLLog.log(this.getModId(), Level.FINEST, "Failed to find a usable version.properties file", new Object[0]);
             return null;
         }
     }
@@ -221,7 +241,7 @@ public class FMLModContainer implements ModContainer {
 
     public boolean registerBus(EventBus bus, LoadController controller) {
         if (this.enabled) {
-            FMLLog.fine("Enabling mod %s", new Object[]{this.getModId()});
+            FMLLog.log(this.getModId(), Level.FINE, "Enabling mod %s", new Object[]{this.getModId()});
             this.eventBus = bus;
             this.controller = controller;
             this.eventBus.register(this);
@@ -242,7 +262,9 @@ public class FMLModContainer implements ModContainer {
                         m.setAccessible(true);
                         anns.put(a.annotationType(), m);
                     } else {
-                        FMLLog.severe(
+                        FMLLog.log(
+                                this.getModId(),
+                                Level.SEVERE,
                                 "The mod %s appears to have an invalid method annotation %s. This annotation can only apply to methods with argument types %s -it will not be called",
                                 new Object[]{this.getModId(), a.annotationType().getSimpleName(), Arrays.toString(paramTypes)}
                         );
@@ -297,6 +319,7 @@ public class FMLModContainer implements ModContainer {
                 } catch (Exception var15) {
                     Throwables.propagateIfPossible(var15);
                     FMLLog.log(
+                            this.getModId(),
                             Level.WARNING,
                             var15,
                             "Attempting to load @%s in class %s for %s and failing",
@@ -310,7 +333,9 @@ public class FMLModContainer implements ModContainer {
                 if (!isStatic) {
                     target = this.modInstance;
                     if (!this.modInstance.getClass().equals(clz)) {
-                        FMLLog.warning(
+                        FMLLog.log(
+                                this.getModId(),
+                                Level.WARNING,
                                 "Unable to inject @%s in non-static field %s.%s for %s as it is NOT the primary mod instance",
                                 new Object[]{annotationName, targets.getClassName(), targets.getObjectName(), mc.getModId()}
                         );
@@ -353,6 +378,7 @@ public class FMLModContainer implements ModContainer {
                     }
 
                     FMLLog.log(
+                            this.getModId(),
                             warnLevel,
                             "The mod %s is expecting signature %s for source %s, however there is no signature matching that description",
                             new Object[]{this.getModId(), expectedFingerprint, this.source.getName()}

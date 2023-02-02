@@ -5,9 +5,13 @@
 package net.minecraftforge.event;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
+import net.minecraftforge.event.entity.living.LivingSpecialSpawnEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -35,5 +39,21 @@ public class ForgeEventFactory {
 
     public static void onPlayerDestroyItem(PlayerEntity player, ItemStack stack) {
         MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(player, stack));
+    }
+
+    public static Event.Result canEntitySpawn(MobEntity entity, World world, float x, float y, float z) {
+        LivingSpawnEvent.CheckSpawn event = new LivingSpawnEvent.CheckSpawn(entity, world, x, y, z);
+        MinecraftForge.EVENT_BUS.post(event);
+        return event.getResult();
+    }
+
+    public static boolean doSpecialSpawn(MobEntity entity, World world, float x, float y, float z) {
+        boolean result = MinecraftForge.EVENT_BUS.post(new LivingSpecialSpawnEvent(entity, world, x, y, z));
+        LivingSpawnEvent.SpecialSpawn nEvent = new LivingSpawnEvent.SpecialSpawn(entity, world, x, y, z);
+        if (result) {
+            nEvent.setCanceled(true);
+        }
+
+        return MinecraftForge.EVENT_BUS.post(nEvent);
     }
 }

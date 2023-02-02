@@ -64,6 +64,7 @@ public class RelaunchClassLoader extends URLClassLoader {
             "LPT8",
             "LPT9"
     };
+    private static final boolean DEBUG_CLASSLOADING = Boolean.parseBoolean(System.getProperty("fml.debugClassLoading", "false"));
 
     public RelaunchClassLoader() {
         super(new URL[0], FabricLauncherBase.getLauncher().getTargetClassLoader());
@@ -162,6 +163,10 @@ public class RelaunchClassLoader extends URLClassLoader {
                     return cl;
                 } catch (Throwable var14) {
                     this.invalidClasses.add(name);
+                    if (DEBUG_CLASSLOADING) {
+                        FMLLog.log(Level.FINEST, var14, "Exception encountered attempting classloading of %s", new Object[]{name});
+                    }
+
                     throw new ClassNotFoundException(name, var14);
                 }
             }
@@ -259,7 +264,15 @@ public class RelaunchClassLoader extends URLClassLoader {
             URL classResource = this.findResource(name.replace('.', '/').concat(".class"));
             if (classResource != null) {
                 classStream = classResource.openStream();
+                if (DEBUG_CLASSLOADING) {
+                    FMLLog.finest("Loading class %s from resource %s", new Object[]{name, classResource.toString()});
+                }
+
                 return this.readFully(classStream);
+            }
+
+            if (DEBUG_CLASSLOADING) {
+                FMLLog.finest("Failed to find class resource %s", new Object[]{name.replace('.', '/').concat(".class")});
             }
 
             i$ = null;

@@ -13,7 +13,10 @@
  */
 package cpw.mods.fml.common.registry;
 
+import com.google.common.base.Charsets;
 import cpw.mods.fml.common.FMLLog;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.ModContainer;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -21,10 +24,12 @@ import net.minecraft.util.Language;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
 
 public class LanguageRegistry {
     private static final LanguageRegistry INSTANCE = new LanguageRegistry();
@@ -122,7 +127,24 @@ public class LanguageRegistry {
     }
 
     public void loadLocalization(String localizationFile, String lang, boolean isXML) {
-        this.loadLocalization(this.getClass().getResource(localizationFile), lang, isXML);
+        URL urlResource = this.getClass().getResource(localizationFile);
+        if (urlResource != null) {
+            this.loadLocalization(urlResource, lang, isXML);
+        } else {
+            ModContainer activeModContainer = Loader.instance().activeModContainer();
+            if (activeModContainer != null) {
+                FMLLog.log(
+                        activeModContainer.getModId(),
+                        Level.SEVERE,
+                        "The language resource %s cannot be located on the classpath. This is a programming error.",
+                        new Object[]{localizationFile}
+                );
+            } else {
+                FMLLog.log(
+                        Level.SEVERE, "The language resource %s cannot be located on the classpath. This is a programming error.", new Object[]{localizationFile}
+                );
+            }
+        }
     }
 
     public void loadLocalization(URL localizationFile, String lang, boolean isXML) {
@@ -134,20 +156,18 @@ public class LanguageRegistry {
             if (isXML) {
                 langPack.loadFromXML(langStream);
             } else {
-                langPack.load(langStream);
+                langPack.load(new InputStreamReader(langStream, Charsets.UTF_8));
             }
 
             this.addStringLocalization(langPack, lang);
         } catch (IOException var15) {
-            FMLLog.getLogger().severe("Unable to load localization from file: " + localizationFile);
-            var15.printStackTrace();
+            FMLLog.log(Level.SEVERE, var15, "Unable to load localization from file %s", new Object[]{localizationFile});
         } finally {
             try {
                 if (langStream != null) {
                     langStream.close();
                 }
             } catch (IOException var14) {
-                var14.printStackTrace();
             }
         }
     }

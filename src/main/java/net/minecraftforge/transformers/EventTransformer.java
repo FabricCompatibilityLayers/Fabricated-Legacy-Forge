@@ -23,7 +23,7 @@ public class EventTransformer implements IClassTransformer {
     }
 
     public byte[] transform(String name, byte[] bytes) {
-        if (!name.equals("net.minecraftforge.event.Event") && !name.startsWith("net.minecraft.") && name.indexOf(46) != -1) {
+        if (bytes != null && !name.equals("net.minecraftforge.event.Event") && !name.startsWith("net.minecraft.") && name.indexOf(46) != -1) {
             ClassReader cr = new ClassReader(bytes);
             ClassNode classNode = new ClassNode();
             cr.accept(classNode, 0);
@@ -33,13 +33,15 @@ public class EventTransformer implements IClassTransformer {
                     ClassWriter cw = new ClassWriter(3);
                     classNode.accept(cw);
                     return cw.toByteArray();
-                } else {
-                    return bytes;
                 }
-            } catch (Exception var6) {
-                var6.printStackTrace();
+
                 return bytes;
+            } catch (ClassNotFoundException var6) {
+            } catch (Exception var7) {
+                var7.printStackTrace();
             }
+
+            return bytes;
         } else {
             return bytes;
         }

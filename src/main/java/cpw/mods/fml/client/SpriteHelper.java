@@ -32,7 +32,7 @@ public class SpriteHelper {
         );
         spriteInfo.put("/terrain.png", slots);
         slots = toBitSet(
-                "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111110000000000111111101000000001111111100000000111111111111001111111111111111100000111111111110000000000000000"
+                "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000111110000000000011111101000000001111111100000000111111110001000111111111111111100000111111111110000000000000000"
         );
         spriteInfo.put("/gui/items.png", slots);
     }
@@ -43,7 +43,7 @@ public class SpriteHelper {
         }
 
         if (spriteInfo.containsKey(file)) {
-            FMLCommonHandler.instance().getFMLLogger().finer(String.format("Duplicate attempt to register a sprite file %s for overriding -- ignoring", file));
+            FMLLog.log("fml.TextureManager", Level.FINE, "Duplicate attempt to register a sprite file %s for overriding -- ignoring", new Object[]{file});
         } else {
             spriteInfo.put(file, toBitSet(spriteMap));
         }
@@ -57,14 +57,14 @@ public class SpriteHelper {
         BitSet slots = (BitSet)spriteInfo.get(path);
         if (slots == null) {
             Exception ex = new Exception(String.format("Invalid getUniqueSpriteIndex call for texture: %s", path));
-            FMLLog.log(Level.SEVERE, ex, "A critical error has been detected with sprite overrides", new Object[0]);
+            FMLLog.log("fml.TextureManager", Level.SEVERE, ex, "A critical error has been detected with sprite overrides", new Object[0]);
             FMLCommonHandler.instance().raiseException(ex, "Invalid request to getUniqueSpriteIndex", true);
         }
 
         int ret = getFreeSlot(slots);
         if (ret == -1) {
             Exception ex = new Exception(String.format("No more sprite indicies left for: %s", path));
-            FMLLog.log(Level.SEVERE, ex, "There are no sprite indicies left for %s", new Object[]{path});
+            FMLLog.log("fml.TextureManager", Level.SEVERE, ex, "There are no sprite indicies left for %s", new Object[]{path});
             FMLCommonHandler.instance().raiseException(ex, "No more sprite indicies left", true);
         }
 

@@ -15,6 +15,7 @@ import net.minecraft.client.TextureManager;
 import net.minecraft.client.BlockRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.WorldRenderer;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.texture.ITexturePack;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.mob.MobEntity;
@@ -193,9 +194,15 @@ public class ForgeHooksClient {
 
             boolean is3D = customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.ENTITY, item, IItemRenderer.ItemRendererHelper.BLOCK_3D);
             if (item.getItem() instanceof BlockItem && (is3D || BlockRenderer.method_1455(Block.BLOCKS[item.id].getBlockType()))) {
-                engine.bindTexture(engine.getTextureFromPath(((IItem)item.getItem()).getTextureFile()));
+                engine.bindTexture(engine.getTextureFromPath(item.getItem().getTextureFile()));
                 int renderType = Block.BLOCKS[item.id].getBlockType();
                 float scale = renderType != 1 && renderType != 19 && renderType != 12 && renderType != 2 ? 0.25F : 0.5F;
+                if (ItemRenderer.field_5197) {
+                    GL11.glScalef(1.25F, 1.25F, 1.25F);
+                    GL11.glTranslatef(0.0F, 0.05F, 0.0F);
+                    GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+                }
+
                 GL11.glScalef(scale, scale, scale);
                 int size = item.count;
                 int count = size > 20 ? 4 : (size > 5 ? 3 : (size > 1 ? 2 : 1));
@@ -214,7 +221,7 @@ public class ForgeHooksClient {
                     GL11.glPopMatrix();
                 }
             } else {
-                engine.bindTexture(engine.getTextureFromPath(((IItem)item.getItem()).getTextureFile()));
+                engine.bindTexture(engine.getTextureFromPath(item.getItem().getTextureFile()));
                 GL11.glScalef(0.5F, 0.5F, 0.5F);
                 customRenderer.renderItem(IItemRenderer.ItemRenderType.ENTITY, item, new Object[]{renderBlocks, entity});
             }
@@ -230,7 +237,7 @@ public class ForgeHooksClient {
         if (customRenderer == null) {
             return false;
         } else {
-            engine.bindTexture(engine.getTextureFromPath(((IItem)Item.ITEMS[item.id]).getTextureFile()));
+            engine.bindTexture(engine.getTextureFromPath(Item.ITEMS[item.id].getTextureFile()));
             if (customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.INVENTORY, item, IItemRenderer.ItemRendererHelper.INVENTORY_BLOCK)) {
                 GL11.glPushMatrix();
                 GL11.glTranslatef(x - 2.0F, y + 3.0F, -3.0F + zLevel);
@@ -298,8 +305,8 @@ public class ForgeHooksClient {
         int y = MathHelper.floor(entity.y);
         int z = MathHelper.floor(entity.z);
         Block block = Block.BLOCKS[mc.world.getBlock(x, y, z)];
-        if (block != null && ((IBlock)block).isBed(mc.world, x, y, z, entity)) {
-            int var12 = ((IBlock)block).getBedDirection(mc.world, x, y, z);
+        if (block != null && block.isBed(mc.world, x, y, z, entity)) {
+            int var12 = block.getBedDirection(mc.world, x, y, z);
             GL11.glRotatef((float)(var12 * 90), 0.0F, 1.0F, 0.0F);
         }
     }
@@ -322,13 +329,17 @@ public class ForgeHooksClient {
         if (((ITessellator)Tessellator.INSTANCE).renderingWorldRenderer()) {
             String msg = String.format("Warning: Texture %s not preloaded, will cause render glitches!", texture);
             System.out.println(msg);
-            if (Tessellator.class.getPackage() != null && Tessellator.class.getPackage().equals("net.minecraft.src")) {
+            if (Tessellator.class.getPackage() != null && Tessellator.class.getPackage().getName().startsWith("net.minecraft.")) {
                 Minecraft mc = FMLClientHandler.instance().getClient();
                 if (mc.inGameHud != null) {
                     mc.inGameHud.getChatHud().method_898(msg);
                 }
             }
         }
+    }
+
+    public static void setRenderPass(int pass) {
+        renderPass = pass;
     }
 
     private static class TesKey implements Comparable<ForgeHooksClient.TesKey> {

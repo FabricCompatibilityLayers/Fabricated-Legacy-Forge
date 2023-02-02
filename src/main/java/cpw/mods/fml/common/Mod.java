@@ -96,12 +96,22 @@ public @interface Mod {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.METHOD})
+    public @interface ServerAboutToStart {
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD})
     public @interface ServerStarted {
     }
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target({ElementType.METHOD})
     public @interface ServerStarting {
+    }
+
+    @Retention(RetentionPolicy.RUNTIME)
+    @Target({ElementType.METHOD})
+    public @interface ServerStopped {
     }
 
     @Retention(RetentionPolicy.RUNTIME)

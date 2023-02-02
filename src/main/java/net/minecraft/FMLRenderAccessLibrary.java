@@ -33,11 +33,13 @@ public class FMLRenderAccessLibrary {
     }
 
     public static Logger getLogger() {
-        return FMLLog.getLogger();
+        Logger l = Logger.getLogger("FMLRenderAccessLibrary");
+        l.setParent(FMLLog.getLogger());
+        return l;
     }
 
     public static void log(Level level, String message) {
-        FMLLog.log(level, message, new Object[0]);
+        FMLLog.log("FMLRenderAccessLibrary", level, message, new Object[0]);
     }
 
     public static void log(Level level, String message, Throwable throwable) {

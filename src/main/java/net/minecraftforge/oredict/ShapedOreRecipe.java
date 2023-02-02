@@ -79,7 +79,6 @@ public class ShapedOreRecipe implements RecipeType {
             for(itemMap = new HashMap(); idx < recipe.length; idx += 2) {
                 Character chr = (Character)recipe[idx];
                 Object in = recipe[idx + 1];
-                Object val = null;
                 if (in instanceof ItemStack) {
                     itemMap.put(chr, ((ItemStack)in).copy());
                 } else if (in instanceof Item) {
@@ -211,5 +210,9 @@ public class ShapedOreRecipe implements RecipeType {
     public ShapedOreRecipe setMirrored(boolean mirror) {
         this.mirrored = mirror;
         return this;
+    }
+
+    public Object[] getInput() {
+        return this.input;
     }
 }

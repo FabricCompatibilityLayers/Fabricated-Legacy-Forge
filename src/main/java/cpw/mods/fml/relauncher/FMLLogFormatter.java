@@ -31,20 +31,15 @@ final class FMLLogFormatter extends Formatter {
         StringBuilder msg = new StringBuilder();
         msg.append(this.dateFormat.format(record.getMillis()));
         Level lvl = record.getLevel();
-        if (lvl == Level.FINEST) {
-            msg.append(" [FINEST] ");
-        } else if (lvl == Level.FINER) {
-            msg.append(" [FINER] ");
-        } else if (lvl == Level.FINE) {
-            msg.append(" [FINE] ");
-        } else if (lvl == Level.INFO) {
-            msg.append(" [INFO] ");
-        } else if (lvl == Level.WARNING) {
-            msg.append(" [WARNING] ");
-        } else if (lvl == Level.SEVERE) {
-            msg.append(" [SEVERE] ");
-        } else if (lvl == Level.SEVERE) {
-            msg.append(" [" + lvl.getLocalizedName() + "] ");
+        String name = lvl.getLocalizedName();
+        if (name == null) {
+            name = lvl.getName();
+        }
+
+        if (name != null && name.length() > 0) {
+            msg.append(" [" + name + "] ");
+        } else {
+            msg.append(" ");
         }
 
         if (record.getLoggerName() != null) {

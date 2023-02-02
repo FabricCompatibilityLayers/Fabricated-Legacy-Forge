@@ -19,6 +19,8 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class ForgeDummyContainer extends DummyModContainer implements WorldAccessContainer {
+    public static int clumpingThreshold = 64;
+
     public ForgeDummyContainer() {
         super(new ModMetadata());
         ModMetadata meta = this.getMetadata();
@@ -39,9 +41,17 @@ public class ForgeDummyContainer extends DummyModContainer implements WorldAcces
             if (enableGlobalCfg.getBoolean(false)) {
                 Configuration.enableGlobalConfig();
             }
-
-            config.save();
         }
+
+        Property clumpingThresholdProperty = config.get("general", "clumpingThreshold", 64);
+        clumpingThresholdProperty.comment = "Controls the number threshold at which Packet51 is preferred over Packet52, default and minimum 64, maximum 1024";
+        clumpingThreshold = clumpingThresholdProperty.getInt(64);
+        if (clumpingThreshold > 1024 || clumpingThreshold < 64) {
+            clumpingThreshold = 64;
+            clumpingThresholdProperty.value = "64";
+        }
+
+        config.save();
     }
 
     public boolean registerBus(EventBus bus, LoadController controller) {

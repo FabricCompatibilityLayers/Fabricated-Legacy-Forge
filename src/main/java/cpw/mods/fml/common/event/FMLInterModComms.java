@@ -75,21 +75,29 @@ public class FMLInterModComms {
 
     public static ImmutableList<FMLInterModComms.IMCMessage> fetchRuntimeMessages(Object forMod) {
         ModContainer mc = FMLCommonHandler.instance().findContainerFor(forMod);
-        return mc != null ? ImmutableList.copyOf(modMessages.removeAll(mc)) : emptyIMCList;
+        return mc != null ? ImmutableList.copyOf(modMessages.removeAll(mc.getModId())) : emptyIMCList;
     }
 
     public static class IMCEvent extends FMLEvent {
+        private ModContainer activeContainer;
         private ImmutableList<FMLInterModComms.IMCMessage> currentList;
 
         public IMCEvent() {
         }
 
         public void applyModContainer(ModContainer activeContainer) {
-            this.currentList = ImmutableList.copyOf(FMLInterModComms.modMessages.removeAll(activeContainer.getModId()));
-            FMLLog.finest("Attempting to deliver %d IMC messages to mod %s", new Object[]{this.currentList.size(), activeContainer.getModId()});
+            this.activeContainer = activeContainer;
+            FMLLog.finest(
+                    "Attempting to deliver %d IMC messages to mod %s",
+                    new Object[]{FMLInterModComms.modMessages.get(activeContainer.getModId()).size(), activeContainer.getModId()}
+            );
         }
 
         public ImmutableList<FMLInterModComms.IMCMessage> getMessages() {
+            if (this.currentList == null) {
+                this.currentList = ImmutableList.copyOf(FMLInterModComms.modMessages.removeAll(this.activeContainer.getModId()));
+            }
+
             return this.currentList;
         }
     }

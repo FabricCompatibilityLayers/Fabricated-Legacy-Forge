@@ -57,7 +57,7 @@ public interface ISpecialArmor {
             }
 
             if (dmgVals.size() > 0) {
-                ISpecialArmor.ArmorProperties[] props = (ISpecialArmor.ArmorProperties[])dmgVals.toArray(new ISpecialArmor.ArmorProperties[0]);
+                ISpecialArmor.ArmorProperties[] props = (ISpecialArmor.ArmorProperties[])dmgVals.toArray(new ISpecialArmor.ArmorProperties[dmgVals.size()]);
                 StandardizeList(props, damage);
                 int level = props[0].Priority;
                 double ratio = 0.0;

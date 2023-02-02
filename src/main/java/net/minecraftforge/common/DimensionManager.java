@@ -4,8 +4,7 @@
  */
 package net.minecraftforge.common;
 
-import com.google.common.collect.ListMultimap;
-import com.google.common.collect.Maps;
+import com.google.common.collect.*;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
@@ -28,6 +27,7 @@ import net.minecraftforge.event.world.WorldEvent;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 
 public class DimensionManager {
@@ -36,15 +36,16 @@ public class DimensionManager {
     private static Hashtable<Integer, ServerWorld> worlds = new Hashtable();
     private static boolean hasInit = false;
     private static Hashtable<Integer, Integer> dimensions = new Hashtable();
-    private static Map<World, ListMultimap<ChunkPos, String>> persistentChunkStore = Maps.newHashMap();
     private static ArrayList<Integer> unloadQueue = new ArrayList();
     private static BitSet dimensionMap = new BitSet(1024);
+    private static ConcurrentMap<World, World> weakWorldMap = new MapMaker().weakKeys().weakValues().makeMap();
+    private static Set<Integer> leakedWorlds = Sets.newHashSet();
 
     public DimensionManager() {
     }
 
     public static boolean registerProviderType(int id, Class<? extends Dimension> provider, boolean keepLoaded) {
-        if (providers.containsValue(id)) {
+        if (providers.containsKey(id)) {
             return false;
         } else {
             providers.put(id, provider);
@@ -53,8 +54,28 @@ public class DimensionManager {
         }
     }
 
+    public static int[] unregisterProviderType(int id) {
+        if (!providers.containsKey(id)) {
+            return new int[0];
+        } else {
+            providers.remove(id);
+            spawnSettings.remove(id);
+            int[] ret = new int[dimensions.size()];
+            int x = 0;
+
+            for(Map.Entry<Integer, Integer> ent : dimensions.entrySet()) {
+                if (ent.getValue() == id) {
+                    ret[x++] = ent.getKey();
+                }
+            }
+
+            return Arrays.copyOf(ret, x);
+        }
+    }
+
     public static void init() {
         if (!hasInit) {
+            hasInit = true;
             registerProviderType(0, OverworldDimension.class, true);
             registerProviderType(-1, TheNetherDimension.class, true);
             registerProviderType(1, TheEndDimension.class, false);
@@ -97,6 +118,36 @@ public class DimensionManager {
         return getWorld(dim).dimension;
     }
 
+    public static Integer[] getIDs(boolean check) {
+        if (check) {
+            List<World> allWorlds = Lists.newArrayList(weakWorldMap.keySet());
+            allWorlds.removeAll(worlds.values());
+            Set<Integer> newLeaks = Sets.newHashSet();
+
+            World w;
+            for(ListIterator<World> li = allWorlds.listIterator(); li.hasNext(); newLeaks.add(System.identityHashCode(w))) {
+                w = (World)li.next();
+                if (leakedWorlds.contains(System.identityHashCode(w))) {
+                    li.remove();
+                }
+            }
+
+            leakedWorlds = newLeaks;
+            if (allWorlds.size() > 0) {
+                FMLLog.severe(
+                        "Detected leaking worlds in memory. There are %d worlds that appear to be persisting. A mod is likely caching the world incorrectly\n",
+                        new Object[]{allWorlds.size() + leakedWorlds.size()}
+                );
+
+                for(World ww : allWorlds) {
+                    FMLLog.severe("The world %x (%s) has leaked.\n", new Object[]{System.identityHashCode(ww), ww.getLevelProperties().getLevelName()});
+                }
+            }
+        }
+
+        return getIDs();
+    }
+
     public static Integer[] getIDs() {
         return (Integer[])worlds.keySet().toArray(new Integer[worlds.size()]);
     }
@@ -104,7 +155,8 @@ public class DimensionManager {
     public static void setWorld(int id, ServerWorld world) {
         if (world != null) {
             worlds.put(id, world);
-            ((IMinecraftServer)MinecraftServer.getServer()).getWorldTickTimes().put(id, new long[100]);
+            weakWorldMap.put(world, world);
+            MinecraftServer.getServer().getWorldTickTimes().put(id, new long[100]);
             FMLLog.info("Loading dimension %d (%s) (%s)", new Object[]{id, world.getLevelProperties().getLevelName(), world.getServer()});
         } else {
             worlds.remove(id);
@@ -132,7 +184,7 @@ public class DimensionManager {
             }
         }
 
-        MinecraftServer.getServer().worlds = (ServerWorld[])tmp.toArray(new ServerWorld[0]);
+        MinecraftServer.getServer().worlds = (ServerWorld[])tmp.toArray(new ServerWorld[tmp.size()]);
     }
 
     public static void initDimension(int dim) {
@@ -168,7 +220,7 @@ public class DimensionManager {
     }
 
     public static ServerWorld[] getWorlds() {
-        return (ServerWorld[])worlds.values().toArray(new ServerWorld[0]);
+        return (ServerWorld[])worlds.values().toArray(new ServerWorld[worlds.size()]);
     }
 
     public static boolean shouldLoadSpawn(int dim) {
@@ -211,15 +263,23 @@ public class DimensionManager {
 
     public static void unloadWorlds(Hashtable<Integer, long[]> worldTickTimes) {
         for(int id : unloadQueue) {
-            try {
-                ((ServerWorld)worlds.get(id)).method_2138(true, null);
-            } catch (Exception var4) {
-                var4.printStackTrace();
-            }
+            ServerWorld w = (ServerWorld)worlds.get(id);
 
-            MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload((World)worlds.get(id)));
-            ((ServerWorld)worlds.get(id)).close();
-            setWorld(id, null);
+            try {
+                if (w != null) {
+                    w.method_2138(true, null);
+                } else {
+                    FMLLog.warning("Unexpected world unload - world %d is already unloaded", new Object[]{id});
+                }
+            } catch (Exception var8) {
+                var8.printStackTrace();
+            } finally {
+                if (w != null) {
+                    MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(w));
+                    w.close();
+                    setWorld(id, null);
+                }
+            }
         }
 
         unloadQueue.clear();
@@ -277,7 +337,15 @@ public class DimensionManager {
     }
 
     public static File getCurrentSaveRootDirectory() {
-        return getWorld(0) != null ? ((WorldSaveHandler)getWorld(0).getSaveHandler()).method_198() : null;
+        if (getWorld(0) != null) {
+            return ((WorldSaveHandler)getWorld(0).getSaveHandler()).method_198();
+        } else if (MinecraftServer.getServer() != null) {
+            MinecraftServer srv = MinecraftServer.getServer();
+            WorldSaveHandler saveHandler = (WorldSaveHandler)srv.getSaveStorage().createSaveHandler(srv.getLevelName(), false);
+            return saveHandler.method_198();
+        } else {
+            return null;
+        }
     }
 
     static {

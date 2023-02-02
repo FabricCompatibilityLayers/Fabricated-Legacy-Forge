@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 public class FMLDummyContainer extends DummyModContainer implements WorldAccessContainer {
     public FMLDummyContainer() {
@@ -38,8 +39,8 @@ public class FMLDummyContainer extends DummyModContainer implements WorldAccessC
         meta.credits = "Made possible with help from many people";
         meta.authorList = Arrays.asList("cpw, LexManos");
         meta.description = "The Forge Mod Loader provides the ability for systems to load mods from the file system. It also provides key capabilities for mods to be able to cooperate and provide a good modding environment. The mod loading system is compatible with ModLoader, all your ModLoader mods should work.";
-        meta.url = "https://github.com/cpw/FML/wiki";
-        meta.updateUrl = "https://github.com/cpw/FML/wiki";
+        meta.url = "https://github.com/MinecraftForge/FML/wiki";
+        meta.updateUrl = "https://github.com/MinecraftForge/FML/wiki";
         meta.screenshots = new String[0];
         meta.logoFile = "";
     }
@@ -76,9 +77,16 @@ public class FMLDummyContainer extends DummyModContainer implements WorldAccessC
                 String modVersion = mod.getString("ModVersion");
                 ModContainer container = (ModContainer)Loader.instance().getIndexedModList().get(modId);
                 if (container == null) {
-                    FMLLog.severe("This world was saved with mod %s which appears to be missing, things may not work well", new Object[]{modId});
+                    FMLLog.log(
+                            "fml.ModTracker",
+                            Level.SEVERE,
+                            "This world was saved with mod %s which appears to be missing, things may not work well",
+                            new Object[]{modId}
+                    );
                 } else if (!modVersion.equals(container.getVersion())) {
-                    FMLLog.info(
+                    FMLLog.log(
+                            "fml.ModTracker",
+                            Level.INFO,
                             "This world was saved with mod %s version %s and it is now at version %s, things may not work well",
                             new Object[]{modId, modVersion, container.getVersion()}
                     );

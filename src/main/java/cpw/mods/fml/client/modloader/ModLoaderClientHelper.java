@@ -58,16 +58,17 @@ public class ModLoaderClientHelper implements IModLoaderSidedHelper {
     }
 
     public static void handleFinishLoadingFor(ModLoaderModContainer mc, Minecraft game) {
-        FMLLog.finer("Handling post startup activities for ModLoader mod %s", new Object[]{mc.getModId()});
+        FMLLog.log(mc.getModId(), Level.FINE, "Handling post startup activities for ModLoader mod %s", new Object[]{mc.getModId()});
         BaseMod mod = (BaseMod)mc.getMod();
         Map<Class<? extends Entity>, EntityRenderer> renderers = Maps.newHashMap(EntityRenderDispatcher.INSTANCE.renderers);
 
         try {
-            FMLLog.finest("Requesting renderers from basemod %s", new Object[]{mc.getModId()});
+            FMLLog.log(mc.getModId(), Level.FINEST, "Requesting renderers from basemod %s", new Object[]{mc.getModId()});
             mod.addRenderer(renderers);
-            FMLLog.finest("Received %d renderers from basemod %s", new Object[]{renderers.size(), mc.getModId()});
+            FMLLog.log(mc.getModId(), Level.FINEST, "Received %d renderers from basemod %s", new Object[]{renderers.size(), mc.getModId()});
         } catch (Exception var8) {
             FMLLog.log(
+                    mc.getModId(),
                     Level.SEVERE,
                     var8,
                     "A severe problem was detected with the mod %s during the addRenderer call. Continuing, but expect odd results",
@@ -80,14 +81,18 @@ public class ModLoaderClientHelper implements IModLoaderSidedHelper {
         );
 
         for(Map.Entry<Class<? extends Entity>, EntityRenderer> e : difference.entriesOnlyOnLeft().entrySet()) {
-            FMLLog.warning(
+            FMLLog.log(
+                    mc.getModId(),
+                    Level.WARNING,
                     "The mod %s attempted to remove an entity renderer %s from the entity map. This will be ignored.",
                     new Object[]{mc.getModId(), ((Class)e.getKey()).getName()}
             );
         }
 
         for(Map.Entry<Class<? extends Entity>, EntityRenderer> e : difference.entriesOnlyOnRight().entrySet()) {
-            FMLLog.finest(
+            FMLLog.log(
+                    mc.getModId(),
+                    Level.FINEST,
                     "Registering ModLoader entity renderer %s as instance of %s",
                     new Object[]{((Class)e.getKey()).getName(), ((EntityRenderer)e.getValue()).getClass().getName()}
             );
@@ -95,7 +100,9 @@ public class ModLoaderClientHelper implements IModLoaderSidedHelper {
         }
 
         for(Map.Entry<Class<? extends Entity>, MapDifference.ValueDifference<EntityRenderer>> e : difference.entriesDiffering().entrySet()) {
-            FMLLog.finest(
+            FMLLog.log(
+                    mc.getModId(),
+                    Level.FINEST,
                     "Registering ModLoader entity rendering override for %s as instance of %s",
                     new Object[]{((Class)e.getKey()).getName(), ((EntityRenderer)((MapDifference.ValueDifference)e.getValue()).rightValue()).getClass().getName()}
             );
@@ -106,6 +113,7 @@ public class ModLoaderClientHelper implements IModLoaderSidedHelper {
             mod.registerAnimation(game);
         } catch (Exception var7) {
             FMLLog.log(
+                    mc.getModId(),
                     Level.SEVERE,
                     var7,
                     "A severe problem was detected with the mod %s during the registerAnimation call. Continuing, but expect odd results",

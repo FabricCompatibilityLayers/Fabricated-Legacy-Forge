@@ -42,7 +42,7 @@ public abstract class FMLPacket {
                         new byte[][]{
                                 {UnsignedBytes.checkedCast((long)type.ordinal()), UnsignedBytes.checkedCast((long)i), UnsignedBytes.checkedCast((long)chunks.length)},
                                 Ints.toByteArray(len),
-                                Arrays.copyOfRange(packetData, i * 32000, len)
+                                Arrays.copyOfRange(packetData, i * 32000, len + i * 32000)
                         }
                 );
             }

@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.List;
+import java.util.logging.Level;
 
 public class TextureFXManager {
     private static final TextureFXManager INSTANCE = new TextureFXManager();
@@ -66,8 +67,11 @@ public class TextureFXManager {
                     effect.method_1613();
                 }
             } catch (Exception var6) {
-                FMLLog.warning(
-                        "Texture FX %s has failed to animate. Likely caused by a texture pack change that they did not respond correctly to", new Object[]{name}
+                FMLLog.log(
+                        "fml.TextureManager",
+                        Level.WARNING,
+                        "Texture FX %s has failed to animate. Likely caused by a texture pack change that they did not respond correctly to",
+                        new Object[]{name}
                 );
                 if (ifx != null) {
                     ifx.setErrored(true);
@@ -82,7 +86,12 @@ public class TextureFXManager {
                 Dimension dim = this.getTextureDimensions(effect);
                 int target = (dim.width >> 4) * (dim.height >> 4) << 2;
                 if (effect.field_2152.length != target) {
-                    FMLLog.warning("Detected a texture FX sizing discrepancy in %s (%d, %d)", new Object[]{name, effect.field_2152.length, target});
+                    FMLLog.log(
+                            "fml.TextureManager",
+                            Level.WARNING,
+                            "Detected a texture FX sizing discrepancy in %s (%d, %d)",
+                            new Object[]{name, effect.field_2152.length, target}
+                    );
                     ifx.setErrored(true);
                     return false;
                 }
@@ -197,17 +206,17 @@ public class TextureFXManager {
         for(OverrideInfo animationOverride : this.animationSet) {
             renderer.method_1416(animationOverride.textureFX);
             this.addedTextureFX.add(animationOverride.textureFX);
-            FMLCommonHandler.instance()
-                    .getFMLLogger()
-                    .finer(
-                            String.format(
-                                    "Registered texture override %d (%d) on %s (%d)",
-                                    animationOverride.index,
-                                    animationOverride.textureFX.field_2153,
-                                    animationOverride.textureFX.getClass().getSimpleName(),
-                                    animationOverride.textureFX.field_2157
-                            )
-                    );
+            FMLLog.log(
+                    "fml.TextureManager",
+                    Level.FINE,
+                    "Registered texture override %d (%d) on %s (%d)",
+                    new Object[]{
+                            animationOverride.index,
+                            animationOverride.textureFX.field_2153,
+                            animationOverride.textureFX.getClass().getSimpleName(),
+                            animationOverride.textureFX.field_2157
+                    }
+            );
         }
 
         for(String fileToOverride : this.overrideInfo.keySet()) {
@@ -217,13 +226,16 @@ public class TextureFXManager {
                     ModTextureStatic mts = new ModTextureStatic(override.index, 1, override.texture, image);
                     renderer.method_1416(mts);
                     this.addedTextureFX.add(mts);
-                    FMLCommonHandler.instance()
-                            .getFMLLogger()
-                            .finer(
-                                    String.format("Registered texture override %d (%d) on %s (%d)", override.index, mts.field_2153, override.texture, mts.field_2157)
-                            );
+                    FMLLog.log(
+                            "fml.TextureManager",
+                            Level.FINE,
+                            "Registered texture override %d (%d) on %s (%d)",
+                            new Object[]{override.index, mts.field_2153, override.texture, mts.field_2157}
+                    );
                 } catch (IOException var8) {
-                    FMLCommonHandler.instance().getFMLLogger().throwing("FMLClientHandler", "registerTextureOverrides", var8);
+                    FMLLog.log(
+                            "fml.TextureManager", Level.WARNING, var8, "Exception occurred registering texture override for %s", new Object[]{fileToOverride}
+                    );
                 }
             }
         }
@@ -262,7 +274,9 @@ public class TextureFXManager {
         info.override = overridingTexturePath;
         info.texture = textureToOverride;
         this.overrideInfo.put(textureToOverride, info);
-        FMLLog.fine(
+        FMLLog.log(
+                "fml.TextureManager",
+                Level.FINE,
                 "Overriding %s @ %d with %s. %d slots remaining",
                 new Object[]{textureToOverride, location, overridingTexturePath, SpriteHelper.freeSlotCount(textureToOverride)}
         );
@@ -284,6 +298,19 @@ public class TextureFXManager {
 
     public static TextureFXManager instance() {
         return INSTANCE;
+    }
+
+    public void fixTransparency(BufferedImage loadedImage, String textureName) {
+        if (textureName.matches("^/mob/.*_eyes.*.png$")) {
+            for(int x = 0; x < loadedImage.getWidth(); ++x) {
+                for(int y = 0; y < loadedImage.getHeight(); ++y) {
+                    int argb = loadedImage.getRGB(x, y);
+                    if ((argb & 0xFF000000) == 0 && argb != 0) {
+                        loadedImage.setRGB(x, y, 0);
+                    }
+                }
+            }
+        }
     }
 
     private class TextureProperties {

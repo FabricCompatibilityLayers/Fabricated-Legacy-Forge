@@ -104,7 +104,7 @@ public class ForgeHooks {
 
     public static boolean isToolEffective(ItemStack stack, Block block, int metadata) {
         List toolClass = (List)toolClasses.get(stack.getItem());
-        return toolClass == null ? false : toolEffectiveness.contains(Arrays.asList(block, metadata, (String)toolClass.get(0)));
+        return toolClass != null && toolEffectiveness.contains(Arrays.asList(block, metadata, toolClass.get(0)));
     }
 
     static void initTools() {
@@ -158,9 +158,9 @@ public class ForgeHooks {
 
     public static String getTexture(String _default, Object obj) {
         if (obj instanceof Item) {
-            return ((IItem)obj).getTextureFile();
+            return ((Item)obj).getTextureFile();
         } else {
-            return obj instanceof Block ? ((IBlock)obj).getTextureFile() : _default;
+            return obj instanceof Block ? ((Block)obj).getTextureFile() : _default;
         }
     }
 
@@ -191,7 +191,7 @@ public class ForgeHooks {
                 return false;
             }
 
-            result = ((IBlock)var8).getPickBlock(target, world, x, y, z);
+            result = var8.getPickBlock(target, world, x, y, z);
         } else {
             if (target.field_595 != HitResultType.ENTITY || target.entity == null || !isCreative) {
                 return false;
@@ -259,7 +259,7 @@ public class ForgeHooks {
     }
 
     public static boolean isLivingOnLadder(Block block, World world, int x, int y, int z) {
-        return block != null && ((IBlock)block).isLadder(world, x, y, z);
+        return block != null && block.isLadder(world, x, y, z);
     }
 
     public static void onLivingJump(MobEntity entity) {

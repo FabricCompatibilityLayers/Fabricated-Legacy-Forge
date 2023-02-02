@@ -17,6 +17,6 @@ public class ServerChatEvent extends Event {
         this.message = message;
         this.player = player;
         this.username = player.username;
-        this.line = "<" + this.username + "> " + message;
+        this.line = line;
     }
 }

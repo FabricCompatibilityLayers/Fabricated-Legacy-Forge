@@ -26,6 +26,7 @@ import cpw.mods.fml.common.toposort.ModSorter;
 import cpw.mods.fml.common.toposort.ModSortingException;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
 import cpw.mods.fml.common.versioning.VersionParser;
+import cpw.mods.fml.relauncher.FMLRelaunchLog;
 import fr.catcore.fabricatedforge.Constants;
 import net.minecraft.util.crash.provider.MinecraftVersionProvider;
 
@@ -58,6 +59,7 @@ public class Loader {
     private MCPDummyContainer mcp;
     private static File minecraftDir;
     private static List<String> injectedContainers;
+    private File loggingProperties;
 
     public static Loader instance() {
         if (instance == null) {
@@ -92,14 +94,18 @@ public class Loader {
         }
     }
 
+    // $QF: Could not verify finally blocks. A semaphore variable has been added to preserve control flow.
+    // Please report this to the Quiltflower issue tracker, at https://github.com/QuiltMC/quiltflower/issues with a copy of the class file (if you have the rights to distribute it!)
     private void sortModList() {
-        FMLLog.fine("Verifying mod requirements are satisfied", new Object[0]);
+        FMLLog.finer("Verifying mod requirements are satisfied", new Object[0]);
+        boolean var16 = false /* QF: Semaphore variable */;
 
         try {
-            BiMap<String, ArtifactVersion> modVersions = HashBiMap.create();
+            var16 = true;
+            BiMap<String, ArtifactVersion> unprintedMods = HashBiMap.create();
 
             for(ModContainer mod : this.getActiveModList()) {
-                modVersions.put(mod.getModId(), mod.getProcessedVersion());
+                unprintedMods.put(mod.getModId(), mod.getProcessedVersion());
             }
 
             for(ModContainer mod : this.getActiveModList()) {
@@ -117,7 +123,7 @@ public class Loader {
                     }
                 });
                 Set<ArtifactVersion> versionMissingMods = Sets.newHashSet();
-                Set<String> missingMods = Sets.difference(names.keySet(), modVersions.keySet());
+                Set<String> missingMods = Sets.difference(names.keySet(), unprintedMods.keySet());
                 if (!missingMods.isEmpty()) {
                     FMLLog.severe("The mod %s (%s) requires mods %s to be available", new Object[]{mod.getModId(), mod.getName(), missingMods});
 
@@ -129,7 +135,7 @@ public class Loader {
                 }
 
                 for(ArtifactVersion v : ImmutableList.<ArtifactVersion>builder().addAll(mod.getDependants()).addAll(mod.getDependencies()).build()) {
-                    if (modVersions.containsKey(v.getLabel()) && !v.containsVersion((ArtifactVersion)modVersions.get(v.getLabel()))) {
+                    if (unprintedMods.containsKey(v.getLabel()) && !v.containsVersion((ArtifactVersion)unprintedMods.get(v.getLabel()))) {
                         versionMissingMods.add(v);
                     }
                 }
@@ -140,46 +146,68 @@ public class Loader {
                 }
             }
 
-            FMLLog.fine("All mod requirements are satisfied", new Object[0]);
+            FMLLog.finer("All mod requirements are satisfied", new Object[0]);
             ModSorter sorter = new ModSorter(this.getActiveModList(), this.namedMods);
 
             try {
-                FMLLog.fine("Sorting mods into an ordered list", new Object[0]);
+                FMLLog.finer("Sorting mods into an ordered list", new Object[0]);
                 List<ModContainer> sortedMods = sorter.sort();
                 this.modController.getActiveModList().clear();
                 this.modController.getActiveModList().addAll(sortedMods);
                 this.mods.removeAll(sortedMods);
                 sortedMods.addAll(this.mods);
                 this.mods = sortedMods;
-                FMLLog.fine("Mod sorting completed successfully", new Object[0]);
-            } catch (ModSortingException var15) {
+                FMLLog.finer("Mod sorting completed successfully", new Object[0]);
+                var16 = false;
+            } catch (ModSortingException var17) {
                 FMLLog.severe("A dependency cycle was detected in the input mod set so an ordering cannot be determined", new Object[0]);
-                FMLLog.severe("The visited mod list is %s", new Object[]{var15.getExceptionData().getVisitedNodes()});
-                FMLLog.severe("The first mod in the cycle is %s", new Object[]{var15.getExceptionData().getFirstBadNode()});
-                FMLLog.log(Level.SEVERE, var15, "The full error", new Object[0]);
-                throw new LoaderException(var15);
+                FMLLog.severe("The visited mod list is %s", new Object[]{var17.getExceptionData().getVisitedNodes()});
+                FMLLog.severe("The first mod in the cycle is %s", new Object[]{var17.getExceptionData().getFirstBadNode()});
+                FMLLog.log(Level.SEVERE, var17, "The full error", new Object[0]);
+                throw new LoaderException(var17);
             }
         } finally {
-            FMLLog.fine("Mod sorting data:", new Object[0]);
+            if (var16) {
+                FMLLog.fine("Mod sorting data", new Object[0]);
+                int unprintedMods = this.mods.size();
 
-            for(ModContainer mod : this.getActiveModList()) {
-                if (!mod.isImmutable()) {
-                    FMLLog.fine(
-                            "\t%s(%s:%s): %s (%s)", new Object[]{mod.getModId(), mod.getName(), mod.getVersion(), mod.getSource().getName(), mod.getSortingRules()}
-                    );
+                for(ModContainer mod : this.getActiveModList()) {
+                    if (!mod.isImmutable()) {
+                        FMLLog.fine(
+                                "\t%s(%s:%s): %s (%s)",
+                                new Object[]{mod.getModId(), mod.getName(), mod.getVersion(), mod.getSource().getName(), mod.getSortingRules()}
+                        );
+                        --unprintedMods;
+                    }
+                }
+
+                if (unprintedMods == this.mods.size()) {
+                    FMLLog.fine("No user mods found to sort", new Object[0]);
                 }
             }
+        }
 
-            if (this.mods.size() == 0) {
-                FMLLog.fine("No mods found to sort", new Object[0]);
+        FMLLog.fine("Mod sorting data", new Object[0]);
+        int unprintedMods = this.mods.size();
+
+        for(ModContainer mod : this.getActiveModList()) {
+            if (!mod.isImmutable()) {
+                FMLLog.fine(
+                        "\t%s(%s:%s): %s (%s)", new Object[]{mod.getModId(), mod.getName(), mod.getVersion(), mod.getSource().getName(), mod.getSortingRules()}
+                );
+                --unprintedMods;
             }
+        }
+
+        if (unprintedMods == this.mods.size()) {
+            FMLLog.fine("No user mods found to sort", new Object[0]);
         }
     }
 
     private ModDiscoverer identifyMods() {
         FMLLog.fine("Building injected Mod Containers %s", new Object[]{injectedContainers});
         this.mods.add(new InjectedModContainer(this.mcp, new File("minecraft.jar")));
-        File coremod = Constants.COREMODS_FOLDER;
+        File coremod = new File(minecraftDir, "coremods");
 
         for(String cont : injectedContainers) {
             ModContainer mc;
@@ -197,12 +225,17 @@ public class Loader {
         FMLLog.fine("Attempting to load mods contained in the minecraft jar file and associated classes", new Object[0]);
         discoverer.findClasspathMods(this.modClassLoader);
         FMLLog.fine("Minecraft jar mods loaded successfully", new Object[0]);
-        FMLLog.info("Searching %s for mods", Constants.MODS_FOLDER);
-        discoverer.findModDirMods(Constants.MODS_FOLDER);
+        FMLLog.info("Searching %s for mods", new Object[]{this.canonicalModsDir.getAbsolutePath()});
+        discoverer.findModDirMods(this.canonicalModsDir);
         this.mods.addAll(discoverer.identifyMods());
         this.identifyDuplicates(this.mods);
         this.namedMods = Maps.uniqueIndex(this.mods, new ModIdFunction());
         FMLLog.info("Forge Mod Loader has identified %d mod%s to load", new Object[]{this.mods.size(), this.mods.size() != 1 ? "s" : ""});
+
+        for(String modId : this.namedMods.keySet()) {
+            FMLLog.makeLog(modId);
+        }
+
         return discoverer;
     }
 
@@ -280,6 +313,11 @@ public class Loader {
         } else if (!configDir.isDirectory()) {
             FMLLog.severe("Attempting to load configuration from %s, which is not a directory", new Object[]{canonicalConfigPath});
             throw new LoaderException();
+        } else {
+            this.loggingProperties = new File(this.canonicalConfigDir, "logging.properties");
+            FMLLog.info("Reading custom logging properties from %s", new Object[]{this.loggingProperties.getPath()});
+            FMLRelaunchLog.loadLogConfiguration(this.loggingProperties);
+            FMLLog.log(Level.OFF, "Logging level for ForgeModLoader logging is set to %s", new Object[]{FMLRelaunchLog.log.getLogger().getLevel()});
         }
     }
 
@@ -295,6 +333,9 @@ public class Loader {
         this.modController.transition(LoaderState.LOADING);
         ModDiscoverer disc = this.identifyMods();
         this.disableRequestedMods();
+        FMLLog.fine("Reloading logging properties from %s", new Object[]{this.loggingProperties.getPath()});
+        FMLRelaunchLog.loadLogConfiguration(this.loggingProperties);
+        FMLLog.fine("Reloaded logging properties", new Object[0]);
         this.modController.distributeStateMessage(FMLLoadEvent.class);
         this.sortModList();
         this.mods = ImmutableList.copyOf(this.mods);
@@ -316,7 +357,7 @@ public class Loader {
 
         this.modController.transition(LoaderState.CONSTRUCTING);
         this.modController.distributeStateMessage(LoaderState.CONSTRUCTING, new Object[]{this.modClassLoader, disc.getASMTable()});
-        FMLLog.fine("Mod signature data:", new Object[0]);
+        FMLLog.fine("Mod signature data", new Object[0]);
 
         for(ModContainer mod : this.getActiveModList()) {
             FMLLog.fine(
@@ -327,6 +368,10 @@ public class Loader {
             );
         }
 
+        if (this.getActiveModList().isEmpty()) {
+            FMLLog.fine("No user mod signature data found", new Object[0]);
+        }
+
         this.modController.transition(LoaderState.PREINITIALIZATION);
         this.modController.distributeStateMessage(LoaderState.PREINITIALIZATION, new Object[]{disc.getASMTable(), this.canonicalConfigDir});
         this.modController.transition(LoaderState.INITIALIZATION);
@@ -334,22 +379,22 @@ public class Loader {
 
     private void disableRequestedMods() {
         String forcedModList = System.getProperty("fml.modStates", "");
-        FMLLog.fine("Received a system property request '%s'", new Object[]{forcedModList});
+        FMLLog.finer("Received a system property request '%s'", new Object[]{forcedModList});
         Map<String, String> sysPropertyStateList = Splitter.on(CharMatcher.anyOf(";:"))
                 .omitEmptyStrings()
                 .trimResults()
                 .withKeyValueSeparator("=")
                 .split(forcedModList);
-        FMLLog.fine("System property request managing the state of %d mods", new Object[]{sysPropertyStateList.size()});
+        FMLLog.finer("System property request managing the state of %d mods", new Object[]{sysPropertyStateList.size()});
         Map<String, String> modStates = Maps.newHashMap();
         File forcedModFile = new File(this.canonicalConfigDir, "fmlModState.properties");
         Properties forcedModListProperties = new Properties();
         if (forcedModFile.exists() && forcedModFile.isFile()) {
-            FMLLog.fine("Found a mod state file %s", new Object[]{forcedModFile.getName()});
+            FMLLog.finer("Found a mod state file %s", new Object[]{forcedModFile.getName()});
 
             try {
                 forcedModListProperties.load(new FileReader(forcedModFile));
-                FMLLog.fine("Loaded states for %d mods from file", new Object[]{forcedModListProperties.size()});
+                FMLLog.finer("Loaded states for %d mods from file", new Object[]{forcedModListProperties.size()});
             } catch (Exception var9) {
                 FMLLog.log(Level.INFO, var9, "An error occurred reading the fmlModState.properties file", new Object[0]);
             }
@@ -484,9 +529,15 @@ public class Loader {
         return "Minecraft " + mccversion;
     }
 
-    public void serverStarting(Object server) {
-        this.modController.distributeStateMessage(LoaderState.SERVER_STARTING, new Object[]{server});
-        this.modController.transition(LoaderState.SERVER_STARTING);
+    public boolean serverStarting(Object server) {
+        try {
+            this.modController.distributeStateMessage(LoaderState.SERVER_STARTING, new Object[]{server});
+            this.modController.transition(LoaderState.SERVER_STARTING);
+            return true;
+        } catch (Throwable var3) {
+            FMLLog.log(Level.SEVERE, var3, "A fatal exception occurred during the server starting event", new Object[0]);
+            return false;
+        }
     }
 
     public void serverStarted() {
@@ -497,7 +548,6 @@ public class Loader {
     public void serverStopping() {
         this.modController.distributeStateMessage(LoaderState.SERVER_STOPPING, new Object[0]);
         this.modController.transition(LoaderState.SERVER_STOPPING);
-        this.modController.transition(LoaderState.AVAILABLE);
     }
 
     public BiMap<ModContainer, Object> getModObjectList() {
@@ -526,6 +576,23 @@ public class Loader {
 
     public String getMCPVersionString() {
         return String.format("MCP v%s", mcpversion);
+    }
+
+    public void serverStopped() {
+        this.modController.distributeStateMessage(LoaderState.SERVER_STOPPED, new Object[0]);
+        this.modController.transition(LoaderState.SERVER_STOPPED);
+        this.modController.transition(LoaderState.AVAILABLE);
+    }
+
+    public boolean serverAboutToStart(Object server) {
+        try {
+            this.modController.distributeStateMessage(LoaderState.SERVER_ABOUT_TO_START, new Object[]{server});
+            this.modController.transition(LoaderState.SERVER_ABOUT_TO_START);
+            return true;
+        } catch (Throwable var3) {
+            FMLLog.log(Level.SEVERE, var3, "A fatal exception occurred during the server about to start event", new Object[0]);
+            return false;
+        }
     }
 
     private class ModIdComparator implements Comparator<ModContainer> {

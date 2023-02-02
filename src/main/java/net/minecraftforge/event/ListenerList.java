@@ -150,7 +150,7 @@ public class ListenerList {
                 ret.addAll(this.getListeners(value));
             }
 
-            this.listeners = (IEventListener[])ret.toArray(new IEventListener[0]);
+            this.listeners = (IEventListener[])ret.toArray(new IEventListener[ret.size()]);
             this.rebuild = false;
         }
 

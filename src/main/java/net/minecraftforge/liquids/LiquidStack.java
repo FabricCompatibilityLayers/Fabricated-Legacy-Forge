@@ -35,17 +35,17 @@ public class LiquidStack {
         this.itemMeta = itemDamage;
     }
 
-    public NbtCompound writeToNBT(NbtCompound nbttagcompound) {
-        nbttagcompound.putShort("Id", (short)this.itemID);
-        nbttagcompound.putInt("Amount", this.amount);
-        nbttagcompound.putShort("Meta", (short)this.itemMeta);
-        return nbttagcompound;
+    public NbtCompound writeToNBT(NbtCompound nbt) {
+        nbt.putShort("Id", (short)this.itemID);
+        nbt.putInt("Amount", this.amount);
+        nbt.putShort("Meta", (short)this.itemMeta);
+        return nbt;
     }
 
-    public void readFromNBT(NbtCompound nbttagcompound) {
-        this.itemID = nbttagcompound.getShort("Id");
-        this.amount = nbttagcompound.getInt("Amount");
-        this.itemMeta = nbttagcompound.getShort("Meta");
+    public void readFromNBT(NbtCompound nbt) {
+        this.itemID = nbt.getShort("Id");
+        this.amount = nbt.getInt("Amount");
+        this.itemMeta = nbt.getShort("Meta");
     }
 
     public LiquidStack copy() {
@@ -53,26 +53,20 @@ public class LiquidStack {
     }
 
     public boolean isLiquidEqual(LiquidStack other) {
-        if (other == null) {
-            return false;
-        } else {
-            return this.itemID == other.itemID && this.itemMeta == other.itemMeta;
-        }
+        return other != null && this.itemID == other.itemID && this.itemMeta == other.itemMeta;
     }
 
     public boolean containsLiquid(LiquidStack other) {
-        if (!this.isLiquidEqual(other)) {
-            return false;
-        } else {
-            return this.amount >= other.amount;
-        }
+        return this.isLiquidEqual(other) && this.amount >= other.amount;
     }
 
     public boolean isLiquidEqual(ItemStack other) {
         if (other == null) {
             return false;
         } else {
-            return this.itemID == other.id && this.itemMeta == other.getData();
+            return this.itemID == other.id && this.itemMeta == other.getData()
+                    ? true
+                    : this.isLiquidEqual(LiquidContainerRegistry.getLiquidForFilledItem(other));
         }
     }
 
@@ -80,9 +74,9 @@ public class LiquidStack {
         return new ItemStack(this.itemID, 1, this.itemMeta);
     }
 
-    public static LiquidStack loadLiquidStackFromNBT(NbtCompound nbttagcompound) {
+    public static LiquidStack loadLiquidStackFromNBT(NbtCompound nbt) {
         LiquidStack liquidstack = new LiquidStack();
-        liquidstack.readFromNBT(nbttagcompound);
+        liquidstack.readFromNBT(nbt);
         return liquidstack.itemID == 0 ? null : liquidstack;
     }
 }

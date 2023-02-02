@@ -5,6 +5,7 @@
 package net.minecraftforge.liquids;
 
 import com.google.common.collect.ImmutableMap;
+import net.minecraft.block.Block;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.Event;
 
@@ -41,6 +42,11 @@ public abstract class LiquidDictionary {
 
     public static Map<String, LiquidStack> getLiquids() {
         return ImmutableMap.copyOf(liquids);
+    }
+
+    static {
+        getOrCreateLiquid("Water", new LiquidStack(Block.WATER, 1000));
+        getOrCreateLiquid("Lava", new LiquidStack(Block.LAVA, 1000));
     }
 
     public static class LiquidRegisterEvent extends Event {

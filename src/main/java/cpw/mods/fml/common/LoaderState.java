@@ -24,9 +24,11 @@ public enum LoaderState {
     INITIALIZATION("Initializing mods", FMLInitializationEvent.class),
     POSTINITIALIZATION("Post-initializing mods", FMLPostInitializationEvent.class),
     AVAILABLE("Mod loading complete", FMLLoadCompleteEvent.class),
+    SERVER_ABOUT_TO_START("Server about to start", FMLServerAboutToStartEvent.class),
     SERVER_STARTING("Server starting", FMLServerStartingEvent.class),
     SERVER_STARTED("Server started", FMLServerStartedEvent.class),
     SERVER_STOPPING("Server stopping", FMLServerStoppingEvent.class),
+    SERVER_STOPPED("Server stopped", FMLServerStoppedEvent.class),
     ERRORED("Mod Loading errored", null);
 
     private Class<? extends FMLStateEvent> eventClass;
@@ -41,7 +43,7 @@ public enum LoaderState {
         if (errored) {
             return ERRORED;
         } else {
-            return this == SERVER_STOPPING ? AVAILABLE : values()[this.ordinal() < values().length ? this.ordinal() + 1 : this.ordinal()];
+            return this == SERVER_STOPPED ? AVAILABLE : values()[this.ordinal() < values().length ? this.ordinal() + 1 : this.ordinal()];
         }
     }
 

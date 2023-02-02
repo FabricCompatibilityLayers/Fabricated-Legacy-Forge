@@ -18,6 +18,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import cpw.mods.fml.common.*;
+import fr.catcore.fabricatedforge.mixin.forgefml.block.entity.BlockEntityAccessor;
 import fr.catcore.fabricatedforge.mixininterface.ILevelGeneratorType;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
@@ -35,10 +36,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.ChunkProvider;
 import net.minecraft.world.level.LevelGeneratorType;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 
 public class GameRegistry {
@@ -144,7 +142,11 @@ public class GameRegistry {
     }
 
     public static void addRecipe(ItemStack output, Object... params) {
-        RecipeDispatcher.getInstance().registerShapedRecipe(output, params);
+        addShapedRecipe(output, params);
+    }
+
+    public static RecipeType addShapedRecipe(ItemStack output, Object... params) {
+        return RecipeDispatcher.getInstance().registerShapedRecipe(output, params);
     }
 
     public static void addShapelessRecipe(ItemStack output, Object... params) {
@@ -163,12 +165,23 @@ public class GameRegistry {
         BlockEntity.registerBlockEntity(tileEntityClass, id);
     }
 
+    public static void registerTileEntityWithAlternatives(Class<? extends BlockEntity> tileEntityClass, String id, String... alternatives) {
+        BlockEntity.registerBlockEntity(tileEntityClass, id);
+        Map<String, Class> teMappings = BlockEntityAccessor.getStringClassMap();
+
+        for(String s : alternatives) {
+            if (!teMappings.containsKey(s)) {
+                teMappings.put(s, tileEntityClass);
+            }
+        }
+    }
+
     public static void addBiome(Biome biome) {
-        ((ILevelGeneratorType)LevelGeneratorType.DEFAULT).addNewBiome(biome);
+        LevelGeneratorType.DEFAULT.addNewBiome(biome);
     }
 
     public static void removeBiome(Biome biome) {
-        ((ILevelGeneratorType)LevelGeneratorType.DEFAULT).removeBiome(biome);
+        LevelGeneratorType.DEFAULT.removeBiome(biome);
     }
 
     public static void registerFuelHandler(IFuelHandler handler) {

@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LoadController {
     private Loader loader;
@@ -56,12 +57,19 @@ public class LoadController {
             EventBus bus = new EventBus(mod.getModId());
             boolean isActive = mod.registerBus(bus, this);
             if (isActive) {
-                FMLLog.fine("Activating mod %s", new Object[]{mod.getModId()});
+                Level level = Logger.getLogger(mod.getModId()).getLevel();
+                FMLLog.log(
+                        mod.getModId(),
+                        Level.FINE,
+                        "Mod Logging channel %s configured at %s level.",
+                        new Object[]{mod.getModId(), level == null ? "default" : level}
+                );
+                FMLLog.log(mod.getModId(), Level.INFO, "Activating mod %s", new Object[]{mod.getModId()});
                 this.activeModList.add(mod);
                 this.modStates.put(mod.getModId(), LoaderState.ModState.UNLOADED);
                 eventBus.put(mod.getModId(), bus);
             } else {
-                FMLLog.warning("Mod %s has been disabled through configuration", new Object[]{mod.getModId()});
+                FMLLog.log(mod.getModId(), Level.WARNING, "Mod %s has been disabled through configuration", new Object[]{mod.getModId()});
                 this.modStates.put(mod.getModId(), LoaderState.ModState.UNLOADED);
                 this.modStates.put(mod.getModId(), LoaderState.ModState.DISABLED);
             }
@@ -85,21 +93,29 @@ public class LoadController {
             StringBuilder sb = new StringBuilder();
             this.printModStates(sb);
             FMLLog.getLogger().severe(sb.toString());
-            FMLLog.severe("The following problems were captured during this phase", new Object[0]);
+            if (this.errors.size() > 0) {
+                FMLLog.severe("The following problems were captured during this phase", new Object[0]);
 
-            for(Map.Entry<String, Throwable> error : this.errors.entries()) {
-                FMLLog.log(Level.SEVERE, (Throwable)error.getValue(), "Caught exception from %s", new Object[]{error.getKey()});
-                if (error.getValue() instanceof IFMLHandledException) {
-                    toThrow = (Throwable)error.getValue();
-                } else if (toThrow == null) {
-                    toThrow = (Throwable)error.getValue();
+                for(Map.Entry<String, Throwable> error : this.errors.entries()) {
+                    FMLLog.log(Level.SEVERE, (Throwable)error.getValue(), "Caught exception from %s", new Object[]{error.getKey()});
+                    if (error.getValue() instanceof IFMLHandledException) {
+                        toThrow = (Throwable)error.getValue();
+                    } else if (toThrow == null) {
+                        toThrow = (Throwable)error.getValue();
+                    }
                 }
-            }
 
-            if (toThrow != null && toThrow instanceof RuntimeException) {
-                throw (RuntimeException)toThrow;
+                if (toThrow != null && toThrow instanceof RuntimeException) {
+                    throw (RuntimeException)toThrow;
+                } else {
+                    throw new LoaderException(toThrow);
+                }
             } else {
-                throw new LoaderException(toThrow);
+                FMLLog.severe(
+                        "The ForgeModLoader state engine has become corrupted. Probably, a state was missed by and invalid modification to a base classForgeModLoader depends on. This is a critical error and not recoverable. Investigate any modifications to base classes outside ofForgeModLoader, especially Optifine, to see if there are fixes available.",
+                        new Object[0]
+                );
+                throw new RuntimeException("The ForgeModLoader state engine is invalid");
             }
         }
     }
@@ -118,9 +134,9 @@ public class LoadController {
             this.activeContainer = mc;
             String modId = mc.getModId();
             stateEvent.applyModContainer(this.activeContainer());
-            FMLLog.finer("Sending event %s to mod %s", new Object[]{stateEvent.getEventType(), modId});
+            FMLLog.log(modId, Level.FINEST, "Sending event %s to mod %s", new Object[]{stateEvent.getEventType(), modId});
             ((EventBus)this.eventChannels.get(modId)).post(stateEvent);
-            FMLLog.finer("Sent event %s to mod %s", new Object[]{stateEvent.getEventType(), modId});
+            FMLLog.log(modId, Level.FINEST, "Sent event %s to mod %s", new Object[]{stateEvent.getEventType(), modId});
             this.activeContainer = null;
             if (stateEvent instanceof FMLStateEvent) {
                 if (!this.errors.containsKey(modId)) {

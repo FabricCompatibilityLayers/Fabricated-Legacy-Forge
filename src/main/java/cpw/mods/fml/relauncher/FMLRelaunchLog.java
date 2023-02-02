@@ -13,10 +13,7 @@
  */
 package cpw.mods.fml.relauncher;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
+import java.io.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.*;
 
@@ -27,6 +24,8 @@ public class FMLRelaunchLog {
     private static Thread consoleLogThread;
     private static PrintStream errCache;
     private Logger myLog;
+    private static FileHandler fileHandler;
+    private static FMLLogFormatter formatter;
 
     private FMLRelaunchLog() {
     }
@@ -40,28 +39,51 @@ public class FMLRelaunchLog {
         stdOut.setParent(log.myLog);
         Logger stdErr = Logger.getLogger("STDERR");
         stdErr.setParent(log.myLog);
-        FMLLogFormatter formatter = new FMLLogFormatter();
+        log.myLog.setLevel(Level.ALL);
         log.myLog.setUseParentHandlers(false);
-        log.myLog.addHandler(new FMLRelaunchLog.ConsoleLogWrapper());
         consoleLogThread = new Thread(new FMLRelaunchLog.ConsoleLogThread());
         consoleLogThread.start();
-        FMLRelaunchLog.ConsoleLogThread.wrappedHandler.setLevel(Level.parse(System.getProperty("fml.log.level", "INFO")));
-        FMLRelaunchLog.ConsoleLogThread.wrappedHandler.setFormatter(formatter);
-        log.myLog.setLevel(Level.ALL);
+        formatter = new FMLLogFormatter();
 
         try {
             File logPath = new File(minecraftHome, FMLRelauncher.logFileNamePattern);
-            FileHandler fileHandler = new FileHandler(logPath.getPath(), 0, 3);
-            fileHandler.setFormatter(formatter);
-            fileHandler.setLevel(Level.ALL);
-            log.myLog.addHandler(fileHandler);
-        } catch (Exception var6) {
+            fileHandler = new FileHandler(logPath.getPath(), 0, 3) {
+                public synchronized void close() throws SecurityException {
+                }
+            };
+        } catch (Exception var4) {
         }
 
+        resetLoggingHandlers();
         errCache = System.err;
         System.setOut(new PrintStream(new FMLRelaunchLog.LoggingOutStream(stdOut), true));
         System.setErr(new PrintStream(new FMLRelaunchLog.LoggingOutStream(stdErr), true));
         configured = true;
+    }
+
+    private static void resetLoggingHandlers() {
+        FMLRelaunchLog.ConsoleLogThread.wrappedHandler.setLevel(Level.parse(System.getProperty("fml.log.level", "INFO")));
+        log.myLog.addHandler(new FMLRelaunchLog.ConsoleLogWrapper());
+        FMLRelaunchLog.ConsoleLogThread.wrappedHandler.setFormatter(formatter);
+        fileHandler.setLevel(Level.ALL);
+        fileHandler.setFormatter(formatter);
+        log.myLog.addHandler(fileHandler);
+    }
+
+    public static void loadLogConfiguration(File logConfigFile) {
+        if (logConfigFile != null && logConfigFile.exists() && logConfigFile.canRead()) {
+            try {
+                LogManager.getLogManager().readConfiguration(new FileInputStream(logConfigFile));
+                resetLoggingHandlers();
+            } catch (Exception var2) {
+                log(Level.SEVERE, var2, "Error reading logging configuration file %s", logConfigFile.getName());
+            }
+        }
+    }
+
+    public static void log(String logChannel, Level level, String format, Object... data) {
+        makeLog(logChannel);
+        Logger.getLogger(logChannel).log(level, String.format(format, data));
     }
 
     public static void log(Level level, String format, Object... data) {
@@ -70,6 +92,11 @@ public class FMLRelaunchLog {
         }
 
         log.myLog.log(level, String.format(format, data));
+    }
+
+    public static void log(String logChannel, Level level, Throwable ex, String format, Object... data) {
+        makeLog(logChannel);
+        Logger.getLogger(logChannel).log(level, String.format(format, data), ex);
     }
 
     public static void log(Level level, Throwable ex, String format, Object... data) {
@@ -106,6 +133,11 @@ public class FMLRelaunchLog {
 
     public Logger getLogger() {
         return this.myLog;
+    }
+
+    public static void makeLog(String logChannel) {
+        Logger l = Logger.getLogger(logChannel);
+        l.setParent(log.myLog);
     }
 
     private static class ConsoleLogThread implements Runnable {

@@ -52,7 +52,7 @@ public class ModDiscoverer {
             for(int i = 0; i < minecraftSources.length; ++i) {
                 if (minecraftSources[i].isFile()) {
                     if (knownLibraries.contains(minecraftSources[i].getName())) {
-                        FMLLog.fine("Skipping known library file %s", new Object[]{minecraftSources[i].getAbsolutePath()});
+                        FMLLog.finer("Skipping known library file %s", new Object[]{minecraftSources[i].getAbsolutePath()});
                     } else {
                         FMLLog.fine("Found a minecraft related file at %s, examining for mod candidates", new Object[]{minecraftSources[i].getAbsolutePath()});
                         this.candidates.add(new ModCandidate(minecraftSources[i], minecraftSources[i], ContainerType.JAR, i == 0, true));

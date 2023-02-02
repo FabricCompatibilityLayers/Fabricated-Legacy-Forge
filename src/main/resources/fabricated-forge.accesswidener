@@ -425,6 +425,13 @@ accessible method net/minecraft/client/world/ClientWorld onEntityRemoved (Lnet/m
 
 accessible method net/minecraft/server/world/ServerWorld onEntityRemoved (Lnet/minecraft/entity/Entity;)V
 
+accessible field net/minecraft/server/world/ServerWorld ready Z
+
+accessible field net/minecraft/world/chunk/ChunkCache world Lnet/minecraft/world/World;
+
+accessible field net/minecraft/inventory/DoubleInventory field_3111 Lnet/minecraft/inventory/Inventory;
+accessible field net/minecraft/inventory/DoubleInventory field_3110 Lnet/minecraft/inventory/Inventory;
+
 #### Fabricated Forge
 accessible class net/minecraft/client/class_470
 accessible class net/minecraft/client/class_416

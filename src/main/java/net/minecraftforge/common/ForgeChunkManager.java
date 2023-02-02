@@ -70,7 +70,7 @@ public class ForgeChunkManager {
         if (world instanceof ServerWorld) {
             dormantChunkCache.put(world, CacheBuilder.newBuilder().maximumSize((long)dormantChunkCacheSize).build());
             ServerWorld worldServer = (ServerWorld)world;
-            File chunkDir = ((IServerWorld)worldServer).getChunkSaveLocation();
+            File chunkDir = worldServer.getChunkSaveLocation();
             File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
             if (chunkLoaderData.exists() && chunkLoaderData.isFile()) {
                 ArrayListMultimap<String, ForgeChunkManager.Ticket> loadedTickets = ArrayListMultimap.create();
@@ -270,12 +270,15 @@ public class ForgeChunkManager {
                 throw new RuntimeException("Invalid ticket request");
             } else {
                 int allowedCount = ticketConstraints.containsKey(modId) ? ticketConstraints.get(modId) : defaultMaxCount;
-                if (((Multimap)tickets.get(world)).get(modId).size() >= allowedCount && !warnedMods.contains(modId)) {
-                    FMLLog.info(
-                            "The mod %s has attempted to allocate a chunkloading ticket beyond it's currently allocated maximum : %d",
-                            new Object[]{modId, allowedCount}
-                    );
-                    warnedMods.add(modId);
+                if (((Multimap)tickets.get(world)).get(modId).size() >= allowedCount) {
+                    if (!warnedMods.contains(modId)) {
+                        FMLLog.info(
+                                "The mod %s has attempted to allocate a chunkloading ticket beyond it's currently allocated maximum : %d",
+                                new Object[]{modId, allowedCount}
+                        );
+                        warnedMods.add(modId);
+                    }
+
                     return null;
                 } else {
                     ForgeChunkManager.Ticket ticket = new ForgeChunkManager.Ticket(modId, type, world);
@@ -367,7 +370,7 @@ public class ForgeChunkManager {
     static void saveWorld(World world) {
         if (world instanceof ServerWorld) {
             ServerWorld worldServer = (ServerWorld)world;
-            File chunkDir = ((IServerWorld)worldServer).getChunkSaveLocation();
+            File chunkDir = worldServer.getChunkSaveLocation();
             File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
             NbtCompound forcedChunkData = new NbtCompound();
             NbtList ticketList = new NbtList();
@@ -434,7 +437,23 @@ public class ForgeChunkManager {
 
     public static Chunk fetchDormantChunk(long coords, World world) {
         Cache<Long, Chunk> cache = (Cache)dormantChunkCache.get(world);
-        return cache == null ? null : (Chunk)cache.getIfPresent(coords);
+        if (cache == null) {
+            return null;
+        } else {
+            Chunk chunk = (Chunk)cache.getIfPresent(coords);
+            if (chunk != null) {
+                List<Entity>[] arr$ = chunk.entities;
+                int len$ = arr$.length;
+
+                for(int i$ = 0; i$ < len$; ++i$) {
+                    for(Entity e : arr$[i$]) {
+                        e.resetEntityId();
+                    }
+                }
+            }
+
+            return chunk;
+        }
     }
 
     static void captureConfig(File configDir) {
@@ -469,7 +488,7 @@ public class ForgeChunkManager {
         playerTicketCount.comment = "The number of tickets a player can be assigned instead of a mod. This is shared across all mods and it is up to the mods to use it.";
         playerTicketLength = playerTicketCount.getInt(500);
         Property dormantChunkCacheSizeProperty = config.get("defaults", "dormantChunkCacheSize", 0);
-        dormantChunkCacheSizeProperty.comment = "Unloaded chunks can first be kept in a dormant cache for quicker\nloading times. Specify the size of that cache here";
+        dormantChunkCacheSizeProperty.comment = "Unloaded chunks can first be kept in a dormant cache for quicker\nloading times. Specify the size (in chunks) of that cache here";
         dormantChunkCacheSize = dormantChunkCacheSizeProperty.getInt(0);
         FMLLog.info("Configured a dormant chunk cache size of %d", new Object[]{dormantChunkCacheSizeProperty.getInt(0)});
         Property modOverridesEnabled = config.get("defaults", "enabled", true);

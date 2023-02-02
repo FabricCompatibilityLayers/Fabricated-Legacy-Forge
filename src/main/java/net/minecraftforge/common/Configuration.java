@@ -143,7 +143,7 @@ public class Configuration {
                 FMLLog.warning("Config \"%s\" Category: \"%s\" Key: \"%s\" Default: %d", new Object[]{this.fileName, category, key, defaultID});
             }
 
-            if (Item.ITEMS[defaultShift] == null && !configMarkers[defaultShift] && defaultShift > Block.BLOCKS.length) {
+            if (Item.ITEMS[defaultShift] == null && !configMarkers[defaultShift] && defaultShift >= Block.BLOCKS.length) {
                 prop.value = Integer.toString(defaultID);
                 configMarkers[defaultShift] = true;
                 return prop;
@@ -335,6 +335,7 @@ public class Configuration {
     public void load() {
         if (PARENT == null || PARENT == this) {
             BufferedReader buffer = null;
+            Configuration.UnicodeInputStreamReader input = null;
 
             try {
                 if (this.file.getParentFile() != null) {
@@ -343,9 +344,7 @@ public class Configuration {
 
                 if (this.file.exists() || this.file.createNewFile()) {
                     if (this.file.canRead()) {
-                        Configuration.UnicodeInputStreamReader input = new Configuration.UnicodeInputStreamReader(
-                                new FileInputStream(this.file), this.defaultEncoding
-                        );
+                        input = new Configuration.UnicodeInputStreamReader(new FileInputStream(this.file), this.defaultEncoding);
                         this.defaultEncoding = input.getEncoding();
                         buffer = new BufferedReader(input);
                         ConfigCategory currentCat = null;
@@ -481,14 +480,21 @@ public class Configuration {
 
                     return;
                 }
-            } catch (IOException var28) {
-                var28.printStackTrace();
+            } catch (IOException var33) {
+                var33.printStackTrace();
                 return;
             } finally {
                 if (buffer != null) {
                     try {
                         buffer.close();
-                    } catch (IOException var27) {
+                    } catch (IOException var32) {
+                    }
+                }
+
+                if (input != null) {
+                    try {
+                        input.close();
+                    } catch (IOException var31) {
                     }
                 }
             }
@@ -511,8 +517,7 @@ public class Configuration {
                 if (this.file.canWrite()) {
                     FileOutputStream fos = new FileOutputStream(this.file);
                     BufferedWriter buffer = new BufferedWriter(new OutputStreamWriter(fos, this.defaultEncoding));
-                    buffer.write("# Configuration file" + NEW_LINE);
-                    buffer.write("# Generated on " + DateFormat.getInstance().format(new Date()) + NEW_LINE + NEW_LINE);
+                    buffer.write("# Configuration file" + NEW_LINE + NEW_LINE);
                     if (this.children.isEmpty()) {
                         this.save(buffer);
                     } else {

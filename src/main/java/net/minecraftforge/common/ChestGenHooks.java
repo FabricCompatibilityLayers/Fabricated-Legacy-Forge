@@ -37,6 +37,7 @@ public class ChestGenHooks {
 
     private static void init() {
         if (!hasInit) {
+            hasInit = true;
             addInfo("mineshaftCorridor", MineshaftPieces.field_4910, 3, 7);
             addInfo("pyramidDesertyChest", class_5.field_6, 2, 7);
             addInfo("pyramidJungleChest", class_6.field_11, 2, 7);
@@ -66,7 +67,7 @@ public class ChestGenHooks {
             addDungeonLoot(d, new ItemStack(Item.STRING), 100, 1, 4);
             addDungeonLoot(d, new ItemStack(Item.BUCKET), 100, 1, 1);
             addDungeonLoot(d, new ItemStack(Item.GOLDEN_APPLE), 1, 1, 1);
-            addDungeonLoot(d, new ItemStack(Item.REDSTONE), 40, 1, 4);
+            addDungeonLoot(d, new ItemStack(Item.REDSTONE), 50, 1, 4);
             addDungeonLoot(d, new ItemStack(Item.RECORD_13), 5, 1, 1);
             addDungeonLoot(d, new ItemStack(Item.RECORD_CAT), 5, 1, 1);
             addDungeonLoot(d, new ItemStack(Item.DYES, 1, 3), 100, 1, 1);
@@ -167,7 +168,7 @@ public class ChestGenHooks {
         for(WeightedRandomChestContent orig : this.contents) {
             Item item = orig.content.getItem();
             if (item != null) {
-                WeightedRandomChestContent n = ((IItem)item).getChestGenBase(this, rnd, orig);
+                WeightedRandomChestContent n = item.getChestGenBase(this, rnd, orig);
                 if (n != null) {
                     ret.add(n);
                 }
@@ -183,7 +184,7 @@ public class ChestGenHooks {
 
     public ItemStack getOneItem(Random rand) {
         WeightedRandomChestContent[] items = this.getItems(rand);
-        WeightedRandomChestContent item = (WeightedRandomChestContent) Weighting.getRandom(rand, items);
+        WeightedRandomChestContent item = (WeightedRandomChestContent)Weighting.getRandom(rand, items);
         ItemStack[] stacks = generateStacks(rand, item.content, item.min, item.max);
         return stacks.length > 0 ? stacks[0] : null;
     }

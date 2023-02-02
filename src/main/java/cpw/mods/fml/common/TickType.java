@@ -18,7 +18,9 @@ import java.util.EnumSet;
 public enum TickType {
     WORLD,
     RENDER,
+    @Deprecated
     GUI,
+    @Deprecated
     CLIENTGUI,
     WORLDLOAD,
     CLIENT,

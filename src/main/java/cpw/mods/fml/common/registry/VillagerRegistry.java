@@ -63,6 +63,10 @@ public class VillagerRegistry {
         return instance().newVillagers.containsKey(villagerType) ? (String)instance().newVillagers.get(villagerType) : defaultSkin;
     }
 
+    public static Collection<Integer> getRegisteredVillagers() {
+        return Collections.unmodifiableCollection(instance().newVillagerIds);
+    }
+
     public static void manageVillagerTrades(TraderOfferList recipeList, VillagerEntity villager, int villagerType, Random random) {
         for(VillagerRegistry.IVillageTradeHandler handler : instance().tradeHandlers.get(villagerType)) {
             handler.manipulateTradesForVillager(villager, recipeList, random);

@@ -8,6 +8,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.event.Cancelable;
 
+@Deprecated
 @Cancelable
 public class LivingSpecialSpawnEvent extends LivingEvent {
     public final World world;

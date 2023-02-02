@@ -33,7 +33,7 @@ public class ForgeInternalHandler {
 
         Entity entity = event.entity;
         if (entity.getClass().equals(ItemEntity.class)) {
-            ItemStack stack = ((ItemEntity)entity).getDataTracker().getStack(10);
+            ItemStack stack = entity.getDataTracker().getStack(10);
             if (stack == null) {
                 return;
             }
@@ -49,8 +49,8 @@ public class ForgeInternalHandler {
                 return;
             }
 
-            if (((IItem)item).hasCustomEntity(stack)) {
-                Entity newEntity = ((IItem)item).createEntity(event.world, entity, stack);
+            if (item.hasCustomEntity(stack)) {
+                Entity newEntity = item.createEntity(event.world, entity, stack);
                 if (newEntity != null) {
                     entity.remove();
                     event.setCanceled(true);

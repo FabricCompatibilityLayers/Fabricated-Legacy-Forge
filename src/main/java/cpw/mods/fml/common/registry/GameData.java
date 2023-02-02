@@ -55,14 +55,14 @@ public class GameData {
                 Properties p = new Properties();
 
                 try {
-                    p.load(Files.newInputStream(f.toPath()));
+                    p.load(new FileInputStream(f));
                     ignoredMods = Maps.fromProperties(p);
                     if (ignoredMods.size() > 0) {
-                        FMLLog.warning("Using non-empty ignored mods configuration file %s", new Object[]{ignoredMods.keySet()});
+                        FMLLog.log("fml.ItemTracker", Level.WARNING, "Using non-empty ignored mods configuration file %s", new Object[]{ignoredMods.keySet()});
                     }
                 } catch (Exception var4) {
                     Throwables.propagateIfPossible(var4);
-                    FMLLog.log(Level.SEVERE, var4, "Failed to read ignored ID checker mods properties file", new Object[0]);
+                    FMLLog.log("fml.ItemTracker", Level.SEVERE, var4, "Failed to read ignored ID checker mods properties file", new Object[0]);
                     ignoredMods = ImmutableMap.of();
                 }
             } else {
@@ -89,15 +89,17 @@ public class GameData {
         ItemData itemData = new ItemData(item, mc);
         if (idMap.containsKey(item.id)) {
             ItemData id = (ItemData)idMap.get(item.id);
-            FMLLog.info(
-                    "[ItemTracker] The mod %s is overwriting existing item at %d (%s from %s) with %s",
+            FMLLog.log(
+                    "fml.ItemTracker",
+                    Level.INFO,
+                    "The mod %s is overwriting existing item at %d (%s from %s) with %s",
                     new Object[]{mc.getModId(), id.getItemId(), id.getItemType(), id.getModId(), itemType}
             );
         }
 
         idMap.put(item.id, itemData);
         if (!"Minecraft".equals(mc.getModId())) {
-            FMLLog.fine("[ItemTracker] Adding item %s(%d) owned by %s", new Object[]{item.getClass().getName(), item.id, mc.getModId()});
+            FMLLog.log("fml.ItemTracker", Level.FINE, "Adding item %s(%d) owned by %s", new Object[]{item.getClass().getName(), item.id, mc.getModId()});
         }
     }
 
@@ -119,14 +121,14 @@ public class GameData {
             };
             Map<Integer, ItemData> worldMap = Maps.uniqueIndex(worldSaveItems, idMapFunction);
             difference = Maps.difference(worldMap, idMap);
-            FMLLog.fine("The difference set is %s", new Object[]{difference});
+            FMLLog.log("fml.ItemTracker", Level.FINE, "The difference set is %s", new Object[]{difference});
             if (difference.entriesDiffering().isEmpty() && difference.entriesOnlyOnLeft().isEmpty()) {
                 isSaveValid = true;
                 serverValidationLatch.countDown();
             } else {
-                FMLLog.severe("FML has detected item discrepancies", new Object[0]);
-                FMLLog.severe("Missing items : %s", new Object[]{difference.entriesOnlyOnLeft()});
-                FMLLog.severe("Mismatched items : %s", new Object[]{difference.entriesDiffering()});
+                FMLLog.log("fml.ItemTracker", Level.SEVERE, "FML has detected item discrepancies", new Object[0]);
+                FMLLog.log("fml.ItemTracker", Level.SEVERE, "Missing items : %s", new Object[]{difference.entriesOnlyOnLeft()});
+                FMLLog.log("fml.ItemTracker", Level.SEVERE, "Mismatched items : %s", new Object[]{difference.entriesDiffering()});
                 boolean foundNonIgnored = false;
 
                 for(ItemData diff : difference.entriesOnlyOnLeft().values()) {
@@ -143,7 +145,9 @@ public class GameData {
                 }
 
                 if (!foundNonIgnored) {
-                    FMLLog.severe(
+                    FMLLog.log(
+                            "fml.ItemTracker",
+                            Level.SEVERE,
                             "FML is ignoring these ID discrepancies because of configuration. YOUR GAME WILL NOW PROBABLY CRASH. HOPEFULLY YOU WON'T HAVE CORRUPTED YOUR WORLD. BLAME %s",
                             new Object[]{ignoredMods.keySet()}
                     );

@@ -1,6 +1,6 @@
 This is Forge Mod Loader, or FML for short, by cpw.
 
-More information can be found at https://github.com/cpw/FML/wiki
+More information can be found at https://github.com/MinecraftForge/FML/wiki
 
 It is a clean reimplementation of a mod loading system for client, server and
 bukkit use, incorporating API implementations of client side ModLoader by
@@ -16,7 +16,7 @@ Environments and compatibility
 ==============================
 FML covers the three main environments: client, server and bukkit. All
 environments share the main mod loading code base, with additional varying hooks
-based on the specific environment. Compatibility is almost 100% with all 
+based on the specific environment. Compatibility is almost 100% with all
 ModLoader based mods- any mod with any difficulty (unless noted below) should
 be reported as a ticket to the github, please.
 
@@ -25,7 +25,7 @@ Optifine, however new versions of optifine are compatible. There are some very
 visible changes to the client when FML is installed.
 
 Server side mods are mostly compatible with previous MLMP based incarnations,
-however, this compatibility is not guaranteed. Most mods have adapted to FML 
+however, this compatibility is not guaranteed. Most mods have adapted to FML
 and MLMP is not assured and will cause errors. Ask your mod author to update
 to FML.
 
@@ -40,10 +40,10 @@ contributors through github.
 
 Notable integrations
 ====================
-Optifine, with the Cx series have started performing the actions necessary for 
-FML compatibility. This means optifine will work well alongside an FML or 
+Optifine, with the Cx series have started performing the actions necessary for
+FML compatibility. This means optifine will work well alongside an FML or
 Minecraft Forge installation. FML will detect and ensure the good operation of
-Optifine (you can see it in your client as an additional data line on the 
+Optifine (you can see it in your client as an additional data line on the
 bottom left).
 
 Client notes
@@ -89,7 +89,7 @@ installing Minecraft Forge.
 Source installation information for modders
 -------------------------------------------
 This code follows the Minecraft Forge installation methodology. It will apply
-some small patches to your MCP extracted source code, giving you and it access 
+some small patches to your MCP extracted source code, giving you and it access
 to some of the data and functions you need to build a successful mod.
 
 Note also that the patches are built against "unrenamed" MCP source code- this
@@ -100,7 +100,7 @@ Source pack installation information:
 Standalone source installation
 ==============================
 
-To install this source code for development purposes, extract this zip file 
+To install this source code for development purposes, extract this zip file
 into an mcp installation containing vanilla jars only. It should create a new
 folder "fml" inside that installation.
 
@@ -116,5 +116,5 @@ Forge source installation
 MinecraftForge ships with this code and installs it as part of the forge
 installation process, no further action is required on your part.
 
-For reference this is version 4.6.17.515 of FML
-for Minecraft version 1.4.6.
+For reference this is version 4.7.35.556 of FML
+for Minecraft version 1.4.7.

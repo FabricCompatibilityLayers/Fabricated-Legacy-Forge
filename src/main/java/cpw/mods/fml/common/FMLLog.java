@@ -24,8 +24,16 @@ public class FMLLog {
     public FMLLog() {
     }
 
+    public static void log(String logChannel, Level level, String format, Object... data) {
+        FMLRelaunchLog.log(logChannel, level, format, data);
+    }
+
     public static void log(Level level, String format, Object... data) {
         FMLRelaunchLog.log(level, format, data);
+    }
+
+    public static void log(String logChannel, Level level, Throwable ex, String format, Object... data) {
+        FMLRelaunchLog.log(logChannel, level, ex, format, data);
     }
 
     public static void log(Level level, Throwable ex, String format, Object... data) {
@@ -58,5 +66,9 @@ public class FMLLog {
 
     public static Logger getLogger() {
         return coreLog.getLogger();
+    }
+
+    public static void makeLog(String logChannel) {
+        FMLRelaunchLog.makeLog(logChannel);
     }
 }

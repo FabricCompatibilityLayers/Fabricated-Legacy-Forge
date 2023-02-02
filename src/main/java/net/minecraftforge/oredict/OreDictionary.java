@@ -71,7 +71,7 @@ public class OreDictionary {
         }
 
         hasInit = true;
-        ItemStack[] replaceStacks = (ItemStack[])replacements.keySet().toArray(new ItemStack[0]);
+        ItemStack[] replaceStacks = (ItemStack[])replacements.keySet().toArray(new ItemStack[replacements.keySet().size()]);
         ItemStack[] exclusions = new ItemStack[]{new ItemStack(Block.LAPIS_BLOCK), new ItemStack(Item.COOKIE)};
         List recipes = RecipeDispatcher.getInstance().getAllRecipes();
         List<RecipeType> recipesToRemove = new ArrayList();
@@ -89,7 +89,7 @@ public class OreDictionary {
                 ShapelessRecipeType recipe = (ShapelessRecipeType)obj;
                 ItemStack output = recipe.getOutput();
                 if ((output == null || !containsMatch(false, exclusions, output))
-                        && containsMatch(true, (ItemStack[])recipe.stacks.toArray(new ItemStack[0]), replaceStacks)) {
+                        && containsMatch(true, (ItemStack[])recipe.stacks.toArray(new ItemStack[recipe.stacks.size()]), replaceStacks)) {
                     recipesToRemove.add((RecipeType)obj);
                     RecipeType newRecipe = new ShapelessOreRecipe(recipe, replacements);
                     recipesToAdd.add(newRecipe);
@@ -129,10 +129,10 @@ public class OreDictionary {
         if (itemStack == null) {
             return -1;
         } else {
-            for(int oreID : oreStacks.keySet()) {
-                for(ItemStack target : oreStacks.get(oreID)) {
+            for(Map.Entry<Integer, ArrayList<ItemStack>> ore : oreStacks.entrySet()) {
+                for(ItemStack target : ore.getValue()) {
                     if (itemStack.id == target.id && (target.getData() == -1 || itemStack.getData() == target.getData())) {
-                        return oreID;
+                        return ore.getKey();
                     }
                 }
             }
@@ -146,7 +146,7 @@ public class OreDictionary {
     }
 
     public static String[] getOreNames() {
-        return (String[])oreIDs.keySet().toArray(new String[0]);
+        return (String[])oreIDs.keySet().toArray(new String[oreIDs.keySet().size()]);
     }
 
     public static ArrayList<ItemStack> getOres(Integer id) {

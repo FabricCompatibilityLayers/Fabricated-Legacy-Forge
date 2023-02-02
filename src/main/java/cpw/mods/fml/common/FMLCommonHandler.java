@@ -44,6 +44,7 @@ import net.minecraft.world.WorldSaveHandler;
 import net.minecraft.world.level.LevelProperties;
 
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class FMLCommonHandler {
@@ -62,10 +63,10 @@ public class FMLCommonHandler {
 
     public void beginLoading(IFMLSidedHandler handler) {
         this.sidedDelegate = handler;
-        FMLLog.info("Attempting early MinecraftForge initialization", new Object[0]);
+        FMLLog.log("MinecraftForge", Level.INFO, "Attempting early MinecraftForge initialization", new Object[0]);
         this.callForgeMethod("initialize");
         this.callForgeMethod("registerCrashCallable");
-        FMLLog.info("Completed early MinecraftForge initialization", new Object[0]);
+        FMLLog.log("MinecraftForge", Level.INFO, "Completed early MinecraftForge initialization", new Object[0]);
     }
 
     public void rescheduleTicks(Side side) {
@@ -120,7 +121,7 @@ public class FMLCommonHandler {
     }
 
     public void raiseException(Throwable exception, String message, boolean stopGame) {
-        instance().getFMLLogger().throwing("FMLHandler", "raiseException", exception);
+        FMLLog.log(Level.SEVERE, exception, "Something raised an exception. The message was '%s'. 'stopGame' is %b", new Object[]{message, stopGame});
         if (stopGame) {
             this.getSidedDelegate().haltGame(message, exception);
         }
@@ -219,8 +220,12 @@ public class FMLCommonHandler {
         }
     }
 
-    public void handleServerStarting(MinecraftServer server) {
-        Loader.instance().serverStarting(server);
+    public boolean handleServerAboutToStart(MinecraftServer server) {
+        return Loader.instance().serverAboutToStart(server);
+    }
+
+    public boolean handleServerStarting(MinecraftServer server) {
+        return Loader.instance().serverStarting(server);
     }
 
     public void handleServerStarted() {
@@ -313,7 +318,7 @@ public class FMLCommonHandler {
             if (!this.handlerSet.contains(handler)) {
                 this.handlerSet.add(handler);
                 Map<String, NbtElement> additionalProperties = Maps.newHashMap();
-                ((ILevelProperties)worldInfo).setAdditionalProperties(additionalProperties);
+                worldInfo.setAdditionalProperties(additionalProperties);
 
                 for(ModContainer mc : Loader.instance().getModList()) {
                     if (mc instanceof InjectedModContainer) {
@@ -328,10 +333,14 @@ public class FMLCommonHandler {
     }
 
     public boolean shouldServerBeKilledQuietly() {
-        return this.sidedDelegate.shouldServerShouldBeKilledQuietly();
+        return this.sidedDelegate == null ? false : this.sidedDelegate.shouldServerShouldBeKilledQuietly();
     }
 
     public void disconnectIDMismatch(MapDifference<Integer, ItemData> serverDifference, PacketListener toKill, Connection network) {
         this.sidedDelegate.disconnectIDMismatch(serverDifference, toKill, network);
+    }
+
+    public void handleServerStopped() {
+        Loader.instance().serverStopped();
     }
 }
