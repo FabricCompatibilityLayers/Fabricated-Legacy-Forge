@@ -217,7 +217,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
             return false;
         } else {
             Item item = par3ItemStack != null ? par3ItemStack.getItem() : null;
-            if (item != null && item.onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, par8, par9, par10)) {
+            if (item != null && ((IItem)item).onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, par8, par9, par10)) {
                 if (par3ItemStack.count <= 0) {
                     ForgeEventFactory.onPlayerDestroyItem(this.player, par3ItemStack);
                 }
@@ -231,7 +231,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
                         && (
                         !par1EntityPlayer.isSneaking()
                                 || par1EntityPlayer.method_2640() == null
-                                || par1EntityPlayer.method_2640().getItem().shouldPassSneakingClickToBlock(par2World, par4, par5, par6)
+                                || ((IItem)par1EntityPlayer.method_2640().getItem()).shouldPassSneakingClickToBlock(par2World, par4, par5, par6)
                 )) {
                     if (event.useBlock != Event.Result.DENY) {
                         result = block.onActivated(par2World, par4, par5, par6, par1EntityPlayer, par7, par8, par9, par10);

@@ -4,7 +4,7 @@
  */
 package net.minecraftforge.common;
 
-import fr.catcore.fabricatedforge.mixininterface.IWeightedRandomChestContent;
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
@@ -167,7 +167,7 @@ public class ChestGenHooks {
         for(WeightedRandomChestContent orig : this.contents) {
             Item item = orig.content.getItem();
             if (item != null) {
-                WeightedRandomChestContent n = item.getChestGenBase(this, rnd, orig);
+                WeightedRandomChestContent n = ((IItem)item).getChestGenBase(this, rnd, orig);
                 if (n != null) {
                     ret.add(n);
                 }

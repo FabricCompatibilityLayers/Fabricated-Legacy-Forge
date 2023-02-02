@@ -10,6 +10,7 @@ import cpw.mods.fml.common.versioning.VersionRange;
 import net.fabricmc.loader.api.metadata.Person;
 
 import java.io.File;
+import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -128,6 +129,11 @@ public class FabricModContainer implements ModContainer {
 
     @Override
     public VersionRange acceptableMinecraftVersionRange() {
+        return null;
+    }
+
+    @Override
+    public Certificate getSigningCertificate() {
         return null;
     }
 }

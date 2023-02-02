@@ -103,7 +103,7 @@ public abstract class ItemEntityMixin extends Entity {
         ItemStack item = this.getDataTracker().getStack(10);
         if (!this.world.isClient && this.age >= this.lifespan) {
             if (item != null) {
-                ItemExpireEvent event = new ItemExpireEvent((ItemEntity)(Object) this, item.getItem() == null ? 6000 : item.getItem().getEntityLifespan(item, this.world));
+                ItemExpireEvent event = new ItemExpireEvent((ItemEntity)(Object) this, item.getItem() == null ? 6000 : ((IItem)item.getItem()).getEntityLifespan(item, this.world));
                 if (MinecraftForge.EVENT_BUS.post(event)) {
                     this.lifespan += event.extraLife;
                 } else {

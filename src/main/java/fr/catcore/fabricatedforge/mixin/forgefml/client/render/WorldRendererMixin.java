@@ -14,7 +14,6 @@ import net.minecraft.item.Item;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.IRenderHandler;
-import net.minecraftforge.client.SkyProvider;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -540,7 +539,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
                     }
 
                     if (var21 != null) {
-                        this.client.particleManager.addEffect(var21, effectObject);
+                        ((IParticleManager)this.client.particleManager).addEffect(var21, effectObject);
                     }
 
                     return var21;

@@ -318,7 +318,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         ItemStack stack = this.inventory.getMainHandStack();
         if (stack == null) {
             return null;
-        } else if (!stack.getItem().onDroppedByPlayer(stack, (PlayerEntity)(Object) this)) {
+        } else if (!((IItem)stack.getItem()).onDroppedByPlayer(stack, (PlayerEntity)(Object) this)) {
             return null;
         } else {
             int count = par1 && this.inventory.getMainHandStack() != null ? this.inventory.getMainHandStack().count : 1;
@@ -360,7 +360,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     @Override
     public float getCurrentPlayerStrVsBlock(Block par1Block, int meta) {
         ItemStack stack = this.inventory.getMainHandStack();
-        float var2 = stack == null ? 1.0F : stack.getItem().getStrVsBlock(stack, par1Block, meta);
+        float var2 = stack == null ? 1.0F : ((IItem)stack.getItem()).getStrVsBlock(stack, par1Block, meta);
         int var3 = EnchantmentHelper.method_4652(this);
         ItemStack var4 = this.inventory.getMainHandStack();
         if (var3 > 0 && var4 != null) {
@@ -778,7 +778,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
             var3 = par1ItemStack.method_3429() + 16;
         } else {
             if (par1ItemStack.getItem().method_3397()) {
-                return par1ItemStack.getItem().getIconIndex(par1ItemStack, par2);
+                return ((IItem)par1ItemStack.getItem()).getIconIndex(par1ItemStack, par2);
             }
 
             if (this.useItem != null && par1ItemStack.id == Item.field_4349.id) {

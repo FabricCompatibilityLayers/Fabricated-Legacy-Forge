@@ -319,7 +319,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 double var11 = this.player.y - ((double)var7 + 0.5) + 1.5;
                 double var13 = this.player.z - ((double)var8 + 0.5);
                 double var15 = var9 * var9 + var11 * var11 + var13 * var13;
-                double dist = this.player.interactionManager.getBlockReachDistance() + 1.0;
+                double dist = ((IServerPlayerInteractionManager)this.player.interactionManager).getBlockReachDistance() + 1.0;
                 dist *= dist;
                 if (var15 > dist) {
                     return;
@@ -395,7 +395,7 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 var13 = var12;
             }
 
-            double dist = this.player.interactionManager.getBlockReachDistance() + 1.0;
+            double dist = ((IServerPlayerInteractionManager)this.player.interactionManager).getBlockReachDistance() + 1.0;
             dist *= dist;
             if (this.field_2910 && this.player.squaredDistanceTo((double)var5 + 0.5, (double)var6 + 0.5, (double)var7 + 0.5) < dist && (var13 > var9 || var10)) {
                 this.player

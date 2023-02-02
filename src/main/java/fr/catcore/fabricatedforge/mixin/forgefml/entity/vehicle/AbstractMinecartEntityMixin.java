@@ -293,7 +293,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
             if (this.canUseRail() && RailBlock.method_354(var8)) {
                 this.fallDistance = 0.0F;
                 Vec3d var9 = this.snapPositionToRail(this.x, this.y, this.z);
-                int var10 = ((RailBlock)Block.BLOCKS[var8]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var45, var2, var47);
+                int var10 = ((IRailBlock)Block.BLOCKS[var8]).getBasicRailMetadata(this.world, (AbstractMinecartEntity)(Object) this, var45, var2, var47);
                 this.y = (double)var2;
                 boolean var11 = false;
                 boolean var12 = false;
@@ -399,7 +399,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
 
                 this.updatePushForces();
                 if (this.shouldDoRailFunctions()) {
-                    ((RailBlock)Block.BLOCKS[var8]).onMinecartPass(this.world, (AbstractMinecartEntity)(Object)this, var45, var2, var47);
+                    ((IRailBlock)Block.BLOCKS[var8]).onMinecartPass(this.world, (AbstractMinecartEntity)(Object)this, var45, var2, var47);
                 }
 
                 if (var11 && this.shouldDoRailFunctions()) {

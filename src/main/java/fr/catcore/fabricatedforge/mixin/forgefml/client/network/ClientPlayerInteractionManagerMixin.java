@@ -87,7 +87,7 @@ public abstract class ClientPlayerInteractionManagerMixin {
         boolean var12 = false;
         if (par3ItemStack != null
                 && par3ItemStack.getItem() != null
-                && par3ItemStack.getItem().onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11)) {
+                && ((IItem)par3ItemStack.getItem()).onItemUseFirst(par3ItemStack, par1EntityPlayer, par2World, par4, par5, par6, par7, var9, var10, var11)) {
             return true;
         } else {
             if (!par1EntityPlayer.isSneaking() || par1EntityPlayer.method_2640() == null) {

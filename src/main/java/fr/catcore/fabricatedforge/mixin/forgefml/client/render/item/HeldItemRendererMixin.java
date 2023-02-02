@@ -58,13 +58,13 @@ public abstract class HeldItemRendererMixin {
         GL11.glPushMatrix();
         IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(par2ItemStack, IItemRenderer.ItemRenderType.EQUIPPED);
         if (customRenderer != null) {
-            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath(par2ItemStack.getItem().getTextureFile()));
+            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath(((IItem)par2ItemStack.getItem()).getTextureFile()));
             ForgeHooksClient.renderEquippedItem(customRenderer, this.blockRenderer, par1EntityLiving, par2ItemStack);
         } else if (par2ItemStack.getItem() instanceof BlockItem && BlockRenderer.method_1455(Block.BLOCKS[par2ItemStack.id].getBlockType())) {
-            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath(par2ItemStack.getItem().getTextureFile()));
+            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath(((IItem)par2ItemStack.getItem()).getTextureFile()));
             this.blockRenderer.method_1447(Block.BLOCKS[par2ItemStack.id], par2ItemStack.getData(), 1.0F);
         } else {
-            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath(par2ItemStack.getItem().getTextureFile()));
+            GL11.glBindTexture(3553, this.client.textureManager.getTextureFromPath(((IItem)par2ItemStack.getItem()).getTextureFile()));
             Tessellator var5 = Tessellator.INSTANCE;
             int var6 = par1EntityLiving.method_2630(par2ItemStack, par3);
             float var7 = ((float)(var6 % 16 * 16) + 0.0F) / 256.0F;
