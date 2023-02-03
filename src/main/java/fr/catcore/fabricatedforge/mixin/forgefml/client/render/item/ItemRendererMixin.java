@@ -57,7 +57,7 @@ public abstract class ItemRendererMixin extends EntityRenderer implements IItemR
             byte var13 = this.getMiniBlockCountForItemStack(var10);
             GL11.glTranslatef((float)par2, (float)par4 + var11, (float)par6);
             GL11.glEnable(32826);
-            if (!ForgeHooksClient.renderEntityItem(par1EntityItem, var10, var11, var12, this.field_2126, this.dispatcher.textureManager, this.field_2125)) {
+            if (!ForgeHooksClient.renderEntityItem(par1EntityItem, var10, var11, var12, this.field_2126, this.dispatcher.textureManager, this.field_2112)) {
                 if (var10.getItem() instanceof BlockItem && BlockRenderer.method_1455(Block.BLOCKS[var10.id].getBlockType())) {
                     GL11.glRotatef(var12, 0.0F, 1.0F, 0.0F);
                     if (field_5197) {
@@ -96,10 +96,10 @@ public abstract class ItemRendererMixin extends EntityRenderer implements IItemR
                         GL11.glScalef(0.5F, 0.5F, 0.5F);
                     }
 
-                    for(int var15 = 0; var15 <= ((IItem)var10.getItem()).getRenderPasses(var10.getData()); ++var15) {
-                        this.method_1529(((IItem)Item.ITEMS[var10.id]).getTextureFile());
+                    for(int var15 = 0; var15 < var10.getItem().getRenderPasses(var10.getData()); ++var15) {
+                        this.method_1529(Item.ITEMS[var10.id].getTextureFile());
                         this.field_2126.setSeed(187L);
-                        int var16 = ((IItem)var10.getItem()).getIconIndex(var10, var15);
+                        int var16 = var10.getItem().getIconIndex(var10, var15);
                         float var17 = 1.0F;
                         if (this.field_2123) {
                             int var18 = Item.ITEMS[var10.id].getDisplayColor(var10, var15);
@@ -121,7 +121,7 @@ public abstract class ItemRendererMixin extends EntityRenderer implements IItemR
                     }
 
                     int var15 = var10.method_3429();
-                    this.method_1529(((IItem)var10.getItem()).getTextureFile());
+                    this.method_1529(var10.getItem().getTextureFile());
                     if (this.field_2123) {
                         int var16 = Item.ITEMS[var10.id].getDisplayColor(var10, 0);
                         float var17 = (float)(var16 >> 16 & 0xFF) / 255.0F;
@@ -316,7 +316,7 @@ public abstract class ItemRendererMixin extends EntityRenderer implements IItemR
     @Overwrite
     public void method_4336(TextRenderer par1FontRenderer, TextureManager par2RenderEngine, ItemStack par3ItemStack, int par4, int par5) {
         if (par3ItemStack != null) {
-            if (!ForgeHooksClient.renderInventoryItem(this.field_2125, par2RenderEngine, par3ItemStack, this.field_2123, this.zOffset, (float)par4, (float)par5)
+            if (!ForgeHooksClient.renderInventoryItem(this.field_2112, par2RenderEngine, par3ItemStack, this.field_2123, this.zOffset, (float)par4, (float)par5)
             )
             {
                 this.method_1546(par1FontRenderer, par2RenderEngine, par3ItemStack, par4, par5);

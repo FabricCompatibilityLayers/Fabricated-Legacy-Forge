@@ -103,6 +103,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
     @Shadow @Final public static Block IRON_BLOCK;
     protected String currentTexture;
     public boolean isDefaultTexture;
+    private int silk_check_meta = -1;
 
     @Inject(method = "<init>(ILnet/minecraft/block/material/Material;)V", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/block/Block;field_469:Z"))
     private void ctrPart1(int material, Material par2, CallbackInfo ci) {
@@ -198,9 +199,19 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
         }
     }
 
+    /**
+     * @author forge
+     * @reason hook
+     */
+    @Overwrite
+    protected boolean requiresSilkTouch() {
+        return this.renderAsNormalBlock() && !this.hasTileEntity(this.silk_check_meta);
+    }
+
     @Override
     public int getLightValue(BlockView world, int x, int y, int z) {
-        return field_496[this.id];
+        Block block = BLOCKS[world.getBlock(x, y, z)];
+        return block != null && block != (Object)this ? block.getLightValue(world, x, y, z) : field_496[this.id];
     }
 
     @Override
@@ -302,7 +313,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
         int count = this.quantityDropped(metadata, fortune, world.random);
 
         for(int i = 0; i < count; ++i) {
-            int id = this.method_398(metadata, world.random, 0);
+            int id = this.method_398(metadata, world.random, fortune);
             if (id > 0) {
                 ret.add(new ItemStack(id, 1, this.method_431(metadata)));
             }
@@ -313,11 +324,10 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     @Override
     public boolean canSilkHarvest(World world, PlayerEntity player, int x, int y, int z, int metadata) {
-        if (!(((Object)this) instanceof GlassBlock) && !(((Object)this) instanceof EnderChestBlock)) {
-            return this.renderAsNormalBlock() && !this.hasTileEntity(metadata);
-        } else {
-            return true;
-        }
+        this.silk_check_meta = metadata;
+        boolean ret = this.requiresSilkTouch();
+        this.silk_check_meta = 0;
+        return ret;
     }
 
     @Override
@@ -487,6 +497,13 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
                 default:
                     return false;
             }
+        }
+    }
+
+    @Override
+    public void onPlantGrow(World world, int x, int y, int z, int sourceX, int sourceY, int sourceZ) {
+        if (this.id == GRASS_BLOCK.id) {
+            world.method_3652(x, y, z, DIRT.id);
         }
     }
 

@@ -3,17 +3,22 @@ package fr.catcore.fabricatedforge.mixin.forgefml.client.render;
 import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import fr.catcore.fabricatedforge.mixininterface.IWorldRenderer;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.*;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.render.*;
+import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.IRenderHandler;
+import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,6 +49,16 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
     @Shadow private int ticks;
 
     @Shadow public abstract void method_1382(float tickDelta);
+
+    @Shadow private int totalEntityCount;
+
+    @Shadow private int rendererdEntityCount;
+
+    @Shadow private int hiddenEntityCount;
+
+    @Shadow private int blockEntityCount;
+
+    @Shadow public List blockEntities;
 
     /**
      * @author Minecraft Forge
@@ -547,6 +562,79 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
             }
         } else {
             return null;
+        }
+    }
+
+    /**
+     * @author forge
+     * @reason hook
+     */
+    @Overwrite
+    public void method_1370(Vec3d par1Vec3, CameraView par2ICamera, float par3) {
+        int pass = MinecraftForgeClient.getRenderPass();
+        if (this.totalEntityCount > 0) {
+            if (pass > 0) {
+                return;
+            }
+
+            --this.totalEntityCount;
+        } else {
+            this.world.profiler.push("prepare");
+            List var5 = this.world.getLoadedEntities();
+            if (pass == 0) {
+                BlockEntityRenderDispatcher.INSTANCE.initialize(this.world, this.textureManager, this.client.textRenderer, this.client.cameraEntity, par3);
+                EntityRenderDispatcher.INSTANCE
+                        .initialize(this.world, this.textureManager, this.client.textRenderer, this.client.cameraEntity, this.client.options, par3);
+                this.rendererdEntityCount = 0;
+                this.hiddenEntityCount = 0;
+                this.blockEntityCount = 0;
+                MobEntity var4 = this.client.cameraEntity;
+                EntityRenderDispatcher.CAMERA_X = var4.prevTickX + (var4.x - var4.prevTickX) * (double)par3;
+                EntityRenderDispatcher.CAMERA_Y = var4.prevTickY + (var4.y - var4.prevTickY) * (double)par3;
+                EntityRenderDispatcher.CAMERA_Z = var4.prevTickZ + (var4.z - var4.prevTickZ) * (double)par3;
+                BlockEntityRenderDispatcher.CAMERA_X = var4.prevTickX + (var4.x - var4.prevTickX) * (double)par3;
+                BlockEntityRenderDispatcher.CAMERA_Y = var4.prevTickY + (var4.y - var4.prevTickY) * (double)par3;
+                BlockEntityRenderDispatcher.CAMERA_Z = var4.prevTickZ + (var4.z - var4.prevTickZ) * (double)par3;
+                this.rendererdEntityCount = var5.size();
+            }
+
+            this.client.gameRenderer.beforeWorldRender((double)par3);
+            this.world.profiler.swap("global");
+
+            for(int var6 = 0; var6 < this.world.entities.size(); ++var6) {
+                Entity var7 = (Entity)this.world.entities.get(var6);
+                if (var7.shouldRenderInPass(pass) && var7.shouldRender(par1Vec3)) {
+                    ++this.hiddenEntityCount;
+                    EntityRenderDispatcher.INSTANCE.render(var7, par3);
+                }
+            }
+
+            this.world.profiler.swap("entities");
+
+            for(int var10 = 0; var10 < var5.size(); ++var10) {
+                Entity var7 = (Entity)var5.get(var10);
+                if (var7.shouldRenderInPass(pass)
+                        && var7.shouldRender(par1Vec3)
+                        && (var7.ignoreCameraFrustum || par2ICamera.isBoxInFrustum(var7.boundingBox) || var7.rider == this.client.playerEntity)
+                        && (var7 != this.client.cameraEntity || this.client.options.perspective != 0 || this.client.cameraEntity.method_2641())
+                        && this.world.isPosLoaded(MathHelper.floor(var7.x), 0, MathHelper.floor(var7.z))) {
+                    ++this.hiddenEntityCount;
+                    EntityRenderDispatcher.INSTANCE.render(var7, par3);
+                }
+            }
+
+            this.world.profiler.swap("tileentities");
+            DiffuseLighting.enableNormally();
+
+            for(int var11 = 0; var11 < this.blockEntities.size(); ++var11) {
+                BlockEntity te = (BlockEntity)this.blockEntities.get(var11);
+                if (par2ICamera.isBoxInFrustum(te.getRenderBoundingBox()) && te.shouldRenderInPass(pass)) {
+                    BlockEntityRenderDispatcher.INSTANCE.render(te, par3);
+                }
+            }
+
+            this.client.gameRenderer.afterWorldRender((double)par3);
+            this.world.profiler.pop();
         }
     }
 }

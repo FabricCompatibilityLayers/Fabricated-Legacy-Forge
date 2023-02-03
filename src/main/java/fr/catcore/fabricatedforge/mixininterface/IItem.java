@@ -37,6 +37,14 @@ public interface IItem {
 
     boolean shouldPassSneakingClickToBlock(World par2World, int par4, int par5, int par6);
 
+    void onArmorTickUpdate(World world, PlayerEntity player, ItemStack itemStack);
+
+    boolean isValidArmor(ItemStack stack, int armorType);
+
+    boolean isPotionIngredient(ItemStack stack);
+
+    String getPotionEffect(ItemStack stack);
+
     // Non Forge APIs
     boolean isDefaultTexture();
     void isDefaultTexture(boolean isDefaultTexture);

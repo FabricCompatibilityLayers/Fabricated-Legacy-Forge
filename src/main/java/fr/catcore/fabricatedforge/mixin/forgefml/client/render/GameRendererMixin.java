@@ -302,7 +302,9 @@ public abstract class GameRendererMixin {
             if (this.field_1859 == 0) {
                 DiffuseLighting.enableNormally();
                 this.client.profiler.swap("entities");
+                ForgeHooksClient.setRenderPass(0);
                 var5.method_1370(var4.method_2663(par1), var14, par1);
+                ForgeHooksClient.setRenderPass(-1);
                 this.beforeWorldRender((double)par1);
                 this.client.profiler.swap("litParticles");
                 var6.method_1299(var4, par1);
@@ -360,6 +362,12 @@ public abstract class GameRendererMixin {
                 var5.method_1374(var4, 1, (double)par1);
             }
 
+            DiffuseLighting.enableNormally();
+            this.client.profiler.swap("entities");
+            ForgeHooksClient.setRenderPass(1);
+            var5.method_1370(var4.method_2663(par1), var14, par1);
+            ForgeHooksClient.setRenderPass(-1);
+            DiffuseLighting.disable();
             GL11.glDepthMask(true);
             GL11.glEnable(2884);
             GL11.glDisable(3042);
@@ -382,7 +390,7 @@ public abstract class GameRendererMixin {
             this.client.profiler.swap("destroyProgress");
             GL11.glEnable(3042);
             GL11.glBlendFunc(770, 1);
-            ((IWorldRenderer)var5).drawBlockDamageTexture(Tessellator.INSTANCE, var4, par1);
+            var5.drawBlockDamageTexture(Tessellator.INSTANCE, var4, par1);
             GL11.glDisable(3042);
             this.client.profiler.swap("weather");
             this.renderWeather(par1);

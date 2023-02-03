@@ -30,6 +30,7 @@ import net.minecraft.inventory.EnderChestInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.stat.Stat;
 import net.minecraft.stat.Stats;
@@ -138,6 +139,10 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     @Shadow public abstract void setScore(int score);
 
     @Shadow private EnderChestInventory enderChest;
+
+    @Shadow private BlockPos field_4001;
+
+    @Shadow private boolean spawnForced;
 
     public PlayerEntityMixin(World world) {
         super(world);
@@ -400,6 +405,42 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
     @Overwrite
     public boolean isUsingEffectiveTool(Block par1Block) {
         return ForgeEventFactory.doPlayerHarvestCheck((PlayerEntity)(Object) this, par1Block, this.inventory.canToolBreak(par1Block));
+    }
+
+    /**
+     * @author forge
+     * @reason hook?
+     */
+    @Overwrite
+    public void readCustomDataFromNbt(NbtCompound par1NBTTagCompound) {
+        super.readCustomDataFromNbt(par1NBTTagCompound);
+        NbtList var2 = par1NBTTagCompound.getList("Inventory");
+        this.inventory.deserialize(var2);
+        this.inventory.selectedSlot = par1NBTTagCompound.getInt("SelectedItemSlot");
+        this.inBed = par1NBTTagCompound.getBoolean("Sleeping");
+        this.sleepTimer = par1NBTTagCompound.getShort("SleepTimer");
+        this.experienceProgress = par1NBTTagCompound.getFloat("XpP");
+        this.experienceLevel = par1NBTTagCompound.getInt("XpLevel");
+        this.totalExperience = par1NBTTagCompound.getInt("XpTotal");
+        this.setScore(par1NBTTagCompound.getInt("Score"));
+        if (this.inBed) {
+            this.field_3992 = new BlockPos(MathHelper.floor(this.x), MathHelper.floor(this.y), MathHelper.floor(this.z));
+            this.awaken(true, true, false);
+        }
+
+        if (par1NBTTagCompound.contains("SpawnX") && par1NBTTagCompound.contains("SpawnY") && par1NBTTagCompound.contains("SpawnZ")) {
+            this.field_4001 = new BlockPos(par1NBTTagCompound.getInt("SpawnX"), par1NBTTagCompound.getInt("SpawnY"), par1NBTTagCompound.getInt("SpawnZ"));
+            this.spawnForced = par1NBTTagCompound.getBoolean("SpawnForced");
+        }
+
+        this.hungerManager.deserialize(par1NBTTagCompound);
+        this.abilities.deserialize(par1NBTTagCompound);
+        if (par1NBTTagCompound.contains("EnderItems")) {
+            NbtList var3 = par1NBTTagCompound.getList("EnderItems");
+            this.enderChest.readNbtList(var3);
+        }
+
+        this.pickUpLoot = false;
     }
 
     /**
@@ -829,6 +870,19 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
         NbtCompound old = par1EntityPlayer.getEntityData();
         if (old.contains("PlayerPersisted")) {
             this.getEntityData().put("PlayerPersisted", old.getCompound("PlayerPersisted"));
+        }
+    }
+
+    /**
+     * @author forge
+     * @reason hook
+     */
+    @Overwrite
+    public void setArmorSlot(int par1, ItemStack par2ItemStack) {
+        if (par1 == 0) {
+            this.inventory.main[this.inventory.selectedSlot] = par2ItemStack;
+        } else {
+            this.inventory.armor[par1 - 1] = par2ItemStack;
         }
     }
 

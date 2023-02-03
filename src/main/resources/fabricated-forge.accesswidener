@@ -449,3 +449,5 @@ accessible class net/minecraft/network/class_266
 accessible class net/minecraft/util/crash/provider/SuspiciousClassesProvider
 accessible class net/minecraft/util/crash/class_1390
 accessible method net/minecraft/util/crash/class_1390 <init> (Lnet/minecraft/util/crash/provider/SuspiciousClassesProvider;)V
+accessible class net/minecraft/inventory/slot/class_1004
+accessible class net/minecraft/inventory/slot/class_1019

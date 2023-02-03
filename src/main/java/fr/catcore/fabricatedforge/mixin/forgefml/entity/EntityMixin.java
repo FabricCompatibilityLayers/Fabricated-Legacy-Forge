@@ -165,6 +165,8 @@ public abstract class EntityMixin implements IEntity {
     @Shadow public abstract void setOnFireFor(int seconds);
 
     @Shadow public int fireResistance;
+    @Shadow public int id;
+    @Shadow private static int entityCount;
     private NbtCompound customEntityData;
     public boolean captureDrops = false;
     public ArrayList<ItemEntity> capturedDrops = new ArrayList<>();
@@ -756,5 +758,15 @@ public abstract class EntityMixin implements IEntity {
     @Override
     public Random getRandom() {
         return this.random;
+    }
+
+    @Override
+    public final void resetEntityId() {
+        this.id = entityCount++;
+    }
+
+    @Override
+    public boolean shouldRenderInPass(int pass) {
+        return pass == 0;
     }
 }

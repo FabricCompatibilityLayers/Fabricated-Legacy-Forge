@@ -15,6 +15,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.Event;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.living.LivingSpecialSpawnEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -77,7 +79,7 @@ public abstract class MobSpawnerHelperMixin {
                     ArrayList<ChunkPos> tmp = new ArrayList(field_4593.keySet());
                     Collections.shuffle(tmp);
 
-                    label122:
+                    label130:
                     for(ChunkPos var36 : tmp) {
                         if (!(boolean) field_4593.get(var36)) {
                             Vec3i var38 = getRandomPosInChunk(par0WorldServer, var36.x, var36.z);
@@ -126,12 +128,13 @@ public abstract class MobSpawnerHelperMixin {
                                                     var39.refreshPositionAndAngles(
                                                             (double)var24, (double)var25, (double)var26, par0WorldServer.random.nextFloat() * 360.0F, 0.0F
                                                     );
-                                                    if (var39.canSpawn()) {
+                                                    Event.Result canSpawn = ForgeEventFactory.canEntitySpawn(var39, par0WorldServer, var24, var25, var26);
+                                                    if (canSpawn == Event.Result.ALLOW || canSpawn == Event.Result.DEFAULT && var39.canSpawn()) {
                                                         ++var16;
                                                         par0WorldServer.spawnEntity(var39);
                                                         method_3797(var39, par0WorldServer, var24, var25, var26);
                                                         if (var16 >= var39.getLimitPerChunk()) {
-                                                            continue label122;
+                                                            continue label130;
                                                         }
                                                     }
 
@@ -180,7 +183,7 @@ public abstract class MobSpawnerHelperMixin {
      */
     @Overwrite
     private static void method_3797(MobEntity par0EntityLiving, World par1World, float par2, float par3, float par4) {
-        if (!MinecraftForge.EVENT_BUS.post(new LivingSpecialSpawnEvent(par0EntityLiving, par1World, par2, par3, par4))) {
+        if (!ForgeEventFactory.doSpecialSpawn(par0EntityLiving, par1World, par2, par3, par4)) {
             par0EntityLiving.method_4475();
         }
     }

@@ -25,4 +25,8 @@ public interface IEntity {
     boolean captureDrops();
     ArrayList<ItemEntity> getCapturedDrops();
     Random getRandom();
+
+    void resetEntityId();
+
+    boolean shouldRenderInPass(int pass);
 }

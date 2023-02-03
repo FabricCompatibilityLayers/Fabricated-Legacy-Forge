@@ -141,15 +141,17 @@ public abstract class TextureManagerMixin {
                     if (var7 == null) {
                         this.method_1418(this.missingTexture, var3);
                     } else {
-                        this.method_1418(this.readBufferedImage(var7), var3);
+                        BufferedImage loadedImage = this.readBufferedImage(var7);
+                        TextureFXManager.instance().fixTransparency(loadedImage, par1Str);
+                        this.method_1418(loadedImage, var3);
                     }
                 }
 
                 this.textureCache.put(par1Str, var3);
                 ForgeHooksClient.onTextureLoad(par1Str, var6);
                 return var3;
-            } catch (Exception var61) {
-                var61.printStackTrace();
+            } catch (Exception var7) {
+                var7.printStackTrace();
                 GlAllocationUtils.method_850(this.field_1976);
                 int var4 = this.field_1976.get(0);
                 this.method_1418(this.missingTexture, var4);

@@ -67,8 +67,10 @@ import net.minecraft.world.level.LevelProperties;
 import net.minecraft.world.level.storage.AnvilLevelStorage;
 import net.minecraft.world.level.storage.LevelStorageAccess;
 import net.minecraftforge.common.ForgeHooks;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
@@ -287,7 +289,7 @@ public abstract class MinecraftMixin implements IMinecraft {
             Display.setDisplayMode(new DisplayMode(this.width, this.height));
         }
 
-        Display.setTitle("Minecraft Minecraft 1.4.6");
+        Display.setTitle("Minecraft Minecraft 1.4.7");
         System.out.println("LWJGL Version: " + Sys.getVersion());
 
         try {
@@ -1013,6 +1015,10 @@ public abstract class MinecraftMixin implements IMinecraft {
     public void connect(ClientWorld par1WorldClient, String par2Str) {
         this.statHandler.method_1739();
         if (par1WorldClient == null) {
+            if (this.world != null) {
+                MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(this.world));
+            }
+
             class_469 var3 = this.method_2960();
             if (var3 != null) {
                 var3.method_1201();

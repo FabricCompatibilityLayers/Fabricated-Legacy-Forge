@@ -68,6 +68,9 @@ public interface IBlock {
     @Environment(EnvType.CLIENT)
     boolean addBlockDestroyEffects(World world, int x, int y, int z, int meta, ParticleManager effectRenderer);
     boolean canSustainPlant(World world, int x, int y, int z, ForgeDirection direction, IPlantable plant);
+
+    void onPlantGrow(World world, int x, int y, int z, int sourceX, int sourceY, int sourceZ);
+
     boolean isFertile(World world, int x, int y, int z);
     int getLightOpacity(World world, int x, int y, int z);
     boolean canDragonDestroy(World world, int x, int y, int z);

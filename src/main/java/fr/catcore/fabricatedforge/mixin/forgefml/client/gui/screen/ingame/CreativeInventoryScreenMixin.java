@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.gui.screen.ingame;
 
+import fr.catcore.fabricatedforge.mixin.forgefml.client.class_417Accessor;
 import fr.catcore.fabricatedforge.mixininterface.IItemGroup;
 import net.minecraft.client.class_416;
 import net.minecraft.client.class_417;
@@ -9,6 +10,7 @@ import net.minecraft.client.gui.screen.ingame.SurvivalInventoryScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.inventory.slot.Slot;
 import net.minecraft.item.ItemStack;
@@ -45,6 +47,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
 
     @Shadow protected abstract boolean renderTabTooltipIfHovered(ItemGroup group, int mouseX, int mouseY);
 
+    @Shadow private boolean scrolling;
     private static int tabPage = 0;
     private int maxPages = 0;
 
@@ -180,6 +183,101 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
 
             this.scrollPosition = 0.0F;
             var3.method_1152(0.0F);
+        }
+    }
+
+    /**
+     * @author forge
+     * @reason hook
+     */
+    @Overwrite
+    protected void onMouseClick(Slot par1Slot, int par2, int par3, int par4) {
+        this.scrolling = true;
+        boolean var5 = par4 == 1;
+        if (par1Slot != null) {
+            if (par1Slot == this.deleteItemSlot && var5) {
+                for(int var10 = 0; var10 < this.field_1229.playerEntity.playerScreenHandler.getStacks().size(); ++var10) {
+                    this.field_1229.interactionManager.clickCreativeStack((ItemStack)null, var10);
+                }
+            } else if (selectedTab == ItemGroup.INVENTORY.getIndex()) {
+                if (par1Slot == this.deleteItemSlot) {
+                    this.field_1229.playerEntity.inventory.setCursorStack((ItemStack)null);
+                } else {
+                    this.field_1229
+                            .playerEntity
+                            .playerScreenHandler
+                            .onSlotClick(((class_417Accessor)par1Slot).getField_1386().id, par3, par4, this.field_1229.playerEntity);
+                    this.field_1229.playerEntity.playerScreenHandler.sendContentUpdates();
+                }
+            } else if (par1Slot.inventory == inventory) {
+                PlayerInventory var6 = this.field_1229.playerEntity.inventory;
+                ItemStack var7 = var6.getCursorStack();
+                ItemStack var8 = par1Slot.getStack();
+                if (par4 == 2) {
+                    if (var8 != null && par3 >= 0 && par3 < 9) {
+                        ItemStack var9 = var8.copy();
+                        var9.count = var9.getMaxCount();
+                        this.field_1229.playerEntity.inventory.setInvStack(par3, var9);
+                        this.field_1229.playerEntity.playerScreenHandler.sendContentUpdates();
+                    }
+
+                    return;
+                }
+
+                if (par4 == 3) {
+                    if (var6.getCursorStack() == null && par1Slot.hasStack()) {
+                        ItemStack var9 = par1Slot.getStack().copy();
+                        var9.count = var9.getMaxCount();
+                        var6.setCursorStack(var9);
+                    }
+
+                    return;
+                }
+
+                if (var7 != null && var8 != null && var7.equalsIgnoreNbt(var8) && ItemStack.equalsIgnoreDamage(var7, var8)) {
+                    if (par3 == 0) {
+                        if (var5) {
+                            var7.count = var7.getMaxCount();
+                        } else if (var7.count < var7.getMaxCount()) {
+                            ++var7.count;
+                        }
+                    } else if (var7.count <= 1) {
+                        var6.setCursorStack((ItemStack)null);
+                    } else {
+                        --var7.count;
+                    }
+                } else if (var8 != null && var7 == null) {
+                    var6.setCursorStack(ItemStack.copyOf(var8));
+                    var7 = var6.getCursorStack();
+                    if (var5) {
+                        var7.count = var7.getMaxCount();
+                    }
+                } else {
+                    var6.setCursorStack((ItemStack)null);
+                }
+            } else {
+                this.screenHandler.onSlotClick(par1Slot.id, par3, par4, this.field_1229.playerEntity);
+                ItemStack var11 = this.screenHandler.getSlot(par1Slot.id).getStack();
+                this.field_1229.interactionManager.clickCreativeStack(var11, par1Slot.id - this.screenHandler.slots.size() + 9 + 36);
+            }
+        } else {
+            PlayerInventory var6 = this.field_1229.playerEntity.inventory;
+            if (var6.getCursorStack() != null) {
+                if (par3 == 0) {
+                    this.field_1229.playerEntity.dropStack(var6.getCursorStack());
+                    this.field_1229.interactionManager.dropCreativeStack(var6.getCursorStack());
+                    var6.setCursorStack((ItemStack)null);
+                }
+
+                if (par3 == 1) {
+                    ItemStack var7 = var6.getCursorStack().split(1);
+                    this.field_1229.playerEntity.dropStack(var7);
+                    this.field_1229.interactionManager.dropCreativeStack(var7);
+                    if (var6.getCursorStack().count == 0) {
+                        var6.setCursorStack((ItemStack)null);
+                    }
+                }
+            }
         }
     }
 

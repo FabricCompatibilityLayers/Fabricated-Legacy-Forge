@@ -9,10 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.EnchantedBookItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.item.itemgroup.ItemGroup;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.util.hit.BlockHitResult;
@@ -50,6 +47,12 @@ public abstract class ItemMixin implements ItemProxy, IItem {
     @Shadow public abstract ItemGroup getItemGroup();
 
     @Shadow public abstract int method_3369(int i, int j);
+
+    @Shadow public static Item SKULL;
+
+    @Shadow public abstract boolean hasStatusEffect();
+
+    @Shadow public abstract String getStatusEffect();
 
     protected boolean canRepair = true;
     public boolean isDefaultTexture = true;
@@ -201,6 +204,31 @@ public abstract class ItemMixin implements ItemProxy, IItem {
     @Override
     public boolean shouldPassSneakingClickToBlock(World par2World, int par4, int par5, int par6) {
         return false;
+    }
+
+    @Override
+    public void onArmorTickUpdate(World world, PlayerEntity player, ItemStack itemStack) {
+    }
+
+    @Override
+    public boolean isValidArmor(ItemStack stack, int armorType) {
+        if ((Object)this instanceof ArmorItem) {
+            return ((ArmorItem)(Object)this).slot == armorType;
+        } else if (armorType != 0) {
+            return false;
+        } else {
+            return this.id == Block.PUMPKIN.id || this.id == SKULL.id;
+        }
+    }
+
+    @Override
+    public boolean isPotionIngredient(ItemStack stack) {
+        return this.hasStatusEffect();
+    }
+
+    @Override
+    public String getPotionEffect(ItemStack stack) {
+        return this.getStatusEffect();
     }
 
     @Override

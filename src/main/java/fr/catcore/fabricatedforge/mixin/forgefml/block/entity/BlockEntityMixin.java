@@ -2,6 +2,9 @@ package fr.catcore.fabricatedforge.mixin.forgefml.block.entity;
 
 import cpw.mods.fml.common.FMLLog;
 import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
+import fr.catcore.modremapperapi.api.mixin.Public;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -9,6 +12,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.crash.CrashReportSection;
 import net.minecraft.util.crash.provider.world.BlockEntityNameProvider;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -30,6 +34,19 @@ public abstract class BlockEntityMixin implements IBlockEntity {
     @Shadow public Block block;
 
     @Shadow public int dataValue;
+
+    @Shadow public abstract Block getBlock();
+
+    @Shadow public World world;
+    @Public
+    private static final Box INFINITE_EXTENT_AABB = Box.of(
+            Double.NEGATIVE_INFINITY,
+            Double.NEGATIVE_INFINITY,
+            Double.NEGATIVE_INFINITY,
+            Double.POSITIVE_INFINITY,
+            Double.POSITIVE_INFINITY,
+            Double.POSITIVE_INFINITY
+    );
 
     /**
      * @author forge
@@ -94,5 +111,31 @@ public abstract class BlockEntityMixin implements IBlockEntity {
     @Override
     public boolean shouldRefresh(int oldID, int newID, int oldMeta, int newMeta, World world, int x, int y, int z) {
         return true;
+    }
+
+    @Override
+    public boolean shouldRenderInPass(int pass) {
+        return pass == 0;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public Box getRenderBoundingBox() {
+        Box bb = INFINITE_EXTENT_AABB;
+        Block type = this.getBlock();
+        if (type == Block.ENCHANTING_TABLE) {
+            bb = Box.getLocalPool()
+                    .getOrCreate((double)this.x, (double)this.y, (double)this.z, (double)(this.x + 1), (double)(this.y + 1), (double)(this.z + 1));
+        } else if (type == Block.field_407) {
+            bb = Box.getLocalPool()
+                    .getOrCreate((double)(this.x - 1), (double)this.y, (double)(this.z - 1), (double)(this.x + 2), (double)(this.y + 1), (double)(this.z + 2));
+        } else if (type != null && type != Block.field_5005) {
+            Box cbb = this.getBlock().getBoundingBox(this.world, this.x, this.y, this.z);
+            if (cbb != null) {
+                bb = cbb;
+            }
+        }
+
+        return bb;
     }
 }

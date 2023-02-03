@@ -54,4 +54,9 @@ public class SmeltingRecipeRegistryMixin implements ISmeltingRecipeRegistry {
             return 0.0F;
         }
     }
+
+    @Override
+    public Map<List<Integer>, ItemStack> getMetaSmeltingList() {
+        return this.metaSmeltingList;
+    }
 }
