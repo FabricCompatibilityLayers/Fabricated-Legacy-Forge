@@ -207,7 +207,7 @@ public class Loader {
     private ModDiscoverer identifyMods() {
         FMLLog.fine("Building injected Mod Containers %s", new Object[]{injectedContainers});
         this.mods.add(new InjectedModContainer(this.mcp, new File("minecraft.jar")));
-        File coremod = new File(minecraftDir, "coremods");
+        File coremod = Constants.COREMODS_FOLDER;
 
         for(String cont : injectedContainers) {
             ModContainer mc;
@@ -225,8 +225,8 @@ public class Loader {
         FMLLog.fine("Attempting to load mods contained in the minecraft jar file and associated classes", new Object[0]);
         discoverer.findClasspathMods(this.modClassLoader);
         FMLLog.fine("Minecraft jar mods loaded successfully", new Object[0]);
-        FMLLog.info("Searching %s for mods", new Object[]{this.canonicalModsDir.getAbsolutePath()});
-        discoverer.findModDirMods(this.canonicalModsDir);
+        FMLLog.info("Searching %s for mods", new Object[]{Constants.MODS_FOLDER});
+        discoverer.findModDirMods(Constants.MODS_FOLDER);
         this.mods.addAll(discoverer.identifyMods());
         this.identifyDuplicates(this.mods);
         this.namedMods = Maps.uniqueIndex(this.mods, new ModIdFunction());
