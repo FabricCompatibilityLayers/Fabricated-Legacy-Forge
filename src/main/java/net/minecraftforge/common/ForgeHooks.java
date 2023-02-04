@@ -158,7 +158,7 @@ public class ForgeHooks {
 
     public static String getTexture(String _default, Object obj) {
         if (obj instanceof Item) {
-            return ((Item)obj).getTextureFile();
+            return ((IItem)obj).getTextureFile();
         } else {
             return obj instanceof Block ? ((Block)obj).getTextureFile() : _default;
         }

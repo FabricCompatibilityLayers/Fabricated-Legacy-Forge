@@ -29,7 +29,7 @@ public abstract class BrewingStandBlockEntityMixin extends BlockEntity implement
     private boolean canBrew() {
         if (this.stacks[3] != null && this.stacks[3].count > 0) {
             ItemStack var1 = this.stacks[3];
-            if (!Item.ITEMS[var1.id].isPotionIngredient(var1)) {
+            if (!((IItem)Item.ITEMS[var1.id]).isPotionIngredient(var1)) {
                 return false;
             } else {
                 boolean var2 = false;
@@ -85,7 +85,7 @@ public abstract class BrewingStandBlockEntityMixin extends BlockEntity implement
             }
 
             if (Item.ITEMS[var1.id].isFood()) {
-                this.stacks[3] = Item.ITEMS[var1.id].getContainerItemStack(this.stacks[3]);
+                this.stacks[3] = ((IItem)Item.ITEMS[var1.id]).getContainerItemStack(this.stacks[3]);
             } else {
                 --this.stacks[3].count;
                 if (this.stacks[3].count <= 0) {
@@ -104,8 +104,8 @@ public abstract class BrewingStandBlockEntityMixin extends BlockEntity implement
         return par2ItemStack == null
                 ? par1
                 : (
-                Item.ITEMS[par2ItemStack.id].isPotionIngredient(par2ItemStack)
-                        ? StatusEffectStrings.getStatusEffectData(par1, Item.ITEMS[par2ItemStack.id].getPotionEffect(par2ItemStack))
+                ((IItem)Item.ITEMS[par2ItemStack.id]).isPotionIngredient(par2ItemStack)
+                        ? StatusEffectStrings.getStatusEffectData(par1, ((IItem)Item.ITEMS[par2ItemStack.id]).getPotionEffect(par2ItemStack))
                         : par1
         );
     }

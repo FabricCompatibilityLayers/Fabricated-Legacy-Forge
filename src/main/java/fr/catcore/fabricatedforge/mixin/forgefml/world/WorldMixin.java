@@ -768,7 +768,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
             if (var9.isRemoved()) {
                 var14.remove();
                 if (this.isChunkInsideSpawnChunks(var9.x >> 4, var9.z >> 4)) {
-                    Chunk var11 = this.getChunk(var9.x >> 4, var9.z >> 4);
+                    IChunk var11 = this.getChunk(var9.x >> 4, var9.z >> 4);
                     if (var11 != null) {
                         var11.cleanChunkBlockTileEntity(var9.x & 15, var9.y, var9.z & 15);
                     }
@@ -778,7 +778,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
 
         if (!this.unloadedBlockEntities.isEmpty()) {
             for(Object tile : this.unloadedBlockEntities) {
-                ((BlockEntity)tile).onChunkUnload();
+                ((IBlockEntity)tile).onChunkUnload();
             }
 
             this.blockEntities.removeAll(this.unloadedBlockEntities);
@@ -795,7 +795,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
                         this.blockEntities.add(var12);
                     }
                 } else if (this.isChunkInsideSpawnChunks(var12.x >> 4, var12.z >> 4)) {
-                    Chunk var15 = this.getChunk(var12.x >> 4, var12.z >> 4);
+                    IChunk var15 = this.getChunk(var12.x >> 4, var12.z >> 4);
                     if (var15 != null) {
                         var15.cleanChunkBlockTileEntity(var12.x & 15, var12.y, var12.z & 15);
                     }

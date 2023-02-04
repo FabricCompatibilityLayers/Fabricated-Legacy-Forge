@@ -93,7 +93,7 @@ public abstract class CreateWorldScreenMixin extends Screen {
                     }
                 }
 
-                LevelGeneratorType.TYPES[this.generatorType].onGUICreateWorldPress();
+                ((ILevelGeneratorType)LevelGeneratorType.TYPES[this.generatorType]).onGUICreateWorldPress();
                 GameMode var8 = GameMode.setGameModeWithString(this.gamemodeName);
                 LevelInfo var6 = new LevelInfo(var2, var8, this.structures, this.hardcore, LevelGeneratorType.TYPES[this.generatorType]);
                 var6.setGeneratorOptions(this.generatorOptions);
@@ -171,7 +171,7 @@ public abstract class CreateWorldScreenMixin extends Screen {
                 this.tweakedCheats = !this.tweakedCheats;
                 this.updateSettingsLabels();
             } else if (par1GuiButton.id == 8) {
-                LevelGeneratorType.TYPES[this.generatorType].onCustomizeButton(this.field_1229, this);
+                ((ILevelGeneratorType)LevelGeneratorType.TYPES[this.generatorType]).onCustomizeButton(this.field_1229, (CreateWorldScreen)(Object) this);
             }
         }
     }
@@ -188,7 +188,7 @@ public abstract class CreateWorldScreenMixin extends Screen {
         this.bonusChestButton.visible = this.moreOptionsOpen;
         this.mapTypeSwitchButton.visible = this.moreOptionsOpen;
         this.allowCommandsButton.visible = this.moreOptionsOpen;
-        this.customizeButton.visible = this.moreOptionsOpen && LevelGeneratorType.TYPES[this.generatorType].isCustomizable();
+        this.customizeButton.visible = this.moreOptionsOpen && ((ILevelGeneratorType)LevelGeneratorType.TYPES[this.generatorType]).isCustomizable();
         if (this.moreOptionsOpen) {
             Language var2 = Language.getInstance();
             this.moreWorldOptionsButton.message = var2.translate("gui.done");

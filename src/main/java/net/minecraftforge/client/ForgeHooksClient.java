@@ -194,7 +194,7 @@ public class ForgeHooksClient {
 
             boolean is3D = customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.ENTITY, item, IItemRenderer.ItemRendererHelper.BLOCK_3D);
             if (item.getItem() instanceof BlockItem && (is3D || BlockRenderer.method_1455(Block.BLOCKS[item.id].getBlockType()))) {
-                engine.bindTexture(engine.getTextureFromPath(item.getItem().getTextureFile()));
+                engine.bindTexture(engine.getTextureFromPath(((IItem)item.getItem()).getTextureFile()));
                 int renderType = Block.BLOCKS[item.id].getBlockType();
                 float scale = renderType != 1 && renderType != 19 && renderType != 12 && renderType != 2 ? 0.25F : 0.5F;
                 if (ItemRenderer.field_5197) {
@@ -221,7 +221,7 @@ public class ForgeHooksClient {
                     GL11.glPopMatrix();
                 }
             } else {
-                engine.bindTexture(engine.getTextureFromPath(item.getItem().getTextureFile()));
+                engine.bindTexture(engine.getTextureFromPath(((IItem)item.getItem()).getTextureFile()));
                 GL11.glScalef(0.5F, 0.5F, 0.5F);
                 customRenderer.renderItem(IItemRenderer.ItemRenderType.ENTITY, item, new Object[]{renderBlocks, entity});
             }
@@ -237,7 +237,7 @@ public class ForgeHooksClient {
         if (customRenderer == null) {
             return false;
         } else {
-            engine.bindTexture(engine.getTextureFromPath(Item.ITEMS[item.id].getTextureFile()));
+            engine.bindTexture(engine.getTextureFromPath(((IItem)Item.ITEMS[item.id]).getTextureFile()));
             if (customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.INVENTORY, item, IItemRenderer.ItemRendererHelper.INVENTORY_BLOCK)) {
                 GL11.glPushMatrix();
                 GL11.glTranslatef(x - 2.0F, y + 3.0F, -3.0F + zLevel);

@@ -122,7 +122,7 @@ public class DungeonHooks {
             return ret;
         }
 
-        protected final ItemStack[] generateChestContent(Random random, Inventory newInventory) {
+        public final ItemStack[] generateChestContent(Random random, Inventory newInventory) {
             FMLLog.warning("Some mod is still using DungeonHooks.DungonLoot, tell them to stop! %s", new Object[]{this});
             return new ItemStack[]{this.generateStack(random)};
         }

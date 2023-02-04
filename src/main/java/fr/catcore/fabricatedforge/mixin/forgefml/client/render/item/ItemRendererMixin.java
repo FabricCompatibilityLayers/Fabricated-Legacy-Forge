@@ -96,10 +96,10 @@ public abstract class ItemRendererMixin extends EntityRenderer implements IItemR
                         GL11.glScalef(0.5F, 0.5F, 0.5F);
                     }
 
-                    for(int var15 = 0; var15 < var10.getItem().getRenderPasses(var10.getData()); ++var15) {
-                        this.method_1529(Item.ITEMS[var10.id].getTextureFile());
+                    for(int var15 = 0; var15 < ((IItem)var10.getItem()).getRenderPasses(var10.getData()); ++var15) {
+                        this.method_1529(((IItem)Item.ITEMS[var10.id]).getTextureFile());
                         this.field_2126.setSeed(187L);
-                        int var16 = var10.getItem().getIconIndex(var10, var15);
+                        int var16 = ((IItem)var10.getItem()).getIconIndex(var10, var15);
                         float var17 = 1.0F;
                         if (this.field_2123) {
                             int var18 = Item.ITEMS[var10.id].getDisplayColor(var10, var15);
@@ -121,7 +121,7 @@ public abstract class ItemRendererMixin extends EntityRenderer implements IItemR
                     }
 
                     int var15 = var10.method_3429();
-                    this.method_1529(var10.getItem().getTextureFile());
+                    this.method_1529(((IItem)var10.getItem()).getTextureFile());
                     if (this.field_2123) {
                         int var16 = Item.ITEMS[var10.id].getDisplayColor(var10, 0);
                         float var17 = (float)(var16 >> 16 & 0xFF) / 255.0F;

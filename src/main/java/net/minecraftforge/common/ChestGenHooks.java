@@ -166,7 +166,7 @@ public class ChestGenHooks {
         ArrayList<WeightedRandomChestContent> ret = new ArrayList();
 
         for(WeightedRandomChestContent orig : this.contents) {
-            Item item = orig.content.getItem();
+            IItem item = orig.content.getItem();
             if (item != null) {
                 WeightedRandomChestContent n = item.getChestGenBase(this, rnd, orig);
                 if (n != null) {

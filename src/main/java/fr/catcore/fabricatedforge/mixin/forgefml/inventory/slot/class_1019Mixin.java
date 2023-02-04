@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.inventory.slot;
 
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.slot.Slot;
 import net.minecraft.inventory.slot.class_1019;
@@ -25,7 +26,7 @@ public class class_1019Mixin extends Slot {
      */
     @Overwrite
     public boolean canInsert(ItemStack par1ItemStack) {
-        Item item = par1ItemStack == null ? null : par1ItemStack.getItem();
+        IItem item = par1ItemStack == null ? null : par1ItemStack.getItem();
         return item != null && item.isValidArmor(par1ItemStack, this.field_4131);
     }
 }

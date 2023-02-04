@@ -31,7 +31,7 @@ public abstract class WeightedRandomChestContentMixin implements IWeightedRandom
             Random par0Random, WeightedRandomChestContent[] par1ArrayOfWeightedRandomChestContent, ChestBlockEntity par2TileEntityChest, int par3
     ) {
         for(int var4 = 0; var4 < par3; ++var4) {
-            WeightedRandomChestContent var5 = (WeightedRandomChestContent)Weighting.getRandom(par0Random, par1ArrayOfWeightedRandomChestContent);
+            IWeightedRandomChestContent var5 = (WeightedRandomChestContent)Weighting.getRandom(par0Random, par1ArrayOfWeightedRandomChestContent);
             ItemStack[] stacks = var5.generateChestContent(par0Random, par2TileEntityChest);
 
             for(ItemStack item : stacks) {
@@ -49,7 +49,7 @@ public abstract class WeightedRandomChestContentMixin implements IWeightedRandom
             Random par0Random, WeightedRandomChestContent[] par1ArrayOfWeightedRandomChestContent, DispenserBlockEntity par2TileEntityDispenser, int par3
     ) {
         for(int var4 = 0; var4 < par3; ++var4) {
-            WeightedRandomChestContent var5 = (WeightedRandomChestContent)Weighting.getRandom(par0Random, par1ArrayOfWeightedRandomChestContent);
+            IWeightedRandomChestContent var5 = (WeightedRandomChestContent)Weighting.getRandom(par0Random, par1ArrayOfWeightedRandomChestContent);
             ItemStack[] stacks = var5.generateChestContent(par0Random, par2TileEntityDispenser);
 
             for(ItemStack item : stacks) {

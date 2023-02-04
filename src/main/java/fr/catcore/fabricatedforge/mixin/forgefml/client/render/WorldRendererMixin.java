@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render;
 
+import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import fr.catcore.fabricatedforge.mixininterface.IParticleManager;
 import fr.catcore.fabricatedforge.mixininterface.IWorldRenderer;
 import net.minecraft.block.Block;
@@ -628,7 +629,7 @@ public abstract class WorldRendererMixin implements IWorldRenderer {
 
             for(int var11 = 0; var11 < this.blockEntities.size(); ++var11) {
                 BlockEntity te = (BlockEntity)this.blockEntities.get(var11);
-                if (par2ICamera.isBoxInFrustum(te.getRenderBoundingBox()) && te.shouldRenderInPass(pass)) {
+                if (par2ICamera.isBoxInFrustum(((IBlockEntity)te).getRenderBoundingBox()) && ((IBlockEntity)te).shouldRenderInPass(pass)) {
                     BlockEntityRenderDispatcher.INSTANCE.render(te, par3);
                 }
             }

@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.entity.player;
 
+import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -32,7 +33,7 @@ public abstract class PlayerInventoryMixin implements Inventory {
 
         for(int i = 0; i < this.armor.length; ++i) {
             if (this.armor[i] != null) {
-                this.armor[i].getItem().onArmorTickUpdate(this.player.world, this.player, this.armor[i]);
+                ((IItem)this.armor[i].getItem()).onArmorTickUpdate(this.player.world, this.player, this.armor[i]);
             }
         }
     }
