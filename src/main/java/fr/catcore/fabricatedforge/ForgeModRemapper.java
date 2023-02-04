@@ -240,6 +240,7 @@ public class ForgeModRemapper implements ModRemapper {
                 .put("bex")
                 .put("bey")
                 .put("bez")
+                .put("bfe")
                 .put("bn")
                 .put("ca")
                 .put("cf")
