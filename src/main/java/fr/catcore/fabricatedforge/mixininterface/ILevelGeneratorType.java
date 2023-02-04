@@ -1,5 +1,9 @@
 package fr.catcore.fabricatedforge.mixininterface;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.world.LayeredBiomeSource;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -31,4 +35,9 @@ public interface ILevelGeneratorType {
     void onGUICreateWorldPress();
 
     int getSpawnFuzz();
+
+    @Environment(EnvType.CLIENT)
+    void onCustomizeButton(Minecraft instance, CreateWorldScreen guiCreateWorld);
+
+    boolean isCustomizable();
 }

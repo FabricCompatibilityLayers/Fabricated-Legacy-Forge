@@ -737,14 +737,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
             this.profiler.pop();
             this.profiler.push("remove");
             if (var2.removed) {
-                int var3 = var2.chunkX;
-                int var13 = var2.chunkZ;
-                if (var2.updateNeeded && this.isChunkInsideSpawnChunks(var3, var13)) {
-                    this.getChunk(var3, var13).removeEntity(var2);
-                }
-
-                this.loadedEntities.remove(var16--);
-                this.onEntityRemoved(var2);
+                this.unloadedEntities.add(var2);
             }
 
             this.profiler.pop();
@@ -777,7 +770,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
                 if (this.isChunkInsideSpawnChunks(var9.x >> 4, var9.z >> 4)) {
                     Chunk var11 = this.getChunk(var9.x >> 4, var9.z >> 4);
                     if (var11 != null) {
-                        ((IChunk)var11).cleanChunkBlockTileEntity(var9.x & 15, var9.y, var9.z & 15);
+                        var11.cleanChunkBlockTileEntity(var9.x & 15, var9.y, var9.z & 15);
                     }
                 }
             }
@@ -785,7 +778,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
 
         if (!this.unloadedBlockEntities.isEmpty()) {
             for(Object tile : this.unloadedBlockEntities) {
-                ((IBlockEntity)tile).onChunkUnload();
+                ((BlockEntity)tile).onChunkUnload();
             }
 
             this.blockEntities.removeAll(this.unloadedBlockEntities);
@@ -804,7 +797,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
                 } else if (this.isChunkInsideSpawnChunks(var12.x >> 4, var12.z >> 4)) {
                     Chunk var15 = this.getChunk(var12.x >> 4, var12.z >> 4);
                     if (var15 != null) {
-                        ((IChunk)var15).cleanChunkBlockTileEntity(var12.x & 15, var12.y, var12.z & 15);
+                        var15.cleanChunkBlockTileEntity(var12.x & 15, var12.y, var12.z & 15);
                     }
                 }
             }

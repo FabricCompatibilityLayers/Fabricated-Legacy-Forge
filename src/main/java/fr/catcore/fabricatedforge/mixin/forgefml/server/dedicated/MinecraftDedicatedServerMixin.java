@@ -53,7 +53,7 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
             var1.setDaemon(true);
             var1.start();
             LogFileWriter.method_1974();
-            field_3848.info("Starting minecraft server version 1.4.6");
+            field_3848.info("Starting minecraft server version 1.4.7");
             if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L) {
                 field_3848.warning("To start the server with more ram, launch it as \"java -Xmx1024M -Xms1024M -jar minecraft_server.jar\"");
             }
@@ -133,7 +133,7 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
                         var9 = var11;
                     }
                 } catch (NumberFormatException var15) {
-                    var9 = (long)var6.hashCode();
+                    var9 = (long) var6.hashCode();
                 }
             }
 
@@ -146,25 +146,28 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
             this.setWorldHeight((this.getWorldHeight() + 8) / 16 * 16);
             this.setWorldHeight(MathHelper.clamp(this.getWorldHeight(), 64, 256));
             this.abstractPropertiesHandler.set("max-build-height", this.getWorldHeight());
-            field_3848.info("Preparing level \"" + this.getLevelName() + "\"");
-            this.setupWorld(this.getLevelName(), this.getLevelName(), var9, var17, var8);
-            long var12 = System.nanoTime() - var4;
-            String var14 = String.format("%.3fs", (double)var12 / 1.0E9);
-            field_3848.info("Done (" + var14 + ")! For help, type \"help\" or \"?\"");
-            if (this.abstractPropertiesHandler.getBooleanOrDefault("enable-query", false)) {
-                field_3848.info("Starting GS4 status listener");
-                this.queryResponseHandler = new QueryResponseHandler(this);
-                this.queryResponseHandler.start();
-            }
+            if (!FMLCommonHandler.instance().handleServerAboutToStart(this)) {
+                return false;
+            } else {
+                field_3848.info("Preparing level \"" + this.getLevelName() + "\"");
+                this.setupWorld(this.getLevelName(), this.getLevelName(), var9, var17, var8);
+                long var12 = System.nanoTime() - var4;
+                String var14 = String.format("%.3fs", (double) var12 / 1.0E9);
+                field_3848.info("Done (" + var14 + ")! For help, type \"help\" or \"?\"");
+                if (this.abstractPropertiesHandler.getBooleanOrDefault("enable-query", false)) {
+                    field_3848.info("Starting GS4 status listener");
+                    this.queryResponseHandler = new QueryResponseHandler(this);
+                    this.queryResponseHandler.start();
+                }
 
-            if (this.abstractPropertiesHandler.getBooleanOrDefault("enable-rcon", false)) {
-                field_3848.info("Starting remote control listener");
-                this.rconServer = new RconServer(this);
-                this.rconServer.start();
-            }
+                if (this.abstractPropertiesHandler.getBooleanOrDefault("enable-rcon", false)) {
+                    field_3848.info("Starting remote control listener");
+                    this.rconServer = new RconServer(this);
+                    this.rconServer.start();
+                }
 
-            FMLCommonHandler.instance().handleServerStarting(this);
-            return true;
+                return FMLCommonHandler.instance().handleServerStarting(this);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

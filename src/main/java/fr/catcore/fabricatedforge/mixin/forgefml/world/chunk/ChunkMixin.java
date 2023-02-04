@@ -553,10 +553,14 @@ public abstract class ChunkMixin implements IChunk {
         int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + ReflectionUtils.World_MAX_ENTITY_RADIUS) / 16.0);
         if (var4 < 0) {
             var4 = 0;
+        } else if (var4 >= this.entities.length) {
+            var4 = this.entities.length - 1;
         }
 
         if (var5 >= this.entities.length) {
             var5 = this.entities.length - 1;
+        } else if (var5 < 0) {
+            var5 = 0;
         }
 
         for(int var6 = var4; var6 <= var5; ++var6) {

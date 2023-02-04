@@ -3,6 +3,11 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world.level;
 import com.google.common.collect.Sets;
 import fr.catcore.fabricatedforge.mixininterface.ILevelGeneratorType;
 import fr.catcore.fabricatedforge.forged.ReflectionUtils;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.CustomizeFlatLevelScreen;
+import net.minecraft.client.gui.screen.world.CreateWorldScreen;
 import net.minecraft.world.LayeredBiomeSource;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -108,5 +113,18 @@ public class LevelGeneratorTypeMixin implements ILevelGeneratorType {
     @Override
     public int getSpawnFuzz() {
         return 20;
+    }
+
+    @Override
+    @Environment(EnvType.CLIENT)
+    public void onCustomizeButton(Minecraft instance, CreateWorldScreen guiCreateWorld) {
+        if ((Object)this == FLAT) {
+            instance.openScreen(new CustomizeFlatLevelScreen(guiCreateWorld, guiCreateWorld.generatorOptions));
+        }
+    }
+
+    @Override
+    public boolean isCustomizable() {
+        return (Object)this == FLAT;
     }
 }

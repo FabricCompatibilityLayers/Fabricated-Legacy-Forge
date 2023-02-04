@@ -66,7 +66,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
      */
     @Overwrite
     protected boolean setupServer() {
-        field_3848.info("Starting integrated minecraft server version 1.4.6");
+        field_3848.info("Starting integrated minecraft server version 1.4.7");
         this.setOnlineMode(false);
         this.setSpawnAnimals(true);
         this.setSpawnNpcs(true);
@@ -74,11 +74,14 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
         this.setFlightEnabled(true);
         field_3848.info("Generating keypair");
         this.setKeyPair(NetworkEncryptionUtils.generateServerKeyPair());
-        this.setupWorld(
-                this.getLevelName(), this.getServerName(), this.levelInfo.getSeed(), this.levelInfo.getGeneratorType(), this.levelInfo.getGeneratorOptions()
-        );
-        this.setMotd(this.getUserName() + " - " + this.worlds[0].getLevelProperties().getLevelName());
-        FMLCommonHandler.instance().handleServerStarting(this);
-        return true;
+        if (!FMLCommonHandler.instance().handleServerAboutToStart(this)) {
+            return false;
+        } else {
+            this.setupWorld(
+                    this.getLevelName(), this.getServerName(), this.levelInfo.getSeed(), this.levelInfo.getGeneratorType(), this.levelInfo.getGeneratorOptions()
+            );
+            this.setMotd(this.getUserName() + " - " + this.worlds[0].getLevelProperties().getLevelName());
+            return FMLCommonHandler.instance().handleServerStarting(this);
+        }
     }
 }

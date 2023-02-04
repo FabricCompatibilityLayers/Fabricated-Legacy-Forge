@@ -2,10 +2,12 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.SaplingBlock;
 import net.minecraft.util.math.Axis;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.JungleTreeFeature;
+import net.minecraftforge.common.ForgeDirection;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -50,11 +52,10 @@ public abstract class JungleTreeFeatureMixin extends Feature {
                         if (var8 >= 0 && var8 < 256) {
                             int var12 = par1World.getBlock(var10, var8, var11);
                             Block block = Block.BLOCKS[var12];
-                            if (var12 != 0
-                                    && !((IBlock)block).isLeaves(par1World, var10, var8, var11)
-                                    && var12 != Block.GRASS_BLOCK.id
-                                    && var12 != Block.DIRT.id
-                                    && !((IBlock)block).isWood(par1World, var10, var8, var11)) {
+                            if (block != null
+                                    && !block.isLeaves(par1World, var10, var8, var11)
+                                    && !block.canSustainPlant(par1World, var10, var8, var11, ForgeDirection.UP, (SaplingBlock)Block.SAPLING)
+                                    && !block.isWood(par1World, var10, var8, var11)) {
                                 var7 = false;
                             }
                         } else {
@@ -67,9 +68,11 @@ public abstract class JungleTreeFeatureMixin extends Feature {
             if (!var7) {
                 return false;
             } else {
-                int var19 = par1World.getBlock(par3, par4 - 1, par5);
-                if ((var19 == Block.GRASS_BLOCK.id || var19 == Block.DIRT.id) && par4 < 256 - var6 - 1) {
-                    this.method_4026(par1World, par3, par4 - 1, par5, Block.DIRT.id);
+                int var21 = par1World.getBlock(par3, par4 - 1, par5);
+                Block soil = Block.BLOCKS[var21];
+                boolean isSoil = soil != null && soil.canSustainPlant(par1World, par3, par4 - 1, par5, ForgeDirection.UP, (SaplingBlock)Block.SAPLING);
+                if (isSoil && par4 < 256 - var6 - 1) {
+                    soil.onPlantGrow(par1World, par3, par4 - 1, par5, par3, par4, par5);
                     byte var9 = 3;
                     byte var18 = 0;
 
@@ -84,61 +87,61 @@ public abstract class JungleTreeFeatureMixin extends Feature {
                                 int var17 = var16 - par5;
                                 Block block = Block.BLOCKS[par1World.getBlock(var14, var11, var16)];
                                 if ((Math.abs(var15) != var13 || Math.abs(var17) != var13 || par2Random.nextInt(2) != 0 && var12 != 0)
-                                        && (block == null || ((IBlock)block).canBeReplacedByLeaves(par1World, var14, var11, var16))) {
+                                        && (block == null || block.canBeReplacedByLeaves(par1World, var14, var11, var16))) {
                                     this.method_4027(par1World, var14, var11, var16, Block.LEAVES.id, this.field_4903);
                                 }
                             }
                         }
                     }
 
-                    for(int var22 = 0; var22 < var6; ++var22) {
-                        int var12 = par1World.getBlock(par3, par4 + var22, par5);
+                    for(int var24 = 0; var24 < var6; ++var24) {
+                        int var12 = par1World.getBlock(par3, par4 + var24, par5);
                         Block block = Block.BLOCKS[var12];
-                        if (var12 == 0 || block == null || ((IBlock)block).isLeaves(par1World, par3, par4 + var22, par5)) {
-                            this.method_4027(par1World, par3, par4 + var22, par5, Block.LOG.id, this.field_4902);
-                            if (this.generateFeatures && var22 > 0) {
-                                if (par2Random.nextInt(3) > 0 && par1World.isAir(par3 - 1, par4 + var22, par5)) {
-                                    this.method_4027(par1World, par3 - 1, par4 + var22, par5, Block.VINE.id, 8);
+                        if (var12 == 0 || block == null || block.isLeaves(par1World, par3, par4 + var24, par5)) {
+                            this.method_4027(par1World, par3, par4 + var24, par5, Block.LOG.id, this.field_4902);
+                            if (this.generateFeatures && var24 > 0) {
+                                if (par2Random.nextInt(3) > 0 && par1World.isAir(par3 - 1, par4 + var24, par5)) {
+                                    this.method_4027(par1World, par3 - 1, par4 + var24, par5, Block.VINE.id, 8);
                                 }
 
-                                if (par2Random.nextInt(3) > 0 && par1World.isAir(par3 + 1, par4 + var22, par5)) {
-                                    this.method_4027(par1World, par3 + 1, par4 + var22, par5, Block.VINE.id, 2);
+                                if (par2Random.nextInt(3) > 0 && par1World.isAir(par3 + 1, par4 + var24, par5)) {
+                                    this.method_4027(par1World, par3 + 1, par4 + var24, par5, Block.VINE.id, 2);
                                 }
 
-                                if (par2Random.nextInt(3) > 0 && par1World.isAir(par3, par4 + var22, par5 - 1)) {
-                                    this.method_4027(par1World, par3, par4 + var22, par5 - 1, Block.VINE.id, 1);
+                                if (par2Random.nextInt(3) > 0 && par1World.isAir(par3, par4 + var24, par5 - 1)) {
+                                    this.method_4027(par1World, par3, par4 + var24, par5 - 1, Block.VINE.id, 1);
                                 }
 
-                                if (par2Random.nextInt(3) > 0 && par1World.isAir(par3, par4 + var22, par5 + 1)) {
-                                    this.method_4027(par1World, par3, par4 + var22, par5 + 1, Block.VINE.id, 4);
+                                if (par2Random.nextInt(3) > 0 && par1World.isAir(par3, par4 + var24, par5 + 1)) {
+                                    this.method_4027(par1World, par3, par4 + var24, par5 + 1, Block.VINE.id, 4);
                                 }
                             }
                         }
                     }
 
                     if (this.generateFeatures) {
-                        for(int var23 = par4 - 3 + var6; var23 <= par4 + var6; ++var23) {
-                            int var12 = var23 - (par4 + var6);
+                        for(int var25 = par4 - 3 + var6; var25 <= par4 + var6; ++var25) {
+                            int var12 = var25 - (par4 + var6);
                             int var13 = 2 - var12 / 2;
 
                             for(int var14 = par3 - var13; var14 <= par3 + var13; ++var14) {
                                 for(int var15 = par5 - var13; var15 <= par5 + var13; ++var15) {
-                                    Block block = Block.BLOCKS[par1World.getBlock(var14, var23, var15)];
-                                    if (block != null && ((IBlock)block).isLeaves(par1World, var14, var23, var15)) {
-                                        if (par2Random.nextInt(4) == 0 && par1World.getBlock(var14 - 1, var23, var15) == 0) {
-                                            this.method_4033(par1World, var14 - 1, var23, var15, 8);
+                                    Block block = Block.BLOCKS[par1World.getBlock(var14, var25, var15)];
+                                    if (block != null && block.isLeaves(par1World, var14, var25, var15)) {
+                                        if (par2Random.nextInt(4) == 0 && par1World.getBlock(var14 - 1, var25, var15) == 0) {
+                                            this.method_4033(par1World, var14 - 1, var25, var15, 8);
                                         }
 
-                                        if (par2Random.nextInt(4) == 0 && par1World.getBlock(var14 + 1, var23, var15) == 0) {
-                                            this.method_4033(par1World, var14 + 1, var23, var15, 2);
+                                        if (par2Random.nextInt(4) == 0 && par1World.getBlock(var14 + 1, var25, var15) == 0) {
+                                            this.method_4033(par1World, var14 + 1, var25, var15, 2);
                                         }
 
-                                        if (par2Random.nextInt(4) == 0 && par1World.getBlock(var14, var23, var15 - 1) == 0) {
-                                            this.method_4033(par1World, var14, var23, var15 - 1, 1);
+                                        if (par2Random.nextInt(4) == 0 && par1World.getBlock(var14, var25, var15 - 1) == 0) {
+                                            this.method_4033(par1World, var14, var25, var15 - 1, 1);
                                         }
 
-                                        if (par2Random.nextInt(4) == 0 && par1World.getBlock(var14, var23, var15 + 1) == 0) {
-                                            this.method_4033(par1World, var14, var23, var15 + 1, 4);
+                                        if (par2Random.nextInt(4) == 0 && par1World.getBlock(var14, var25, var15 + 1) == 0) {
+                                            this.method_4033(par1World, var14, var25, var15 + 1, 4);
                                         }
                                     }
                                 }
@@ -146,14 +149,14 @@ public abstract class JungleTreeFeatureMixin extends Feature {
                         }
 
                         if (par2Random.nextInt(5) == 0 && var6 > 5) {
-                            for(int var24 = 0; var24 < 2; ++var24) {
+                            for(int var26 = 0; var26 < 2; ++var26) {
                                 for(int var12 = 0; var12 < 4; ++var12) {
-                                    if (par2Random.nextInt(4 - var24) == 0) {
+                                    if (par2Random.nextInt(4 - var26) == 0) {
                                         int var13 = par2Random.nextInt(3);
                                         this.method_4027(
                                                 par1World,
                                                 par3 + Axis.OFFSET_X[Axis.OPPOSITE[var12]],
-                                                par4 + var6 - 5 + var24,
+                                                par4 + var6 - 5 + var26,
                                                 par5 + Axis.OFFSET_Z[Axis.OPPOSITE[var12]],
                                                 Block.COCOA.id,
                                                 var13 << 2 | var12

@@ -90,7 +90,8 @@
       "net/minecraft/class_1175": ["fr/catcore/fabricatedforge/mixininterface/ILayeredBiomeSource"],
       "net/minecraft/class_1170": ["fr/catcore/fabricatedforge/mixininterface/IBiome"],
       "net/minecraft/class_560": ["fr/catcore/fabricatedforge/mixininterface/IItemRenderer"],
-      "net/minecraft/class_1432": ["net/minecraftforge/common/IShearable"]
+      "net/minecraft/class_1432": ["net/minecraftforge/common/IShearable"],
+      "net/minecraft/class_847": ["fr/catcore/fabricatedforge/mixininterface/IWeightedRandomChestContent"]
     }
   }
 }

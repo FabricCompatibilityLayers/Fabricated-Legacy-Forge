@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server;
 
+import fr.catcore.modremapperapi.api.mixin.Public;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.Packet;
@@ -9,6 +10,7 @@ import net.minecraft.network.packet.s2c.play.ChunkUpdateS2CPacket;
 import net.minecraft.server.PlayerWorldManager;
 import net.minecraft.server.class_793;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraftforge.common.ForgeDummyContainer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.ChunkWatchEvent;
 import org.spongepowered.asm.mixin.Final;
@@ -16,6 +18,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Mixin(class_793.class)
@@ -38,6 +41,9 @@ public abstract class class_793Mixin {
     @Shadow protected abstract void method_2119(BlockEntity blockEntity);
 
     @Shadow @Final public List<ServerPlayerEntity> field_2796;
+
+    @Public
+    private static int clumpingThreshold;
 
     /**
      * @author forge
@@ -64,6 +70,32 @@ public abstract class class_793Mixin {
     }
 
     /**
+     * @author forge
+     * @reason idk
+     */
+    @Overwrite
+    public void method_2118(int par1, int par2, int par3) {
+        if (this.field_2799 == 0) {
+            ((PlayerWorldManagerAccessor) this.field_2795).getField_2792().add((class_793)(Object) this);
+        }
+
+        this.field_2800 |= 1 << (par2 >> 4);
+        short var4 = (short)(par1 << 12 | par3 << 8 | par2);
+
+        for(int var5 = 0; var5 < this.field_2799; ++var5) {
+            if (this.field_2798[var5] == var4) {
+                return;
+            }
+        }
+
+        if (this.field_2799 == this.field_2798.length) {
+            this.field_2798 = Arrays.copyOf(this.field_2798, this.field_2798.length << 1);
+        }
+
+        this.field_2798[this.field_2799++] = var4;
+    }
+
+    /**
      * @author Minecraft Forge
      * @reason meow
      */
@@ -78,12 +110,22 @@ public abstract class class_793Mixin {
                 if (this.field_2795.getWorld().hasBlockEntity(var1, var2, var3)) {
                     this.method_2119(this.field_2795.getWorld().getBlockEntity(var1, var2, var3));
                 }
-            } else if (this.field_2799 != 64) {
-                this.method_2120(
-                        new ChunkBlockUpdateS2CPacket(
-                                this.field_2797.x, this.field_2797.z, this.field_2798, this.field_2799, this.field_2795.getWorld()
-                        )
-                );
+            } else {
+                if (this.field_2799 >= ForgeDummyContainer.clumpingThreshold) {
+                    int var1 = this.field_2797.x * 16;
+                    int var2 = this.field_2797.z * 16;
+                    this.method_2120(
+                            new ChunkUpdateS2CPacket(
+                                    this.field_2795.getWorld().getChunk(this.field_2797.x, this.field_2797.z), false, this.field_2800
+                            )
+                    );
+                } else {
+                    this.method_2120(
+                            new ChunkBlockUpdateS2CPacket(
+                                    this.field_2797.x, this.field_2797.z, this.field_2798, this.field_2799, this.field_2795.getWorld()
+                            )
+                    );
+                }
 
                 for(int var1 = 0; var1 < this.field_2799; ++var1) {
                     int var2 = this.field_2797.x * 16 + (this.field_2798[var1] >> 12 & 15);
@@ -91,25 +133,6 @@ public abstract class class_793Mixin {
                     int var4 = this.field_2797.z * 16 + (this.field_2798[var1] >> 8 & 15);
                     if (this.field_2795.getWorld().hasBlockEntity(var2, var3, var4)) {
                         this.method_2119(this.field_2795.getWorld().getBlockEntity(var2, var3, var4));
-                    }
-                }
-            } else {
-                int var1 = this.field_2797.x * 16;
-                int var2 = this.field_2797.z * 16;
-                this.method_2120(
-                        new ChunkUpdateS2CPacket(
-                                this.field_2795.getWorld().getChunk(this.field_2797.x, this.field_2797.z), false, this.field_2800
-                        )
-                );
-
-                for(int var3 = 0; var3 < 16; ++var3) {
-                    if ((this.field_2800 & 1 << var3) != 0) {
-                        int var4 = var3 << 4;
-                        List var5 = this.field_2795.getWorld().method_2134(var1, var4, var2, var1 + 15, var4 + 16, var2 + 15);
-
-                        for(int var6 = 0; var6 < var5.size(); ++var6) {
-                            this.method_2119((BlockEntity)var5.get(var6));
-                        }
                     }
                 }
             }

@@ -292,6 +292,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
                     var65.printStackTrace();
                     break label535;
                 } finally {
+                    FMLCommonHandler.instance().handleServerStopped();
                     this.exit();
                 }
 
@@ -358,7 +359,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
     @Overwrite
     public void tick() {
         this.profiler.push("levels");
-        Integer[] ids = DimensionManager.getIDs();
+        Integer[] ids = DimensionManager.getIDs(this.ticks % 200 == 0);
 
         for(int x = 0; x < ids.length; ++x) {
             int id = ids[x];
@@ -442,7 +443,7 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
      */
     @Overwrite
     public String getServerModName() {
-        return "fml on fabric";
+        return "forge,fml on fabric";
     }
 
     /**

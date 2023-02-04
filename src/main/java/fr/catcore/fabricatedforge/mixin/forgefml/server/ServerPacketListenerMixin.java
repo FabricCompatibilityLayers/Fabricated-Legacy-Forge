@@ -200,9 +200,9 @@ public abstract class ServerPacketListenerMixin extends PacketListener {
                 double var13 = var5 - this.player.x;
                 double var15 = var7 - this.player.y;
                 double var17 = var9 - this.player.z;
-                double var19 = Math.min(Math.abs(var13), Math.abs(this.player.velocityX));
-                double var21 = Math.min(Math.abs(var15), Math.abs(this.player.velocityY));
-                double var23 = Math.min(Math.abs(var17), Math.abs(this.player.velocityZ));
+                double var19 = Math.max(Math.abs(var13), Math.abs(this.player.velocityX));
+                double var21 = Math.max(Math.abs(var15), Math.abs(this.player.velocityY));
+                double var23 = Math.max(Math.abs(var17), Math.abs(this.player.velocityZ));
                 double var25 = var19 * var19 + var21 * var21 + var23 * var23;
                 if (var25 > 100.0 && (!this.server.isSinglePlayer() || !this.server.getUserName().equals(this.player.username))) {
                     LOGGER.warning(

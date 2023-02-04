@@ -157,6 +157,7 @@
     "world.dimension.DimensionMixin",
     "world.explosion.ExplosionMixin",
     "world.gen.feature.AbstractGiantTreeFeatureMixin",
+    "world.gen.feature.BigTreeFeatureMixin",
     "world.gen.feature.BirchTreeFeatureMixin",
     "world.gen.feature.DeadbushFeatureMixin",
     "world.gen.feature.DungeonFeatureMixin",
@@ -222,7 +223,8 @@
     "client.texture.ClockSpriteMixin",
     "client.texture.CompassSpriteMixin",
     "client.world.ClientWorldMixin",
-    "stat.StatHandlerMixin"
+    "stat.StatHandlerMixin",
+    "world.chunk.ClientChunkProviderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
