@@ -127,7 +127,7 @@ modrinth {
 	token = System.getenv("MODRINTH_TOKEN") == null ? "dev" : System.getenv("MODRINTH_TOKEN") // This is the default. Remember to have the MODRINTH_TOKEN environment variable set or else this will fail, or set it to whatever you want - just make sure it stays private!
 	projectId = "JpHZ1Cyv" // This can be the project ID or the slug. Either will work!
 	versionName = displayVersion
-	changelog = "Port to Minecraft 1.4.6.\nWith Forge 6.5.0.489 and FML 4.6.17.515."
+	changelog = "Port to Minecraft 1.4.7.\nWith Forge 6.6.2.534 and FML 4.7.35.556."
 	uploadFile = remapJar
 	gameVersions = [project.minecraft_version] // Must be an array, even with only one version
 	debugMode = debug
