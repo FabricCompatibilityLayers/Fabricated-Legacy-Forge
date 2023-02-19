@@ -27,7 +27,7 @@ public abstract class CropBlockMixin extends FlowerBlock {
      * @reason none
      */
     @Overwrite
-    private float method_294(World par1World, int par2, int par3, int par4) {
+    public float method_294(World par1World, int par2, int par3, int par4) {
         float var5 = 1.0F;
         int var6 = par1World.getBlock(par2, par3, par4 - 1);
         int var7 = par1World.getBlock(par2, par3, par4 + 1);

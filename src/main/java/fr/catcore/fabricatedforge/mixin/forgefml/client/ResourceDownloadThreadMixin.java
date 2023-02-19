@@ -70,7 +70,7 @@ public abstract class ResourceDownloadThreadMixin {
      * @reason none
      */
     @Overwrite
-    private void method_801(URL par1URL, File par2File, long par3) throws IOException {
+    public void method_801(URL par1URL, File par2File, long par3) throws IOException {
         byte[] var5 = new byte[4096];
         URLConnection con = par1URL.openConnection();
         con.setConnectTimeout(60000);

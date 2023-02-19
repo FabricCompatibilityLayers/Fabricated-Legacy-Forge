@@ -73,7 +73,7 @@ public abstract class AbstractButtonBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    private int method_284(World par1World, int par2, int par3, int par4) {
+    public int method_284(World par1World, int par2, int par3, int par4) {
         if (par1World.isBlockSolidOnSide(par2 - 1, par3, par4, ForgeDirection.EAST)) {
             return 1;
         } else if (par1World.isBlockSolidOnSide(par2 + 1, par3, par4, ForgeDirection.WEST)) {

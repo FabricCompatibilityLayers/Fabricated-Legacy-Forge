@@ -109,7 +109,7 @@ public abstract class ServerPlayerInteractionManagerMixin implements IServerPlay
      * @reason none
      */
     @Overwrite
-    private boolean method_2177(int par1, int par2, int par3) {
+    public boolean method_2177(int par1, int par2, int par3) {
         Block var4 = Block.BLOCKS[this.world.getBlock(par1, par2, par3)];
         int var5 = this.world.getBlockData(par1, par2, par3);
         if (var4 != null) {

@@ -83,7 +83,7 @@ public abstract class FurnaceBlockEntityMixin extends BlockEntity implements Inv
      * @reason none
      */
     @Overwrite
-    private boolean canAcceptRecipeOutput() {
+    public boolean canAcceptRecipeOutput() {
         if (this.stacks[0] == null) {
             return false;
         } else {

@@ -20,7 +20,7 @@ public class class_53Mixin {
      * @reason hooks
      */
     @Overwrite
-    protected int method_114(int par1, int par2) {
+    public int method_114(int par1, int par2) {
         BiomeEvent.GetVillageBlockID event = new BiomeEvent.GetVillageBlockID(((Iclass_50)this.field_102).getBiome(), par1, par2);
         MinecraftForge.TERRAIN_GEN_BUS.post(event);
         if (event.getResult() == Event.Result.DENY) {
@@ -61,7 +61,7 @@ public class class_53Mixin {
      * @reason hooks
      */
     @Overwrite
-    protected int method_115(int par1, int par2) {
+    public int method_115(int par1, int par2) {
         BiomeEvent.GetVillageBlockMeta event = new BiomeEvent.GetVillageBlockMeta(((Iclass_50)this.field_102).getBiome(), par1, par2);
         MinecraftForge.TERRAIN_GEN_BUS.post(event);
         if (event.getResult() == Event.Result.DENY) {

@@ -69,7 +69,7 @@ public abstract class CreateWorldScreenMixin extends Screen {
      * @reason hook
      */
     @Overwrite
-    protected void buttonClicked(ButtonWidget par1GuiButton) {
+    public void buttonClicked(ButtonWidget par1GuiButton) {
         if (par1GuiButton.active) {
             if (par1GuiButton.id == 1) {
                 this.field_1229.openScreen(this.parent);
@@ -181,7 +181,7 @@ public abstract class CreateWorldScreenMixin extends Screen {
      * @reason hook
      */
     @Overwrite
-    private void setMoreOptionsOpen(boolean par1) {
+    public void setMoreOptionsOpen(boolean par1) {
         this.moreOptionsOpen = par1;
         this.gameModeButton.visible = !this.moreOptionsOpen;
         this.generateStructuresButton.visible = this.moreOptionsOpen;

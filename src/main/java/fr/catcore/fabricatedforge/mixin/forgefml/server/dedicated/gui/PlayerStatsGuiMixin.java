@@ -33,7 +33,7 @@ public abstract class PlayerStatsGuiMixin extends JComponent {
      * @reason none
      */
     @Overwrite
-    private void method_2086() {
+    public void method_2086() {
         this.lines = new String[5 + DimensionManager.getIDs().length];
         long var1 = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         System.gc();

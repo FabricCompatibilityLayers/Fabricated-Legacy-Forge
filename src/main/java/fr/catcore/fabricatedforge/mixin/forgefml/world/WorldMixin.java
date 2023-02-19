@@ -1021,7 +1021,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
      * @reason none
      */
     @Overwrite
-    private void initWeatherGradients() {
+    public void initWeatherGradients() {
         this.dimension.calculateInitialWeather();
     }
 
@@ -1244,7 +1244,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
      * @reason none
      */
     @Overwrite
-    private int method_3699(int par1, int par2, int par3, int par4, int par5, int par6) {
+    public int method_3699(int par1, int par2, int par3, int par4, int par5, int par6) {
         int var7 = par5 != 0 && Block.BLOCKS[par5] != null ? ((IBlock)Block.BLOCKS[par5]).getLightValue(this, par2, par3, par4) : 0;
         int var8 = this.method_3667(LightType.BLOCK, par2 - 1, par3, par4) - par6;
         int var9 = this.method_3667(LightType.BLOCK, par2 + 1, par3, par4) - par6;

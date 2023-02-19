@@ -32,7 +32,7 @@ public class FurnaceOutputSlotMixin extends Slot {
      * @reason none
      */
     @Overwrite
-    protected void onCrafted(ItemStack par1ItemStack) {
+    public void onCrafted(ItemStack par1ItemStack) {
         par1ItemStack.onCraft(this.player.world, this.player, this.amount);
         if (!this.player.world.isClient) {
             int var2 = this.amount;

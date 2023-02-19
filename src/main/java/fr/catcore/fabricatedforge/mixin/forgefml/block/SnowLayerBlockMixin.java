@@ -36,7 +36,7 @@ public class SnowLayerBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    private boolean method_488(World par1World, int par2, int par3, int par4) {
+    public boolean method_488(World par1World, int par2, int par3, int par4) {
         if (!this.canPlaceBlockAt(par1World, par2, par3, par4)) {
             par1World.method_3690(par2, par3, par4, 0);
             return false;

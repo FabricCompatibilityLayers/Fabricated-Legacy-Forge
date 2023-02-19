@@ -60,7 +60,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
      * @reason none
      */
     @Overwrite
-    private void method_315(int par1, int par2, int par3) {
+    public void method_315(int par1, int par2, int par3) {
         ReflectionUtils.Block_setBurnProperties(par1, par2, par3);
     }
 
@@ -157,7 +157,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
      * @reason none
      */
     @Overwrite
-    private void method_316(World par1World, int par2, int par3, int par4, int par5, Random par6Random, int par7) {
+    public void method_316(World par1World, int par2, int par3, int par4, int par5, Random par6Random, int par7) {
         this.tryToCatchBlockOnFire(par1World, par2, par3, par4, par5, par6Random, par7, ForgeDirection.UP);
     }
 
@@ -193,7 +193,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
      * @reason none
      */
     @Overwrite
-    private boolean method_319(World par1World, int par2, int par3, int par4) {
+    public boolean method_319(World par1World, int par2, int par3, int par4) {
         return this.canBlockCatchFire(par1World, par2 + 1, par3, par4, ForgeDirection.WEST)
                 || this.canBlockCatchFire(par1World, par2 - 1, par3, par4, ForgeDirection.EAST)
                 || this.canBlockCatchFire(par1World, par2, par3 - 1, par4, ForgeDirection.UP)
@@ -207,7 +207,7 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
      * @reason none
      */
     @Overwrite
-    private int method_320(World par1World, int par2, int par3, int par4) {
+    public int method_320(World par1World, int par2, int par3, int par4) {
         byte var5 = 0;
         if (!par1World.isAir(par2, par3, par4)) {
             return 0;

@@ -23,7 +23,7 @@ public abstract class TorchBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    private boolean method_489(World par1World, int par2, int par3, int par4) {
+    public boolean method_489(World par1World, int par2, int par3, int par4) {
         if (par1World.isTopSolid(par2, par3, par4)) {
             return true;
         } else {
