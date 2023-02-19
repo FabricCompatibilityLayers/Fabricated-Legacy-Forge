@@ -44,7 +44,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
      * @reason none
      */
     @Overwrite
-    protected int method_1564(PlayerEntity par1EntityPlayer, int par2, float par3) {
+    public int method_1564(PlayerEntity par1EntityPlayer, int par2, float par3) {
         ItemStack var4 = par1EntityPlayer.inventory.getArmor(3 - par2);
         if (var4 != null) {
             Item var5 = var4.getItem();
@@ -103,7 +103,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
      * @reason none
      */
     @Overwrite
-    protected void method_4337(PlayerEntity par1EntityPlayer, int par2, float par3) {
+    public void method_4337(PlayerEntity par1EntityPlayer, int par2, float par3) {
         ItemStack var4 = par1EntityPlayer.inventory.getArmor(3 - par2);
         if (var4 != null) {
             Item var5 = var4.getItem();
@@ -121,7 +121,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
      * @reason yes
      */
     @Overwrite
-    protected void method_1566(PlayerEntity par1EntityPlayer, double par2, double par4, double par6) {
+    public void method_1566(PlayerEntity par1EntityPlayer, double par2, double par4, double par6) {
         if (Minecraft.isHudEnabled() && par1EntityPlayer != this.dispatcher.cameraEntity && !par1EntityPlayer.isInvisible()) {
             float var8 = 1.6F;
             float var9 = 0.016666668F * var8;
@@ -173,7 +173,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
      * @reason none
      */
     @Overwrite
-    protected void method_1569(PlayerEntity par1EntityPlayer, float par2) {
+    public void method_1569(PlayerEntity par1EntityPlayer, float par2) {
         float var3 = 1.0F;
         GL11.glColor3f(var3, var3, var3);
         super.method_1569(par1EntityPlayer, par2);
