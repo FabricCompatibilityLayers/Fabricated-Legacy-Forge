@@ -130,7 +130,7 @@ public abstract class DungeonFeatureMixin extends Feature {
      * @reason hook
      */
     @Overwrite
-    private ItemStack method_4030(Random par1Random) {
+    public ItemStack method_4030(Random par1Random) {
         return ChestGenHooks.getOneItem("dungeonChest", par1Random);
     }
 
@@ -139,7 +139,7 @@ public abstract class DungeonFeatureMixin extends Feature {
      * @reason hook
      */
     @Overwrite
-    private String getRandomSpawnerMob(Random par1Random) {
+    public String getRandomSpawnerMob(Random par1Random) {
         return DungeonHooks.getRandomDungeonMob(par1Random);
     }
 }

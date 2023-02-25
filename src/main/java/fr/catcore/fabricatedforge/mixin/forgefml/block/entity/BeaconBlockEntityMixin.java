@@ -21,7 +21,7 @@ public abstract class BeaconBlockEntityMixin extends BlockEntity implements Inve
      * @reason yes
      */
     @Overwrite
-    private void method_4203() {
+    public void method_4203() {
         if (!this.world.isAboveHighestBlock(this.x, this.y + 1, this.z)) {
             this.hasValidBase = false;
             this.levels = 0;

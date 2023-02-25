@@ -204,7 +204,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
      * @reason hook
      */
     @Overwrite
-    protected boolean requiresSilkTouch() {
+    public boolean requiresSilkTouch() {
         return this.renderAsNormalBlock() && !this.hasTileEntity(this.silk_check_meta);
     }
 

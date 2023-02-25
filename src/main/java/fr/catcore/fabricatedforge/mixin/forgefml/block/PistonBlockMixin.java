@@ -29,7 +29,7 @@ public abstract class PistonBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    private boolean method_557(World par1World, int par2, int par3, int par4, int par5) {
+    public boolean method_557(World par1World, int par2, int par3, int par4, int par5) {
         return par5 != 0 && par1World.method_3721(par2, par3 - 1, par4, 0)
                 ? true
                 : (
@@ -80,7 +80,7 @@ public abstract class PistonBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    private static boolean method_554(int par0, World par1World, int par2, int par3, int par4, boolean par5) {
+    public static boolean method_554(int par0, World par1World, int par2, int par3, int par4, boolean par5) {
         if (par0 == Block.OBSIDIAN.id) {
             return false;
         } else {
@@ -109,7 +109,7 @@ public abstract class PistonBlockMixin extends Block {
      * @reason max build height
      */
     @Overwrite
-    private static boolean method_559(World par0World, int par1, int par2, int par3, int par4) {
+    public static boolean method_559(World par0World, int par1, int par2, int par3, int par4) {
         int var5 = par1 + class_830.field_3062[par4];
         int var6 = par2 + class_830.field_3063[par4];
         int var7 = par3 + class_830.field_3064[par4];
@@ -147,7 +147,7 @@ public abstract class PistonBlockMixin extends Block {
      * @reason max build height
      */
     @Overwrite
-    private boolean method_560(World par1World, int par2, int par3, int par4, int par5) {
+    public boolean method_560(World par1World, int par2, int par3, int par4, int par5) {
         int var6 = par2 + class_830.field_3062[par5];
         int var7 = par3 + class_830.field_3063[par5];
         int var8 = par4 + class_830.field_3064[par5];

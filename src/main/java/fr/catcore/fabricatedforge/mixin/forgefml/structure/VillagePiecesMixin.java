@@ -46,7 +46,7 @@ public abstract class VillagePiecesMixin {
      * @reason none
      */
     @Overwrite
-    private static class_53 method_86(
+    public static class_53 method_86(
             class_50 par0ComponentVillageStartPiece,
             class_44 par1StructureVillagePieceWeight,
             List par2List,

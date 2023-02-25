@@ -22,7 +22,7 @@ public abstract class EnderDragonEntityMixin extends MobEntity {
      * @reason none
      */
     @Overwrite
-    private boolean destroyBlocks(Box par1AxisAlignedBB) {
+    public boolean destroyBlocks(Box par1AxisAlignedBB) {
         int var2 = MathHelper.floor(par1AxisAlignedBB.minX);
         int var3 = MathHelper.floor(par1AxisAlignedBB.minY);
         int var4 = MathHelper.floor(par1AxisAlignedBB.minZ);

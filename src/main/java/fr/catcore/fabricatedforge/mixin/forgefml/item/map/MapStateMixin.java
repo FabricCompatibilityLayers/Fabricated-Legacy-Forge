@@ -151,7 +151,7 @@ public abstract class MapStateMixin extends PersistentState implements IMapState
      * @reason none
      */
     @Overwrite
-    private void method_4126(int par1, World par2World, String par3Str, double par4, double par6, double par8) {
+    public void method_4126(int par1, World par2World, String par3Str, double par4, double par6, double par8) {
         int var10 = 1 << this.scale;
         float var11 = (float)(par4 - (double)this.xCenter) / (float)var10;
         float var12 = (float)(par6 - (double)this.zCenter) / (float)var10;

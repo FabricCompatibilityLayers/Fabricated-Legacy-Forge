@@ -145,7 +145,7 @@ public abstract class TrackedEntityInstanceMixin {
      * @reason none
      */
     @Overwrite
-    private Packet method_2182() {
+    public Packet method_2182() {
         if (this.trackedEntity.removed) {
             System.out.println("Fetching addPacket for removed entity");
         }

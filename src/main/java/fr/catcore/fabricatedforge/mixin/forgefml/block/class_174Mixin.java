@@ -56,7 +56,7 @@ public abstract class class_174Mixin {
      * @reason none
      */
     @Overwrite
-    private void method_368(class_174 par1RailLogic) {
+    public void method_368(class_174 par1RailLogic) {
         this.field_311.add(new Vec3i(((class_174Mixin)(Object)par1RailLogic).field_307, ((class_174Mixin)(Object)par1RailLogic).field_308, ((class_174Mixin)(Object)par1RailLogic).field_309));
         boolean var2 = this.method_364(this.field_307, this.field_308, this.field_309 - 1);
         boolean var3 = this.method_364(this.field_307, this.field_308, this.field_309 + 1);

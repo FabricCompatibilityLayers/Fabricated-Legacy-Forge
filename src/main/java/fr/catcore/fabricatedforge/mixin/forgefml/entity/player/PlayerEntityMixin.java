@@ -448,7 +448,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
      * @reason none
      */
     @Overwrite
-    protected void method_2653(DamageSource par1DamageSource, int par2) {
+    public void method_2653(DamageSource par1DamageSource, int par2) {
         if (!this.method_4447()) {
             par2 = ForgeHooks.onLivingHurt(this, par1DamageSource, par2);
             if (par2 <= 0) {
@@ -749,7 +749,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
      * @reason none
      */
     @Overwrite
-    private boolean method_3213() {
+    public boolean method_3213() {
         BlockPos c = this.field_3992;
         int blockID = this.world.getBlock(c.x, c.y, c.z);
         return Block.BLOCKS[blockID] != null && Block.BLOCKS[blockID].isBed(this.world, c.x, c.y, c.z, this);

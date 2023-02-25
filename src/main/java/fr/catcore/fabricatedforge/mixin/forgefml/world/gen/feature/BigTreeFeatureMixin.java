@@ -57,7 +57,7 @@ public abstract class BigTreeFeatureMixin extends Feature {
      * @reason PI?
      */
     @Overwrite
-    void addBlockCoords() {
+    public void addBlockCoords() {
         this.height = (int)((double)this.maxHeight * this.heightModifier);
         if (this.height >= this.maxHeight) {
             this.height = this.maxHeight - 1;
@@ -129,7 +129,7 @@ public abstract class BigTreeFeatureMixin extends Feature {
      * @reason hook
      */
     @Overwrite
-    boolean canGenerate() {
+    public boolean canGenerate() {
         int[] var1 = new int[]{this.field_4865[0], this.field_4865[1], this.field_4865[2]};
         int[] var2 = new int[]{this.field_4865[0], this.field_4865[1] + this.maxHeight - 1, this.field_4865[2]};
         int var3 = this.world.getBlock(this.field_4865[0], this.field_4865[1] - 1, this.field_4865[2]);

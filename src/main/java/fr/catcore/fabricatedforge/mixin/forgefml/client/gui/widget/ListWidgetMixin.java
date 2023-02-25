@@ -256,7 +256,7 @@ public abstract class ListWidgetMixin /*implements IListWidget*/ {
      * @reason none
      */
     @Overwrite
-    protected void renderHoleBackground(int par1, int par2, int par3, int par4) {
+    public void renderHoleBackground(int par1, int par2, int par3, int par4) {
         Tessellator var5 = Tessellator.INSTANCE;
         GL11.glBindTexture(3553, this.field_1241.textureManager.getTextureFromPath(this.BACKGROUND_IMAGE));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

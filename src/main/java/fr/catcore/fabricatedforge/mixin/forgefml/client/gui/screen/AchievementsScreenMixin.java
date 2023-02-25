@@ -82,7 +82,7 @@ public class AchievementsScreenMixin extends Screen {
      * @reason none
      */
     @Overwrite
-    protected void method_1095(int par1, int par2, float par3) {
+    public void method_1095(int par1, int par2, float par3) {
         int var4 = MathHelper.floor(this.attemptedCenterX + (this.targetCenterX - this.attemptedCenterX) * (double)par3);
         int var5 = MathHelper.floor(this.attemptedCenterY + (this.targetCenterY - this.attemptedCenterY) * (double)par3);
         if (var4 < MIN_PAN_X) {

@@ -25,7 +25,7 @@ public abstract class StatsMixin {
      * @reason none
      */
     @Overwrite
-    private static Stat[] method_2271(String par0Str, int par1) {
+    public static Stat[] method_2271(String par0Str, int par1) {
         Stat[] var2 = new Stat[Block.BLOCKS.length];
 
         for(int var3 = 0; var3 < Block.BLOCKS.length; ++var3) {

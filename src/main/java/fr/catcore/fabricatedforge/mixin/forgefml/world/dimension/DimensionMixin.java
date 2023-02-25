@@ -46,7 +46,7 @@ public class DimensionMixin implements IDimension {
      * @reason none
      */
     @Overwrite
-    protected void init() {
+    public void init() {
         this.biomeSource = ((ILevelGeneratorType)this.generatorType).getChunkManager(this.world);
     }
 

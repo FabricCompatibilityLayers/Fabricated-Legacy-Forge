@@ -145,7 +145,7 @@ public abstract class ItemRendererMixin extends EntityRenderer implements IItemR
      * @reason hook
      */
     @Overwrite
-    private void method_4335(ItemEntity par1EntityItem, int par2, int par3, float par4, float par5, float par6, float par7) {
+    public void method_4335(ItemEntity par1EntityItem, int par2, int par3, float par4, float par5, float par6, float par7) {
         Tessellator var8 = Tessellator.INSTANCE;
         float var9 = (float)(par2 % 16 * 16 + 0) / 256.0F;
         float var10 = (float)(par2 % 16 * 16 + 16) / 256.0F;

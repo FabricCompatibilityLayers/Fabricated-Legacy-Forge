@@ -188,7 +188,7 @@ public abstract class SurfaceChunkGeneratorMixin implements ChunkProvider {
      * @reason hook
      */
     @Overwrite
-    private double[] method_4009(double[] par1ArrayOfDouble, int par2, int par3, int par4, int par5, int par6, int par7) {
+    public double[] method_4009(double[] par1ArrayOfDouble, int par2, int par3, int par4, int par5, int par6, int par7) {
         ChunkProviderEvent.InitNoiseField event = new ChunkProviderEvent.InitNoiseField(this, par1ArrayOfDouble, par2, par3, par4, par5, par6, par7);
         MinecraftForge.EVENT_BUS.post(event);
         if (event.getResult() == Event.Result.DENY) {

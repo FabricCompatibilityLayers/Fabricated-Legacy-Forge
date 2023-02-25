@@ -29,7 +29,7 @@ public class SnowGolemEntityRendererMixin extends MobEntityRenderer {
      * @reason none
      */
     @Overwrite
-    protected void method_1569(SnowGolemEntity par1EntitySnowman, float par2) {
+    public void method_1569(SnowGolemEntity par1EntitySnowman, float par2) {
         super.method_1569(par1EntitySnowman, par2);
         ItemStack var3 = new ItemStack(Block.PUMPKIN, 1);
         if (var3 != null && var3.getItem() instanceof BlockItem) {

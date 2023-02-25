@@ -182,7 +182,7 @@ public abstract class MobSpawnerHelperMixin {
      * @reason none
      */
     @Overwrite
-    private static void method_3797(MobEntity par0EntityLiving, World par1World, float par2, float par3, float par4) {
+    public static void method_3797(MobEntity par0EntityLiving, World par1World, float par2, float par3, float par4) {
         if (!ForgeEventFactory.doSpecialSpawn(par0EntityLiving, par1World, par2, par3, par4)) {
             par0EntityLiving.method_4475();
         }

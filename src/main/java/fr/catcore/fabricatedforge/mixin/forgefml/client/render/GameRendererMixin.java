@@ -83,7 +83,7 @@ public abstract class GameRendererMixin {
      * @reason none
      */
     @Overwrite
-    private void updateMovementFovMultiplier() {
+    public void updateMovementFovMultiplier() {
         if (this.client.cameraEntity instanceof ClientPlayerEntity) {
             ClientPlayerEntity var1 = (ClientPlayerEntity)this.client.cameraEntity;
             this.field_1831 = var1.method_1305();
@@ -100,7 +100,7 @@ public abstract class GameRendererMixin {
      * @reason none
      */
     @Overwrite
-    private float getFov(float par1, boolean par2) {
+    public float getFov(float par1, boolean par2) {
         if (this.field_1859 > 0) {
             return 90.0F;
         } else {
@@ -130,7 +130,7 @@ public abstract class GameRendererMixin {
      * @reason none
      */
     @Overwrite
-    private void transformCamera(float par1) {
+    public void transformCamera(float par1) {
         MobEntity var2 = this.client.cameraEntity;
         float var3 = var2.heightOffset - 1.62F;
         double var4 = var2.prevX + (var2.x - var2.prevX) * (double)par1;

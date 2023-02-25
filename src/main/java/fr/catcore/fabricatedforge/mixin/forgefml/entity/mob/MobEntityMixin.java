@@ -357,7 +357,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
      * @reason none
      */
     @Overwrite
-    protected void method_2653(DamageSource par1DamageSource, int par2) {
+    public void method_2653(DamageSource par1DamageSource, int par2) {
         if (!this.method_4447()) {
             par2 = ForgeHooks.onLivingHurt((MobEntity)(Object) this, par1DamageSource, par2);
             if (par2 <= 0) {
@@ -424,7 +424,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
      * @reason none
      */
     @Overwrite
-    protected void method_2490(float par1) {
+    public void method_2490(float par1) {
         par1 = ForgeHooks.onLivingFall((MobEntity)(Object) this, par1);
         if (!(par1 <= 0.0F)) {
             super.method_2490(par1);
@@ -464,7 +464,7 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
      * @reason none
      */
     @Overwrite
-    protected void method_2612() {
+    public void method_2612() {
         this.velocityY = 0.42F;
         if (this.method_2581(StatusEffect.JUMP_BOOST)) {
             this.velocityY += (double)((float)(this.method_2627(StatusEffect.JUMP_BOOST).getAmplifier() + 1) * 0.1F);

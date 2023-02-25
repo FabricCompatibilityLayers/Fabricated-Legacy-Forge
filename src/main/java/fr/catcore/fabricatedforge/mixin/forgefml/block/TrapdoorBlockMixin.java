@@ -100,7 +100,7 @@ public abstract class TrapdoorBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    private static boolean method_494(int par0) {
+    public static boolean method_494(int par0) {
         if (disableValidation) {
             return true;
         } else if (par0 <= 0) {

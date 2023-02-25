@@ -72,7 +72,7 @@ public abstract class VillagerEntityMixin extends PassiveEntity {
      * @reason none
      */
     @Overwrite
-    private void method_3111(int par1) {
+    public void method_3111(int par1) {
         if (this.offers != null) {
             this.field_5397 = MathHelper.sqrt((float)this.offers.size()) * 0.2F;
         } else {

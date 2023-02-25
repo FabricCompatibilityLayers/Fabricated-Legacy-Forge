@@ -163,7 +163,7 @@ public abstract class AbstractGiantTreeFeatureMixin extends Feature {
      * @reason none
      */
     @Overwrite
-    private void method_4029(World par1World, int par2, int par3, int par4, int par5, Random par6Random) {
+    public void method_4029(World par1World, int par2, int par3, int par4, int par5, Random par6Random) {
         byte var7 = 2;
 
         for(int var8 = par4 - var7; var8 <= par4; ++var8) {

@@ -72,7 +72,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
      * @reason none
      */
     @Overwrite
-    protected void drawForeground(int par1, int par2) {
+    public void drawForeground(int par1, int par2) {
         ItemGroup var3 = ItemGroup.itemGroups[selectedTab];
         if (var3 != null && var3.hasTooltip()) {
             this.textRenderer.draw(var3.getTranslationKey(), 8, 6, 4210752);
@@ -84,7 +84,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
      * @reason none
      */
     @Overwrite
-    protected void mouseClicked(int par1, int par2, int par3) {
+    public void mouseClicked(int par1, int par2, int par3) {
         if (par3 == 0) {
             int var4 = par1 - this.x;
             int var5 = par2 - this.y;
@@ -105,7 +105,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
      * @reason none
      */
     @Overwrite
-    private boolean hasScrollbar() {
+    public boolean hasScrollbar() {
         if (ItemGroup.itemGroups[selectedTab] == null) {
             return false;
         } else {
@@ -120,7 +120,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
      * @reason none
      */
     @Overwrite
-    private void setSelectedTab(ItemGroup par1CreativeTabs) {
+    public void setSelectedTab(ItemGroup par1CreativeTabs) {
         if (par1CreativeTabs != null) {
             int var2 = selectedTab;
             selectedTab = par1CreativeTabs.getIndex();
@@ -191,7 +191,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
      * @reason hook
      */
     @Overwrite
-    protected void onMouseClick(Slot par1Slot, int par2, int par3, int par4) {
+    public void onMouseClick(Slot par1Slot, int par2, int par3, int par4) {
         this.scrolling = true;
         boolean var5 = par4 == 1;
         if (par1Slot != null) {
@@ -364,7 +364,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
      * @reason none
      */
     @Overwrite
-    protected void drawBackground(float par1, int par2, int par3) {
+    public void drawBackground(float par1, int par2, int par3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         DiffuseLighting.enable();
         int var4 = this.field_1229.textureManager.getTextureFromPath("/gui/allitems.png");
@@ -425,7 +425,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
      * @reason none
      */
     @Overwrite
-    protected boolean isClickInTab(ItemGroup par1CreativeTabs, int par2, int par3) {
+    public boolean isClickInTab(ItemGroup par1CreativeTabs, int par2, int par3) {
         if (((IItemGroup)par1CreativeTabs).getTabPage() != tabPage && par1CreativeTabs != ItemGroup.SEARCH && par1CreativeTabs != ItemGroup.INVENTORY) {
             return false;
         } else {
@@ -454,7 +454,7 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
      * @reason none
      */
     @Overwrite
-    protected void renderTabIcon(ItemGroup par1CreativeTabs) {
+    public void renderTabIcon(ItemGroup par1CreativeTabs) {
         boolean var2 = par1CreativeTabs.getIndex() == selectedTab;
         boolean var3 = par1CreativeTabs.isTopRow();
         int var4 = par1CreativeTabs.getColumn();

@@ -26,7 +26,7 @@ public abstract class BrewingStandBlockEntityMixin extends BlockEntity implement
      * @reason hook
      */
     @Overwrite
-    private boolean canBrew() {
+    public boolean canBrew() {
         if (this.stacks[3] != null && this.stacks[3].count > 0) {
             ItemStack var1 = this.stacks[3];
             if (!((IItem)Item.ITEMS[var1.id]).isPotionIngredient(var1)) {
@@ -64,7 +64,7 @@ public abstract class BrewingStandBlockEntityMixin extends BlockEntity implement
      * @reason none
      */
     @Overwrite
-    private void brew() {
+    public void brew() {
         if (this.canBrew()) {
             ItemStack var1 = this.stacks[3];
 
@@ -100,7 +100,7 @@ public abstract class BrewingStandBlockEntityMixin extends BlockEntity implement
      * @reason hook
      */
     @Overwrite
-    private int getBrewEffectData(int par1, ItemStack par2ItemStack) {
+    public int getBrewEffectData(int par1, ItemStack par2ItemStack) {
         return par2ItemStack == null
                 ? par1
                 : (

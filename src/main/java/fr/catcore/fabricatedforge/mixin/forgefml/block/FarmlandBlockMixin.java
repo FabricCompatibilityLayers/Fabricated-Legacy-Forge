@@ -22,7 +22,7 @@ public abstract class FarmlandBlockMixin extends Block {
      * @reason none
      */
     @Overwrite
-    private boolean method_310(World par1World, int par2, int par3, int par4) {
+    public boolean method_310(World par1World, int par2, int par3, int par4) {
         byte var5 = 0;
 
         for(int var6 = par2 - var5; var6 <= par2 + var5; ++var6) {
