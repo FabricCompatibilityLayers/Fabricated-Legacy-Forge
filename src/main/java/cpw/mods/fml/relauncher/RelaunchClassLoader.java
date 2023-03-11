@@ -20,6 +20,8 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+
+import fr.catcore.modremapperapi.ClassTransformer;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import net.fabricmc.loader.impl.util.UrlUtil;
 
@@ -68,7 +70,9 @@ public class RelaunchClassLoader extends URLClassLoader {
 
     public void registerTransformer(String transformerClassName) {
         try {
-            this.transformers.add((IClassTransformer) this.loadClass(transformerClassName).newInstance());
+            IClassTransformer classTransformer = (IClassTransformer) this.loadClass(transformerClassName).newInstance();
+            ClassTransformer.registerTransformer(classTransformer);
+            this.transformers.add(classTransformer);
         } catch (Exception var3) {
             FMLRelaunchLog.log(Level.SEVERE, var3, "A critical problem occurred registering the ASM transformer class %s", transformerClassName);
         }

@@ -13,6 +13,19 @@
  */
 package cpw.mods.fml.relauncher;
 
-public interface IClassTransformer {
+public interface IClassTransformer extends fr.catcore.modremapperapi.api.IClassTransformer {
     byte[] transform(String string, byte[] bs);
+
+    @Override
+    default byte[] transformClass(String name, String transformedName, byte[] original) {
+        if (name.startsWith("cpw.mods.fml") || name.startsWith("net.minecraftforge") || name.startsWith("codechicken.")) return original;
+        System.out.println(name + ":" + transformedName);
+        return this.transform(transformedName,
+                this.transform(name, original));
+    }
+
+    @Override
+    default boolean handlesClass(String s, String s1) {
+        return true;
+    }
 }
