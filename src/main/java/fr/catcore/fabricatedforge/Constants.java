@@ -4,6 +4,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.MappingResolver;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import net.fabricmc.mapping.tree.ClassDef;
+import net.fabricmc.mapping.tree.FieldDef;
 import net.fabricmc.mapping.tree.MethodDef;
 import net.fabricmc.tinyremapper.extension.mixin.common.data.Pair;
 
@@ -23,11 +24,11 @@ public class Constants {
         COREMODS_FOLDER.mkdirs();
     }
 
-    public static Pair<String, String> getRemappedMethodName(Class<?> owner, String methodName, String argDesc) {
+    public static Pair<String, String> getRemappedMethodName(String owner, String methodName, String argDesc) {
         MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
 
         for(ClassDef def : FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses()) {
-            if (def.getName(resolver.getCurrentRuntimeNamespace()).replace(".", "/").equals(owner.getName().replace(".", "/"))) {
+            if (def.getName(resolver.getCurrentRuntimeNamespace()).replace(".", "/").equals(owner.replace(".", "/"))) {
                 for(MethodDef methodDef : def.getMethods()) {
                     if (Objects.equals(methodDef.getName(getNativeNamespace()), methodName)) {
                         String methodDescriptor = methodDef.getDescriptor(getNativeNamespace());
@@ -39,10 +40,22 @@ public class Constants {
             }
         }
 
-        if (owner.getSuperclass() != null) {
-            return getRemappedMethodName(owner.getSuperclass(), methodName, argDesc);
+        return Pair.of(methodName, argDesc);
+    }
+
+    public static String getRemappedFieldName(String owner, String fieldName) {
+        MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
+
+        for(ClassDef def : FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses()) {
+            if (def.getName(resolver.getCurrentRuntimeNamespace()).replace(".", "/").equals(owner.replace(".", "/"))) {
+                for(FieldDef fieldDef : def.getFields()) {
+                    if (Objects.equals(fieldDef.getName(getNativeNamespace()), fieldName)) {
+                        return fieldDef.getName(resolver.getCurrentRuntimeNamespace());
+                    }
+                }
+            }
         }
 
-        return Pair.of(methodName, argDesc);
+        return fieldName;
     }
 }

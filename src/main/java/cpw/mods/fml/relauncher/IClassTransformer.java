@@ -18,10 +18,8 @@ public interface IClassTransformer extends fr.catcore.modremapperapi.api.IClassT
 
     @Override
     default byte[] transformClass(String name, String transformedName, byte[] original) {
-        if (name.startsWith("cpw.mods.fml") || name.startsWith("net.minecraftforge") || name.startsWith("codechicken.")) return original;
-        System.out.println(name + ":" + transformedName);
-        return this.transform(transformedName,
-                this.transform(name, original));
+        if (original == null) return null;
+        return this.transform(name, original);
     }
 
     @Override
