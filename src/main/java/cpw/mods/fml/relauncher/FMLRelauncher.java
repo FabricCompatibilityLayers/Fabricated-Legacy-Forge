@@ -15,13 +15,11 @@ package cpw.mods.fml.relauncher;
 
 import fr.catcore.fabricatedforge.mixininterface.IMinecraftApplet;
 import net.fabricmc.loader.impl.game.minecraft.applet.AppletLauncher;
-import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 
 import javax.swing.*;
 import java.applet.Applet;
 import java.io.File;
 import java.lang.reflect.Method;
-import java.net.URLClassLoader;
 
 public class FMLRelauncher {
     private static FMLRelauncher INSTANCE;

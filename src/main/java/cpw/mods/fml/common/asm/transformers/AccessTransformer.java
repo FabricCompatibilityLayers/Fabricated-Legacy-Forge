@@ -23,7 +23,6 @@ import com.google.common.io.LineProcessor;
 import com.google.common.io.Resources;
 import cpw.mods.fml.relauncher.IClassTransformer;
 import fr.catcore.fabricatedforge.Constants;
-import fr.catcore.modremapperapi.remapping.RemapUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import net.fabricmc.tinyremapper.extension.mixin.common.data.Pair;
@@ -36,7 +35,6 @@ import org.objectweb.asm.tree.MethodNode;
 import java.io.*;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.zip.ZipEntry;
@@ -101,12 +99,12 @@ public class AccessTransformer implements IClassTransformer {
                             String nameReference = descriptor.get(1);
                             int parenIdx = nameReference.indexOf(40);
                             if (parenIdx > 0) {
-                                Pair<String, String> o = Constants.getRemappedMethodName(className,
+                                Pair<String, String> o = Constants.getRemappedMethodNameNative(className,
                                         nameReference.substring(0, parenIdx), nameReference.substring(parenIdx));
                                 m.desc = o.second();
                                 m.name = o.first();
                             } else {
-                                m.name = Constants.getRemappedFieldName(className, nameReference);
+                                m.name = Constants.getRemappedFieldNameNative(className, nameReference);
                             }
                         }
 

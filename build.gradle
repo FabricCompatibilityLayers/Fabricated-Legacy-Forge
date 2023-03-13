@@ -31,7 +31,7 @@ repositories {
 		}
 	}
 	flatDir {
-		dirs "./lib"
+		dirs ("./lib", "./mods")
 	}
 
 	maven {
@@ -52,12 +52,15 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 //	modApi("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
-	implementation(include(group: "local", name: "mod-remapping-api", version: "1.8.0"))
+	modApi(group: "local", name: "mod-remapping-api", version: "1.8.0")
 
 	modImplementation(legacyFabricApi.module("legacy-fabric-logger-api-v1", "1.9.0+1.8.9"))
 
 	implementation(include(group: "local", name: "argo", version: "2.25"))
 	implementation(include(group: "local", name: "guava", version: "12.0.1"))
+
+	modCompileOnly(group: "local", name: "CodeChickenCore", version: "0.6.5")
+	modRuntimeOnly(group: "local", name: "NotEnoughItems", version: "1.4.0.5")
 
 //	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
 }

@@ -51,18 +51,6 @@ public class ForgeModRemapper implements ModRemapper {
 
     @Override
     public void registerVisitors(VisitorInfos infos) {
-        Map<VisitorInfos.Type, VisitorInfos.Type> types = new HashMap<>();
-
-        for (Map.Entry<VisitorInfos.Type, VisitorInfos.Type> entry : types.entrySet()) {
-            infos.registerSuperType(entry.getKey(), entry.getValue());
-            infos.registerMethodTypeIns(entry.getKey(), entry.getValue());
-
-            infos.registerMethodMethodIns(
-                    new VisitorInfos.MethodNamed(entry.getKey().type, "<init>"),
-                    new VisitorInfos.MethodNamed(entry.getValue().type, "<init>")
-            );
-        }
-
         infos.registerMethodMethodIns(
                 new VisitorInfos.MethodNamed("net/minecraft/class_197", "setBurnProperties"),
                 new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "Block_setBurnProperties")
@@ -73,6 +61,8 @@ public class ForgeModRemapper implements ModRemapper {
                 new VisitorInfos.MethodNamed("xcompwiz/mystcraft/Mystcraft", "registeredDims"),
                 new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/MystcraftCompat", "registeredDims")
         );
+
+
     }
 
     @Override

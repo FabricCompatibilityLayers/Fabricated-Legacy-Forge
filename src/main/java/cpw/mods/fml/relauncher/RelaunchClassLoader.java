@@ -72,6 +72,7 @@ public class RelaunchClassLoader extends URLClassLoader {
         try {
             IClassTransformer classTransformer = (IClassTransformer) this.loadClass(transformerClassName).newInstance();
             ClassTransformer.registerTransformer(classTransformer);
+            System.out.println("Registered ClassTransformer: " + transformerClassName);
             this.transformers.add(classTransformer);
         } catch (Exception var3) {
             FMLRelaunchLog.log(Level.SEVERE, var3, "A critical problem occurred registering the ASM transformer class %s", transformerClassName);
@@ -203,26 +204,27 @@ public class RelaunchClassLoader extends URLClassLoader {
     }
 
     public byte[] getClassBytes(String name) throws IOException {
-        InputStream classStream = null;
-
-        try {
-            URL classResource = this.findResource(name.replace('.', '/').concat(".class"));
-            if (classResource == null) {
-                return null;
-            }
-
-            classStream = classResource.openStream();
-            return readFully(classStream);
-        } finally {
-            if (classStream != null) {
-                try {
-                    classStream.close();
-                } catch (IOException var12) {
-                    // Swallow the close exception
-                }
-            }
-
-        }
+        return null;
+//        InputStream classStream = null;
+//
+//        try {
+//            URL classResource = this.findResource(name.replace('.', '/').concat(".class"));
+//            if (classResource == null) {
+//                return null;
+//            }
+//
+//            classStream = classResource.openStream();
+//            return readFully(classStream);
+//        } finally {
+//            if (classStream != null) {
+//                try {
+//                    classStream.close();
+//                } catch (IOException var12) {
+//                    // Swallow the close exception
+//                }
+//            }
+//
+//        }
     }
 
     private byte[] runTransformers(String name, byte[] basicClass) {
