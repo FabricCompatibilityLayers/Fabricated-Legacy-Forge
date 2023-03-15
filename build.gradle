@@ -60,7 +60,7 @@ dependencies {
 	implementation(include(group: "local", name: "guava", version: "12.0.1"))
 
 	modCompileOnly(group: "local", name: "CodeChickenCore", version: "0.6.5")
-	modRuntimeOnly(group: "local", name: "NotEnoughItems", version: "1.4.0.5")
+	modCompileOnly(group: "local", name: "NotEnoughItems", version: "1.4.0.5")
 
 //	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
 }

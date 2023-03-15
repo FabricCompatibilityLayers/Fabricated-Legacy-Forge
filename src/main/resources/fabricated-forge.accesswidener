@@ -310,3 +310,18 @@ accessible method net/minecraft/server/dedicated/MinecraftDedicatedServer tick (
 
 accessible method net/minecraft/server/integrated/IntegratedServer setupWorld ()V
 accessible method net/minecraft/server/integrated/IntegratedServer populateCrashReport (Lnet/minecraft/util/crash/CrashReport;)Lnet/minecraft/util/crash/CrashReport;
+
+### NEI Fix
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen field_1346 Lnet/minecraft/client/render/item/ItemRenderer;
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen backgroundWidth I
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen backgroundHeight I
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen x I
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen y I
+accessible field net/minecraft/client/gui/screen/Screen field_1229 Lnet/minecraft/client/Minecraft;
+accessible method net/minecraft/client/gui/screen/ingame/HandledScreen getSlotAt (II)Lnet/minecraft/inventory/slot/Slot;
+accessible field net/minecraft/client/gui/screen/Screen textRenderer Lnet/minecraft/client/font/TextRenderer;
+accessible field net/minecraft/client/gui/DrawableHelper zOffset F
+accessible method net/minecraft/client/gui/DrawableHelper fillGradient (IIIIII)V
+accessible field net/minecraft/world/chunk/ThreadedAnvilChunkStorage saveLocation Ljava/io/File;
+accessible field net/minecraft/client/class_469 connection Lnet/minecraft/network/Connection;
+accessible field net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen selectedTab I

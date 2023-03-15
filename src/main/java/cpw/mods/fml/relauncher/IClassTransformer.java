@@ -24,6 +24,7 @@ public interface IClassTransformer extends fr.catcore.modremapperapi.api.IClassT
 
     @Override
     default boolean handlesClass(String s, String s1) {
+        if (s.equals("net.minecraft.class_415") && this.getClass().getName().equals("codechicken.nei.asm.NEITransformer")) return false;
         return true;
     }
 }
