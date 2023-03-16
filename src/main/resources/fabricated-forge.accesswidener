@@ -1,4 +1,4 @@
-accessWidener v1 named
+accessWidener v2 named
 
 ### FML
 accessible method net/minecraft/block/entity/BlockEntity registerBlockEntity (Ljava/lang/Class;Ljava/lang/String;)V

@@ -64,6 +64,18 @@ public abstract class CreativeInventoryScreenMixin extends InventoryScreen {
     }
 
     /**
+     * @author codechicken
+     * @reason add super
+     */
+    @Overwrite
+    public void tick() {
+        super.tick();
+        if (!this.field_1229.interactionManager.hasCreativeInventory()) {
+            this.field_1229.openScreen(new SurvivalInventoryScreen(this.field_1229.playerEntity));
+        }
+    }
+
+    /**
      * @author Minecraft Forge
      * @reason none
      */
