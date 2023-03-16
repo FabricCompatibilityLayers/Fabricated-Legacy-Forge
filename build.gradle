@@ -51,8 +51,8 @@ dependencies {
 	mappings "net.legacyfabric:yarn:${project.minecraft_version}+build.${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-//	modApi("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
-	modApi(group: "local", name: "mod-remapping-api", version: "1.8.0")
+	modApi("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
+//	modApi(group: "local", name: "mod-remapping-api", version: "1.8.0")
 
 	modImplementation(legacyFabricApi.module("legacy-fabric-logger-api-v1", "1.9.0+1.8.9"))
 
