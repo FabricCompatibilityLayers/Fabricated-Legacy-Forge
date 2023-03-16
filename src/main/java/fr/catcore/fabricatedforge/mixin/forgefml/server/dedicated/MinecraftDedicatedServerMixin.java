@@ -47,7 +47,7 @@ public abstract class MinecraftDedicatedServerMixin extends MinecraftServer impl
      * @reason none
      */
     @Overwrite
-    protected boolean setupServer() {
+    public boolean setupServer() {
         try {
             class_772 var1 = class_772Accessor.newInstance((MinecraftDedicatedServer) (Object) this);
             var1.setDaemon(true);

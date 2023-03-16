@@ -34,7 +34,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
      * @reason none
      */
     @Overwrite
-    protected void setupWorld(String par1Str, String par2Str, long par3, LevelGeneratorType par5WorldType, String par6Str) {
+    public void setupWorld(String par1Str, String par2Str, long par3, LevelGeneratorType par5WorldType, String par6Str) {
         this.upgradeWorld(par1Str);
         SaveHandler var7 = this.getSaveStorage().createSaveHandler(par1Str, true);
         ServerWorld overWorld = (ServerWorld)(this.isDemo()
@@ -64,7 +64,7 @@ public abstract class IntegratedServerMixin extends MinecraftServer {
      * @reason none
      */
     @Overwrite
-    protected boolean setupServer() {
+    public boolean setupServer() {
         field_3848.info("Starting integrated minecraft server version 1.4");
         this.setOnlineMode(false);
         this.setSpawnAnimals(true);

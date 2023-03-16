@@ -82,7 +82,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      * @reason none
      */
     @Overwrite
-    protected void tickBlocks() {
+    public void tickBlocks() {
         super.tickBlocks();
         int var1 = 0;
         int var2 = 0;
@@ -318,7 +318,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      * @reason none
      */
     @Overwrite
-    protected void placeBonusChest() {
+    public void placeBonusChest() {
         BonusChestFeature var1 = new BonusChestFeature(ChestGenHooks.getItems("bonusChest"), ChestGenHooks.getCount("bonusChest", this.random));
 
         for(int var2 = 0; var2 < 10; ++var2) {

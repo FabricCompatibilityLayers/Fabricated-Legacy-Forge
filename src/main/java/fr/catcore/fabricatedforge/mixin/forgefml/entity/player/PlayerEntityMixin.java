@@ -358,7 +358,7 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
      * @reason none
      */
     @Overwrite
-    protected void method_2653(DamageSource par1DamageSource, int par2) {
+    public void method_2653(DamageSource par1DamageSource, int par2) {
         LivingHurtEvent event = new LivingHurtEvent(this, par1DamageSource, par2);
         if (!MinecraftForge.EVENT_BUS.post(event) && event.ammount != 0) {
             par2 = event.ammount;
