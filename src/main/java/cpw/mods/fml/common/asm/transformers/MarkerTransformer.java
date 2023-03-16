@@ -72,7 +72,19 @@ public class MarkerTransformer implements IClassTransformer {
                         throw new RuntimeException("Invalid config file line " + input);
                     } else {
                         for(String marker : Lists.newArrayList(Splitter.on(",").trimResults().split((CharSequence)parts.get(1)))) {
-                            MarkerTransformer.this.markers.put(parts.get(0), marker);
+                            String className = ((String)parts.get(0)).replace('/', '.');
+                            String finalClassName = className;
+                            try {
+                                className = FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses().stream()
+                                        .filter(classDef -> classDef.getName("official").equals(finalClassName)).findFirst().get()
+                                        .getName(FabricLoader.getInstance().getMappingResolver().getCurrentRuntimeNamespace());
+                            } catch (NullPointerException | NoSuchElementException ignored) {}
+
+                            if (className.equals("net")) {
+                                className = "net.minecraft.client.Minecraft";
+                            }
+
+                            MarkerTransformer.this.markers.put(className, marker);
                         }
 
                         return true;

@@ -5,9 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "server": [],
   "mixins": [],
-  "client": [
-    "nei.HandledScreenMixin"
-  ],
+  "client": [],
   "injectors": {
     "defaultRequire": 1
   },
