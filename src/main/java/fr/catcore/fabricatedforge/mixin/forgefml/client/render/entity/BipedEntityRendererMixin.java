@@ -40,7 +40,7 @@ public abstract class BipedEntityRendererMixin extends MobEntityRenderer {
      * @reason none
      */
     @Overwrite
-    protected int method_1564(MobEntity par1EntityLiving, int par2, float par3) {
+    public int method_1564(MobEntity par1EntityLiving, int par2, float par3) {
         ItemStack var4 = par1EntityLiving.method_4485(3 - par2);
         if (var4 != null) {
             Item var5 = var4.getItem();
@@ -99,7 +99,7 @@ public abstract class BipedEntityRendererMixin extends MobEntityRenderer {
      * @reason none
      */
     @Overwrite
-    protected void method_1569(MobEntity par1EntityLiving, float par2) {
+    public void method_1569(MobEntity par1EntityLiving, float par2) {
         float var3 = 1.0F;
         GL11.glColor3f(var3, var3, var3);
         super.method_1569(par1EntityLiving, par2);

@@ -3,7 +3,7 @@
 build/
 out/
 classes/
-mods/
+./mods/
 
 # eclipse
 *.launch
@@ -30,3 +30,5 @@ run/
 ./ModLoader*
 jars/
 remappedSrc/
+
+mods/
