@@ -30,3 +30,5 @@ run/
 ./ModLoader*
 jars/
 remappedSrc/
+
+mods/
