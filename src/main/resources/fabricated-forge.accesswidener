@@ -325,3 +325,5 @@ accessible method net/minecraft/client/gui/DrawableHelper fillGradient (IIIIII)V
 accessible field net/minecraft/world/chunk/ThreadedAnvilChunkStorage saveLocation Ljava/io/File;
 accessible field net/minecraft/client/class_469 connection Lnet/minecraft/network/Connection;
 accessible field net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen selectedTab I
+accessible class net/minecraft/inventory/slot/class_1019
+accessible method net/minecraft/inventory/slot/class_1019 <init> (Lnet/minecraft/screen/PlayerScreenHandler;Lnet/minecraft/inventory/Inventory;IIII)V
