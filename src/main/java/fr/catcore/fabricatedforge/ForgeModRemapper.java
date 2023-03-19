@@ -160,14 +160,6 @@ public class ForgeModRemapper implements ModRemapper {
                 new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "(Lnet/minecraft/src/World;IIILnet/minecraft/src/EntityLiving;)V"),
                 new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "(Lnet/minecraft/class_1150;IIILnet/minecraft/class_871;)V")
         );
-        infos.registerMethodMethodIns(
-                new VisitorInfos.MethodNamed("codechicken/nei/TMIUninstaller", "getJarFile"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/CodeChickenCoreCompat", "getJarFile")
-        );
-        infos.registerMethodLdcIns(
-                new VisitorInfos.MethodValue("codechicken/nei/recipe/FurnaceRecipeHandler", "getItemBurnTime"),
-                new VisitorInfos.MethodValue("codechicken/nei/recipe/FurnaceRecipeHandler", "method_519")
-        );
     }
 
     @Override
