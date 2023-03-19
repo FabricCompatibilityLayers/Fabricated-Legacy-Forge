@@ -31,7 +31,7 @@ repositories {
 		}
 	}
 	flatDir {
-		dirs "./lib"
+		dirs ("./lib", "./mods")
 	}
 
 	maven {
@@ -52,13 +52,17 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 	modApi("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
+//	modApi(group: "local", name: "mod-remapping-api", version: "1.8.0")
 
 	modImplementation(legacyFabricApi.module("legacy-fabric-logger-api-v1", "1.9.0+1.8.9"))
 
 	implementation(include(group: "local", name: "argo", version: "2.25"))
 	implementation(include(group: "local", name: "guava", version: "12.0.1"))
 
-	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
+	modCompileOnly(group: "local", name: "CodeChickenCore", version: "0.6.5")
+	modCompileOnly(group: "local", name: "NotEnoughItems", version: "1.4.0.5")
+
+//	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
 }
 
 processResources {
@@ -126,7 +130,7 @@ modrinth {
 	token = System.getenv("MODRINTH_TOKEN") == null ? "dev" : System.getenv("MODRINTH_TOKEN") // This is the default. Remember to have the MODRINTH_TOKEN environment variable set or else this will fail, or set it to whatever you want - just make sure it stays private!
 	projectId = "JpHZ1Cyv" // This can be the project ID or the slug. Either will work!
 	versionName = displayVersion
-	changelog = "Update to Mod-Remapping-API 1.7.1 and use ASM Magic."
+	changelog = "Update to Mod-Remapping-API 1.8.0.\nClassTransformers are now applied!!\nMeaning Coremods are more likely to work.\nImplement special fixes to get CodeChickenCore and NEI working."
 	uploadFile = remapJar
 	gameVersions = [project.minecraft_version] // Must be an array, even with only one version
 	debugMode = debug
