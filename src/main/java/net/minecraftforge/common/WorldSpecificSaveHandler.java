@@ -4,7 +4,9 @@
  */
 package net.minecraftforge.common;
 
+import fr.catcore.fabricatedforge.mixininterface.IServerChunkProvider;
 import fr.catcore.fabricatedforge.mixininterface.IServerWorld;
+import fr.catcore.fabricatedforge.mixininterface.IThreadedAnvilChunkStorage;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.PlayerDataHandler;
@@ -24,7 +26,7 @@ public class WorldSpecificSaveHandler implements SaveHandler {
     public WorldSpecificSaveHandler(ServerWorld world, SaveHandler parent) {
         this.world = world;
         this.parent = parent;
-        this.dataDir = new File(((IServerWorld) world).getChunkSaveLocation(), "data");
+        this.dataDir = new File(((IThreadedAnvilChunkStorage)((IServerChunkProvider)world.chunkCache).getChunkWriter()).getSaveLocation(), "data");
         this.dataDir.mkdirs();
     }
 

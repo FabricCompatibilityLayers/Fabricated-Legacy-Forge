@@ -48,8 +48,6 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     @Shadow @Final private MinecraftServer server;
 
-    @Shadow public ServerChunkProvider chunkCache;
-
     @Shadow public abstract void resetIdleTimeout();
 
     public ServerWorldMixin(SaveHandler saveHandler, String string, Dimension dimension, LevelInfo levelInfo, Profiler profiler) {
@@ -357,10 +355,5 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
         this.saveHandler.saveWorld(this.levelProperties, this.server.getPlayerManager().getUserData());
         this.persistentStateManager.save();
         this.getPerWorldStorage().save();
-    }
-
-    @Override
-    public File getChunkSaveLocation() {
-        return ((IThreadedAnvilChunkStorage)((IServerChunkProvider)this.chunkCache).getChunkWriter()).getSaveLocation();
     }
 }
