@@ -1,34 +1,40 @@
 # gradle
+
 .gradle/
 build/
 out/
 classes/
-./mods/
 
 # eclipse
+
 *.launch
 
 # idea
+
 .idea/
 *.iml
 *.ipr
 *.iws
 
 # vscode
+
 .settings/
 .vscode/
 bin/
 .classpath
 .project
 
-# fabric
-run/
-
 # macos
+
 *.DS_Store
 
-./ModLoader*
-jars/
-remappedSrc/
+# fabric
 
-mods/
+run/
+
+# java
+
+hs_err_*.log
+replay_*.log
+*.hprof
+*.jfr
