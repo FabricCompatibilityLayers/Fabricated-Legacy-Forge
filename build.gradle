@@ -59,6 +59,8 @@ dependencies {
 	modCompileOnly(group: "local", name: "CodeChickenCore", version: "0.6.5")
 	modCompileOnly(group: "local", name: "NotEnoughItems", version: "1.4.0.5")
 
+	include("org.apache.commons:commons-lang3:3.12.0")
+
 //	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
 }
 
