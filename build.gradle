@@ -48,6 +48,9 @@ dependencies {
 	modApi("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
 //	modApi(group: "local", name: "mod-remapping-api", version: "1.8.0")
 
+	modApi("maven.modrinth:spasm:${project.spasm_version}")
+	modApi(annotationProcessor("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:${project.mixin_extras_version}"))
+
 	modImplementation(legacy.apiModule("legacy-fabric-logger-api-v1", "1.9.0+1.8.9"))
 
 	implementation(include(group: "local", name: "argo", version: "2.25"))
