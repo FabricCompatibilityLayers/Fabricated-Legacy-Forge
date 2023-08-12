@@ -83,7 +83,7 @@ public class ReflectionHelper {
         {
             try
             {
-                return (Class<? super Object>) Class.forName(className, false, loader);
+                return (Class<? super Object>) Class.forName(className, false, ReflectionHelper.class.getClassLoader());
             }
             catch (Exception e)
             {

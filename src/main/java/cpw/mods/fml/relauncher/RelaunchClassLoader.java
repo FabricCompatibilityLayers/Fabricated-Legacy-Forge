@@ -21,6 +21,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import fr.catcore.fabricatedforge.util.Utils;
 import fr.catcore.modremapperapi.ClassTransformer;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import net.fabricmc.loader.impl.util.UrlUtil;
@@ -57,7 +58,6 @@ public class RelaunchClassLoader extends URLClassLoader {
         // standard classloader exclusions
         this.addClassLoaderExclusion("java.");
         this.addClassLoaderExclusion("sun.");
-        this.addClassLoaderExclusion("");
         this.addClassLoaderExclusion("net.minecraftforge.classloading.");
 
         // standard transformer exclusions
@@ -70,7 +70,7 @@ public class RelaunchClassLoader extends URLClassLoader {
 
     public void registerTransformer(String transformerClassName) {
         try {
-            IClassTransformer classTransformer = (IClassTransformer) this.loadClass(transformerClassName).newInstance();
+            IClassTransformer classTransformer = (IClassTransformer) Class.forName(transformerClassName).newInstance();
             ClassTransformer.registerTransformer(classTransformer);
             System.out.println("Registered ClassTransformer: " + transformerClassName);
             this.transformers.add(classTransformer);
@@ -269,9 +269,11 @@ public class RelaunchClassLoader extends URLClassLoader {
 
     private void addClassLoaderExclusion(String toExclude) {
         this.classLoaderExceptions.add(toExclude);
+        Utils.TRANSFORMER_EXCLUSIONS.add(toExclude);
     }
 
     void addTransformerExclusion(String toExclude) {
         this.transformerExceptions.add(toExclude);
+        Utils.TRANSFORMER_EXCLUSIONS.add(toExclude);
     }
 }

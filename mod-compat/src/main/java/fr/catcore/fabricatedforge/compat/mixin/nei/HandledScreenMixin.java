@@ -1,4 +1,4 @@
-package fr.catcore.fabricatedforge.mixin.mods.nei;
+package fr.catcore.fabricatedforge.compat.mixin.nei;
 
 import codechicken.nei.forge.GuiContainerManager;
 import codechicken.nei.forge.IContainerClientSide;

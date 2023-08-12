@@ -63,49 +63,49 @@ public class ForgeModRemapper implements ModRemapper {
                 new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/MystcraftCompat", "registeredDims")
         );
 
-        // CodeChickenCore
-        infos.registerMethodMethodIns(
-                new VisitorInfos.MethodNamed("codechicken/core/asm/ClassOverrider", "overrideBytes"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/CodeChickenCoreCompat", "overrideBytes")
-        );
-
-        // NEI
-        infos.registerMethodLdcIns(
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "aqh"),
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "net.minecraft.class_409")
-        );
-        infos.registerMethodLdcIns(
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "apn"),
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "net.minecraft.class_388")
-        );
-        infos.registerMethodLdcIns(
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "agu"),
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "net.minecraft.class_159")
-        );
-        infos.registerMethodLdcIns(
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "aig"),
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "net.minecraft.class_197")
-        );
-        infos.registerMethodLdcIns(
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "c"),
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "method_1033")
-        );
-        infos.registerMethodLdcIns(
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "a"),
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "method_419")
-        );
-        infos.registerMethodLdcIns(
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "(Lup;IIILjw;)V"),
-                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "(Lnet/minecraft/class_1150;IIILnet/minecraft/class_871;)V")
-        );
-        infos.registerMethodMethodIns(
-                new VisitorInfos.MethodNamed("codechicken/nei/TMIUninstaller", "getJarFile"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/CodeChickenCoreCompat", "getJarFile")
-        );
-        infos.registerMethodLdcIns(
-                new VisitorInfos.MethodValue("codechicken/nei/recipe/FurnaceRecipeHandler", "getItemBurnTime"),
-                new VisitorInfos.MethodValue("codechicken/nei/recipe/FurnaceRecipeHandler", "method_519")
-        );
+//        // CodeChickenCore
+//        infos.registerMethodMethodIns(
+//                new VisitorInfos.MethodNamed("codechicken/core/asm/ClassOverrider", "overrideBytes"),
+//                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/CodeChickenCoreCompat", "overrideBytes")
+//        );
+//
+//        // NEI
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "aqh"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "net.minecraft.class_409")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "apn"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "net.minecraft.class_388")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "agu"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "net.minecraft.class_159")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "aig"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "net.minecraft.class_197")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "c"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "method_1033")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "a"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "method_419")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "(Lup;IIILjw;)V"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "(Lnet/minecraft/class_1150;IIILnet/minecraft/class_871;)V")
+//        );
+//        infos.registerMethodMethodIns(
+//                new VisitorInfos.MethodNamed("codechicken/nei/TMIUninstaller", "getJarFile"),
+//                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/CodeChickenCoreCompat", "getJarFile")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/recipe/FurnaceRecipeHandler", "getItemBurnTime"),
+//                new VisitorInfos.MethodValue("codechicken/nei/recipe/FurnaceRecipeHandler", "method_519")
+//        );
     }
 
     @Override
@@ -115,7 +115,7 @@ public class ForgeModRemapper implements ModRemapper {
 
     @Override
     public void afterRemap() {
-        Mixins.addConfiguration("fabricated-forge.mods.mixins.json");
+
     }
 
     static {

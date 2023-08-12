@@ -1,0 +1,4 @@
+dependencies {
+    modCompileOnly(group: "local", name: "CodeChickenCore", version: "0.6.5")
+    modCompileOnly(group: "local", name: "NotEnoughItems", version: "1.4.0.5")
+}

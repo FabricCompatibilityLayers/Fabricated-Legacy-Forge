@@ -11,3 +11,5 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
+
+include 'mod-compat'
