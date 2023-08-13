@@ -13,7 +13,18 @@
  */
 package cpw.mods.fml.relauncher;
 
+import fr.catcore.fabricatedforge.util.Utils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public interface IClassTransformer extends fr.catcore.modremapperapi.api.IClassTransformer {
+    static final List<String> CLASS_NAMES = new ArrayList<>();
+
+    Map<IClassTransformer, List<String>> transformed = new HashMap<>();
+
     byte[] transform(String string, byte[] bs);
 
     @Override
@@ -24,6 +35,24 @@ public interface IClassTransformer extends fr.catcore.modremapperapi.api.IClassT
 
     @Override
     default boolean handlesClass(String s, String s1) {
+        String className = this.getClass().getName();
+
+        if (!CLASS_NAMES.contains(className)) {
+            CLASS_NAMES.add(className);
+            transformed.put(this, new ArrayList<>());
+        }
+
+        if (CLASS_NAMES.contains(s)) return false;
+
+        for (String toExclude : Utils.TRANSFORMER_EXCLUSIONS) {
+            if (s.startsWith(toExclude)) return false;
+        }
+
+        if (transformed.get(this).contains(s)) {
+            throw new RuntimeException("Detected transformation loop for class " + s + " in ClassTransformer " + className);
+        }
+
+        transformed.get(this).add(s);
         if (s.equals("net.minecraft.class_415") && this.getClass().getName().equals("codechicken.nei.asm.NEITransformer")) return false;
         return true;
     }
