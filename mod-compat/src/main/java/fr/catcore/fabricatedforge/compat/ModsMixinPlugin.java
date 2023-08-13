@@ -19,15 +19,6 @@ public class ModsMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (mixinClassName.contains(".nei.")) {
-            try {
-                Class.forName("codechicken.nei.IStackPositioner", false, this.getClass().getClassLoader());
-                return true;
-            } catch (ClassNotFoundException e) {
-                return false;
-            }
-        }
-
         return true;
     }
 
