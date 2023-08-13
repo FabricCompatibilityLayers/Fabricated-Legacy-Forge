@@ -24,6 +24,7 @@ import java.util.jar.Manifest;
 import fr.catcore.fabricatedforge.util.Utils;
 import fr.catcore.modremapperapi.ClassTransformer;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
+import net.fabricmc.loader.impl.util.UrlUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
