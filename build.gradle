@@ -1,20 +1,15 @@
 import com.diffplug.gradle.spotless.JavaExtension
 
 plugins {
+	id 'java-library'
 	id 'com.diffplug.spotless' version "6.12.0"
-	id 'fabric-loom' version "1.1-SNAPSHOT" // To use chocoloom, change the version to a commit hash
-	id 'legacy-looming' version "1.1-SNAPSHOT" // Version must be the same as fabric-loom's
+	id 'fabric-loom' version "1.3-SNAPSHOT" apply false // To use chocoloom, change the version to a commit hash
+	id 'legacy-looming' version "1.3-SNAPSHOT" apply false // Version must be the same as fabric-loom's
 	id 'maven-publish'
 	id "com.modrinth.minotaur" version "2.+"
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
-
-archivesBaseName = project.archives_base_name + "-" + project.minecraft_version
-version = project.mod_version
-def displayVersion = version + "+" + project.minecraft_version
-group = project.maven_group
+def displayVersion = project.mod_version + "+" + project.minecraft_version
 
 def debug = true
 def branch = System.getenv("GITHUB_REF_NAME") == null ? "-forge" : System.getenv("GITHUB_REF_NAME")
@@ -22,77 +17,117 @@ if (!branch.endsWith("-forge")) {
 	debug = false
 }
 
-repositories {
-	maven {
-		name = "Modrinth"
-		url = "https://api.modrinth.com/maven"
-		content {
-			includeGroup "maven.modrinth"
+allprojects {
+	apply plugin: "maven-publish"
+	apply plugin: "java-library"
+	apply plugin: "fabric-loom"
+	apply plugin: "legacy-looming"
+
+	version = project.mod_version
+	group = project.maven_group
+
+	repositories {
+		maven {
+			name = "Modrinth"
+			url = "https://api.modrinth.com/maven"
+			content {
+				includeGroup "maven.modrinth"
+			}
+		}
+		flatDir {
+			dirs (rootProject.rootDir.toString() + "/lib", rootProject.rootDir.toString() + "/mods")
+		}
+
+		maven {
+			name = "Jitpack"
+			url 'https://jitpack.io/'
 		}
 	}
-	flatDir {
-		dirs ("./lib", "./mods")
+
+	dependencies {
+		minecraft "com.mojang:minecraft:${project.minecraft_version}"
+		mappings legacy.yarn(project.minecraft_version, project.yarn_mappings)
+		modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+		modApi("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
+	//	modApi(group: "local", name: "mod-remapping-api", version: "1.8.0")
+
+		modApi("maven.modrinth:spasm:${project.spasm_version}")
+		modApi(annotationProcessor("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:${project.mixin_extras_version}"))
+
+		implementation(group: "local", name: "argo", version: "2.25")
+		implementation(group: "local", name: "guava", version: "12.0.1")
+
+		modImplementation(legacy.apiModule("legacy-fabric-logger-api-v1", "1.9.0+1.8.9"))
+
+	//	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
 	}
 
-	maven {
-		name = "Jitpack"
-		url 'https://jitpack.io/'
+	base {
+		archivesName = project.archives_base_name + "-" + project.minecraft_version
+	}
+
+	processResources {
+		inputs.property "version", project.version
+
+		filesMatching("fabric.mod.json") {
+			expand "version": project.version
+		}
+	}
+
+	// ensure that the encoding is set to UTF-8, no matter what the system default is
+	// this fixes some edge cases with special characters not displaying correctly
+	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+	tasks.withType(JavaCompile).configureEach {
+		it.options.encoding = "UTF-8"
+		if (JavaVersion.current().isJava9Compatible()) it.options.release = 8
+
+		sourceCompatibility = JavaVersion.VERSION_1_8
+		targetCompatibility = JavaVersion.VERSION_1_8
+	}
+
+	java {
+		// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+		// if it is present.
+		// If you remove this line, sources will not be generated.
+		withSourcesJar()
+	}
+
+	jar {
+		from("LICENSE") {
+			rename { "${it}_${base.archivesName.get()}" }
+		}
 	}
 }
 
 loom {
-	setIntermediaryUrl('https://repo.legacyfabric.net/repository/legacyfabric/net/legacyfabric/intermediary/%1$s/intermediary-%1$s-v2.jar');
-
 	accessWidenerPath = file("src/main/resources/fabricated-forge.accesswidener")
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.legacyfabric:yarn:${project.minecraft_version}+build.${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	include(group: "local", name: "argo", version: "2.25")
+	include(group: "local", name: "guava", version: "12.0.1")
 
-	modApi("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
-//	modApi(group: "local", name: "mod-remapping-api", version: "1.8.0")
-
-	modImplementation(legacyFabricApi.module("legacy-fabric-logger-api-v1", "1.9.0+1.8.9"))
-
-	implementation(include(group: "local", name: "argo", version: "2.25"))
-	implementation(include(group: "local", name: "guava", version: "12.0.1"))
-
-	modCompileOnly(group: "local", name: "CodeChickenCore", version: "0.6.5")
-	modCompileOnly(group: "local", name: "NotEnoughItems", version: "1.4.0.5")
-
-//	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
+	include("org.apache.commons:commons-lang3:3.12.0")
 }
 
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
+subprojects {
+	dependencies {
+		api(project.dependencies.project(path: ":", configuration: 'namedElements'))
 	}
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile).configureEach {
-	it.options.encoding = "UTF-8"
-	if (JavaVersion.current().isJava9Compatible()) it.options.release = 8
-}
-
-java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
+remapJar {
+	afterEvaluate {
+		subprojects.each {
+			// Include the jar from the sub project.
+			nestedJars.from project("${it.path}").tasks.getByName("remapJar")
+		}
+	}
 }
 
 jar {
 	from("licensing.md")
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}" }
-	}
 	from("LICENSE-fml.txt")
 	from("CREDITS-fml.txt")
 	from("MinecraftForge-Credits.txt")
@@ -130,7 +165,7 @@ modrinth {
 	token = System.getenv("MODRINTH_TOKEN") == null ? "dev" : System.getenv("MODRINTH_TOKEN") // This is the default. Remember to have the MODRINTH_TOKEN environment variable set or else this will fail, or set it to whatever you want - just make sure it stays private!
 	projectId = "JpHZ1Cyv" // This can be the project ID or the slug. Either will work!
 	versionName = displayVersion
-	changelog = "Update to Mod-Remapping-API 1.8.0.\nClassTransformers are now applied!!\nMeaning Coremods are more likely to work.\nImplement special fixes to get CodeChickenCore and NEI working."
+	changelog = "Update to MRAPI 1.14.2.\nFix more compatibility issues with CodeChickenCore and NEI.\nNEI plugins still do not work for now."
 	uploadFile = remapJar
 	gameVersions = [project.minecraft_version] // Must be an array, even with only one version
 	debugMode = debug
@@ -138,6 +173,6 @@ modrinth {
 		// scope.type
 		// The scope can be `required`, `optional`, `incompatible`, or `embedded`
 		// The type can either be `project` or `version`
-		required.version "eRGeQXjD", project.mod_remapping_api
+		required.version "mod-remapping-api", project.mod_remapping_api
 	}
 }

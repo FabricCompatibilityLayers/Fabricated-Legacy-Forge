@@ -1,4 +1,4 @@
-package fr.catcore.fabricatedforge.mixin;
+package fr.catcore.fabricatedforge.compat;
 
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
@@ -10,7 +10,6 @@ import java.util.Set;
 public class ModsMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void onLoad(String mixinPackage) {
-
     }
 
     @Override
@@ -20,14 +19,6 @@ public class ModsMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (mixinClassName.contains(".nei.")) {
-            try {
-                this.getClass().getClassLoader().loadClass("codechicken.nei.forge.IContainerClientSide");
-                return true;
-            } catch (ClassNotFoundException e) {
-                return false;
-            }
-        }
         return true;
     }
 
@@ -43,11 +34,9 @@ public class ModsMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-
     }
 
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-
     }
 }
