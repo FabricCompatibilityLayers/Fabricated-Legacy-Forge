@@ -59,8 +59,6 @@ allprojects {
 		implementation(group: "local", name: "guava", version: "12.0.1")
 
 		modImplementation(legacy.apiModule("legacy-fabric-logger-api-v1", "1.9.0+1.8.9"))
-
-	//	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
 	}
 
 	processResources {
@@ -109,6 +107,8 @@ dependencies {
 	include(group: "local", name: "guava", version: "12.0.1")
 
 	include("org.apache.commons:commons-lang3:3.12.0")
+
+//	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
 }
 
 subprojects {
