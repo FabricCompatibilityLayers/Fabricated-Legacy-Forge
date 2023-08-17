@@ -1,0 +1,12 @@
+//project.name = "fabricated-forge-mod-compat"
+
+dependencies {
+    // How to add a mod
+    // add the intermediary jar of the mod in rootfolder/lib with a dummy fabric.mod.json file in it
+    // if the file is named like "filename-fileversion.jar" then import it this way:
+    // modCompileOnly(group: "local", name: "filename", version: "fileversion")
+}
+
+base {
+    archivesName = "fabricated-forge-mod-compat"
+}

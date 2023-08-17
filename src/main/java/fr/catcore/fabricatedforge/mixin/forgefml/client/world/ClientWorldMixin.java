@@ -38,7 +38,7 @@ public abstract class ClientWorldMixin extends World {
      * @reason none
      */
     @Overwrite
-    protected void tickWeather() {
+    public void tickWeather() {
         super.tickWeather();
     }
 
