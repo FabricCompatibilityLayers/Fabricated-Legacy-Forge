@@ -1,6 +1,17 @@
 package fr.catcore.fabricatedforge;
 
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.MappingResolver;
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
+import net.fabricmc.mapping.tree.ClassDef;
+import net.fabricmc.mapping.tree.FieldDef;
+import net.fabricmc.mapping.tree.MethodDef;
+import net.fabricmc.tinyremapper.extension.mixin.common.data.Pair;
+
 import java.io.File;
+import java.util.Objects;
+
+import static fr.catcore.modremapperapi.remapping.RemapUtil.getNativeNamespace;
 
 public class Constants {
     public static final String FORGE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.4.3-6.2.1.358/forge-1.4.3-6.2.1.358-universal.zip";
@@ -11,5 +22,87 @@ public class Constants {
     static {
         MODS_FOLDER.mkdirs();
         COREMODS_FOLDER.mkdirs();
+    }
+
+    public static Pair<String, String> getRemappedMethodNameNative(String owner, String methodName, String argDesc) {
+        MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
+
+        for(ClassDef def : FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses()) {
+            if (def.getName(getNativeNamespace()).replace(".", "/").equals(owner.replace(".", "/"))) {
+                for(MethodDef methodDef : def.getMethods()) {
+                    if (Objects.equals(methodDef.getName(getNativeNamespace()), methodName)) {
+                        String methodDescriptor = methodDef.getDescriptor(getNativeNamespace());
+                        if (methodDescriptor.startsWith(argDesc)) {
+                            return Pair.of(methodDef.getName(resolver.getCurrentRuntimeNamespace()), methodDef.getDescriptor(resolver.getCurrentRuntimeNamespace()));
+                        }
+                    }
+                }
+            }
+        }
+
+        return Pair.of(methodName, argDesc);
+    }
+
+    public static Pair<String, String> getRemappedMethodName(String owner, String methodName, String argDesc) {
+        MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
+
+        for(ClassDef def : FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses()) {
+            if (def.getName(resolver.getCurrentRuntimeNamespace()).replace(".", "/").equals(owner.replace(".", "/"))) {
+                for(MethodDef methodDef : def.getMethods()) {
+                    if (Objects.equals(methodDef.getName(getNativeNamespace()), methodName)) {
+                        String methodDescriptor = methodDef.getDescriptor(getNativeNamespace());
+                        if (methodDescriptor.startsWith(argDesc)) {
+                            return Pair.of(methodDef.getName(resolver.getCurrentRuntimeNamespace()), methodDef.getDescriptor(resolver.getCurrentRuntimeNamespace()));
+                        }
+                    }
+                }
+            }
+        }
+
+        return Pair.of(methodName, argDesc);
+    }
+
+    public static String getRemappedClassName(String name) {
+        MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
+
+        for(ClassDef def : FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses()) {
+            if (def.getName(getNativeNamespace()).replace(".", "/").equals(name.replace(".", "/"))) {
+                return def.getName(resolver.getCurrentRuntimeNamespace()).replace("/", ".");
+            }
+        }
+
+        return name.replace("/", ".");
+    }
+
+    public static String getRemappedFieldNameNative(String owner, String fieldName) {
+        MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
+
+        for(ClassDef def : FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses()) {
+            if (def.getName(getNativeNamespace()).replace(".", "/").equals(owner.replace(".", "/"))) {
+                for(FieldDef fieldDef : def.getFields()) {
+                    if (Objects.equals(fieldDef.getName(getNativeNamespace()), fieldName)) {
+                        return fieldDef.getName(resolver.getCurrentRuntimeNamespace());
+                    }
+                }
+            }
+        }
+
+        return fieldName;
+    }
+
+    public static Pair<String, String> getRemappedFieldName(String owner, String fieldName, String fieldDesc) {
+        MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
+
+        for(ClassDef def : FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses()) {
+            if (def.getName(resolver.getCurrentRuntimeNamespace()).replace(".", "/").equals(owner.replace(".", "/"))) {
+                for(FieldDef fieldDef : def.getFields()) {
+                    if (Objects.equals(fieldDef.getName(getNativeNamespace()), fieldName)) {
+                        return Pair.of(fieldDef.getName(resolver.getCurrentRuntimeNamespace()), fieldDef.getDescriptor(resolver.getCurrentRuntimeNamespace()));
+                    }
+                }
+            }
+        }
+
+        return Pair.of(fieldName, fieldDesc);
     }
 }

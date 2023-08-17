@@ -51,11 +51,11 @@ public class RelaunchLibraryManager {
 
         for(String s : rootPlugins) {
             try {
-                IFMLLoadingPlugin plugin = (IFMLLoadingPlugin)Class.forName(s, true, actualClassLoader).newInstance();
+                IFMLLoadingPlugin plugin = (IFMLLoadingPlugin)Class.forName(s, true, RelaunchLibraryManager.class.getClassLoader()).newInstance();
                 loadPlugins.add(plugin);
 
                 for(String libName : plugin.getLibraryRequestClass()) {
-                    libraries.add((ILibrarySet)Class.forName(libName, true, actualClassLoader).newInstance());
+                    libraries.add((ILibrarySet)Class.forName(libName, true, RelaunchLibraryManager.class.getClassLoader()).newInstance());
                 }
             } catch (Exception var42) {
             }
@@ -73,7 +73,7 @@ public class RelaunchLibraryManager {
 
                     try {
                         actualClassLoader.addTransformerExclusion(s);
-                        Class<?> coreModClass = Class.forName(s, true, actualClassLoader);
+                        Class<?> coreModClass = Class.forName(s, true, RelaunchLibraryManager.class.getClassLoader());
                         IFMLLoadingPlugin.TransformerExclusions trExclusions = (IFMLLoadingPlugin.TransformerExclusions)coreModClass.getAnnotation(IFMLLoadingPlugin.TransformerExclusions.class);
                         if (trExclusions != null) {
                             for(String st : trExclusions.value()) {
@@ -85,7 +85,7 @@ public class RelaunchLibraryManager {
                         loadPlugins.add(plugin);
                         if (plugin.getLibraryRequestClass() != null) {
                             for(String libName : plugin.getLibraryRequestClass()) {
-                                libraries.add((ILibrarySet)Class.forName(libName, true, actualClassLoader).newInstance());
+                                libraries.add((ILibrarySet)Class.forName(libName, true, RelaunchLibraryManager.class.getClassLoader()).newInstance());
                             }
                         }
                     } catch (Throwable var41) {
@@ -330,7 +330,7 @@ public class RelaunchLibraryManager {
                         String setupClass = plugin.getSetupClass();
                         if (setupClass != null) {
                             try {
-                                IFMLCallHook call = (IFMLCallHook)Class.forName(setupClass, true, actualClassLoader).newInstance();
+                                IFMLCallHook call = (IFMLCallHook)Class.forName(setupClass, true, RelaunchLibraryManager.class.getClassLoader()).newInstance();
                                 Map<String, Object> callData = new HashMap();
                                 callData.put("classLoader", actualClassLoader);
                                 call.injectData(callData);
@@ -349,7 +349,7 @@ public class RelaunchLibraryManager {
 
                     try {
                         downloadMonitor.updateProgressString("Validating minecraft", new Object[0]);
-                        Class<?> loaderClazz = Class.forName("cpw.mods.fml.common.Loader", true, actualClassLoader);
+                        Class<?> loaderClazz = Class.forName("cpw.mods.fml.common.Loader", true, RelaunchLibraryManager.class.getClassLoader());
                         Method m = loaderClazz.getMethod("injectData", Object[].class);
                         m.invoke(null, (Object)FMLInjectionData.data());
                         m = loaderClazz.getMethod("instance");
@@ -402,7 +402,7 @@ public class RelaunchLibraryManager {
                 try {
                     downloadMonitor.updateProgressString("Loading coremod %s", new Object[]{coreMod.getName()});
                     classLoader.addTransformerExclusion(fmlCorePlugin);
-                    Class<?> coreModClass = Class.forName(fmlCorePlugin, true, classLoader);
+                    Class<?> coreModClass = Class.forName(fmlCorePlugin, true, RelaunchLibraryManager.class.getClassLoader());
                     IFMLLoadingPlugin.TransformerExclusions trExclusions = (IFMLLoadingPlugin.TransformerExclusions)coreModClass.getAnnotation(IFMLLoadingPlugin.TransformerExclusions.class);
                     if (trExclusions != null) {
                         for(String st : trExclusions.value()) {
@@ -415,7 +415,7 @@ public class RelaunchLibraryManager {
                     pluginLocations.put(plugin, coreMod);
                     if (plugin.getLibraryRequestClass() != null) {
                         for(String libName : plugin.getLibraryRequestClass()) {
-                            libraries.add((ILibrarySet)Class.forName(libName, true, classLoader).newInstance());
+                            libraries.add((ILibrarySet)Class.forName(libName, true, RelaunchLibraryManager.class.getClassLoader()).newInstance());
                         }
                     }
 

@@ -542,7 +542,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
      * @reason none
      */
     @Overwrite
-    protected void writeCustomDataToNbt(NbtCompound par1NBTTagCompound) {
+    public void writeCustomDataToNbt(NbtCompound par1NBTTagCompound) {
         par1NBTTagCompound.putInt("Type", this.field_3897);
         if (this.isPoweredCart()) {
             par1NBTTagCompound.putDouble("PushX", this.field_3904);
@@ -571,7 +571,7 @@ public abstract class AbstractMinecartEntityMixin extends Entity implements Inve
      * @reason none
      */
     @Overwrite
-    protected void readCustomDataFromNbt(NbtCompound par1NBTTagCompound) {
+    public void readCustomDataFromNbt(NbtCompound par1NBTTagCompound) {
         this.field_3897 = par1NBTTagCompound.getInt("Type");
         if (this.isPoweredCart()) {
             this.field_3904 = par1NBTTagCompound.getDouble("PushX");
