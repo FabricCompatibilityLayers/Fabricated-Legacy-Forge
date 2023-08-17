@@ -55,8 +55,6 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     @Shadow @Final private MinecraftServer server;
 
-    @Shadow public ServerChunkProvider chunkCache;
-
     @Shadow public abstract void resetIdleTimeout();
 
     @Shadow protected abstract void method_2131();
@@ -154,7 +152,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      * @reason none
      */
     @Overwrite
-    protected void tickBlocks() {
+    public void tickBlocks() {
         super.tickBlocks();
         int var1 = 0;
         int var2 = 0;
@@ -405,7 +403,7 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
      * @reason none
      */
     @Overwrite
-    protected void placeBonusChest() {
+    public void placeBonusChest() {
         BonusChestFeature var1 = new BonusChestFeature(ChestGenHooks.getItems("bonusChest"), ChestGenHooks.getCount("bonusChest", this.random));
 
         for(int var2 = 0; var2 < 10; ++var2) {
@@ -449,10 +447,5 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
         this.saveHandler.saveWorld(this.levelProperties, this.server.getPlayerManager().getUserData());
         this.persistentStateManager.save();
         this.getPerWorldStorage().save();
-    }
-
-    @Override
-    public File getChunkSaveLocation() {
-        return ((IThreadedAnvilChunkStorage)((IServerChunkProvider)this.chunkCache).getChunkWriter()).getSaveLocation();
     }
 }

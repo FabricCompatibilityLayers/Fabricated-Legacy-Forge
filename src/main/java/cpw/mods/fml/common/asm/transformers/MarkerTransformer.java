@@ -22,6 +22,8 @@ import com.google.common.collect.Lists;
 import com.google.common.io.LineProcessor;
 import com.google.common.io.Resources;
 import cpw.mods.fml.relauncher.IClassTransformer;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
@@ -30,6 +32,7 @@ import java.io.*;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -69,7 +72,19 @@ public class MarkerTransformer implements IClassTransformer {
                         throw new RuntimeException("Invalid config file line " + input);
                     } else {
                         for(String marker : Lists.newArrayList(Splitter.on(",").trimResults().split((CharSequence)parts.get(1)))) {
-                            MarkerTransformer.this.markers.put(parts.get(0), marker);
+                            String className = ((String)parts.get(0)).replace('/', '.');
+                            String finalClassName = className;
+                            try {
+                                className = FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses().stream()
+                                        .filter(classDef -> classDef.getName("official").equals(finalClassName)).findFirst().get()
+                                        .getName(FabricLoader.getInstance().getMappingResolver().getCurrentRuntimeNamespace());
+                            } catch (NullPointerException | NoSuchElementException ignored) {}
+
+                            if (className.equals("net")) {
+                                className = "net.minecraft.client.Minecraft";
+                            }
+
+                            MarkerTransformer.this.markers.put(className, marker);
                         }
 
                         return true;

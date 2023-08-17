@@ -5,7 +5,7 @@
   "name": "Fabricated Forge",
   "description": "A compatibility layer to load Forge mods on FabricLoader.",
   "authors": [
-    "CatCore/arthurbambou"
+    "CatCore"
   ],
   "contributors": [
     "MinecraftForge:\n- Eloraam\n- FlowerChild\n- Hawkye\n- MALfunction84\n- Scokeev9\n- SpaceToad\n- LexManos",
@@ -16,8 +16,8 @@
   ],
   "contact": {
     "homepage": "https://modrinth.com/mod/fabricated-forge",
-    "sources": "https://github.com/arthurbambou/Fabricated-Legacy-Forge",
-    "issues": "https://github.com/arthurbambou/Fabricated-Legacy-Forge/issues"
+    "sources": "https://github.com/thecatcore/Fabricated-Legacy-Forge",
+    "issues": "https://github.com/thecatcore/Fabricated-Legacy-Forge/issues"
   },
   "license": "CC0-1.0",
   "icon": "assets/fabricated-forge/icon.png",
@@ -34,7 +34,7 @@
   "depends": {
     "fabricloader": ">0.14.3",
     "minecraft": "1.4.5",
-    "mod-remapping-api": ">=1.7.1"
+    "mod-remapping-api": ">=1.14.2"
   },
   "custom": {
     "loom:injected_interfaces": {

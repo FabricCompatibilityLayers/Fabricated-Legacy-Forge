@@ -44,7 +44,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
      * @reason none
      */
     @Overwrite
-    protected int method_1564(PlayerEntity par1EntityPlayer, int par2, float par3) {
+    public int method_1564(PlayerEntity par1EntityPlayer, int par2, float par3) {
         ItemStack var4 = par1EntityPlayer.inventory.getArmor(3 - par2);
         if (var4 != null) {
             Item var5 = var4.getItem();
@@ -103,7 +103,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
      * @reason none
      */
     @Overwrite
-    protected void method_4337(PlayerEntity par1EntityPlayer, int par2, float par3) {
+    public void method_4337(PlayerEntity par1EntityPlayer, int par2, float par3) {
         ItemStack var4 = par1EntityPlayer.inventory.getArmor(3 - par2);
         if (var4 != null) {
             Item var5 = var4.getItem();
@@ -173,7 +173,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
      * @reason none
      */
     @Overwrite
-    protected void method_1569(PlayerEntity par1EntityPlayer, float par2) {
+    public void method_1569(PlayerEntity par1EntityPlayer, float par2) {
         float var3 = 1.0F;
         GL11.glColor3f(var3, var3, var3);
         super.method_1569(par1EntityPlayer, par2);

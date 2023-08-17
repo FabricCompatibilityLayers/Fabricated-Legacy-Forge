@@ -1041,7 +1041,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
      * @reason none
      */
     @Overwrite
-    protected void tickWeather() {
+    public void tickWeather() {
         this.dimension.updateWeather();
     }
 
@@ -1126,7 +1126,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
      * @reason none
      */
     @Overwrite
-    protected void updateLighting() {
+    public void updateLighting() {
         this.field_4530.clear();
         this.field_4530.addAll(this.getPersistentChunks().keySet());
         this.profiler.push("buildList");
