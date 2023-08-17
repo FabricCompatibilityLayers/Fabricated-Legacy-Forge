@@ -353,6 +353,7 @@ accessible field net/minecraft/recipe/ShapedRecipeType height I
 accessible field net/minecraft/recipe/ShapelessRecipeType stacks Ljava/util/List;
 
 accessible method net/minecraft/client/gui/screen/ingame/HandledScreen drawSlot (Lnet/minecraft/inventory/slot/Slot;)V
+extendable method net/minecraft/client/gui/screen/ingame/HandledScreen drawSlot (Lnet/minecraft/inventory/slot/Slot;)V
 
 accessible method net/minecraft/block/AbstractButtonBlock method_4163 (Lnet/minecraft/world/World;III)V
 

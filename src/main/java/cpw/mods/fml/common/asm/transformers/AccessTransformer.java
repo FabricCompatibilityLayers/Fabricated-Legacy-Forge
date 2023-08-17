@@ -83,9 +83,7 @@ public class AccessTransformer implements IClassTransformer {
                         String className = ((String)descriptor.get(0)).replace('/', '.');
                         String finalClassName = className;
                         try {
-                            className = FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses().stream()
-                                    .filter(classDef -> classDef.getName("official").equals(finalClassName)).findFirst().get()
-                                    .getName(FabricLoader.getInstance().getMappingResolver().getCurrentRuntimeNamespace());
+                            className = Constants.getRemappedClassName(finalClassName);
                         } catch (NullPointerException | NoSuchElementException ignored) {}
 
                         if (className.equals("net")) {

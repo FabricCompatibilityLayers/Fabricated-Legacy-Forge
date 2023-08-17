@@ -1,0 +1,22 @@
+accessWidener v2 named
+
+### NEI
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen field_1346 Lnet/minecraft/client/render/item/ItemRenderer;
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen backgroundWidth I
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen backgroundHeight I
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen x I
+accessible field net/minecraft/client/gui/screen/ingame/HandledScreen y I
+accessible method net/minecraft/client/gui/screen/ingame/HandledScreen getSlotAt (II)Lnet/minecraft/inventory/slot/Slot;
+extendable method net/minecraft/client/gui/screen/ingame/HandledScreen getSlotAt (II)Lnet/minecraft/inventory/slot/Slot;
+accessible method net/minecraft/client/gui/screen/ingame/HandledScreen onMouseClick (Lnet/minecraft/inventory/slot/Slot;III)V
+
+accessible field net/minecraft/client/class_469 connection Lnet/minecraft/network/Connection;
+accessible field net/minecraft/entity/EntityType CLASS_ID_MAP Ljava/util/Map;
+accessible field net/minecraft/client/gui/screen/Screen textRenderer Lnet/minecraft/client/font/TextRenderer;
+accessible field net/minecraft/client/gui/screen/Screen field_1229 Lnet/minecraft/client/Minecraft;
+accessible method net/minecraft/client/gui/DrawableHelper fillGradient (IIIIII)V
+accessible field net/minecraft/client/gui/DrawableHelper zOffset F
+accessible field net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen selectedTab I
+accessible field net/minecraft/client/gui/screen/Screen buttons Ljava/util/List;
+accessible class net/minecraft/inventory/slot/class_1019
+accessible method net/minecraft/inventory/slot/class_1019 <init> (Lnet/minecraft/screen/PlayerScreenHandler;Lnet/minecraft/inventory/Inventory;IIII)V
