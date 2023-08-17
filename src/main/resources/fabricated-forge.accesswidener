@@ -371,3 +371,4 @@ accessible field net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen 
 accessible class net/minecraft/inventory/slot/class_1019
 accessible method net/minecraft/inventory/slot/class_1019 <init> (Lnet/minecraft/screen/PlayerScreenHandler;Lnet/minecraft/inventory/Inventory;IIII)V
 accessible field net/minecraft/client/gui/screen/ingame/HandledScreen focusedSlot Lnet/minecraft/inventory/slot/Slot;
+accessible method net/minecraft/client/gui/screen/ingame/HandledScreen onMouseClick (Lnet/minecraft/inventory/slot/Slot;III)V

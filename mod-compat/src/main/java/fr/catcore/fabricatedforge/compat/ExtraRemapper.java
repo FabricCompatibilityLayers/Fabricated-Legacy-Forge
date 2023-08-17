@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.compat;
 
+import fr.catcore.fabricatedforge.util.Utils;
 import fr.catcore.modremapperapi.api.ModRemapper;
 import fr.catcore.modremapperapi.remapping.RemapUtil;
 import fr.catcore.modremapperapi.remapping.VisitorInfos;
@@ -34,5 +35,6 @@ public class ExtraRemapper implements ModRemapper {
     @Override
     public void afterRemap() {
         Mixins.addConfiguration("fabricated-forge.mods.mixins.json");
+        Utils.TRANSFORMER_EXCLUSIONS.add("fr.catcore.fabricatedforge.compat.nei.NEIFixer");
     }
 }

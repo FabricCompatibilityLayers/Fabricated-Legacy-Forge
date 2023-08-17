@@ -1,13 +1,17 @@
-package fr.catcore.fabricatedforge.mixin.mods.nei;
+package fr.catcore.fabricatedforge.compat.mixin.nei;
 
 import codechicken.nei.forge.GuiContainerManager;
 import codechicken.nei.forge.IContainerClientSide;
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import com.mojang.blaze3d.platform.GLX;
+import fr.catcore.fabricatedforge.compat.nei.NEIHandledScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.slot.Slot;
 import net.minecraft.item.ItemStack;
@@ -18,30 +22,38 @@ import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
 @Mixin(HandledScreen.class)
-public abstract class HandledScreenMixin extends Screen {
-    @Shadow public int x;
-    @Shadow public int y;
-    @Shadow
-    public Slot focusedSlot;
+public abstract class HandledScreenMixin extends Screen implements NEIHandledScreen {
+    @Shadow protected int x;
+    @Shadow protected int y;
+
+    @Shadow private Slot focusedSlot;
     @Shadow public ScreenHandler screenHandler;
-    @Shadow public static ItemRenderer field_1346;
-    @Shadow public int backgroundWidth;
-    @Shadow public int backgroundHeight;
+    @Shadow protected int backgroundHeight;
 
     @Shadow protected abstract boolean handleHotbarKeyPressed(int keyCode);
 
-    @Shadow public abstract Slot getSlotAt(int x, int y);
+    @Shadow protected abstract Slot getSlotAt(int x, int y);
 
-    @Shadow protected abstract void drawForeground(int mouseX, int mouseY);
+    @Shadow protected int backgroundWidth;
 
-    @Shadow protected abstract boolean isPointOverSlot(Slot slot, int pointX, int pointY);
+    @Shadow protected abstract void onMouseClick(Slot slot, int invSlot, int button, int slotAction);
 
     @Shadow protected abstract void drawBackground(float delta, int mouseX, int mouseY);
 
+    @Shadow protected abstract void drawSlot(Slot slot);
+
+    @Shadow protected abstract boolean isPointOverSlot(Slot slot, int pointX, int pointY);
+
+    @Shadow protected abstract void drawForeground(int mouseX, int mouseY);
+
+    @Shadow protected static ItemRenderer field_1346;
     public GuiContainerManager manager;
 
     @Override
@@ -55,7 +67,7 @@ public abstract class HandledScreenMixin extends Screen {
 
     /**
      * @author ChickenBones
-     * @reason impl manager
+     * @reason hooks for NEI
      */
     @Overwrite
     public void render(int par1, int par2, float par3) {
@@ -118,52 +130,27 @@ public abstract class HandledScreenMixin extends Screen {
         DiffuseLighting.enableNormally();
     }
 
+    @Override
     public List handleTooltip(int mousex, int mousey, List currenttip) {
         return currenttip;
     }
 
+    @Override
     public List handleItemTooltip(ItemStack stack, int mousex, int mousey, List currenttip) {
         return currenttip;
     }
 
-    /**
-     * @author ChickenBones
-     * @reason impl manager
-     */
-    @Overwrite
-    private void drawSlot(Slot par1Slot) {
-        int var2 = par1Slot.x;
-        int var3 = par1Slot.y;
-        ItemStack var4 = par1Slot.getStack();
-        boolean var5 = false;
-        this.zOffset = 100.0F;
-        field_1346.zOffset = 100.0F;
-        if (var4 == null) {
-            int var6 = par1Slot.method_3297();
-            if (var6 >= 0) {
-                GL11.glDisable(2896);
-                this.field_1229.textureManager.bindTexture(this.field_1229.textureManager.getTextureFromPath("/gui/items.png"));
-                this.drawTexture(var2, var3, var6 % 16 * 16, var6 / 16 * 16, 16, 16);
-                GL11.glEnable(2896);
-                var5 = true;
-            }
-        }
-
-        if (!var5) {
-            this.manager.renderSlotUnderlay(par1Slot);
-            GL11.glEnable(2929);
-            field_1346.method_4336(this.textRenderer, this.field_1229.textureManager, var4, var2, var3);
-            field_1346.method_1549(this.textRenderer, this.field_1229.textureManager, var4, var2, var3);
-            this.manager.renderSlotOverlay(par1Slot);
-        }
-
-        field_1346.zOffset = 0.0F;
-        this.zOffset = 0.0F;
+    @Inject(method = "drawSlot", at = {
+            @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glEnable(I)V", ordinal = 1, remap = false),
+            @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/render/item/ItemRenderer;method_1549(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/client/TextureManager;Lnet/minecraft/item/ItemStack;II)V")
+    })
+    private void renderSlotUnderlay(Slot par1Slot, CallbackInfo ci) {
+        this.manager.renderSlotUnderlay(par1Slot);
     }
 
     /**
      * @author ChickenBones
-     * @reason impl manager
+     * @reason idk
      */
     @Overwrite
     protected void mouseClicked(int par1, int par2, int par3) {
@@ -190,23 +177,19 @@ public abstract class HandledScreenMixin extends Screen {
         }
     }
 
-    /**
-     * @author ChickenBones
-     * @reason impl manager
-     */
-    @Overwrite
-    public void onMouseClick(Slot par1Slot, int par2, int par3, int par4) {
-        if (par1Slot != null) {
-            par2 = par1Slot.id;
-        }
-
-        if (par2 != -1) {
+    @WrapWithCondition(method = "onMouseClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;clickSlot(IIIILnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/item/ItemStack;"))
+    private boolean wrapClickSlot(
+            ClientPlayerInteractionManager interactionManager, int syncId, int slotId, int mouseButton, int actionType, PlayerEntity player
+    ) {
+        if (slotId != 1) {
             if (this instanceof IContainerClientSide) {
-                this.field_1229.playerEntity.openScreenHandler.onSlotClick(par2, par3, par4, this.field_1229.playerEntity);
+                this.screenHandler.onSlotClick(slotId, mouseButton, actionType, player);
             } else {
-                this.field_1229.interactionManager.clickSlot(this.screenHandler.syncId, par2, par3, par4, this.field_1229.playerEntity);
+                return true;
             }
         }
+
+        return false;
     }
 
     @Override
@@ -218,7 +201,7 @@ public abstract class HandledScreenMixin extends Screen {
 
     /**
      * @author ChickenBones
-     * @reason impl manager
+     * @reason idk
      */
     @Overwrite
     protected void keyPressed(char par1, int par2) {
@@ -238,17 +221,9 @@ public abstract class HandledScreenMixin extends Screen {
         }
     }
 
-    /**
-     * @author ChickenBones
-     * @reason impl manager
-     */
-    @Overwrite
-    public void tick() {
-        super.tick();
+    @Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/ControllablePlayerEntity;isAlive()Z"))
+    private void tickManager(CallbackInfo ci) {
         this.manager.guiTick();
-        if (!this.field_1229.playerEntity.isAlive() || this.field_1229.playerEntity.removed) {
-            this.field_1229.playerEntity.closeHandledScreen();
-        }
     }
 
     @Override
@@ -276,6 +251,7 @@ public abstract class HandledScreenMixin extends Screen {
         }
     }
 
+    @Override
     public void refresh() {
         this.manager.refresh();
     }

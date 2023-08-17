@@ -63,10 +63,6 @@ allprojects {
 	//	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
 	}
 
-	base {
-		archivesName = project.archives_base_name + "-" + project.minecraft_version
-	}
-
 	processResources {
 		inputs.property "version", project.version
 
@@ -98,6 +94,10 @@ allprojects {
 			rename { "${it}_${base.archivesName.get()}" }
 		}
 	}
+}
+
+base {
+	archivesName = project.archives_base_name + "-" + project.minecraft_version
 }
 
 loom {
