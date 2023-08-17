@@ -5,16 +5,8 @@
   "compatibilityLevel": "JAVA_8",
   "server": [],
   "mixins": [
-    "codechickencore.ClassHeirachyManagerMixin",
-    "codechickencore.ClassMappingMixin",
-    "codechickencore.ClassOverriderMixin",
-    "codechickencore.FieldMappingMixin",
-    "codechickencore.MethodMappingMixin",
-    "nei.FurnaceRecipeHandlerMixin",
-    "nei.TMIUninstallerMixin"
   ],
   "client": [
-    "nei.HandledScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

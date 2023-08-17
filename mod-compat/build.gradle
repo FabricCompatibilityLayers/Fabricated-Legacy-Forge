@@ -5,8 +5,6 @@ dependencies {
     // add the intermediary jar of the mod in rootfolder/lib with a dummy fabric.mod.json file in it
     // if the file is named like "filename-fileversion.jar" then import it this way:
     // modCompileOnly(group: "local", name: "filename", version: "fileversion")
-    modCompileOnly(group: "local", name: "CodeChickenCore", version: "0.6.12")
-    modCompileOnly(group: "local", name: "NotEnoughItems", version: "1.4.2.1")
 }
 
 base {
