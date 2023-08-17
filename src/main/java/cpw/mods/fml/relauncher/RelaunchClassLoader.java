@@ -14,8 +14,17 @@
 package cpw.mods.fml.relauncher;
 
 import java.net.*;
+import java.security.CodeSigner;
+import java.security.CodeSource;
+import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.Manifest;
+
+import fr.catcore.fabricatedforge.util.Utils;
 import fr.catcore.modremapperapi.ClassTransformer;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
+import net.fabricmc.loader.impl.util.UrlUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -55,7 +64,7 @@ public class RelaunchClassLoader extends URLClassLoader {
 
     public void registerTransformer(String transformerClassName) {
         try {
-            IClassTransformer classTransformer = (IClassTransformer)this.loadClass(transformerClassName).newInstance();
+            IClassTransformer classTransformer = (IClassTransformer)Class.forName(transformerClassName).newInstance();
             ClassTransformer.registerTransformer(classTransformer);
             System.out.println("Registered ClassTransformer: " + transformerClassName);
             this.transformers.add(classTransformer);
@@ -147,6 +156,9 @@ public class RelaunchClassLoader extends URLClassLoader {
 
     public void addURL(URL url) {
         super.addURL(url);
+
+        FabricLauncherBase.getLauncher().addToClassPath(UrlUtil.asPath(url));
+
         this.sources.add(url);
     }
 
@@ -175,9 +187,11 @@ public class RelaunchClassLoader extends URLClassLoader {
 
     private void addClassLoaderExclusion(String toExclude) {
         this.classLoaderExceptions.add(toExclude);
+        Utils.TRANSFORMER_EXCLUSIONS.add(toExclude);
     }
 
     void addTransformerExclusion(String toExclude) {
         this.transformerExceptions.add(toExclude);
+        Utils.TRANSFORMER_EXCLUSIONS.add(toExclude);
     }
 }
