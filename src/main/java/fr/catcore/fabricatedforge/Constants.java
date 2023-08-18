@@ -7,6 +7,7 @@ import net.fabricmc.mapping.tree.ClassDef;
 import net.fabricmc.mapping.tree.FieldDef;
 import net.fabricmc.mapping.tree.MethodDef;
 import net.fabricmc.tinyremapper.extension.mixin.common.data.Pair;
+import org.objectweb.asm.Type;
 
 import java.io.File;
 import java.util.Objects;
@@ -104,5 +105,50 @@ public class Constants {
         }
 
         return Pair.of(fieldName, fieldDesc);
+    }
+
+    public static String remapMethodDescriptor(String desc) {
+        Type methodDescType = Type.getType(desc);
+
+        Type[] argTypes = methodDescType.getArgumentTypes();
+        Type returnType = methodDescType.getReturnType();
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+        stringBuilder.append("(");
+
+        for (Type type : argTypes) {
+            stringBuilder.append(remapIndividualType(type.getDescriptor()));
+        }
+
+        stringBuilder.append(")");
+
+        stringBuilder.append(remapIndividualType(returnType.getDescriptor()));
+
+        return stringBuilder.toString();
+    }
+
+    public static String remapIndividualType(String desc) {
+        Type type = Type.getType(desc);
+
+        if (type.getSort() == Type.OBJECT || type.getSort() == 12) {
+            String className = type.getClassName();
+
+            String newClassName = getRemappedClassName(className);
+
+            if (!Objects.equals(className, newClassName)) {
+                type = Type.getType("L" + newClassName.replace(".", "/") + ";");
+            }
+        } else if (type.getSort() == Type.ARRAY) {
+            StringBuilder arrayType = new StringBuilder(remapIndividualType(type.getElementType().getDescriptor()));
+
+            for (int i = 1; i < type.getDimensions() + 1; i++) {
+                arrayType.insert(0, "[");
+            }
+
+            type = Type.getType(arrayType.toString());
+        }
+
+        return type.getDescriptor();
     }
 }

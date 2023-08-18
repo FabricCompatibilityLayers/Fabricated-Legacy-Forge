@@ -3,7 +3,7 @@ package fr.catcore.fabricatedforge.compat.mixin.nei;
 import codechicken.core.asm.ASMHelper;
 import codechicken.core.asm.ClassHeirachyManager;
 import codechicken.core.asm.InstructionComparator;
-import codechicken.core.asm.ObfuscationManager;
+import codechicken.core.asm.ObfuscationMappings;
 import codechicken.nei.asm.NEITransformer;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.InsnList;
@@ -20,11 +20,13 @@ public class NEITransformerMixin {
      */
     @Overwrite(remap = false)
     public byte[] transformer001(String name, byte[] bytes) {
-        ObfuscationManager.ClassMapping classmap = new ObfuscationManager.ClassMapping("auy");
-        if (ClassHeirachyManager.classExtends(name, classmap.classname, bytes)) {
+        ObfuscationMappings.ClassMapping classmap = new ObfuscationMappings.ClassMapping("avf");
+
+        if (ClassHeirachyManager.classExtends(name, classmap.javaClass(), bytes)) {
             ClassNode node = ASMHelper.createClassNode(bytes);
-            ObfuscationManager.MethodMapping methodmap = new ObfuscationManager.MethodMapping("aue", "c", "()V");
-            ObfuscationManager.MethodMapping supermap = new ObfuscationManager.MethodMapping(node.superName, methodmap);
+
+            ObfuscationMappings.DescriptorMapping methodmap = new ObfuscationMappings.DescriptorMapping("aul", "c", "()V");
+            ObfuscationMappings.DescriptorMapping supermap = new ObfuscationMappings.DescriptorMapping(node.superName, methodmap);
             InsnList supercall = new InsnList();
             supercall.add(new VarInsnNode(25, 0));
             supercall.add(supermap.toInsn(183));
@@ -34,7 +36,7 @@ public class NEITransformerMixin {
                     InsnList importantNodeList = InstructionComparator.getImportantList(methodnode.instructions);
                     if (!InstructionComparator.insnListMatches(importantNodeList, supercall, 0)) {
                         methodnode.instructions.insertBefore(methodnode.instructions.getFirst(), supercall);
-                        System.out.println("Inserted super call into " + name + "." + supermap.name);
+                        System.out.println("Inserted super call into " + name + "." + supermap.s_name);
                     }
                 }
             }

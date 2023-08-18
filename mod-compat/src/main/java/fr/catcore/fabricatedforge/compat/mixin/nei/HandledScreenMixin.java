@@ -133,13 +133,14 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
         PlayerInventory var15 = this.field_1229.playerEntity.inventory;
         ItemStack var16 = this.touchDragStack == null ? var15.getCursorStack() : this.touchDragStack;
         if (var16 != null) {
-            int var8 = this.touchDragStack == null ? 8 : 0;
+            byte var18 = 8;
+            int var9 = this.touchDragStack == null ? 8 : 16;
             if (this.touchDragStack != null && this.touchIsRightClickDrag) {
                 var16 = var16.copy();
                 var16.count = MathHelper.ceil((float)var16.count / 2.0F);
             }
 
-            this.method_4264(var16, par1 - var4 - var8, par2 - var5 - var8);
+            this.method_4264(var16, par1 - var4 - var18, par2 - var5 - var9);
         }
 
         if (this.touchDropReturningStack != null) {
@@ -163,7 +164,10 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
         DiffuseLighting.enableNormally();
     }
 
-    @ModifyConstant(method = "method_4264", constant = {@Constant(floatValue = 200.0F, ordinal = 0), @Constant(floatValue = 200.0F, ordinal = 1)})
+    @ModifyConstant(method = "method_4264", constant = {
+            @Constant(floatValue = 200.0F, ordinal = 0),
+            @Constant(floatValue = 200.0F, ordinal = 1)
+    })
     private float changeConstants(float constant) {
         return 500.0F;
     }

@@ -9,6 +9,8 @@ accessible field net/minecraft/client/gui/screen/ingame/HandledScreen y I
 accessible method net/minecraft/client/gui/screen/ingame/HandledScreen getSlotAt (II)Lnet/minecraft/inventory/slot/Slot;
 extendable method net/minecraft/client/gui/screen/ingame/HandledScreen getSlotAt (II)Lnet/minecraft/inventory/slot/Slot;
 accessible method net/minecraft/client/gui/screen/ingame/HandledScreen onMouseClick (Lnet/minecraft/inventory/slot/Slot;III)V
+accessible method net/minecraft/client/gui/screen/ingame/HandledScreen drawSlot (Lnet/minecraft/inventory/slot/Slot;)V
+extendable method net/minecraft/client/gui/screen/ingame/HandledScreen drawSlot (Lnet/minecraft/inventory/slot/Slot;)V
 
 accessible field net/minecraft/client/class_469 connection Lnet/minecraft/network/Connection;
 accessible field net/minecraft/entity/EntityType CLASS_ID_MAP Ljava/util/Map;

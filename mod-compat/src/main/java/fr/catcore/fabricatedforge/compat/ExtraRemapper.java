@@ -35,5 +35,6 @@ public class ExtraRemapper implements ModRemapper {
     @Override
     public void afterRemap() {
         Mixins.addConfiguration("fabricated-forge.mods.mixins.json");
+        Utils.TRANSFORMER_EXCLUSIONS.add("fr.catcore.fabricatedforge.compat.BetterClassWriter");
     }
 }

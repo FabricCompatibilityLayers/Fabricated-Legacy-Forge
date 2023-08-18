@@ -11,7 +11,7 @@ public class FeatureHackTransformerMixin {
             remap = false,
             at = @At(value = "INVOKE",
                     remap = false,
-                    target = "Lcodechicken/core/asm/ObfuscationManager$MethodMapping;<init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"))
+                    target = "Lcodechicken/core/asm/ObfuscationMappings$DescriptorMapping;<init>(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V", ordinal = 0))
     private String fixMethodArg(String arg) {
         return "(Lnet/minecraft/class_1069;)V";
     }

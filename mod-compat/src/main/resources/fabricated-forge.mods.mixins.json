@@ -9,15 +9,13 @@
     "codechickencore.ClassHeirachyManagerMixin",
     "codechickencore.ClassMappingMixin",
     "codechickencore.ClassOverriderMixin",
+    "codechickencore.DescriptorMappingMixin",
     "codechickencore.FeatureHackTransformerMixin",
-    "codechickencore.FieldMappingMixin",
-    "codechickencore.MethodMappingMixin",
     "nei.FurnaceRecipeHandlerMixin",
     "nei.NEITransformerMixin",
     "nei.TMIUninstallerMixin"
   ],
   "client": [
-    "nei.HandledScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
