@@ -1,0 +1,27 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "fr.catcore.fabricatedforge.compat.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "server": [],
+  "mixins": [
+    "codechickencore.ASMHelperMixin",
+    "codechickencore.ClassHeirachyManagerMixin",
+    "codechickencore.ClassMappingMixin",
+    "codechickencore.ClassOverriderMixin",
+    "codechickencore.FeatureHackTransformerMixin",
+    "codechickencore.FieldMappingMixin",
+    "codechickencore.MethodMappingMixin",
+    "nei.FurnaceRecipeHandlerMixin",
+    "nei.NEITransformerMixin",
+    "nei.TMIUninstallerMixin"
+  ],
+  "client": [
+    "nei.HandledScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "plugin": "fr.catcore.fabricatedforge.compat.ModsMixinPlugin",
+  "refmap": "fabricated-forge-mod-compat-refmap.json"
+}

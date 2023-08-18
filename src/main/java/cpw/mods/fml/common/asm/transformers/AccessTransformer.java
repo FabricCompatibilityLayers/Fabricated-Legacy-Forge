@@ -22,6 +22,10 @@ import com.google.common.collect.Multimap;
 import com.google.common.io.LineProcessor;
 import com.google.common.io.Resources;
 import cpw.mods.fml.relauncher.IClassTransformer;
+import fr.catcore.fabricatedforge.Constants;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
+import net.fabricmc.tinyremapper.extension.mixin.common.data.Pair;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
@@ -31,8 +35,8 @@ import org.objectweb.asm.tree.MethodNode;
 import java.io.*;
 import java.net.URL;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -75,20 +79,33 @@ public class AccessTransformer implements IClassTransformer {
                         AccessTransformer.Modifier m = AccessTransformer.this.new Modifier();
                         m.setTargetAccess((String)parts.get(0));
                         List<String> descriptor = Lists.newArrayList(Splitter.on(".").trimResults().split((CharSequence)parts.get(1)));
+
+                        String className = ((String)descriptor.get(0)).replace('/', '.');
+                        String finalClassName = className;
+                        try {
+                            className = Constants.getRemappedClassName(finalClassName);
+                        } catch (NullPointerException | NoSuchElementException ignored) {}
+
+                        if (className.equals("net")) {
+                            className = "net.minecraft.client.Minecraft";
+                        }
+
                         if (descriptor.size() == 1) {
                             m.modifyClassVisibility = true;
                         } else {
-                            String nameReference = (String)descriptor.get(1);
+                            String nameReference = descriptor.get(1);
                             int parenIdx = nameReference.indexOf(40);
                             if (parenIdx > 0) {
-                                m.desc = nameReference.substring(parenIdx);
-                                m.name = nameReference.substring(0, parenIdx);
+                                Pair<String, String> o = Constants.getRemappedMethodNameNative(className,
+                                        nameReference.substring(0, parenIdx), nameReference.substring(parenIdx));
+                                m.desc = o.second();
+                                m.name = o.first();
                             } else {
-                                m.name = nameReference;
+                                m.name = Constants.getRemappedFieldNameNative(className, nameReference);
                             }
                         }
 
-                        AccessTransformer.this.modifiers.put(((String)descriptor.get(0)).replace('/', '.'), m);
+                        AccessTransformer.this.modifiers.put(className, m);
                         return true;
                     }
                 }

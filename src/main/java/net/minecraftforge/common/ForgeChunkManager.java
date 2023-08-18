@@ -10,7 +10,9 @@ import com.google.common.collect.*;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
+import fr.catcore.fabricatedforge.mixininterface.IServerChunkProvider;
 import fr.catcore.fabricatedforge.mixininterface.IServerWorld;
+import fr.catcore.fabricatedforge.mixininterface.IThreadedAnvilChunkStorage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -70,7 +72,7 @@ public class ForgeChunkManager {
         if (world instanceof ServerWorld) {
             dormantChunkCache.put(world, CacheBuilder.newBuilder().maximumSize((long)dormantChunkCacheSize).build());
             ServerWorld worldServer = (ServerWorld)world;
-            File chunkDir = ((IServerWorld)worldServer).getChunkSaveLocation();
+            File chunkDir = ((IThreadedAnvilChunkStorage)((IServerChunkProvider)worldServer.chunkCache).getChunkWriter()).getSaveLocation();
             File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
             if (chunkLoaderData.exists() && chunkLoaderData.isFile()) {
                 ArrayListMultimap<String, ForgeChunkManager.Ticket> loadedTickets = ArrayListMultimap.create();
@@ -367,7 +369,7 @@ public class ForgeChunkManager {
     static void saveWorld(World world) {
         if (world instanceof ServerWorld) {
             ServerWorld worldServer = (ServerWorld)world;
-            File chunkDir = ((IServerWorld)worldServer).getChunkSaveLocation();
+            File chunkDir = ((IThreadedAnvilChunkStorage)((IServerChunkProvider)worldServer.chunkCache).getChunkWriter()).getSaveLocation();
             File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
             NbtCompound forcedChunkData = new NbtCompound();
             NbtList ticketList = new NbtList();

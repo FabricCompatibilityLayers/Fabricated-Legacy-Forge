@@ -41,7 +41,7 @@ public abstract class ControlsOptionsScreenMixin extends Screen {
      * @reason none
      */
     @Overwrite
-    protected void buttonClicked(ButtonWidget par1GuiButton) {
+    public void buttonClicked(ButtonWidget par1GuiButton) {
         if (par1GuiButton.id == 200) {
             this.field_1229.openScreen(this.parent);
         }
@@ -52,7 +52,7 @@ public abstract class ControlsOptionsScreenMixin extends Screen {
      * @reason none
      */
     @Overwrite
-    protected void mouseClicked(int par1, int par2, int par3) {
+    public void mouseClicked(int par1, int par2, int par3) {
         super.mouseClicked(par1, par2, par3);
     }
 
@@ -61,7 +61,7 @@ public abstract class ControlsOptionsScreenMixin extends Screen {
      * @reason none
      */
     @Overwrite
-    protected void keyPressed(char par1, int par2) {
+    public void keyPressed(char par1, int par2) {
         if (this.scrollPane.keyTyped(par1, par2)) {
             super.keyPressed(par1, par2);
         }

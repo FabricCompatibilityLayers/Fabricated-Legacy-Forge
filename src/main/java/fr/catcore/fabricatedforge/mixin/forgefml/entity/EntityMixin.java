@@ -550,7 +550,7 @@ public abstract class EntityMixin implements IEntity {
      */
     @Environment(EnvType.CLIENT)
     @Overwrite
-    protected void afterSpawn() {
+    public void afterSpawn() {
         if (this.world != null) {
             while(true) {
                 if (this.y > 0.0) {

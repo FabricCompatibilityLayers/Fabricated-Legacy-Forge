@@ -5,6 +5,7 @@ import fr.catcore.modremapperapi.api.RemapLibrary;
 import fr.catcore.modremapperapi.remapping.RemapUtil;
 import fr.catcore.modremapperapi.remapping.VisitorInfos;
 import net.fabricmc.loader.api.FabricLoader;
+import org.spongepowered.asm.mixin.Mixins;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,27 +59,9 @@ public class ForgeModRemapper implements ModRemapper {
 
     @Override
     public void registerVisitors(VisitorInfos infos) {
-        Map<VisitorInfos.Type, VisitorInfos.Type> types = new HashMap<>();
-
-        for (Map.Entry<VisitorInfos.Type, VisitorInfos.Type> entry : types.entrySet()) {
-            infos.registerSuperType(entry.getKey(), entry.getValue());
-            infos.registerMethodTypeIns(entry.getKey(), entry.getValue());
-
-            infos.registerMethodMethodIns(
-                    new VisitorInfos.MethodNamed(entry.getKey().type, "<init>"),
-                    new VisitorInfos.MethodNamed(entry.getValue().type, "<init>")
-            );
-        }
-
         infos.registerMethodMethodIns(
                 new VisitorInfos.MethodNamed("net/minecraft/class_197", "setBurnProperties"),
                 new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "Block_setBurnProperties")
-        );
-
-        // Mystcraft
-        infos.registerMethodFieldIns(
-                new VisitorInfos.MethodNamed("xcompwiz/mystcraft/Mystcraft", "registeredDims"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/MystcraftCompat", "registeredDims")
         );
 
         infos.registerMethodFieldIns(
@@ -104,13 +87,68 @@ public class ForgeModRemapper implements ModRemapper {
                 new VisitorInfos.MethodNamed("net/minecraft/class_988", "PERSISTED_NBT_TAG"),
                 new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "PERSISTED_NBT_TAG")
         );
+
+        // Mystcraft
+        infos.registerMethodFieldIns(
+                new VisitorInfos.MethodNamed("xcompwiz/mystcraft/Mystcraft", "registeredDims"),
+                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/MystcraftCompat", "registeredDims")
+        );
+
+//        // CodeChickenCore
+//        infos.registerMethodMethodIns(
+//                new VisitorInfos.MethodNamed("codechicken/core/asm/ClassOverrider", "overrideBytes"),
+//                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/CodeChickenCoreCompat", "overrideBytes")
+//        );
+//
+//        // NEI
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "aqh"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "net.minecraft.class_409")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "apn"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "net.minecraft.class_388")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "agu"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "net.minecraft.class_159")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "aig"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "net.minecraft.class_197")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "c"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "method_1033")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "a"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "method_419")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "(Lup;IIILjw;)V"),
+//                new VisitorInfos.MethodValue("codechicken/nei/asm/NEITransformer", "(Lnet/minecraft/class_1150;IIILnet/minecraft/class_871;)V")
+//        );
+//        infos.registerMethodMethodIns(
+//                new VisitorInfos.MethodNamed("codechicken/nei/TMIUninstaller", "getJarFile"),
+//                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/CodeChickenCoreCompat", "getJarFile")
+//        );
+//        infos.registerMethodLdcIns(
+//                new VisitorInfos.MethodValue("codechicken/nei/recipe/FurnaceRecipeHandler", "getItemBurnTime"),
+//                new VisitorInfos.MethodValue("codechicken/nei/recipe/FurnaceRecipeHandler", "method_519")
+//        );
     }
 
     @Override
     public Optional<String> getDefaultPackage() {
         return Optional.of("net/minecraft/");
     }
-    
+
+    @Override
+    public void afterRemap() {
+
+    }
+
     static {
         FORGE_EXCLUDED.put("a")
                 .put("aam")
