@@ -27,8 +27,7 @@
   "mixins": [
   ],
   "depends": {
-    "fabricloader": ">0.14.3",
-    "mod-remapping-api": ">=1.14.2"
+    "fabricloader": ">0.14.3"
   },
   "accessWidener": "fabricated-forge-mods.accesswidener"
 }

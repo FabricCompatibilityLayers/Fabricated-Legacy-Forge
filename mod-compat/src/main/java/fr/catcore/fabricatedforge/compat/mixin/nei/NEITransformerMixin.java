@@ -34,6 +34,7 @@ public class NEITransformerMixin {
             for(MethodNode methodnode : node.methods) {
                 if (methodmap.matches(methodnode)) {
                     InsnList importantNodeList = InstructionComparator.getImportantList(methodnode.instructions);
+
                     if (!InstructionComparator.insnListMatches(importantNodeList, supercall, 0)) {
                         methodnode.instructions.insertBefore(methodnode.instructions.getFirst(), supercall);
                         System.out.println("Inserted super call into " + name + "." + supermap.s_name);
