@@ -63,7 +63,7 @@ public class RelaunchClassLoader extends URLClassLoader {
     public void registerTransformer(String transformerClassName) {
         try {
             IClassTransformer classTransformer = (IClassTransformer)Class.forName(transformerClassName).newInstance();
-            ClassTransformer.registerTransformer(classTransformer);
+            ClassTransformer.registerPostTransformer(classTransformer);
             System.out.println("Registered ClassTransformer: " + transformerClassName);
             this.transformers.add(classTransformer);
         } catch (Exception var3) {

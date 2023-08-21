@@ -50,10 +50,9 @@ allprojects {
 		modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 		modApi("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
-	//	modApi(group: "local", name: "mod-remapping-api", version: "1.8.0")
 
 		modApi("maven.modrinth:spasm:${project.spasm_version}")
-		modApi(annotationProcessor("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:${project.mixin_extras_version}"))
+		implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixin_extras_version}"))
 
 		implementation(group: "local", name: "argo", version: "2.25")
 		implementation(group: "local", name: "guava", version: "12.0.1")
@@ -69,9 +68,13 @@ allprojects {
 
 	processResources {
 		inputs.property "version", project.version
+		inputs.property "mc_version", project.minecraft_version
+		inputs.property "mrapi_version", project.mod_remapping_api
 
 		filesMatching("fabric.mod.json") {
-			expand "version": project.version
+			expand "version": project.version,
+					"mc_version": rootProject.minecraft_version,
+					"mrapi_version": project.mod_remapping_api
 		}
 	}
 
@@ -107,8 +110,6 @@ loom {
 dependencies {
 	include(group: "local", name: "argo", version: "2.25")
 	include(group: "local", name: "guava", version: "12.0.1")
-
-	include("org.apache.commons:commons-lang3:3.12.0")
 }
 
 subprojects {
@@ -165,7 +166,11 @@ modrinth {
 	token = System.getenv("MODRINTH_TOKEN") == null ? "dev" : System.getenv("MODRINTH_TOKEN") // This is the default. Remember to have the MODRINTH_TOKEN environment variable set or else this will fail, or set it to whatever you want - just make sure it stays private!
 	projectId = "JpHZ1Cyv" // This can be the project ID or the slug. Either will work!
 	versionName = displayVersion
-	changelog = "Update to MRAPI 1.14.2.\nFix more compatibility issues with CodeChickenCore and NEI.\nNEI plugins still do not work for now."
+	changelog = """
+Update MRAPI to 1.15.0.\\
+ClassTransformers now run after mixins are applied on a class instead of before, improving compatibility with ClassTransformers by a lot.\\
+Some more improvements on NEI Compatibility.
+"""
 	uploadFile = remapJar
 	gameVersions = [project.minecraft_version] // Must be an array, even with only one version
 	debugMode = debug
