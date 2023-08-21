@@ -23,6 +23,7 @@ public class NEITransformerMixin {
         ObfuscationManager.ClassMapping classmap = new ObfuscationManager.ClassMapping("auy");
         if (ClassHeirachyManager.classExtends(name, classmap.classname, bytes)) {
             ClassNode node = ASMHelper.createClassNode(bytes);
+
             ObfuscationManager.MethodMapping methodmap = new ObfuscationManager.MethodMapping("aue", "c", "()V");
             ObfuscationManager.MethodMapping supermap = new ObfuscationManager.MethodMapping(node.superName, methodmap);
             InsnList supercall = new InsnList();
@@ -32,6 +33,7 @@ public class NEITransformerMixin {
             for(MethodNode methodnode : node.methods) {
                 if (methodmap.matches(methodnode)) {
                     InsnList importantNodeList = InstructionComparator.getImportantList(methodnode.instructions);
+
                     if (!InstructionComparator.insnListMatches(importantNodeList, supercall, 0)) {
                         methodnode.instructions.insertBefore(methodnode.instructions.getFirst(), supercall);
                         System.out.println("Inserted super call into " + name + "." + supermap.name);
