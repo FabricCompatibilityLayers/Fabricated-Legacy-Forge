@@ -18,14 +18,6 @@ public class BetterClassWriter extends ClassWriter {
         try {
             return super.getCommonSuperClass(type1, type2);
         } catch (TypeNotPresentException e) {
-            if ("net/minecraft/class_1071".equals(type1) && "net/minecraft/class_987".equals(type2)) {
-                return "java/lang/Object";
-            }
-
-            if ("net/minecraft/class_987".equals(type1) && "java/lang/Object".equals(type2)) {
-                return type2;
-            }
-
             System.out.println("Common of: " + type1 + " " + type2);
             e.printStackTrace();
             return "java/lang/Object";
