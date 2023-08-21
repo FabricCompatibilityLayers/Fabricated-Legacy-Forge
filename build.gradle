@@ -50,10 +50,9 @@ allprojects {
 		modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
 		modApi("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
-	//	modApi(group: "local", name: "mod-remapping-api", version: "1.8.0")
 
 		modApi("maven.modrinth:spasm:${project.spasm_version}")
-		modApi(annotationProcessor("com.github.LlamaLad7.MixinExtras:mixinextras-fabric:${project.mixin_extras_version}"))
+		implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${project.mixin_extras_version}"))
 
 		implementation(group: "local", name: "argo", version: "2.25")
 		implementation(group: "local", name: "guava", version: "12.0.1")
@@ -69,9 +68,14 @@ allprojects {
 
 	processResources {
 		inputs.property "version", project.version
+		inputs.property "mc_version", project.minecraft_version
+		inputs.property "mrapi_version", project.mod_remapping_api
 
 		filesMatching("fabric.mod.json") {
-			expand "version": project.version
+			expand "version": project.version,
+					"mc_version": rootProject.minecraft_version,
+					"mrapi_version": project.mod_remapping_api
+//			expand "mc_version": rootProject.minecraft_version
 		}
 	}
 
@@ -107,8 +111,6 @@ loom {
 dependencies {
 	include(group: "local", name: "argo", version: "2.25")
 	include(group: "local", name: "guava", version: "12.0.1")
-
-	include("org.apache.commons:commons-lang3:3.12.0")
 }
 
 subprojects {
