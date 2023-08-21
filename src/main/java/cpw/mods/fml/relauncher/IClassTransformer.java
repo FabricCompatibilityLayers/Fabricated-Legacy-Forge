@@ -53,7 +53,7 @@ public interface IClassTransformer extends fr.catcore.modremapperapi.api.IClassT
         }
 
         transformed.get(this).add(s);
-        if (s.equals("net.minecraft.class_415") && this.getClass().getName().equals("codechicken.nei.asm.NEITransformer")) return false;
+
         return true;
     }
 }
