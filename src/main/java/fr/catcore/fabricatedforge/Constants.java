@@ -27,30 +27,36 @@ public class Constants {
     }
 
     public static Pair<String, String> getRemappedMethodName(String owner, String methodName, String argDesc) {
+        if (methodName.equals("<init>") || methodName.length() > 3 || methodName.equals("*")) {
+            return Pair.of(methodName, argDesc == null || argDesc.isEmpty() || argDesc.equals("()") ? argDesc
+                    : remapMethodDescriptor(argDesc));
+        }
+
+        MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(owner.replace(".", "/"), getTargetNamespace());
+
+        if (classView != null) {
+            MappingTreeView.MethodMappingView methodView = classView.getMethod(methodName, argDesc, getSrcNamespace());
+
+            if (methodView != null) {
+                return Pair.of(methodView.getName(getTargetNamespace()), methodView.getDesc(getTargetNamespace()));
+            }
+
+            for (MappingTreeView.MethodMappingView methodViews : classView.getMethods()) {
+                if (methodViews.getName(getSrcNamespace()).equals(methodName)) {
+                    if (methodViews.getDesc(getSrcNamespace()).equals(argDesc)) {
+                        return Pair.of(methodViews.getName(getTargetNamespace()), methodViews.getDesc(getTargetNamespace()));
+                    }
+                }
+            }
+        }
+
         try {
             return getRemappedMethodName(
                     Class.forName(owner.replace("/", "."), false, Constants.class.getClassLoader()),
                     methodName, argDesc
             );
         } catch (Exception e) {
-            MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(owner.replace(".", "/"), getTargetNamespace());
-
-            if (classView != null) {
-                MappingTreeView.MethodMappingView methodView = classView.getMethod(methodName, argDesc, getSrcNamespace());
-
-                if (methodView != null) {
-                    return Pair.of(methodView.getName(getTargetNamespace()), methodView.getDesc(getTargetNamespace()));
-                }
-
-                for (MappingTreeView.MethodMappingView methodViews : classView.getMethods()) {
-                    if (methodViews.getName(getSrcNamespace()).equals(methodName)) {
-                        if (methodViews.getDesc(getSrcNamespace()).equals(argDesc)) {
-                            return Pair.of(methodViews.getName(getTargetNamespace()), methodViews.getDesc(getTargetNamespace()));
-                        }
-                    }
-                }
-            }
-
+            e.printStackTrace();
             return Pair.of(methodName, argDesc);
         }
     }
@@ -74,16 +80,16 @@ public class Constants {
             }
         }
 
-        for (Class<?> interfaces : cl.getInterfaces()) {
-            Pair<String, String> result = getRemappedMethodName(interfaces, methodName, argDesc);
+        if (cl.getSuperclass() != null) {
+            Pair<String, String> result = getRemappedMethodName(cl.getSuperclass(), methodName, argDesc);
 
             if (!methodName.equals(result.first()) || !argDesc.equals(result.second())) {
                 return result;
             }
         }
 
-        if (cl.getSuperclass() != null) {
-            Pair<String, String> result = getRemappedMethodName(cl.getSuperclass(), methodName, argDesc);
+        for (Class<?> interfaces : cl.getInterfaces()) {
+            Pair<String, String> result = getRemappedMethodName(interfaces, methodName, argDesc);
 
             if (!methodName.equals(result.first()) || !argDesc.equals(result.second())) {
                 return result;
@@ -112,51 +118,53 @@ public class Constants {
     }
 
     public static String getRemappedFieldName(String owner, String fieldName) {
+        MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(owner.replace(".", "/"), getTargetNamespace());
+
+        if (classView != null) {
+            for (MappingTreeView.FieldMappingView fieldViews : classView.getFields()) {
+                if (fieldViews.getName(getSrcNamespace()).equals(fieldName)) {
+                    return fieldViews.getName(getTargetNamespace());
+                }
+            }
+        }
+
         try {
             return getRemappedField(
                     Class.forName(owner.replace("/", "."), false, Constants.class.getClassLoader()),
                     fieldName
             );
         } catch (Exception e) {
-            MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(owner.replace(".", "/"), getTargetNamespace());
-
-            if (classView != null) {
-                for (MappingTreeView.FieldMappingView fieldViews : classView.getFields()) {
-                    if (fieldViews.getName(getSrcNamespace()).equals(fieldName)) {
-                        return fieldViews.getName(getTargetNamespace());
-                    }
-                }
-            }
-
+            e.printStackTrace();
             return fieldName;
         }
     }
 
     public static Pair<String, String> getRemappedFieldName(String owner, String fieldName, String fieldDesc) {
+        MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(owner.replace(".", "/"), getTargetNamespace());
+
+        if (classView != null) {
+            MappingTreeView.FieldMappingView methodView = classView.getField(fieldName, fieldDesc, getSrcNamespace());
+
+            if (methodView != null) {
+                return Pair.of(methodView.getName(getTargetNamespace()), methodView.getDesc(getTargetNamespace()));
+            }
+
+            for (MappingTreeView.FieldMappingView fieldViews : classView.getFields()) {
+                if (fieldViews.getName(getSrcNamespace()).equals(fieldName)) {
+                    if (fieldViews.getDesc(getSrcNamespace()).equals(fieldDesc)) {
+                        return Pair.of(fieldViews.getName(getTargetNamespace()), fieldViews.getDesc(getTargetNamespace()));
+                    }
+                }
+            }
+        }
+
         try {
             return getRemappedField(
                     Class.forName(owner.replace("/", "."), false, Constants.class.getClassLoader()),
                     fieldName, fieldDesc
             );
         } catch (Exception e) {
-            MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(owner.replace(".", "/"), getTargetNamespace());
-
-            if (classView != null) {
-                MappingTreeView.FieldMappingView methodView = classView.getField(fieldName, fieldDesc, getSrcNamespace());
-
-                if (methodView != null) {
-                    return Pair.of(methodView.getName(getTargetNamespace()), methodView.getDesc(getTargetNamespace()));
-                }
-
-                for (MappingTreeView.FieldMappingView fieldViews : classView.getFields()) {
-                    if (fieldViews.getName(getSrcNamespace()).equals(fieldName)) {
-                        if (fieldViews.getDesc(getSrcNamespace()).equals(fieldDesc)) {
-                            return Pair.of(fieldViews.getName(getTargetNamespace()), fieldViews.getDesc(getTargetNamespace()));
-                        }
-                    }
-                }
-            }
-
+            e.printStackTrace();
             return Pair.of(fieldName, fieldDesc);
         }
     }
@@ -180,14 +188,6 @@ public class Constants {
             }
         }
 
-        for (Class<?> interfaces : cl.getInterfaces()) {
-            Pair<String, String> result = getRemappedField(interfaces, fieldName, argDesc);
-
-            if (!fieldName.equals(result.first()) || !argDesc.equals(result.second())) {
-                return result;
-            }
-        }
-
         if (cl.getSuperclass() != null) {
             Pair<String, String> result = getRemappedField(cl.getSuperclass(), fieldName, argDesc);
 
@@ -207,14 +207,6 @@ public class Constants {
                 if (fieldViews.getName(getSrcNamespace()).equals(fieldName)) {
                     return fieldViews.getName(getTargetNamespace());
                 }
-            }
-        }
-
-        for (Class<?> interfaces : cl.getInterfaces()) {
-            String result = getRemappedField(cl.getSuperclass(), fieldName);
-
-            if (!fieldName.equals(result)) {
-                return result;
             }
         }
 
