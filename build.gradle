@@ -75,7 +75,6 @@ allprojects {
 			expand "version": project.version,
 					"mc_version": rootProject.minecraft_version,
 					"mrapi_version": project.mod_remapping_api
-//			expand "mc_version": rootProject.minecraft_version
 		}
 	}
 
@@ -167,7 +166,11 @@ modrinth {
 	token = System.getenv("MODRINTH_TOKEN") == null ? "dev" : System.getenv("MODRINTH_TOKEN") // This is the default. Remember to have the MODRINTH_TOKEN environment variable set or else this will fail, or set it to whatever you want - just make sure it stays private!
 	projectId = "JpHZ1Cyv" // This can be the project ID or the slug. Either will work!
 	versionName = displayVersion
-	changelog = "Update to MRAPI 1.14.2.\nFix more compatibility issues with CodeChickenCore and NEI.\nNEI plugins still do not work for now."
+	changelog = """
+Update MRAPI to 1.15.0.\\
+ClassTransformers now run after mixins are applied on a class instead of before, improving compatibility with ClassTransformers by a lot.\\
+Some more improvements on NEI Compatibility.
+"""
 	uploadFile = remapJar
 	gameVersions = [project.minecraft_version] // Must be an array, even with only one version
 	debugMode = debug
