@@ -1,18 +1,12 @@
 package fr.catcore.fabricatedforge;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.MappingResolver;
-import net.fabricmc.loader.impl.launch.FabricLauncherBase;
-import net.fabricmc.mapping.tree.ClassDef;
-import net.fabricmc.mapping.tree.FieldDef;
-import net.fabricmc.mapping.tree.MethodDef;
+import fr.catcore.modremapperapi.impl.lib.mappingio.tree.MappingTreeView;
+import fr.catcore.modremapperapi.utils.MappingsUtils;
 import net.fabricmc.tinyremapper.extension.mixin.common.data.Pair;
 import org.objectweb.asm.Type;
 
 import java.io.File;
 import java.util.Objects;
-
-import static fr.catcore.modremapperapi.remapping.RemapUtil.getNativeNamespace;
 
 public class Constants {
     public static final String FORGE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.4.6-6.5.0.489/forge-1.4.6-6.5.0.489-universal.zip";
@@ -26,37 +20,73 @@ public class Constants {
     }
 
     public static Pair<String, String> getRemappedMethodNameNative(String owner, String methodName, String argDesc) {
-        MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
+        return getRemappedMethodName(
+                getRemappedClassName(owner),
+                methodName, argDesc
+        );
+    }
 
-        for(ClassDef def : FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses()) {
-            if (def.getName(getNativeNamespace()).replace(".", "/").equals(owner.replace(".", "/"))) {
-                for(MethodDef methodDef : def.getMethods()) {
-                    if (Objects.equals(methodDef.getName(getNativeNamespace()), methodName)) {
-                        String methodDescriptor = methodDef.getDescriptor(getNativeNamespace());
-                        if (methodDescriptor.startsWith(argDesc)) {
-                            return Pair.of(methodDef.getName(resolver.getCurrentRuntimeNamespace()), methodDef.getDescriptor(resolver.getCurrentRuntimeNamespace()));
+    public static Pair<String, String> getRemappedMethodName(String owner, String methodName, String argDesc) {
+        try {
+            return getRemappedMethodName(
+                    Class.forName(owner.replace("/", "."), false, Constants.class.getClassLoader()),
+                    methodName, argDesc
+            );
+        } catch (Exception e) {
+            MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(owner.replace(".", "/"), getTargetNamespace());
+
+            if (classView != null) {
+                MappingTreeView.MethodMappingView methodView = classView.getMethod(methodName, argDesc, getSrcNamespace());
+
+                if (methodView != null) {
+                    return Pair.of(methodView.getName(getTargetNamespace()), methodView.getDesc(getTargetNamespace()));
+                }
+
+                for (MappingTreeView.MethodMappingView methodViews : classView.getMethods()) {
+                    if (methodViews.getName(getSrcNamespace()).equals(methodName)) {
+                        if (methodViews.getDesc(getSrcNamespace()).equals(argDesc)) {
+                            return Pair.of(methodViews.getName(getTargetNamespace()), methodViews.getDesc(getTargetNamespace()));
                         }
+                    }
+                }
+            }
+
+            return Pair.of(methodName, argDesc);
+        }
+    }
+
+    public static Pair<String, String> getRemappedMethodName(Class<?> cl, String methodName, String argDesc) {
+        MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(cl.getName().replace(".", "/"), getTargetNamespace());
+
+        if (classView != null) {
+            MappingTreeView.MethodMappingView methodView = classView.getMethod(methodName, argDesc, getSrcNamespace());
+
+            if (methodView != null) {
+                return Pair.of(methodView.getName(getTargetNamespace()), methodView.getDesc(getTargetNamespace()));
+            }
+
+            for (MappingTreeView.MethodMappingView methodViews : classView.getMethods()) {
+                if (methodViews.getName(getSrcNamespace()).equals(methodName)) {
+                    if (methodViews.getDesc(getSrcNamespace()).equals(argDesc)) {
+                        return Pair.of(methodViews.getName(getTargetNamespace()), methodViews.getDesc(getTargetNamespace()));
                     }
                 }
             }
         }
 
-        return Pair.of(methodName, argDesc);
-    }
+        for (Class<?> interfaces : cl.getInterfaces()) {
+            Pair<String, String> result = getRemappedMethodName(interfaces, methodName, argDesc);
 
-    public static Pair<String, String> getRemappedMethodName(String owner, String methodName, String argDesc) {
-        MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
+            if (!methodName.equals(result.first()) || !argDesc.equals(result.second())) {
+                return result;
+            }
+        }
 
-        for(ClassDef def : FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses()) {
-            if (def.getName(resolver.getCurrentRuntimeNamespace()).replace(".", "/").equals(owner.replace(".", "/"))) {
-                for(MethodDef methodDef : def.getMethods()) {
-                    if (Objects.equals(methodDef.getName(getNativeNamespace()), methodName)) {
-                        String methodDescriptor = methodDef.getDescriptor(getNativeNamespace());
-                        if (methodDescriptor.startsWith(argDesc)) {
-                            return Pair.of(methodDef.getName(resolver.getCurrentRuntimeNamespace()), methodDef.getDescriptor(resolver.getCurrentRuntimeNamespace()));
-                        }
-                    }
-                }
+        if (cl.getSuperclass() != null) {
+            Pair<String, String> result = getRemappedMethodName(cl.getSuperclass(), methodName, argDesc);
+
+            if (!methodName.equals(result.first()) || !argDesc.equals(result.second())) {
+                return result;
             }
         }
 
@@ -64,47 +94,139 @@ public class Constants {
     }
 
     public static String getRemappedClassName(String name) {
-        MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
+        return MappingsUtils.getMinecraftMappings()
+                .mapClassName(name.replace(".", "/"), getSrcNamespace(), getTargetNamespace())
+                .replace("/", ".");
+    }
 
-        for(ClassDef def : FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses()) {
-            if (def.getName(getNativeNamespace()).replace(".", "/").equals(name.replace(".", "/"))) {
-                return def.getName(resolver.getCurrentRuntimeNamespace()).replace("/", ".");
-            }
-        }
+    public static int getSrcNamespace() {
+        return MappingsUtils.getMinecraftMappings().getNamespaceId(MappingsUtils.getNativeNamespace());
+    }
 
-        return name.replace("/", ".");
+    public static int getTargetNamespace() {
+        return MappingsUtils.getMinecraftMappings().getNamespaceId(MappingsUtils.getTargetNamespace());
     }
 
     public static String getRemappedFieldNameNative(String owner, String fieldName) {
-        MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
+        return getRemappedFieldName(getRemappedClassName(owner), fieldName);
+    }
 
-        for(ClassDef def : FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses()) {
-            if (def.getName(getNativeNamespace()).replace(".", "/").equals(owner.replace(".", "/"))) {
-                for(FieldDef fieldDef : def.getFields()) {
-                    if (Objects.equals(fieldDef.getName(getNativeNamespace()), fieldName)) {
-                        return fieldDef.getName(resolver.getCurrentRuntimeNamespace());
+    public static String getRemappedFieldName(String owner, String fieldName) {
+        try {
+            return getRemappedField(
+                    Class.forName(owner.replace("/", "."), false, Constants.class.getClassLoader()),
+                    fieldName
+            );
+        } catch (Exception e) {
+            MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(owner.replace(".", "/"), getTargetNamespace());
+
+            if (classView != null) {
+                for (MappingTreeView.FieldMappingView fieldViews : classView.getFields()) {
+                    if (fieldViews.getName(getSrcNamespace()).equals(fieldName)) {
+                        return fieldViews.getName(getTargetNamespace());
                     }
                 }
+            }
+
+            return fieldName;
+        }
+    }
+
+    public static Pair<String, String> getRemappedFieldName(String owner, String fieldName, String fieldDesc) {
+        try {
+            return getRemappedField(
+                    Class.forName(owner.replace("/", "."), false, Constants.class.getClassLoader()),
+                    fieldName, fieldDesc
+            );
+        } catch (Exception e) {
+            MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(owner.replace(".", "/"), getTargetNamespace());
+
+            if (classView != null) {
+                MappingTreeView.FieldMappingView methodView = classView.getField(fieldName, fieldDesc, getSrcNamespace());
+
+                if (methodView != null) {
+                    return Pair.of(methodView.getName(getTargetNamespace()), methodView.getDesc(getTargetNamespace()));
+                }
+
+                for (MappingTreeView.FieldMappingView fieldViews : classView.getFields()) {
+                    if (fieldViews.getName(getSrcNamespace()).equals(fieldName)) {
+                        if (fieldViews.getDesc(getSrcNamespace()).equals(fieldDesc)) {
+                            return Pair.of(fieldViews.getName(getTargetNamespace()), fieldViews.getDesc(getTargetNamespace()));
+                        }
+                    }
+                }
+            }
+
+            return Pair.of(fieldName, fieldDesc);
+        }
+    }
+
+    public static Pair<String, String> getRemappedField(Class<?> cl, String fieldName, String argDesc) {
+        MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(cl.getName().replace(".", "/"), getTargetNamespace());
+
+        if (classView != null) {
+            MappingTreeView.FieldMappingView methodView = classView.getField(fieldName, argDesc, getSrcNamespace());
+
+            if (methodView != null) {
+                return Pair.of(methodView.getName(getTargetNamespace()), methodView.getDesc(getTargetNamespace()));
+            }
+
+            for (MappingTreeView.FieldMappingView fieldViews : classView.getFields()) {
+                if (fieldViews.getName(getSrcNamespace()).equals(fieldName)) {
+                    if (fieldViews.getDesc(getSrcNamespace()).equals(argDesc)) {
+                        return Pair.of(fieldViews.getName(getTargetNamespace()), fieldViews.getDesc(getTargetNamespace()));
+                    }
+                }
+            }
+        }
+
+        for (Class<?> interfaces : cl.getInterfaces()) {
+            Pair<String, String> result = getRemappedField(interfaces, fieldName, argDesc);
+
+            if (!fieldName.equals(result.first()) || !argDesc.equals(result.second())) {
+                return result;
+            }
+        }
+
+        if (cl.getSuperclass() != null) {
+            Pair<String, String> result = getRemappedField(cl.getSuperclass(), fieldName, argDesc);
+
+            if (!fieldName.equals(result.first()) || !argDesc.equals(result.second())) {
+                return result;
+            }
+        }
+
+        return Pair.of(fieldName, argDesc);
+    }
+
+    public static String getRemappedField(Class<?> cl, String fieldName) {
+        MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(cl.getName().replace(".", "/"), getTargetNamespace());
+
+        if (classView != null) {
+            for (MappingTreeView.FieldMappingView fieldViews : classView.getFields()) {
+                if (fieldViews.getName(getSrcNamespace()).equals(fieldName)) {
+                    return fieldViews.getName(getTargetNamespace());
+                }
+            }
+        }
+
+        for (Class<?> interfaces : cl.getInterfaces()) {
+            String result = getRemappedField(cl.getSuperclass(), fieldName);
+
+            if (!fieldName.equals(result)) {
+                return result;
+            }
+        }
+
+        if (cl.getSuperclass() != null) {
+            String result = getRemappedField(cl.getSuperclass(), fieldName);
+
+            if (!fieldName.equals(result)) {
+                return result;
             }
         }
 
         return fieldName;
-    }
-
-    public static Pair<String, String> getRemappedFieldName(String owner, String fieldName, String fieldDesc) {
-        MappingResolver resolver = FabricLoader.getInstance().getMappingResolver();
-
-        for(ClassDef def : FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses()) {
-            if (def.getName(resolver.getCurrentRuntimeNamespace()).replace(".", "/").equals(owner.replace(".", "/"))) {
-                for(FieldDef fieldDef : def.getFields()) {
-                    if (Objects.equals(fieldDef.getName(getNativeNamespace()), fieldName)) {
-                        return Pair.of(fieldDef.getName(resolver.getCurrentRuntimeNamespace()), fieldDef.getDescriptor(resolver.getCurrentRuntimeNamespace()));
-                    }
-                }
-            }
-        }
-
-        return Pair.of(fieldName, fieldDesc);
     }
 
     public static String remapMethodDescriptor(String desc) {

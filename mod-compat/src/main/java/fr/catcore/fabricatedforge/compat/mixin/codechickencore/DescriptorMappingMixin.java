@@ -47,42 +47,4 @@ public class DescriptorMappingMixin {
             this.s_desc = Constants.remapIndividualType(pair.second());
         }
     }
-
-//    /**
-//     * @author CatCore
-//     * @reason fix match because of the way methods are added to classes
-//     */
-//    @Overwrite(remap = false)
-//    public boolean matches(MethodNode node) {
-//        String className = this.getClassNameForMethod();
-//
-//        System.out.println(this.s_owner + " -> " + className);
-//
-//        return this.s_name.equals(node.name) && this.s_desc.equals(node.desc);
-//    }
-//
-//    /**
-//     * @author CatCore
-//     * @reason fix match because of the way methods are added to classes
-//     */
-//    @Overwrite(remap = false)
-//    public boolean matches(MethodInsnNode node) {
-//        String className = this.getClassNameForMethod();
-//
-//        System.out.println(this.s_name + " -> " + className + " : " + node.owner);
-//
-//        return className.equals(node.owner) && this.s_name.equals(node.name) && this.s_desc.equals(node.desc);
-//    }
-//
-//    @Unique
-//    private String getClassNameForMethod() {
-//        if (this.s_owner.equals("net/minecraft/class_197") && (
-//                this.s_name.equals("canBeReplacedByLeaves")
-//                        || this.s_name.equals("isAirBlock")
-//        )) {
-//            return  "fr/catcore/fabricatedforge/mixininterface/IBlock";
-//        }
-//
-//        return this.s_name;
-//    }
 }
