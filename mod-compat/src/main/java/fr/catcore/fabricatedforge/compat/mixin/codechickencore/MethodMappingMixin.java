@@ -3,7 +3,7 @@ package fr.catcore.fabricatedforge.compat.mixin.codechickencore;
 import codechicken.core.asm.ObfuscationManager;
 import fr.catcore.fabricatedforge.Constants;
 import fr.catcore.fabricatedforge.compat.nei.NEIFixer;
-import net.fabricmc.tinyremapper.extension.mixin.common.data.Pair;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.MappingUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -34,21 +34,21 @@ public class MethodMappingMixin {
         if (NEIFixer.FIX_CLASSES.containsKey(this.owner)) {
             this.owner = NEIFixer.FIX_CLASSES.get(this.owner);
         } else if (!this.owner.contains(".")) {
-            this.owner = Constants.getRemappedClassName(this.owner);
+            this.owner = Constants.mapClass(this.owner);
         }
 
-        Pair<String, String> pair = Constants.getRemappedMethodName(this.owner, this.name, this.desc);
+        MappingUtils.ClassMember pair = Constants.mapMethodFromRemappedClass(this.owner, this.name, this.desc);
 
         if (NEIFixer.FIX_METHOD_NAMES.containsKey(this.name)) {
             this.name = NEIFixer.FIX_METHOD_NAMES.get(this.name);
         } else {
-            this.name = pair.first();
+            this.name = pair.name;
         }
 
         if (NEIFixer.FIX_METHOD_ARGS.containsKey(this.desc)) {
             this.desc = NEIFixer.FIX_METHOD_ARGS.get(this.desc);
         } else {
-            this.desc = pair.second();
+            this.desc = pair.desc;
         }
     }
 }

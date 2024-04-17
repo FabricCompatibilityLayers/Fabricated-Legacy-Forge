@@ -18,7 +18,7 @@ public class ClassMappingMixin {
         if (NEIFixer.FIX_CLASSES.containsKey(classname)) {
             this.classname = NEIFixer.FIX_CLASSES.get(classname);
         } else if (!this.classname.contains(".")) {
-            this.classname = Constants.getRemappedClassName(this.classname);
+            this.classname = Constants.mapClass(this.classname);
         }
     }
 }
