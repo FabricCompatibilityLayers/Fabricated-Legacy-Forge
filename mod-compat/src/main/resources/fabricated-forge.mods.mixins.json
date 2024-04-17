@@ -17,6 +17,7 @@
     "nei.TMIUninstallerMixin"
   ],
   "client": [
+    "nei.HandledScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

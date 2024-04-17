@@ -1,8 +1,10 @@
 package fr.catcore.fabricatedforge;
 
 import io.github.fabriccompatibiltylayers.modremappingapi.api.MappingUtils;
+import org.objectweb.asm.Type;
 
 import java.io.File;
+import java.util.Objects;
 
 public class Constants {
     public static final String FORGE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.4.6-6.5.0.489/forge-1.4.6-6.5.0.489-universal.zip";
@@ -24,7 +26,7 @@ public class Constants {
     }
 
     public static String mapClass(String className) {
-        return MappingUtils.mapClass(className.replace(".", "/")).replace("/", ".");
+        return MappingUtils.mapClass(className.replace(".", "/"));
     }
 
     public static MappingUtils.ClassMember mapField(String owner, String fieldName) {
@@ -34,94 +36,46 @@ public class Constants {
     public static MappingUtils.ClassMember mapFieldFromRemappedClass(String owner, String fieldName, String fieldDesc) {
         return MappingUtils.mapFieldFromRemappedClass(owner.replace(".", "/"), fieldName, fieldDesc);
     }
-}
 
-    public static Pair<String, String> getRemappedField(Class<?> cl, String fieldName, String argDesc) {
-        MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(cl.getName().replace(".", "/"), getTargetNamespace());
-
-        if (classView != null) {
-            MappingTreeView.FieldMappingView methodView = classView.getField(fieldName, argDesc, getSrcNamespace());
-
-            if (methodView != null) {
-                return Pair.of(methodView.getName(getTargetNamespace()), methodView.getDesc(getTargetNamespace()));
-            }
-
-            for (MappingTreeView.FieldMappingView fieldViews : classView.getFields()) {
-                if (fieldViews.getName(getSrcNamespace()).equals(fieldName)) {
-                    if (fieldViews.getDesc(getSrcNamespace()).equals(argDesc)) {
-                        return Pair.of(fieldViews.getName(getTargetNamespace()), fieldViews.getDesc(getTargetNamespace()));
-                    }
-                }
-            }
-        }
-
-        if (cl.getSuperclass() != null) {
-            Pair<String, String> result = getRemappedField(cl.getSuperclass(), fieldName, argDesc);
-
-            if (!fieldName.equals(result.first()) || !argDesc.equals(result.second())) {
-                return result;
-            }
-        }
-
-        return Pair.of(fieldName, argDesc);
-    }
-
-    public static String getRemappedField(Class<?> cl, String fieldName) {
-        MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(cl.getName().replace(".", "/"), getTargetNamespace());
-
-        if (classView != null) {
-            for (MappingTreeView.FieldMappingView fieldViews : classView.getFields()) {
-                if (fieldViews.getName(getSrcNamespace()).equals(fieldName)) {
-                    return fieldViews.getName(getTargetNamespace());
-                }
-            }
-        }
-
-        if (cl.getSuperclass() != null) {
-            String result = getRemappedField(cl.getSuperclass(), fieldName);
-
-            if (!fieldName.equals(result)) {
-                return result;
-            }
-        }
-
-        return fieldName;
-    }
-
-    public static String remapMethodDescriptor(String desc) {
+    public static String mapMethodDescriptor(String desc) {
         Type methodDescType = Type.getType(desc);
 
         Type[] argTypes = methodDescType.getArgumentTypes();
-        Type returnType = methodDescType.getReturnType();
+
+        Type returnType = null;
+
+        try {
+            returnType = Type.getReturnType(desc);
+        } catch (StringIndexOutOfBoundsException e) {}
 
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append("(");
 
         for (Type type : argTypes) {
-            stringBuilder.append(remapIndividualType(type.getDescriptor()));
+            stringBuilder.append(mapTypeDescriptor(type.getDescriptor()));
         }
 
         stringBuilder.append(")");
 
-        stringBuilder.append(remapIndividualType(returnType.getDescriptor()));
+        if (returnType != null) stringBuilder.append(mapTypeDescriptor(returnType.getDescriptor()));
 
         return stringBuilder.toString();
     }
 
-    public static String remapIndividualType(String desc) {
+    public static String mapTypeDescriptor(String desc) {
         Type type = Type.getType(desc);
 
         if (type.getSort() == Type.OBJECT || type.getSort() == 12) {
             String className = type.getClassName();
 
-            String newClassName = getRemappedClassName(className);
+            String newClassName = mapClass(className);
 
             if (!Objects.equals(className, newClassName)) {
                 type = Type.getType("L" + newClassName.replace(".", "/") + ";");
             }
         } else if (type.getSort() == Type.ARRAY) {
-            StringBuilder arrayType = new StringBuilder(remapIndividualType(type.getElementType().getDescriptor()));
+            StringBuilder arrayType = new StringBuilder(mapTypeDescriptor(type.getElementType().getDescriptor()));
 
             for (int i = 1; i < type.getDimensions() + 1; i++) {
                 arrayType.insert(0, "[");

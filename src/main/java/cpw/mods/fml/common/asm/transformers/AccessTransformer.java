@@ -32,7 +32,6 @@ import org.objectweb.asm.tree.MethodNode;
 
 import java.io.*;
 import java.net.URL;
-import java.util.Collection;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -97,7 +96,7 @@ public class AccessTransformer implements IClassTransformer {
                             if (parenIdx > 0) {
                                 MappingUtils.ClassMember o = Constants.mapMethod(className,
                                         nameReference.substring(0, parenIdx), nameReference.substring(parenIdx));
-                                m.desc = o.desc;
+                                m.desc = Constants.mapMethodDescriptor(o.desc);
                                 m.name = o.name;
                             } else {
                                 m.name = Constants.mapField(className, nameReference).name;

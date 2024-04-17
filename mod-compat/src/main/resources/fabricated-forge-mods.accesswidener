@@ -22,3 +22,7 @@ accessible field net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen 
 accessible field net/minecraft/client/gui/screen/Screen buttons Ljava/util/List;
 accessible class net/minecraft/inventory/slot/class_1019
 accessible method net/minecraft/inventory/slot/class_1019 <init> (Lnet/minecraft/screen/PlayerScreenHandler;Lnet/minecraft/inventory/Inventory;IIII)V
+
+accessible field net/minecraft/world/chunk/ServerChunkProvider chunks Ljava/util/List;
+accessible field net/minecraft/inventory/CraftingInventory stacks [Lnet/minecraft/item/ItemStack;
+accessible field net/minecraft/client/Minecraft ticker Lnet/minecraft/client/render/ClientTickTracker;

@@ -2,11 +2,8 @@ package fr.catcore.fabricatedforge.compat.mixin.codechickencore;
 
 import codechicken.core.asm.ObfuscationMappings;
 import fr.catcore.fabricatedforge.Constants;
-import net.fabricmc.tinyremapper.extension.mixin.common.data.Pair;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.MappingUtils;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,16 +32,16 @@ public class DescriptorMappingMixin {
     @Unique
     private void remap() {
         if (!this.s_owner.contains("/")) {
-            this.s_owner = Constants.getRemappedClassName(this.s_owner).replace(".", "/");
+            this.s_owner = Constants.mapClass(this.s_owner);
         }
         if (this.s_desc.startsWith("(")) {
-            Pair<String, String> pair = Constants.getRemappedMethodName(this.s_owner, this.s_name, this.s_desc);
-            this.s_name = pair.first();
-            this.s_desc = Constants.remapMethodDescriptor(pair.second());
+            MappingUtils.ClassMember pair = Constants.mapMethodFromRemappedClass(this.s_owner, this.s_name, this.s_desc);
+            this.s_name = pair.name;
+            this.s_desc = Constants.mapMethodDescriptor(pair.desc);
         } else {
-            Pair<String, String> pair = Constants.getRemappedFieldName(this.s_owner, this.s_name, this.s_desc);
-            this.s_name = pair.first();
-            this.s_desc = Constants.remapIndividualType(pair.second());
+            MappingUtils.ClassMember pair = Constants.mapFieldFromRemappedClass(this.s_owner, this.s_name, this.s_desc);
+            this.s_name = pair.name;
+            this.s_desc = Constants.mapTypeDescriptor(pair.desc);
         }
     }
 }
