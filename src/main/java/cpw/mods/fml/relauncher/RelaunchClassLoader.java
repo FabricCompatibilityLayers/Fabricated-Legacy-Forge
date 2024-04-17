@@ -14,20 +14,23 @@
 package cpw.mods.fml.relauncher;
 
 import java.net.*;
-
-import cpw.mods.fml.common.FMLLog;
-import net.fabricmc.loader.impl.launch.FabricLauncherBase;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.CodeSigner;
 import java.security.CodeSource;
-import java.util.*;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
+
+import cpw.mods.fml.common.FMLLog;
+import fr.catcore.fabricatedforge.util.Utils;
+import fr.catcore.modremapperapi.ClassTransformer;
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
+import net.fabricmc.loader.impl.util.UrlUtil;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 import java.util.logging.Level;
 
 public class RelaunchClassLoader extends URLClassLoader {
@@ -86,91 +89,91 @@ public class RelaunchClassLoader extends URLClassLoader {
 
     public void registerTransformer(String transformerClassName) {
         try {
-            this.transformers.add((IClassTransformer)this.loadClass(transformerClassName).newInstance());
+            IClassTransformer classTransformer = (IClassTransformer)Class.forName(transformerClassName).newInstance();
+            ClassTransformer.registerPostTransformer(classTransformer);
+            System.out.println("Registered ClassTransformer: " + transformerClassName);
+            this.transformers.add(classTransformer);
         } catch (Exception var3) {
             FMLRelaunchLog.log(Level.SEVERE, var3, "A critical problem occured registering the ASM transformer class %s", new Object[]{transformerClassName});
         }
     }
 
     public Class<?> findClass(String name) throws ClassNotFoundException {
-        if (this.invalidClasses.contains(name)) {
-            throw new ClassNotFoundException(name);
-        } else {
-            for(String st : this.classLoaderExceptions) {
-                if (name.startsWith(st)) {
-                    return this.parent.loadClass(name);
-                }
-            }
-
-            if (this.cachedClasses.containsKey(name)) {
-                return (Class<?>)this.cachedClasses.get(name);
-            } else {
-                for(String st : this.transformerExceptions) {
-                    if (name.startsWith(st)) {
-                        try {
-                            Class<?> cl = super.findClass(name);
-                            this.cachedClasses.put(name, cl);
-                            return cl;
-                        } catch (ClassNotFoundException var13) {
-                            this.invalidClasses.add(name);
-                            throw var13;
-                        }
-                    }
-                }
-
-                try {
-                    CodeSigner[] signers = null;
-                    int lastDot = name.lastIndexOf(46);
-                    String pkgname = lastDot == -1 ? "" : name.substring(0, lastDot);
-                    String fName = name.replace('.', '/').concat(".class");
-                    String pkgPath = pkgname.replace('.', '/');
-                    URLConnection urlConnection = this.findCodeSourceConnectionFor(fName);
-                    if (urlConnection instanceof JarURLConnection && lastDot > -1) {
-                        JarURLConnection jarUrlConn = (JarURLConnection)urlConnection;
-                        JarFile jf = jarUrlConn.getJarFile();
-                        if (jf != null && jf.getManifest() != null) {
-                            Manifest mf = jf.getManifest();
-                            JarEntry ent = jf.getJarEntry(fName);
-                            Package pkg = this.getPackage(pkgname);
-                            this.getClassBytes(name);
-                            signers = ent.getCodeSigners();
-                            if (pkg == null) {
-                                pkg = this.definePackage(pkgname, mf, jarUrlConn.getJarFileURL());
-                                this.packageManifests.put(pkg, mf);
-                            } else if (pkg.isSealed() && !pkg.isSealed(jarUrlConn.getJarFileURL())) {
-                                FMLLog.severe("The jar file %s is trying to seal already secured path %s", new Object[]{jf.getName(), pkgname});
-                            } else if (this.isSealed(pkgname, mf)) {
-                                FMLLog.severe(
-                                        "The jar file %s has a security seal for path %s, but that path is defined and not secure",
-                                        new Object[]{jf.getName(), pkgname}
-                                );
-                            }
-                        }
-                    } else if (lastDot > -1) {
-                        Package pkg = this.getPackage(pkgname);
-                        if (pkg == null) {
-                            pkg = this.definePackage(pkgname, null, null, null, null, null, null, null);
-                            this.packageManifests.put(pkg, EMPTY);
-                        } else if (pkg.isSealed()) {
-                            FMLLog.severe("The URL %s is defining elements for sealed path %s", new Object[]{urlConnection.getURL(), pkgname});
-                        }
-                    }
-
-                    byte[] basicClass = this.getClassBytes(name);
-                    byte[] transformedClass = this.runTransformers(name, basicClass);
-                    Class<?> cl = this.defineClass(name, transformedClass, 0, transformedClass.length, new CodeSource(urlConnection.getURL(), signers));
-                    this.cachedClasses.put(name, cl);
-                    return cl;
-                } catch (Throwable var14) {
-                    this.invalidClasses.add(name);
-                    if (DEBUG_CLASSLOADING) {
-                        FMLLog.log(Level.FINEST, var14, "Exception encountered attempting classloading of %s", new Object[]{name});
-                    }
-
-                    throw new ClassNotFoundException(name, var14);
-                }
-            }
-        }
+        return Class.forName(name, false, this.parent);
+//        if (this.invalidClasses.contains(name)) {
+//            throw new ClassNotFoundException(name);
+//        } else {
+//            for(String st : this.classLoaderExceptions) {
+//                if (name.startsWith(st)) {
+//                    return this.parent.loadClass(name);
+//                }
+//            }
+//
+//            if (this.cachedClasses.containsKey(name)) {
+//                return (Class<?>)this.cachedClasses.get(name);
+//            } else {
+//                for(String st : this.transformerExceptions) {
+//                    if (name.startsWith(st)) {
+//                        try {
+//                            Class<?> cl = super.findClass(name);
+//                            this.cachedClasses.put(name, cl);
+//                            return cl;
+//                        } catch (ClassNotFoundException var13) {
+//                            this.invalidClasses.add(name);
+//                            throw var13;
+//                        }
+//                    }
+//                }
+//
+//                try {
+//                    CodeSigner[] signers = null;
+//                    int lastDot = name.lastIndexOf(46);
+//                    String pkgname = lastDot == -1 ? "" : name.substring(0, lastDot);
+//                    String fName = name.replace('.', '/').concat(".class");
+//                    String pkgPath = pkgname.replace('.', '/');
+//                    URLConnection urlConnection = this.findCodeSourceConnectionFor(fName);
+//                    if (urlConnection instanceof JarURLConnection && lastDot > -1) {
+//                        JarURLConnection jarUrlConn = (JarURLConnection)urlConnection;
+//                        JarFile jf = jarUrlConn.getJarFile();
+//                        if (jf != null && jf.getManifest() != null) {
+//                            Manifest mf = jf.getManifest();
+//                            JarEntry ent = jf.getJarEntry(fName);
+//                            Package pkg = this.getPackage(pkgname);
+//                            this.getClassBytes(name);
+//                            signers = ent.getCodeSigners();
+//                            if (pkg == null) {
+//                                pkg = this.definePackage(pkgname, mf, jarUrlConn.getJarFileURL());
+//                                this.packageManifests.put(pkg, mf);
+//                            } else if (pkg.isSealed() && !pkg.isSealed(jarUrlConn.getJarFileURL())) {
+//                                FMLLog.severe("The jar file %s is trying to seal already secured path %s", new Object[]{jf.getName(), pkgname});
+//                            } else if (this.isSealed(pkgname, mf)) {
+//                                FMLLog.severe(
+//                                        "The jar file %s has a security seal for path %s, but that path is defined and not secure",
+//                                        new Object[]{jf.getName(), pkgname}
+//                                );
+//                            }
+//                        }
+//                    } else if (lastDot > -1) {
+//                        Package pkg = this.getPackage(pkgname);
+//                        if (pkg == null) {
+//                            pkg = this.definePackage(pkgname, null, null, null, null, null, null, null);
+//                            this.packageManifests.put(pkg, EMPTY);
+//                        } else if (pkg.isSealed()) {
+//                            FMLLog.severe("The URL %s is defining elements for sealed path %s", new Object[]{urlConnection.getURL(), pkgname});
+//                        }
+//                    }
+//
+//                    byte[] basicClass = this.getClassBytes(name);
+//                    byte[] transformedClass = this.runTransformers(name, basicClass);
+//                    Class<?> cl = this.defineClass(name, transformedClass, 0, transformedClass.length, new CodeSource(urlConnection.getURL(), signers));
+//                    this.cachedClasses.put(name, cl);
+//                    return cl;
+//                } catch (Throwable var14) {
+//                    this.invalidClasses.add(name);
+//                    throw new ClassNotFoundException(name, var14);
+//                }
+//            }
+//        }
     }
 
     private boolean isSealed(String path, Manifest man) {
@@ -210,6 +213,9 @@ public class RelaunchClassLoader extends URLClassLoader {
 
     public void addURL(URL url) {
         super.addURL(url);
+
+        FabricLauncherBase.getLauncher().addToClassPath(UrlUtil.asPath(url));
+
         this.sources.add(url);
     }
 
@@ -239,10 +245,12 @@ public class RelaunchClassLoader extends URLClassLoader {
 
     private void addClassLoaderExclusion(String toExclude) {
         this.classLoaderExceptions.add(toExclude);
+        Utils.TRANSFORMER_EXCLUSIONS.add(toExclude);
     }
 
     void addTransformerExclusion(String toExclude) {
         this.transformerExceptions.add(toExclude);
+        Utils.TRANSFORMER_EXCLUSIONS.add(toExclude);
     }
 
     public byte[] getClassBytes(String name) throws IOException {

@@ -22,6 +22,8 @@ import com.google.common.collect.Multimap;
 import com.google.common.io.LineProcessor;
 import com.google.common.io.Resources;
 import cpw.mods.fml.relauncher.IClassTransformer;
+import fr.catcore.fabricatedforge.Constants;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.MappingUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
@@ -30,8 +32,6 @@ import org.objectweb.asm.tree.MethodNode;
 
 import java.io.*;
 import java.net.URL;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -75,20 +75,35 @@ public class AccessTransformer implements IClassTransformer {
                         AccessTransformer.Modifier m = AccessTransformer.this.new Modifier();
                         m.setTargetAccess((String)parts.get(0));
                         List<String> descriptor = Lists.newArrayList(Splitter.on(".").trimResults().split((CharSequence)parts.get(1)));
+
+                        String className = descriptor.get(0);
+                        String finalClassName = className;
+                        try {
+                            className = Constants.mapClass(finalClassName);
+                        } catch (NullPointerException ignored) {
+                            ignored.printStackTrace();
+                        }
+
+                        if (className.equals("net")) {
+                            className = "net.minecraft.client.Minecraft";
+                        }
+
                         if (descriptor.size() == 1) {
                             m.modifyClassVisibility = true;
                         } else {
-                            String nameReference = (String)descriptor.get(1);
+                            String nameReference = descriptor.get(1);
                             int parenIdx = nameReference.indexOf(40);
                             if (parenIdx > 0) {
-                                m.desc = nameReference.substring(parenIdx);
-                                m.name = nameReference.substring(0, parenIdx);
+                                MappingUtils.ClassMember o = Constants.mapMethod(className,
+                                        nameReference.substring(0, parenIdx), nameReference.substring(parenIdx));
+                                m.desc = Constants.mapMethodDescriptor(o.desc);
+                                m.name = o.name;
                             } else {
-                                m.name = nameReference;
+                                m.name = Constants.mapField(className, nameReference).name;
                             }
                         }
 
-                        AccessTransformer.this.modifiers.put(((String)descriptor.get(0)).replace('/', '.'), m);
+                        AccessTransformer.this.modifiers.put(className.replace("/", "."), m);
                         return true;
                     }
                 }

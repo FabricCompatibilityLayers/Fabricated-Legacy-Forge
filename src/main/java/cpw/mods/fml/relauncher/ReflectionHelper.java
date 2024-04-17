@@ -13,7 +13,7 @@
  */
 package cpw.mods.fml.relauncher;
 
-import fr.catcore.modremapperapi.remapping.RemapUtil;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.MappingUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -28,7 +28,7 @@ public class ReflectionHelper {
         {
             try
             {
-                fieldName = RemapUtil.getRemappedFieldName(clazz, fieldName);
+                fieldName = MappingUtils.mapField(clazz, fieldName).name;
                 Field f = clazz.getDeclaredField(fieldName);
                 f.setAccessible(true);
                 return f;
@@ -82,7 +82,8 @@ public class ReflectionHelper {
         {
             try
             {
-                return (Class<? super Object>) Class.forName(className, false, loader);
+                className = MappingUtils.mapClass(className);
+                return (Class<? super Object>) Class.forName(className, false, ReflectionHelper.class.getClassLoader());
             }
             catch (Exception e)
             {
@@ -99,7 +100,7 @@ public class ReflectionHelper {
         {
             try
             {
-                methodName = RemapUtil.getRemappedMethodName(clazz, methodName, methodTypes);
+                methodName = MappingUtils.mapMethod(clazz, methodName, methodTypes).name;
                 Method m = clazz.getDeclaredMethod(methodName, methodTypes);
                 m.setAccessible(true);
                 return m;

@@ -73,7 +73,7 @@ public class EventTransformer implements IClassTransformer {
             }
 
             if (!hasSetup) {
-                Type tSuper = Type.getType(classNode.superName);
+                Type tSuper = Type.getType(parent);
                 classNode.fields.add(new FieldNode(10, "LISTENER_LIST", tList.getDescriptor(), null, null));
                 MethodNode method = new MethodNode(262144, 1, "<init>", Type.getMethodDescriptor(Type.VOID_TYPE, new Type[0]), null, null);
                 method.instructions.add(new VarInsnNode(25, 0));

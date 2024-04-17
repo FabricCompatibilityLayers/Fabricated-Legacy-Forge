@@ -363,7 +363,6 @@ public abstract class MobEntityMixin extends Entity implements IMobEntity {
             if (par2 <= 0) {
                 return;
             }
-
             par2 = this.method_2626(par1DamageSource, par2);
             par2 = this.method_2648(par1DamageSource, par2);
             this.field_3294 -= par2;

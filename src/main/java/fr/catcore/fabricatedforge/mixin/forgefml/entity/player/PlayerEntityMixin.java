@@ -454,7 +454,6 @@ public abstract class PlayerEntityMixin extends MobEntity implements CommandSour
             if (par2 <= 0) {
                 return;
             }
-
             if (!par1DamageSource.bypassesArmor() && this.method_2611()) {
                 par2 = 1 + par2 >> 1;
             }

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "fabricated-forge-compat",
+  "version": "${version}",
+  "name": "Fabricated Forge Mod Compatibility Module",
+  "description": "",
+  "authors": [
+    "CatCore"
+  ],
+  "contributors": [],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/fabricated-forge",
+    "sources": "https://github.com/thecatcore/Fabricated-Legacy-Forge",
+    "issues": "https://github.com/thecatcore/Fabricated-Legacy-Forge/issues"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/fabricated-forge/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "mod-remapper-api:modremapper": [
+      "fr.catcore.fabricatedforge.compat.ExtraRemapper"
+    ],
+    "preLaunch": [
+      "fr.catcore.fabricatedforge.compat.Dummy"
+    ]
+  },
+  "mixins": [
+  ],
+  "depends": {
+    "fabricloader": ">0.14.3"
+  },
+  "accessWidener": "fabricated-forge-mods.accesswidener"
+}
