@@ -2,7 +2,7 @@ package fr.catcore.fabricatedforge.compat.mixin.codechickencore;
 
 import codechicken.core.asm.ObfuscationManager;
 import fr.catcore.fabricatedforge.Constants;
-import net.fabricmc.tinyremapper.extension.mixin.common.data.Pair;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.MappingUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -31,10 +31,10 @@ public class MethodMappingMixin {
     @Unique
     private void remap() {
         if (!this.owner.contains(".")) {
-            this.owner = Constants.getRemappedClassName(this.owner);
+            this.owner = Constants.mapClass(this.owner);
         }
-        Pair<String, String> pair = Constants.getRemappedMethodName(this.owner, this.name, this.desc);
-        this.name = pair.first();
-        this.desc = pair.second();
+        MappingUtils.ClassMember pair = Constants.mapMethodFromRemappedClass(this.owner, this.name, this.desc);
+        this.name = pair.name;
+        this.desc = pair.desc;
     }
 }

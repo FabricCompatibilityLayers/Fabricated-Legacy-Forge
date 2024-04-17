@@ -15,7 +15,7 @@ public class ClassMappingMixin {
     @Inject(method = "<init>", remap = false, at = @At("RETURN"))
     private void remapClassName(String classname, CallbackInfo ci) {
         if (!this.classname.contains(".")) {
-            this.classname = Constants.getRemappedClassName(this.classname);
+            this.classname = Constants.mapClass(this.classname);
         }
     }
 }
