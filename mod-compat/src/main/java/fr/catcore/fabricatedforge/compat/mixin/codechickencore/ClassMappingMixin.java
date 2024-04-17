@@ -14,6 +14,6 @@ public class ClassMappingMixin {
 
     @Inject(method = "<init>", remap = false, at = @At("RETURN"))
     private void remapClassName(String classname, CallbackInfo ci) {
-        this.s_class = Constants.getRemappedClassName(this.s_class).replace(".", "/");
+        this.s_class = Constants.mapClass(this.s_class);
     }
 }

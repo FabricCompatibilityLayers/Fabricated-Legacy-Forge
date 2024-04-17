@@ -1,12 +1,8 @@
 package fr.catcore.fabricatedforge;
 
-import fr.catcore.modremapperapi.impl.lib.mappingio.tree.MappingTreeView;
-import fr.catcore.modremapperapi.utils.MappingsUtils;
-import net.fabricmc.tinyremapper.extension.mixin.common.data.Pair;
-import org.objectweb.asm.Type;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.MappingUtils;
 
 import java.io.File;
-import java.util.Objects;
 
 public class Constants {
     public static final String FORGE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.4.6-6.5.0.489/forge-1.4.6-6.5.0.489-universal.zip";
@@ -19,155 +15,26 @@ public class Constants {
         COREMODS_FOLDER.mkdirs();
     }
 
-    public static Pair<String, String> getRemappedMethodNameNative(String owner, String methodName, String argDesc) {
-        return getRemappedMethodName(
-                getRemappedClassName(owner),
-                methodName, argDesc
-        );
+    public static MappingUtils.ClassMember mapMethod(String owner, String methodName, String argDesc) {
+        return MappingUtils.mapMethod(owner.replace(".", "/"), methodName, argDesc);
     }
 
-    public static Pair<String, String> getRemappedMethodName(String owner, String methodName, String argDesc) {
-        if (methodName.equals("<init>") || methodName.length() > 3 || methodName.equals("*")) {
-            return Pair.of(methodName, argDesc == null || argDesc.isEmpty() || argDesc.equals("()") ? argDesc
-                    : remapMethodDescriptor(argDesc));
-        }
-
-        MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(owner.replace(".", "/"), getTargetNamespace());
-
-        if (classView != null) {
-            MappingTreeView.MethodMappingView methodView = classView.getMethod(methodName, argDesc, getSrcNamespace());
-
-            if (methodView != null) {
-                return Pair.of(methodView.getName(getTargetNamespace()), methodView.getDesc(getTargetNamespace()));
-            }
-
-            for (MappingTreeView.MethodMappingView methodViews : classView.getMethods()) {
-                if (methodViews.getName(getSrcNamespace()).equals(methodName)) {
-                    if (methodViews.getDesc(getSrcNamespace()).equals(argDesc)) {
-                        return Pair.of(methodViews.getName(getTargetNamespace()), methodViews.getDesc(getTargetNamespace()));
-                    }
-                }
-            }
-        }
-
-        try {
-            return getRemappedMethodName(
-                    Class.forName(owner.replace("/", "."), false, Constants.class.getClassLoader()),
-                    methodName, argDesc
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Pair.of(methodName, argDesc);
-        }
+    public static MappingUtils.ClassMember mapMethodFromRemappedClass(String owner, String methodName, String argDesc) {
+        return MappingUtils.mapMethodFromRemappedClass(owner.replace(".", "/"), methodName, argDesc);
     }
 
-    public static Pair<String, String> getRemappedMethodName(Class<?> cl, String methodName, String argDesc) {
-        MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(cl.getName().replace(".", "/"), getTargetNamespace());
-
-        if (classView != null) {
-            MappingTreeView.MethodMappingView methodView = classView.getMethod(methodName, argDesc, getSrcNamespace());
-
-            if (methodView != null) {
-                return Pair.of(methodView.getName(getTargetNamespace()), methodView.getDesc(getTargetNamespace()));
-            }
-
-            for (MappingTreeView.MethodMappingView methodViews : classView.getMethods()) {
-                if (methodViews.getName(getSrcNamespace()).equals(methodName)) {
-                    if (methodViews.getDesc(getSrcNamespace()).equals(argDesc)) {
-                        return Pair.of(methodViews.getName(getTargetNamespace()), methodViews.getDesc(getTargetNamespace()));
-                    }
-                }
-            }
-        }
-
-        if (cl.getSuperclass() != null) {
-            Pair<String, String> result = getRemappedMethodName(cl.getSuperclass(), methodName, argDesc);
-
-            if (!methodName.equals(result.first()) || !argDesc.equals(result.second())) {
-                return result;
-            }
-        }
-
-        for (Class<?> interfaces : cl.getInterfaces()) {
-            Pair<String, String> result = getRemappedMethodName(interfaces, methodName, argDesc);
-
-            if (!methodName.equals(result.first()) || !argDesc.equals(result.second())) {
-                return result;
-            }
-        }
-
-        return Pair.of(methodName, argDesc);
+    public static String mapClass(String className) {
+        return MappingUtils.mapClass(className.replace(".", "/")).replace("/", ".");
     }
 
-    public static String getRemappedClassName(String name) {
-        return MappingsUtils.getMinecraftMappings()
-                .mapClassName(name.replace(".", "/"), getSrcNamespace(), getTargetNamespace())
-                .replace("/", ".");
+    public static MappingUtils.ClassMember mapField(String owner, String fieldName) {
+        return MappingUtils.mapField(owner.replace(".", "/"), fieldName, null);
     }
 
-    public static int getSrcNamespace() {
-        return MappingsUtils.getMinecraftMappings().getNamespaceId(MappingsUtils.getNativeNamespace());
+    public static MappingUtils.ClassMember mapFieldFromRemappedClass(String owner, String fieldName, String fieldDesc) {
+        return MappingUtils.mapFieldFromRemappedClass(owner.replace(".", "/"), fieldName, fieldDesc);
     }
-
-    public static int getTargetNamespace() {
-        return MappingsUtils.getMinecraftMappings().getNamespaceId(MappingsUtils.getTargetNamespace());
-    }
-
-    public static String getRemappedFieldNameNative(String owner, String fieldName) {
-        return getRemappedFieldName(getRemappedClassName(owner), fieldName);
-    }
-
-    public static String getRemappedFieldName(String owner, String fieldName) {
-        MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(owner.replace(".", "/"), getTargetNamespace());
-
-        if (classView != null) {
-            for (MappingTreeView.FieldMappingView fieldViews : classView.getFields()) {
-                if (fieldViews.getName(getSrcNamespace()).equals(fieldName)) {
-                    return fieldViews.getName(getTargetNamespace());
-                }
-            }
-        }
-
-        try {
-            return getRemappedField(
-                    Class.forName(owner.replace("/", "."), false, Constants.class.getClassLoader()),
-                    fieldName
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-            return fieldName;
-        }
-    }
-
-    public static Pair<String, String> getRemappedFieldName(String owner, String fieldName, String fieldDesc) {
-        MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(owner.replace(".", "/"), getTargetNamespace());
-
-        if (classView != null) {
-            MappingTreeView.FieldMappingView methodView = classView.getField(fieldName, fieldDesc, getSrcNamespace());
-
-            if (methodView != null) {
-                return Pair.of(methodView.getName(getTargetNamespace()), methodView.getDesc(getTargetNamespace()));
-            }
-
-            for (MappingTreeView.FieldMappingView fieldViews : classView.getFields()) {
-                if (fieldViews.getName(getSrcNamespace()).equals(fieldName)) {
-                    if (fieldViews.getDesc(getSrcNamespace()).equals(fieldDesc)) {
-                        return Pair.of(fieldViews.getName(getTargetNamespace()), fieldViews.getDesc(getTargetNamespace()));
-                    }
-                }
-            }
-        }
-
-        try {
-            return getRemappedField(
-                    Class.forName(owner.replace("/", "."), false, Constants.class.getClassLoader()),
-                    fieldName, fieldDesc
-            );
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Pair.of(fieldName, fieldDesc);
-        }
-    }
+}
 
     public static Pair<String, String> getRemappedField(Class<?> cl, String fieldName, String argDesc) {
         MappingTreeView.ClassMappingView classView = MappingsUtils.getMinecraftMappings().getClass(cl.getName().replace(".", "/"), getTargetNamespace());
