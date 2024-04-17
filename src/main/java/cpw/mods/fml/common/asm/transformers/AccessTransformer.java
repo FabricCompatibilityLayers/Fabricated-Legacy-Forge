@@ -23,9 +23,7 @@ import com.google.common.io.LineProcessor;
 import com.google.common.io.Resources;
 import cpw.mods.fml.relauncher.IClassTransformer;
 import fr.catcore.fabricatedforge.Constants;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.impl.launch.FabricLauncherBase;
-import net.fabricmc.tinyremapper.extension.mixin.common.data.Pair;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.MappingUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
@@ -36,7 +34,6 @@ import java.io.*;
 import java.net.URL;
 import java.util.Collection;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -81,13 +78,13 @@ public class AccessTransformer implements IClassTransformer {
                         m.setTargetAccess((String)parts.get(0));
                         List<String> descriptor = Lists.newArrayList(Splitter.on(".").trimResults().split((CharSequence)parts.get(1)));
 
-                        String className = ((String)descriptor.get(0)).replace('/', '.');
+                        String className = descriptor.get(0);
                         String finalClassName = className;
                         try {
-                            className = FabricLauncherBase.getLauncher().getMappingConfiguration().getMappings().getClasses().stream()
-                                    .filter(classDef -> classDef.getName("official").equals(finalClassName)).findFirst().get()
-                                    .getName(FabricLoader.getInstance().getMappingResolver().getCurrentRuntimeNamespace());
-                        } catch (NullPointerException | NoSuchElementException ignored) {}
+                            className = Constants.mapClass(finalClassName);
+                        } catch (NullPointerException ignored) {
+                            ignored.printStackTrace();
+                        }
 
                         if (className.equals("net")) {
                             className = "net.minecraft.client.Minecraft";
@@ -99,16 +96,16 @@ public class AccessTransformer implements IClassTransformer {
                             String nameReference = descriptor.get(1);
                             int parenIdx = nameReference.indexOf(40);
                             if (parenIdx > 0) {
-                                Pair<String, String> o = Constants.getRemappedMethodNameNative(className,
+                                MappingUtils.ClassMember o = Constants.mapMethod(className,
                                         nameReference.substring(0, parenIdx), nameReference.substring(parenIdx));
-                                m.desc = o.second();
-                                m.name = o.first();
+                                m.desc = o.desc;
+                                m.name = o.name;
                             } else {
-                                m.name = Constants.getRemappedFieldNameNative(className, nameReference);
+                                m.name = Constants.mapField(className, nameReference).name;
                             }
                         }
 
-                        AccessTransformer.this.modifiers.put(className, m);
+                        AccessTransformer.this.modifiers.put(className.replace("/", "."), m);
                         return true;
                     }
                 }
