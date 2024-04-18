@@ -9,6 +9,7 @@
     "codechickencore.ClassHeirachyManagerMixin",
     "codechickencore.ClassMappingMixin",
     "codechickencore.ClassOverriderMixin",
+    "codechickencore.DelegatedTransformerMixin",
     "codechickencore.DescriptorMappingMixin",
     "codechickencore.FeatureHackTransformerMixin",
     "codechickencore.TweakTransformerMixin",

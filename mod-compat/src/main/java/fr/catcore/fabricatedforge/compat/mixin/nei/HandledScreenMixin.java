@@ -2,14 +2,18 @@ package fr.catcore.fabricatedforge.compat.mixin.nei;
 
 import codechicken.nei.forge.GuiContainerManager;
 import codechicken.nei.forge.IContainerClientSide;
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.GLX;
 import fr.catcore.fabricatedforge.compat.nei.NEIHandledScreen;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.TextureManager;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.slot.Slot;
@@ -41,7 +45,7 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
     @Shadow public ScreenHandler screenHandler;
 
     @Shadow
-    protected abstract void drawSlot(Slot slot);
+    public abstract void drawSlot(Slot slot);
 
     @Shadow protected abstract boolean isPointOverSlot(Slot slot, int pointX, int pointY);
 
@@ -67,11 +71,8 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
     public int backgroundHeight;
     @Shadow private Slot touchDragSlotStart;
 
-    @Shadow protected abstract boolean handleHotbarKeyPressed(int keyCode);
-
     @Shadow
-    public abstract void onMouseClick(Slot slot, int invSlot, int button, int slotAction);
-
+    public static ItemRenderer field_1346;
     public GuiContainerManager manager;
 
     @Override
@@ -111,6 +112,7 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         boolean objectundermouse = this.manager.objectUnderMouse(par1, par2);
 
+        int var9;
         for(int var13 = 0; var13 < this.screenHandler.slots.size(); ++var13) {
             Slot var14 = (Slot)this.screenHandler.slots.get(var13);
             this.drawSlot(var14);
@@ -119,7 +121,7 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
                 GL11.glDisable(2896);
                 GL11.glDisable(2929);
                 int var8 = var14.x;
-                int var9 = var14.y;
+                var9 = var14.y;
                 this.fillGradient(var8, var9, var8 + 16, var9 + 16, -2130706433, -2130706433);
                 GL11.glEnable(2896);
                 GL11.glEnable(2929);
@@ -134,7 +136,7 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
         ItemStack var16 = this.touchDragStack == null ? var15.getCursorStack() : this.touchDragStack;
         if (var16 != null) {
             byte var18 = 8;
-            int var9 = this.touchDragStack == null ? 8 : 16;
+            var9 = this.touchDragStack == null ? 8 : 16;
             if (this.touchDragStack != null && this.touchIsRightClickDrag) {
                 var16 = var16.copy();
                 var16.count = MathHelper.ceil((float)var16.count / 2.0F);
@@ -150,7 +152,7 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
                 this.touchDropReturningStack = null;
             }
 
-            int var9 = this.touchDropOriginSlot.x - this.touchDropX;
+            var9 = this.touchDropOriginSlot.x - this.touchDropX;
             int var10 = this.touchDropOriginSlot.y - this.touchDropY;
             int var11 = this.touchDropX + (int)((float)var9 * var17);
             int var12 = this.touchDropY + (int)((float)var10 * var17);
@@ -168,7 +170,7 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
             @Constant(floatValue = 200.0F, ordinal = 0),
             @Constant(floatValue = 200.0F, ordinal = 1)
     })
-    private float changeConstants(float constant) {
+    private float nei$changeConstants(float constant) {
         return 500.0F;
     }
 
@@ -182,12 +184,27 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
         return currenttip;
     }
 
-    @Inject(method = "drawSlot", at = {
-            @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glEnable(I)V", ordinal = 1, remap = false),
-            @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/render/item/ItemRenderer;method_1549(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/client/TextureManager;Lnet/minecraft/item/ItemStack;II)V")
-    })
-    private void renderSlotUnderlay(Slot par1Slot, CallbackInfo ci) {
+    @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glEnable(I)V", ordinal = 1, remap = false))
+    private void nei$renderSlotUnderlay(Slot par1Slot, CallbackInfo ci) {
         this.manager.renderSlotUnderlay(par1Slot);
+    }
+
+    @Redirect(method = "drawSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/ItemRenderer;method_4336(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/client/TextureManager;Lnet/minecraft/item/ItemStack;II)V"))
+    private void nei$drawSlotItemOverridable(ItemRenderer instance, TextRenderer textRenderer, TextureManager textureManager,
+                                         ItemStack itemstack, int i, int j, @Local(argsOnly = true) Slot slot) {
+        this.drawSlotItem(slot, itemstack, i, j);
+    }
+
+    @Override
+    public void drawSlotItem(Slot par1Slot, ItemStack itemstack, int i, int j) {
+        field_1346.method_4336(this.textRenderer, this.field_1229.textureManager, itemstack, i, j);
+        field_1346.method_1549(this.textRenderer, this.field_1229.textureManager, itemstack, i, j);
+    }
+
+    @Redirect(method = "drawSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/ItemRenderer;method_1549(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/client/TextureManager;Lnet/minecraft/item/ItemStack;II)V"))
+    private void nei$renderSlotOverlay(ItemRenderer instance, TextRenderer textureManager, TextureManager itemStack, ItemStack stack, int j, int i,
+                                       @Local(argsOnly = true) Slot slot) {
+        this.manager.renderSlotOverlay(slot);
     }
 
     /**
@@ -213,7 +230,7 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
             }
 
             if (this.field_1229.options.touchScreen && var8 && this.field_1229.playerEntity.inventory.getCursorStack() == null) {
-                this.field_1229.openScreen(null);
+                this.field_1229.openScreen((Screen)null);
                 return;
             }
 
@@ -232,6 +249,12 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
                 }
             }
         }
+
+    }
+
+    @Inject(method = "mouseDragged", at = @At("HEAD"))
+    private void nei$mouseDragged(int par1, int par2, int par3, long par4, CallbackInfo ci) {
+        this.manager.mouseDragged(par1, par2, par3, par4);
     }
 
     @Inject(method = "mouseReleased", at = @At("RETURN"))
@@ -245,7 +268,7 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
     }
 
     @WrapWithCondition(method = "onMouseClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;clickSlot(IIIILnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/item/ItemStack;"))
-    private boolean wrapClickSlot(
+    private boolean nei$wrapClickSlot(
             ClientPlayerInteractionManager interactionManager, int syncId, int slotId, int mouseButton, int actionType, PlayerEntity player
     ) {
         if (slotId != 1) {
@@ -259,23 +282,15 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
         return false;
     }
 
-    /**
-     * @author ChickenBones
-     * @reason idk
-     */
-    @Overwrite
-    protected void keyPressed(char par1, int par2) {
-        if (par2 == 1) {
-            this.field_1229.playerEntity.closeHandledScreen();
-        } else if (!this.manager.lastKeyTyped(par2, par1)) {
-            this.handleHotbarKeyPressed(par2);
-            if (par2 == this.field_1229.options.keyPickItem.code && this.focusedSlot != null && this.focusedSlot.hasStack()) {
-                this.onMouseClick(this.focusedSlot, this.focusedSlot.id, this.backgroundHeight, 3);
-            }
+    @Inject(method = "keyPressed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;handleHotbarKeyPressed(I)Z"), cancellable = true)
+    private void nei$keyPressed$condition(char code, int par2, CallbackInfo ci) {
+        if (code == 1 || this.manager.lastKeyTyped(par2, code)) ci.cancel();
+    }
 
-            if (par2 == this.field_1229.options.keyInventory.code) {
-                this.field_1229.playerEntity.closeHandledScreen();
-            }
+    @Inject(method = "keyPressed", at = @At("RETURN"))
+    private void nei$keyPressed$close(char code, int par2, CallbackInfo ci) {
+        if (par2 == this.field_1229.options.keyInventory.code) {
+            this.field_1229.playerEntity.closeHandledScreen();
         }
     }
 
@@ -298,6 +313,7 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
 
             this.keyPressed(Keyboard.getEventCharacter(), Keyboard.getEventKey());
         }
+
     }
 
     @Override
@@ -307,6 +323,7 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
         if (i != 0) {
             this.manager.mouseWheel(i > 0 ? 1 : -1);
         }
+
     }
 
     @Override
