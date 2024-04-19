@@ -86,6 +86,7 @@ public class RelaunchClassLoader extends URLClassLoader {
         this.addTransformerExclusion("org.objectweb.asm.");
         this.addTransformerExclusion("com.google.common.");
         this.addTransformerExclusion("fr.catcore.fabricatedforge.");
+        this.addClassLoaderExclusion("com.llamalad7.mixinextras.");
     }
 
     public void registerTransformer(String transformerClassName) {

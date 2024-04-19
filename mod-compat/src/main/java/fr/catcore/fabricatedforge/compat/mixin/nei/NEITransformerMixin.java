@@ -1,50 +1,28 @@
 package fr.catcore.fabricatedforge.compat.mixin.nei;
 
-import codechicken.core.asm.ASMHelper;
-import codechicken.core.asm.ClassHeirachyManager;
-import codechicken.core.asm.InstructionComparator;
-import codechicken.core.asm.ObfuscationMappings;
 import codechicken.nei.asm.NEITransformer;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import fr.catcore.fabricatedforge.Constants;
+import fr.catcore.fabricatedforge.compat.BetterClassWriter;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.MappingUtils;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.tree.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(NEITransformer.class)
 public class NEITransformerMixin {
-//    /**
-//     * @author CatCore
-//     * @reason E
-//     */
-//    @Overwrite(remap = false)
-//    public byte[] transformer001(String name, byte[] bytes) {
-//        ObfuscationMappings.ClassMapping classmap = new ObfuscationMappings.ClassMapping("avf");
-//
-//        if (ClassHeirachyManager.classExtends(name, classmap.javaClass(), bytes)) {
-//            ClassNode node = ASMHelper.createClassNode(bytes);
-//
-//            ObfuscationMappings.DescriptorMapping methodmap = new ObfuscationMappings.DescriptorMapping("aul", "c", "()V");
-//            ObfuscationMappings.DescriptorMapping supermap = new ObfuscationMappings.DescriptorMapping(node.superName, methodmap);
-//            InsnList supercall = new InsnList();
-//            supercall.add(new VarInsnNode(25, 0));
-//            supercall.add(supermap.toInsn(183));
-//
-//            for(MethodNode methodnode : node.methods) {
-//                if (methodmap.matches(methodnode)) {
-//                    InsnList importantNodeList = InstructionComparator.getImportantList(methodnode.instructions);
-//
-//                    if (!InstructionComparator.insnListMatches(importantNodeList, supercall, 0)) {
-//                        methodnode.instructions.insertBefore(methodnode.instructions.getFirst(), supercall);
-//                        System.out.println("Inserted super call into " + name + "." + supermap.s_name);
-//                    }
-//                }
-//            }
-//
-//            bytes = ASMHelper.createBytes(node, 3);
-//        }
-//
-//        return bytes;
-//    }
+    @WrapOperation(method = "transformer004", require = 0, at = @At(value = "NEW", target = "(ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lorg/objectweb/asm/tree/FieldInsnNode;"), remap = false)
+    private FieldInsnNode flf$remapField(int opcode, String owner, String name, String descriptor, Operation<FieldInsnNode> original) {
+        String remappedOwner = Constants.mapClass(owner);
+        MappingUtils.ClassMember member = Constants.mapFieldFromRemappedClass(remappedOwner, name, descriptor);
+
+        return original.call(opcode, remappedOwner, member.name, Constants.mapTypeDescriptor(member.desc));
+    }
+
+    @WrapOperation(method = {"transformer001", "transformer002", "transformer003"}, at = @At(value = "NEW", target = "(I)Lorg/objectweb/asm/ClassWriter;"), remap = false)
+    private ClassWriter flf$fixClassWriter(int flags, Operation<ClassWriter> original) {
+        return new BetterClassWriter(flags);
+    }
 }
