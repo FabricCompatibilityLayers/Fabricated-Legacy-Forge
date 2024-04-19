@@ -11,6 +11,7 @@ dependencies {
     // modCompileOnly(group: "local", name: "filename", version: "fileversion")
     modCompileOnly(group: "local", name: "CodeChickenCore", version: "0.8.1.6")
     modCompileOnly(group: "local", name: "NotEnoughItems", version: "1.4.7.4")
+    modCompileOnly(group: "local", name: "TreeCapitator", version: "1.4.6-r07")
 }
 
 base {

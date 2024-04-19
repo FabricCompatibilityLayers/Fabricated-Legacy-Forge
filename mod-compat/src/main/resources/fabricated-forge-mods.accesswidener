@@ -26,3 +26,4 @@ accessible method net/minecraft/inventory/slot/class_1019 <init> (Lnet/minecraft
 accessible field net/minecraft/world/chunk/ServerChunkProvider chunks Ljava/util/List;
 accessible field net/minecraft/inventory/CraftingInventory stacks [Lnet/minecraft/item/ItemStack;
 accessible field net/minecraft/client/Minecraft ticker Lnet/minecraft/client/render/ClientTickTracker;
+accessible field net/minecraft/nbt/NbtCompound data Ljava/util/Map;

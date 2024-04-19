@@ -15,7 +15,8 @@
     "codechickencore.TweakTransformerMixin",
     "nei.FurnaceRecipeHandlerMixin",
     "nei.NEITransformerMixin",
-    "nei.TMIUninstallerMixin"
+    "nei.TMIUninstallerMixin",
+    "treecapitator.ItemInWorldManagerTransformerMixin"
   ],
   "client": [
     "nei.HandledScreenMixin"
