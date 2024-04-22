@@ -1,4 +1,4 @@
-package fr.catcore.fabricatedforge.compat;
+package fr.catcore.fabricatedforge.compat.asm;
 
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.ClassReader;

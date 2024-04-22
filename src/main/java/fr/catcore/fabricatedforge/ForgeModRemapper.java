@@ -146,7 +146,7 @@ public class ForgeModRemapper implements ModRemapper {
 
     @Override
     public void afterRemap() {
-
+        System.out.println(System.getProperty("java.security.properties"));
     }
 
     static {
