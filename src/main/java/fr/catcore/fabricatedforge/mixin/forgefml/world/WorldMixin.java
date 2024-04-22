@@ -7,6 +7,8 @@ import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import fr.catcore.fabricatedforge.mixininterface.IWorld;
 import fr.catcore.modremapperapi.api.mixin.Public;
+import fr.catcore.modremapperapi.api.mixin.ReplaceConstructor;
+import fr.catcore.modremapperapi.api.mixin.SuperConstructor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -23,6 +25,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.village.VillageState;
+import net.minecraft.village.ZombieSiegeManager;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
@@ -141,6 +144,21 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Shadow public boolean isClient;
     @Mutable
     @Shadow @Final public VillageState villageState;
+    @Mutable
+    @Shadow @Final protected SaveHandler saveHandler;
+    @Shadow public boolean immediateUpdates;
+    @Shadow public int ambientDarkness;
+    @Shadow protected int lcgBlockSeed;
+    @Mutable
+    @Shadow @Final protected int unusedIncrement;
+    @Shadow public boolean field_4555;
+    @Mutable
+    @Shadow @Final protected ZombieSiegeManager zombieSiegeManager;
+    @Mutable
+    @Shadow @Final private Vec3dPool vectorPool;
+    @Mutable
+    @Shadow @Final private Calendar calender;
+    @Shadow private ArrayList field_4539;
     @Public
     private static double MAX_ENTITY_RADIUS = ReflectedWorld.MAX_ENTITY_RADIUS;
 
@@ -169,10 +187,46 @@ public abstract class WorldMixin implements BlockView, IWorld {
         return this.dimension.biomeSource.method_3853(par1, par2);
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/world/SaveHandler;Ljava/lang/String;Lnet/minecraft/world/dimension/Dimension;Lnet/minecraft/world/level/LevelInfo;Lnet/minecraft/util/profiler/Profiler;)V", at = @At("RETURN"))
-    private void moveStateManager(SaveHandler string, String dimension, Dimension levelInfo, LevelInfo profiler, Profiler par5, CallbackInfo ci) {
-        this.perWorldStorage = new PersistentStateManager((SaveHandler)null);;
-        this.persistentStateManager = null;
+    @SuperConstructor
+    private void superCtr() {}
+
+    @Environment(EnvType.CLIENT)
+    @ReplaceConstructor
+    public void clientCtr(SaveHandler par1ISaveHandler, String par2Str, Dimension par3WorldProvider, LevelInfo par4WorldSettings, Profiler par5Profiler) {
+        superCtr();
+        this.immediateUpdates = false;
+        this.loadedEntities = new ArrayList<>();
+        this.unloadedEntities = new ArrayList<>();
+        this.blockEntities = new ArrayList<>();
+        this.pendingBlockEntities = new ArrayList<>();
+        this.unloadedBlockEntities = new ArrayList<>();
+        this.playerEntities = new ArrayList<>();
+        this.entities = new ArrayList<>();
+        this.cloudColor = 16777215L;
+        this.ambientDarkness = 0;
+        this.lcgBlockSeed = (new Random()).nextInt();
+        this.unusedIncrement = 1013904223;
+        this.field_4553 = 0;
+        this.field_4555 = false;
+        this.random = new Random();
+        this.eventListeners = new ArrayList<>();
+        this.zombieSiegeManager = new ZombieSiegeManager((World)(Object) this);
+        this.vectorPool = new Vec3dPool(300, 2000);
+        this.calender = Calendar.getInstance();
+        this.field_4539 = new ArrayList<>();
+        this.spawnAnimals = true;
+        this.spawnMonsters = true;
+        this.field_4530 = new HashSet<>();
+        // Beginning of Forge ctr
+        this.field_4534 = this.random.nextInt(12000);
+        this.updateLightBlocks = new int['耀'];
+        this.field_4535 = new ArrayList<>();
+        this.isClient = false;
+        this.saveHandler = par1ISaveHandler;
+        this.profiler = par5Profiler;
+        this.levelProperties = new LevelProperties(par4WorldSettings, par2Str);
+        this.dimension = par3WorldProvider;
+        this.perWorldStorage = new PersistentStateManager((SaveHandler)null);
     }
 
     @Environment(EnvType.CLIENT)
