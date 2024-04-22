@@ -17,6 +17,7 @@ import com.google.common.collect.ImmutableList;
 import cpw.mods.fml.common.asm.transformers.AccessTransformer;
 import cpw.mods.fml.common.modloader.BaseModProxy;
 import cpw.mods.fml.relauncher.RelaunchClassLoader;
+import fr.catcore.fabricatedforge.Constants;
 import net.fabricmc.loader.impl.FabricLoaderImpl;
 import net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
@@ -28,11 +29,10 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class ModClassLoader extends URLClassLoader {
     private static final List<String> STANDARD_LIBRARIES = ImmutableList.of("jinput.jar", "lwjgl.jar", "lwjgl_util.jar");
@@ -98,6 +98,37 @@ public class ModClassLoader extends URLClassLoader {
      * @return The "parent source" files array.
      */
     public File[] getParentSources() {
+        ClassLoader loader = this.getClass().getClassLoader();
+
+        while (loader != null && !(loader instanceof URLClassLoader)) {
+            loader = loader.getParent();
+        }
+
+        if (loader != null) {
+            URL[] urls = ((URLClassLoader) loader).getURLs();
+            List<File> files = new ArrayList<>();
+
+            try {
+                for (URL url : urls) {
+                    files.add(new File(url.toURI()));
+                }
+
+                files = files.stream()
+                        .filter(file -> Objects.equals(
+                                file.getParentFile(),
+                                Constants.COREMODS_FOLDER)
+                        ).collect(Collectors.toList());
+
+                files.addAll(FabricLauncherBase.getLauncher().getClassPath().stream().map(Path::toFile).collect(Collectors.toList()));
+
+                return files.toArray(new File[0]);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.err.println("Failed to get sources from Knot classloader");
+
         return new File[] { getParentSource() };
     }
 
