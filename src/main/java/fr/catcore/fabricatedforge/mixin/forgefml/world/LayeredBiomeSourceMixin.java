@@ -1,6 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world;
 
-import fr.catcore.fabricatedforge.forged.ReflectionUtils;
+import fr.catcore.fabricatedforge.forged.reflection.ReflectedLayeredBiomeSource;
 import fr.catcore.fabricatedforge.mixininterface.ILayeredBiomeSource;
 import net.minecraft.world.LayeredBiomeSource;
 import net.minecraft.world.biome.Biome;
@@ -24,7 +24,7 @@ public class LayeredBiomeSourceMixin implements ILayeredBiomeSource {
     @Inject(method = "<init>()V", at = @At("RETURN"))
     private void replaceDefaultBiomes(CallbackInfo ci) {
         this.biomes.clear();
-        this.biomes.addAll(ReflectionUtils.LayeredBiomeSource_allowedBiomes);
+        this.biomes.addAll(ReflectedLayeredBiomeSource.allowedBiomes);
     }
 
     @Redirect(method = "<init>(JLnet/minecraft/world/level/LevelGeneratorType;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/biome/layer/Layer;method_146(JLnet/minecraft/world/level/LevelGeneratorType;)[Lnet/minecraft/world/biome/layer/Layer;"))

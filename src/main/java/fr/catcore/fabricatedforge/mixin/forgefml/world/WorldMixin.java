@@ -1,11 +1,11 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world;
 
 import com.google.common.collect.ImmutableSetMultimap;
+import fr.catcore.fabricatedforge.forged.reflection.ReflectedWorld;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import fr.catcore.fabricatedforge.mixininterface.IWorld;
-import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import fr.catcore.modremapperapi.api.mixin.Public;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -142,7 +142,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Mutable
     @Shadow @Final public VillageState villageState;
     @Public
-    private static double MAX_ENTITY_RADIUS = ReflectionUtils.World_MAX_ENTITY_RADIUS;
+    private static double MAX_ENTITY_RADIUS = ReflectedWorld.MAX_ENTITY_RADIUS;
 
     private static PersistentStateManager s_mapStorage;
     private static SaveHandler s_savehandler;

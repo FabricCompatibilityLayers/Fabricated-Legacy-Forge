@@ -6,5 +6,7 @@ import net.minecraft.item.ItemStack;
 import java.util.Random;
 
 public interface IWeightedRandomChestContent {
-    ItemStack[] generateChestContent(Random random, Inventory newInventory);
+    default ItemStack[] generateChestContent(Random random, Inventory newInventory) {
+        return null;
+    }
 }

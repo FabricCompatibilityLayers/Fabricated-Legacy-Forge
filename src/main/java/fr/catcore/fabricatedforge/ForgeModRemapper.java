@@ -66,11 +66,11 @@ public class ForgeModRemapper implements ModRemapper {
 
         infos.registerMethodFieldIns(
                 new VisitorInfos.MethodNamed("net/minecraft/class_9", "allowedBiomes"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "StrongholdStructure_allowedBiomes")
+                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/reflection/ReflectedStrongholdStructure", "allowedBiomes")
         );
         infos.registerMethodFieldIns(
                 new VisitorInfos.MethodNamed("net/minecraft/class_1175", "allowedBiomes"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "LayeredBiomeSource_allowedBiomes")
+                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/reflection/ReflectedLayeredBiomeSource", "allowedBiomes")
         );
 
         infos.registerMethodFieldIns(
