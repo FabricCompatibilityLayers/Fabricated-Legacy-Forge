@@ -11,6 +11,7 @@
     "codechickencore.ClassOverriderMixin",
     "codechickencore.DelegatedTransformerMixin",
     "codechickencore.DescriptorMappingMixin",
+    "immibiscore.ImmibisCoreMixin",
     "nei.FurnaceRecipeHandlerMixin",
     "nei.TMIUninstallerMixin",
     "treecapitator.ItemInWorldManagerTransformerMixin"
