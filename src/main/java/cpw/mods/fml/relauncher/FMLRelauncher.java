@@ -170,22 +170,6 @@ public class FMLRelauncher {
     }
 
     private File computeExistingClientHome() {
-//        Class<? super Object> mcMaster = ReflectionHelper.getClass(this.getClass().getClassLoader(), new String[]{"net.minecraft.client.Minecraft"});
-//        String str = System.getProperty("minecraft.applet.TargetDirectory");
-//        if (str != null) {
-//            str = str.replace('/', File.separatorChar);
-//            ReflectionHelper.setPrivateValue(mcMaster, null, new File(str), new String[]{"minecraftDir", "an", "minecraftDir"});
-//        }
-//
-//        Method setupHome = ReflectionHelper.findMethod(mcMaster, null, new String[]{"getMinecraftDir", "getMinecraftDir", "b"}, new Class[0]);
-//
-//        try {
-//            setupHome.invoke(null);
-//        } catch (Exception var5) {
-//        }
-//
-//        return (File)ReflectionHelper.getPrivateValue(mcMaster, null, new String[]{"minecraftDir", "an", "minecraftDir"});
-
         return FabricLoader.getInstance().getGameDir().toFile();
     }
 

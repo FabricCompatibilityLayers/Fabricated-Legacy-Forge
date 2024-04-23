@@ -37,7 +37,12 @@ public class ExtraRemapper implements ModRemapper {
     @Override
     public void afterRemap() {
         Mixins.addConfiguration("fabricated-forge.mods.mixins.json");
-        Utils.TRANSFORMER_EXCLUSIONS.add("fr.catcore.fabricatedforge.compat.asm.BetterClassWriter");
+        Utils.TRANSFORMER_EXCLUSIONS.add("fr.catcore.");
+        try {
+            Class.forName("fr.catcore.fabricatedforge.compat.asm.RemapAwareClass");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         ClassTransformer.registerPostTransformer(new ASMRemapperTransformer());
     }
 }
