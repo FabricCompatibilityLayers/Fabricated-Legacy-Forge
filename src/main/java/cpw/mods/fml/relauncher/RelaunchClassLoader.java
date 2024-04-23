@@ -24,6 +24,7 @@ import java.util.jar.Manifest;
 import cpw.mods.fml.common.FMLLog;
 import fr.catcore.fabricatedforge.util.Utils;
 import fr.catcore.modremapperapi.ClassTransformer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import net.fabricmc.loader.impl.util.UrlUtil;
 
@@ -70,7 +71,7 @@ public class RelaunchClassLoader extends URLClassLoader {
     private static final boolean DEBUG_CLASSLOADING = Boolean.parseBoolean(System.getProperty("fml.debugClassLoading", "false"));
 
     public RelaunchClassLoader() {
-        super(new URL[0], FabricLauncherBase.getLauncher().getTargetClassLoader());
+        super(new URL[0], FMLRelauncher.class.getClassLoader());
         this.sources = new ArrayList<>();
         this.parent = this.getClass().getClassLoader();
         this.cachedClasses = new HashMap<>(1000);
@@ -271,7 +272,7 @@ public class RelaunchClassLoader extends URLClassLoader {
 
         Object i$;
         try {
-            URL classResource = this.findResource(name.replace('.', '/').concat(".class"));
+            URL classResource = ((URLClassLoader)this.parent.getParent()).findResource(name.replace('.', '/').concat(".class"));
             if (classResource != null) {
                 classStream = classResource.openStream();
                 if (DEBUG_CLASSLOADING) {

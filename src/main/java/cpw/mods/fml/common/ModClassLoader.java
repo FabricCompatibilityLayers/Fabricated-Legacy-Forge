@@ -113,14 +113,6 @@ public class ModClassLoader extends URLClassLoader {
                     files.add(new File(url.toURI()));
                 }
 
-                files = files.stream()
-                        .filter(file -> Objects.equals(
-                                file.getParentFile(),
-                                Constants.COREMODS_FOLDER)
-                        ).collect(Collectors.toList());
-
-                files.addAll(FabricLauncherBase.getLauncher().getClassPath().stream().map(Path::toFile).collect(Collectors.toList()));
-
                 return files.toArray(new File[0]);
             } catch (URISyntaxException e) {
                 e.printStackTrace();
