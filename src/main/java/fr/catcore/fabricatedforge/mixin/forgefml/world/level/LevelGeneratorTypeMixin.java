@@ -1,8 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.level;
 
 import com.google.common.collect.Sets;
+import fr.catcore.fabricatedforge.forged.reflection.ReflectedLevelGeneratorType;
 import fr.catcore.fabricatedforge.mixininterface.ILevelGeneratorType;
-import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.minecraft.world.LayeredBiomeSource;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -34,10 +34,10 @@ public class LevelGeneratorTypeMixin implements ILevelGeneratorType {
     private void fmlCtr(int par1, String par2Str, int par3, CallbackInfo ci) {
         switch (par1) {
             case 8:
-                this.biomesForWorldType = ReflectionUtils.LevelGeneratorType_base11Biomes;
+                this.biomesForWorldType = ReflectedLevelGeneratorType.base11Biomes;
                 break;
             default:
-                this.biomesForWorldType = ReflectionUtils.LevelGeneratorType_base12Biomes;
+                this.biomesForWorldType = ReflectedLevelGeneratorType.base12Biomes;
         }
     }
 

@@ -59,8 +59,7 @@ allprojects {
 		implementation(group: "local", name: "guava", version: "12.0.1")
 
 		modImplementation(legacy.apiModule("legacy-fabric-logger-api-v1", "1.9.0+1.8.9"))
-
-	//	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
+		implementation("com.github.thecatcore.CursedMixinExtensions:fabric:1.0.0")
 	}
 
 	base {
@@ -111,6 +110,8 @@ loom {
 dependencies {
 	include(group: "local", name: "argo", version: "2.25")
 	include(group: "local", name: "guava", version: "12.0.1")
+
+	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
 }
 
 subprojects {

@@ -84,7 +84,7 @@ public class ReflectionHelper {
             try
             {
                 className = MappingUtils.mapClass(className);
-                return (Class<? super Object>) Class.forName(className, false, ReflectionHelper.class.getClassLoader());
+                return (Class<? super Object>) Class.forName(className, false, loader);
             }
             catch (Exception e)
             {

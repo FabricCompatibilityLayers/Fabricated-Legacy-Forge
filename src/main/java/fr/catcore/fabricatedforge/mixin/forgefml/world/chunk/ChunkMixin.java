@@ -1,8 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 
+import fr.catcore.fabricatedforge.forged.reflection.ReflectedWorld;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
-import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import fr.catcore.modremapperapi.api.mixin.NewConstructor;
 import fr.catcore.modremapperapi.api.mixin.ShadowConstructor;
 import net.fabricmc.api.EnvType;
@@ -525,8 +525,8 @@ public abstract class ChunkMixin implements IChunk {
      */
     @Overwrite
     public void method_3889(Entity par1Entity, Box par2AxisAlignedBB, List par3List) {
-        int var4 = MathHelper.floor((par2AxisAlignedBB.minY - ReflectionUtils.World_MAX_ENTITY_RADIUS) / 16.0);
-        int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + ReflectionUtils.World_MAX_ENTITY_RADIUS) / 16.0);
+        int var4 = MathHelper.floor((par2AxisAlignedBB.minY - ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
         if (var4 < 0) {
             var4 = 0;
         }
@@ -575,8 +575,8 @@ public abstract class ChunkMixin implements IChunk {
      */
     @Overwrite
     public void method_3886(Class par1Class, Box par2AxisAlignedBB, List par3List) {
-        int var4 = MathHelper.floor((par2AxisAlignedBB.minY - ReflectionUtils.World_MAX_ENTITY_RADIUS) / 16.0);
-        int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + ReflectionUtils.World_MAX_ENTITY_RADIUS) / 16.0);
+        int var4 = MathHelper.floor((par2AxisAlignedBB.minY - ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var5 = MathHelper.floor((par2AxisAlignedBB.maxY + ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
         if (var4 < 0) {
             var4 = 0;
         } else if (var4 >= this.entities.length) {

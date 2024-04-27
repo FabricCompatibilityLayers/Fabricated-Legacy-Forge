@@ -34,6 +34,7 @@ public class FabricModContainer implements ModContainer {
         this.modMetadata.description = this.container.getMetadata().getDescription();
         this.modMetadata.name = this.container.getMetadata().getName();
         this.modMetadata.logoFile = this.container.getMetadata().getIconPath(1).orElse("");
+        System.out.println(this.modMetadata.logoFile);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class FabricModContainer implements ModContainer {
 
     @Override
     public File getSource() {
-        return this.container.getRootPath().toFile();
+        return this.container.getRootPaths().get(0).toFile();
     }
 
     @Override

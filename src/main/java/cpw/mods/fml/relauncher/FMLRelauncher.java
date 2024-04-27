@@ -14,6 +14,7 @@
 package cpw.mods.fml.relauncher;
 
 import fr.catcore.fabricatedforge.mixininterface.IMinecraftApplet;
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.impl.game.minecraft.applet.AppletLauncher;
 
 import javax.swing.*;
@@ -153,21 +154,7 @@ public class FMLRelauncher {
     }
 
     private File computeExistingClientHome() {
-        Class<? super Object> mcMaster = ReflectionHelper.getClass(this.getClass().getClassLoader(), "net.minecraft.client.Minecraft");
-        String str = System.getProperty("minecraft.applet.TargetDirectory");
-        if (str != null) {
-            str = str.replace('/', File.separatorChar);
-            ReflectionHelper.setPrivateValue(mcMaster, (Object) null, new File(str), "gameFolder", "am");
-        }
-
-        Method setupHome = ReflectionHelper.findMethod(mcMaster, (Object) null, new String[]{"getGameFolder", "b"});
-
-        try {
-            setupHome.invoke((Object) null);
-        } catch (Exception var5) {
-        }
-
-        return (File) ReflectionHelper.getPrivateValue(mcMaster, (Object) null, new String[]{"gameFolder", "am"});
+        return FabricLoader.getInstance().getGameDir().toFile();
     }
 
     public static void appletEntry(Applet minecraftApplet) {
