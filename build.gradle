@@ -112,7 +112,7 @@ dependencies {
 	include(group: "local", name: "guava", version: "12.0.1")
     include(group: "local", name: "bcprov-jdk15on", version: "147")
 
-//	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
+	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
 }
 
 subprojects {

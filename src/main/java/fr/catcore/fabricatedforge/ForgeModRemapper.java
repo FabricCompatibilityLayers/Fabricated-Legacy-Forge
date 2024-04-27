@@ -1,20 +1,16 @@
 package fr.catcore.fabricatedforge;
 
-import fr.catcore.modremapperapi.api.ModRemapper;
-import fr.catcore.modremapperapi.api.RemapLibrary;
-import fr.catcore.modremapperapi.remapping.RemapUtil;
-import fr.catcore.modremapperapi.remapping.VisitorInfos;
-import net.fabricmc.loader.api.FabricLoader;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.MappingBuilder;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.ModRemapper;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.VisitorInfos;
+import net.fabricmc.api.EnvType;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 public class ForgeModRemapper implements ModRemapper {
 
     private static final BArrayList FORGE_EXCLUDED = new BArrayList();
-    private static final Map<String, fr.catcore.modremapperapi.utils.BArrayList<String>> EXCLUDED = new HashMap<>();
     
     @Override
     public String[] getJarFolders() {
@@ -22,63 +18,176 @@ public class ForgeModRemapper implements ModRemapper {
     }
 
     @Override
-    public RemapLibrary[] getRemapLibraries() {
-        return new RemapLibrary[] {
-                new RemapLibrary(
-                        Constants.FORGE_URL,
-                        FORGE_EXCLUDED,
-                        "forge.zip"
-                )
-        };
+    public void addRemapLibraries(List<io.github.fabriccompatibiltylayers.modremappingapi.api.v1.RemapLibrary> list, EnvType envType) {
+        list.add(new io.github.fabriccompatibiltylayers.modremappingapi.api.v1.RemapLibrary(
+                Constants.FORGE_URL,
+                FORGE_EXCLUDED,
+                "forge.zip"
+        ));
     }
 
     @Override
-    public Map<String, List<String>> getExclusions() {
-        return new HashMap<>(EXCLUDED);
-    }
-
-    @Override
-    public void getMappingList(RemapUtil.MappingList mappings) {
+    public void registerMappings(MappingBuilder mappingBuilder) {
         // ModLoader mappings
-        mappings.add("BaseMod", "net/minecraft/BaseMod");
-        mappings.add("EntityRendererProxy", "net/minecraft/EntityRendererProxy");
-        mappings.add("FMLRendererAccessLibrary", "net/minecraft/FMLRendererAccessLibrary");
-        mappings.add("MLProp", "net/minecraft/MLProp");
-        mappings.add("ModLoader", "net/minecraft/ModLoader");
-        mappings.add("ModTextureAnimation", "net/minecraft/ModTextureAnimation");
-        mappings.add("ModTextureStatic", "net/minecraft/ModTextureStatic");
-        mappings.add("TradeEntry", "net/minecraft/TradeEntry");
+        mappingBuilder.addMapping("BaseMod", "net/minecraft/BaseMod");
+        mappingBuilder.addMapping("EntityRendererProxy", "net/minecraft/EntityRendererProxy");
+        mappingBuilder.addMapping("FMLRendererAccessLibrary", "net/minecraft/FMLRendererAccessLibrary");
+        mappingBuilder.addMapping("MLProp", "net/minecraft/MLProp");
+        mappingBuilder.addMapping("ModLoader", "net/minecraft/ModLoader");
+        mappingBuilder.addMapping("ModTextureAnimation", "net/minecraft/ModTextureAnimation");
+        mappingBuilder.addMapping("ModTextureStatic", "net/minecraft/ModTextureStatic");
+        mappingBuilder.addMapping("TradeEntry", "net/minecraft/TradeEntry");
     }
 
     @Override
-    public void registerVisitors(VisitorInfos infos) {
-        infos.registerMethodMethodIns(
-                new VisitorInfos.MethodNamed("net/minecraft/class_197", "setBurnProperties"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "Block_setBurnProperties")
+    public void registerPreVisitors(io.github.fabriccompatibiltylayers.modremappingapi.api.v1.VisitorInfos visitorInfos) {
+
+    }
+
+    @Override
+    public void registerPostVisitors(io.github.fabriccompatibiltylayers.modremappingapi.api.v1.VisitorInfos visitorInfos) {
+        // Reflection Remappers
+        visitorInfos.registerInstantiation(
+                "org/objectweb/asm/tree/FieldInsnNode",
+                "fr/catcore/fabricatedforge/compat/asm/BetterFieldInsnNode"
+        );
+        visitorInfos.registerInstantiation(
+                "org/objectweb/asm/tree/MethodInsnNode",
+                "fr/catcore/fabricatedforge/compat/asm/BetterMethodInsnNode"
+        );
+        visitorInfos.registerInstantiation(
+                "org/objectweb/asm/ClassWriter",
+                "fr/catcore/fabricatedforge/compat/asm/BetterClassWriter"
         );
 
-        infos.registerMethodFieldIns(
-                new VisitorInfos.MethodNamed("net/minecraft/class_9", "allowedBiomes"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/reflection/ReflectedStrongholdStructure", "allowedBiomes")
+        visitorInfos.registerMethodInvocation(
+                "java/lang/Class",
+                "getDeclaredMethod",
+                "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/compat/asm/RemapAwareClass",
+                        "getDeclaredMethod",
+                        "(Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;",
+                        true
+                )
         );
-        infos.registerMethodFieldIns(
-                new VisitorInfos.MethodNamed("net/minecraft/class_1175", "allowedBiomes"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/reflection/ReflectedLayeredBiomeSource", "allowedBiomes")
+        visitorInfos.registerMethodInvocation(
+                "java/lang/Class",
+                "getDeclaredField",
+                "(Ljava/lang/String;)Ljava/lang/reflect/Field;",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/compat/asm/RemapAwareClass",
+                        "getDeclaredField",
+                        "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/reflect/Field;",
+                        true
+                )
+        );
+        visitorInfos.registerMethodInvocation(
+                "java/lang/Class",
+                "getMethod",
+                "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/compat/asm/RemapAwareClass",
+                        "getMethod",
+                        "(Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;",
+                        true
+                )
+        );
+        visitorInfos.registerMethodInvocation(
+                "java/lang/Class",
+                "getField",
+                "(Ljava/lang/String;)Ljava/lang/reflect/Field;",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/compat/asm/RemapAwareClass",
+                        "getField",
+                        "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/reflect/Field;",
+                        true
+                )
+        );
+        visitorInfos.registerMethodInvocation(
+                "java/lang/Class",
+                "forName",
+                "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/compat/asm/RemapAwareClass",
+                        "forName",
+                        "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;",
+                        true
+                )
+        );
+        visitorInfos.registerMethodInvocation(
+                "java/lang/Class",
+                "forName",
+                "(Ljava/lang/String;)Ljava/lang/Class;",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/compat/asm/RemapAwareClass",
+                        "forName",
+                        "(Ljava/lang/String;)Ljava/lang/Class;",
+                        true
+                )
         );
 
-        infos.registerMethodFieldIns(
-                new VisitorInfos.MethodNamed("net/minecraft/class_570", "NAME_TAG_RANGE"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "NAME_TAG_RANGE")
-        );
-        infos.registerMethodFieldIns(
-                new VisitorInfos.MethodNamed("net/minecraft/class_570", "NAME_TAG_RANGE_SNEAK"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "NAME_TAG_RANGE_SNEAK")
+        // Forge added fields and methods
+        visitorInfos.registerMethodInvocation(
+                "net/minecraft/class_197",
+                "setBurnProperties",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/ReflectionUtils",
+                        "Block_setBurnProperties",
+                        null
+                )
         );
 
-
-        infos.registerMethodFieldIns(
-                new VisitorInfos.MethodNamed("net/minecraft/class_988", "PERSISTED_NBT_TAG"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "PERSISTED_NBT_TAG")
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_9",
+                "allowedBiomes",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedStrongholdStructure",
+                        "allowedBiomes",
+                        null
+                )
+        );
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_1175",
+                "allowedBiomes",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedLayeredBiomeSource",
+                        "allowedBiomes",
+                        null
+                )
+        );
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_570",
+                "NAME_TAG_RANGE",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/ReflectionUtils",
+                        "NAME_TAG_RANGE",
+                        null
+                )
+        );
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_570",
+                "NAME_TAG_RANGE_SNEAK",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/ReflectionUtils",
+                        "NAME_TAG_RANGE_SNEAK",
+                        null
+                )
+        );
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_988",
+                "PERSISTED_NBT_TAG",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/ReflectionUtils",
+                        "PERSISTED_NBT_TAG",
+                        null
+                )
         );
     }
 
@@ -305,18 +414,6 @@ public class ForgeModRemapper implements ModRemapper {
                 .put("zc")
                 .put("zd")
                 .put("zz");
-    }
-
-    public static class Entry {
-        public final String name;
-        public final String descriptor;
-        public final String owner;
-
-        public Entry(String name, String descriptor, String owner) {
-            this.name = name;
-            this.descriptor = descriptor;
-            this.owner = owner;
-        }
     }
 
     public static class BArrayList extends fr.catcore.modremapperapi.utils.BArrayList<String> {
