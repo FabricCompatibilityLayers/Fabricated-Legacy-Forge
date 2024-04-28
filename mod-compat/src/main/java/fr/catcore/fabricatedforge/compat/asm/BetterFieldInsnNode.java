@@ -25,7 +25,7 @@ public class BetterFieldInsnNode extends FieldInsnNode {
     }
 
     private BetterFieldInsnNode(int code, String owner, MappingUtils.ClassMember classMember) {
-        super(code, owner, classMember.name, Constants.mapTypeDescriptor(classMember.desc));
+        super(code, owner, classMember.name, Constants.mapDescriptor(classMember.desc));
     }
 
     @Override

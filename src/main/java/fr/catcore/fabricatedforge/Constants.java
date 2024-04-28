@@ -45,53 +45,7 @@ public class Constants {
         return MappingUtils.mapFieldFromRemappedClass(owner.replace(".", "/"), fieldName, fieldDesc);
     }
 
-    public static String mapMethodDescriptor(String desc) {
-        Type methodDescType = Type.getType(desc);
-
-        Type[] argTypes = methodDescType.getArgumentTypes();
-
-        Type returnType = null;
-
-        try {
-            returnType = Type.getReturnType(desc);
-        } catch (StringIndexOutOfBoundsException e) {}
-
-        StringBuilder stringBuilder = new StringBuilder();
-
-        stringBuilder.append("(");
-
-        for (Type type : argTypes) {
-            stringBuilder.append(mapTypeDescriptor(type.getDescriptor()));
-        }
-
-        stringBuilder.append(")");
-
-        if (returnType != null) stringBuilder.append(mapTypeDescriptor(returnType.getDescriptor()));
-
-        return stringBuilder.toString();
-    }
-
-    public static String mapTypeDescriptor(String desc) {
-        Type type = Type.getType(desc);
-
-        if (type.getSort() == Type.OBJECT || type.getSort() == 12) {
-            String className = type.getClassName();
-
-            String newClassName = mapClass(className);
-
-            if (!Objects.equals(className, newClassName)) {
-                type = Type.getType("L" + newClassName.replace(".", "/") + ";");
-            }
-        } else if (type.getSort() == Type.ARRAY) {
-            StringBuilder arrayType = new StringBuilder(mapTypeDescriptor(type.getElementType().getDescriptor()));
-
-            for (int i = 1; i < type.getDimensions() + 1; i++) {
-                arrayType.insert(0, "[");
-            }
-
-            type = Type.getType(arrayType.toString());
-        }
-
-        return type.getDescriptor();
+    public static String mapDescriptor(String desc) {
+        return MappingUtils.mapDescriptor(desc);
     }
 }

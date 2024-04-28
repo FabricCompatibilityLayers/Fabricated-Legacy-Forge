@@ -19,7 +19,7 @@ public class BetterMethodInsnNode extends MethodInsnNode implements Opcodes {
     }
 
     private BetterMethodInsnNode(int opcode, String owner, MappingUtils.ClassMember member, boolean isInterface) {
-        super(opcode, owner, member.name, Constants.mapMethodDescriptor(member.desc), isInterface);
+        super(opcode, owner, member.name, Constants.mapDescriptor(member.desc), isInterface);
     }
 
     @Override

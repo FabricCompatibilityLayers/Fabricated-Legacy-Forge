@@ -35,6 +35,6 @@ public class MethodMappingMixin {
         }
         MappingUtils.ClassMember pair = Constants.mapMethodFromRemappedClass(this.owner, this.name, this.desc);
         this.name = pair.name;
-        this.desc = Constants.mapMethodDescriptor(pair.desc);
+        this.desc = Constants.mapDescriptor(pair.desc);
     }
 }

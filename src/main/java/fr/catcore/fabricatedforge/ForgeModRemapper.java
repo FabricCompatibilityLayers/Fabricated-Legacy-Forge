@@ -208,12 +208,6 @@ public class ForgeModRemapper implements ModRemapper {
                         null
                 )
         );
-
-//        // Mystcraft
-//        infos.registerMethodFieldIns(
-//                new VisitorInfos.MethodNamed("xcompwiz/mystcraft/Mystcraft", "registeredDims"),
-//                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/compat/MystcraftCompat", "registeredDims")
-//        );
     }
 
     @Override
