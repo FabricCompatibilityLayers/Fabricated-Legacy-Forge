@@ -145,6 +145,8 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Mutable
     @Shadow @Final private Vec3dPool vectorPool;
     @Shadow public PersistentStateManager persistentStateManager;
+    @Mutable
+    @Shadow @Final private Calendar calender;
     @Unique
     private static PersistentStateManager s_mapStorage;
     private static SaveHandler s_savehandler;
@@ -196,6 +198,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.eventListeners = new ArrayList<>();
         this.zombieSiegeManager = new ZombieSiegeManager((World)(Object) this);
         this.vectorPool = new Vec3dPool(300, 2000);
+        this.calender = Calendar.getInstance();
         this.field_4539 = new ArrayList<>();
         this.spawnAnimals = true;
         this.spawnMonsters = true;
