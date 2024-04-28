@@ -10,10 +10,8 @@ import cpw.mods.fml.common.versioning.VersionRange;
 import net.fabricmc.loader.api.metadata.Person;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.nio.file.Path;
+import java.util.*;
 
 public class FabricModContainer implements ModContainer {
     private final net.fabricmc.loader.api.ModContainer container;
@@ -33,8 +31,15 @@ public class FabricModContainer implements ModContainer {
         this.modMetadata.url = this.container.getMetadata().getContact().get("url").orElse("");
         this.modMetadata.description = this.container.getMetadata().getDescription();
         this.modMetadata.name = this.container.getMetadata().getName();
-        this.modMetadata.logoFile = this.container.getMetadata().getIconPath(1).orElse("");
-        System.out.println(this.modMetadata.logoFile);
+        Optional<String> iconPathway = this.container.getMetadata().getIconPath(1);
+
+        if (iconPathway.isPresent()) {
+            Optional<Path> iconPath = this.container.findPath("/" + iconPathway.get());
+
+            if (iconPath.isPresent()) {
+                this.modMetadata.logoFile = "/" + iconPathway.get();
+            }
+        }
     }
 
     @Override
