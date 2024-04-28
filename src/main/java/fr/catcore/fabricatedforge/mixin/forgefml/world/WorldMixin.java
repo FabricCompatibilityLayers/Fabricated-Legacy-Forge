@@ -20,6 +20,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.*;
 import net.minecraft.util.profiler.Profiler;
 import net.minecraft.village.VillageState;
+import net.minecraft.village.ZombieSiegeManager;
 import net.minecraft.world.*;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
@@ -128,6 +129,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Shadow public boolean isClient;
     @Mutable
     @Shadow @Final public VillageState villageState;
+    @Mutable
     @Shadow @Final protected SaveHandler saveHandler;
     @Shadow protected int field_23088;
 
@@ -140,6 +142,9 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Mutable
     @Shadow @Final protected ZombieSiegeManager zombieSiegeManager;
     @Shadow private ArrayList field_4539;
+    @Mutable
+    @Shadow @Final private Vec3dPool vectorPool;
+    @Shadow public PersistentStateManager persistentStateManager;
     @Unique
     private static PersistentStateManager s_mapStorage;
     private static SaveHandler s_savehandler;
@@ -184,13 +189,13 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.ambientDarkness = 0;
         this.lcgBlockSeed = (new Random()).nextInt();
         this.unusedIncrement = 1013904223;
+        this.field_23088 = 0;
         this.field_4553 = 0;
-        this.field_4554 = 0;
         this.field_4555 = false;
         this.random = new Random();
         this.eventListeners = new ArrayList<>();
-        this.villageState = new VillageState((World)(Object) this);
         this.zombieSiegeManager = new ZombieSiegeManager((World)(Object) this);
+        this.vectorPool = new Vec3dPool(300, 2000);
         this.field_4539 = new ArrayList<>();
         this.spawnAnimals = true;
         this.spawnMonsters = true;
