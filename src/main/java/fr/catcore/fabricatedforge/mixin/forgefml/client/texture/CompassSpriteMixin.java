@@ -1,8 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.texture;
 
 import cpw.mods.fml.client.FMLTextureFX;
+import fr.catcore.cursedmixinextensions.annotations.ChangeSuperClass;
 import fr.catcore.fabricatedforge.mixininterface.IFMLTextureFX;
-import fr.catcore.modremapperapi.api.mixin.ChangeSuperClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.texture.CompassSprite;
 import net.minecraft.util.math.BlockPos;
