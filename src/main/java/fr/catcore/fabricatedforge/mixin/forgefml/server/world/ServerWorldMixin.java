@@ -22,6 +22,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ServerChunkProvider;
+import net.minecraft.world.chunk.ThreadedAnvilChunkStorage;
 import net.minecraft.world.dimension.Dimension;
 import net.minecraft.world.gen.feature.BonusChestFeature;
 import net.minecraft.world.level.LevelInfo;
@@ -49,6 +50,8 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
     @Shadow @Final private MinecraftServer server;
 
     @Shadow public abstract void resetIdleTimeout();
+
+    @Shadow public ServerChunkProvider chunkCache;
 
     public ServerWorldMixin(SaveHandler saveHandler, String string, Dimension dimension, LevelInfo levelInfo, Profiler profiler) {
         super(saveHandler, string, dimension, levelInfo, profiler);
@@ -355,5 +358,10 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
         this.saveHandler.saveWorld(this.levelProperties, this.server.getPlayerManager().getUserData());
         this.persistentStateManager.save();
         this.getPerWorldStorage().save();
+    }
+
+    @Override
+    public File getChunkSaveLocation() {
+        return ((ThreadedAnvilChunkStorage)((IServerChunkProvider)this.chunkCache).getChunkWriter()).saveLocation;
     }
 }
