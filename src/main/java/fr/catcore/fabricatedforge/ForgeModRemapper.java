@@ -1,6 +1,5 @@
 package fr.catcore.fabricatedforge;
 
-import fr.catcore.modremapperapi.remapping.VisitorInfos;
 import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.MappingBuilder;
 import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.ModRemapper;
 import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.RemapLibrary;
@@ -209,25 +208,45 @@ public class ForgeModRemapper implements ModRemapper {
                         null
                 )
         );
-
-
-
-        infos.registerMethodFieldIns(
-                new VisitorInfos.MethodNamed("net/minecraft/class_9", "allowedBiomes"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "StrongholdStructure_allowedBiomes")
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_9",
+                "allowedBiomes",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedStrongholdStructure",
+                        "allowedBiomes",
+                        null
+                )
         );
-        infos.registerMethodFieldIns(
-                new VisitorInfos.MethodNamed("net/minecraft/class_1175", "allowedBiomes"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "LayeredBiomeSource_allowedBiomes")
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_1175",
+                "allowedBiomes",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedLayeredBiomeSource",
+                        "allowedBiomes",
+                        null
+                )
         );
-
-        infos.registerMethodFieldIns(
-                new VisitorInfos.MethodNamed("net/minecraft/class_570", "NAME_TAG_RANGE"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "NAME_TAG_RANGE")
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_570",
+                "NAME_TAG_RANGE",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedPlayerEntityRenderer",
+                        "NAME_TAG_RANGE",
+                        null
+                )
         );
-        infos.registerMethodFieldIns(
-                new VisitorInfos.MethodNamed("net/minecraft/class_570", "NAME_TAG_RANGE_SNEAK"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "NAME_TAG_RANGE_SNEAK")
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_570",
+                "NAME_TAG_RANGE_SNEAK",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedPlayerEntityRenderer",
+                        "NAME_TAG_RANGE_SNEAK",
+                        null
+                )
         );
     }
 

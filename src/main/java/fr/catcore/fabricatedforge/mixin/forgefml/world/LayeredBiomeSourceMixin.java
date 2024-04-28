@@ -1,6 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world;
 
-import fr.catcore.fabricatedforge.forged.ReflectionUtils;
+import fr.catcore.fabricatedforge.forged.reflection.ReflectedLayeredBiomeSource;
 import net.minecraft.world.LayeredBiomeSource;
 import net.minecraft.world.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +18,6 @@ public class LayeredBiomeSourceMixin {
     @Inject(method = "<init>()V", at = @At("RETURN"))
     private void replaceDefaultBiomes(CallbackInfo ci) {
         this.biomes.clear();
-        this.biomes.addAll(ReflectionUtils.LayeredBiomeSource_allowedBiomes);
+        this.biomes.addAll(ReflectedLayeredBiomeSource.allowedBiomes);
     }
 }
