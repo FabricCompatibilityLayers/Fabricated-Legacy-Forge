@@ -29,8 +29,8 @@ import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import fr.catcore.fabricatedforge.forged.reflection.ReflectedLevelGeneratorType;
 import fr.catcore.fabricatedforge.mixininterface.IPacketListener;
-import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.minecraft.advancement.Achievement;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
@@ -156,7 +156,7 @@ public class ModLoader {
     }
 
     public static void addSpawn(Class<? extends MobEntity> entityClass, int weightedProb, int min, int max, EntityCategory spawnList) {
-        EntityRegistry.addSpawn(entityClass, weightedProb, min, max, spawnList, ReflectionUtils.LevelGeneratorType_base12Biomes);
+        EntityRegistry.addSpawn(entityClass, weightedProb, min, max, spawnList, ReflectedLevelGeneratorType.base12Biomes);
     }
 
     public static void addSpawn(Class<? extends MobEntity> entityClass, int weightedProb, int min, int max, EntityCategory spawnList, Biome... biomes) {
@@ -164,7 +164,7 @@ public class ModLoader {
     }
 
     public static void addSpawn(String entityName, int weightedProb, int min, int max, EntityCategory spawnList) {
-        EntityRegistry.addSpawn(entityName, weightedProb, min, max, spawnList, ReflectionUtils.LevelGeneratorType_base12Biomes);
+        EntityRegistry.addSpawn(entityName, weightedProb, min, max, spawnList, ReflectedLevelGeneratorType.base12Biomes);
     }
 
     public static void addSpawn(String entityName, int weightedProb, int min, int max, EntityCategory spawnList, Biome... biomes) {
@@ -324,7 +324,7 @@ public class ModLoader {
     }
 
     public static void removeSpawn(Class<? extends MobEntity> entityClass, EntityCategory spawnList) {
-        EntityRegistry.removeSpawn(entityClass, spawnList, ReflectionUtils.LevelGeneratorType_base12Biomes);
+        EntityRegistry.removeSpawn(entityClass, spawnList, ReflectedLevelGeneratorType.base12Biomes);
     }
 
     public static void removeSpawn(Class<? extends MobEntity> entityClass, EntityCategory spawnList, Biome... biomes) {
@@ -332,7 +332,7 @@ public class ModLoader {
     }
 
     public static void removeSpawn(String entityName, EntityCategory spawnList) {
-        EntityRegistry.removeSpawn(entityName, spawnList, ReflectionUtils.LevelGeneratorType_base12Biomes);
+        EntityRegistry.removeSpawn(entityName, spawnList, ReflectedLevelGeneratorType.base12Biomes);
     }
 
     public static void removeSpawn(String entityName, EntityCategory spawnList, Biome... biomes) {

@@ -26,10 +26,8 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.common.registry.IThrowableEntity;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import fr.catcore.fabricatedforge.forged.FabricModContainer;
+import fr.catcore.fabricatedforge.forged.reflection.Reflectedclass_469;
 import fr.catcore.fabricatedforge.mixininterface.Iclass_469;
-import fr.catcore.fabricatedforge.forged.ReflectionUtils;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_469;
 import net.minecraft.client.gui.screen.Screen;
@@ -275,10 +273,10 @@ public class FMLClientHandler implements IFMLSidedHandler {
     }
 
     public void setClientCompatibilityLevel(byte compatibilityLevel) {
-        ReflectionUtils.class_469_connectionCompatibilityLevel = compatibilityLevel;
+        Reflectedclass_469.setConnectionCompatibilityLevel(compatibilityLevel);
     }
 
     public byte getClientCompatibilityLevel() {
-        return ReflectionUtils.class_469_connectionCompatibilityLevel;
+        return Reflectedclass_469.getConnectionCompatibilityLevel();
     }
 }

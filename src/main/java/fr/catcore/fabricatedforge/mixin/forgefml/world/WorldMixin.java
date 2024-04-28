@@ -1,11 +1,13 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world;
 
 import com.google.common.collect.SetMultimap;
+import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
+import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
+import fr.catcore.fabricatedforge.forged.reflection.ReflectedWorld;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import fr.catcore.fabricatedforge.mixininterface.IWorld;
-import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -54,7 +56,6 @@ public abstract class WorldMixin implements BlockView, IWorld {
 
     @Shadow public abstract void calculateAmbientDarkness();
 
-    @Shadow public PersistentStateManager persistentStateManager;
     @Shadow protected LevelProperties levelProperties;
 
     @Shadow protected List<WorldEventListener> eventListeners;
@@ -129,9 +130,17 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Shadow @Final public VillageState villageState;
     @Shadow @Final protected SaveHandler saveHandler;
     @Shadow protected int field_23088;
-    @Unique // Public
-    private static double MAX_ENTITY_RADIUS = ReflectionUtils.World_MAX_ENTITY_RADIUS;
 
+    @Shadow public boolean immediateUpdates;
+    @Shadow public int ambientDarkness;
+    @Shadow protected int lcgBlockSeed;
+    @Mutable
+    @Shadow @Final protected int unusedIncrement;
+    @Shadow public boolean field_4555;
+    @Mutable
+    @Shadow @Final protected ZombieSiegeManager zombieSiegeManager;
+    @Shadow private ArrayList field_4539;
+    @Unique
     private static PersistentStateManager s_mapStorage;
     private static SaveHandler s_savehandler;
 
@@ -154,6 +163,48 @@ public abstract class WorldMixin implements BlockView, IWorld {
         }
 
         return this.dimension.biomeSource.method_3853(par1, par2);
+    }
+
+    @ShadowSuperConstructor
+    private void superCtr() {}
+
+    @Environment(EnvType.CLIENT)
+    @ReplaceConstructor
+    public void ctr(SaveHandler par1ISaveHandler, String par2Str, Dimension par3WorldProvider, LevelInfo par4WorldSettings, Profiler par5Profiler) {
+        superCtr();
+        this.immediateUpdates = false;
+        this.loadedEntities = new ArrayList<>();
+        this.unloadedEntities = new ArrayList<>();
+        this.blockEntities = new ArrayList<>();
+        this.pendingBlockEntities = new ArrayList<>();
+        this.unloadedBlockEntities = new ArrayList<>();
+        this.playerEntities = new ArrayList<>();
+        this.entities = new ArrayList<>();
+        this.cloudColor = 16777215L;
+        this.ambientDarkness = 0;
+        this.lcgBlockSeed = (new Random()).nextInt();
+        this.unusedIncrement = 1013904223;
+        this.field_4553 = 0;
+        this.field_4554 = 0;
+        this.field_4555 = false;
+        this.random = new Random();
+        this.eventListeners = new ArrayList<>();
+        this.villageState = new VillageState((World)(Object) this);
+        this.zombieSiegeManager = new ZombieSiegeManager((World)(Object) this);
+        this.field_4539 = new ArrayList<>();
+        this.spawnAnimals = true;
+        this.spawnMonsters = true;
+        this.field_4530 = new HashSet<>();
+
+        // Actual ctr
+        this.field_4534 = this.random.nextInt(12000);
+        this.updateLightBlocks = new int['耀'];
+        this.field_4535 = new ArrayList();
+        this.isClient = false;
+        this.saveHandler = par1ISaveHandler;
+        this.profiler = par5Profiler;
+        this.levelProperties = new LevelProperties(par4WorldSettings, par2Str);
+        this.dimension = par3WorldProvider;
     }
 
     @Environment(EnvType.CLIENT)
@@ -1357,10 +1408,10 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Overwrite
     public List getEntitiesIn(Entity par1Entity, Box par2AxisAlignedBB) {
         this.field_4535.clear();
-        int var3 = MathHelper.floor((par2AxisAlignedBB.minX - MAX_ENTITY_RADIUS) / 16.0);
-        int var4 = MathHelper.floor((par2AxisAlignedBB.maxX + MAX_ENTITY_RADIUS) / 16.0);
-        int var5 = MathHelper.floor((par2AxisAlignedBB.minZ - MAX_ENTITY_RADIUS) / 16.0);
-        int var6 = MathHelper.floor((par2AxisAlignedBB.maxZ + MAX_ENTITY_RADIUS) / 16.0);
+        int var3 = MathHelper.floor((par2AxisAlignedBB.minX - ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var4 = MathHelper.floor((par2AxisAlignedBB.maxX + ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var5 = MathHelper.floor((par2AxisAlignedBB.minZ - ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var6 = MathHelper.floor((par2AxisAlignedBB.maxZ + ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
 
         for(int var7 = var3; var7 <= var4; ++var7) {
             for(int var8 = var5; var8 <= var6; ++var8) {
@@ -1379,10 +1430,10 @@ public abstract class WorldMixin implements BlockView, IWorld {
      */
     @Overwrite
     public List getEntitiesInBox(Class par1Class, Box par2AxisAlignedBB, EntityPredicate par3IEntitySelector) {
-        int var4 = MathHelper.floor((par2AxisAlignedBB.minX - MAX_ENTITY_RADIUS) / 16.0);
-        int var5 = MathHelper.floor((par2AxisAlignedBB.maxX + MAX_ENTITY_RADIUS) / 16.0);
-        int var6 = MathHelper.floor((par2AxisAlignedBB.minZ - MAX_ENTITY_RADIUS) / 16.0);
-        int var7 = MathHelper.floor((par2AxisAlignedBB.maxZ + MAX_ENTITY_RADIUS) / 16.0);
+        int var4 = MathHelper.floor((par2AxisAlignedBB.minX - ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var5 = MathHelper.floor((par2AxisAlignedBB.maxX + ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var6 = MathHelper.floor((par2AxisAlignedBB.minZ - ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var7 = MathHelper.floor((par2AxisAlignedBB.maxZ + ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
         ArrayList var8 = new ArrayList();
 
         for(int var9 = var4; var9 <= var5; ++var9) {

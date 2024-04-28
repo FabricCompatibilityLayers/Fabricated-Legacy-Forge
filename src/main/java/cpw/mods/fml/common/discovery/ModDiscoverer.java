@@ -21,11 +21,13 @@ import cpw.mods.fml.common.LoaderException;
 import cpw.mods.fml.common.ModClassLoader;
 import cpw.mods.fml.common.ModContainer;
 import cpw.mods.fml.relauncher.RelaunchLibraryManager;
+import fr.catcore.fabricatedforge.Constants;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -54,6 +56,7 @@ public class ModDiscoverer {
                     if (knownLibraries.contains(minecraftSources[i].getName())) {
                         FMLLog.fine("Skipping known library file %s", new Object[]{minecraftSources[i].getAbsolutePath()});
                     } else {
+                        if (!Objects.equals(minecraftSources[i].getParentFile().toString(), Constants.COREMODS_FOLDER.toString())) continue;
                         FMLLog.fine("Found a minecraft related file at %s, examining for mod candidates", new Object[]{minecraftSources[i].getAbsolutePath()});
                         this.candidates.add(new ModCandidate(minecraftSources[i], minecraftSources[i], ContainerType.JAR, i == 0, true));
                     }
