@@ -173,7 +173,17 @@ modrinth {
 	projectId = "JpHZ1Cyv" // This can be the project ID or the slug. Either will work!
 	versionName = displayVersion
 	changelog = """
-Fix fabric mods icon in Forge mod list.
+# Changelog
+Fix fabric mods icon in Forge mod list.\\
+# 2.7.0 Changelog
+Update MRAPI to 1.22.0.\\
+Make use of MRAPI v1 api.\\
+Fix most reflection related crashes.\\
+Improve compatibility with coremods by a lot.\\
+Fix NEI plugins not loading.\\
+Fix crashes related to a badly ported patch.\\
+Fix some class loading before coremods were discovered, preventing them from being modified by ClassTransformers.\\
+Cleaned up existing compatibility patches after mentioned improvements and fixes.
 """
 	uploadFile = remapJar
 	gameVersions = [project.minecraft_version] // Must be an array, even with only one version
