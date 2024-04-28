@@ -48,7 +48,7 @@ public class MethodMappingMixin {
         if (NEIFixer.FIX_METHOD_ARGS.containsKey(this.desc)) {
             this.desc = NEIFixer.FIX_METHOD_ARGS.get(this.desc);
         } else {
-            this.desc = pair.desc;
+            this.desc = Constants.mapDescriptor(pair.desc);
         }
     }
 }

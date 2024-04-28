@@ -24,6 +24,6 @@ public class FieldMappingMixin {
         }
         MappingUtils.ClassMember pair = Constants.mapFieldFromRemappedClass(this.owner, this.name, this.type);
         this.name = pair.name;
-        this.type = pair.desc;
+        this.type = Constants.mapDescriptor(pair.desc);
     }
 }
