@@ -2,12 +2,12 @@ package fr.catcore.fabricatedforge.mixin.forgefml.world;
 
 import com.google.common.collect.SetMultimap;
 import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
+import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
 import fr.catcore.fabricatedforge.forged.reflection.ReflectedWorld;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import fr.catcore.fabricatedforge.mixininterface.IWorld;
-import fr.catcore.modremapperapi.api.mixin.SuperConstructor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -164,7 +164,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         return this.dimension.biomeSource.method_3853(par1, par2);
     }
 
-    @SuperConstructor
+    @ShadowSuperConstructor
     private void superCtr() {}
 
     @Environment(EnvType.CLIENT)

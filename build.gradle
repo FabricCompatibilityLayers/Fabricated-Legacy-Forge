@@ -101,6 +101,10 @@ allprojects {
 			rename { "${it}_${base.archivesName.get()}" }
 		}
 	}
+
+	tasks.withType(JavaCompile) {
+		options.deprecation = true
+	}
 }
 
 loom {

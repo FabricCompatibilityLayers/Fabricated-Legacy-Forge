@@ -46,7 +46,7 @@ public class ASMEventHandler implements IEventListener {
         MethodVisitor mv = cw.visitMethod(1, "<init>", "(Ljava/lang/Object;)V", (String)null, (String[])null);
         mv.visitCode();
         mv.visitVarInsn(25, 0);
-        mv.visitMethodInsn(183, "java/lang/Object", "<init>", "()V");
+        mv.visitMethodInsn(183, "java/lang/Object", "<init>", "()V", false);
         mv.visitVarInsn(25, 0);
         mv.visitVarInsn(25, 1);
         mv.visitFieldInsn(181, desc, "instance", "Ljava/lang/Object;");
@@ -60,7 +60,7 @@ public class ASMEventHandler implements IEventListener {
         mv.visitTypeInsn(192, instType);
         mv.visitVarInsn(25, 1);
         mv.visitTypeInsn(192, eventType);
-        mv.visitMethodInsn(182, instType, callback.getName(), Type.getMethodDescriptor(callback));
+        mv.visitMethodInsn(182, instType, callback.getName(), Type.getMethodDescriptor(callback), false);
         mv.visitInsn(177);
         mv.visitMaxs(2, 2);
         mv.visitEnd();

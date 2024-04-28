@@ -1,10 +1,10 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.chunk;
 
+import fr.catcore.cursedmixinextensions.annotations.NewConstructor;
+import fr.catcore.cursedmixinextensions.annotations.ShadowConstructor;
 import fr.catcore.fabricatedforge.forged.reflection.ReflectedWorld;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
-import fr.catcore.modremapperapi.api.mixin.NewConstructor;
-import fr.catcore.modremapperapi.api.mixin.ShadowConstructor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;

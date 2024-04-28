@@ -9,6 +9,7 @@ import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -19,8 +20,9 @@ import java.util.ArrayList;
 
 @Mixin(ClassDiscoverer.class)
 public abstract class ClassDiscovererMixin {
-    @Shadow public ArrayList classes;
-    @Shadow public ModClassLoader modClassLoader;
+    @Shadow(remap = false) public ArrayList classes;
+    @Shadow(remap = false) public ModClassLoader modClassLoader;
+    @Unique
     public String[] superclassesString;
 
     @Inject(method = "<init>", at = @At("RETURN"), remap = false)
@@ -41,6 +43,10 @@ public abstract class ClassDiscovererMixin {
         checkAddClass(resource);
     }
 
+    /**
+     * @author ChickenBones
+     * Backported from CCC for MC 1.4.7
+     */
     private void checkAddClass(String resource) {
         try {
             String classname = resource.replace(".class", "").replace("\\", ".").replace("/", ".");
