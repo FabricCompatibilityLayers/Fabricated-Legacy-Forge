@@ -220,6 +220,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.profiler = par5Profiler;
         this.levelProperties = new LevelProperties(par4WorldSettings, par2Str);
         this.dimension = par3WorldProvider;
+        this.perWorldStorage = new PersistentStateManager((SaveHandler)null);
     }
 
     @Inject(method = "<init>(Lnet/minecraft/world/SaveHandler;Ljava/lang/String;Lnet/minecraft/world/dimension/Dimension;Lnet/minecraft/world/level/LevelInfo;Lnet/minecraft/util/profiler/Profiler;)V", at = @At("RETURN"))
