@@ -40,12 +40,6 @@ public class ForgeModRemapper implements ModRemapper {
         mappingBuilder.addMapping("TradeEntry", "net/minecraft/TradeEntry");
     }
 
-    private String getOfficialClassName(String className) {
-        className = className.replace("/", ".");
-        className = FabricLoader.getInstance().getMappingResolver().unmapClassName("official", className);
-        return className.replace(".", "/");
-    }
-
     @Override
     public void registerPreVisitors(VisitorInfos visitorInfos) {
 
