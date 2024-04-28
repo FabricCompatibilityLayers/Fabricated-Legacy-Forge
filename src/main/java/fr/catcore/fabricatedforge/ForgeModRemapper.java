@@ -133,7 +133,7 @@ public class ForgeModRemapper implements ModRemapper {
                 "setBurnProperties",
                 "",
                 new VisitorInfos.FullClassMember(
-                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedWorld",
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedBlock",
                         "setBurnProperties",
                         null
                 )
@@ -245,6 +245,69 @@ public class ForgeModRemapper implements ModRemapper {
                 new VisitorInfos.FullClassMember(
                         "fr/catcore/fabricatedforge/forged/reflection/ReflectedPlayerEntityRenderer",
                         "NAME_TAG_RANGE_SNEAK",
+                        null
+                )
+        );
+
+        // Mod specific fixes
+        // ExtraBiomesXL
+        visitorInfos.registerMethodInvocation(
+                "extrabiomes/module/summa/block/BlockCustomTallGrass",
+                "setBurnProperties",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedBlock",
+                        "setBurnProperties",
+                        null
+                )
+        );
+        visitorInfos.registerMethodInvocation(
+                "extrabiomes/module/summa/block/BlockCustomLog",
+                "setBurnProperties",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedBlock",
+                        "setBurnProperties",
+                        null
+                )
+        );
+        visitorInfos.registerMethodInvocation(
+                "extrabiomes/module/summa/block/BlockQuarterLog",
+                "setBurnProperties",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedBlock",
+                        "setBurnProperties",
+                        null
+                )
+        );
+        visitorInfos.registerMethodInvocation(
+                "extrabiomes/module/fabrica/block/BlockCustomWood",
+                "setBurnProperties",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedBlock",
+                        "setBurnProperties",
+                        null
+                )
+        );
+        visitorInfos.registerMethodInvocation(
+                "extrabiomes/module/fabrica/block/BlockCustomWoodSlab",
+                "setBurnProperties",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedBlock",
+                        "setBurnProperties",
+                        null
+                )
+        );
+        visitorInfos.registerMethodInvocation(
+                "extrabiomes/module/fabrica/block/BlockWoodStairs",
+                "setBurnProperties",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedBlock",
+                        "setBurnProperties",
                         null
                 )
         );
