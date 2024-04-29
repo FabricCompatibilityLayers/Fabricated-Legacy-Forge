@@ -1,9 +1,9 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import cpw.mods.fml.common.registry.BlockProxy;
+import fr.catcore.fabricatedforge.forged.reflection.ReflectedBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockWithEntity;
-import fr.catcore.fabricatedforge.forged.ReflectionUtils;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
@@ -259,7 +259,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     @Override
     public int getFlammability(BlockView world, int x, int y, int z, int metadata, ForgeDirection face) {
-        return ReflectionUtils.Block_blockFlammability[this.id];
+        return ReflectedBlock.blockFlammability[this.id];
     }
 
     @Override
@@ -269,7 +269,7 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
 
     @Override
     public int getFireSpreadSpeed(World world, int x, int y, int z, int metadata, ForgeDirection face) {
-        return ReflectionUtils.Block_blockFireSpreadSpeed[this.id];
+        return ReflectedBlock.blockFireSpreadSpeed[this.id];
     }
 
     @Override

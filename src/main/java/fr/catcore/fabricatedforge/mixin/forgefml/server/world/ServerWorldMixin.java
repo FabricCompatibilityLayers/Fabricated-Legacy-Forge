@@ -69,6 +69,8 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     @Shadow public abstract boolean isReady();
 
+    @Shadow public ServerChunkProvider chunkCache;
+
     public ServerWorldMixin(SaveHandler saveHandler, String string, Dimension dimension, LevelInfo levelInfo, Profiler profiler) {
         super(saveHandler, string, dimension, levelInfo, profiler);
     }

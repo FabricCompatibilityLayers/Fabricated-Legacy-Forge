@@ -6,14 +6,10 @@
   "server": [],
   "mixins": [
     "codechickencore.ASMHelperMixin",
-    "codechickencore.ClassHeirachyManagerMixin",
+    "codechickencore.ClassDiscovererMixin",
     "codechickencore.ClassMappingMixin",
     "codechickencore.ClassOverriderMixin",
     "codechickencore.DescriptorMappingMixin",
-    "codechickencore.FeatureHackTransformerMixin",
-    "codechickencore.TweakTransformerMixin",
-    "nei.FurnaceRecipeHandlerMixin",
-    "nei.NEITransformerMixin",
     "nei.TMIUninstallerMixin"
   ],
   "client": [

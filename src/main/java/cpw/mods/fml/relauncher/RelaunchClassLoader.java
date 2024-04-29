@@ -69,7 +69,7 @@ public class RelaunchClassLoader extends URLClassLoader {
     };
 
     public RelaunchClassLoader() {
-        super(new URL[0], FabricLauncherBase.getLauncher().getTargetClassLoader());
+        super(new URL[0], FMLRelauncher.class.getClassLoader());
         this.sources = new ArrayList<>();
         this.parent = this.getClass().getClassLoader();
         this.cachedClasses = new HashMap<>(1000);
@@ -84,6 +84,8 @@ public class RelaunchClassLoader extends URLClassLoader {
         this.addTransformerExclusion("javax.");
         this.addTransformerExclusion("org.objectweb.asm.");
         this.addTransformerExclusion("com.google.common.");
+        this.addTransformerExclusion("fr.catcore.fabricatedforge.");
+        this.addClassLoaderExclusion("com.llamalad7.mixinextras.");
     }
 
     public void registerTransformer(String transformerClassName) {
@@ -268,7 +270,7 @@ public class RelaunchClassLoader extends URLClassLoader {
 
         Object i$;
         try {
-            URL classResource = this.findResource(name.replace('.', '/').concat(".class"));
+            URL classResource = ((URLClassLoader)this.parent.getParent()).findResource(name.replace('.', '/').concat(".class"));
             if (classResource != null) {
                 classStream = classResource.openStream();
                 return this.readFully(classStream);
