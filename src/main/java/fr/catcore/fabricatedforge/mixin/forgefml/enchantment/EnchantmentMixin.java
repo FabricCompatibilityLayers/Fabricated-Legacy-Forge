@@ -1,8 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.enchantment;
 
 import com.google.common.collect.ObjectArrays;
+import fr.catcore.cursedmixinextensions.annotations.Public;
 import fr.catcore.fabricatedforge.mixininterface.IEnchantment;
-import fr.catcore.modremapperapi.api.mixin.Public;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.item.ItemStack;
