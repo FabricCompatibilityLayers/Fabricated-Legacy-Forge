@@ -453,6 +453,6 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     @Override
     public File getChunkSaveLocation() {
-        return ((ThreadedAnvilChunkStorage)((IServerChunkProvider)this.chunkCache).getChunkWriter()).saveLocation;
+        return ((IThreadedAnvilChunkStorage)((IServerChunkProvider)this.chunkCache).getChunkWriter()).getSaveLocation();
     }
 }
