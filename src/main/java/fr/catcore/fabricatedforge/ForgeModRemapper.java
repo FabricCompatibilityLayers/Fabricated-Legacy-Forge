@@ -1,6 +1,5 @@
 package fr.catcore.fabricatedforge;
 
-import fr.catcore.modremapperapi.remapping.VisitorInfos;
 import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.MappingBuilder;
 import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.ModRemapper;
 import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.RemapLibrary;
@@ -249,11 +248,15 @@ public class ForgeModRemapper implements ModRemapper {
                         null
                 )
         );
-
-
-        infos.registerMethodFieldIns(
-                new VisitorInfos.MethodNamed("net/minecraft/class_988", "PERSISTED_NBT_TAG"),
-                new VisitorInfos.MethodNamed("fr/catcore/fabricatedforge/forged/ReflectionUtils", "PERSISTED_NBT_TAG")
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_988",
+                "PERSISTED_NBT_TAG",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedPlayerEntity",
+                        "PERSISTED_NBT_TAG",
+                        null
+                )
         );
 
         // Mod specific fixes
