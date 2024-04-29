@@ -26,10 +26,9 @@ import cpw.mods.fml.common.network.EntitySpawnPacket;
 import cpw.mods.fml.common.network.ModMissingPacket;
 import cpw.mods.fml.common.registry.*;
 import fr.catcore.fabricatedforge.forged.FabricModContainer;
+import fr.catcore.fabricatedforge.forged.reflection.Reflectedclass_469;
 import fr.catcore.fabricatedforge.mixininterface.IConnectScreen;
 import fr.catcore.fabricatedforge.mixininterface.Iclass_469;
-import fr.catcore.fabricatedforge.forged.ReflectionUtils;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.class_469;
 import net.minecraft.client.gui.screen.ConnectScreen;
@@ -286,11 +285,11 @@ public class FMLClientHandler implements IFMLSidedHandler {
     }
 
     public void setClientCompatibilityLevel(byte compatibilityLevel) {
-        ReflectionUtils.class_469_connectionCompatibilityLevel = compatibilityLevel;
+        Reflectedclass_469.setConnectionCompatibilityLevel(compatibilityLevel);
     }
 
     public byte getClientCompatibilityLevel() {
-        return ReflectionUtils.class_469_connectionCompatibilityLevel;
+        return Reflectedclass_469.getConnectionCompatibilityLevel();
     }
 
     public void warnIDMismatch(MapDifference<Integer, ItemData> idDifferences, boolean mayContinue) {

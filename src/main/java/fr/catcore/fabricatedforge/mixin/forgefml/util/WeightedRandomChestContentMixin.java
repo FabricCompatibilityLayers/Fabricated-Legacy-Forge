@@ -1,8 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.util;
 
+import fr.catcore.cursedmixinextensions.annotations.NewConstructor;
+import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
 import fr.catcore.fabricatedforge.mixininterface.IWeightedRandomChestContent;
-import fr.catcore.modremapperapi.api.mixin.NewConstructor;
-import fr.catcore.modremapperapi.api.mixin.SuperConstructor;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.entity.DispenserBlockEntity;
 import net.minecraft.item.ItemStack;
@@ -30,7 +30,7 @@ public abstract class WeightedRandomChestContentMixin implements IWeightedRandom
         this.itemStack = new ItemStack(par1, 1, par2);
     }
 
-    @SuperConstructor
+    @ShadowSuperConstructor
     public abstract void weight$ctr(int weight);
 
     @NewConstructor

@@ -95,12 +95,12 @@ public class AccessTransformer implements IClassTransformer {
                             String nameReference = descriptor.get(1);
                             int parenIdx = nameReference.indexOf(40);
                             if (parenIdx > 0) {
-                                MappingUtils.ClassMember o = Constants.mapMethod(className,
+                                MappingUtils.ClassMember o = Constants.mapMethodFromRemappedClass(className,
                                         nameReference.substring(0, parenIdx), nameReference.substring(parenIdx));
-                                m.desc = o.desc;
+                                m.desc = Constants.mapDescriptor(o.desc);
                                 m.name = o.name;
                             } else {
-                                m.name = Constants.mapField(className, nameReference).name;
+                                m.name = Constants.mapFieldFromRemappedClass(className, nameReference, null).name;
                             }
                         }
 

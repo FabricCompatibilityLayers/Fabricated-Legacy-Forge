@@ -60,6 +60,7 @@ allprojects {
 		implementation(group: "local", name: "guava", version: "12.0.1")
 
 		modImplementation(legacy.apiModule("legacy-fabric-logger-api-v1", "1.9.0+1.8.9"))
+		implementation("com.github.thecatcore.CursedMixinExtensions:fabric:1.0.0")
 	}
 
 	processResources {
@@ -97,6 +98,10 @@ allprojects {
 			rename { "${it}_${base.archivesName.get()}" }
 		}
 	}
+
+	tasks.withType(JavaCompile) {
+		options.deprecation = true
+	}
 }
 
 base {
@@ -112,7 +117,7 @@ dependencies {
 	include(group: "local", name: "guava", version: "12.0.1")
     include(group: "local", name: "bcprov-jdk15on", version: "147")
 
-//	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
+	modRuntimeOnly(files("./forge-${project.minecraft_version}-${project.forge_version}-universal-intermediary.jar"))
 }
 
 subprojects {
@@ -170,8 +175,18 @@ modrinth {
 	projectId = "JpHZ1Cyv" // This can be the project ID or the slug. Either will work!
 	versionName = displayVersion
 	changelog = """
-Update MRAPI to 1.19.0.\\
-Fix crash on Fabric Loader 0.15+.\\
+# Changelog
+Fix fabric mods icon in Forge mod list.\\
+You can now interact again with the second slot of any inventory.
+# 2.7.0 Changelog
+Update MRAPI to 1.22.0.\\
+Make use of MRAPI v1 api.\\
+Fix most reflection related crashes.\\
+Improve compatibility with coremods by a lot.\\
+Fix NEI plugins not loading.\\
+Fix crashes related to a badly ported patch.\\
+Fix some class loading before coremods were discovered, preventing them from being modified by ClassTransformers.\\
+Cleaned up existing compatibility patches after mentioned improvements and fixes.
 """
 	uploadFile = remapJar
 	gameVersions = [project.minecraft_version] // Must be an array, even with only one version
@@ -180,6 +195,6 @@ Fix crash on Fabric Loader 0.15+.\\
 		// scope.type
 		// The scope can be `required`, `optional`, `incompatible`, or `embedded`
 		// The type can either be `project` or `version`
-		required.version "mod-remapping-api", project.mod_remapping_api
+		required.project("mod-remapping-api")
 	}
 }

@@ -24,7 +24,7 @@
   "environment": "*",
   "accessWidener": "fabricated-forge.accesswidener",
   "entrypoints": {
-    "mod-remapper-api:modremapper": [
+    "mod-remapper-api:modremapper_v1": [
       "fr.catcore.fabricatedforge.ForgeModRemapper"
     ]
   },

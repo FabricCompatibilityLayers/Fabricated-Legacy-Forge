@@ -1,6 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render.entity;
 
-import fr.catcore.fabricatedforge.forged.ReflectionUtils;
+import fr.catcore.fabricatedforge.forged.reflection.ReflectedPlayerEntityRenderer;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.BlockRenderer;
@@ -126,7 +126,7 @@ public class PlayerEntityRendererMixin extends MobEntityRenderer {
             float var8 = 1.6F;
             float var9 = 0.016666668F * var8;
             double var10 = par1EntityPlayer.squaredDistanceTo(this.dispatcher.cameraEntity);
-            float var12 = par1EntityPlayer.isSneaking() ? ReflectionUtils.NAME_TAG_RANGE_SNEAK : ReflectionUtils.NAME_TAG_RANGE;
+            float var12 = par1EntityPlayer.isSneaking() ? ReflectedPlayerEntityRenderer.NAME_TAG_RANGE_SNEAK : ReflectedPlayerEntityRenderer.NAME_TAG_RANGE;
             if (var10 < (double)(var12 * var12)) {
                 String var13 = par1EntityPlayer.username;
                 if (par1EntityPlayer.isSneaking()) {

@@ -67,6 +67,8 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
 
     @Shadow public abstract boolean isReady();
 
+    @Shadow public ServerChunkProvider chunkCache;
+
     public ServerWorldMixin(SaveHandler saveHandler, String string, Dimension dimension, LevelInfo levelInfo, Profiler profiler) {
         super(saveHandler, string, dimension, levelInfo, profiler);
     }
@@ -447,5 +449,10 @@ public abstract class ServerWorldMixin extends World implements IServerWorld {
         this.saveHandler.saveWorld(this.levelProperties, this.server.getPlayerManager().getUserData());
         this.persistentStateManager.save();
         this.getPerWorldStorage().save();
+    }
+
+    @Override
+    public File getChunkSaveLocation() {
+        return ((IThreadedAnvilChunkStorage)((IServerChunkProvider)this.chunkCache).getChunkWriter()).getSaveLocation();
     }
 }

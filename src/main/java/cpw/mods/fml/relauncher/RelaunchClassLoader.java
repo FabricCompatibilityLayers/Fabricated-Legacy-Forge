@@ -44,7 +44,7 @@ public class RelaunchClassLoader extends URLClassLoader {
     private Set<String> transformerExceptions = new HashSet<>();
 
     public RelaunchClassLoader() {
-        super(new URL[0], FabricLauncherBase.getLauncher().getTargetClassLoader());
+        super(new URL[0], FMLRelauncher.class.getClassLoader());
         this.sources = new ArrayList<>();
         this.parent = this.getClass().getClassLoader();
         this.cachedClasses = new HashMap<>(1000);
@@ -60,6 +60,8 @@ public class RelaunchClassLoader extends URLClassLoader {
         this.addTransformerExclusion("com.google.common.");
         this.addTransformerExclusion("cpw.mods.fml.common.asm.SideOnly");
         this.addTransformerExclusion("cpw.mods.fml.common.Side");
+        this.addTransformerExclusion("fr.catcore.fabricatedforge.");
+        this.addClassLoaderExclusion("com.llamalad7.mixinextras.");
     }
 
     public void registerTransformer(String transformerClassName) {
@@ -123,28 +125,27 @@ public class RelaunchClassLoader extends URLClassLoader {
     }
 
     public byte[] getClassBytes(String name) throws IOException {
-        return null;
-        //        InputStream classStream = null;
-//
-//        Object var4;
-//        try {
-//            URL classResource = this.findResource(name.replace('.', '/').concat(".class"));
-//            if (classResource != null) {
-//                classStream = classResource.openStream();
-//                return this.readFully(classStream);
-//            }
-//
-//            var4 = null;
-//        } finally {
-//            if (classStream != null) {
-//                try {
-//                    classStream.close();
-//                } catch (IOException var12) {
-//                }
-//            }
-//        }
-//
-//        return (byte[])var4;
+        InputStream classStream = null;
+
+        Object var4;
+        try {
+            URL classResource = ((URLClassLoader)this.parent.getParent()).findResource(name.replace('.', '/').concat(".class"));
+            if (classResource != null) {
+                classStream = classResource.openStream();
+                return this.readFully(classStream);
+            }
+
+            var4 = null;
+        } finally {
+            if (classStream != null) {
+                try {
+                    classStream.close();
+                } catch (IOException var12) {
+                }
+            }
+        }
+
+        return (byte[])var4;
     }
 
     private byte[] runTransformers(String name, byte[] basicClass) {
