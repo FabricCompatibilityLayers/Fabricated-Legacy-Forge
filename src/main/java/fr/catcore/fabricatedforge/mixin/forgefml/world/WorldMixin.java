@@ -157,6 +157,8 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Shadow public PersistentStateManager persistentStateManager;
     @Mutable
     @Shadow @Final private Calendar calender;
+    @Mutable
+    @Shadow @Final protected SaveHandler saveHandler;
     @Unique
     private static PersistentStateManager s_mapStorage;
     private static SaveHandler s_savehandler;
@@ -202,7 +204,6 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.ambientDarkness = 0;
         this.lcgBlockSeed = (new Random()).nextInt();
         this.unusedIncrement = 1013904223;
-        this.field_23088 = 0;
         this.field_4553 = 0;
         this.field_4555 = false;
         this.random = new Random();
