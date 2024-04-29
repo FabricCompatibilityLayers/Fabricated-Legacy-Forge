@@ -98,6 +98,29 @@ public class ModClassLoader extends URLClassLoader {
      * @return The "parent source" files array.
      */
     public File[] getParentSources() {
+        ClassLoader loader = this.getClass().getClassLoader();
+
+        while (loader != null && !(loader instanceof URLClassLoader)) {
+            loader = loader.getParent();
+        }
+
+        if (loader != null) {
+            URL[] urls = ((URLClassLoader) loader).getURLs();
+            List<File> files = new ArrayList<>();
+
+            try {
+                for (URL url : urls) {
+                    files.add(new File(url.toURI()));
+                }
+
+                return files.toArray(new File[0]);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+        }
+
+        System.err.println("Failed to get sources from Knot classloader");
+
         return new File[] { getParentSource() };
     }
 

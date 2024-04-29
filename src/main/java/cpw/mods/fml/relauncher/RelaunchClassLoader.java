@@ -44,7 +44,7 @@ public class RelaunchClassLoader extends URLClassLoader {
     private Set<String> transformerExceptions = new HashSet<>();
 
     public RelaunchClassLoader() {
-        super(new URL[0], FabricLauncherBase.getLauncher().getTargetClassLoader());
+        super(new URL[0], FMLRelauncher.class.getClassLoader());
         this.sources = new ArrayList<>();
         this.parent = this.getClass().getClassLoader();
         this.cachedClasses = new HashMap<>(1000);
@@ -60,6 +60,8 @@ public class RelaunchClassLoader extends URLClassLoader {
         this.addTransformerExclusion("com.google.common.");
         this.addTransformerExclusion("cpw.mods.fml.common.asm.SideOnly");
         this.addTransformerExclusion("cpw.mods.fml.common.Side");
+        this.addTransformerExclusion("fr.catcore.fabricatedforge.");
+        this.addClassLoaderExclusion("com.llamalad7.mixinextras.");
     }
 
     public void registerTransformer(String transformerClassName) {
@@ -74,76 +76,76 @@ public class RelaunchClassLoader extends URLClassLoader {
     }
 
     public Class<?> findClass(String name) throws ClassNotFoundException {
-        if (excludedPackages.length != 0) {
-            this.classLoaderExceptions.addAll(Arrays.asList(excludedPackages));
-            excludedPackages = new String[0];
-        }
-
-        if (transformerExclusions.length != 0) {
-            this.transformerExceptions.addAll(Arrays.asList(transformerExclusions));
-            transformerExclusions = new String[0];
-        }
-
-        for(String st : this.classLoaderExceptions) {
-            if (name.startsWith(st)) {
-                return this.parent.loadClass(name);
-            }
-        }
-
-        if (this.cachedClasses.containsKey(name)) {
-            return (Class<?>)this.cachedClasses.get(name);
-        } else {
-            for(String st : this.transformerExceptions) {
-                if (name.startsWith(st)) {
-                    Class<?> cl = super.findClass(name);
-                    this.cachedClasses.put(name, cl);
-                    return cl;
-                }
-            }
-
-            try {
-                int lastDot = name.lastIndexOf(46);
-                if (lastDot > -1) {
-                    String pkgname = name.substring(0, lastDot);
-                    if (this.getPackage(pkgname) == null) {
-                        this.definePackage(pkgname, null, null, null, null, null, null, null);
-                    }
-                }
-
-                byte[] basicClass = this.getClassBytes(name);
-                byte[] transformedClass = this.runTransformers(name, basicClass);
-                Class<?> cl = this.defineClass(name, transformedClass, 0, transformedClass.length);
-                this.cachedClasses.put(name, cl);
-                return cl;
-            } catch (Throwable var6) {
-                throw new ClassNotFoundException(name, var6);
-            }
-        }
-    }
-
-    public byte[] getClassBytes(String name) throws IOException {
-        return null;
-        //        InputStream classStream = null;
+        return Class.forName(name, false, this.parent);
+//        if (excludedPackages.length != 0) {
+//            this.classLoaderExceptions.addAll(Arrays.asList(excludedPackages));
+//            excludedPackages = new String[0];
+//        }
 //
-//        Object var4;
-//        try {
-//            URL classResource = this.findResource(name.replace('.', '/').concat(".class"));
-//            if (classResource != null) {
-//                classStream = classResource.openStream();
-//                return this.readFully(classStream);
-//            }
+//        if (transformerExclusions.length != 0) {
+//            this.transformerExceptions.addAll(Arrays.asList(transformerExclusions));
+//            transformerExclusions = new String[0];
+//        }
 //
-//            var4 = null;
-//        } finally {
-//            if (classStream != null) {
-//                try {
-//                    classStream.close();
-//                } catch (IOException var12) {
-//                }
+//        for(String st : this.classLoaderExceptions) {
+//            if (name.startsWith(st)) {
+//                return this.parent.loadClass(name);
 //            }
 //        }
 //
-//        return (byte[])var4;
+//        if (this.cachedClasses.containsKey(name)) {
+//            return (Class<?>)this.cachedClasses.get(name);
+//        } else {
+//            for(String st : this.transformerExceptions) {
+//                if (name.startsWith(st)) {
+//                    Class<?> cl = super.findClass(name);
+//                    this.cachedClasses.put(name, cl);
+//                    return cl;
+//                }
+//            }
+//
+//            try {
+//                int lastDot = name.lastIndexOf(46);
+//                if (lastDot > -1) {
+//                    String pkgname = name.substring(0, lastDot);
+//                    if (this.getPackage(pkgname) == null) {
+//                        this.definePackage(pkgname, null, null, null, null, null, null, null);
+//                    }
+//                }
+//
+//                byte[] basicClass = this.getClassBytes(name);
+//                byte[] transformedClass = this.runTransformers(name, basicClass);
+//                Class<?> cl = this.defineClass(name, transformedClass, 0, transformedClass.length);
+//                this.cachedClasses.put(name, cl);
+//                return cl;
+//            } catch (Throwable var6) {
+//                throw new ClassNotFoundException(name, var6);
+//            }
+//        }
+    }
+
+    public byte[] getClassBytes(String name) throws IOException {
+        InputStream classStream = null;
+
+        Object var4;
+        try {
+            URL classResource = ((URLClassLoader)this.parent.getParent()).findResource(name.replace('.', '/').concat(".class"));
+            if (classResource != null) {
+                classStream = classResource.openStream();
+                return this.readFully(classStream);
+            }
+
+            var4 = null;
+        } finally {
+            if (classStream != null) {
+                try {
+                    classStream.close();
+                } catch (IOException var12) {
+                }
+            }
+        }
+
+        return (byte[])var4;
     }
 
     private byte[] runTransformers(String name, byte[] basicClass) {

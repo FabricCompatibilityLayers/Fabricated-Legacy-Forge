@@ -1,5 +1,6 @@
 package fr.catcore.fabricatedforge.compat;
 
+import fr.catcore.fabricatedforge.compat.asm.BetterClassWriter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
