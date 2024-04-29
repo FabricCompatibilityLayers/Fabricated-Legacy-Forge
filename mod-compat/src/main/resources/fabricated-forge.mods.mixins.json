@@ -6,7 +6,6 @@
   "server": [],
   "mixins": [
     "codechickencore.ASMHelperMixin",
-    "codechickencore.ClassDiscovererMixin",
     "codechickencore.ClassMappingMixin",
     "codechickencore.ClassOverriderMixin",
     "codechickencore.DescriptorMappingMixin",
