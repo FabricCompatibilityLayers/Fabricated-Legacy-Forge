@@ -11,6 +11,7 @@ dependencies {
     // modCompileOnly(group: "local", name: "filename", version: "fileversion")
     modCompileOnly(group: "local", name: "CodeChickenCore", version: "0.8.1.3")
     modCompileOnly(group: "local", name: "NotEnoughItems", version: "1.4.7.1")
+    modCompileOnly(group: "local", name: "immibis-core", version: "52.4.6")
 }
 
 base {

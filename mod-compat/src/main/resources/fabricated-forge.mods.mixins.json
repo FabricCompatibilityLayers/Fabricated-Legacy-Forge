@@ -9,6 +9,7 @@
     "codechickencore.ClassMappingMixin",
     "codechickencore.ClassOverriderMixin",
     "codechickencore.DescriptorMappingMixin",
+    "immibiscore.ImmibisCoreMixin",
     "nei.TMIUninstallerMixin"
   ],
   "client": [
