@@ -177,7 +177,8 @@ modrinth {
 	changelog = """
 # Changelog
 Fix fabric mods icon in Forge mod list.\\
-You can now interact again with the second slot of any inventory.
+You can now interact again with the second slot of any inventory.\\
+Fix immibis core crash.
 # 2.7.0 Changelog
 Update MRAPI to 1.22.0.\\
 Make use of MRAPI v1 api.\\
