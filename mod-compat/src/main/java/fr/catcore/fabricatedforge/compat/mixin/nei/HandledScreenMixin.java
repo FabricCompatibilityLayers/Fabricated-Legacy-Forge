@@ -2,8 +2,8 @@ package fr.catcore.fabricatedforge.compat.mixin.nei;
 
 import codechicken.nei.forge.GuiContainerManager;
 import codechicken.nei.forge.IContainerClientSide;
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.platform.GLX;
 import fr.catcore.fabricatedforge.compat.nei.NEIHandledScreen;
 import net.minecraft.client.Minecraft;
@@ -185,7 +185,7 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
     }
 
     @Inject(method = "drawSlot", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glEnable(I)V", ordinal = 1, remap = false))
-    private void nei$renderSlotUnderlay(Slot par1Slot, CallbackInfo ci) {
+    private void flf$renderSlotUnderlay(Slot par1Slot, CallbackInfo ci) {
         this.manager.renderSlotUnderlay(par1Slot);
     }
 
@@ -267,19 +267,17 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
         }
     }
 
-    @WrapWithCondition(method = "onMouseClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;clickSlot(IIIILnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/item/ItemStack;"))
-    private boolean nei$wrapClickSlot(
-            ClientPlayerInteractionManager interactionManager, int syncId, int slotId, int mouseButton, int actionType, PlayerEntity player
-    ) {
-        if (slotId != 1) {
+    @WrapOperation(method = "onMouseClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerInteractionManager;clickSlot(IIIILnet/minecraft/entity/player/PlayerEntity;)Lnet/minecraft/item/ItemStack;"))
+    private ItemStack flf$onMouseClick(ClientPlayerInteractionManager instance, int syncId, int slotId, int mouseButton, int actionType, PlayerEntity player, Operation<ItemStack> original) {
+        if (slotId != -1) {
             if (this instanceof IContainerClientSide) {
-                player.openScreenHandler.onSlotClick(slotId, mouseButton, actionType, player);
+                return this.field_1229.playerEntity.openScreenHandler.onSlotClick(slotId, mouseButton, actionType, player);
             } else {
-                return true;
+                return original.call(instance, syncId, slotId, mouseButton, actionType, player);
             }
         }
 
-        return false;
+        return null;
     }
 
     @Inject(method = "keyPressed", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ingame/HandledScreen;handleHotbarKeyPressed(I)Z"), cancellable = true)
@@ -313,7 +311,6 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
 
             this.keyPressed(Keyboard.getEventCharacter(), Keyboard.getEventKey());
         }
-
     }
 
     @Override
@@ -323,7 +320,6 @@ public abstract class HandledScreenMixin extends Screen implements NEIHandledScr
         if (i != 0) {
             this.manager.mouseWheel(i > 0 ? 1 : -1);
         }
-
     }
 
     @Override

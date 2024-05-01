@@ -2,6 +2,7 @@ package fr.catcore.fabricatedforge;
 
 import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.MappingBuilder;
 import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.ModRemapper;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.RemapLibrary;
 import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.VisitorInfos;
 import net.fabricmc.api.EnvType;
 
@@ -18,7 +19,7 @@ public class ForgeModRemapper implements ModRemapper {
     }
 
     @Override
-    public void addRemapLibraries(List<io.github.fabriccompatibiltylayers.modremappingapi.api.v1.RemapLibrary> list, EnvType envType) {
+    public void addRemapLibraries(List<RemapLibrary> list, EnvType envType) {
         list.add(new io.github.fabriccompatibiltylayers.modremappingapi.api.v1.RemapLibrary(
                 Constants.FORGE_URL,
                 FORGE_EXCLUDED,
@@ -40,12 +41,12 @@ public class ForgeModRemapper implements ModRemapper {
     }
 
     @Override
-    public void registerPreVisitors(io.github.fabriccompatibiltylayers.modremappingapi.api.v1.VisitorInfos visitorInfos) {
+    public void registerPreVisitors(VisitorInfos visitorInfos) {
 
     }
 
     @Override
-    public void registerPostVisitors(io.github.fabriccompatibiltylayers.modremappingapi.api.v1.VisitorInfos visitorInfos) {
+    public void registerPostVisitors(VisitorInfos visitorInfos) {
         // Reflection Remappers
         visitorInfos.registerInstantiation(
                 "org/objectweb/asm/tree/FieldInsnNode",
@@ -59,7 +60,6 @@ public class ForgeModRemapper implements ModRemapper {
                 "org/objectweb/asm/ClassWriter",
                 "fr/catcore/fabricatedforge/compat/asm/BetterClassWriter"
         );
-
         visitorInfos.registerMethodInvocation(
                 "java/lang/Class",
                 "getDeclaredMethod",
@@ -133,12 +133,81 @@ public class ForgeModRemapper implements ModRemapper {
                 "setBurnProperties",
                 "",
                 new VisitorInfos.FullClassMember(
-                        "fr/catcore/fabricatedforge/forged/ReflectionUtils",
-                        "Block_setBurnProperties",
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedBlock",
+                        "setBurnProperties",
                         null
                 )
         );
-
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_197",
+                "blockFireSpreadSpeed",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedWorld",
+                        "blockFireSpreadSpeed",
+                        null
+                )
+        );
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_197",
+                "blockFlammability",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedWorld",
+                        "blockFlammability",
+                        null
+                )
+        );
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_1150",
+                "MAX_ENTITY_RADIUS",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedWorld",
+                        "MAX_ENTITY_RADIUS",
+                        null
+                )
+        );
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_1160",
+                "base11Biomes",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedLevelGeneratorType",
+                        "base11Biomes",
+                        null
+                )
+        );
+        visitorInfos.registerFieldRef(
+                "net/minecraft/class_1160",
+                "base12Biomes",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedLevelGeneratorType",
+                        "base12Biomes",
+                        null
+                )
+        );
+        visitorInfos.registerMethodInvocation(
+                "net/minecraft/class_469",
+                "setConnectionCompatibilityLevel",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/Reflectedclass_469",
+                        "setConnectionCompatibilityLevel",
+                        null
+                )
+        );
+        visitorInfos.registerMethodInvocation(
+                "net/minecraft/class_469",
+                "getConnectionCompatibilityLevel",
+                "",
+                new VisitorInfos.FullClassMember(
+                        "fr/catcore/fabricatedforge/forged/reflection/Reflectedclass_469",
+                        "getConnectionCompatibilityLevel",
+                        null
+                )
+        );
         visitorInfos.registerFieldRef(
                 "net/minecraft/class_9",
                 "allowedBiomes",
@@ -164,7 +233,7 @@ public class ForgeModRemapper implements ModRemapper {
                 "NAME_TAG_RANGE",
                 "",
                 new VisitorInfos.FullClassMember(
-                        "fr/catcore/fabricatedforge/forged/ReflectionUtils",
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedPlayerEntityRenderer",
                         "NAME_TAG_RANGE",
                         null
                 )
@@ -174,7 +243,7 @@ public class ForgeModRemapper implements ModRemapper {
                 "NAME_TAG_RANGE_SNEAK",
                 "",
                 new VisitorInfos.FullClassMember(
-                        "fr/catcore/fabricatedforge/forged/ReflectionUtils",
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedPlayerEntityRenderer",
                         "NAME_TAG_RANGE_SNEAK",
                         null
                 )
@@ -184,11 +253,13 @@ public class ForgeModRemapper implements ModRemapper {
                 "PERSISTED_NBT_TAG",
                 "",
                 new VisitorInfos.FullClassMember(
-                        "fr/catcore/fabricatedforge/forged/ReflectionUtils",
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedPlayerEntity",
                         "PERSISTED_NBT_TAG",
                         null
                 )
         );
+
+        // Mod specific fixes
     }
 
     @Override
@@ -198,7 +269,7 @@ public class ForgeModRemapper implements ModRemapper {
 
     @Override
     public void afterRemap() {
-        System.out.println(System.getProperty("java.security.properties"));
+
     }
 
     static {

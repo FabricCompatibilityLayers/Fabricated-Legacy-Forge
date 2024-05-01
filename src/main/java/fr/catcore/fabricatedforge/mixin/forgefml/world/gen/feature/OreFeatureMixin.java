@@ -1,9 +1,9 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world.gen.feature;
 
+import fr.catcore.cursedmixinextensions.annotations.NewConstructor;
+import fr.catcore.cursedmixinextensions.annotations.ShadowConstructor;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IOreFeature;
-import fr.catcore.modremapperapi.api.mixin.NewConstructor;
-import fr.catcore.modremapperapi.api.mixin.ShadowConstructor;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;

@@ -1,14 +1,13 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.world;
 
 import com.google.common.collect.ImmutableSetMultimap;
+import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
+import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
 import fr.catcore.fabricatedforge.forged.reflection.ReflectedWorld;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
 import fr.catcore.fabricatedforge.mixininterface.IChunk;
 import fr.catcore.fabricatedforge.mixininterface.IWorld;
-import fr.catcore.modremapperapi.api.mixin.Public;
-import fr.catcore.modremapperapi.api.mixin.ReplaceConstructor;
-import fr.catcore.modremapperapi.api.mixin.SuperConstructor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
@@ -65,7 +64,6 @@ public abstract class WorldMixin implements BlockView, IWorld {
 
     @Shadow public abstract void calculateAmbientDarkness();
 
-    @Shadow public PersistentStateManager persistentStateManager;
     @Shadow protected LevelProperties levelProperties;
 
     @Shadow protected List<WorldEventListener> eventListeners;
@@ -144,8 +142,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Shadow public boolean isClient;
     @Mutable
     @Shadow @Final public VillageState villageState;
-    @Mutable
-    @Shadow @Final protected SaveHandler saveHandler;
+
     @Shadow public boolean immediateUpdates;
     @Shadow public int ambientDarkness;
     @Shadow protected int lcgBlockSeed;
@@ -154,14 +151,15 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Shadow public boolean field_4555;
     @Mutable
     @Shadow @Final protected ZombieSiegeManager zombieSiegeManager;
+    @Shadow private ArrayList field_4539;
     @Mutable
     @Shadow @Final private Vec3dPool vectorPool;
+    @Shadow public PersistentStateManager persistentStateManager;
     @Mutable
     @Shadow @Final private Calendar calender;
-    @Shadow private ArrayList field_4539;
-    @Public
-    private static double MAX_ENTITY_RADIUS = ReflectedWorld.MAX_ENTITY_RADIUS;
-
+    @Mutable
+    @Shadow @Final protected SaveHandler saveHandler;
+    @Unique
     private static PersistentStateManager s_mapStorage;
     private static SaveHandler s_savehandler;
     public PersistentStateManager perWorldStorage;
@@ -187,12 +185,12 @@ public abstract class WorldMixin implements BlockView, IWorld {
         return this.dimension.biomeSource.method_3853(par1, par2);
     }
 
-    @SuperConstructor
+    @ShadowSuperConstructor
     private void superCtr() {}
 
     @Environment(EnvType.CLIENT)
     @ReplaceConstructor
-    public void clientCtr(SaveHandler par1ISaveHandler, String par2Str, Dimension par3WorldProvider, LevelInfo par4WorldSettings, Profiler par5Profiler) {
+    public void ctr(SaveHandler par1ISaveHandler, String par2Str, Dimension par3WorldProvider, LevelInfo par4WorldSettings, Profiler par5Profiler) {
         superCtr();
         this.immediateUpdates = false;
         this.loadedEntities = new ArrayList<>();
@@ -227,6 +225,12 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.levelProperties = new LevelProperties(par4WorldSettings, par2Str);
         this.dimension = par3WorldProvider;
         this.perWorldStorage = new PersistentStateManager((SaveHandler)null);
+    }
+
+    @Inject(method = "<init>(Lnet/minecraft/world/SaveHandler;Ljava/lang/String;Lnet/minecraft/world/dimension/Dimension;Lnet/minecraft/world/level/LevelInfo;Lnet/minecraft/util/profiler/Profiler;)V", at = @At("RETURN"))
+    private void moveStateManager(SaveHandler string, String dimension, Dimension levelInfo, LevelInfo profiler, Profiler par5, CallbackInfo ci) {
+        this.perWorldStorage = new PersistentStateManager((SaveHandler)null);;
+        this.persistentStateManager = null;
     }
 
     @Environment(EnvType.CLIENT)
@@ -1502,10 +1506,10 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Overwrite
     public List getEntitiesIn(Entity par1Entity, Box par2AxisAlignedBB) {
         this.field_4535.clear();
-        int var3 = MathHelper.floor((par2AxisAlignedBB.minX - MAX_ENTITY_RADIUS) / 16.0);
-        int var4 = MathHelper.floor((par2AxisAlignedBB.maxX + MAX_ENTITY_RADIUS) / 16.0);
-        int var5 = MathHelper.floor((par2AxisAlignedBB.minZ - MAX_ENTITY_RADIUS) / 16.0);
-        int var6 = MathHelper.floor((par2AxisAlignedBB.maxZ + MAX_ENTITY_RADIUS) / 16.0);
+        int var3 = MathHelper.floor((par2AxisAlignedBB.minX - ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var4 = MathHelper.floor((par2AxisAlignedBB.maxX + ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var5 = MathHelper.floor((par2AxisAlignedBB.minZ - ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var6 = MathHelper.floor((par2AxisAlignedBB.maxZ + ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
 
         for(int var7 = var3; var7 <= var4; ++var7) {
             for(int var8 = var5; var8 <= var6; ++var8) {
@@ -1524,10 +1528,10 @@ public abstract class WorldMixin implements BlockView, IWorld {
      */
     @Overwrite
     public List getEntitiesInBox(Class par1Class, Box par2AxisAlignedBB, EntityPredicate par3IEntitySelector) {
-        int var4 = MathHelper.floor((par2AxisAlignedBB.minX - MAX_ENTITY_RADIUS) / 16.0);
-        int var5 = MathHelper.floor((par2AxisAlignedBB.maxX + MAX_ENTITY_RADIUS) / 16.0);
-        int var6 = MathHelper.floor((par2AxisAlignedBB.minZ - MAX_ENTITY_RADIUS) / 16.0);
-        int var7 = MathHelper.floor((par2AxisAlignedBB.maxZ + MAX_ENTITY_RADIUS) / 16.0);
+        int var4 = MathHelper.floor((par2AxisAlignedBB.minX - ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var5 = MathHelper.floor((par2AxisAlignedBB.maxX + ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var6 = MathHelper.floor((par2AxisAlignedBB.minZ - ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
+        int var7 = MathHelper.floor((par2AxisAlignedBB.maxZ + ReflectedWorld.MAX_ENTITY_RADIUS) / 16.0);
         ArrayList var8 = new ArrayList();
 
         for(int var9 = var4; var9 <= var5; ++var9) {

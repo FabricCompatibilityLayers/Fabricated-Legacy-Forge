@@ -1,6 +1,6 @@
 package fr.catcore.fabricatedforge.mixin;
 
-import fr.catcore.modremapperapi.utils.MixinUtils;
+import fr.catcore.cursedmixinextensions.CursedMixinExtensions;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -40,6 +40,6 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-        MixinUtils.applyASMMagic(targetClassName, targetClass, mixinClassName, mixinInfo);
+        CursedMixinExtensions.postApply(targetClass);
     }
 }

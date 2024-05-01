@@ -60,6 +60,7 @@ allprojects {
 		implementation(group: "local", name: "guava", version: "12.0.1")
 
 		modImplementation(legacy.apiModule("legacy-fabric-logger-api-v1", "1.9.0+1.8.9"))
+		implementation("com.github.thecatcore.CursedMixinExtensions:fabric:1.0.0")
 	}
 
 	processResources {
@@ -96,6 +97,10 @@ allprojects {
 		from("LICENSE") {
 			rename { "${it}_${base.archivesName.get()}" }
 		}
+	}
+
+	tasks.withType(JavaCompile) {
+		options.deprecation = true
 	}
 }
 
@@ -170,21 +175,19 @@ modrinth {
 	projectId = "JpHZ1Cyv" // This can be the project ID or the slug. Either will work!
 	versionName = displayVersion
 	changelog = """
-# 2.6.2\\
-Update MRAPI to 1.20.0.\\
-Fix crash on Fabric Loader 0.15+.\\
-CodeChickenCore and NEI are finally working on 1.4.6.\\
-# 2.6.1\\
-Update MRAPI to 1.15.0.\\
-ClassTransformers now run after mixins are applied on a class instead of before, improving compatibility with ClassTransformers by a lot.\\
-Some more improvements on NEI Compatibility.\\
-# 2.6.0\\
-Update to MRAPI 1.14.2.\\
-Fix more compatibility issues with CodeChickenCore and NEI. NEI plugins still do not work for now.\\
-# 2.5.0\\
-Update to Mod-Remapping-API 1.8.0. ClassTransformers are now applied!!\\
-Meaning Coremods are more likely to work.\\
-Implement special fixes to get CodeChickenCore and NEI working.
+# Changelog
+Fix fabric mods icon in Forge mod list.\\
+You can now interact again with the second slot of any inventory.\\
+Fix immibis core crash.
+# 2.7.0 Changelog
+Update MRAPI to 1.22.0.\\
+Make use of MRAPI v1 api.\\
+Fix most reflection related crashes.\\
+Improve compatibility with coremods by a lot.\\
+Fix NEI plugins not loading.\\
+Fix crashes related to a badly ported patch.\\
+Fix some class loading before coremods were discovered, preventing them from being modified by ClassTransformers.\\
+Cleaned up existing compatibility patches after mentioned improvements and fixes.
 """
 	uploadFile = remapJar
 	gameVersions = [project.minecraft_version] // Must be an array, even with only one version
@@ -193,6 +196,6 @@ Implement special fixes to get CodeChickenCore and NEI working.
 		// scope.type
 		// The scope can be `required`, `optional`, `incompatible`, or `embedded`
 		// The type can either be `project` or `version`
-		required.version "mod-remapping-api", project.mod_remapping_api
+		required.project("mod-remapping-api")
 	}
 }

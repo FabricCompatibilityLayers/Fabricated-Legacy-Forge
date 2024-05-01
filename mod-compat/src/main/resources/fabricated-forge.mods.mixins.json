@@ -8,7 +8,6 @@
     "codechickencore.ASMHelperMixin",
     "codechickencore.ClassMappingMixin",
     "codechickencore.ClassOverriderMixin",
-    "codechickencore.DelegatedTransformerMixin",
     "codechickencore.DescriptorMappingMixin",
     "immibiscore.ImmibisCoreMixin",
     "nei.TMIUninstallerMixin",

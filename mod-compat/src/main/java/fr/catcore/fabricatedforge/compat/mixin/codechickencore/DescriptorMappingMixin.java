@@ -34,14 +34,16 @@ public class DescriptorMappingMixin {
         if (!this.s_owner.contains("/")) {
             this.s_owner = Constants.mapClass(this.s_owner);
         }
+
+        MappingUtils.ClassMember pair;
+
         if (this.s_desc.startsWith("(")) {
-            MappingUtils.ClassMember pair = Constants.mapMethodFromRemappedClass(this.s_owner, this.s_name, this.s_desc);
-            this.s_name = pair.name;
-            this.s_desc = Constants.mapMethodDescriptor(pair.desc);
+            pair = Constants.mapMethodFromRemappedClass(this.s_owner, this.s_name, this.s_desc);
         } else {
-            MappingUtils.ClassMember pair = Constants.mapFieldFromRemappedClass(this.s_owner, this.s_name, this.s_desc);
-            this.s_name = pair.name;
-            this.s_desc = Constants.mapTypeDescriptor(pair.desc);
+            pair = Constants.mapFieldFromRemappedClass(this.s_owner, this.s_name, this.s_desc);
         }
+
+        this.s_name = pair.name;
+        this.s_desc = Constants.mapDescriptor(pair.desc);
     }
 }

@@ -1,17 +1,15 @@
 package fr.catcore.fabricatedforge.compat;
 
 import fr.catcore.fabricatedforge.compat.asm.ASMRemapperTransformer;
-import fr.catcore.fabricatedforge.util.Utils;
 import fr.catcore.modremapperapi.ClassTransformer;
-import fr.catcore.modremapperapi.api.ModRemapper;
-import fr.catcore.modremapperapi.remapping.RemapUtil;
-import fr.catcore.modremapperapi.remapping.VisitorInfos;
-import org.spongepowered.asm.mixin.MixinEnvironment;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.MappingBuilder;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.ModRemapper;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.RemapLibrary;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.VisitorInfos;
+import net.fabricmc.api.EnvType;
 import org.spongepowered.asm.mixin.Mixins;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ExtraRemapper implements ModRemapper {
     @Override
@@ -20,29 +18,35 @@ public class ExtraRemapper implements ModRemapper {
     }
 
     @Override
-    public Map<String, List<String>> getExclusions() {
-        return new HashMap<>();
-    }
-
-    @Override
-    public void getMappingList(RemapUtil.MappingList mappingList) {
+    public void addRemapLibraries(List<RemapLibrary> list, EnvType envType) {
 
     }
 
     @Override
-    public void registerVisitors(VisitorInfos visitorInfos) {
+    public void registerMappings(MappingBuilder mappingBuilder) {
+
+    }
+
+    @Override
+    public void registerPreVisitors(VisitorInfos visitorInfos) {
+
+    }
+
+    @Override
+    public void registerPostVisitors(VisitorInfos visitorInfos) {
 
     }
 
     @Override
     public void afterRemap() {
         Mixins.addConfiguration("fabricated-forge.mods.mixins.json");
-        Utils.TRANSFORMER_EXCLUSIONS.add("fr.catcore.");
+
         try {
             Class.forName("fr.catcore.fabricatedforge.compat.asm.RemapAwareClass");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+
         ClassTransformer.registerPostTransformer(new ASMRemapperTransformer());
     }
 }

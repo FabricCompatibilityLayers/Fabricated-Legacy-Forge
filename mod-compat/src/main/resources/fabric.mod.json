@@ -17,7 +17,7 @@
   "icon": "assets/fabricated-forge/icon.png",
   "environment": "*",
   "entrypoints": {
-    "mod-remapper-api:modremapper": [
+    "mod-remapper-api:modremapper_v1": [
       "fr.catcore.fabricatedforge.compat.ExtraRemapper"
     ],
     "preLaunch": [
