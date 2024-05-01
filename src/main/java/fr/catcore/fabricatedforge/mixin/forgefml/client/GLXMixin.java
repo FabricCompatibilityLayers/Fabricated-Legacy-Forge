@@ -1,9 +1,9 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client;
 
 import com.mojang.blaze3d.platform.GLX;
-import fr.catcore.modremapperapi.api.mixin.NewConstructor;
-import fr.catcore.modremapperapi.api.mixin.Public;
-import fr.catcore.modremapperapi.api.mixin.SuperConstructor;
+import fr.catcore.cursedmixinextensions.annotations.NewConstructor;
+import fr.catcore.cursedmixinextensions.annotations.Public;
+import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
 import org.lwjgl.opengl.ARBMultitexture;
 import org.lwjgl.opengl.GL13;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ public class GLXMixin {
     @Public
     private static float lastBrightnessY = 0.0F;
 
-    @SuperConstructor
+    @ShadowSuperConstructor
     public void obj$ctr() {}
 
     @NewConstructor

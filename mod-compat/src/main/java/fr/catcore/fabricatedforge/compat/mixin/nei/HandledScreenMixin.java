@@ -4,6 +4,7 @@ import codechicken.nei.forge.GuiContainerManager;
 import codechicken.nei.forge.IContainerClientSide;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.platform.GLX;
 import fr.catcore.fabricatedforge.compat.nei.NEIHandledScreen;
 import net.minecraft.client.Minecraft;

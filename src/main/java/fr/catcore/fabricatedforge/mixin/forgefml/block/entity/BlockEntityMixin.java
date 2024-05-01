@@ -1,8 +1,8 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block.entity;
 
 import cpw.mods.fml.common.FMLLog;
+import fr.catcore.cursedmixinextensions.annotations.Public;
 import fr.catcore.fabricatedforge.mixininterface.IBlockEntity;
-import fr.catcore.modremapperapi.api.mixin.Public;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;

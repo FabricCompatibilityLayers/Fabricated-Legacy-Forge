@@ -1,6 +1,6 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.server;
 
-import fr.catcore.modremapperapi.api.mixin.Public;
+import fr.catcore.cursedmixinextensions.annotations.Public;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.Packet;
