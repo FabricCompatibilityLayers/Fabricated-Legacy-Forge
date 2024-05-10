@@ -21,6 +21,7 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.LoaderException;
 import cpw.mods.fml.common.ModContainer;
+import fr.catcore.fabricatedforge.Constants;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -40,9 +41,9 @@ public class ItemData {
     public ItemData(Item item, ModContainer mc) {
         this.itemId = item.id;
         if (item.getClass().equals(BlockItem.class)) {
-            this.itemType = Block.BLOCKS[this.getItemId()].getClass().getName();
+            this.itemType = Constants.unmapClass(Block.BLOCKS[this.getItemId()].getClass().getName());
         } else {
-            this.itemType = item.getClass().getName();
+            this.itemType = Constants.unmapClass(item.getClass().getName());
         }
 
         this.modId = mc.getModId();
@@ -55,7 +56,7 @@ public class ItemData {
 
     public ItemData(NbtCompound tag) {
         this.modId = tag.getString("ModId");
-        this.itemType = tag.getString("ItemType");
+        this.itemType = Constants.unmapClass(tag.getString("ItemType"));
         this.itemId = tag.getInt("ItemId");
         this.ordinal = tag.getInt("ordinal");
         this.forcedModId = tag.contains("ForcedModId") ? tag.getString("ForcedModId") : null;
