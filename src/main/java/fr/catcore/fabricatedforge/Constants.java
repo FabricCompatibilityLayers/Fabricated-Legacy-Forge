@@ -48,4 +48,8 @@ public class Constants {
     public static String mapDescriptor(String desc) {
         return MappingUtils.mapDescriptor(desc);
     }
+
+    public static String unmapClass(String className) {
+        return MappingUtils.unmapClass(className.replace(".", "/"));
+    }
 }
