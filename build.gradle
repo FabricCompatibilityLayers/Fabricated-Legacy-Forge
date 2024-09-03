@@ -173,7 +173,8 @@ modrinth {
 	projectId = "JpHZ1Cyv" // This can be the project ID or the slug. Either will work!
 	versionName = displayVersion
 	changelog = """
-Fix fabric mods icon in Forge mod list.
+Ensure Forge always loads before Minecraft classes.
+Fix crash on server.
 """
 	uploadFile = remapJar
 	gameVersions = [project.minecraft_version] // Must be an array, even with only one version
