@@ -86,10 +86,13 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
     @Shadow @Final public static Block NETHER_BRICK_FENCE;
     @Shadow @Final public static Block GLASS_BLOCK;
 
+    @Environment(EnvType.CLIENT)
     @Shadow public abstract int method_479();
 
+    @Environment(EnvType.CLIENT)
     @Shadow public abstract int method_407(World world, int i, int j, int k);
 
+    @Environment(EnvType.CLIENT)
     @Shadow public abstract int method_463(World world, int i, int j, int k);
 
     @Shadow @Final public static Block CACTUS;
