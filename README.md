@@ -1,8 +1,8 @@
-# Fabricated Forge
+# Fabricated Legacy Forge
 
 Load Forge/ModLoader mods as if they were Fabric Loader mods.
 
-Supported Minecraft versions: 1.3.2, 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4 and 1.4.5.
+Supported Minecraft versions: 1.3.2, 1.4.0, 1.4.1, 1.4.2, 1.4.3, 1.4.4, 1.4.5, 1.4.6 and 1.4.7.
 
 This mod requires [Mod-Remapping-API](https://modrinth.com/mod/mod-remapping-api).
 
@@ -39,6 +39,6 @@ This mod requires [Mod-Remapping-API](https://modrinth.com/mod/mod-remapping-api
 ### ClassLoaderFixer
 - ThexXTURBOXx
 
-### Fabricated Forge itself
+### Fabricated Legacy Forge itself
 - CatCore (aka. arthurbambou)
 - Contributors
