@@ -45,6 +45,7 @@ public abstract class ItemMixin implements ItemProxy, IItem {
 
     @Shadow public abstract Item getRecipeRemainder();
 
+    @Environment(EnvType.CLIENT)
     @Shadow public abstract ItemGroup getItemGroup();
 
     protected boolean canRepair = true;

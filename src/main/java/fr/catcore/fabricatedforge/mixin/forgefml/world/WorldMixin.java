@@ -214,6 +214,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.perWorldStorage = new PersistentStateManager((SaveHandler)null);
     }
 
+    @Environment(EnvType.CLIENT)
     @Inject(method = "<init>(Lnet/minecraft/world/SaveHandler;Ljava/lang/String;Lnet/minecraft/world/dimension/Dimension;Lnet/minecraft/world/level/LevelInfo;Lnet/minecraft/util/profiler/Profiler;)V", at = @At("RETURN"))
     private void moveStateManager(SaveHandler string, String dimension, Dimension levelInfo, LevelInfo profiler, Profiler par5, CallbackInfo ci) {
         this.perWorldStorage = this.persistentStateManager;
