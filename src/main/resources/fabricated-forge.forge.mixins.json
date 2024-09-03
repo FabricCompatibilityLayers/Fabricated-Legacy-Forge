@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_8",
   "plugin": "fr.catcore.fabricatedforge.mixin.FabricatedForgeMixinPlugin",
   "server": [
-    "nbt.Server_NbtIoMixin",
     "server.dedicated.gui.PlayerStatsGuiMixin",
     "util.Server_LanguageMixin",
     "world.Server_WorldMixin"
@@ -189,7 +188,6 @@
     "client.texture.ClockSpriteMixin",
     "client.texture.CompassSpriteMixin",
     "client.world.ClientWorldMixin",
-    "nbt.Client_NbtIoMixin",
     "world.Client_WorldMixin"
   ],
   "injectors": {
