@@ -1,5 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.nbt;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import org.spongepowered.asm.mixin.Mixin;
@@ -8,8 +10,9 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.io.*;
 
+@Environment(EnvType.CLIENT)
 @Mixin(NbtIo.class)
-public abstract class NbtIoMixin {
+public abstract class Client_NbtIoMixin {
 
     @Shadow
     public static void method_1345(NbtCompound nbtCompound, DataOutput dataOutput) {

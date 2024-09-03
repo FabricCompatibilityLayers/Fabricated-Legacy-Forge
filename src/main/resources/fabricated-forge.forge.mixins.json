@@ -5,7 +5,10 @@
   "compatibilityLevel": "JAVA_8",
   "plugin": "fr.catcore.fabricatedforge.mixin.FabricatedForgeMixinPlugin",
   "server": [
-    "server.dedicated.gui.PlayerStatsGuiMixin"
+    "nbt.Server_NbtIoMixin",
+    "server.dedicated.gui.PlayerStatsGuiMixin",
+    "util.Server_LanguageMixin",
+    "world.Server_WorldMixin"
   ],
   "mixins": [
     "block.AbstractButtonBlockMixin",
@@ -79,7 +82,6 @@
     "item.ToolItemMixin",
     "item.itemgroup.ItemGroupMixin",
     "item.map.MapStateMixin",
-    "nbt.NbtIoMixin",
     "network.class_690Mixin",
     "network.IntegratedConnectionMixin",
     "network.OutboundConnectionMixin",
@@ -189,7 +191,9 @@
     "client.sound.SoundSystemMixin",
     "client.texture.ClockSpriteMixin",
     "client.texture.CompassSpriteMixin",
-    "client.world.ClientWorldMixin"
+    "client.world.ClientWorldMixin",
+    "nbt.Client_NbtIoMixin",
+    "world.Client_WorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1
