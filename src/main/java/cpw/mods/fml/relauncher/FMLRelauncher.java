@@ -43,6 +43,12 @@ public class FMLRelauncher {
         instance().relaunchServer(wrap);
     }
 
+    public static void handleServerPreLaunch() {
+        logFileNamePattern = "ForgeModLoader-server-%g.log";
+        side = "SERVER";
+        instance().preLaunchCommon(false);
+    }
+
     static FMLRelauncher instance() {
         if (INSTANCE == null) {
             INSTANCE = new FMLRelauncher();
@@ -86,7 +92,7 @@ public class FMLRelauncher {
 
         Class client;
         try {
-            File minecraftHome = this.computeExistingClientHome();
+            File minecraftHome = this.computeExistingGameDir();
             this.setupHome(minecraftHome);
             client = this.setupNewClientHome(minecraftHome);
         } finally {
@@ -118,9 +124,9 @@ public class FMLRelauncher {
     }
 
     private void relaunchServer(ArgsWrapper wrap) {
-        this.showWindow(false);
-        File minecraftHome = new File(".");
-        this.setupHome(minecraftHome);
+//        this.showWindow(false);
+//        File minecraftHome = new File(".");
+//        this.setupHome(minecraftHome);
         Class<? super Object> server = ReflectionHelper.getClass(this.classLoader, "net.minecraft.server.MinecraftServer");
 
         try {
@@ -153,7 +159,7 @@ public class FMLRelauncher {
         }
     }
 
-    private File computeExistingClientHome() {
+    private File computeExistingGameDir() {
         return FabricLoader.getInstance().getGameDir().toFile();
     }
 
@@ -161,6 +167,31 @@ public class FMLRelauncher {
         side = "CLIENT";
         logFileNamePattern = "ForgeModLoader-client-%g.log";
         instance().relaunchApplet(minecraftApplet);
+    }
+
+    public static void preLaunchClientEntry() {
+        side = "CLIENT";
+        logFileNamePattern = "ForgeModLoader-client-%g.log";
+        instance().preLaunchClient();
+    }
+
+    public File preLaunchCommon(boolean showWindow) {
+        this.showWindow(showWindow);
+
+        File mcDir = this.computeExistingGameDir();
+        this.setupHome(mcDir);
+
+        return mcDir;
+    }
+
+    public void preLaunchClient() {
+        File mcDir = preLaunchCommon(true);
+        this.setupNewClientHome(mcDir);
+
+        if (this.popupWindow != null) {
+            this.popupWindow.setVisible(false);
+            this.popupWindow.dispose();
+        }
     }
 
     private void relaunchApplet(Applet minecraftApplet) {
@@ -186,9 +217,9 @@ public class FMLRelauncher {
             }
         } else {
             System.out.println(minecraftApplet.getClass().getClassLoader().getClass().getName());
-            File mcDir = this.computeExistingClientHome();
-            this.setupHome(mcDir);
-            this.setupNewClientHome(mcDir);
+//            File mcDir = this.computeExistingClientHome();
+//            this.setupHome(mcDir);
+//            this.setupNewClientHome(mcDir);
             Class<? super Object> parentAppletClass = ReflectionHelper.getClass(this.getClass().getClassLoader(), "java.applet.Applet");
 
             try {
