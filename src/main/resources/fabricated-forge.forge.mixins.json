@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "plugin": "fr.catcore.fabricatedforge.mixin.FabricatedForgeMixinPlugin",
   "server": [
-    "server.dedicated.gui.PlayerStatsGuiMixin"
+    "server.dedicated.gui.PlayerStatsGuiMixin",
+    "util.Server_LanguageMixin",
+    "world.Server_WorldMixin"
   ],
   "mixins": [
     "block.AbstractButtonBlockMixin",
@@ -210,7 +212,8 @@
     "client.texture.ClockSpriteMixin",
     "client.texture.CompassSpriteMixin",
     "client.world.ClientWorldMixin",
-    "stat.StatHandlerMixin"
+    "stat.StatHandlerMixin",
+    "world.Client_WorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1
