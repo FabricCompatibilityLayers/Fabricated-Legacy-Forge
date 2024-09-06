@@ -5,6 +5,8 @@ import cpw.mods.fml.common.registry.ItemProxy;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IItem;
 import fr.catcore.fabricatedforge.mixininterface.IServerPlayerInteractionManager;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -39,14 +41,17 @@ public abstract class ItemMixin implements ItemProxy, IItem {
 
     @Shadow public abstract boolean isDamageable();
 
+    @Environment(EnvType.CLIENT)
     @Shadow public abstract int method_3378(ItemStack itemStack);
 
+    @Environment(EnvType.CLIENT)
     @Shadow public abstract boolean method_3397();
 
     @Shadow public abstract boolean isFood();
 
     @Shadow public abstract Item getRecipeRemainder();
 
+    @Environment(EnvType.CLIENT)
     @Shadow public abstract ItemGroup getItemGroup();
 
     @Shadow public abstract int method_3369(int i, int j);

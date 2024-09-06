@@ -27,6 +27,7 @@ public abstract class ItemGroupMixin implements IItemGroup {
 
     @Shadow @Final private int index;
 
+    @Environment(EnvType.CLIENT)
     @Shadow public abstract Item method_3320();
 
     @Inject(method = "<init>", at = @At(value = "FIELD", opcode = Opcodes.PUTFIELD, target = "Lnet/minecraft/item/itemgroup/ItemGroup;index:I"))
