@@ -177,6 +177,7 @@ modrinth {
 	changelog = """
 Ensure Forge always loads before Minecraft classes.
 Fix crash on server.
+Fix compatibility with forge servers.
 """
 	uploadFile = remapJar
 	gameVersions = [project.minecraft_version] // Must be an array, even with only one version
