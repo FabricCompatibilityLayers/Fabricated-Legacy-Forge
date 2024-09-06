@@ -164,15 +164,6 @@ public abstract class WorldMixin implements BlockView, IWorld {
     private static SaveHandler s_savehandler;
     public PersistentStateManager perWorldStorage;
 
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Overwrite
-    public Biome getBiome(int par1, int par2) {
-        return this.dimension.getBiomeGenForCoords(par1, par2);
-    }
-
     @Override
     public Biome getBiomeGenForCoordsBody(int par1, int par2) {
         if (this.isPosLoaded(par1, 0, par2)) {
@@ -227,6 +218,7 @@ public abstract class WorldMixin implements BlockView, IWorld {
         this.perWorldStorage = new PersistentStateManager((SaveHandler)null);
     }
 
+    @Environment(EnvType.CLIENT)
     @Inject(method = "<init>(Lnet/minecraft/world/SaveHandler;Ljava/lang/String;Lnet/minecraft/world/dimension/Dimension;Lnet/minecraft/world/level/LevelInfo;Lnet/minecraft/util/profiler/Profiler;)V", at = @At("RETURN"))
     private void moveStateManager(SaveHandler string, String dimension, Dimension levelInfo, LevelInfo profiler, Profiler par5, CallbackInfo ci) {
         this.perWorldStorage = new PersistentStateManager((SaveHandler)null);;
@@ -281,16 +273,6 @@ public abstract class WorldMixin implements BlockView, IWorld {
         }
 
         return s_mapStorage;
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Overwrite
-    public boolean isAir(int par1, int par2, int par3) {
-        int id = this.getBlock(par1, par2, par3);
-        return id == 0 || Block.BLOCKS[id] == null || ((IBlock)Block.BLOCKS[id]).isAirBlock((World)(Object) this, par1, par2, par3);
     }
 
     /**
@@ -1032,25 +1014,6 @@ public abstract class WorldMixin implements BlockView, IWorld {
      * @reason none
      */
     @Overwrite
-    public boolean isBlockSolid(int par1, int par2, int par3) {
-        Block block = Block.BLOCKS[this.getBlock(par1, par2, par3)];
-        return block != null && ((IBlock)block).isBlockNormalCube((World)(Object) this, par1, par2, par3);
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Overwrite
-    public boolean isTopSolid(int par1, int par2, int par3) {
-        return this.isBlockSolidOnSide(par1, par2, par3, ForgeDirection.UP);
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Overwrite
     public boolean method_3656(int par1, int par2, int par3, boolean par4) {
         if (par1 >= -30000000 && par3 >= -30000000 && par1 < 30000000 && par3 < 30000000) {
             Chunk var5 = this.chunkProvider.getChunk(par1 >> 4, par3 >> 4);
@@ -1688,15 +1651,6 @@ public abstract class WorldMixin implements BlockView, IWorld {
     @Overwrite
     public boolean isHighHumidity(int par1, int par2, int par3) {
         return this.dimension.isBlockHighHumidity(par1, par2, par3);
-    }
-
-    /**
-     * @author Minecraft Forge
-     * @reason none
-     */
-    @Overwrite
-    public int getMaxBuildHeight() {
-        return this.dimension.getHeight();
     }
 
     /**

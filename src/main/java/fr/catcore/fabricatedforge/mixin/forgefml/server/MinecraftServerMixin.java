@@ -4,6 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.ArgsWrapper;
 import cpw.mods.fml.relauncher.FMLRelauncher;
+import fr.catcore.cursedmixinextensions.annotations.Public;
 import fr.catcore.fabricatedforge.mixininterface.IMinecraftServer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -478,7 +479,8 @@ public abstract class MinecraftServerMixin implements Runnable, Snoopable, Comma
     }
 
     @Environment(EnvType.SERVER)
-    protected static void fmlReentry(ArgsWrapper wrap) {
+    @Public
+    private static void fmlReentry(ArgsWrapper wrap) {
         String[] par0ArrayOfStr = wrap.args;
         Stats.method_2269();
 
