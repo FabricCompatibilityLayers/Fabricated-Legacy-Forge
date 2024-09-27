@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.client.render;
 
 import com.mojang.blaze3d.platform.GLX;
+import fr.catcore.cursedmixinextensions.annotations.Public;
 import fr.catcore.fabricatedforge.mixininterface.ITessellator;
 import net.minecraft.client.render.Tessellator;
 import org.lwjgl.opengl.ARBVertexBufferObject;
@@ -54,6 +55,7 @@ public abstract class TessellatorMixin implements ITessellator {
     private static int nativeBufferSize = 0x200000;
     private static int trivertsInBuffer = nativeBufferSize / 48 * 6;
     // Should be public
+    @Public
     private static boolean renderingWorldRenderer = false;
     public boolean defaultTexture = false;
     private int rawBufferSize = 0;
