@@ -3,8 +3,8 @@ import com.diffplug.gradle.spotless.JavaExtension
 plugins {
 	id 'java-library'
 	id 'com.diffplug.spotless' version "6.12.0"
-	id 'fabric-loom' version "1.6-SNAPSHOT" apply false // To use chocoloom, change the version to a commit hash
-	id 'legacy-looming' version "1.6-SNAPSHOT" apply false // Version must be the same as fabric-loom's
+	id 'fabric-loom' version "1.7-SNAPSHOT" apply false // To use chocoloom, change the version to a commit hash
+	id 'legacy-looming' version "1.7-SNAPSHOT" apply false // Version must be the same as fabric-loom's
 	id 'maven-publish'
 	id "com.modrinth.minotaur" version "2.+"
 }
@@ -173,8 +173,9 @@ modrinth {
 	projectId = "JpHZ1Cyv" // This can be the project ID or the slug. Either will work!
 	versionName = displayVersion
 	changelog = """
-Ensure Forge always loads before Minecraft classes.
-Fix crash on server.
+Fix IC2 crash because of bad reflection again.\\
+Add OptiFabric/OptiFine compatibility.\\
+Don't load multiple variant of a mixin at the same time
 """
 	uploadFile = remapJar
 	gameVersions = [project.minecraft_version] // Must be an array, even with only one version
