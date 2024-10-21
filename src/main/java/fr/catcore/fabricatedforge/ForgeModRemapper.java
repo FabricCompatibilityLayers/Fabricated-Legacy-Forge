@@ -128,22 +128,12 @@ public class ForgeModRemapper implements ModRemapper {
         );
 
         // Forge added fields and methods
-        visitorInfos.registerMethodInvocation(
-                "net/minecraft/class_197",
-                "setBurnProperties",
-                "",
-                new VisitorInfos.FullClassMember(
-                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedBlock",
-                        "setBurnProperties",
-                        null
-                )
-        );
         visitorInfos.registerFieldRef(
                 "net/minecraft/class_197",
                 "blockFireSpreadSpeed",
                 "",
                 new VisitorInfos.FullClassMember(
-                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedWorld",
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedBlock",
                         "blockFireSpreadSpeed",
                         null
                 )
@@ -153,7 +143,7 @@ public class ForgeModRemapper implements ModRemapper {
                 "blockFlammability",
                 "",
                 new VisitorInfos.FullClassMember(
-                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedWorld",
+                        "fr/catcore/fabricatedforge/forged/reflection/ReflectedBlock",
                         "blockFlammability",
                         null
                 )
