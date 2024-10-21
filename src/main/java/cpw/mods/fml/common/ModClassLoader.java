@@ -110,7 +110,11 @@ public class ModClassLoader extends URLClassLoader {
 
             try {
                 for (URL url : urls) {
-                    files.add(new File(url.toURI()));
+                    try {
+                        files.add(new File(url.toURI()));
+                    } catch (IllegalArgumentException ignored) {
+                        System.err.println("Found non file url while getting sources from Knot classloader: " + url.toURI());
+                    }
                 }
 
                 return files.toArray(new File[0]);
