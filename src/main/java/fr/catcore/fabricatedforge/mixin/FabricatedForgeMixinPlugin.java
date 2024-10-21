@@ -44,13 +44,17 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (FabricLoader.getInstance().isModLoaded("optifabric") &&
-                OPTIFINE_OVERRIDES.contains(FabricLoader.getInstance().getMappingResolver()
-                        .unmapClassName("official", targetClassName)) && !mixinClassName.endsWith("Accessor") && !mixinClassName.contains(".optifine.")) {
-            System.out.println("[Fabricated-Legacy-Forge] Mixin cancelled for Optifine compatibility: " + mixinClassName);
-            return false;
+        if (FabricLoader.getInstance().isModLoaded("optifabric")) {
+            if (OPTIFINE_OVERRIDES.contains(FabricLoader.getInstance().getMappingResolver()
+                    .unmapClassName("official", targetClassName)) && !mixinClassName.endsWith("Accessor") && !mixinClassName.contains(".optifine.")) {
+                System.out.println("[Fabricated-Legacy-Forge] Mixin cancelled for Optifine compatibility: " + mixinClassName);
+                return false;
+            }
+
+            return true;
+        } else {
+            return !mixinClassName.contains(".optifine.");
         }
-        return true;
     }
 
     @Override
