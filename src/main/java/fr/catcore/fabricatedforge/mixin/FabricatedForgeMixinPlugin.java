@@ -27,7 +27,6 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
             "asl",
             "asn",
             "atj",
-            "auh",
             "auo",
             "azy",
             "bac",
@@ -39,8 +38,10 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
             "bas",
             "bau",
             "bav",
+            "bdo",
             "ik",
             "il",
+            "kc",
             "kh",
             "md"
     );
