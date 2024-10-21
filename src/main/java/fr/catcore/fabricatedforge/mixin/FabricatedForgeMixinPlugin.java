@@ -24,24 +24,24 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
     }
 
     private static List<String> OPTIFINE_OVERRIDES = Arrays.asList(
-            "ard",
-            "arf",
-            "asb",
+            "asi",
+            "ask",
             "atg",
-            "ayp",
-            "ayt",
-            "ayy",
-            "ayz",
-            "azb",
-            "azc",
-            "azd",
-            "azf",
-            "azh",
-            "azi",
-            "ib",
-            "ic",
-            "jy",
-            "ln"
+            "aul",
+            "azu",
+            "azy",
+            "bad",
+            "baf",
+            "bah",
+            "bai",
+            "baj",
+            "bal",
+            "ban",
+            "bao",
+            "ij",
+            "ik",
+            "kg",
+            "mc"
     );
 
     @Override
