@@ -1,6 +1,7 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
 import cpw.mods.fml.common.registry.BlockProxy;
+import fr.catcore.cursedmixinextensions.annotations.Public;
 import fr.catcore.fabricatedforge.forged.reflection.ReflectedBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlockWithEntity;
@@ -527,6 +528,11 @@ public abstract class BlockMixin implements IBlock, BlockProxy {
     @Override
     public boolean canDragonDestroy(World world, int x, int y, int z) {
         return this.id != OBSIDIAN.id && this.id != END_STONE.id && this.id != BEDROCK.id;
+    }
+
+    @Public
+    private static void setBurnProperties(int id, int encouragement, int flammability) {
+        ReflectedBlock.setBurnProperties(id, encouragement, flammability);
     }
 
     @Override

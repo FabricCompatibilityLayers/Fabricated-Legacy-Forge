@@ -1,6 +1,5 @@
 package fr.catcore.fabricatedforge.mixin.forgefml.block;
 
-import fr.catcore.cursedmixinextensions.annotations.Public;
 import fr.catcore.fabricatedforge.forged.reflection.ReflectedBlock;
 import fr.catcore.fabricatedforge.mixininterface.IBlock;
 import fr.catcore.fabricatedforge.mixininterface.IFireBlock;
@@ -55,11 +54,6 @@ public abstract class FireBlockMixin extends Block implements IFireBlock {
         this.method_315(Block.TALLGRASS.id, 60, 100);
         this.method_315(Block.WOOL.id, 30, 60);
         this.method_315(Block.VINE.id, 15, 100);
-    }
-
-    @Public
-    private static void setBurnProperties(int id, int encouragement, int flammability) {
-        ReflectedBlock.setBurnProperties(id, encouragement, flammability);
     }
 
     /**
