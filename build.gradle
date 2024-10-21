@@ -173,7 +173,9 @@ modrinth {
 	projectId = "JpHZ1Cyv" // This can be the project ID or the slug. Either will work!
 	versionName = displayVersion
 	changelog = """
-Fix IC2 crash because of bad reflection again
+Fix IC2 crash because of bad reflection again.\\
+Add OptiFabric/OptiFine compatibility.\\
+Don't load multiple variant of a mixin at the same time
 """
 	uploadFile = remapJar
 	gameVersions = [project.minecraft_version] // Must be an array, even with only one version
