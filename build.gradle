@@ -3,8 +3,8 @@ import com.diffplug.gradle.spotless.JavaExtension
 plugins {
 	id 'java-library'
 	id 'com.diffplug.spotless' version "6.12.0"
-	id 'fabric-loom' version "1.6-SNAPSHOT" apply false // To use chocoloom, change the version to a commit hash
-	id 'legacy-looming' version "1.6-SNAPSHOT" apply false // Version must be the same as fabric-loom's
+	id 'fabric-loom' version "1.7-SNAPSHOT" apply false // To use chocoloom, change the version to a commit hash
+	id 'legacy-looming' version "1.7-SNAPSHOT" apply false // Version must be the same as fabric-loom's
 	id 'maven-publish'
 	id "com.modrinth.minotaur" version "2.+"
 }
