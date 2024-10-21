@@ -38,6 +38,8 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
             "azf",
             "azh",
             "azi",
+            "ib",
+            "ic",
             "jy",
             "ln"
     );
