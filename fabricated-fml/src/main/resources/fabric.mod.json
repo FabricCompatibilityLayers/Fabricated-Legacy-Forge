@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "fabricated-fml",
+  "version": "${version}",
+  "name": "Fabricated FML",
+  "description": "",
+  "authors": [
+    "CatCore"
+  ],
+  "contributors": [],
+  "contact": {
+    "homepage": "",
+    "sources": "",
+    "issues": ""
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/fabricated-fml/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "preLaunch": [
+    ]
+  },
+  "depends": {
+  },
+  "mixins": [
+    "fabricated-fml.mixins.json"
+  ],
+  "accessWidener": "fabricated-fml.accesswidener"
+}

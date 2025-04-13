@@ -1,0 +1,24 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.fabriccompatibilitylayers.fabricatedfml.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "server": [
+  ],
+  "mixins": [
+  ],
+  "client": [
+    "client.GameSettingsMixin",
+    "client.GuiCreateWorldMixin",
+    "client.GuiMainMenuMixin",
+    "client.IntegratedServerListenThreadMixin",
+    "client.IntegratedServerMixin",
+    "client.ItemRendererMixin",
+    "client.MemoryConnectionMixin",
+    "client.NetClientHandlerMixin",
+    "client.RenderBlocksMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

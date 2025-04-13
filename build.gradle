@@ -56,6 +56,10 @@ subprojects {
 
         legacyFabric {
             loader project.fabric_version
+
+            if (!project.access_widener.isEmpty()) {
+                accessWidener(project.file(project.access_widener))
+            }
         }
 
         minecraftRemapper.config {
