@@ -18,13 +18,13 @@ import java.awt.Dimension;
 import java.util.List;
 import java.util.logging.Logger;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.IFMLTextureFXExtension;
 import net.minecraft.src.RenderEngine;
 import net.minecraft.src.TextureFX;
 import net.minecraft.src.TexturePackBase;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 
-public class FMLTextureFX extends TextureFX implements ITextureFX
+public class FMLTextureFX extends TextureFX implements ITextureFX, IFMLTextureFXExtension
 {
     public int tileSizeBase = 16;
     public int tileSizeSquare = 256;
@@ -56,14 +56,46 @@ public class FMLTextureFX extends TextureFX implements ITextureFX
         setup();
     }
 
-    protected void setup()
+    @Override
+    public void setup()
     {
-        field_76852_a = new byte[tileSizeSquare << 2];
+        this.superSetup();
     }
 
     public boolean unregister(RenderEngine engine, List<TextureFX> effects)
     {
         effects.remove(this);
         return true;
+    }
+
+    // Fabricated FML BEGINS
+    @Override
+    public void superSetup() {
+        field_76852_a = new byte[tileSizeSquare << 2];
+    }
+
+    @Override
+    public int getTileSizeBase() {
+        return tileSizeBase;
+    }
+
+    @Override
+    public int getTileSizeMask() {
+        return tileSizeMask;
+    }
+
+    @Override
+    public int getTileSizeSquare() {
+        return tileSizeSquare;
+    }
+
+    @Override
+    public int getTileSizeSquareMask() {
+        return tileSizeSquareMask;
+    }
+
+    @Override
+    public Logger getLogger() {
+        return log;
     }
 }

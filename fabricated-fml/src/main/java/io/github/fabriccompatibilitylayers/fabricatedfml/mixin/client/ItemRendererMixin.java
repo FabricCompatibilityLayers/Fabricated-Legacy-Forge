@@ -38,7 +38,7 @@ public class ItemRendererMixin {
      * to fix the side rendering issues on textures != 16 */
     @Inject(method = "func_78439_a", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/src/Tessellator;func_78375_b(FFF)V", ordinal = 2))
     private void fml$storeFixedTextureDimensions(Tessellator p_78439_2_, float p_78439_3_, float p_78439_4_, float p_78439_5_, float par5, CallbackInfo ci,
-                                                 @Share(value = "fml:tileSize") LocalIntRef tileSizeRef, @Share("fml:tx") LocalFloatRef txRef, @Share("fml:tz") LocalFloatRef tzRef) {
+                                                 @Share(value = "tileSize", namespace = "fml") LocalIntRef tileSizeRef, @Share(value = "tx", namespace = "fml") LocalFloatRef txRef, @Share(value = "tz", namespace = "fml") LocalFloatRef tzRef) {
         tileSizeRef.set(TextureFXManager.instance().getTextureDimensions(GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D)).width / 16);
 
         txRef.set(1.0f / (32 * tileSizeRef.get()));
@@ -46,17 +46,17 @@ public class ItemRendererMixin {
     }
 
     @ModifyConstant(method = "func_78439_a", constant = @Constant(intValue = 16))
-    private int fml$fixTileSize(int constant, @Share(value = "fml:tileSize") LocalIntRef tileSizeRef) {
+    private int fml$fixTileSize(int constant, @Share(value = "tileSize", namespace = "fml") LocalIntRef tileSizeRef) {
         return tileSizeRef.get();
     }
 
     @ModifyConstant(method = "func_78439_a", constant = @Constant(floatValue = 16.0f))
-    private float fml$fixTileSize(float constant, @Share(value = "fml:tileSize") LocalIntRef tileSizeRef) {
+    private float fml$fixTileSize(float constant, @Share(value = "tileSize", namespace = "fml") LocalIntRef tileSizeRef) {
         return tileSizeRef.get();
     }
 
     @ModifyConstant(method = "func_78439_a", constant = @Constant(floatValue = 0.001953125f))
-    private float fml$fixTx(float constant, @Share("fml:tx") LocalFloatRef txRef) {
+    private float fml$fixTx(float constant, @Share(value = "tx", namespace = "fml") LocalFloatRef txRef) {
         return txRef.get();
     }
 
@@ -64,7 +64,7 @@ public class ItemRendererMixin {
             @Constant(floatValue = 0.0625f, ordinal = 1),
             @Constant(floatValue = 0.0625f, ordinal = 2),
     })
-    private float fml$fixTz(float constant, @Share("fml:tz") LocalFloatRef tzRef) {
+    private float fml$fixTz(float constant, @Share(value = "tz", namespace = "fml") LocalFloatRef tzRef) {
         return tzRef.get();
     }
 }

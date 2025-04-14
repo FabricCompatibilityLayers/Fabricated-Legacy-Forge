@@ -16,7 +16,16 @@
     "client.ItemRendererMixin",
     "client.MemoryConnectionMixin",
     "client.NetClientHandlerMixin",
-    "client.RenderBlocksMixin"
+    "client.RenderBlocksMixin",
+    "client.RenderEngineMixin",
+    "client.TextureCompassFXMixin",
+    "client.TextureFlamesFXMixin",
+    "client.TextureLavaFlowFXMixin",
+    "client.TextureLavaFXMixin",
+    "client.TexturePortalFXMixin",
+    "client.TextureWatchFXMixin",
+    "client.TextureWaterFlowFXMixin",
+    "client.TextureWaterFXMixin"
   ],
   "injectors": {
     "defaultRequire": 1
