@@ -1,0 +1,5 @@
+unimined.minecraft {
+    mappings {
+        devNamespace("searge")
+    }
+}

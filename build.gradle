@@ -36,22 +36,16 @@ subprojects {
 
     configurations {
         ornitheImplementation
+        implementation.extendsFrom ornitheImplementation
     }
 
-    unimined.minecraft {
+    unimined.minecraft(sourceSets.main, true) {
         version project.minecraft_version
 
         mappings {
             calamus()
 
             forgeBuiltinMCP(project.forge_version)
-
-            if (project.mappings == "searge") {
-                devNamespace("searge")
-            } else {
-                devFallbackNamespace("searge")
-                devNamespace("forgeMCP")
-            }
         }
 
         legacyFabric {
@@ -80,18 +74,10 @@ subprojects {
         }
         modImplementation("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
 
-        if (project.file(".gradle/unimined/local/modTransform/core-0.6.0-mapped-${project.mappings}.jar").exists()) {
-            fabricApi.osl(project.minecraft_version, project.osl_version).forEach {
-                modImplementation(ornitheImplementation(it))
-            }
-
-            modImplementation(ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}"))
-        } else {
-            fabricApi.osl(project.minecraft_version, project.osl_version).forEach {
-                ornitheImplementation(it)
-            }
-
-            ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
+        fabricApi.osl(project.minecraft_version, project.osl_version).forEach {
+            ornitheImplementation(it)
         }
+
+        ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
     }
 }
