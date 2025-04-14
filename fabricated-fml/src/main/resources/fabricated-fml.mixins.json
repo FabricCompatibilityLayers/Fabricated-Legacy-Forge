@@ -6,6 +6,11 @@
   "server": [
   ],
   "mixins": [
+    "common.BlockDispenserMixin",
+    "common.ChunkProviderServerMixin",
+    "common.CrashReportMixin",
+    "common.DedicatedServerMixin",
+    "common.EntityAIVillagerMateMixin"
   ],
   "client": [
     "client.GameSettingsMixin",
