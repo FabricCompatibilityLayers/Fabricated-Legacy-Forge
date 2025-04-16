@@ -10,7 +10,15 @@
     "common.ChunkProviderServerMixin",
     "common.CrashReportMixin",
     "common.DedicatedServerMixin",
-    "common.EntityAIVillagerMateMixin"
+    "common.EntityAIVillagerMateMixin",
+    "common.EntityItemMixin",
+    "common.EntityPlayerMixin",
+    "common.EntityPlayerMPMixin",
+    "common.EntitySlimeMixin",
+    "common.EntityTrackerEntryMixin",
+    "common.EntityTrackerMixin",
+    "common.EntityVillagerMixin",
+    "common.GenLayerBiomeMixin"
   ],
   "client": [
     "client.GameSettingsMixin",
