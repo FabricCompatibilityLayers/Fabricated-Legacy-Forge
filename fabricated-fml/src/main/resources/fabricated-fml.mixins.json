@@ -18,7 +18,11 @@
     "common.EntityTrackerEntryMixin",
     "common.EntityTrackerMixin",
     "common.EntityVillagerMixin",
-    "common.GenLayerBiomeMixin"
+    "common.GenLayerBiomeMixin",
+    "common.ItemMonsterPlacerMixin",
+    "common.NetHandlerMixin",
+    "common.NetLoginHandlerMixin",
+    "common.NetServerHandlerMixin"
   ],
   "client": [
     "client.GameSettingsMixin",

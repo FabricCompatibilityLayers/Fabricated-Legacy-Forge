@@ -6,5 +6,4 @@ import net.minecraft.src.Packet250CustomPayload;
 
 public interface NetClientHandlerExtension extends NetHandlerExtension {
     void fmlPacket131Callback(Packet131MapData p_72494_1_);
-    void handleVanilla250Packet(Packet250CustomPayload p_72501_1_);
 }
