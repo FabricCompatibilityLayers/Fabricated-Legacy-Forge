@@ -27,7 +27,7 @@ public class GuiMainMenuMixin extends GuiScreen {
     }
 
     @Inject(method = "func_73866_w_", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;field_71448_m:Z"))
-    private void fml$addModsButton(CallbackInfo ci, @Local LocalIntRef localIntRef) {
+    private void fml$addModsButton(CallbackInfo ci, @Local int var4) {
         this.field_73887_h.add(new GuiButton(6, this.field_73880_f / 2 + 2, var4 + 48, 98, 20, "Mods"));
     }
 

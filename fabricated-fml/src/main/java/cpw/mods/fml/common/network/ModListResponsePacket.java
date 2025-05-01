@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common.NetLoginHandlerAccessor;
 import net.minecraft.src.NetHandler;
 import net.minecraft.src.NetLoginHandler;
 import net.minecraft.src.NetworkManager;
@@ -124,7 +125,7 @@ public class ModListResponsePacket extends FMLPacket
         pkt.field_73628_b = pkt.field_73629_c.length;
         network.func_74429_a(pkt);
         // reset the continuation flag - we have completed extra negotiation and the login should complete now
-        NetLoginHandler.func_72531_a((NetLoginHandler) netHandler, true);
+        ((NetLoginHandlerAccessor) netHandler).setFlag(true);
     }
 
 }

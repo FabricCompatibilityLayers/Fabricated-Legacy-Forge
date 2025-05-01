@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.NetHandlerExtension;
+import io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common.WorldTypeAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -264,7 +266,7 @@ public class ModLoader
      */
     public static void addSpawn(Class<? extends EntityLiving> entityClass, int weightedProb, int min, int max, EnumCreatureType spawnList)
     {
-        EntityRegistry.addSpawn(entityClass, weightedProb, min, max, spawnList, WorldType.base12Biomes);
+        EntityRegistry.addSpawn(entityClass, weightedProb, min, max, spawnList, WorldTypeAccessor.getBase12Biomes());
     }
 
     /**
@@ -293,7 +295,7 @@ public class ModLoader
      */
     public static void addSpawn(String entityName, int weightedProb, int min, int max, EnumCreatureType spawnList)
     {
-        EntityRegistry.addSpawn(entityName, weightedProb, min, max, spawnList, WorldType.base12Biomes);
+        EntityRegistry.addSpawn(entityName, weightedProb, min, max, spawnList, WorldTypeAccessor.getBase12Biomes());
     }
 
     /**
@@ -689,7 +691,7 @@ public class ModLoader
      */
     public static void removeSpawn(Class<? extends EntityLiving> entityClass, EnumCreatureType spawnList)
     {
-        EntityRegistry.removeSpawn(entityClass, spawnList, WorldType.base12Biomes);
+        EntityRegistry.removeSpawn(entityClass, spawnList, WorldTypeAccessor.getBase12Biomes());
     }
 
     /**
@@ -712,7 +714,7 @@ public class ModLoader
      */
     public static void removeSpawn(String entityName, EnumCreatureType spawnList)
     {
-        EntityRegistry.removeSpawn(entityName, spawnList, WorldType.base12Biomes);
+        EntityRegistry.removeSpawn(entityName, spawnList, WorldTypeAccessor.getBase12Biomes());
     }
 
     /**
@@ -788,7 +790,7 @@ public class ModLoader
     {
         if (handler != null)
         {
-            PacketDispatcher.sendPacketToPlayer(packet, (Player)handler.getPlayer());
+            PacketDispatcher.sendPacketToPlayer(packet, (Player)((NetHandlerExtension) handler).getPlayer());
         }
     }
     public static void serverOpenWindow(EntityPlayerMP player, Container container, int ID, int x, int y, int z)

@@ -2,9 +2,10 @@ package cpw.mods.fml.client;
 
 import cpw.mods.fml.common.MissingModsException;
 import cpw.mods.fml.common.versioning.ArtifactVersion;
+import io.github.fabriccompatibilitylayers.fabricatedfml.forged.ForgedGuiErrorScreen;
 import net.minecraft.src.GuiErrorScreen;
 
-public class GuiModsMissing extends GuiErrorScreen
+public class GuiModsMissing extends ForgedGuiErrorScreen
 {
 
     private MissingModsException modsMissing;

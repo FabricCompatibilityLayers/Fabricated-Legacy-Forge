@@ -5,6 +5,7 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.WorldTypeExtension;
 import net.minecraft.src.BiomeGenBase;
 import net.minecraft.src.CraftingManager;
 import net.minecraft.src.EntityItem;
@@ -218,12 +219,12 @@ public class GameRegistry
 
     public static void addBiome(BiomeGenBase biome)
     {
-        WorldType.field_77137_b.addNewBiome(biome);
+        ((WorldTypeExtension) WorldType.field_77137_b).addNewBiome(biome);
     }
 
     public static void removeBiome(BiomeGenBase biome)
     {
-        WorldType.field_77137_b.removeBiome(biome);
+        ((WorldTypeExtension) WorldType.field_77137_b).removeBiome(biome);
     }
 
     public static void registerFuelHandler(IFuelHandler handler)

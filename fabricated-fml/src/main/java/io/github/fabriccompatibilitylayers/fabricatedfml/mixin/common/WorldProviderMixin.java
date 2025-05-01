@@ -1,6 +1,7 @@
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.WorldTypeExtension;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -26,7 +27,7 @@ public class WorldProviderMixin {
     @Overwrite
     protected void func_76572_b()
     {
-        this.field_76578_c = this.field_76577_b.getChunkManager(this.field_76579_a);
+        this.field_76578_c = ((WorldTypeExtension) this.field_76577_b).getChunkManager(this.field_76579_a);
     }
 
     /**
@@ -36,13 +37,13 @@ public class WorldProviderMixin {
     @Overwrite
     public IChunkProvider func_76555_c()
     {
-        return this.field_76577_b.getChunkGenerator(this.field_76579_a);
+        return ((WorldTypeExtension) this.field_76577_b).getChunkGenerator(this.field_76579_a);
     }
 
     @ModifyReturnValue(method = "func_76557_i", at = @At("RETURN"))
     private int fml$getMinimumSpawnHeight(int original) {
         if (original == 4 || original == 64) {
-            return this.field_76577_b.getMinimumSpawnHeight(this.field_76579_a);
+            return ((WorldTypeExtension) this.field_76577_b).getMinimumSpawnHeight(this.field_76579_a);
         }
 
         return original;
@@ -56,14 +57,14 @@ public class WorldProviderMixin {
     @Overwrite
     public boolean func_76564_j()
     {
-        return this.field_76577_b.hasVoidParticles(this.field_76576_e);
+        return ((WorldTypeExtension) this.field_76577_b).hasVoidParticles(this.field_76576_e);
     }
 
     @Environment(EnvType.CLIENT)
     @ModifyReturnValue(method = "func_76565_k", at = @At("RETURN"))
     private double fml$voidFadeMagnitude(double original) {
         if (original == 0.0D || original == 0.03125D) {
-            return this.field_76577_b.voidFadeMagnitude();
+            return ((WorldTypeExtension) this.field_76577_b).voidFadeMagnitude();
         }
 
         return original;

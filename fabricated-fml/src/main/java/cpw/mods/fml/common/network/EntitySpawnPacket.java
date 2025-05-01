@@ -91,8 +91,9 @@ public class EntitySpawnPacket extends FMLPacket
         {
             ent.func_70096_w().func_75689_a(dos);
         }
-        catch (IOException e)
+        catch (Throwable e)
         {
+            if (!(e instanceof IOException)) throw e;
             // unpossible
         }
 
@@ -150,8 +151,9 @@ public class EntitySpawnPacket extends FMLPacket
         {
             metadata = DataWatcher.func_75686_a(dis);
         }
-        catch (IOException e)
+        catch (Throwable e)
         {
+            if (!(e instanceof IOException)) throw e;
             // Nope
         }
         dat.skipBytes(data.length - bis.available() - 27);

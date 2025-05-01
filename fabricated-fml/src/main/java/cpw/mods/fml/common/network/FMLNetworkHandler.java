@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.NetHandlerExtension;
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.NetLoginHandlerExtension;
+import io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common.NetLoginHandlerAccessor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityPlayer;
@@ -67,7 +70,7 @@ public class FMLNetworkHandler
 
         if (target.startsWith("MC|"))
         {
-            handler.handleVanilla250Packet(packet);
+            ((NetHandlerExtension) handler).handleVanilla250Packet(packet);
         }
         if (target.equals("FML"))
         {
@@ -94,7 +97,7 @@ public class FMLNetworkHandler
         }
         else
         {
-            EntityPlayer pl = netHandler.getPlayer();
+            EntityPlayer pl = ((NetHandlerExtension) netHandler).getPlayer();
             if (pl != null)
             {
                 userName = pl.func_70005_c_();
@@ -117,7 +120,7 @@ public class FMLNetworkHandler
             {
                 // No FML on the client
                 FMLLog.fine("Connection from %s rejected - no FML packet received from client", userName);
-                netLoginHandler.completeConnection("You don't have FML installed, you cannot connect to this server");
+                ((NetLoginHandlerExtension) netLoginHandler).completeConnection("You don't have FML installed, you cannot connect to this server");
                 return;
             }
             else
@@ -135,7 +138,7 @@ public class FMLNetworkHandler
             String modKick = NetworkRegistry.instance().connectionReceived(netLoginHandler, netLoginHandler.field_72538_b);
             if (modKick != null)
             {
-                netLoginHandler.completeConnection(modKick);
+                ((NetLoginHandlerExtension) netLoginHandler).completeConnection(modKick);
                 loginStates.remove(netLoginHandler);
                 return;
             }
@@ -146,25 +149,25 @@ public class FMLNetworkHandler
                 return;
             }
             // Reset the "connection completed" flag so processing can continue
-            NetLoginHandler.func_72531_a(netLoginHandler, false);
+            ((NetLoginHandlerAccessor) netLoginHandler).setFlag(false);
             // Send the mod list request packet to the client from the server
             netLoginHandler.field_72538_b.func_74429_a(getModListRequestPacket());
             loginStates.put(netLoginHandler, CONNECTION_VALID);
             break;
         case CONNECTION_VALID:
-            netLoginHandler.completeConnection(null);
+            ((NetLoginHandlerExtension) netLoginHandler).completeConnection(null);
             loginStates.remove(netLoginHandler);
             break;
         case MISSING_MODS_OR_VERSIONS:
-            netLoginHandler.completeConnection("The server requires mods that are absent or out of date on your client");
+            ((NetLoginHandlerExtension) netLoginHandler).completeConnection("The server requires mods that are absent or out of date on your client");
             loginStates.remove(netLoginHandler);
             break;
         case FML_OUT_OF_DATE:
-            netLoginHandler.completeConnection("Your client is not running a new enough version of FML to connect to this server");
+            ((NetLoginHandlerExtension) netLoginHandler).completeConnection("Your client is not running a new enough version of FML to connect to this server");
             loginStates.remove(netLoginHandler);
             break;
         default:
-            netLoginHandler.completeConnection("There was a problem during FML negotiation");
+            ((NetLoginHandlerExtension) netLoginHandler).completeConnection("There was a problem during FML negotiation");
             loginStates.remove(netLoginHandler);
             break;
         }
@@ -185,7 +188,7 @@ public class FMLNetworkHandler
 
         if (kickReason != null)
         {
-            netLoginHandler.completeConnection(kickReason);
+            ((NetLoginHandlerExtension) netLoginHandler).completeConnection(kickReason);
         }
         return kickReason == null;
     }

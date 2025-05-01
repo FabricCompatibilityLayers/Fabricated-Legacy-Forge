@@ -2,9 +2,10 @@ package cpw.mods.fml.client;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.WrongMinecraftVersionException;
+import io.github.fabriccompatibilitylayers.fabricatedfml.forged.ForgedGuiErrorScreen;
 import net.minecraft.src.GuiErrorScreen;
 
-public class GuiCustomModLoadingErrorScreen extends GuiErrorScreen
+public class GuiCustomModLoadingErrorScreen extends ForgedGuiErrorScreen
 {
     private CustomModLoadingErrorDisplayException customException;
     public GuiCustomModLoadingErrorScreen(CustomModLoadingErrorDisplayException customException)

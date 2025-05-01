@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.NetHandlerExtension;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.Container;
 import net.minecraft.src.EntityPlayer;
@@ -199,7 +200,7 @@ public class NetworkRegistry
 
     void clientLoggedIn(NetHandler clientHandler, NetworkManager manager, Packet1Login login)
     {
-        generateChannelRegistration(clientHandler.getPlayer(), clientHandler, manager);
+        generateChannelRegistration(((NetHandlerExtension) clientHandler).getPlayer(), clientHandler, manager);
         for (IConnectionHandler handler : connectionHandlers)
         {
             handler.clientLoggedIn(clientHandler, manager, login);
@@ -228,15 +229,15 @@ public class NetworkRegistry
     {
         if ("REGISTER".equals(packet.field_73630_a))
         {
-            handleRegistrationPacket(packet, (Player)handler.getPlayer());
+            handleRegistrationPacket(packet, (Player)((NetHandlerExtension) handler).getPlayer());
         }
         else if ("UNREGISTER".equals(packet.field_73630_a))
         {
-            handleUnregistrationPacket(packet, (Player)handler.getPlayer());
+            handleUnregistrationPacket(packet, (Player)((NetHandlerExtension) handler).getPlayer());
         }
         else
         {
-            handlePacket(packet, network, (Player)handler.getPlayer());
+            handlePacket(packet, network, (Player)((NetHandlerExtension) handler).getPlayer());
         }
     }
 

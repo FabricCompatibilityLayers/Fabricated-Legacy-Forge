@@ -20,6 +20,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.NetClientHandlerExtension;
+import io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client.NetClientHandlerAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.CrashReport;
@@ -434,18 +436,18 @@ public class FMLClientHandler implements IFMLSidedHandler
     @Override
     public void handleTinyPacket(NetHandler handler, Packet131MapData mapData)
     {
-        ((NetClientHandler)handler).fmlPacket131Callback(mapData);
+        ((NetClientHandlerExtension)handler).fmlPacket131Callback(mapData);
     }
 
     @Override
     public void setClientCompatibilityLevel(byte compatibilityLevel)
     {
-        NetClientHandler.setConnectionCompatibilityLevel(compatibilityLevel);
+        NetClientHandlerAccessor.callSetConnectionCompatibilityLevel(compatibilityLevel);
     }
 
     @Override
     public byte getClientCompatibilityLevel()
     {
-        return NetClientHandler.getConnectionCompatibilityLevel();
+        return NetClientHandlerAccessor.callGetConnectionCompatibilityLevel();
     }
 }

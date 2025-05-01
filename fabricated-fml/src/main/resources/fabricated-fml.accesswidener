@@ -191,3 +191,5 @@ accessible	method	net/minecraft/src/WorldType	<init>	(ILjava/lang/String;I)V
 
 accessible	class	net/minecraft/src/ConsoleLogFormatter
 accessible	method	net/minecraft/src/ConsoleLogFormatter	<init>	()V
+accessible  class   net/minecraft/src/NetClientWebTextures
+accessible  method  net/minecraft/src/NetClientWebTextures <init> (Lnet/minecraft/src/NetClientHandler;Ljava/lang/String;)V

@@ -1,6 +1,7 @@
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common;
 
 import cpw.mods.fml.common.network.FMLNetworkHandler;
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.NetHandlerExtension;
 import net.minecraft.src.NetHandler;
 import net.minecraft.src.NetworkManager;
 import net.minecraft.src.TcpConnection;
@@ -23,7 +24,7 @@ public abstract class TcpConnectionMixin implements NetworkManager {
     @Inject(method = "func_74428_b", at = @At("RETURN"))
     private void fml$onConnectionClosed(CallbackInfo ci) {
         if (this.field_74472_n && this.field_74473_o.isEmpty()) {
-            FMLNetworkHandler.onConnectionClosed(this, this.field_74485_r.getPlayer());
+            FMLNetworkHandler.onConnectionClosed(this, ((NetHandlerExtension) this.field_74485_r).getPlayer());
         }
     }
 }

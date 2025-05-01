@@ -99,7 +99,7 @@ public abstract class NetClientHandlerMixin extends NetHandler implements NetCli
                 if (this.field_72563_h.field_71418_C.func_77298_g()) {
                     this.field_72563_h.field_71418_C.func_77296_a(var3);
                 } else if (this.field_72563_h.field_71418_C.func_77300_f()) {
-                    this.field_72563_h.func_71373_a(new GuiYesNo(new NetClientWebTextures(this, var3), StringTranslate.func_74808_a().func_74805_b("multiplayer.texturePrompt.line1"), StringTranslate.func_74808_a().func_74805_b("multiplayer.texturePrompt.line2"), 0));
+                    this.field_72563_h.func_71373_a(new GuiYesNo(new NetClientWebTextures((NetClientHandler) (Object) this, var3), StringTranslate.func_74808_a().func_74805_b("multiplayer.texturePrompt.line1"), StringTranslate.func_74808_a().func_74805_b("multiplayer.texturePrompt.line2"), 0));
                 }
             }
         } else if ("MC|TrList".equals(p_72501_1_.field_73630_a)) {

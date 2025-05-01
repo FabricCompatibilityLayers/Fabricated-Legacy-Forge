@@ -3,8 +3,8 @@ package cpw.mods.fml.client;
 import cpw.mods.fml.common.IFMLHandledException;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.common.asm.SideOnly;
+import io.github.fabriccompatibilitylayers.fabricatedfml.forged.ForgedGuiErrorScreen;
 import net.minecraft.src.FontRenderer;
-import net.minecraft.src.GuiErrorScreen;
 
 /**
  * If a mod throws this exception during loading, it will be called back to render
@@ -25,7 +25,7 @@ public abstract class CustomModLoadingErrorDisplayException extends RuntimeExcep
      * @param errorScreen The error screen we're painting
      * @param fontRenderer A font renderer for you
      */
-    public abstract void initGui(GuiErrorScreen errorScreen, FontRenderer fontRenderer);
+    public abstract void initGui(ForgedGuiErrorScreen errorScreen, FontRenderer fontRenderer);
 
     /**
      * Draw your error to the screen.
@@ -39,5 +39,5 @@ public abstract class CustomModLoadingErrorDisplayException extends RuntimeExcep
      * @param mouseRelY Mouse Y
      * @param tickTime tick time
      */
-    public abstract void drawScreen(GuiErrorScreen errorScreen, FontRenderer fontRenderer, int mouseRelX, int mouseRelY, float tickTime);
+    public abstract void drawScreen(ForgedGuiErrorScreen errorScreen, FontRenderer fontRenderer, int mouseRelX, int mouseRelY, float tickTime);
 }

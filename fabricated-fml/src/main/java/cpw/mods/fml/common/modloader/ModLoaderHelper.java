@@ -23,6 +23,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Maps;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.EntityPlayerExtension;
 import net.minecraft.src.BaseMod;
 import net.minecraft.src.Container;
 import net.minecraft.src.Entity;
@@ -151,7 +152,7 @@ public class ModLoaderHelper
     {
         ModLoaderGuiHelper helper = guiHelpers.get(id);
         helper.injectContainer(container);
-        player.openGui(helper.getMod(), id, player.field_70170_p, x, y, z);
+        ((EntityPlayerExtension) player).openGui(helper.getMod(), id, player.field_70170_p, x, y, z);
     }
 
     public static Object getClientSideGui(BaseModProxy mod, EntityPlayer player, int ID, int x, int y, int z)

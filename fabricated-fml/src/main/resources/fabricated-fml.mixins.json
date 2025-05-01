@@ -26,6 +26,7 @@
     "common.MapDataMixin",
     "common.MinecraftServerMixin",
     "common.NetHandlerMixin",
+    "common.NetLoginHandlerAccessor",
     "common.NetLoginHandlerMixin",
     "common.NetServerHandlerMixin",
     "common.NetworkListenThreadMixin",
@@ -43,6 +44,7 @@
     "common.WorldInfoMixin",
     "common.WorldMixin",
     "common.WorldProviderMixin",
+    "common.WorldTypeAccessor",
     "common.WorldTypeMixin"
   ],
   "client": [
@@ -56,6 +58,7 @@
     "client.MinecraftAccessor",
     "client.MinecraftAppletMixin",
     "client.MinecraftMixin",
+    "client.NetClientHandlerAccessor",
     "client.NetClientHandlerMixin",
     "client.RenderBlocksMixin",
     "client.RenderEngineMixin",

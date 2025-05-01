@@ -21,6 +21,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.WorldInfoExtension;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.CrashReport;
 import net.minecraft.src.DedicatedServer;
@@ -425,7 +426,7 @@ public class FMLCommonHandler
         }
         handlerSet.add(handler);
         Map<String,NBTBase> additionalProperties = Maps.newHashMap();
-        worldInfo.setAdditionalProperties(additionalProperties);
+        ((WorldInfoExtension) worldInfo).setAdditionalProperties(additionalProperties);
         for (ModContainer mc : Loader.instance().getModList())
         {
             if (mc instanceof InjectedModContainer)
