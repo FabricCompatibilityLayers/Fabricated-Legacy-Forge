@@ -53,6 +53,12 @@ subprojects {
 
             if (!project.access_widener.isEmpty()) {
                 accessWidener(project.file(project.access_widener))
+//                afterEvaluate {
+//                    mergeAws([
+//                            atLegacy2aw(project.file("src/main/resources/fml_at.cfg"), project.file("src/main/resources/fml_at.accesswidener"), "official"),
+//                            project.file("src/main/resources/fabric-specific.accesswidener")
+//                    ], "searge")
+//                }
             }
         }
 
