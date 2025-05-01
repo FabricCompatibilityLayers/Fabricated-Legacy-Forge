@@ -10,13 +10,6 @@ base {
     archivesName = project.archives_base_name
 }
 
-allprojects {
-    java {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-}
-
 subprojects {
     apply(plugin: "xyz.wagyourtail.unimined")
 
@@ -80,10 +73,24 @@ subprojects {
         }
         modImplementation("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
 
-        fabricApi.osl(project.minecraft_version, project.osl_version).forEach {
-            ornitheImplementation(it)
+        modImplementation(fabricApi.legacyFabricModule("legacy-fabric-logger-api-v1", "1.9.1+1.12.2")) {
+            exclude(module: 'fabric-loader')
+        }
+        modImplementation("maven.modrinth:spasm:0.2")
+
+        implementation("com.github.thecatcore:WFVAIO:1.2.1") {
+            exclude(module: 'fabric-loader')
         }
 
-        ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
+//        fabricApi.osl(project.minecraft_version, project.osl_version).forEach {
+//            ornitheImplementation(it)
+//        }
+//
+//        ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
+    }
+
+    java {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }

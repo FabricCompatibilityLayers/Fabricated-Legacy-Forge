@@ -18,6 +18,7 @@
   "environment": "*",
   "entrypoints": {
     "preLaunch": [
+      "io.github.fabriccompatibilitylayers.fabricatedfml.FabricatedFML"
     ]
   },
   "depends": {
@@ -25,5 +26,5 @@
   "mixins": [
     "fabricated-fml.mixins.json"
   ],
-  "accessWidener": "fabricated-fml.accesswidener"
+  "accessWidener": "fabricated-fml-test.accesswidener"
 }

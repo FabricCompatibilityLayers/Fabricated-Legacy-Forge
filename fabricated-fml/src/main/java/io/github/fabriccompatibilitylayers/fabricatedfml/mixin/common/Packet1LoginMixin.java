@@ -1,7 +1,6 @@
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import cpw.mods.fml.common.network.FMLNetworkHandler;
@@ -12,6 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.DataInputStream;
@@ -35,14 +35,18 @@ public class Packet1LoginMixin {
         this.vanillaCompatible = false;
     }
 
-    @WrapWithCondition(method = "func_73267_a", at = @At(value = "INVOKE", target = "Ljava/io/DataInputStream;readByte()B", ordinal = 1))
-    private boolean fml$readDimensionId(DataInputStream instance) throws IOException {
-        if (this.vanillaCompatible) {
-            return true;
-        }
+    @Redirect(method = "func_73267_a", at = @At(value = "INVOKE", target = "Ljava/io/DataInputStream;readByte()B", ordinal = 1))
+    private byte fml$redirectOriginalCall(DataInputStream instance) {
+        return -1;
+    }
 
-        this.field_73558_e = instance.readInt();
-        return false;
+    @Inject(method = "func_73267_a", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Packet1Login;field_73555_f:B"))
+    private void fml$readDimensionId(DataInputStream p_73267_1_, CallbackInfo ci) throws IOException {
+        if (this.vanillaCompatible) {
+            this.field_73558_e = p_73267_1_.readByte();
+        } else {
+            this.field_73558_e = p_73267_1_.readInt();
+        }
     }
 
     @WrapOperation(method = "func_73273_a", at = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeByte(I)V", ordinal = 1))

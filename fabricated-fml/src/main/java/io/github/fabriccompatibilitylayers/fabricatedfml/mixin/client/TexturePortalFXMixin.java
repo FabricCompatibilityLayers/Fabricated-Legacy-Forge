@@ -2,17 +2,17 @@ package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client;
 
 import cpw.mods.fml.client.FMLTextureFX;
 import fr.catcore.cursedmixinextensions.annotations.ChangeSuperClass;
+import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
+import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.IFMLTextureFXExtension;
+import net.minecraft.src.Block;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.TextureFX;
 import net.minecraft.src.TexturePortalFX;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
 
@@ -25,10 +25,14 @@ public abstract class TexturePortalFXMixin extends TextureFX implements IFMLText
         super(p_i3213_1_);
     }
 
-    @Inject(method = "<init>", at = @At(value = "NEW", target = "Ljava/util/Random;", remap = false), cancellable = true)
-    private void fml$cancelConstructorEarly(CallbackInfo ci) {
+    @ShadowSuperConstructor
+    public abstract void superConstructor(int p_i3213_1_);
+
+    @ReplaceConstructor
+    public void constructor() {
+        superConstructor(Block.field_72015_be.field_72059_bZ);
+
         this.setup();
-        ci.cancel();
     }
 
     @Override

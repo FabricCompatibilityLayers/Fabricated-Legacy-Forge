@@ -32,6 +32,8 @@ public abstract class MinecraftMixin {
         return 0;
     }
 
+    @Shadow public boolean field_71454_w;
+
     @Inject(method = "func_71384_a", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GameSettings;field_74363_ab:Ljava/lang/String;", ordinal = 0))
     private void fml$beginMinecraftLoading(CallbackInfo ci) {
         FMLClientHandler.instance().beginMinecraftLoading((Minecraft) (Object) this);
@@ -52,9 +54,9 @@ public abstract class MinecraftMixin {
         FMLCommonHandler.instance().onRenderTickStart(this.field_71428_T.field_74281_c);
     }
 
-    @Inject(method = "func_71411_J", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/src/Profiler;func_76319_b()V", ordinal = 2))
+    @Inject(method = "func_71411_J", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glFlush()V", remap = false))
     private void fml$onRenderTickEnd(CallbackInfo ci) {
-        FMLCommonHandler.instance().onRenderTickEnd(this.field_71428_T.field_74281_c);
+        if (!this.field_71454_w) FMLCommonHandler.instance().onRenderTickEnd(this.field_71428_T.field_74281_c);
     }
 
     @Inject(method = "func_71407_l", at = @At("HEAD"))

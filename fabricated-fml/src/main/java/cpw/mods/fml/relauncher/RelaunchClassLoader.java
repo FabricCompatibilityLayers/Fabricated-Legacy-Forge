@@ -1,5 +1,10 @@
 package cpw.mods.fml.relauncher;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.forged.ClassLoaderUtils;
+import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.ClassTransformer;
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
+import net.fabricmc.loader.impl.util.UrlUtil;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,16 +30,16 @@ public class RelaunchClassLoader extends URLClassLoader
     private List<URL> sources;
     private ClassLoader parent;
 
-    private List<IClassTransformer> transformers;
+    public static List<IClassTransformer> transformers;
     private Map<String, Class> cachedClasses;
 
     private Set<String> classLoaderExceptions = new HashSet<String>();
     private Set<String> transformerExceptions = new HashSet<String>();
 
-    public RelaunchClassLoader(URL[] sources)
+    public RelaunchClassLoader()
     {
-        super(sources, null);
-        this.sources = new ArrayList<URL>(Arrays.asList(sources));
+        super(new URL[0], RelaunchClassLoader.class.getClassLoader());
+        this.sources = new ArrayList<URL>();
         this.parent = getClass().getClassLoader();
         this.cachedClasses = new HashMap<String,Class>(1000);
         this.transformers = new ArrayList<IClassTransformer>(2);
@@ -53,13 +58,19 @@ public class RelaunchClassLoader extends URLClassLoader
         addTransformerExclusion("com.google.common.");
         addTransformerExclusion("cpw.mods.fml.common.asm.SideOnly");
         addTransformerExclusion("cpw.mods.fml.common.Side");
+
+
+        addTransformerExclusion("io.github.fabriccompatibilitylayers.fabricatedfml.");
+        addClassLoaderExclusion("com.llamalad7.mixinextras.");
     }
 
     public void registerTransformer(String transformerClassName)
     {
         try
         {
-            transformers.add((IClassTransformer) loadClass(transformerClassName).newInstance());
+            IClassTransformer transformer = (IClassTransformer) loadClass(transformerClassName).newInstance();
+            ClassTransformer.registerPostTransformer(transformer);
+            transformers.add(transformer);
         }
         catch (Exception e)
         {
@@ -69,62 +80,64 @@ public class RelaunchClassLoader extends URLClassLoader
     @Override
     public Class<?> findClass(String name) throws ClassNotFoundException
     {
-        // NEI/CCC compatibility code
-        if (excludedPackages.length != 0)
-        {
-            classLoaderExceptions.addAll(Arrays.asList(excludedPackages));
-            excludedPackages = new String[0];
-        }
-        if (transformerExclusions.length != 0)
-        {
-            transformerExceptions.addAll(Arrays.asList(transformerExclusions));
-            transformerExclusions = new String[0];
-        }
+        return Class.forName(name, false, this.parent);
 
-        for (String st : classLoaderExceptions)
-        {
-            if (name.startsWith(st))
-            {
-                return parent.loadClass(name);
-            }
-        }
-
-        if (cachedClasses.containsKey(name))
-        {
-            return cachedClasses.get(name);
-        }
-
-        for (String st : transformerExceptions)
-        {
-            if (name.startsWith(st))
-            {
-                Class<?> cl = super.findClass(name);
-                cachedClasses.put(name, cl);
-                return cl;
-            }
-        }
-
-        try
-        {
-            int lastDot = name.lastIndexOf('.');
-            if (lastDot > -1)
-            {
-                String pkgname = name.substring(0, lastDot);
-                if (getPackage(pkgname)==null)
-                {
-                    definePackage(pkgname, null, null, null, null, null, null, null);
-                }
-            }
-            byte[] basicClass = getClassBytes(name);
-            byte[] transformedClass = runTransformers(name, basicClass);
-            Class<?> cl = defineClass(name, transformedClass, 0, transformedClass.length);
-            cachedClasses.put(name, cl);
-            return cl;
-        }
-        catch (Throwable e)
-        {
-            throw new ClassNotFoundException(name, e);
-        }
+//        // NEI/CCC compatibility code
+//        if (excludedPackages.length != 0)
+//        {
+//            classLoaderExceptions.addAll(Arrays.asList(excludedPackages));
+//            excludedPackages = new String[0];
+//        }
+//        if (transformerExclusions.length != 0)
+//        {
+//            transformerExceptions.addAll(Arrays.asList(transformerExclusions));
+//            transformerExclusions = new String[0];
+//        }
+//
+//        for (String st : classLoaderExceptions)
+//        {
+//            if (name.startsWith(st))
+//            {
+//                return parent.loadClass(name);
+//            }
+//        }
+//
+//        if (cachedClasses.containsKey(name))
+//        {
+//            return cachedClasses.get(name);
+//        }
+//
+//        for (String st : transformerExceptions)
+//        {
+//            if (name.startsWith(st))
+//            {
+//                Class<?> cl = super.findClass(name);
+//                cachedClasses.put(name, cl);
+//                return cl;
+//            }
+//        }
+//
+//        try
+//        {
+//            int lastDot = name.lastIndexOf('.');
+//            if (lastDot > -1)
+//            {
+//                String pkgname = name.substring(0, lastDot);
+//                if (getPackage(pkgname)==null)
+//                {
+//                    definePackage(pkgname, null, null, null, null, null, null, null);
+//                }
+//            }
+//            byte[] basicClass = getClassBytes(name);
+//            byte[] transformedClass = runTransformers(name, basicClass);
+//            Class<?> cl = defineClass(name, transformedClass, 0, transformedClass.length);
+//            cachedClasses.put(name, cl);
+//            return cl;
+//        }
+//        catch (Throwable e)
+//        {
+//            throw new ClassNotFoundException(name, e);
+//        }
     }
 
     public byte[] getClassBytes(String name) throws IOException
@@ -132,7 +145,7 @@ public class RelaunchClassLoader extends URLClassLoader
         InputStream classStream = null;
         try
         {
-            URL classResource = findResource(name.replace('.', '/').concat(".class"));
+            URL classResource = ((URLClassLoader)this.parent.getParent()).findResource(name.replace('.', '/').concat(".class"));
             if (classResource == null)
             {
                 return null;
@@ -170,6 +183,8 @@ public class RelaunchClassLoader extends URLClassLoader
     {
         super.addURL(url);
         sources.add(url);
+
+        FabricLauncherBase.getLauncher().addToClassPath(UrlUtil.asPath(url));
     }
 
     public List<URL> getSources()
@@ -206,10 +221,12 @@ public class RelaunchClassLoader extends URLClassLoader
     private void addClassLoaderExclusion(String toExclude)
     {
         classLoaderExceptions.add(toExclude);
+        ClassLoaderUtils.TRANSFORMER_EXCLUSIONS.add(toExclude);
     }
 
     void addTransformerExclusion(String toExclude)
     {
         transformerExceptions.add(toExclude);
+        ClassLoaderUtils.TRANSFORMER_EXCLUSIONS.add(toExclude);
     }
 }

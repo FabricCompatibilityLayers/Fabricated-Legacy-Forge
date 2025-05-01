@@ -2,8 +2,11 @@ package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client;
 
 import cpw.mods.fml.client.FMLTextureFX;
 import fr.catcore.cursedmixinextensions.annotations.ChangeSuperClass;
+import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
+import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.IFMLTextureFXExtension;
 import net.minecraft.client.Minecraft;
+import net.minecraft.src.Item;
 import net.minecraft.src.TextureCompassFX;
 import net.minecraft.src.TextureFX;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,10 +32,16 @@ public abstract class TextureCompassFXMixin extends TextureFX implements IFMLTex
         super(icon);
     }
 
-    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Ljavax/imageio/ImageIO;read(Ljava/net/URL;)Ljava/awt/image/BufferedImage;", remap = false), cancellable = true)
-    private void fml$cancelOriginalConstructor(Minecraft par1, CallbackInfo ci) {
+    @ShadowSuperConstructor
+    public abstract void superConstructor(int p_i3213_1_);
+
+    @ReplaceConstructor
+    public void constructor(Minecraft p_i3212_1_) {
+        superConstructor(Item.field_77750_aQ.func_77617_a(0));
+        this.field_76865_g = p_i3212_1_;
+        this.field_76847_f = 1;
+
         this.setup();
-        ci.cancel();
     }
 
     @Override

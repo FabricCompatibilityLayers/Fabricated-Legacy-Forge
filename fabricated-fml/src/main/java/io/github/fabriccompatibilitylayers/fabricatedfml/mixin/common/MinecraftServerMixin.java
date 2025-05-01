@@ -1,5 +1,7 @@
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Side;
@@ -43,8 +45,10 @@ public class MinecraftServerMixin {
         FMLCommonHandler.instance().onWorldLoadTick(field_71305_c);
     }
 
-    @Inject(method = "run", remap = false, at = @At(value = "INVOKE_ASSIGN", target = "Ljava/lang/Thread;sleep(J)V", remap = false))
-    private void fml$handleServerStopping(CallbackInfo ci) {
+    @WrapOperation(method = "run", remap = false, at = @At(value = "INVOKE", target = "Ljava/lang/Thread;sleep(J)V", remap = false))
+    private void fml$handleServerStopping(long l, Operation<Void> original) {
+        original.call(l);
+
         if (!this.field_71317_u) {
             FMLCommonHandler.instance().handleServerStopping();
         }
