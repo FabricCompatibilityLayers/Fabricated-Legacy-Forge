@@ -1,0 +1,61 @@
+package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common;
+
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import cpw.mods.fml.common.network.FMLNetworkHandler;
+import net.minecraft.src.EnumGameType;
+import net.minecraft.src.Packet1Login;
+import net.minecraft.src.WorldType;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+@Mixin(Packet1Login.class)
+public class Packet1LoginMixin {
+
+    @Shadow public int field_73558_e;
+
+    private boolean vanillaCompatible;
+
+    @Inject(method = "<init>()V", at = @At("RETURN"))
+    private void fml$init(CallbackInfo ci) {
+        this.vanillaCompatible = FMLNetworkHandler.vanillaLoginPacketCompatibility();
+    }
+
+    @Inject(method = "<init>(ILnet/minecraft/src/WorldType;Lnet/minecraft/src/EnumGameType;ZIIII)V", at = @At("RETURN"))
+    private void fml$init(int p_i3327_2_, WorldType p_i3327_3_, EnumGameType p_i3327_4_, boolean p_i3327_5_, int p_i3327_6_, int p_i3327_7_, int p_i3327_8_, int par8, CallbackInfo ci) {
+        this.vanillaCompatible = false;
+    }
+
+    @WrapWithCondition(method = "func_73267_a", at = @At(value = "INVOKE", target = "Ljava/io/DataInputStream;readByte()B", ordinal = 1))
+    private boolean fml$readDimensionId(DataInputStream instance) throws IOException {
+        if (this.vanillaCompatible) {
+            return true;
+        }
+
+        this.field_73558_e = instance.readInt();
+        return false;
+    }
+
+    @WrapOperation(method = "func_73273_a", at = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeByte(I)V", ordinal = 1))
+    private void fml$writeDimensionId(DataOutputStream instance, int v, Operation<Void> original) throws IOException {
+        if (this.vanillaCompatible) {
+            original.call(instance, v);
+        } else {
+            instance.writeInt(this.field_73558_e);
+        }
+    }
+
+    @ModifyReturnValue(method = "func_73284_a", at = @At("RETURN"))
+    private int fml$addCompatibilityFlag(int original) {
+        return original + (vanillaCompatible ? 0 : 3);
+    }
+}
