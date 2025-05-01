@@ -188,3 +188,6 @@ accessible	method	net/minecraft/src/CraftingManager	func_77595_a	(Lnet/minecraft
 accessible	method	net/minecraft/src/CraftingManager	func_77596_b	(Lnet/minecraft/src/ItemStack;[Ljava/lang/Object;)V
 accessible	method	net/minecraft/src/WorldType	<init>	(ILjava/lang/String;)V
 accessible	method	net/minecraft/src/WorldType	<init>	(ILjava/lang/String;I)V
+
+accessible	class	net/minecraft/src/ConsoleLogFormatter
+accessible	method	net/minecraft/src/ConsoleLogFormatter	<init>	()V

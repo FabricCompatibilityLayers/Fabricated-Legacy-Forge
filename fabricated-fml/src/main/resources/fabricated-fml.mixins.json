@@ -4,10 +4,12 @@
   "package": "io.github.fabriccompatibilitylayers.fabricatedfml.mixin",
   "compatibilityLevel": "JAVA_8",
   "server": [
+    "server.StringTranslateMixin"
   ],
   "mixins": [
     "common.BlockDispenserMixin",
     "common.ChunkProviderServerMixin",
+    "common.ConsoleLogManagerMixin",
     "common.CrashReportMixin",
     "common.DedicatedServerMixin",
     "common.EntityAIVillagerMateMixin",
@@ -20,9 +22,25 @@
     "common.EntityVillagerMixin",
     "common.GenLayerBiomeMixin",
     "common.ItemMonsterPlacerMixin",
+    "common.MapDataMixin",
     "common.NetHandlerMixin",
     "common.NetLoginHandlerMixin",
-    "common.NetServerHandlerMixin"
+    "common.NetServerHandlerMixin",
+    "common.NetworkListenThreadMixin",
+    "common.PacketMixin",
+    "common.SaveHandlerMixin",
+    "common.ServerConfigurationManagerMixin",
+    "common.ServerListenThreadMixin",
+    "common.SlotCraftingMixin",
+    "common.SlotFurnaceMixin",
+    "common.StringTranslateMixin",
+    "common.StructureVillagePiecesMixin",
+    "common.TcpConnectionMixin",
+    "common.TileEntityFurnaceMixin",
+    "common.WorldInfoMixin",
+    "common.WorldMixin",
+    "common.WorldProviderMixin",
+    "common.WorldTypeMixin"
   ],
   "client": [
     "client.GameSettingsMixin",
