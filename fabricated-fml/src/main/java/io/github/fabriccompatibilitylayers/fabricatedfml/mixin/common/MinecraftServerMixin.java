@@ -40,9 +40,11 @@ public class MinecraftServerMixin {
         FMLCommonHandler.instance().handleServerStarted();
     }
 
-    @Inject(method = "run", remap = false, at = @At(value = "INVOKE_ASSIGN", target = "Ljava/lang/System;currentTimeMillis()J", ordinal = 0, remap = false))
-    private void fml$onWorldLoadTick(CallbackInfo ci) {
+    @WrapOperation(method = "run", remap = false, at = @At(value = "INVOKE", target = "Ljava/lang/System;currentTimeMillis()J", ordinal = 0, remap = false))
+    private long fml$onWorldLoadTick(Operation<Long> original) {
+        long result = original.call();
         FMLCommonHandler.instance().onWorldLoadTick(field_71305_c);
+        return result;
     }
 
     @WrapOperation(method = "run", remap = false, at = @At(value = "INVOKE", target = "Ljava/lang/Thread;sleep(J)V", remap = false))

@@ -1,9 +1,11 @@
 {
   "required": true,
-  "minVersion": "0.8",
   "package": "io.github.fabriccompatibilitylayers.fabricatedfml.mixin",
   "plugin": "io.github.fabriccompatibilitylayers.fabricatedfml.FabricatedFMLMixinPlugin",
   "compatibilityLevel": "JAVA_8",
+  "mixinextras": {
+    "minVersion": "0.5.0-rc.2"
+  },
   "server": [
     "server.StringTranslateMixin"
   ],
@@ -45,7 +47,6 @@
     "common.WorldInfoMixin",
     "common.WorldMixin",
     "common.WorldProviderMixin",
-    "common.WorldTypeAccessor",
     "common.WorldTypeMixin"
   ],
   "client": [

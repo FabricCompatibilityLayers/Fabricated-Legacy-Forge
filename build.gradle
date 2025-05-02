@@ -82,6 +82,8 @@ subprojects {
             exclude(module: 'fabric-loader')
         }
 
+        implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.5.0-rc.2"))
+
 //        fabricApi.osl(project.minecraft_version, project.osl_version).forEach {
 //            ornitheImplementation(it)
 //        }

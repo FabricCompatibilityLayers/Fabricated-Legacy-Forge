@@ -25,7 +25,7 @@ public class WorldProviderMixin {
      * @reason
      */
     @Overwrite
-    protected void func_76572_b()
+    public void func_76572_b()
     {
         this.field_76578_c = ((WorldTypeExtension) this.field_76577_b).getChunkManager(this.field_76579_a);
     }

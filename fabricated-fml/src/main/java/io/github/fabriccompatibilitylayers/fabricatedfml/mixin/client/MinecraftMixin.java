@@ -6,11 +6,10 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.relauncher.ArgsWrapper;
 import cpw.mods.fml.relauncher.FMLRelauncher;
 import fr.catcore.cursedmixinextensions.annotations.Public;
+import io.github.fabriccompatibilitylayers.fabricatedfml.forged.ForgedGuiErrorScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MinecraftApplet;
-import net.minecraft.src.GameWindowListener;
-import net.minecraft.src.MinecraftFakeLauncher;
-import net.minecraft.src.ThreadShutdown;
+import net.minecraft.src.*;
 import net.minecraft.src.Timer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -33,6 +32,8 @@ public abstract class MinecraftMixin {
     }
 
     @Shadow public boolean field_71454_w;
+
+    @Shadow public GuiScreen field_71462_r;
 
     @Inject(method = "func_71384_a", at = @At(value = "FIELD", target = "Lnet/minecraft/src/GameSettings;field_74363_ab:Ljava/lang/String;", ordinal = 0))
     private void fml$beginMinecraftLoading(CallbackInfo ci) {
@@ -72,6 +73,11 @@ public abstract class MinecraftMixin {
     @Inject(method = "func_71407_l", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Profiler;func_76319_b()V"))
     private void fml$onPostClientTick(CallbackInfo ci) {
         FMLCommonHandler.instance().onPostClientTick();
+    }
+
+    @Inject(method = "func_71373_a", at = @At("HEAD"), cancellable = true)
+    private void fml$hackyGuiErrorScreen(GuiScreen par1, CallbackInfo ci) {
+        if (this.field_71462_r instanceof ForgedGuiErrorScreen) ci.cancel();
     }
 
     /**

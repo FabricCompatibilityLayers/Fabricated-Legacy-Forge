@@ -21,6 +21,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.List;
@@ -108,9 +109,9 @@ public abstract class RenderEngineMixin {
             int tLen = tWidth * tHeight << 2;
 
             if (var3.field_76852_a.length == tLen) {
-                this.field_78358_g.clear();
+                ((Buffer) this.field_78358_g).clear();
                 this.field_78358_g.put(var3.field_76852_a);
-                this.field_78358_g.position(0).limit(var3.field_76852_a.length);
+                ((Buffer) this.field_78358_g).position(0).limit(var3.field_76852_a.length);
             } else {
                 TextureFXManager.instance().scaleTextureFXData(var3.field_76852_a, field_78358_g, tWidth, tLen);
             }

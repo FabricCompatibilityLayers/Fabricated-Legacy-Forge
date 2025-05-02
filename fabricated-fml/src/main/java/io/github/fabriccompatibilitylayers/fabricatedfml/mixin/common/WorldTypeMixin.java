@@ -4,6 +4,7 @@ import com.google.common.collect.ObjectArrays;
 import com.google.common.collect.Sets;
 import fr.catcore.cursedmixinextensions.annotations.Public;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.WorldTypeExtension;
+import io.github.fabriccompatibilitylayers.fabricatedfml.forged.ForgedWorldType;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,11 +21,6 @@ import java.util.Set;
 public class WorldTypeMixin implements WorldTypeExtension {
     @Shadow @Final public static WorldType field_77138_c;
 
-    @Public
-    private static final BiomeGenBase[] base11Biomes = new BiomeGenBase[] {BiomeGenBase.field_76769_d, BiomeGenBase.field_76767_f, BiomeGenBase.field_76770_e, BiomeGenBase.field_76780_h, BiomeGenBase.field_76772_c, BiomeGenBase.field_76768_g};
-    @Public
-    private static final BiomeGenBase[] base12Biomes = ObjectArrays.concat(base11Biomes, BiomeGenBase.field_76782_w);
-
     protected BiomeGenBase[] biomesForWorldType;
 
     @Inject(method = "<init>(ILjava/lang/String;I)V", at = @At("RETURN"))
@@ -32,10 +28,10 @@ public class WorldTypeMixin implements WorldTypeExtension {
         switch (p_i3738_1_)
         {
             case 8:
-                biomesForWorldType = base11Biomes;
+                biomesForWorldType = ForgedWorldType.base11Biomes;
                 break;
             default:
-                biomesForWorldType = base12Biomes;
+                biomesForWorldType = ForgedWorldType.base12Biomes;
         }
     }
 
