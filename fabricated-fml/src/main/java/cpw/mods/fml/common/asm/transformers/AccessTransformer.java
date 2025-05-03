@@ -20,6 +20,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.MappingsHelper;
+import io.github.fabriccompatibilitylayers.modremappingapi.api.v2.MappingUtils;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
@@ -117,6 +119,7 @@ public class AccessTransformer implements IClassTransformer
                 Modifier m = new Modifier();
                 m.setTargetAccess(parts.get(0));
                 List<String> descriptor = Lists.newArrayList(Splitter.on(".").trimResults().split(parts.get(1)));
+                String parentClass = MappingsHelper.mapClass(descriptor.get(0)).replace('/', '.');
                 if (descriptor.size() == 1)
                 {
                     m.modifyClassVisibility = true;
@@ -127,15 +130,25 @@ public class AccessTransformer implements IClassTransformer
                     int parenIdx = nameReference.indexOf('(');
                     if (parenIdx>0)
                     {
-                        m.desc = nameReference.substring(parenIdx);
-                        m.name = nameReference.substring(0,parenIdx);
+                        MappingUtils.ClassMember member = MappingsHelper.mapMethodFromRemappedClass(
+                                parentClass,
+                                nameReference.substring(0,parenIdx),
+                                nameReference.substring(parenIdx)
+                        );
+                        m.desc = member.getDesc();
+                        m.name = member.getName();
                     }
                     else
                     {
-                        m.name = nameReference;
+                        MappingUtils.ClassMember member = MappingsHelper.mapFieldFromRemappedClass(
+                                parentClass,
+                                nameReference,
+                                null
+                        );
+                        m.name = member.getName();
                     }
                 }
-                modifiers.put(descriptor.get(0).replace('/', '.'), m);
+                modifiers.put(parentClass, m);
                 return true;
             }
         });

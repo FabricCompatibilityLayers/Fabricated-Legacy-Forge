@@ -14,6 +14,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.MappingsHelper;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.tree.ClassNode;
@@ -76,9 +77,10 @@ public class MarkerTransformer implements IClassTransformer
                     throw new RuntimeException("Invalid config file line "+ input);
                 }
                 List<String> markerInterfaces = Lists.newArrayList(Splitter.on(",").trimResults().split(parts.get(1)));
+                String target = MappingsHelper.mapClass(parts.get(0)).replace('/', '.');
                 for (String marker : markerInterfaces)
                 {
-                    markers.put(parts.get(0), marker);
+                    markers.put(target, marker);
                 }
                 return true;
             }

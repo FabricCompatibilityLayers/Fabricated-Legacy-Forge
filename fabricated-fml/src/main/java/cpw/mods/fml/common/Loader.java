@@ -25,6 +25,9 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.Constants;
+import io.github.fabriccompatibilitylayers.modremappingapi.api.v2.CacheHandler;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.src.CallableMinecraftVersion;
 
 import com.google.common.base.CharMatcher;
@@ -368,8 +371,8 @@ public class Loader
      */
     private void initializeLoader()
     {
-        File modsDir = new File(minecraftDir, "mods");
-        File configDir = new File(minecraftDir, "config");
+        File modsDir = CacheHandler.getCacheHandler(Constants.CONTEXT_ID).resolveCache("mods").toFile();
+        File configDir = FabricLoader.getInstance().getConfigDir().toFile();
         String canonicalModsPath;
         String canonicalConfigPath;
 

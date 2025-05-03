@@ -1,6 +1,7 @@
 package io.github.fabriccompatibilitylayers.fabricatedfml.remapper;
 
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.discoverer.CoremodsDiscoverer;
+import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.discoverer.ForgeModsDiscoverer;
 import io.github.fabriccompatibilitylayers.modremappingapi.api.v2.*;
 import net.fabricmc.api.EnvType;
 
@@ -30,6 +31,7 @@ public class FMLRemapper implements ModRemapper {
                 ModDiscovererConfig.builder("mods")
                         .fileNameMatcher("(.+).(jar|zip)$")
                         .allowDirectoryMods(true)
+                        .candidateCollector(new ForgeModsDiscoverer())
                         .build()
         );
     }

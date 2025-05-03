@@ -12,6 +12,8 @@
  */
 package cpw.mods.fml.relauncher;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.asm.RemapAwareClass;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 /**
@@ -75,7 +77,7 @@ public class ReflectionHelper
         {
             try
             {
-                Field f = clazz.getDeclaredField(fieldName);
+                Field f = RemapAwareClass.getField(clazz, fieldName);
                 f.setAccessible(true);
                 return f;
             }
@@ -148,7 +150,7 @@ public class ReflectionHelper
         {
             try
             {
-                return (Class<? super Object>) Class.forName(className, false, loader);
+                return (Class<? super Object>) RemapAwareClass.forName(className, false, loader);
             }
             catch (Exception e)
             {
@@ -167,7 +169,7 @@ public class ReflectionHelper
         {
             try
             {
-                Method m = clazz.getDeclaredMethod(methodName, methodTypes);
+                Method m = RemapAwareClass.getDeclaredMethod(clazz, methodName, methodTypes);
                 m.setAccessible(true);
                 return m;
             }
