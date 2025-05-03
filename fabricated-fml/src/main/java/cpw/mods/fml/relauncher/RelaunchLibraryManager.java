@@ -26,6 +26,8 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
+import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.Constants;
+import io.github.fabriccompatibilitylayers.modremappingapi.api.v2.CacheHandler;
 
 public class RelaunchLibraryManager
 {
@@ -431,7 +433,7 @@ public class RelaunchLibraryManager
      */
     private static File setupCoreModDir(File mcDir)
     {
-        File coreModDir = new File(mcDir,"coremods");
+        File coreModDir = CacheHandler.getCacheHandler(Constants.CONTEXT_ID).resolveCache("coremods").toFile();
         try
         {
             coreModDir = coreModDir.getCanonicalFile();

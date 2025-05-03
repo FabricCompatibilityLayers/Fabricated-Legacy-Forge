@@ -14,7 +14,7 @@
 
 package cpw.mods.fml.client.modloader;
 
-import net.minecraft.src.BaseMod;
+import net.minecraft.BaseMod;
 import net.minecraft.src.Block;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.RenderBlocks;

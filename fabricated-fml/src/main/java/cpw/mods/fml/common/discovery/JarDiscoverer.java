@@ -43,7 +43,7 @@ public class JarDiscoverer implements ITypeDiscoverer
             for (ZipEntry ze : Collections.list(jar.entries()))
             {
                 Matcher match = classFile.matcher(ze.getName());
-                if (match.matches())
+                if (match.matches() && !ze.getName().endsWith("/module-info.class"))
                 {
                     ASMModParser modParser;
                     try

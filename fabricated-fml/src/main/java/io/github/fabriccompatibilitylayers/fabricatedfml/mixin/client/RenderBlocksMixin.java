@@ -3,7 +3,7 @@ package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.src.Block;
-import net.minecraft.src.FMLRenderAccessLibrary;
+import net.minecraft.FMLRenderAccessLibrary;
 import net.minecraft.src.IBlockAccess;
 import net.minecraft.src.RenderBlocks;
 import org.spongepowered.asm.mixin.Mixin;

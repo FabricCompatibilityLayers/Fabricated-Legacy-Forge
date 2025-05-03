@@ -12,12 +12,13 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package net.minecraft.src;
+package net.minecraft;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 
+import net.minecraft.src.RenderEngine;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.client.FMLClientHandler;

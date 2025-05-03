@@ -6,8 +6,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
+import net.minecraft.BaseMod;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.BaseMod;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityClientPlayerMP;
 import net.minecraft.src.EntityPlayer;
@@ -21,9 +21,7 @@ import net.minecraft.src.RenderManager;
 
 import com.google.common.base.Equivalences;
 import com.google.common.base.Supplier;
-import com.google.common.base.Suppliers;
 import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import com.google.common.collect.MapDifference;
 import com.google.common.collect.MapDifference.ValueDifference;
 import com.google.common.collect.MapMaker;
@@ -31,7 +29,6 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 
-import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLLog;
@@ -138,21 +135,21 @@ public class ModLoaderClientHelper implements IModLoaderSidedHelper
     @Override
     public Object getClientGui(BaseModProxy mod, EntityPlayer player, int ID, int x, int y, int z)
     {
-        return ((net.minecraft.src.BaseMod)mod).getContainerGUI((EntityClientPlayerMP) player, ID, x, y, z);
+        return ((BaseMod)mod).getContainerGUI((EntityClientPlayerMP) player, ID, x, y, z);
     }
 
 
     @Override
     public Entity spawnEntity(BaseModProxy mod, EntitySpawnPacket input, EntityRegistration er)
     {
-        return ((net.minecraft.src.BaseMod)mod).spawnEntity(er.getModEntityId(), client.field_71441_e, input.scaledX, input.scaledY, input.scaledZ);
+        return ((BaseMod)mod).spawnEntity(er.getModEntityId(), client.field_71441_e, input.scaledX, input.scaledY, input.scaledZ);
     }
 
 
     @Override
     public void sendClientPacket(BaseModProxy mod, Packet250CustomPayload packet)
     {
-        ((net.minecraft.src.BaseMod)mod).clientCustomPayload(client.field_71439_g.field_71174_a, packet);
+        ((BaseMod)mod).clientCustomPayload(client.field_71439_g.field_71174_a, packet);
     }
 
     private Map<NetworkManager,NetHandler> managerLookups = new MapMaker().weakKeys().weakValues().makeMap();

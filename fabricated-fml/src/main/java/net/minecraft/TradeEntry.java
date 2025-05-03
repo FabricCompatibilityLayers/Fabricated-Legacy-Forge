@@ -1,4 +1,4 @@
-package net.minecraft.src;
+package net.minecraft;
 
 /**
  * Compatibility class for ModLoader -- do not use

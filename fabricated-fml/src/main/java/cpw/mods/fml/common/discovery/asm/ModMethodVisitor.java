@@ -19,7 +19,7 @@ public class ModMethodVisitor extends MethodVisitor
 
     public ModMethodVisitor(String name, ASMModParser discoverer)
     {
-        super(Opcodes.ASM4);
+        super(Opcodes.ASM9);
         this.discoverer = discoverer;
     }
     @Override
