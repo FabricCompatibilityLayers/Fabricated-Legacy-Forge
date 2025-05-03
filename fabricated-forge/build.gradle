@@ -5,6 +5,18 @@ unimined.minecraft {
     }
 }
 
+configurations {
+    production
+}
+
+artifacts {
+    production remapJar
+}
+
+remapJar {
+    remapAccessTransformer.set(false)
+}
+
 dependencies {
     implementation(project(":fabricated-fml"))
 }

@@ -35,7 +35,7 @@ public class Packet1LoginMixin {
         this.vanillaCompatible = false;
     }
 
-    @Redirect(method = "func_73267_a", at = @At(value = "INVOKE", target = "Ljava/io/DataInputStream;readByte()B", ordinal = 1))
+    @Redirect(method = "func_73267_a", at = @At(value = "INVOKE", target = "Ljava/io/DataInputStream;readByte()B", ordinal = 1, remap = false))
     private byte fml$redirectOriginalCall(DataInputStream instance) {
         return -1;
     }
@@ -49,7 +49,7 @@ public class Packet1LoginMixin {
         }
     }
 
-    @WrapOperation(method = "func_73273_a", at = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeByte(I)V", ordinal = 1))
+    @WrapOperation(method = "func_73273_a", at = @At(value = "INVOKE", target = "Ljava/io/DataOutputStream;writeByte(I)V", ordinal = 1, remap = false))
     private void fml$writeDimensionId(DataOutputStream instance, int v, Operation<Void> original) throws IOException {
         if (this.vanillaCompatible) {
             original.call(instance, v);

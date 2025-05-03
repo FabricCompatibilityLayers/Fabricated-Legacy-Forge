@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "fabricated-legacy-forge",
+  "version": "${version}",
+  "name": "Fabricated Legacy Forge",
+  "description": "A compatibility layer to load Forge mods on FabricLoader.",
+  "authors": [
+    "CatCore"
+  ],
+  "contributors": [
+    "MinecraftForge:\n- Eloraam\n- FlowerChild\n- Hawkye\n- MALfunction84\n- Scokeev9\n- SpaceToad\n- LexManos",
+    "Forge Mod Loader (FML):\n- cpw\n- Risugami, author of ModLoader\n- LexManos",
+    "Paulscode IBXM Library:\n- IBXM\n- Martin Cameron",
+    "Paulscode SoundSystem CodecIBXM:\n- Paul Lamb\n- IBXM\n- Martin Cameron",
+    "ClassLoaderFixer:\n- ThexXTURBOXx"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/fabricated-forge",
+    "sources": "https://github.com/thecatcore/Fabricated-Legacy-Forge",
+    "issues": "https://github.com/thecatcore/Fabricated-Legacy-Forge/issues"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/fabricated-forge/icon.png",
+  "environment": "*",
+  "entrypoints": {
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": ">0.14.3",
+    "minecraft": "${mc_version}",
+    "mod-remapping-api": ">=${mrapi_version}"
+  }
+}

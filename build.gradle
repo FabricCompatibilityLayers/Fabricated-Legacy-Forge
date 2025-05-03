@@ -1,17 +1,18 @@
 plugins {
     id 'java'
-    id 'xyz.wagyourtail.unimined' version '1.4.1-SNAPSHOT' apply false
+    id 'xyz.wagyourtail.unimined' version '1.4.999' apply false
 }
 
 group project.maven_group
-version project.version
 
 base {
     archivesName = project.archives_base_name
 }
 
-subprojects {
+allprojects {
     apply(plugin: "xyz.wagyourtail.unimined")
+
+    version project.version
 
     unimined.useGlobalCache = false
 
@@ -29,7 +30,7 @@ subprojects {
 
     configurations {
         ornitheImplementation
-        implementation.extendsFrom ornitheImplementation
+        compileOnly.extendsFrom ornitheImplementation
     }
 
     unimined.minecraft(sourceSets.main, true) {
@@ -44,12 +45,12 @@ subprojects {
         legacyFabric {
             loader project.fabric_version
 
-            if (!project.access_widener.isEmpty()) {
+            if (project.hasProperty("access_widener") && !project.access_widener.isEmpty()) {
                 accessWidener(project.file(project.access_widener))
 //                afterEvaluate {
 //                    mergeAws([
-//                            atLegacy2aw(project.file("src/main/resources/fml_at.cfg"), project.file("src/main/resources/fml_at.accesswidener"), "official"),
-//                            project.file("src/main/resources/fabric-specific.accesswidener")
+//                            atLegacy2aw(project.file(project.access_transformer), project.file("converted_at.accesswidener"), "official"),
+//                            project.file("fabric-specific.accesswidener")
 //                    ], "searge")
 //                }
             }
@@ -68,7 +69,7 @@ subprojects {
         implementation(group: "local", name: "argo", version: "2.25")
         implementation(group: "local", name: "guava", version: "12.0.1")
 
-        implementation("com.github.thecatcore.CursedMixinExtensions:fabric:1.0.0") {
+        modImplementation("com.github.thecatcore.CursedMixinExtensions:fabric:1.0.0") {
             exclude(module: 'fabric-loader')
         }
         modImplementation("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
@@ -78,21 +79,52 @@ subprojects {
         }
         modImplementation("maven.modrinth:spasm:0.2")
 
-        implementation("com.github.thecatcore:WFVAIO:1.2.1") {
+        modImplementation("com.github.thecatcore:WFVAIO:1.2.1") {
             exclude(module: 'fabric-loader')
         }
 
         implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.5.0-rc.2"))
 
-//        fabricApi.osl(project.minecraft_version, project.osl_version).forEach {
-//            ornitheImplementation(it)
-//        }
-//
-//        ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
+        fabricApi.osl(project.minecraft_version, project.osl_version).forEach {
+            ornitheImplementation(it)
+        }
+
+        ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
     }
 
     java {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    processResources {
+        inputs.property "version", project.version
+        inputs.property "mc_version", project.minecraft_version
+        inputs.property "mrapi_version", project.mod_remapping_api
+
+        filesMatching("fabric.mod.json") {
+            expand "version": project.version,
+                    "mc_version": rootProject.minecraft_version,
+                    "mrapi_version": project.mod_remapping_api
+        }
+    }
+}
+
+unimined.minecraft {
+}
+
+subprojects.forEach {
+    remapJar.dependsOn("${it.path}:remapJar")
+}
+
+dependencies {
+    include(group: "local", name: "argo", version: "2.25")
+    include(group: "local", name: "guava", version: "12.0.1")
+    include("io.github.llamalad7:mixinextras-fabric:0.5.0-rc.2")
+
+    afterEvaluate {
+        subprojects.forEach {
+            include(project(path: "${it.path}", configuration: 'production'))
+        }
     }
 }

@@ -10,7 +10,9 @@ import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Desc;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityVillager.class)
@@ -26,8 +28,11 @@ public abstract class EntityVillagerMixin extends EntityAgeable {
         return VillagerRegistry.getVillagerSkin(this.func_70946_n(), original);
     }
 
-    @Inject(method = "func_70950_c", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/MerchantRecipeList;isEmpty()Z"))
-    private void fml$manageVillagerTrades(int p_70950_1_, CallbackInfo ci, @Local MerchantRecipeList var2) {
+    @Redirect(method = "func_70950_c", at = @At(value = "INVOKE", desc = @Desc(
+            owner = MerchantRecipeList.class, value = "isEmpty", ret = boolean.class
+    )))
+    private boolean fml$manageVillagerTrades(MerchantRecipeList var2) {
         VillagerRegistry.manageVillagerTrades(var2, (EntityVillager)(Object) this, this.func_70946_n(), this.field_70146_Z);
+        return var2.isEmpty();
     }
 }

@@ -30,5 +30,5 @@
   "mixins": [
     "fabricated-fml.mixins.json"
   ],
-  "accessWidener": "fabricated-fml-test.accesswidener"
+  "accessWidener": "fabricated-fml.accesswidener"
 }

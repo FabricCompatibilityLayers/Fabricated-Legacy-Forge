@@ -1,4 +1,4 @@
-accessWidener	v2	intermediary
+accessWidener	v2	named
 accessible	class	net/minecraft/src/ComponentVillage
 accessible	method	net/minecraft/src/BlockChest	func_72292_n	(Lnet/minecraft/src/World;III)Z
 accessible	method	net/minecraft/src/TileEntity	func_70306_a	(Ljava/lang/Class;Ljava/lang/String;)V

@@ -21,6 +21,7 @@ pluginManagement {
                 excludeGroup("org.apache.logging.log4j")
             }
         }
+        mavenLocal()
     }
 }
 
