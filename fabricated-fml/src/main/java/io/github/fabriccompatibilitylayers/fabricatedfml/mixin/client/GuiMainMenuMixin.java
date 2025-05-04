@@ -42,6 +42,7 @@ public class GuiMainMenuMixin extends GuiScreen {
     @WrapOperation(method = "func_73863_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiMainMenu;func_73731_b(Lnet/minecraft/src/FontRenderer;Ljava/lang/String;III)V", ordinal = 0))
     private void fml$drawMultilineBranding(GuiMainMenu instance, FontRenderer fontRenderer, String s, int x, int y, int z, Operation<Void> original) {
         List<String> brandings = Lists.reverse(FMLCommonHandler.instance().getBrandings());
+        brandings.add(s);
 
         for (int i = 0; i < brandings.size(); i++) {
             String brd = brandings.get(i);
