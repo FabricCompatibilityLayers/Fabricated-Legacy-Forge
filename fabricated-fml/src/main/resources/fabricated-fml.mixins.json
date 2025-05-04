@@ -71,7 +71,8 @@
     "client.TexturePortalFXMixin",
     "client.TextureWatchFXMixin",
     "client.TextureWaterFlowFXMixin",
-    "client.TextureWaterFXMixin"
+    "client.TextureWaterFXMixin",
+    "modmenu.FabricIconHandlerAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

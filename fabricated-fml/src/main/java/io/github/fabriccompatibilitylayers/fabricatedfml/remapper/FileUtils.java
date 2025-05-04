@@ -27,6 +27,7 @@ public class FileUtils {
     }
 
     public static FileSystem getJarFileSystem(Path path) throws IOException {
+        System.out.println(path);
         URI uri = URI.create("jar:" + path.toUri());
 
         return getJarFileSystem(uri);
