@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +21,8 @@ import java.util.logging.Level;
 
 public class RelaunchClassLoader extends URLClassLoader
 {
+    // ClassLoaderFixer indication
+    public static String FIXER_VERSION = "2";
     // Left behind for CCC/NEI compatibility
     private static String[] excludedPackages = new String[0];
     // Left behind for CCC/NEI compatibility
@@ -31,18 +32,18 @@ public class RelaunchClassLoader extends URLClassLoader
     private ClassLoader parent;
 
     public static List<IClassTransformer> transformers;
-    private Map<String, Class> cachedClasses;
+    private Map<String, Class<?>> cachedClasses;
 
-    private Set<String> classLoaderExceptions = new HashSet<String>();
-    private Set<String> transformerExceptions = new HashSet<String>();
+    private Set<String> classLoaderExceptions = new HashSet<>();
+    private Set<String> transformerExceptions = new HashSet<>();
 
     public RelaunchClassLoader()
     {
         super(new URL[0], RelaunchClassLoader.class.getClassLoader());
-        this.sources = new ArrayList<URL>();
+        this.sources = new ArrayList<>();
         this.parent = getClass().getClassLoader();
-        this.cachedClasses = new HashMap<String,Class>(1000);
-        this.transformers = new ArrayList<IClassTransformer>(2);
+        this.cachedClasses = new HashMap<>(1000);
+        transformers = new ArrayList<>(2);
 //        ReflectionHelper.setPrivateValue(ClassLoader.class, null, this, "scl");
         Thread.currentThread().setContextClassLoader(this);
 
@@ -119,10 +120,37 @@ public class RelaunchClassLoader extends URLClassLoader
 //
 //        try
 //        {
+//            CodeSigner[] signers = null;
 //            int lastDot = name.lastIndexOf('.');
-//            if (lastDot > -1)
+//            String pkgname = lastDot == -1 ? "" : name.substring(0, lastDot);
+//            String fName = name.replace('.', '/').concat(".class");
+//            URLConnection urlConnection = findCodeSourceConnectionFor(fName);
+//            if (urlConnection instanceof JarURLConnection && lastDot > -1)
 //            {
-//                String pkgname = name.substring(0, lastDot);
+//                JarURLConnection jarUrlConn = (JarURLConnection)urlConnection;
+//                JarFile jf = jarUrlConn.getJarFile();
+//                if (jf != null && jf.getManifest() != null)
+//                {
+//                    Manifest mf = jf.getManifest();
+//                    JarEntry ent = jf.getJarEntry(fName);
+//                    Package pkg = getPackage(pkgname);
+//                    getClassBytes(name);
+//                    signers = ent.getCodeSigners();
+//                    if (pkg != null)
+//                    {
+//                        if (pkg.isSealed() && !pkg.isSealed(jarUrlConn.getJarFileURL()))
+//                        {
+//                            FMLRelaunchLog.severe("The jar file %s is trying to seal already secured path %s", jf.getName(), pkgname);
+//                        }
+//                        else if (isSealed(pkgname, mf))
+//                        {
+//                            FMLRelaunchLog.severe("The jar file %s has a security seal for path %s, but that path is defined and not secure", jf.getName(), pkgname);
+//                        }
+//                    }
+//                }
+//            }
+//            else if (lastDot > -1)
+//            {
 //                if (getPackage(pkgname)==null)
 //                {
 //                    definePackage(pkgname, null, null, null, null, null, null, null);
@@ -130,7 +158,8 @@ public class RelaunchClassLoader extends URLClassLoader
 //            }
 //            byte[] basicClass = getClassBytes(name);
 //            byte[] transformedClass = runTransformers(name, basicClass);
-//            Class<?> cl = defineClass(name, transformedClass, 0, transformedClass.length);
+//            URL url = urlConnection == null ? null : urlConnection.getURL();
+//            Class<?> cl = defineClass(name, transformedClass, 0, transformedClass.length, new CodeSource(url, signers));
 //            cachedClasses.put(name, cl);
 //            return cl;
 //        }
@@ -139,6 +168,41 @@ public class RelaunchClassLoader extends URLClassLoader
 //            throw new ClassNotFoundException(name, e);
 //        }
     }
+
+//    private boolean isSealed(String path, Manifest man)
+//    {
+//        Attributes attr = man.getAttributes(path);
+//        String sealed = null;
+//        if (attr != null) {
+//            sealed = attr.getValue(Attributes.Name.SEALED);
+//        }
+//        if (sealed == null) {
+//            if ((attr = man.getMainAttributes()) != null) {
+//                sealed = attr.getValue(Attributes.Name.SEALED);
+//            }
+//        }
+//        return "true".equalsIgnoreCase(sealed);
+//    }
+
+//    private URLConnection findCodeSourceConnectionFor(String name)
+//    {
+//        URL res = findResource(name);
+//        if (res != null)
+//        {
+//            try
+//            {
+//                return res.openConnection();
+//            }
+//            catch (IOException e)
+//            {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//        else
+//        {
+//            return null;
+//        }
+//    }
 
     public byte[] getClassBytes(String name) throws IOException
     {
