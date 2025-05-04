@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.compat.guava.Equivalences;
 import net.minecraft.BaseMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.Entity;
@@ -19,7 +20,6 @@ import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.Render;
 import net.minecraft.src.RenderManager;
 
-import com.google.common.base.Equivalences;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.MapDifference;

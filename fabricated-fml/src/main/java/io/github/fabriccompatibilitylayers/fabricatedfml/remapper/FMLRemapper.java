@@ -1,5 +1,7 @@
 package io.github.fabriccompatibilitylayers.fabricatedfml.remapper;
 
+import fr.catcore.wfvaio.FabricVariants;
+import fr.catcore.wfvaio.WhichFabricVariantAmIOn;
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.discoverer.CoremodsDiscoverer;
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.discoverer.ForgeModsDiscoverer;
 import io.github.fabriccompatibilitylayers.modremappingapi.api.v2.*;
@@ -11,6 +13,7 @@ import java.util.List;
 
 public class FMLRemapper implements ModRemapper {
     private static final String FORGE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.3.2-4.3.5.318/forge-1.3.2-4.3.5.318-universal.zip";
+    private static final boolean runningLegacyFabric = WhichFabricVariantAmIOn.getVariant() == FabricVariants.LEGACY_FABRIC_V1;
 
     @Override
     public String getContextId() {
@@ -77,6 +80,11 @@ public class FMLRemapper implements ModRemapper {
         mappingBuilder.addMapping("ModTextureAnimation", "net/minecraft/ModTextureAnimation");
         mappingBuilder.addMapping("ModTextureStatic", "net/minecraft/ModTextureStatic");
         mappingBuilder.addMapping("TradeEntry", "net/minecraft/TradeEntry");
+
+        // Guava backward compatibility
+        if (!runningLegacyFabric) {
+            mappingBuilder.addMapping("com/google/common/base/Equivalences", "io/github/fabriccompatibilitylayers/fabricatedfml/compat/guava/Equivalences");
+        }
     }
 
     @Override
