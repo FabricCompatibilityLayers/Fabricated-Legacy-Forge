@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'xyz.wagyourtail.unimined' version '1.4.999' apply false
+    id 'xyz.wagyourtail.unimined' version '1.4.1-SNAPSHOT' apply false
 }
 
 group project.maven_group
