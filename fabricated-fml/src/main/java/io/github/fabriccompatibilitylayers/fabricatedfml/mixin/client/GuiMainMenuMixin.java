@@ -23,7 +23,7 @@ import java.util.List;
 public class GuiMainMenuMixin extends GuiScreen {
     @WrapOperation(method = "func_73866_w_", at = @At(value = "NEW", target = "Lnet/minecraft/src/GuiButton;", ordinal = 0))
     private GuiButton fml$moveTexturePackButton(int p_i3055_1_, int p_i3055_2_, int p_i3055_3_, String p_i3055_4_, Operation<GuiButton> original) {
-        if (!FabricLoader.getInstance().isModLoaded("modmenu")) {
+        if (FabricLoader.getInstance().isModLoaded("modmenu")) {
             return original.call(p_i3055_1_, p_i3055_2_, p_i3055_3_, p_i3055_4_);
         }
 
