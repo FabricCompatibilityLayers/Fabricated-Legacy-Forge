@@ -17,6 +17,8 @@ package cpw.mods.fml.client;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.forged.FabricModContainer;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GuiButton;
@@ -66,6 +68,11 @@ public class GuiModList extends GuiScreen
             }
             mods.add(mod);
         }
+
+        // Fabricated-FML
+        for (net.fabricmc.loader.api.ModContainer container : FabricLoader.getInstance().getAllMods()) {
+            mods.add(new FabricModContainer(container));
+        }
     }
 
     @Override
@@ -114,16 +121,21 @@ public class GuiModList extends GuiScreen
                 int shifty = 35;
                 if (!selectedMod.getMetadata().logoFile.isEmpty())
                 {
+                    boolean isFabricMod = this.selectedMod instanceof FabricModContainer;
+                    int fabricModIconSize = 65;
+
                     int texture = this.field_73882_e.field_71446_o.func_78341_b(selectedMod.getMetadata().logoFile);
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                     this.field_73882_e.field_71446_o.func_78342_b(texture);
                     Dimension dim = TextureFXManager.instance().getTextureDimensions(texture);
+                    int height = isFabricMod ? fabricModIconSize : dim.height;
+                    int width = isFabricMod ? fabricModIconSize : dim.width;
                     int top = 32;
                     Tessellator tess = Tessellator.field_78398_a;
                     tess.func_78382_b();
-                    tess.func_78374_a(offset,             top + dim.height, field_73735_i, 0, 1);
-                    tess.func_78374_a(offset + dim.width, top + dim.height, field_73735_i, 1, 1);
-                    tess.func_78374_a(offset + dim.width, top,              field_73735_i, 1, 0);
+                    tess.func_78374_a(offset,             top + height, field_73735_i, 0, 1);
+                    tess.func_78374_a(offset + width, top + height, field_73735_i, 1, 1);
+                    tess.func_78374_a(offset + width, top,              field_73735_i, 1, 0);
                     tess.func_78374_a(offset,             top,              field_73735_i, 0, 0);
                     tess.func_78381_a();
 
