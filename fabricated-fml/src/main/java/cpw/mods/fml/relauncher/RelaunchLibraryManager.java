@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -77,7 +78,7 @@ public class RelaunchLibraryManager
             {
                 actualClassLoader.addTransformerExclusion(s);
                 Class<?> coreModClass = Class.forName(s, true, actualClassLoader);
-                TransformerExclusions trExclusions = coreModClass.getAnnotation(IFMLLoadingPlugin.TransformerExclusions.class);
+                TransformerExclusions trExclusions = coreModClass.getAnnotation(TransformerExclusions.class);
                 if (trExclusions!=null)
                 {
                     for (String st : trExclusions.value())
@@ -362,7 +363,7 @@ public class RelaunchLibraryManager
                 downloadMonitor.updateProgressString("Loading coremod %s", coreMod.getName());
                 classLoader.addTransformerExclusion(fmlCorePlugin);
                 Class<?> coreModClass = Class.forName(fmlCorePlugin, true, classLoader);
-                TransformerExclusions trExclusions = coreModClass.getAnnotation(IFMLLoadingPlugin.TransformerExclusions.class);
+                TransformerExclusions trExclusions = coreModClass.getAnnotation(TransformerExclusions.class);
                 if (trExclusions!=null)
                 {
                     for (String st : trExclusions.value())
@@ -504,7 +505,7 @@ public class RelaunchLibraryManager
         {
             throw new RuntimeException(String.format("The file %s is too large to be downloaded by FML - the coremod is invalid", target.getName()));
         }
-        downloadBuffer.clear();
+        ((Buffer) downloadBuffer).clear();
 
         int bytesRead, fullLength = 0;
 
@@ -524,8 +525,8 @@ public class RelaunchLibraryManager
             }
             is.close();
             downloadMonitor.setPokeThread(null);
-            downloadBuffer.limit(fullLength);
-            downloadBuffer.position(0);
+            ((Buffer) downloadBuffer).limit(fullLength);
+            ((Buffer) downloadBuffer).position(0);
         }
         catch (InterruptedIOException e)
         {
@@ -544,7 +545,7 @@ public class RelaunchLibraryManager
             String cksum = generateChecksum(downloadBuffer);
             if (cksum.equals(validationHash))
             {
-                downloadBuffer.position(0);
+                ((Buffer) downloadBuffer).position(0);
                 FileOutputStream fos = new FileOutputStream(target);
                 fos.getChannel().write(downloadBuffer);
                 fos.close();

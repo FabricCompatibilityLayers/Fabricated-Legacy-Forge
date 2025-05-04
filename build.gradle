@@ -23,8 +23,18 @@ allprojects {
     unimined.jitpack()
 
     repositories {
-        flatDir {
-            dirs (rootProject.rootDir.toString() + "/libs")
+        ivy {
+            name = "fmllibs"
+            url = "https://maven.wagyourtail.xyz/releases/fmllibs/"
+            patternLayout {
+                artifact("[artifact]-[revision].[ext]")
+            }
+            content {
+                includeGroup("fmllibs")
+            }
+            metadataSources {
+                it.artifact()
+            }
         }
     }
 
@@ -66,8 +76,8 @@ allprojects {
     }
 
     dependencies {
-        implementation(group: "local", name: "argo", version: "2.25")
-        implementation(group: "local", name: "guava", version: "12.0.1")
+        compileOnly("com.google.guava:guava:12.0.1")
+        implementation("fmllibs:argo:2.25")
 
         modImplementation("com.github.thecatcore.CursedMixinExtensions:fabric:1.0.0") {
             exclude(module: 'fabric-loader')
@@ -118,8 +128,7 @@ subprojects.forEach {
 }
 
 dependencies {
-    include(group: "local", name: "argo", version: "2.25")
-    include(group: "local", name: "guava", version: "12.0.1")
+    include("fmllibs:argo:2.25")
     include("io.github.llamalad7:mixinextras-fabric:0.5.0-rc.2")
 
     afterEvaluate {

@@ -1,16 +1,33 @@
 package io.github.fabriccompatibilitylayers.fabricatedfml;
 
 import fr.catcore.cursedmixinextensions.CursedMixinExtensions;
+import fr.catcore.wfvaio.FabricVariants;
+import fr.catcore.wfvaio.WhichFabricVariantAmIOn;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 public class FabricatedFMLMixinPlugin implements IMixinConfigPlugin {
+    static {
+        boolean runningLegacyFabric = WhichFabricVariantAmIOn.getVariant() == FabricVariants.LEGACY_FABRIC_V1;
+
+        if (runningLegacyFabric) {
+            Path guavaPath = FabricLoader.getInstance().getGameDir().resolve("lib").resolve("guava-12.0.1.jar");
+
+            if (Files.exists(guavaPath)) {
+                FabricLauncherBase.getLauncher().addToClassPath(guavaPath);
+            }
+        }
+    }
+
     @Override
     public void onLoad(String mixinPackage) {
 
