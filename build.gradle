@@ -36,6 +36,9 @@ allprojects {
                 it.artifact()
             }
         }
+        repositories {
+            maven { url = "https://maven.bawnorton.com/releases" }
+        }
     }
 
     configurations {
@@ -72,6 +75,11 @@ allprojects {
 
         mods.remap(configurations.ornitheImplementation) {
             namespace("calamus")
+
+            mixinRemap {
+                enableBaseMixin()
+                enableMixinExtra()
+            }
         }
     }
 
@@ -94,6 +102,8 @@ allprojects {
         }
 
         implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.5.0-rc.2"))
+
+        modImplementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.2.0"))
 
         fabricApi.osl(project.minecraft_version, project.osl_version).forEach {
             ornitheImplementation(it)
@@ -130,6 +140,7 @@ subprojects.forEach {
 dependencies {
     include("fmllibs:argo:2.25")
     include("io.github.llamalad7:mixinextras-fabric:0.5.0-rc.2")
+    include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.2.0")
 
     afterEvaluate {
         subprojects.forEach {

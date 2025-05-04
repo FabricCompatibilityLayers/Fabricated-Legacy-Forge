@@ -1,7 +1,9 @@
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client;
 
 import cpw.mods.fml.relauncher.FMLRelauncher;
+import io.github.fabriccompatibilitylayers.fabricatedfml.compat.osl.OSLEntrypointsHelper;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.MinecraftAppletExtension;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MinecraftApplet;
 import net.minecraft.src.CanvasMinecraftApplet;
@@ -15,7 +17,7 @@ import org.spongepowered.asm.mixin.Unique;
 import java.applet.Applet;
 import java.awt.*;
 
-@Mixin(MinecraftApplet.class)
+@Mixin(value = MinecraftApplet.class)
 public class MinecraftAppletMixin extends Applet implements MinecraftAppletExtension {
     @Shadow private Canvas field_71483_a;
     @Shadow private Minecraft field_71481_b;
@@ -44,6 +46,7 @@ public class MinecraftAppletMixin extends Applet implements MinecraftAppletExten
 
     @Override
     public void fmlInitReentry() {
+        if (FabricLoader.getInstance().isModLoaded("osl-entrypoints")) OSLEntrypointsHelper.clientEntrypoint(this::getParameter);
         this.field_71483_a = new CanvasMinecraftApplet((MinecraftApplet)(Object) this);
         boolean var1 = "true".equalsIgnoreCase(this.getParameter("fullscreen"));
         this.field_71481_b = new MinecraftAppletImpl((MinecraftApplet) (Object) this, this.field_71483_a, (MinecraftApplet)(Object) this, this.getWidth(), this.getHeight(), var1);

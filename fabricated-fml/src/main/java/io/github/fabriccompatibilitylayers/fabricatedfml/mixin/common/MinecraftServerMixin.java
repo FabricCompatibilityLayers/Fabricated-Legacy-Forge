@@ -8,8 +8,10 @@ import cpw.mods.fml.common.Side;
 import cpw.mods.fml.relauncher.ArgsWrapper;
 import cpw.mods.fml.relauncher.FMLRelauncher;
 import fr.catcore.cursedmixinextensions.annotations.Public;
+import io.github.fabriccompatibilitylayers.fabricatedfml.compat.osl.OSLEntrypointsHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.DedicatedServer;
 import net.minecraft.src.StatList;
@@ -27,7 +29,7 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-@Mixin(MinecraftServer.class)
+@Mixin(value = MinecraftServer.class)
 public class MinecraftServerMixin {
     @Shadow public WorldServer[] field_71305_c;
 
@@ -95,6 +97,8 @@ public class MinecraftServerMixin {
     @Environment(EnvType.SERVER)
     private static void fmlReentry(ArgsWrapper wrap) {
         String[] p_main_0_ = wrap.args;
+
+        if (FabricLoader.getInstance().isModLoaded("osl-entrypoints")) OSLEntrypointsHelper.serverEntrypoint(p_main_0_);
 
         StatList.func_75919_a();
 
