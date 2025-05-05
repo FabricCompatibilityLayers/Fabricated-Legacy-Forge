@@ -9,6 +9,11 @@
   "server": [
   ],
   "mixins": [
+    "common.AnvilChunkLoaderMixin",
+    "common.AnvilSaveHandlerMixin",
+    "common.BlockButtonMixin",
+    "common.BlockMixin",
+    "common.MinecraftServerMixin"
   ],
   "client": [
   ],
