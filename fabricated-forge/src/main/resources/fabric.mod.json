@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "fabricated-forge",
+  "version": "${version}",
+  "name": "Fabricated Forge",
+  "description": "",
+  "authors": [
+    "CatCore"
+  ],
+  "contributors": [],
+  "contact": {
+    "homepage": "",
+    "sources": "",
+    "issues": ""
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/fabricated-forge/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "preLaunch": [
+    ],
+    "mod-remapper-api:modremapper_v2": [
+      "io.github.fabriccompatibilitylayers.fabricatedforge.remapper.ForgeRemapper"
+    ],
+    "mixinsquared": [
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.10"
+  },
+  "mixins": [
+    "fabricated-forge.mixins.json"
+  ],
+  "accessWidener": "fabricated-forge.accesswidener"
+}

@@ -1,8 +1,8 @@
 unimined.minecraft {
-    mappings {
-        devFallbackNamespace("searge")
-        devNamespace("forgeMCP")
-    }
+//    mappings {
+//        devFallbackNamespace("searge")
+//        devNamespace("forgeMCP")
+//    }
 }
 
 configurations {

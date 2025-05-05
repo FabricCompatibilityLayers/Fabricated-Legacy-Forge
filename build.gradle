@@ -64,7 +64,7 @@ allprojects {
 //                    mergeAws([
 //                            atLegacy2aw(project.file(project.access_transformer), project.file("converted_at.accesswidener"), "official"),
 //                            project.file("fabric-specific.accesswidener")
-//                    ], "searge")
+//                    ], project.mappings)
 //                }
             }
         }

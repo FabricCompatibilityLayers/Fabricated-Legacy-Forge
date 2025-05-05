@@ -1,0 +1,18 @@
+{
+  "required": true,
+  "package": "io.github.fabriccompatibilitylayers.fabricatedforge.mixin",
+  "plugin": "io.github.fabriccompatibilitylayers.fabricatedforge.FabricatedForgeMixinPlugin",
+  "compatibilityLevel": "JAVA_8",
+  "mixinextras": {
+    "minVersion": "0.5.0-rc.2"
+  },
+  "server": [
+  ],
+  "mixins": [
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
