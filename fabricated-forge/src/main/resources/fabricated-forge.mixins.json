@@ -12,6 +12,13 @@
     "common.AnvilChunkLoaderMixin",
     "common.AnvilSaveHandlerMixin",
     "common.BlockButtonMixin",
+    "common.BlockCactusMixin",
+    "common.BlockChestMixin",
+    "common.BlockContainerMixin",
+    "common.BlockCropsMixin",
+    "common.BlockDoorMixin",
+    "common.BlockFarmlandMixin",
+    "common.BlockFlowerMixin",
     "common.BlockMixin",
     "common.MinecraftServerMixin"
   ],
