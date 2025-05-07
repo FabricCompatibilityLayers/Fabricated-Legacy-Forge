@@ -101,4 +101,9 @@ public interface BlockExtension {
     int getLightOpacity(World world, int x, int y, int z);
 
     boolean canDragonDestroy(World world, int x, int y, int z);
+
+    // Fabricated Forge
+    int[] getBlockFireSpreadSpeed();
+
+    int[] getBlockFlammability();
 }

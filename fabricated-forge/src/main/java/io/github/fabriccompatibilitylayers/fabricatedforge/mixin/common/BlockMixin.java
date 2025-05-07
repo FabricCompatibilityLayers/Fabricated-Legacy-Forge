@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.sugar.Local;
 import fr.catcore.cursedmixinextensions.annotations.Public;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockContainerExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -451,7 +452,7 @@ public abstract class BlockMixin implements BlockExtension {
     {
         if ((Object) this instanceof BlockContainer)
         {
-            return ((BlockContainer) (Object) this).createNewTileEntity(world, metadata);
+            return ((BlockContainerExtension) this).createNewTileEntity(world, metadata);
         }
         return null;
     }
@@ -1022,5 +1023,16 @@ public abstract class BlockMixin implements BlockExtension {
     public boolean canDragonDestroy(World world, int x, int y, int z)
     {
         return blockID != obsidian.blockID && blockID != whiteStone.blockID && blockID != bedrock.blockID;
+    }
+
+    // Fabricated Forge
+    @Override
+    public int[] getBlockFireSpreadSpeed() {
+        return blockFireSpreadSpeed;
+    }
+
+    @Override
+    public int[] getBlockFlammability() {
+        return blockFlammability;
     }
 }

@@ -11,6 +11,7 @@
   "mixins": [
     "common.AnvilChunkLoaderMixin",
     "common.AnvilSaveHandlerMixin",
+    "common.BlockAccessor",
     "common.BlockButtonMixin",
     "common.BlockCactusMixin",
     "common.BlockChestMixin",
@@ -18,7 +19,13 @@
     "common.BlockCropsMixin",
     "common.BlockDoorMixin",
     "common.BlockFarmlandMixin",
+    "common.BlockFireMixin",
     "common.BlockFlowerMixin",
+    "common.BlockGrassMixin",
+    "common.BlockLadderMixin",
+    "common.BlockLeavesMixin",
+    "common.BlockLeverMixin",
+    "common.BlockLogMixin",
     "common.BlockMixin",
     "common.MinecraftServerMixin"
   ],
