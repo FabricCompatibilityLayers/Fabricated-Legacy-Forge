@@ -33,7 +33,7 @@ public abstract class BlockVineMixin extends Block implements IShearable, BlockE
     @Override
     public ArrayList<ItemStack> onSheared(ItemStack item, World world, int x, int y, int z, int fortune)
     {
-        ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+        ArrayList<ItemStack> ret = new ArrayList<>();
         ret.add(new ItemStack(this, 1, 0));
         return ret;
     }

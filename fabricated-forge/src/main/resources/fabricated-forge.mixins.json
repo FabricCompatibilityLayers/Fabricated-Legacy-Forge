@@ -41,6 +41,7 @@
     "common.BlockTrapDoorMixin",
     "common.BlockTripWireSourceMixin",
     "common.BlockVineMixin",
+    "common.ChunkMixin",
     "common.MinecraftServerMixin"
   ],
   "client": [
