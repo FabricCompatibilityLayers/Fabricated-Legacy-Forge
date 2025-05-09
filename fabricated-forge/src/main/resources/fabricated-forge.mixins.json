@@ -7,6 +7,8 @@
     "minVersion": "0.5.0-rc.2"
   },
   "server": [
+    "server.CompressedStreamToolsMixin",
+    "server.EntityLivingMixin"
   ],
   "mixins": [
     "common.AnvilChunkLoaderMixin",
@@ -41,7 +43,28 @@
     "common.BlockTrapDoorMixin",
     "common.BlockTripWireSourceMixin",
     "common.BlockVineMixin",
+    "common.ChunkCacheMixin",
     "common.ChunkMixin",
+    "common.ChunkProviderServerMixin",
+    "common.CommandHandlerMixin",
+    "common.ComponentMineshaftCorridorMixin",
+    "common.ComponentScatteredFeatureDesertPyramidMixin",
+    "common.ComponentScatteredFeatureJunglePyramidMixin",
+    "common.ComponentStrongholdChestCorridorMixin",
+    "common.ComponentStrongholdLibraryMixin",
+    "common.ComponentStrongholdRoomCrossingMixin",
+    "common.ComponentVillageHouse2Mixin",
+    "common.ContainerFurnaceMixin",
+    "common.CraftingManagerMixin",
+    "common.CreativeTabsMixin",
+    "common.DedicatedServerMixin",
+    "common.EnchantmentHelperMixin",
+    "common.EnchantmentMixin",
+    "common.EntityDragonMixin",
+    "common.EntityItemMixin",
+    "common.EntityLivingMixin",
+    "common.EntityMinecartMixin",
+    "common.EntityMixin",
     "common.MinecraftServerMixin"
   ],
   "client": [

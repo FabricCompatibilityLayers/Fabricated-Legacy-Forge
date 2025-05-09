@@ -21,4 +21,9 @@ public class StringTranslateMixin {
     public String m_2823481() {
         return this.field_74813_d;
     }
+
+    // searge
+    public String func_74811_c() {
+        return this.field_74813_d;
+    }
 }

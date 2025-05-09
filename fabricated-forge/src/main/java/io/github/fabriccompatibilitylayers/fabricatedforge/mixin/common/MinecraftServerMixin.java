@@ -2,6 +2,7 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.MinecraftServerExtension;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import net.minecraftforge.common.DimensionManager;
@@ -17,7 +18,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 @Mixin(MinecraftServer.class)
-public abstract class MinecraftServerMixin {
+public abstract class MinecraftServerMixin implements MinecraftServerExtension {
 
     @Shadow @Final public Profiler theProfiler;
     @Shadow @Final private List playersOnline;
@@ -182,5 +183,10 @@ public abstract class MinecraftServerMixin {
     private void forge$deleteWorld(WorldServer var2, Operation<Void> original) {
         MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(var2));
         var2.flush();
+    }
+
+    @Override
+    public void setSpawnProtectionSize(int spawnProtectionSize) {
+        this.spawnProtectionSize = spawnProtectionSize;
     }
 }
