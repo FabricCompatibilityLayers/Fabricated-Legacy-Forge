@@ -3,6 +3,7 @@ package cpw.mods.fml.common;
 import java.io.File;
 import java.util.regex.Pattern;
 
+import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.Type;
 
 import cpw.mods.fml.common.discovery.ModCandidate;
@@ -37,7 +38,7 @@ public class ModContainerFactory
         }
 
         // We warn if it's not a basemod instance -- compatibility requires it to be in net.minecraft.src *sigh*
-        if (className.startsWith("net.minecraft.src.") && container.isClasspath() && !container.isMinecraftJar())
+        if (!FabricLoader.getInstance().isDevelopmentEnvironment() && className.startsWith("net.minecraft.src.") && container.isClasspath() && !container.isMinecraftJar())
         {
             FMLLog.severe("FML has detected a mod that is using a package name based on 'net.minecraft.src' : %s. This is generally a severe programming error. "
                     + " There should be no mod code in the minecraft namespace. MOVE YOUR MOD! If you're in eclipse, select your source code and 'refactor' it into "

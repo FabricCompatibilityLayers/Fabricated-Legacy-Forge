@@ -39,6 +39,8 @@ allprojects {
         repositories {
             maven { url = "https://maven.bawnorton.com/releases" }
         }
+
+        mavenLocal()
     }
 
     configurations {
@@ -69,6 +71,15 @@ allprojects {
             }
         }
 
+        runs {
+            config("client") {
+                jvmArgs += "-Dfabric-mod-remapper-api.dev"
+            }
+            config("server") {
+                jvmArgs += "-Dfabric-mod-remapper-api.dev"
+            }
+        }
+
         minecraftRemapper.config {
             ignoreFieldDesc(true)
         }
@@ -84,13 +95,17 @@ allprojects {
     }
 
     dependencies {
-        compileOnly("com.google.guava:guava:12.0.1")
+        implementation("com.google.guava:guava:12.0.1")
         implementation("fmllibs:argo:2.25")
 
         modImplementation("com.github.thecatcore.CursedMixinExtensions:fabric:1.0.0") {
             exclude(module: 'fabric-loader')
         }
+        // Published version of MRAPI
         modImplementation("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
+
+//        // Local version of MRAPI
+//        modImplementation("io.github.fabriccompatibilitylayers:Mod-Remapping-API:1.26.2")
 
         modImplementation(fabricApi.legacyFabricModule("legacy-fabric-logger-api-v1", "1.9.1+1.12.2")) {
             exclude(module: 'fabric-loader')
