@@ -1,3 +1,4 @@
 accessWidener	v2	named
 
 accessible method net/minecraft/src/BlockFlower canThisPlantGrowOnThisBlockID (I)Z
+accessible field net/minecraft/src/Entity rand Ljava/util/Random;

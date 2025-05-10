@@ -55,3 +55,4 @@ accessible	field	net/minecraft/src/ItemSpade	blocksEffectiveAgainst	[Lnet/minecr
 accessible	field	net/minecraft/src/StructureMineshaftPieces	mineshaftChestContents	[Lnet/minecraft/src/WeightedRandomChestContent;
 
 accessible method net/minecraft/src/BlockFlower canThisPlantGrowOnThisBlockID (I)Z
+accessible field net/minecraft/src/Entity rand Ljava/util/Random;

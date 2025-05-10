@@ -1035,4 +1035,9 @@ public abstract class BlockMixin implements BlockExtension {
     public int[] getBlockFlammability() {
         return blockFlammability;
     }
+
+    @Override
+    public boolean isDefaultTexture() {
+        return isDefaultTexture;
+    }
 }

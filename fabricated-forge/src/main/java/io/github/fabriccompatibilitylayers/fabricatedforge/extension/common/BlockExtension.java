@@ -106,4 +106,6 @@ public interface BlockExtension {
     int[] getBlockFireSpreadSpeed();
 
     int[] getBlockFlammability();
+
+    boolean isDefaultTexture();
 }
