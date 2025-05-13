@@ -9,6 +9,23 @@ base {
     archivesName = project.archives_base_name
 }
 
+def ornitheLibraries = [
+        "com.google.code.gson:gson:2.10",
+        "commons-codec:commons-codec:1.9",
+        "commons-io:commons-io:2.4",
+        "commons-logging:commons-logging:1.1.3",
+        "it.unimi.dsi:fastutil:8.5.9",
+        "net.ornithemc:logger-config:1.0.0",
+        "org.apache.commons:commons-compress:1.8.1",
+        "org.apache.commons:commons-lang3:3.1",
+        "org.apache.httpcomponents:httpclient:4.3.3",
+        "org.apache.httpcomponents:httpcore:4.3.2",
+        "org.apache.logging.log4j:log4j-api:2.19.0",
+        "org.apache.logging.log4j:log4j-core:2.19.0",
+        "org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0",
+        "org.slf4j:slf4j-api:2.0.1"
+]
+
 allprojects {
     apply(plugin: "xyz.wagyourtail.unimined")
 
@@ -45,7 +62,7 @@ allprojects {
 
     configurations {
         ornitheImplementation
-        compileOnly.extendsFrom ornitheImplementation
+        modImplementation.extendsFrom ornitheImplementation
     }
 
     unimined.minecraft(sourceSets.main, true) {
@@ -105,7 +122,7 @@ allprojects {
         modImplementation("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
 
 //        // Local version of MRAPI
-//        modImplementation("io.github.fabriccompatibilitylayers:Mod-Remapping-API:1.26.2")
+//        modImplementation("io.github.fabriccompatibilitylayers:mod-remapping-api:1.27.0")
 
         modImplementation(fabricApi.legacyFabricModule("legacy-fabric-logger-api-v1", "1.9.1+1.12.2")) {
             exclude(module: 'fabric-loader')
@@ -125,6 +142,10 @@ allprojects {
         }
 
         ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
+
+        ornitheLibraries.forEach {
+            runtimeOnly(it)
+        }
     }
 
     java {
