@@ -56,3 +56,4 @@ accessible	field	net/minecraft/src/StructureMineshaftPieces	mineshaftChestConten
 
 accessible method net/minecraft/src/BlockFlower canThisPlantGrowOnThisBlockID (I)Z
 accessible field net/minecraft/src/Entity rand Ljava/util/Random;
+accessible class net/minecraft/src/PlayerInstance

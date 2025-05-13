@@ -77,12 +77,20 @@
     "common.ItemBucketMixin",
     "common.ItemDyeMixin",
     "common.ItemHoeMixin",
+    "common.ItemInWorldManagerMixin",
     "common.ItemMapMixin",
     "common.ItemMixin",
     "common.ItemSeedsMixin",
     "common.ItemShearsMixin",
     "common.ItemToolMixin",
-    "common.MinecraftServerMixin"
+    "common.MinecraftServerMixin",
+    "common.MovingObjectPositionMixin",
+    "common.NetServerHandlerMixin",
+    "common.Packet51MapChunkMixin",
+    "common.Packet56MapChunksMixin",
+    "common.PlayerInstanceMixin",
+    "common.PotionEffectMixin",
+    "common.RailLogicMixin"
   ],
   "client": [
   ],
