@@ -304,6 +304,11 @@ public class TextureFXManager
     public BufferedImage loadImageFromTexturePack(RenderEngine renderEngine, String path) throws IOException
     {
         InputStream image=client.field_71418_C.func_77292_e().func_77532_a(path);
+
+        if (image == null) {
+            image = client.field_71418_C.func_77292_e().func_77532_a("/" + path);
+        }
+
         if (image==null) {
             throw new RuntimeException(String.format("The requested image path %s is not found",path));
         }

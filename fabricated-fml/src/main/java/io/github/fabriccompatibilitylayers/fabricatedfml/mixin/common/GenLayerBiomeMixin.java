@@ -2,7 +2,7 @@ package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common;
 
 import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
 import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
-import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.WorldTypeExtension;
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.FMLWorldTypeExtension;
 import net.minecraft.src.BiomeGenBase;
 import net.minecraft.src.GenLayer;
 import net.minecraft.src.GenLayerBiome;
@@ -24,10 +24,7 @@ public abstract class GenLayerBiomeMixin extends GenLayer {
     @ReplaceConstructor
     public void constructor(long p_i3888_1_, GenLayer p_i3888_3_, WorldType p_i3888_4_) {
         superConstructor(p_i3888_1_);
-        this.field_75914_b = ((WorldTypeExtension) p_i3888_4_).getBiomesForWorldType();
+        this.field_75914_b = ((FMLWorldTypeExtension) p_i3888_4_).getBiomesForWorldType();
         this.field_75909_a = p_i3888_3_;
-        System.out.println(this.field_75909_a);
-        System.out.println(p_i3888_4_);
-        System.out.println(this.field_75914_b);
     }
 }

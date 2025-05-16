@@ -1,9 +1,7 @@
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common;
 
-import com.google.common.collect.ObjectArrays;
 import com.google.common.collect.Sets;
-import fr.catcore.cursedmixinextensions.annotations.Public;
-import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.WorldTypeExtension;
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.FMLWorldTypeExtension;
 import io.github.fabriccompatibilitylayers.fabricatedfml.forged.ForgedWorldType;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
@@ -18,7 +16,7 @@ import java.util.Random;
 import java.util.Set;
 
 @Mixin(WorldType.class)
-public class WorldTypeMixin implements WorldTypeExtension {
+public class WorldTypeMixin implements FMLWorldTypeExtension {
     @Shadow @Final public static WorldType field_77138_c;
 
     protected BiomeGenBase[] biomesForWorldType;

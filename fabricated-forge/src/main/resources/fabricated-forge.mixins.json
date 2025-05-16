@@ -90,7 +90,20 @@
     "common.Packet56MapChunksMixin",
     "common.PlayerInstanceMixin",
     "common.PotionEffectMixin",
-    "common.RailLogicMixin"
+    "common.RailLogicMixin",
+    "common.ServerConfigurationManagerMixin",
+    "common.SlotCraftingMixin",
+    "common.SpawnerAnimalsMixin",
+    "common.StatListMixin",
+    "common.TileEntityBrewingStandMixin",
+    "common.TileEntityFurnaceMixin",
+    "common.TileEntityMixin",
+    "common.WeightedRandomChestContentMixin",
+    "common.WorldGenBigMushroomMixin",
+    "common.WorldGenDeadBushMixin",
+    "common.WorldGenDungeonsMixin",
+    "common.WorldProviderMixin",
+    "common.WorldTypeMixin"
   ],
   "client": [
   ],

@@ -7,7 +7,7 @@ import net.minecraft.src.WorldChunkManager;
 
 import java.util.Random;
 
-public interface WorldTypeExtension {
+public interface FMLWorldTypeExtension {
     WorldChunkManager getChunkManager(World world);
 
     IChunkProvider getChunkGenerator(World world);

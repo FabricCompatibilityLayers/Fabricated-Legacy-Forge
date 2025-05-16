@@ -1,7 +1,7 @@
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.WorldTypeExtension;
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.FMLWorldTypeExtension;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +17,7 @@ public abstract class EntitySlimeMixin extends EntityLiving {
 
     @ModifyExpressionValue(method = "func_70601_bi", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldInfo;func_76067_t()Lnet/minecraft/src/WorldType;"))
     private WorldType fml$handleSlimeSpawnReduction(WorldType original) {
-        if (((WorldTypeExtension) original).handleSlimeSpawnReduction(field_70146_Z, field_70170_p)) {
+        if (((FMLWorldTypeExtension) original).handleSlimeSpawnReduction(field_70146_Z, field_70170_p)) {
             return WorldType.field_77138_c;
         }
 

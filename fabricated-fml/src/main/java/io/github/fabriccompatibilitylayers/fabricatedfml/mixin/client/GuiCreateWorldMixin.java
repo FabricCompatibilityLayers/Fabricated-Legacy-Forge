@@ -1,6 +1,6 @@
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client;
 
-import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.WorldTypeExtension;
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.FMLWorldTypeExtension;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiCreateWorld;
 import net.minecraft.src.WorldType;
@@ -16,6 +16,6 @@ public class GuiCreateWorldMixin {
 
     @Inject(method = "func_73875_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EnumGameType;func_77142_a(Ljava/lang/String;)Lnet/minecraft/src/EnumGameType;"))
     private void fml$onGUICreateWorldPress(GuiButton p_73875_1_, CallbackInfo ci) {
-        ((WorldTypeExtension) WorldType.field_77139_a[this.field_73916_E]).onGUICreateWorldPress();
+        ((FMLWorldTypeExtension) WorldType.field_77139_a[this.field_73916_E]).onGUICreateWorldPress();
     }
 }
