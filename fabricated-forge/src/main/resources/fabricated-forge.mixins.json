@@ -102,6 +102,9 @@
     "common.WorldGenBigMushroomMixin",
     "common.WorldGenDeadBushMixin",
     "common.WorldGenDungeonsMixin",
+    "common.WorldGenForestMixin",
+    "common.WorldGenHugeTreesMixin",
+    "common.WorldGenMinableMixin",
     "common.WorldProviderMixin",
     "common.WorldTypeMixin"
   ],
