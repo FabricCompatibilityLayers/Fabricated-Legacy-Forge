@@ -200,7 +200,7 @@ public class WorldProviderMixin implements WorldProviderExtension {
     @Override
     public void toggleRain()
     {
-        worldObj.worldInfo.setRainTime(1);
+        worldObj.getWorldInfo().setRainTime(1);
     }
 
     @Override
@@ -218,32 +218,32 @@ public class WorldProviderMixin implements WorldProviderExtension {
     @Override
     public void setWorldTime(long time)
     {
-        worldObj.worldInfo.setWorldTime(time);
+        worldObj.getWorldInfo().setWorldTime(time);
     }
 
     @Override
     public long getSeed()
     {
-        return worldObj.worldInfo.getSeed();
+        return worldObj.getWorldInfo().getSeed();
     }
 
     @Override
     public long getWorldTime()
     {
-        return worldObj.worldInfo.getWorldTime();
+        return worldObj.getWorldInfo().getWorldTime();
     }
 
     @Override
     public ChunkCoordinates getSpawnPoint()
     {
-        WorldInfo info = worldObj.worldInfo;
+        WorldInfo info = worldObj.getWorldInfo();
         return new ChunkCoordinates(info.getSpawnX(), info.getSpawnY(), info.getSpawnZ());
     }
 
     @Override
     public void setSpawnPoint(int x, int y, int z)
     {
-        worldObj.worldInfo.setSpawnPosition(x, y, z);
+        worldObj.getWorldInfo().setSpawnPosition(x, y, z);
     }
 
     @Override
