@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'xyz.wagyourtail.unimined' version '1.4.1-SNAPSHOT' apply false
+    id 'xyz.wagyourtail.unimined' version '1.4.2-SNAPSHOT' apply false
 }
 
 group project.maven_group
@@ -101,12 +101,21 @@ allprojects {
             ignoreFieldDesc(true)
         }
 
-        mods.remap(configurations.ornitheImplementation) {
-            namespace("calamus")
+        mods {
+            modImplementation {
+                mixinRemap {
+                    enableBaseMixin()
+                    enableMixinExtra()
+                }
+            }
 
-            mixinRemap {
-                enableBaseMixin()
-                enableMixinExtra()
+            remap(configurations.ornitheImplementation) {
+                namespace("calamus")
+
+                mixinRemap {
+                    enableBaseMixin()
+                    enableMixinExtra()
+                }
             }
         }
     }
@@ -124,7 +133,7 @@ allprojects {
 //        // Local version of MRAPI
 //        modImplementation("io.github.fabriccompatibilitylayers:mod-remapping-api:1.27.0")
 
-        modImplementation(fabricApi.legacyFabricModule("legacy-fabric-logger-api-v1", "1.9.1+1.12.2")) {
+        modImplementation(fabricApi.legacyFabric(project.legacyfabric_version)) {
             exclude(module: 'fabric-loader')
         }
         modImplementation("maven.modrinth:spasm:0.2")
@@ -132,8 +141,6 @@ allprojects {
         modImplementation("com.github.thecatcore:WFVAIO:1.2.1") {
             exclude(module: 'fabric-loader')
         }
-
-        implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.5.0-rc.2"))
 
         modImplementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.2.0"))
 
@@ -175,7 +182,6 @@ subprojects.forEach {
 
 dependencies {
     include("fmllibs:argo:2.25")
-    include("io.github.llamalad7:mixinextras-fabric:0.5.0-rc.2")
     include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.2.0")
 
     afterEvaluate {
