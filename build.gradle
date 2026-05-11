@@ -133,7 +133,7 @@ allprojects {
 //        // Local version of MRAPI
 //        modImplementation("io.github.fabriccompatibilitylayers:mod-remapping-api:1.27.0")
 
-        modImplementation(fabricApi.legacyFabric(project.legacyfabric_version)) {
+        modImplementation(fabricApi.legacyFabric("${project.legacyfabric_version}+${project.minecraft_version}")) {
             exclude(module: 'fabric-loader')
         }
         modImplementation("maven.modrinth:spasm:0.2")
