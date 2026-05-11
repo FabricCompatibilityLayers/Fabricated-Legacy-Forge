@@ -119,6 +119,9 @@
     "common.WorldTypeMixin"
   ],
   "client": [
+    "client.EffectRendererMixin",
+    "client.EntityDiggingFXMixin",
+    "client.MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1
