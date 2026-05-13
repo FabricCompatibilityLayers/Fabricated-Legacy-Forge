@@ -121,6 +121,9 @@
   "client": [
     "client.EffectRendererMixin",
     "client.EntityDiggingFXMixin",
+    "client.EntityRendererMixin",
+    "client.GuiAchievementsMixin",
+    "client.GuiContainerCreativeMixin",
     "client.MinecraftMixin"
   ],
   "injectors": {
