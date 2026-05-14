@@ -124,6 +124,9 @@
     "client.EntityRendererMixin",
     "client.GuiAchievementsMixin",
     "client.GuiContainerCreativeMixin",
+    "client.GuiSlotMixin",
+    "client.GuiControlsMixin",
+    "client.GuiIngameMixin",
     "client.MinecraftMixin"
   ],
   "injectors": {
