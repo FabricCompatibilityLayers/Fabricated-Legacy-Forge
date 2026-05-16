@@ -8,7 +8,8 @@
   },
   "server": [
     "server.CompressedStreamToolsMixin",
-    "server.EntityLivingMixin"
+    "server.EntityLivingMixin",
+    "server.GuiStatsComponentMixin"
   ],
   "mixins": [
     "common.AnvilChunkLoaderMixin",
@@ -124,10 +125,13 @@
     "client.EntityRendererMixin",
     "client.GuiAchievementsMixin",
     "client.GuiContainerCreativeMixin",
-    "client.GuiSlotMixin",
     "client.GuiControlsMixin",
     "client.GuiIngameMixin",
-    "client.MinecraftMixin"
+    "client.GuiSlotMixin",
+    "client.IntegratedServerMixin",
+    "client.ItemRendererMixin",
+    "client.MinecraftMixin",
+    "client.NetClientHandlerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

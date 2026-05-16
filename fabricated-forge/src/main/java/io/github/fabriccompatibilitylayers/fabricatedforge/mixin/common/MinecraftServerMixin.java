@@ -56,6 +56,10 @@ public abstract class MinecraftServerMixin implements MinecraftServerExtension {
 
     @Shadow public abstract boolean isHardcore();
 
+    @Shadow public abstract ISaveFormat getActiveAnvilConverter();
+
+    @Shadow public abstract ServerConfigurationManager getConfigurationManager();
+
     // Forge Fields
     public Hashtable<Integer, long[]> worldTickTimes = new Hashtable<>();
     public int spawnProtectionSize = 16;
