@@ -131,7 +131,12 @@
     "client.IntegratedServerMixin",
     "client.ItemRendererMixin",
     "client.MinecraftMixin",
-    "client.NetClientHandlerMixin"
+    "client.NetClientHandlerMixin",
+    "client.PlayerControllerMPMixin",
+    "client.RenderBipedMixin",
+    "client.RenderBlocksMixin",
+    "client.RenderEngineMixin",
+    "client.RenderGlobalMixin"
   ],
   "injectors": {
     "defaultRequire": 1

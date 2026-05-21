@@ -1,5 +1,6 @@
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.client;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.client.RenderGlobalExtension;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -346,7 +347,7 @@ public class EntityRendererMixin {
             this.mc.mcProfiler.endStartSection("destroyProgress");
             GL11.glEnable(3042);
             GL11.glBlendFunc(770, 1);
-            var5.drawBlockDamageTexture(Tessellator.instance, var4, par1);
+            ((RenderGlobalExtension) var5).drawBlockDamageTexture(Tessellator.instance, var4, par1);
             GL11.glDisable(3042);
             this.mc.mcProfiler.endStartSection("weather");
             this.renderRainSnow(par1);
