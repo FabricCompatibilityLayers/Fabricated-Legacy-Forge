@@ -29,3 +29,4 @@ rootProject.name = 'Fabricated-Legacy-Forge'
 
 include("fabricated-fml")
 include("fabricated-forge")
+include("fabricated-forge-server-stubs")

@@ -1,0 +1,23 @@
+unimined.minecraft {
+//    mappings {
+//        devFallbackNamespace("searge")
+//        devNamespace("forgeMCP")
+//    }
+}
+
+configurations {
+    production
+}
+
+artifacts {
+    production remapJar
+}
+
+remapJar {
+    remapAccessTransformer.set(false)
+}
+
+dependencies {
+//    implementation(project(":fabricated-fml"))
+//    implementation(project(":fabricated-forge"))
+}

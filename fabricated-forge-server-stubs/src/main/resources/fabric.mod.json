@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "fabricated-forge-server-stubs",
+  "version": "${version}",
+  "name": "Fabricated Forge (Server Stubs)",
+  "description": "",
+  "authors": [
+    "CatCore"
+  ],
+  "contributors": [],
+  "contact": {
+    "homepage": "",
+    "sources": "",
+    "issues": ""
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/fabricated-forge/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "preLaunch": [
+    ],
+    "mod-remapper-api:modremapper_v2": [
+    ],
+    "mixinsquared": [
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.10",
+    "fabricated-forge": "*"
+  },
+  "mixins": [
+  ]
+}
