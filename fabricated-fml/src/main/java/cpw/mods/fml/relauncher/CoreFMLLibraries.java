@@ -2,6 +2,11 @@ package cpw.mods.fml.relauncher;
 
 import fr.catcore.wfvaio.FabricVariants;
 import fr.catcore.wfvaio.WhichFabricVariantAmIOn;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CoreFMLLibraries implements ILibrarySet
 {
@@ -12,32 +17,32 @@ public class CoreFMLLibraries implements ILibrarySet
     @Override
     public String[] getLibraries()
     {
+        List<String> libs = new ArrayList<>();
+
         if (runningLegacyFabric) {
-            return new String[] {
-                    "guava-12.0.1.jar"
-            };
+            libs.add("guava-12.0.1.jar");
         }
 
-        return new String[0];
+        return libs.toArray(new String[0]);
     }
 
     @Override
     public String[] getHashes()
     {
+        List<String> hashes = new ArrayList<>();
+
         if (runningLegacyFabric) {
-            return new String[] {
-                    "b8e78b9af7bf45900e14c6f958486b6ca682195f"
-            };
+            hashes.add("b8e78b9af7bf45900e14c6f958486b6ca682195f");
         }
 
-        return new String[0];
+        return hashes.toArray(new String[0]);
     }
 
     @Override
     public String getRootURL()
     {
 //        return "http://files.minecraftforge.net/fmllibs/%s";
-        return "https://repo.maven.apache.org/maven2/com/google/guava/guava/12.0.1/%s";
+        return "https://maven.wagyourtail.xyz/releases/fmllibs/%s";
     }
 
 }

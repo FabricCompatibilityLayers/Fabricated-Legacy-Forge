@@ -1,5 +1,6 @@
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.server;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.utils.ServerImplementation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.StringTranslate;
@@ -12,17 +13,7 @@ public class StringTranslateMixin {
     @Shadow public String field_74813_d;
 
     // Readd this client-only method to the server
-    // Legacy Fabric intermediary 1
-    public String method_636() {
-        return this.field_74813_d;
-    }
-
-    // Ornithe gen 1
-    public String m_2823481() {
-        return this.field_74813_d;
-    }
-
-    // searge
+    @ServerImplementation("c")
     public String func_74811_c() {
         return this.field_74813_d;
     }

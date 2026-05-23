@@ -29,6 +29,7 @@ import java.util.logging.Level;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin.TransformerExclusions;
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.Constants;
 import io.github.fabriccompatibilitylayers.modremappingapi.api.v2.CacheHandler;
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 
 public class RelaunchLibraryManager
 {

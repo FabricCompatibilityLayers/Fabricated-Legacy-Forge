@@ -3,6 +3,8 @@ package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import cpw.mods.fml.common.registry.VillagerRegistry;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.src.EntityAgeable;
 import net.minecraft.src.EntityVillager;
 import net.minecraft.src.MerchantRecipeList;
@@ -23,6 +25,7 @@ public abstract class EntityVillagerMixin extends EntityAgeable {
 
     @Shadow public abstract int func_70946_n();
 
+    @Environment(EnvType.CLIENT)
     @ModifyExpressionValue(method = "func_70073_O", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityAgeable;func_70073_O()Ljava/lang/String;"))
     private String fml$getVillagerSkin(String original) {
         return VillagerRegistry.getVillagerSkin(this.func_70946_n(), original);
