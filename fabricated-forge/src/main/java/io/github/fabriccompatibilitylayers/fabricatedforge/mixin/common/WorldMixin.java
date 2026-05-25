@@ -120,6 +120,8 @@ public abstract class WorldMixin implements WorldExtension {
     protected boolean spawnHostileMobs;
     @Shadow
     protected boolean spawnPeacefulMobs;
+    @Shadow
+    public MapStorage mapStorage;
 
     // == Shadowed members section: end ==
 

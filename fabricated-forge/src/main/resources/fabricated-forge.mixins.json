@@ -136,7 +136,17 @@
     "client.RenderBipedMixin",
     "client.RenderBlocksMixin",
     "client.RenderEngineMixin",
-    "client.RenderGlobalMixin"
+    "client.RenderGlobalMixin",
+    "client.RenderManagerMixin",
+    "client.RenderPlayerMixin",
+    "client.RenderSnowManMixin",
+    "client.SoundManagerMixin",
+    "client.SoundPoolMixin",
+    "client.ThreadDownloadResourcesMixin",
+    "client.TileEntityRendererMixin",
+    "client.TileEntityRendererPistonMixin",
+    "client.WorldClientMixin",
+    "client.WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

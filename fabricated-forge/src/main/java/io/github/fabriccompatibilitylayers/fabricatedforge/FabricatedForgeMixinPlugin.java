@@ -3,6 +3,7 @@ package io.github.fabriccompatibilitylayers.fabricatedforge;
 import fr.catcore.cursedmixinextensions.CursedMixinExtensions;
 import fr.catcore.wfvaio.FabricVariants;
 import fr.catcore.wfvaio.WhichFabricVariantAmIOn;
+import io.github.fabriccompatibilitylayers.fabricatedfml.utils.PatchConversionHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import org.objectweb.asm.tree.ClassNode;
@@ -78,5 +79,6 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
         CursedMixinExtensions.postApply(targetClass);
+        PatchConversionHelper.postApply(targetClass);
     }
 }
