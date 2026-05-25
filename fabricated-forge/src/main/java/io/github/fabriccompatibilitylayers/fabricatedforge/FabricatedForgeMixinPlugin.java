@@ -74,6 +74,7 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+        PatchConversionHelper.preApply(mixinClassName, targetClass);
     }
 
     @Override
