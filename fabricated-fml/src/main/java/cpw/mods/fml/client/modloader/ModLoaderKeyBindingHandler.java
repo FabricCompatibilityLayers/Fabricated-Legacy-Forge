@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
-import net.minecraft.BaseMod;
+import net.minecraft.src.BaseMod;
 
 import com.google.common.collect.ObjectArrays;
 import com.google.common.primitives.Booleans;

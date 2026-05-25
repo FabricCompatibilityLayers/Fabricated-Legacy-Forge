@@ -12,10 +12,9 @@
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-package net.minecraft;
+package net.minecraft.src;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.EntityRenderer;
 
 public class EntityRendererProxy extends EntityRenderer
 {

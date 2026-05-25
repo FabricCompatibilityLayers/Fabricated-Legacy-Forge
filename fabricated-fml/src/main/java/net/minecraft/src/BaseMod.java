@@ -10,7 +10,7 @@
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51
  * Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
-package net.minecraft;
+package net.minecraft.src;
 
 import static cpw.mods.fml.common.Side.CLIENT;
 
@@ -22,7 +22,6 @@ import net.minecraft.server.MinecraftServer;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.asm.SideOnly;
-import net.minecraft.src.*;
 
 public abstract class BaseMod implements cpw.mods.fml.common.modloader.BaseModProxy
 {

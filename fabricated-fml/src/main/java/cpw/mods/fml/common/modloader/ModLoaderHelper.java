@@ -26,7 +26,7 @@ import net.minecraft.src.EntityDragon;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.IAnimals;
 import net.minecraft.src.ICommand;
-import net.minecraft.TradeEntry;
+import net.minecraft.src.TradeEntry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ICraftingHandler;
 import cpw.mods.fml.common.IDispenserHandler;

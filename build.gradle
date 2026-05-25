@@ -72,6 +72,10 @@ allprojects {
             calamus()
 
             forgeBuiltinMCP(project.forge_version)
+
+            stubs(["official", "searge", "calamus", "legacyIntermediary", "forgeMCP"]) {
+                k("", "net/minecraft/src/", "net/minecraft/unmapped/", "net/minecraft/", "net/minecraft/src/")
+            }
         }
 
         legacyFabric {

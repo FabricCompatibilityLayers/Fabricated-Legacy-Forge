@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 
 import io.github.fabriccompatibilitylayers.fabricatedfml.compat.guava.Equivalences;
-import net.minecraft.BaseMod;
+import net.minecraft.src.BaseMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityClientPlayerMP;

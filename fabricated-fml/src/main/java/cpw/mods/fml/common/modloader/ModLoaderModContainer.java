@@ -143,7 +143,7 @@ public class ModLoaderModContainer implements ModContainer
         List<ModProperty> mlPropFields = Lists.newArrayList();
         try
         {
-            for (ASMData dat : Sets.union(asmData.getAnnotationsFor(this).get("net.minecraft.MLProp"), asmData.getAnnotationsFor(this).get("MLProp")))
+            for (ASMData dat : Sets.union(asmData.getAnnotationsFor(this).get("net.minecraft.src.MLProp"), asmData.getAnnotationsFor(this).get("MLProp")))
             {
                 if (dat.getClassName().equals(modClazzName))
                 {

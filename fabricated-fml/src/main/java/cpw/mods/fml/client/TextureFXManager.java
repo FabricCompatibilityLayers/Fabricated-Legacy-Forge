@@ -19,7 +19,7 @@ import java.util.Map;
 import javax.imageio.ImageIO;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.ModTextureStatic;
+import net.minecraft.src.ModTextureStatic;
 import net.minecraft.src.RenderEngine;
 import net.minecraft.src.TextureFX;
 import net.minecraft.src.TexturePackBase;

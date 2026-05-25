@@ -71,15 +71,17 @@ public class FMLRemapper implements ModRemapper {
 
     @Override
     public void registerAdditionalMappings(MappingBuilder mappingBuilder) {
+        MappingsConfig config = getMappingsConfig();
+
         // ModLoader mappings
-        mappingBuilder.addMapping("BaseMod", "net/minecraft/BaseMod");
-        mappingBuilder.addMapping("EntityRendererProxy", "net/minecraft/EntityRendererProxy");
-        mappingBuilder.addMapping("FMLRendererAccessLibrary", "net/minecraft/FMLRendererAccessLibrary");
-        mappingBuilder.addMapping("MLProp", "net/minecraft/MLProp");
-        mappingBuilder.addMapping("ModLoader", "net/minecraft/ModLoader");
-        mappingBuilder.addMapping("ModTextureAnimation", "net/minecraft/ModTextureAnimation");
-        mappingBuilder.addMapping("ModTextureStatic", "net/minecraft/ModTextureStatic");
-        mappingBuilder.addMapping("TradeEntry", "net/minecraft/TradeEntry");
+        mappingBuilder.addMapping("BaseMod", config.getDefaultPackage() + "BaseMod");
+        mappingBuilder.addMapping("EntityRendererProxy", config.getDefaultPackage() + "EntityRendererProxy");
+        mappingBuilder.addMapping("FMLRendererAccessLibrary", config.getDefaultPackage() + "FMLRendererAccessLibrary");
+        mappingBuilder.addMapping("MLProp", config.getDefaultPackage() + "MLProp");
+        mappingBuilder.addMapping("ModLoader", config.getDefaultPackage() + "ModLoader");
+        mappingBuilder.addMapping("ModTextureAnimation", config.getDefaultPackage() + "ModTextureAnimation");
+        mappingBuilder.addMapping("ModTextureStatic", config.getDefaultPackage() + "ModTextureStatic");
+        mappingBuilder.addMapping("TradeEntry", config.getDefaultPackage() + "TradeEntry");
 
         // Guava backward compatibility
         if (!runningLegacyFabric) {
