@@ -12,6 +12,7 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import fr.catcore.cursedmixinextensions.annotations.Public;
 import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
+import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -158,6 +159,9 @@ public abstract class WorldMixin implements WorldExtension {
         return this.provider.worldChunkMgr.getBiomeGenAt(par1, par2);
     }
 
+    @ShadowSuperConstructor
+    private void superConstructor() {}
+
 
     // Pattern K (@ReplaceConstructor): client-side constructor is truncated to field assignment only;
     // the removed tail (registerWorld + chunkProvider init + skylight + weather) moves into finishSetup().
@@ -165,6 +169,8 @@ public abstract class WorldMixin implements WorldExtension {
     @ReplaceConstructor
     @Environment(EnvType.CLIENT)
     public void constructor(ISaveHandler par1ISaveHandler, String par2Str, WorldProvider par3WorldProvider, WorldSettings par4WorldSettings, Profiler par5Profiler) {
+        superConstructor();
+
         scheduledUpdatesAreImmediate = false;
         loadedEntityList = new ArrayList();
         unloadedEntityList = new ArrayList();

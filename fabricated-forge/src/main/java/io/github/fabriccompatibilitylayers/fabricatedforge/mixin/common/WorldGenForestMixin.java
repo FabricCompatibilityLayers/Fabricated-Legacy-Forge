@@ -23,17 +23,25 @@ public class WorldGenForestMixin {
         return Block.blocksList[blockId] != null;
     }
 
+    @WrapOperation(method = "generate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockId(III)I", ordinal = 0))
+    private int forge$capturePos0(World instance, int par2, int par3, int i, Operation<Integer> original,
+                                  @Share(namespace = "fabricated-forge", value = "toleavePos0") LocalRef<ChunkCoordinates> posRef) {
+        posRef.set(new ChunkCoordinates(par2, par3, i));
+
+        return original.call(instance, par2, par3, i);
+    }
+
     @Definition(id = "leaves", field = "Lnet/minecraft/src/Block;leaves:Lnet/minecraft/src/BlockLeaves;")
     @Definition(id = "blockID", field = "Lnet/minecraft/src/BlockLeaves;blockID:I")
     @Expression("? != leaves.blockID")
     @WrapOperation(method = "generate", at = @At("MIXINEXTRAS:EXPRESSION"))
     private boolean forge$isntLeaves(int var12, int right, Operation<Boolean> original,
-                                   @Local(argsOnly = true) World par1World,
-                                   @Local(index = 8) int var8,
-                                   @Local(index = 10) int var10,
-                                   @Local(index = 11) int var11) {
+                                     @Local(argsOnly = true) World par1World,
+                                     @Share(namespace = "fabricated-forge", value = "toleavePos0") LocalRef<ChunkCoordinates> posRef) {
         Block block = Block.blocksList[var12];
-        return !((BlockExtension) block).isLeaves(par1World, var10,  var8, var11);
+        ChunkCoordinates pos = posRef.get();
+
+        return !((BlockExtension) block).isLeaves(par1World, pos.posX,  pos.posY, pos.posZ);
     }
 
     @WrapOperation(method = "generate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockId(III)I", ordinal = 2))

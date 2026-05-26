@@ -123,11 +123,11 @@ public abstract class ChunkMixin implements ChunkExtension {
 
     @Definition(id = "lightOpacity", field = "Lnet/minecraft/src/Block;lightOpacity:[I")
     @Expression("lightOpacity[?]")
-    @Redirect(method = "generateHeightMap", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private int forge$getBlockLightOpacity$generateHeightMap(int[] array, int index,
-                                           @Local(ordinal = 1) int var2,
-                                           @Local(ordinal = 2) int var3,
-                                           @Local(ordinal = 3) int var4) {
+    @WrapOperation(method = "generateHeightMap", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private int forge$getBlockLightOpacity$generateHeightMap(int[] array, int index, Operation<Integer> original,
+                                                             @Local(ordinal = 1) int var2,
+                                                             @Local(ordinal = 2) int var3,
+                                                             @Local(ordinal = 3) int var4) {
         return getBlockLightOpacity(var2, var4 - 1, var3);
     }
 
@@ -178,24 +178,32 @@ public abstract class ChunkMixin implements ChunkExtension {
     @WrapOperation(method = "setBlockIDWithMetadata", at = @At("MIXINEXTRAS:EXPRESSION"))
     private boolean forge$hasTileEntity(int var8, int par4, Operation<Boolean> original,
                                         @Local(ordinal = 8) int var9) {
-        return ((BlockExtension) Block.blocksList[var8]).hasTileEntity(var9);
+        return Block.blocksList[var8] != null && ((BlockExtension) Block.blocksList[var8]).hasTileEntity(var9);
     }
 
     @Definition(id = "lightOpacity", field = "Lnet/minecraft/src/Block;lightOpacity:[I")
     @Definition(id = "par4", local = @Local(type = int.class, ordinal = 3, argsOnly = true))
     @Expression("lightOpacity[par4 & 4095]")
-    @Redirect(method = "setBlockIDWithMetadata", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private int forge$getBlockLightOpacity$setBlockIDWithMetadata(int[] array, int index,
-                                           @Local(argsOnly = true, ordinal = 0) int par1,
-                                           @Local(argsOnly = true, ordinal = 1) int par2,
-                                           @Local(argsOnly = true, ordinal = 2) int par3) {
+    @WrapOperation(method = "setBlockIDWithMetadata", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private int forge$getBlockLightOpacity$setBlockIDWithMetadata(int[] array, int index, Operation<Integer> original,
+                                                                  @Local(argsOnly = true, ordinal = 0) int par1,
+                                                                  @Local(argsOnly = true, ordinal = 1) int par2,
+                                                                  @Local(argsOnly = true, ordinal = 2) int par3) {
         return getBlockLightOpacity(par1, par2, par3);
+    }
+
+    @Definition(id = "BlockContainer", type = BlockContainer.class)
+    @Expression("(BlockContainer) ?")
+    @WrapOperation(method = "setBlockIDWithMetadata", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private BlockContainer forge$fixCast(Object object, Operation<BlockContainer> original) {
+        return null;
     }
 
     @Redirect(method = "setBlockIDWithMetadata", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/BlockContainer;createNewTileEntity(Lnet/minecraft/src/World;)Lnet/minecraft/src/TileEntity;"))
     private TileEntity forge$createTileEntity(BlockContainer instance, World world,
+                                              @Local(argsOnly = true, ordinal = 3) int par4,
                                               @Local(argsOnly = true, ordinal = 4) int par5) {
-        return ((BlockExtension) instance).createTileEntity(world, par5);
+        return ((BlockExtension) Block.blocksList[par4]).createTileEntity(world, par5);
     }
 
     @WrapOperation(method = "setBlockIDWithMetadata", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/TileEntity;updateContainingBlockInfo()V", ordinal = 0))

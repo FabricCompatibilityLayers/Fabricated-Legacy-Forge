@@ -97,7 +97,7 @@ public class EventTransformer implements IClassTransformer
                 }
         }
 
-        Type tSuper = Type.getType(classNode.superName);
+        Type tSuper = Type.getType(parent);
 
         //Add private static ListenerList LISTENER_LIST
         classNode.fields.add(new FieldNode(ACC_PRIVATE | ACC_STATIC, "LISTENER_LIST", tList.getDescriptor(), null, null));

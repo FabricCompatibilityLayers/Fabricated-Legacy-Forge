@@ -68,7 +68,7 @@ public class WorldGenHugeTreesMixin {
     @Definition(id = "leaves", field = "Lnet/minecraft/src/Block;leaves:Lnet/minecraft/src/BlockLeaves;")
     @Definition(id = "blockID", field = "Lnet/minecraft/src/BlockLeaves;blockID:I")
     @Expression("? == leaves.blockID")
-    @WrapOperation(method = "generate", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0))
+    @WrapOperation(method = "generate", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 1))
     private boolean forge$isLeaves1(int blockId, int right, Operation<Boolean> original,
                                     @Local(argsOnly = true) World par1World,
                                     @Share(namespace = "fabricated-forge", value = "leavePos1") LocalRef<ChunkCoordinates> posRef) {
@@ -89,7 +89,7 @@ public class WorldGenHugeTreesMixin {
     @Definition(id = "leaves", field = "Lnet/minecraft/src/Block;leaves:Lnet/minecraft/src/BlockLeaves;")
     @Definition(id = "blockID", field = "Lnet/minecraft/src/BlockLeaves;blockID:I")
     @Expression("? == leaves.blockID")
-    @WrapOperation(method = "generate", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 1))
+    @WrapOperation(method = "generate", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 2))
     private boolean forge$isLeaves2(int blockId, int right, Operation<Boolean> original,
                                     @Local(argsOnly = true) World par1World,
                                     @Share(namespace = "fabricated-forge", value = "leavePos2") LocalRef<ChunkCoordinates> posRef) {
@@ -110,7 +110,7 @@ public class WorldGenHugeTreesMixin {
     @Definition(id = "leaves", field = "Lnet/minecraft/src/Block;leaves:Lnet/minecraft/src/BlockLeaves;")
     @Definition(id = "blockID", field = "Lnet/minecraft/src/BlockLeaves;blockID:I")
     @Expression("? == leaves.blockID")
-    @WrapOperation(method = "generate", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 2))
+    @WrapOperation(method = "generate", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 3))
     private boolean forge$isLeaves3(int blockId, int right, Operation<Boolean> original,
                                     @Local(argsOnly = true) World par1World,
                                     @Share(namespace = "fabricated-forge", value = "leavePos3") LocalRef<ChunkCoordinates> posRef) {
@@ -131,7 +131,7 @@ public class WorldGenHugeTreesMixin {
     @Definition(id = "leaves", field = "Lnet/minecraft/src/Block;leaves:Lnet/minecraft/src/BlockLeaves;")
     @Definition(id = "blockID", field = "Lnet/minecraft/src/BlockLeaves;blockID:I")
     @Expression("? == leaves.blockID")
-    @WrapOperation(method = "generate", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 3))
+    @WrapOperation(method = "generate", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 4))
     private boolean forge$isLeaves4(int blockId, int right, Operation<Boolean> original,
                                     @Local(argsOnly = true) World par1World,
                                     @Share(namespace = "fabricated-forge", value = "leavePos4") LocalRef<ChunkCoordinates> posRef) {

@@ -150,9 +150,11 @@ public abstract class ItemInWorldManagerMixin implements ItemInWorldManagerExten
         return this.removeBlock(par1, par2, par3) ? 1 : 0;
     }
 
-    @Expression("null")
-    @WrapOperation(method = "tryUseItem", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 2))
-    private void forge$postPlayerDestroyItemEvent(@Local(ordinal = 1) ItemStack var6) {
+    @Definition(id = "mainInventory", field = "Lnet/minecraft/src/InventoryPlayer;mainInventory:[Lnet/minecraft/src/ItemStack;")
+    @Expression("?.mainInventory[?] = ?")
+    @WrapOperation(method = "tryUseItem", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 1))
+    private void forge$postPlayerDestroyItemEvent(ItemStack[] array, int index, ItemStack value, Operation<Void> original, @Local(ordinal = 1) ItemStack var6) {
+        original.call(array, index, value);
         MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(thisPlayerMP, var6));
     }
 
