@@ -2,10 +2,13 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import fr.catcore.cursedmixinextensions.annotations.Public;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockContainerExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.forged.ForgedBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -72,10 +75,7 @@ public abstract class BlockMixin implements BlockExtension {
     @Shadow protected abstract void dropBlockAsItem_do(World par1World, int par2, int par3, int par4, ItemStack par5ItemStack);
 
     // Forge Fields
-    @Public
-    private static int[] blockFireSpreadSpeed = new int[4096];
-    @Public
-    private static int[] blockFlammability = new int[4096];
+
     protected String currentTexture = "/terrain.png";
     public boolean isDefaultTexture = true;
 
@@ -97,14 +97,9 @@ public abstract class BlockMixin implements BlockExtension {
 
     @Environment(EnvType.CLIENT)
     @Definition(id = "lightValue", field = "Lnet/minecraft/src/Block;lightValue:[I")
-    @Definition(id = "par1IBlockAccess", local = @Local(argsOnly = true, type = IBlockAccess.class))
-    @Definition(id = "getBlockId", method = "Lnet/minecraft/src/IBlockAccess;getBlockId(III)I")
-    @Definition(id = "par2", local = @Local(argsOnly = true, type = int.class, ordinal = 0))
-    @Definition(id = "par3", local = @Local(argsOnly = true, type = int.class, ordinal = 1))
-    @Definition(id = "par4", local = @Local(argsOnly = true, type = int.class, ordinal = 2))
-    @Expression("lightValue[par1IBlockAccess.getBlockId(par2, par3, par4)]")
-    @Redirect(method = {"getBlockBrightness", "getMixedBrightnessForBlock"}, at = @At("MIXINEXTRAS:EXPRESSION"))
-    private int forge$getLightValue(int[] array, int index,
+    @Expression("lightValue[?]")
+    @WrapOperation(method = {"getBlockBrightness", "getMixedBrightnessForBlock"}, at = @At("MIXINEXTRAS:EXPRESSION"))
+    private int forge$getLightValue(int[] array, int index, Operation<Integer> original,
                                     @Local(argsOnly = true) IBlockAccess par1IBlockAccess,
                                     @Local(argsOnly = true, type = int.class, ordinal = 0) int par2,
                                     @Local(argsOnly = true, type = int.class, ordinal = 1) int par3,
@@ -344,7 +339,7 @@ public abstract class BlockMixin implements BlockExtension {
     @Override
     public int getFlammability(IBlockAccess world, int x, int y, int z, int metadata, ForgeDirection face)
     {
-        return blockFlammability[blockID];
+        return ForgedBlock.blockFlammability[blockID];
     }
 
     /**
@@ -380,7 +375,7 @@ public abstract class BlockMixin implements BlockExtension {
     @Override
     public int getFireSpreadSpeed(World world, int x, int y, int z, int metadata, ForgeDirection face)
     {
-        return blockFireSpreadSpeed[blockID];
+        return ForgedBlock.blockFireSpreadSpeed[blockID];
     }
 
     /**
@@ -419,8 +414,8 @@ public abstract class BlockMixin implements BlockExtension {
     @Public
     private static void setBurnProperties(int id, int encouragement, int flammability)
     {
-        blockFireSpreadSpeed[id] = encouragement;
-        blockFlammability[id] = flammability;
+        ForgedBlock.blockFireSpreadSpeed[id] = encouragement;
+        ForgedBlock.blockFlammability[id] = flammability;
     }
 
     /**
@@ -1023,21 +1018,5 @@ public abstract class BlockMixin implements BlockExtension {
     public boolean canDragonDestroy(World world, int x, int y, int z)
     {
         return blockID != obsidian.blockID && blockID != whiteStone.blockID && blockID != bedrock.blockID;
-    }
-
-    // Fabricated Forge
-    @Override
-    public int[] getBlockFireSpreadSpeed() {
-        return blockFireSpreadSpeed;
-    }
-
-    @Override
-    public int[] getBlockFlammability() {
-        return blockFlammability;
-    }
-
-    @Override
-    public boolean isDefaultTexture() {
-        return isDefaultTexture;
     }
 }

@@ -954,8 +954,7 @@ public abstract class WorldMixin implements WorldExtension {
     }
 
     @Definition(id = "lightValue", field = "Lnet/minecraft/src/Block;lightValue:[I")
-    @Definition(id = "par5", local = @Local(argsOnly = true, ordinal = 4))
-    @Expression("lightValue[par5]")
+    @Expression("lightValue[?]")
     @WrapOperation(method = "computeBlockLightValue", at = @At("MIXINEXTRAS:EXPRESSION"))
     private int forge$getBlockLightValue(int[] lightValue, int par5, Operation<Integer> original,
                                          @Local(argsOnly = true, ordinal = 1) int par2,

@@ -2,7 +2,6 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
-import com.llamalad7.mixinextras.injector.ModifyReceiver;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -42,10 +41,9 @@ public abstract class TileEntityFurnaceMixin extends TileEntity implements TileE
         return original.call(left + var1.stackSize, right);
     }
 
-    @ModifyReceiver(method = "canSmelt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;getMaxStackSize()I", ordinal = 0))
-    private ItemStack forge$swapStack(ItemStack instance,
-                                      @Local ItemStack var1) {
-        return var1;
+    @WrapOperation(method = "canSmelt", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;getMaxStackSize()I", ordinal = 0))
+    private int forge$swapStack(ItemStack instance, Operation<Integer> original, @Local ItemStack var1) {
+        return original.call(var1);
     }
 
     @Definition(id = "furnaceItemStacks", field = "Lnet/minecraft/src/TileEntityFurnace;furnaceItemStacks:[Lnet/minecraft/src/ItemStack;")

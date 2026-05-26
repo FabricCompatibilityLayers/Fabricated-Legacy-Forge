@@ -61,7 +61,26 @@ public class ForgeRemapper implements ModRemapper {
 
     @Override
     public void registerPreVisitors(VisitorInfos visitorInfos) {
-
+        visitorInfos.registerFieldRef(
+                "aig",
+                "blockFireSpreadSpeed",
+                "",
+                VisitorInfos.classMember(
+                        "io/github/fabriccompatibilitylayers/fabricatedforge/forged/ForgedBlock",
+                        "blockFireSpreadSpeed",
+                        null
+                )
+        );
+        visitorInfos.registerFieldRef(
+                "aig",
+                "blockFlammability",
+                "",
+                VisitorInfos.classMember(
+                        "io/github/fabriccompatibilitylayers/fabricatedforge/forged/ForgedBlock",
+                        "blockFlammability",
+                        null
+                )
+        );
     }
 
     @Override

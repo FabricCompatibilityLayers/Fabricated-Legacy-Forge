@@ -5,8 +5,11 @@ import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import net.minecraft.src.Block;
+import net.minecraft.src.ChunkCoordinates;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldGenTaiga1;
 import org.spongepowered.asm.mixin.Mixin;
@@ -28,17 +31,31 @@ public class WorldGenTaiga1Mixin {
         return block != null && !((BlockExtension) block).isLeaves(par1World, var13, var11, var14);
     }
 
+    @WrapOperation(method = "generate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockId(III)I", ordinal = 2))
+    private int forge$capturePos1(World instance, int par2, int par3, int i, Operation<Integer> original,
+                                 @Share(namespace = "fabricated-forge", value = "toleavePos") LocalRef<ChunkCoordinates> posRef) {
+        posRef.set(new ChunkCoordinates(par2, par3, i));
+
+        return original.call(instance, par2, par3, i);
+    }
+
     @Definition(id = "opaqueCubeLookup", field = "Lnet/minecraft/src/Block;opaqueCubeLookup:[Z")
     @Expression("opaqueCubeLookup[?]")
     @WrapOperation(method = "generate", at = @At("MIXINEXTRAS:EXPRESSION"))
     private boolean forge$canBeReplacedByLeaves(boolean[] array, int blockId, Operation<Boolean> original,
                                                 @Local(argsOnly = true) World par1World,
-                                                @Local(index = 16) int var16,
-                                                @Local(index = 21) int var21,
-                                                @Local(index = 23) int var23) {
+                                                @Share(namespace = "fabricated-forge", value = "toleavePos") LocalRef<ChunkCoordinates> posRef) {
         Block block = Block.blocksList[blockId];
+        ChunkCoordinates pos = posRef.get();
 
-        return block != null && !((BlockExtension) block).canBeReplacedByLeaves(par1World, var23, var21, var16);
+        return block != null && !((BlockExtension) block).canBeReplacedByLeaves(par1World, pos.posX, pos.posY, pos.posZ);
+    }
+
+    @WrapOperation(method = "generate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockId(III)I", ordinal = 3))
+    private int forge$captureLeavePos2(World instance, int par2, int par3, int i, Operation<Integer> original,
+                                      @Share(namespace = "fabricated-forge", value = "leavePos")LocalRef<ChunkCoordinates> posRef) {
+        posRef.set(new ChunkCoordinates(par2, par3, i));
+        return original.call(instance, par2, par3, i);
     }
 
     @Definition(id = "leaves", field = "Lnet/minecraft/src/Block;leaves:Lnet/minecraft/src/BlockLeaves;")
@@ -47,12 +64,10 @@ public class WorldGenTaiga1Mixin {
     @WrapOperation(method = "generate", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0))
     private boolean forge$isLeaves1(int blockId, int right, Operation<Boolean> original,
                                     @Local(argsOnly = true) World par1World,
-                                    @Local(ordinal = 0, argsOnly = true) int par3,
-                                    @Local(ordinal = 1, argsOnly = true) int par4,
-                                    @Local(ordinal = 2, argsOnly = true) int par5,
-                                    @Local(index = 22) int var22) {
+                                    @Share(namespace = "fabricated-forge", value = "leavePos")LocalRef<ChunkCoordinates> posRef) {
         Block block = Block.blocksList[blockId];
+        ChunkCoordinates pos = posRef.get();
 
-        return block != null && ((BlockExtension) block).isLeaves(par1World, par3, par4 + var22, par5);
+        return block != null && ((BlockExtension) block).isLeaves(par1World, pos.posX, pos.posY, pos.posZ);
     }
 }

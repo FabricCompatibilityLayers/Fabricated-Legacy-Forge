@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockFireExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.forged.ForgedBlock;
 import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeDirection;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,8 +30,8 @@ public abstract class BlockFireMixin extends Block implements BlockFireExtension
 
     @Inject(method = "initializeBlock", at = @At("HEAD"))
     private void forge$initializeBlock(CallbackInfo ci) {
-        abilityToCatchFire = this.getBlockFlammability();
-        chanceToEncourageFire = this.getBlockFireSpreadSpeed();
+        abilityToCatchFire = ForgedBlock.blockFlammability;
+        chanceToEncourageFire = ForgedBlock.blockFireSpreadSpeed;
     }
 
     /**
@@ -53,7 +54,7 @@ public abstract class BlockFireMixin extends Block implements BlockFireExtension
     }
 
     @ModifyConstant(method = "updateTick", constant = @Constant(classValue = WorldProviderEnd.class))
-    private Class<?> forge$hackCheck(Class constant) {
+    private Class<?> forge$hackCheck(Object instance, Class<?> type) {
         return Number.class;
     }
 

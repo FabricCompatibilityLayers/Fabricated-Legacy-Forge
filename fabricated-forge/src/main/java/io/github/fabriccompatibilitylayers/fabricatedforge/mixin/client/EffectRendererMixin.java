@@ -10,6 +10,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.client.EffectRendererExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.ItemExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common.BlockAccessor;
 import net.minecraft.src.*;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.ForgeHooks;
@@ -155,7 +156,7 @@ public abstract class EffectRendererMixin implements EffectRendererExtension {
             addEffect(effect);
             return;
         }
-        if (obj instanceof Block && ((BlockExtension) obj).isDefaultTexture()) {
+        if (obj instanceof Block && ((BlockAccessor) obj).isDefaultTexture()) {
             addEffect(effect);
             return;
         }

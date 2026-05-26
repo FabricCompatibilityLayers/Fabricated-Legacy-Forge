@@ -5,8 +5,11 @@ import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import net.minecraft.src.Block;
+import net.minecraft.src.ChunkCoordinates;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldGenTaiga2;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,18 +44,23 @@ public class WorldGenTaiga2Mixin {
         return block != null && !((BlockExtension) block).canBeReplacedByLeaves(par1World, var17, var16, var19);
     }
 
+    @WrapOperation(method = "generate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockId(III)I", ordinal = 3))
+    private int forge$captureLeavePos(World instance, int par2, int par3, int i, Operation<Integer> original,
+                                      @Share(namespace = "fabricated-forge", value = "leavePos")LocalRef<ChunkCoordinates> posRef) {
+        posRef.set(new ChunkCoordinates(par2, par3, i));
+        return original.call(instance, par2, par3, i);
+    }
+
     @Definition(id = "leaves", field = "Lnet/minecraft/src/Block;leaves:Lnet/minecraft/src/BlockLeaves;")
     @Definition(id = "blockID", field = "Lnet/minecraft/src/BlockLeaves;blockID:I")
     @Expression("? == leaves.blockID")
     @WrapOperation(method = "generate", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0))
     private boolean forge$isLeaves1(int blockId, int right, Operation<Boolean> original,
                                     @Local(argsOnly = true) World par1World,
-                                    @Local(ordinal = 0, argsOnly = true) int par3,
-                                    @Local(ordinal = 1, argsOnly = true) int par4,
-                                    @Local(ordinal = 2, argsOnly = true) int par5,
-                                    @Local(index = 28) int var28) {
+                                    @Share(namespace = "fabricated-forge", value = "leavePos")LocalRef<ChunkCoordinates> posRef) {
         Block block = Block.blocksList[blockId];
+        ChunkCoordinates pos = posRef.get();
 
-        return block != null && ((BlockExtension) block).isLeaves(par1World, par3, par4 + var28, par5);
+        return block != null && ((BlockExtension) block).isLeaves(par1World, pos.posX, pos.posY, pos.posZ);
     }
 }

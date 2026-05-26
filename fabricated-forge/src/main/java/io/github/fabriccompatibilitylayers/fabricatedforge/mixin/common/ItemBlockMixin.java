@@ -25,7 +25,7 @@ public abstract class ItemBlockMixin extends Item implements ItemBlockExtension 
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void forge$setDefaultTexture(int par1, CallbackInfo ci) {
-        this.setIsDefaultTexture(((BlockExtension) Block.blocksList[par1 + 256]).isDefaultTexture());
+        this.setIsDefaultTexture(((BlockAccessor) Block.blocksList[par1 + 256]).isDefaultTexture());
     }
 
     @Definition(id = "deadBush", field = "Lnet/minecraft/src/Block;deadBush:Lnet/minecraft/src/BlockDeadBush;")

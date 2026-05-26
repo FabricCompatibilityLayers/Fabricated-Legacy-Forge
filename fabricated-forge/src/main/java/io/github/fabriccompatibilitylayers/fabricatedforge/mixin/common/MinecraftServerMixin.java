@@ -2,6 +2,7 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import cpw.mods.fml.common.FMLCommonHandler;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.MinecraftServerExtension;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -136,7 +137,9 @@ public abstract class MinecraftServerMixin implements MinecraftServerExtension {
                 }
 
                 this.theProfiler.startSection("tick");
+                FMLCommonHandler.instance().onPreWorldTick(var4);
                 var4.tick();
+                FMLCommonHandler.instance().onPostWorldTick(var4);
                 this.theProfiler.endStartSection("lights");
 
                 while(var4.updatingLighting()) {
