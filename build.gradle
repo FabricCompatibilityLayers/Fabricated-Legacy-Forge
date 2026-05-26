@@ -76,6 +76,14 @@ allprojects {
 
             stubs(["official", "searge", "calamus", "legacyIntermediary", "forgeMCP"]) {
                 k("", "net/minecraft/src/", "net/minecraft/unmapped/", "net/minecraft/", "net/minecraft/src/")
+                c("BaseMod", "net/minecraft/src/BaseMod", "net/minecraft/unmapped/BaseMod", "net/minecraft/BaseMod", "net/minecraft/src/BaseMod")
+                c("EntityRendererProxy", "net/minecraft/src/EntityRendererProxy", "net/minecraft/unmapped/EntityRendererProxy", "net/minecraft/EntityRendererProxy", "net/minecraft/src/EntityRendererProxy")
+                c("FMLRenderAccessLibrary", "net/minecraft/src/FMLRenderAccessLibrary", "net/minecraft/unmapped/FMLRenderAccessLibrary", "net/minecraft/FMLRenderAccessLibrary", "net/minecraft/src/FMLRenderAccessLibrary")
+                c("MLProp", "net/minecraft/src/MLProp", "net/minecraft/unmapped/MLProp", "net/minecraft/MLProp", "net/minecraft/src/MLProp")
+                c("ModLoader", "net/minecraft/src/ModLoader", "net/minecraft/unmapped/ModLoader", "net/minecraft/ModLoader", "net/minecraft/src/ModLoader")
+                c("ModTextureAnimation", "net/minecraft/src/ModTextureAnimation", "net/minecraft/unmapped/ModTextureAnimation", "net/minecraft/ModTextureAnimation", "net/minecraft/src/ModTextureAnimation")
+                c("ModTextureStatic", "net/minecraft/src/ModTextureStatic", "net/minecraft/unmapped/ModTextureStatic", "net/minecraft/ModTextureStatic", "net/minecraft/src/ModTextureStatic")
+                c("TradeEntry", "net/minecraft/src/TradeEntry", "net/minecraft/unmapped/TradeEntry", "net/minecraft/TradeEntry", "net/minecraft/src/TradeEntry")
             }
         }
 

@@ -6,24 +6,44 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Marks a {@code @Shadow} field in a Mixin so that the MixinPlugin will promote the
- * corresponding field in the target class to {@code static} before Mixin validates the
- * shadow.  Declare the shadow field as {@code static} in the mixin to match:
+ * Two-annotation, two-step mechanism for promoting an instance field in the target class
+ * to {@code static} via the MixinPlugin.
+ *
+ * <h3>Why @Shadow must be non-static</h3>
+ * Mixin validates {@code @Shadow} field staticness inside {@code createContextFor()}, which
+ * runs <em>before</em> the plugin's {@code preApply} hook.  Declaring the shadow as
+ * {@code static} therefore fails validation before the plugin has any chance to act.
+ * The shadow must be declared to match the vanilla (non-static) target field:
  *
  * <pre>
  * &#64;Shadow
  * &#64;MakeStatic
- * private static SomeType fieldName;
+ * private SomeType fieldName;   // NOT static — must match the vanilla instance field
  * </pre>
  *
- * The MixinPlugin handles two things automatically:
+ * <h3>Two-step promotion performed by the MixinPlugin</h3>
  * <ol>
- *   <li><b>preApply</b> — sets {@code ACC_STATIC} on the target field so Mixin's shadow
- *       validator sees a static field and accepts the static shadow declaration.</li>
- *   <li><b>postApply</b> — rewrites any {@code GETFIELD}/{@code PUTFIELD} instructions
- *       in the target's existing methods to {@code GETSTATIC}/{@code PUTSTATIC} so the
- *       bytecode remains valid after the field's storage model has changed.</li>
+ *   <li><b>preApply</b> (after validation) — sets {@code ACC_STATIC} on the target field
+ *       so subsequent bytecode in the target treats it as static.</li>
+ *   <li><b>postApply</b> (after @Overwrite / @Inject methods have been copied in) —
+ *       rewrites every {@code GETFIELD}/{@code PUTFIELD} that references these now-static
+ *       fields to {@code GETSTATIC}/{@code PUTSTATIC}, including in the freshly-injected
+ *       mixin methods.</li>
  * </ol>
+ *
+ * <h3>Accessing @MakeStatic fields from static mixin methods</h3>
+ * Because the mixin declares the field as non-static, it cannot be referenced directly
+ * from a {@code static} method (e.g. a {@code @Inject} into {@code <clinit>}).  Use the
+ * singleton instance instead — postApply's rewrite will fix the resulting
+ * {@code GETFIELD}/{@code PUTFIELD}:
+ *
+ * <pre>
+ * &#64;Inject(method = "&lt;clinit&gt;", at = &#64;At("RETURN"))
+ * private static void classInit(CallbackInfo ci) {
+ *     MyMixin self = (MyMixin)(Object) instance; // instance is a @Shadow static field
+ *     self.fieldName = ...;
+ * }
+ * </pre>
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

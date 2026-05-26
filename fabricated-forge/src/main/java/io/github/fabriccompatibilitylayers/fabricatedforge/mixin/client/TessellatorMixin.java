@@ -3,6 +3,7 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.client;
 import fr.catcore.cursedmixinextensions.annotations.NewConstructor;
 import fr.catcore.cursedmixinextensions.annotations.Public;
 import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
+import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
 import io.github.fabriccompatibilitylayers.fabricatedfml.utils.MakeStatic;
 import net.minecraft.src.GLAllocation;
 import net.minecraft.src.OpenGlHelper;
@@ -17,10 +18,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
-import java.nio.ShortBuffer;
+import java.nio.*;
 import java.util.Arrays;
 
 @Mixin(Tessellator.class)
@@ -45,20 +43,24 @@ public abstract class TessellatorMixin {
 
     @Shadow public static Tessellator instance;
 
-    // Pattern I + @MakeStatic: @Shadow declares the field as static (matching what preApply will make it);
-    // the MixinPlugin promotes the target field before Mixin validates, and postApply rewrites
-    // GETFIELD/PUTFIELD → GETSTATIC/PUTSTATIC in existing target methods.
-    @Shadow @MakeStatic private static ByteBuffer byteBuffer;
-    @Shadow @MakeStatic private static IntBuffer intBuffer;
-    @Shadow @MakeStatic private static FloatBuffer floatBuffer;
-    @Shadow @MakeStatic private static ShortBuffer shortBuffer;
+    // Pattern I + @MakeStatic (two-annotation, two-step):
+    //   • @Shadow is declared NON-static so Mixin's createContextFor validation passes
+    //     (the target fields are instance fields in vanilla and staticness is verified before preApply).
+    //   • @MakeStatic is the second annotation; it drives a two-step promotion:
+    //       Step 1 (preApply, after validation): sets ACC_STATIC on the matching target field.
+    //       Step 2 (postApply, after @Overwrite injection): rewrites every GETFIELD/PUTFIELD that
+    //       references these now-static fields to GETSTATIC/PUTSTATIC in all target methods,
+    //       including the freshly-injected @Overwrite bodies.
+    @Shadow @MakeStatic private ByteBuffer byteBuffer;
+    @Shadow @MakeStatic private IntBuffer intBuffer;
+    @Shadow @MakeStatic private FloatBuffer floatBuffer;
+    @Shadow @MakeStatic private ShortBuffer shortBuffer;
 
-    // Pattern I + @MakeStatic: same approach as the buffer fields above.
-    // Logic delta: vboCount's initializer (= 10) is in the instance constructor in bytecode;
-    // postApply rewrites that PUTFIELD to PUTSTATIC so the static field still gets the right value.
-    @Shadow @MakeStatic private static boolean useVBO;
-    @Shadow @MakeStatic private static IntBuffer vertexBuffers;
-    @Shadow @MakeStatic private static int vboCount;
+    // Same two-step approach. vboCount's initializer (= 10) lives in the vanilla constructor;
+    // postApply's PUTFIELD→PUTSTATIC rewrite picks it up there too.
+    @Shadow @MakeStatic private boolean useVBO;
+    @Shadow @MakeStatic private IntBuffer vertexBuffers;
+    @Shadow @MakeStatic private int vboCount;
 
     @Shadow private static boolean convertQuadsToTriangles;
     @Shadow public boolean isDrawing;
@@ -85,11 +87,18 @@ public abstract class TessellatorMixin {
     @Shadow
     private static boolean tryVBO;
 
+    @ShadowSuperConstructor
+    private void superConstructor() {}
+
     @ReplaceConstructor
-    public void constructor(int arg) {}
+    public void constructor(int arg) {
+        superConstructor();
+    }
 
     @NewConstructor
-    public void constructor() {}
+    public void constructor() {
+        superConstructor();
+    }
 
     // -------------------------------------------------------------------------
     // Static initializer hook
@@ -97,22 +106,25 @@ public abstract class TessellatorMixin {
 
     // Pattern A (@Inject at RETURN on <clinit>): matches the patch's static block literally —
     // runs after all static field initializers (including `instance = new Tessellator(2097152)`).
-    // Logic delta: patch sets instance.defaultTexture in the static block; we cast to TessellatorMixin
-    // to reach the mixin-added field, since Tessellator's compiled type doesn't know about it.
+    //
+    // The buffer/@MakeStatic fields are non-static @Shadows (matching vanilla), so they cannot be
+    // referenced directly from this static method.  We access them via the singleton `instance` cast
+    // to TessellatorMixin.  postApply's fixStaticFieldAccess will rewrite those GETFIELD/PUTFIELD
+    // instructions to GETSTATIC/PUTSTATIC once preApply has promoted the fields to static.
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void forge$classInit(CallbackInfo ci) {
-        byteBuffer = GLAllocation.createDirectByteBuffer(nativeBufferSize * 4);
-        intBuffer = byteBuffer.asIntBuffer();
-        floatBuffer = byteBuffer.asFloatBuffer();
-        shortBuffer = byteBuffer.asShortBuffer();
-        vboCount = 10;
-        ((TessellatorMixin) (Object) instance).defaultTexture = true;
-        useVBO = tryVBO && GLContext.getCapabilities().GL_ARB_vertex_buffer_object;
+        TessellatorMixin tess = (TessellatorMixin) (Object) instance;
+        tess.byteBuffer = GLAllocation.createDirectByteBuffer(nativeBufferSize * 4);
+        tess.intBuffer = tess.byteBuffer.asIntBuffer();
+        tess.floatBuffer = tess.byteBuffer.asFloatBuffer();
+        tess.shortBuffer = tess.byteBuffer.asShortBuffer();
+        tess.vboCount = 10;
+        tess.defaultTexture = true;
+        tess.useVBO = tryVBO && GLContext.getCapabilities().GL_ARB_vertex_buffer_object;
 
-        if (useVBO)
-        {
-            vertexBuffers = GLAllocation.createDirectIntBuffer(vboCount);
-            ARBVertexBufferObject.glGenBuffersARB(vertexBuffers);
+        if (tess.useVBO) {
+            tess.vertexBuffers = GLAllocation.createDirectIntBuffer(tess.vboCount);
+            ARBVertexBufferObject.glGenBuffersARB(tess.vertexBuffers);
         }
     }
 
@@ -144,10 +156,10 @@ public abstract class TessellatorMixin {
                     vtc = Math.min(this.vertexCount - offs, nativeBufferSize >> 5);
                 }
 
-                intBuffer.clear();
+                ((Buffer) intBuffer).clear();
                 intBuffer.put(this.rawBuffer, offs * 8, vtc * 8);
-                byteBuffer.position(0);
-                byteBuffer.limit(vtc * 32);
+                ((Buffer) byteBuffer).position(0);
+                ((Buffer) byteBuffer).limit(vtc * 32);
                 offs += vtc;
 
                 if (useVBO) {
@@ -160,7 +172,7 @@ public abstract class TessellatorMixin {
                     if (useVBO) {
                         GL11.glTexCoordPointer(2, 5126, 32, 12L);
                     } else {
-                        floatBuffer.position(3);
+                        ((Buffer) floatBuffer).position(3);
                         GL11.glTexCoordPointer(2, 32, floatBuffer);
                     }
 
@@ -173,7 +185,7 @@ public abstract class TessellatorMixin {
                     if (useVBO) {
                         GL11.glTexCoordPointer(2, 5122, 32, 28L);
                     } else {
-                        shortBuffer.position(14);
+                        ((Buffer) shortBuffer).position(14);
                         GL11.glTexCoordPointer(2, 32, shortBuffer);
                     }
 
@@ -185,7 +197,7 @@ public abstract class TessellatorMixin {
                     if (useVBO) {
                         GL11.glColorPointer(4, 5121, 32, 20L);
                     } else {
-                        byteBuffer.position(20);
+                        ((Buffer) byteBuffer).position(20);
                         GL11.glColorPointer(4, true, 32, byteBuffer);
                     }
 
@@ -196,7 +208,7 @@ public abstract class TessellatorMixin {
                     if (useVBO) {
                         GL11.glNormalPointer(5121, 32, 24L);
                     } else {
-                        byteBuffer.position(24);
+                        ((Buffer) byteBuffer).position(24);
                         GL11.glNormalPointer(32, byteBuffer);
                     }
 
@@ -206,7 +218,7 @@ public abstract class TessellatorMixin {
                 if (useVBO) {
                     GL11.glVertexPointer(3, 5126, 32, 0L);
                 } else {
-                    floatBuffer.position(0);
+                    ((Buffer) floatBuffer).position(0);
                     GL11.glVertexPointer(3, 32, floatBuffer);
                 }
 

@@ -8,6 +8,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import cpw.mods.fml.client.TextureFXManager;
 import net.minecraft.src.Block;
 import net.minecraft.src.ItemRenderer;
@@ -21,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin {
+    @IfModAbsent("fabricated-forge")
     @Definition(id = "field_71973_m", field = "Lnet/minecraft/src/Block;field_71973_m:[Lnet/minecraft/src/Block;")
     @Definition(id = "p_78443_2_", local = @Local(type = ItemStack.class))
     @Definition(id = "field_77993_c", field = "Lnet/minecraft/src/ItemStack;field_77993_c:I")
