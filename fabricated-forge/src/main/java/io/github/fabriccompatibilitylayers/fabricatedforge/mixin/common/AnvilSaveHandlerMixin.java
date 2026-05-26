@@ -1,5 +1,6 @@
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldProviderExtension;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -19,9 +20,9 @@ public class AnvilSaveHandlerMixin extends SaveHandler {
     @Overwrite
     public IChunkLoader getChunkLoader(WorldProvider par1WorldProvider) {
         File var2 = this.getSaveDirectory();
-        if (par1WorldProvider.getSaveFolder() != null)
+        if (((WorldProviderExtension) par1WorldProvider).getSaveFolder() != null)
         {
-            File var3 = new File(var2, par1WorldProvider.getSaveFolder());
+            File var3 = new File(var2, ((WorldProviderExtension) par1WorldProvider).getSaveFolder());
             var3.mkdirs();
             return new AnvilChunkLoader(var3);
         } else {

@@ -37,6 +37,8 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldServerExtension;
 import net.minecraft.src.Chunk;
 import net.minecraft.src.ChunkCoordIntPair;
 import net.minecraft.src.CompressedStreamTools;
@@ -325,7 +327,7 @@ public class ForgeChunkManager
 
         dormantChunkCache.put(world, CacheBuilder.newBuilder().maximumSize(dormantChunkCacheSize).<Long, Chunk>build());
         WorldServer worldServer = (WorldServer) world;
-        File chunkDir = worldServer.getChunkSaveLocation();
+        File chunkDir = ((WorldServerExtension) worldServer).getChunkSaveLocation();
         File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
 
         if (chunkLoaderData.exists() && chunkLoaderData.isFile())
@@ -337,10 +339,14 @@ public class ForgeChunkManager
             {
                 forcedChunkData = CompressedStreamTools.read(chunkLoaderData);
             }
-            catch (IOException e)
+            catch (Exception e)
             {
-                FMLLog.log(Level.WARNING, e, "Unable to read forced chunk data at %s - it will be ignored", chunkLoaderData.getAbsolutePath());
-                return;
+                if (e instanceof IOException) {
+                    FMLLog.log(Level.WARNING, e, "Unable to read forced chunk data at %s - it will be ignored", chunkLoaderData.getAbsolutePath());
+                    return;
+                } else {
+                    throw e;
+                }
             }
             NBTTagList ticketList = forcedChunkData.getTagList("TicketList");
             for (int i = 0; i < ticketList.tagCount(); i++)
@@ -687,7 +693,7 @@ public class ForgeChunkManager
         // only persist persistent worlds
         if (!(world instanceof WorldServer)) { return; }
         WorldServer worldServer = (WorldServer) world;
-        File chunkDir = worldServer.getChunkSaveLocation();
+        File chunkDir = ((WorldServerExtension) worldServer).getChunkSaveLocation();
         File chunkLoaderData = new File(chunkDir, "forcedchunks.dat");
 
         NBTTagCompound forcedChunkData = new NBTTagCompound();
@@ -722,8 +728,8 @@ public class ForgeChunkManager
                 {
                     ticket.setInteger("chunkX", MathHelper.floor_double(tick.entity.chunkCoordX));
                     ticket.setInteger("chunkZ", MathHelper.floor_double(tick.entity.chunkCoordZ));
-                    ticket.setLong("PersistentIDMSB", tick.entity.getPersistentID().getMostSignificantBits());
-                    ticket.setLong("PersistentIDLSB", tick.entity.getPersistentID().getLeastSignificantBits());
+                    ticket.setLong("PersistentIDMSB", ((EntityExtension) tick.entity).getPersistentID().getMostSignificantBits());
+                    ticket.setLong("PersistentIDLSB", ((EntityExtension) tick.entity).getPersistentID().getLeastSignificantBits());
                     tickets.appendTag(ticket);
                 }
                 else if (tick.ticketType != Type.ENTITY)
@@ -736,16 +742,20 @@ public class ForgeChunkManager
         {
             CompressedStreamTools.write(forcedChunkData, chunkLoaderData);
         }
-        catch (IOException e)
+        catch (Exception e)
         {
-            FMLLog.log(Level.WARNING, e, "Unable to write forced chunk data to %s - chunkloading won't work", chunkLoaderData.getAbsolutePath());
-            return;
+            if (e instanceof IOException) {
+                FMLLog.log(Level.WARNING, e, "Unable to write forced chunk data to %s - chunkloading won't work", chunkLoaderData.getAbsolutePath());
+                return;
+            } else {
+                throw e;
+            }
         }
     }
 
     static void loadEntity(Entity entity)
     {
-        UUID id = entity.getPersistentID();
+        UUID id = ((EntityExtension) entity).getPersistentID();
         Ticket tick = pendingEntities.get(id);
         if (tick != null)
         {

@@ -1,8 +1,10 @@
 package io.github.fabriccompatibilitylayers.fabricatedforge.extension.common;
 
+import com.google.common.collect.SetMultimap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeDirection;
 
 public interface WorldExtension {
@@ -23,4 +25,6 @@ public interface WorldExtension {
     void addTileEntity(TileEntity entity);
     boolean isBlockSolidOnSide(int X, int Y, int Z, ForgeDirection side);
     boolean isBlockSolidOnSide(int X, int Y, int Z, ForgeDirection side, boolean _default);
+
+    SetMultimap<ChunkCoordIntPair, ForgeChunkManager.Ticket> getPersistentChunks();
 }

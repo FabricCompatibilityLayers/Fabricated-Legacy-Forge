@@ -63,7 +63,7 @@ public class NetServerHandlerMixin {
 
     @ModifyConstant(method = {"handleBlockDig", "handlePlace"}, constant = @Constant(intValue = 16))
     private int forge$spawnProtectionSize(int constant) {
-        return mcServer.spawnProtectionSize;
+        return ((MinecraftServerAccessor) mcServer).getSpawnProtectionSize();
     }
 
     @Inject(method = "handleBlockDig", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/NetServerHandler;sendPacketToPlayer(Lnet/minecraft/src/Packet;)V", ordinal = 0))

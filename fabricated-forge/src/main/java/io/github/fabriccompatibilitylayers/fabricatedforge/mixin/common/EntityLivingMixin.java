@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityLivingExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.PotionEffectExtension;
 import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeHooks;
 import org.spongepowered.asm.mixin.Mixin;
@@ -176,7 +177,7 @@ public abstract class EntityLivingMixin extends Entity implements EntityLivingEx
             Integer key = potionKey.next();
             PotionEffect effect = (PotionEffect)activePotionsMap.get(key);
 
-            if (effect.isCurativeItem(curativeItem))
+            if (((PotionEffectExtension) effect).isCurativeItem(curativeItem))
             {
                 potionKey.remove();
                 onFinishedPotionEffect(effect);

@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import fr.catcore.cursedmixinextensions.annotations.Public;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldExtension;
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockTrapDoor;
 import net.minecraft.src.Material;
@@ -32,7 +33,7 @@ public abstract class BlockTrapDoorMixin extends Block implements BlockExtension
                                              @Local(ordinal = 4) int var6,
                                              @Local(ordinal = 5) int var7,
                                              @Local(ordinal = 6) int var8) {
-        return !(original.call(par0) || par1World.isBlockSolidOnSide(var7, par3, var8, ForgeDirection.getOrientation((var6 & 3) + 2)));
+        return !(original.call(par0) || ((WorldExtension) par1World).isBlockSolidOnSide(var7, par3, var8, ForgeDirection.getOrientation((var6 & 3) + 2)));
     }
 
     @Inject(method = "canPlaceBlockOnSide", at = @At("HEAD"), cancellable = true)
@@ -55,6 +56,6 @@ public abstract class BlockTrapDoorMixin extends Block implements BlockExtension
                                                                    @Local(ordinal = 0, argsOnly = true) int par2,
                                                                    @Local(ordinal = 1, argsOnly = true) int par3,
                                                                    @Local(ordinal = 2, argsOnly = true) int par4) {
-        return original.call(par0) || par1World.isBlockSolidOnSide(par2, par3, par4, ForgeDirection.UP);
+        return original.call(par0) || ((WorldExtension) par1World).isBlockSolidOnSide(par2, par3, par4, ForgeDirection.UP);
     }
 }

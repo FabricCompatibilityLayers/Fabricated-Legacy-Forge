@@ -13,6 +13,7 @@ import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
 import fr.catcore.cursedmixinextensions.annotations.ShadowConstructor;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.ChunkExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldExtension;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -281,7 +282,7 @@ public abstract class ChunkMixin implements ChunkExtension {
 
     @Redirect(method = "addTileEntity", at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", remap = false))
     private boolean forge$addTileEntity(List instance, Object e) {
-        this.worldObj.addTileEntity((TileEntity) e);
+        ((WorldExtension) this.worldObj).addTileEntity((TileEntity) e);
         return true;
     }
 
@@ -329,7 +330,7 @@ public abstract class ChunkMixin implements ChunkExtension {
 
     @ModifyConstant(method = {"getEntitiesWithinAABBForEntity", "getEntitiesOfTypeWithinAAAB"}, constant = @Constant(doubleValue = 2.0))
     private double forge$getMaxEntityRadius(double constant) {
-        return World.MAX_ENTITY_RADIUS;
+        return WorldAccessor.getMaxEntityRadius();
     }
 
     @Environment(EnvType.CLIENT)

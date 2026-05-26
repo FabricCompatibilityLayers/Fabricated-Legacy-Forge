@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityMinecartExtension;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -109,7 +110,7 @@ public class EntityMixin implements EntityExtension {
         }
         else if ((Object) this instanceof EntityMinecart)
         {
-            return ((EntityMinecart) (Object) this).getCartItem();
+            return ((EntityMinecartExtension) this).getCartItem();
         }
         else if ((Object) this instanceof EntityBoat)
         {

@@ -134,6 +134,6 @@ public class RenderBlocksMixin {
     @Expression("fancyGrass")
     @WrapOperation(method = {"renderStandardBlockWithAmbientOcclusion", "renderStandardBlockWithColorMultiplier"}, at = @At("MIXINEXTRAS:EXPRESSION"))
     private boolean forge$defaultTexture(Operation<Boolean> original) {
-        return Tessellator.instance.defaultTexture && original.call();
+        return ((TessellatorAccessor) Tessellator.instance).isDefaultTexture() && original.call();
     }
 }

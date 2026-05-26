@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLLog;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.mixin.client.SoundManagerAccessor;
 import paulscode.sound.SoundSystemConfig;
 import paulscode.sound.codecs.CodecIBXM;
 
@@ -69,9 +70,9 @@ public class ModCompatibilityClient
         audioModLoadModAudio("resources/mod/music", mngr.soundPoolMusic);
         audioModLoadModAudio("resources/mod/cavemusic", audioModSoundPoolCave);
 
-        if (mngr.MUSIC_INTERVAL == 12000)
+        if (SoundManagerAccessor.getMusicInterval() == 12000)
         {
-            mngr.MUSIC_INTERVAL = 6000;
+            SoundManagerAccessor.setMusicInterval(6000);
         }
     }
 

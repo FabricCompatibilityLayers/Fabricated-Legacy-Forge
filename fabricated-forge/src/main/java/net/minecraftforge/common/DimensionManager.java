@@ -15,6 +15,8 @@ import com.google.common.collect.Maps;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldProviderExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common.MinecraftServerAccessor;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import net.minecraftforge.event.world.WorldEvent;
@@ -107,11 +109,11 @@ public class DimensionManager
     {
         if (world != null) {
             worlds.put(id, world);
-            MinecraftServer.getServer().worldTickTimes.put(id, new long[100]);
+            ((MinecraftServerAccessor) MinecraftServer.getServer()).getWorldTickTimes().put(id, new long[100]);
             FMLLog.info("Loading dimension %d (%s) (%s)", id, world.getWorldInfo().getWorldName(), world.getMinecraftServer());
         } else {
             worlds.remove(id);
-            MinecraftServer.getServer().worldTickTimes.remove(id);
+            ((MinecraftServerAccessor) MinecraftServer.getServer()).getWorldTickTimes().remove(id);
             FMLLog.info("Unloading dimension %d", id);
         }
 
@@ -199,7 +201,7 @@ public class DimensionManager
             if (dimensions.containsKey(dim))
             {
                 WorldProvider provider = providers.get(getProviderType(dim)).newInstance();
-                provider.setDimension(dim);
+                ((WorldProviderExtension) provider).setDimension(dim);
                 return provider;
             }
             else
@@ -226,8 +228,9 @@ public class DimensionManager
         for (int id : unloadQueue) {
             try {
                 worlds.get(id).saveAllChunks(true, null);
-            } catch (MinecraftException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                if (e instanceof MinecraftException) e.printStackTrace();
+                else throw e;
             }
             MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(worlds.get(id)));
             ((WorldServer)worlds.get(id)).flush();

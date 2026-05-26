@@ -1,6 +1,6 @@
 package cpw.mods.fml.common.network;
 
-import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.EntityPlayerExtension;
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.FMLEntityPlayerExtension;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.NetHandlerExtension;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.NetHandler;
@@ -54,7 +54,7 @@ public class OpenGuiPacket extends FMLPacket
     public void execute(NetworkManager network, FMLNetworkHandler handler, NetHandler netHandler, String userName)
     {
         EntityPlayer player = ((NetHandlerExtension) netHandler).getPlayer();
-        ((EntityPlayerExtension) player).openGui(networkId, modGuiId, player.field_70170_p, x, y, z);
+        ((FMLEntityPlayerExtension) player).openGui(networkId, modGuiId, player.field_70170_p, x, y, z);
         player.field_71070_bA.field_75152_c = windowId;
     }
 

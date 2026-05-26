@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityMinecartExtension;
 import net.minecraft.src.EntityMinecart;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
@@ -97,7 +98,7 @@ public class MinecartRegistry
      */
     public static ItemStack getItemForCart(EntityMinecart cart)
     {
-        return getItemForCart(cart.getClass(), cart.getMinecartType());
+        return getItemForCart(cart.getClass(), ((EntityMinecartExtension) cart).getMinecartType());
     }
 
     /**

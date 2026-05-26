@@ -2,6 +2,8 @@ package net.minecraftforge.common;
 
 import java.util.UUID;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.ItemExtension;
 import net.minecraft.src.*;
 import net.minecraftforge.event.*;
 import net.minecraftforge.event.entity.*;
@@ -14,9 +16,9 @@ public class ForgeInternalHandler
     {
         if (!event.world.isRemote)
         {
-            if (event.entity.getPersistentID() == null)
+            if (((EntityExtension) event.entity).getPersistentID() == null)
             {
-                event.entity.generatePersistentID();
+                ((EntityExtension) event.entity).generatePersistentID();
             }
             else
             {
@@ -27,9 +29,9 @@ public class ForgeInternalHandler
         if (entity.getClass().equals(EntityItem.class))
         {
             ItemStack item = ((EntityItem)entity).item;
-            if (item != null && item.getItem().hasCustomEntity(item))
+            if (item != null && ((ItemExtension) item.getItem()).hasCustomEntity(item))
             {
-                Entity newEntity = item.getItem().createEntity(event.world, entity, item);
+                Entity newEntity = ((ItemExtension) item.getItem()).createEntity(event.world, entity, item);
                 if (newEntity != null)
                 {
                     entity.setDead();

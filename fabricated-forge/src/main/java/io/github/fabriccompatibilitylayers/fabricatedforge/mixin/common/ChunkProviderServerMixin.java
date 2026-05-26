@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldServerExtension;
 import net.minecraft.src.*;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -57,7 +58,7 @@ public abstract class ChunkProviderServerMixin implements IChunkProvider {
     @Overwrite
     public boolean unload100OldestChunks() {
         if (!this.currentServer.canNotSave) {
-            for (ChunkCoordIntPair forced : currentServer.getPersistentChunks().keySet())
+            for (ChunkCoordIntPair forced : ((WorldServerExtension) currentServer).getPersistentChunks().keySet())
             {
                 this.chunksToUnload.remove(ChunkCoordIntPair.chunkXZ2Int(forced.chunkXPos, forced.chunkZPos));
             }

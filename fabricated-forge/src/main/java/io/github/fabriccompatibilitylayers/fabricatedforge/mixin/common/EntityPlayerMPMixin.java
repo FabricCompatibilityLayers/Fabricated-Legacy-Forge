@@ -3,6 +3,7 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldProviderExtension;
 import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
@@ -23,7 +24,7 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements ICraft
 
     @Redirect(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getSpawnPoint()Lnet/minecraft/src/ChunkCoordinates;"))
     private ChunkCoordinates forge$getRandomizedSpawnPoint(World instance) {
-        return instance.provider.getRandomizedSpawnPoint();
+        return ((WorldProviderExtension) instance.provider).getRandomizedSpawnPoint();
     }
 
     @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/src/WorldProvider;hasNoSky:Z"))

@@ -1161,7 +1161,8 @@ public abstract class WorldMixin implements WorldExtension {
         return ((BlockExtension) block).isBlockSolidOnSide((World)(Object)this, X, Y, Z, side);
     }
 
-    private SetMultimap<ChunkCoordIntPair, ForgeChunkManager.Ticket> getPersistentChunks() {
+    @Override
+    public SetMultimap<ChunkCoordIntPair, ForgeChunkManager.Ticket> getPersistentChunks() {
         return ForgeChunkManager.getPersistentChunksFor((World)(Object)this);
     }
 

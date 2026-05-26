@@ -3,6 +3,7 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockRailExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldExtension;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -67,12 +68,12 @@ public abstract class BlockRailMixin extends Block implements BlockRailExtension
     @Overwrite
     public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
-        return par1World.isBlockSolidOnSide(par2, par3 - 1, par4, UP);
+        return ((WorldExtension) par1World).isBlockSolidOnSide(par2, par3 - 1, par4, UP);
     }
 
     @Redirect(method = "onNeighborBlockChange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;doesBlockHaveSolidTopSurface(III)Z"))
     private boolean forge$isBlockSolidOnSide(World instance, int par2, int par3, int i) {
-        return instance.isBlockSolidOnSide(par2, par3, i, UP);
+        return ((WorldExtension) instance).isBlockSolidOnSide(par2, par3, i, UP);
     }
 
     /**

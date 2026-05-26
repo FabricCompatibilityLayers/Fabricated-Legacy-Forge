@@ -2,6 +2,7 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldProviderExtension;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import net.minecraftforge.common.DimensionManager;
@@ -69,7 +70,7 @@ public abstract class ServerConfigurationManagerMixin {
 
         WorldProvider pOld = DimensionManager.getProvider(var3);
         WorldProvider pNew = DimensionManager.getProvider(par2);
-        double moveFactor = pOld.getMovementFactor() / pNew.getMovementFactor();
+        double moveFactor = ((WorldProviderExtension) pOld).getMovementFactor() / ((WorldProviderExtension) pNew).getMovementFactor();
         double var6 = par1EntityPlayerMP.posX * moveFactor;
         double var8 = par1EntityPlayerMP.posZ * moveFactor;
 

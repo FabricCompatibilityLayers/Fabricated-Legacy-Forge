@@ -2,6 +2,7 @@ package net.minecraftforge.common;
 
 import java.util.*;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common.WeightedRandomChestContentAccessor;
 import net.minecraft.src.*;
 
 public class ChestGenHooks
@@ -148,7 +149,7 @@ public class ChestGenHooks
         while(itr.hasNext())
         {
             WeightedRandomChestContent cont = itr.next();
-            if (item.isItemEqual(cont.itemStack) || (item.getItemDamage() == -1 && item.itemID == cont.itemStack.itemID))
+            if (item.isItemEqual(((WeightedRandomChestContentAccessor) cont).getItemStack()) || (item.getItemDamage() == -1 && item.itemID == ((WeightedRandomChestContentAccessor) cont).getItemStack().itemID))
             {
                 itr.remove();
             }

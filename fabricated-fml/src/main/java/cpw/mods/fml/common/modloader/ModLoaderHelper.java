@@ -19,7 +19,7 @@ import java.util.Map;
 
 import com.google.common.collect.Maps;
 
-import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.EntityPlayerExtension;
+import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.FMLEntityPlayerExtension;
 import net.minecraft.src.Container;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityDragon;
@@ -144,7 +144,7 @@ public class ModLoaderHelper
     {
         ModLoaderGuiHelper helper = guiHelpers.get(id);
         helper.injectContainer(container);
-        ((EntityPlayerExtension) player).openGui(helper.getMod(), id, player.field_70170_p, x, y, z);
+        ((FMLEntityPlayerExtension) player).openGui(helper.getMod(), id, player.field_70170_p, x, y, z);
     }
 
     public static Object getClientSideGui(BaseModProxy mod, EntityPlayer player, int ID, int x, int y, int z)

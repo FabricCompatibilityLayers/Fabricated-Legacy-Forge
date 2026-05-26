@@ -6,6 +6,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.ItemExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.ItemInWorldManagerExtension;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -53,7 +54,7 @@ public abstract class ItemMixin implements ItemExtension {
                                              @Local(ordinal = 3) LocalDoubleRef var21Ref) {
         if (par2EntityPlayer instanceof EntityPlayerMP)
         {
-            var21Ref.set(((EntityPlayerMP)par2EntityPlayer).theItemInWorldManager.getBlockReachDistance());
+            var21Ref.set(((ItemInWorldManagerExtension) ((EntityPlayerMP) par2EntityPlayer).theItemInWorldManager).getBlockReachDistance());
         }
     }
 

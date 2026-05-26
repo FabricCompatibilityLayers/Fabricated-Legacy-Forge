@@ -1,11 +1,15 @@
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.client;
 
+import fr.catcore.cursedmixinextensions.annotations.NewConstructor;
 import fr.catcore.cursedmixinextensions.annotations.Public;
+import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
 import io.github.fabriccompatibilitylayers.fabricatedfml.utils.MakeStatic;
+import net.minecraft.src.GLAllocation;
 import net.minecraft.src.OpenGlHelper;
 import net.minecraft.src.Tessellator;
 import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -78,6 +82,15 @@ public abstract class TessellatorMixin {
     @Shadow public double zOffset;
     @Shadow protected abstract void reset();
 
+    @Shadow
+    private static boolean tryVBO;
+
+    @ReplaceConstructor
+    public void constructor(int arg) {}
+
+    @NewConstructor
+    public void constructor() {}
+
     // -------------------------------------------------------------------------
     // Static initializer hook
     // -------------------------------------------------------------------------
@@ -88,7 +101,19 @@ public abstract class TessellatorMixin {
     // to reach the mixin-added field, since Tessellator's compiled type doesn't know about it.
     @Inject(method = "<clinit>", at = @At("RETURN"))
     private static void forge$classInit(CallbackInfo ci) {
+        byteBuffer = GLAllocation.createDirectByteBuffer(nativeBufferSize * 4);
+        intBuffer = byteBuffer.asIntBuffer();
+        floatBuffer = byteBuffer.asFloatBuffer();
+        shortBuffer = byteBuffer.asShortBuffer();
+        vboCount = 10;
         ((TessellatorMixin) (Object) instance).defaultTexture = true;
+        useVBO = tryVBO && GLContext.getCapabilities().GL_ARB_vertex_buffer_object;
+
+        if (useVBO)
+        {
+            vertexBuffers = GLAllocation.createDirectIntBuffer(vboCount);
+            ARBVertexBufferObject.glGenBuffersARB(vertexBuffers);
+        }
     }
 
     // -------------------------------------------------------------------------

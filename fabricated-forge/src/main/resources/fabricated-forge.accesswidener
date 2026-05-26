@@ -60,3 +60,10 @@ accessible class net/minecraft/src/PlayerInstance
 accessible field net/minecraft/src/ChunkProviderServer currentChunkLoader Lnet/minecraft/src/IChunkLoader;
 accessible class net/minecraft/src/ContainerCreative
 accessible	method	net/minecraft/src/GuiSlot	overlayBackground	(IIII)V
+accessible method net/minecraft/src/Tessellator <init> (I)V
+accessible field net/minecraft/src/RenderBlocks overrideBlockTexture I
+accessible field net/minecraft/src/EntityLiving carryoverDamage I
+accessible field net/minecraft/src/WeightedRandomItem itemWeight I
+accessible field net/minecraft/src/World spawnHostileMobs Z
+accessible field net/minecraft/src/World spawnPeacefulMobs Z
+accessible field net/minecraft/src/AnvilChunkLoader chunkSaveLocation Ljava/io/File;

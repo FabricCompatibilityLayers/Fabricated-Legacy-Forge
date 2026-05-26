@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.ItemExtension;
 import net.minecraft.src.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
@@ -38,7 +39,7 @@ public abstract class EntityItemMixin extends Entity implements EntityExtension 
 
     @Inject(method = "<init>(Lnet/minecraft/src/World;DDDLnet/minecraft/src/ItemStack;)V", at = @At("RETURN"))
     private void forge$setLifespan(World par1World, double par2, double par4, double par6, ItemStack par8ItemStack, CallbackInfo ci) {
-        this.lifespan = (par8ItemStack.getItem() == null ? 6000 : par8ItemStack.getItem().getEntityLifespan(par8ItemStack, par1World));
+        this.lifespan = (par8ItemStack.getItem() == null ? 6000 : ((ItemExtension) par8ItemStack.getItem()).getEntityLifespan(par8ItemStack, par1World));
     }
 
     @ModifyConstant(method = "onUpdate", constant = @Constant(intValue = 6000))
@@ -48,7 +49,7 @@ public abstract class EntityItemMixin extends Entity implements EntityExtension 
 
     @WrapWithCondition(method = "onUpdate", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityItem;setDead()V"))
     private boolean forge$postItemExpireEvent(EntityItem instance) {
-        ItemExpireEvent event = new ItemExpireEvent(this, (item.getItem() == null ? 6000 : item.getItem().getEntityLifespan(item, worldObj)));
+        ItemExpireEvent event = new ItemExpireEvent((EntityItem) (Object) this, (item.getItem() == null ? 6000 : ((ItemExtension) item.getItem()).getEntityLifespan(item, worldObj)));
         if (MinecraftForge.EVENT_BUS.post(event))
         {
             lifespan += event.extraLife;

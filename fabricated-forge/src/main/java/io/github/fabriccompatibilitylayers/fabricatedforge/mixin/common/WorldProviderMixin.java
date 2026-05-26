@@ -1,5 +1,6 @@
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldProviderExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldTypeExtension;
 import net.fabricmc.api.EnvType;
@@ -148,7 +149,7 @@ public class WorldProviderMixin implements WorldProviderExtension {
     @Override
     public BiomeGenBase getBiomeGenForCoords(int x, int z)
     {
-        return worldObj.getBiomeGenForCoordsBody(x, z);
+        return ((WorldExtension) worldObj).getBiomeGenForCoordsBody(x, z);
     }
 
     @Override
@@ -161,21 +162,21 @@ public class WorldProviderMixin implements WorldProviderExtension {
     @Override
     public Vec3 getSkyColor(Entity cameraEntity, float partialTicks)
     {
-        return worldObj.getSkyColorBody(cameraEntity, partialTicks);
+        return ((WorldExtension) worldObj).getSkyColorBody(cameraEntity, partialTicks);
     }
 
     @Environment(EnvType.CLIENT)
     @Override
     public Vec3 drawClouds(float partialTicks)
     {
-        return worldObj.drawCloudsBody(partialTicks);
+        return ((WorldExtension) worldObj).drawCloudsBody(partialTicks);
     }
 
     @Environment(EnvType.CLIENT)
     @Override
     public float getStarBrightness(float par1)
     {
-        return worldObj.getStarBrightnessBody(par1);
+        return ((WorldExtension) worldObj).getStarBrightnessBody(par1);
     }
 
     @Override
@@ -188,13 +189,13 @@ public class WorldProviderMixin implements WorldProviderExtension {
     @Override
     public void calculateInitialWeather()
     {
-        worldObj.calculateInitialWeatherBody();
+        ((WorldExtension) worldObj).calculateInitialWeatherBody();
     }
 
     @Override
     public void updateWeather()
     {
-        worldObj.updateWeatherBody();
+        ((WorldExtension) worldObj).updateWeatherBody();
     }
 
     @Override
@@ -206,13 +207,13 @@ public class WorldProviderMixin implements WorldProviderExtension {
     @Override
     public boolean canBlockFreeze(int x, int y, int z, boolean byWater)
     {
-        return worldObj.canBlockFreezeBody(x, y, z, byWater);
+        return ((WorldExtension) worldObj).canBlockFreezeBody(x, y, z, byWater);
     }
 
     @Override
     public boolean canSnowAt(int x, int y, int z)
     {
-        return worldObj.canSnowAtBody(x, y, z);
+        return ((WorldExtension) worldObj).canSnowAtBody(x, y, z);
     }
 
     @Override
@@ -249,7 +250,7 @@ public class WorldProviderMixin implements WorldProviderExtension {
     @Override
     public boolean canMineBlock(EntityPlayer player, int x, int y, int z)
     {
-        return worldObj.canMineBlockBody(player, x, y, z);
+        return ((WorldExtension) worldObj).canMineBlockBody(player, x, y, z);
     }
 
     @Override
@@ -273,16 +274,16 @@ public class WorldProviderMixin implements WorldProviderExtension {
     @Override
     public double getHorizon()
     {
-        return worldObj.worldInfo.getTerrainType().getHorizon(worldObj);
+        return ((WorldTypeExtension) worldObj.getWorldInfo().getTerrainType()).getHorizon(worldObj);
     }
 
     @Override
     public void resetRainAndThunder()
     {
-        worldObj.worldInfo.setRainTime(0);
-        worldObj.worldInfo.setRaining(false);
-        worldObj.worldInfo.setThunderTime(0);
-        worldObj.worldInfo.setThundering(false);
+        worldObj.getWorldInfo().setRainTime(0);
+        worldObj.getWorldInfo().setRaining(false);
+        worldObj.getWorldInfo().setThunderTime(0);
+        worldObj.getWorldInfo().setThundering(false);
     }
 
     @Override

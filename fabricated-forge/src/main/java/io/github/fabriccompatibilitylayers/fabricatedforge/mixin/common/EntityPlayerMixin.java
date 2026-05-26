@@ -11,7 +11,8 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
-import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityPlayerExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.ItemExtension;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
@@ -31,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(EntityPlayer.class)
-public abstract class EntityPlayerMixin extends EntityLiving implements ICommandSender, EntityExtension {
+public abstract class EntityPlayerMixin extends EntityLiving implements ICommandSender, EntityPlayerExtension {
     @Shadow private ItemStack itemInUse;
 
     @Shadow private int itemInUseCount;
@@ -52,7 +53,7 @@ public abstract class EntityPlayerMixin extends EntityLiving implements ICommand
 
     @Inject(method = "onUpdate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityPlayer;itemInUseCount:I", ordinal = 0))
     private void forge$onUsingItemTick(CallbackInfo ci) {
-        itemInUse.getItem().onUsingItemTick(itemInUse, this, itemInUseCount);
+        ((ItemExtension) itemInUse.getItem()).onUsingItemTick(itemInUse, (EntityPlayer) (Object) this, itemInUseCount);
     }
 
     @Inject(method = "onDeath", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityPlayer;username:Ljava/lang/String;"))
@@ -91,7 +92,7 @@ public abstract class EntityPlayerMixin extends EntityLiving implements ICommand
         {
             return null;
         }
-        if (stack.getItem().onDroppedByPlayer(stack, this))
+        if (((ItemExtension) stack.getItem()).onDroppedByPlayer(stack, (EntityPlayer) (Object) this))
         {
             return ForgeHooks.onPlayerTossEvent((EntityPlayer) (Object) this, inventory.decrStackSize(inventory.currentItem, 1));
         }
@@ -128,9 +129,10 @@ public abstract class EntityPlayerMixin extends EntityLiving implements ICommand
         return getCurrentPlayerStrVsBlock(par1Block, 0);
     }
 
+    @Override
     public float getCurrentPlayerStrVsBlock(Block par1Block, int meta) {
         ItemStack stack = inventory.getCurrentItem();
-        float var2 = (stack == null ? 1.0F : stack.getItem().getStrVsBlock(stack, par1Block, meta));
+        float var2 = (stack == null ? 1.0F : ((ItemExtension) stack.getItem()).getStrVsBlock(stack, par1Block, meta));
         int var3 = EnchantmentHelper.getEfficiencyModifier(this.inventory);
         if (var3 > 0 && ForgeHooks.canHarvestBlock(par1Block, (EntityPlayer) (Object) this, meta)) {
             var2 += var3 * var3 + 1;
@@ -214,7 +216,7 @@ public abstract class EntityPlayerMixin extends EntityLiving implements ICommand
             return;
         }
         ItemStack stack = getCurrentEquippedItem();
-        if (stack != null && stack.getItem().onLeftClickEntity(stack, (EntityPlayer) (Object) this, par1Entity))
+        if (stack != null && ((ItemExtension) stack.getItem()).onLeftClickEntity(stack, (EntityPlayer) (Object) this, par1Entity))
         {
             ci.cancel();
         }
@@ -316,7 +318,7 @@ public abstract class EntityPlayerMixin extends EntityLiving implements ICommand
                                    @Local(argsOnly = true) ItemStack par1ItemStack,
                                    @Local(argsOnly = true) int par2) {
         if (!(par1ItemStack.itemID == Item.fishingRod.shiftedIndex && this.fishEntity != null)) {
-            return par1ItemStack.getItem().getIconIndex(par1ItemStack, par2, this, itemInUse, itemInUseCount);
+            return ((ItemExtension) par1ItemStack.getItem()).getIconIndex(par1ItemStack, par2, (EntityPlayer) (Object) this, itemInUse, itemInUseCount);
         }
 
         return original;

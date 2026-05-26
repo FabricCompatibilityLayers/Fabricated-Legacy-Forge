@@ -4,6 +4,11 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.TreeSet;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.ItemExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mixin.client.TessellatorAccessor;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common.BlockAccessor;
+import net.fabricmc.loader.api.FabricLoader;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -149,8 +154,8 @@ public class ForgeHooksClient
 
         if (tess == null)
         {
-            tess = new Tessellator();
-            tess.textureID = texture;
+            tess = new Tessellator(0);
+            ((TessellatorAccessor) tess).setTextureID(texture);
             tessellators.put(key, tess);
         }
 
@@ -169,7 +174,7 @@ public class ForgeHooksClient
     {
         renderPass = pass;
         defaultTessellator = Tessellator.instance;
-        Tessellator.renderingWorldRenderer = true;
+        TessellatorAccessor.setRenderingWorldRenderer(true);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, engine().getTexture("/terrain.png"));
         renderTextures.clear();
         inWorld = true;
@@ -197,21 +202,21 @@ public class ForgeHooksClient
             }
         }
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, engine().getTexture("/terrain.png"));
-        Tessellator.renderingWorldRenderer = false;
+        TessellatorAccessor.setRenderingWorldRenderer(false);
         Tessellator.instance = defaultTessellator;
     }
 
     public static void beforeBlockRender(Block block, RenderBlocks render)
     {
-        if (!block.isDefaultTexture && render.overrideBlockTexture == -1)
+        if (!((BlockAccessor) block).isDefaultTexture() && render.overrideBlockTexture == -1)
         {
-            bindTexture(block.getTextureFile(), 0);
+            bindTexture(((BlockExtension) block).getTextureFile(), 0);
         }
     }
 
     public static void afterBlockRender(Block block, RenderBlocks render)
     {
-        if (!block.isDefaultTexture && render.overrideBlockTexture == -1)
+        if (!((BlockAccessor) block).isDefaultTexture() && render.overrideBlockTexture == -1)
         {
             unbindTexture();
         }
@@ -246,7 +251,7 @@ public class ForgeHooksClient
 
         if (item.getItem() instanceof ItemBlock && (is3D || RenderBlocks.renderItemIn3d(Block.blocksList[item.itemID].getRenderType())))
         {
-            engine.bindTexture(engine.getTexture(item.getItem().getTextureFile()));
+            engine.bindTexture(engine.getTexture(((ItemExtension) item.getItem()).getTextureFile()));
             int renderType = Block.blocksList[item.itemID].getRenderType();
             float scale = (renderType == 1 || renderType == 19 || renderType == 12 || renderType == 2 ? 0.5F : 0.25F);
 
@@ -270,7 +275,7 @@ public class ForgeHooksClient
         }
         else
         {
-                engine.bindTexture(engine.getTexture(item.getItem().getTextureFile()));
+                engine.bindTexture(engine.getTexture(((ItemExtension) item.getItem()).getTextureFile()));
             GL11.glScalef(0.5F, 0.5F, 0.5F);
             customRenderer.renderItem(ENTITY, item, renderBlocks, entity);
         }
@@ -285,7 +290,7 @@ public class ForgeHooksClient
                 return false;
         }
 
-        engine.bindTexture(engine.getTexture(Item.itemsList[item.itemID].getTextureFile()));
+        engine.bindTexture(engine.getTexture(((ItemExtension) Item.itemsList[item.itemID]).getTextureFile()));
         if (customRenderer.shouldUseRenderHelper(INVENTORY, item, INVENTORY_BLOCK))
         {
             GL11.glPushMatrix();
@@ -367,9 +372,9 @@ public class ForgeHooksClient
         int z = MathHelper.floor_double(entity.posZ);
         Block block = Block.blocksList[mc.theWorld.getBlockId(x, y, z)];
 
-        if (block != null && block.isBed(mc.theWorld, x, y, z, entity))
+        if (block != null && ((BlockExtension) block).isBed(mc.theWorld, x, y, z, entity))
         {
-            int var12 = block.getBedDirection(mc.theWorld, x, y, z);
+            int var12 = ((BlockExtension) block).getBedDirection(mc.theWorld, x, y, z);
             GL11.glRotatef((float)(var12 * 90), 0.0F, 1.0F, 0.0F);
         }
     }
@@ -395,13 +400,13 @@ public class ForgeHooksClient
      */
     public static void onTextureLoadPre(String texture)
     {
-        if (Tessellator.renderingWorldRenderer)
+        if (TessellatorAccessor.isRenderingWorldRenderer())
         {
             String msg = String.format("Warning: Texture %s not preloaded, will cause render glitches!", texture);
             System.out.println(msg);
             if (Tessellator.class.getPackage() != null)
             {
-                if (Tessellator.class.getPackage().equals("net.minecraft.src"))
+                if (FabricLoader.getInstance().isDevelopmentEnvironment())
                 {
                     Minecraft mc = FMLClientHandler.instance().getClient();
                     if (mc.ingameGUI != null)

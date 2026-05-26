@@ -9,6 +9,11 @@ import com.google.common.collect.ListMultimap;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityPlayerExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.ItemExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common.EntityAccessor;
 import net.minecraft.src.*;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
@@ -118,7 +123,7 @@ public class ForgeHooks
         }
         else
         {
-             return player.getCurrentPlayerStrVsBlock(block, metadata) / hardness / 30F;
+             return ((EntityPlayerExtension) player).getCurrentPlayerStrVsBlock(block, metadata) / hardness / 30F;
         }
     }
 
@@ -194,11 +199,11 @@ public class ForgeHooks
     {
         if (obj instanceof Item)
         {
-            return ((Item)obj).getTextureFile();
+            return ((ItemExtension)obj).getTextureFile();
         }
         else if (obj instanceof Block)
         {
-            return ((Block)obj).getTextureFile();
+            return ((BlockExtension)obj).getTextureFile();
         }
         else
         {
@@ -252,7 +257,7 @@ public class ForgeHooks
                 return false;
             }
 
-            result = var8.getPickBlock(target, world, x, y, z);
+            result = ((BlockExtension) var8).getPickBlock(target, world, x, y, z);
         }
         else
         {
@@ -261,7 +266,7 @@ public class ForgeHooks
                 return false;
             }
 
-            result = target.entityHit.getPickedResult(target);
+            result = ((EntityExtension) target.entityHit).getPickedResult(target);
         }
 
         if (result == null)
@@ -337,7 +342,7 @@ public class ForgeHooks
 
     public static boolean isLivingOnLadder(Block block, World world, int x, int y, int z)
     {
-        return block != null && block.isLadder(world, x, y, z);
+        return block != null && ((BlockExtension) block).isLadder(world, x, y, z);
     }
 
     public static void onLivingJump(EntityLiving entity)
@@ -347,10 +352,10 @@ public class ForgeHooks
 
     public static EntityItem onPlayerTossEvent(EntityPlayer player, ItemStack item)
     {
-        player.captureDrops = true;
+        ((EntityAccessor) player).setCaptureDrops(true);
         EntityItem ret = player.dropPlayerItemWithRandomChoice(item, false);
-        player.capturedDrops.clear();
-        player.captureDrops = false;
+        ((EntityAccessor) player).getCapturedDrops().clear();
+        ((EntityAccessor) player).setCaptureDrops(false);
 
         ItemTossEvent event = new ItemTossEvent(ret, player);
         if (MinecraftForge.EVENT_BUS.post(event))
