@@ -1,15 +1,15 @@
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.Random;
@@ -20,30 +20,22 @@ public abstract class BlockSnowMixin extends Block implements BlockExtension {
         super(par1, par2Material);
     }
 
-    @ModifyConstant(method = "canPlaceBlockAt", constant = @Constant(intValue = 0))
-    private int forge$NonNullBlock(int constant,
-                                   @Local(ordinal = 3) int var5,
-                                   @Share(value = "block", namespace = "fabricated-forge") LocalRef<Block> blockRef) {
-        Block block = Block.blocksList[var5];
-
-        if (block != null) {
-            blockRef.set(block);
-            return -2;
-        }
-
-        return var5;
+    @Expression("? != 0")
+    @WrapOperation(method = "canPlaceBlockAt", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private boolean forge$isNotNull(int left, int right, Operation<Boolean> original) {
+        return original.call(left, right) && Block.blocksList[left] != null;
     }
 
-    @Redirect(method = "canPlaceBlockAt", at = @At(value = "FIELD", target = "Lnet/minecraft/src/BlockLeaves;blockID:I"))
-    private int forge$isLeaves(BlockLeaves instance,
-                               @Local(argsOnly = true) World par1World,
-                               @Local(argsOnly = true, ordinal = 0) int par2,
-                               @Local(argsOnly = true, ordinal = 1) int par3,
-                               @Local(argsOnly = true, ordinal = 2) int par4,
-                               @Share(value = "block", namespace = "fabricated-forge") LocalRef<Block> blockRef) {
-        Block block = blockRef.get();
-        return (((BlockExtension) block).isLeaves(par1World, par2, par3 - 1, par4))
-                ? block.blockID : -2;
+    @Definition(id = "leaves", field = "Lnet/minecraft/src/Block;leaves:Lnet/minecraft/src/BlockLeaves;")
+    @Definition(id = "blockID", field = "Lnet/minecraft/src/BlockLeaves;blockID:I")
+    @Expression("? == leaves.blockID")
+    @WrapOperation(method = "canPlaceBlockAt", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private boolean forge$isLeaves(int left, int right, Operation<Boolean> original,
+                                   @Local(argsOnly = true) World par1World,
+                                   @Local(argsOnly = true, ordinal = 0) int par2,
+                                   @Local(argsOnly = true, ordinal = 1) int par3,
+                                   @Local(argsOnly = true, ordinal = 2) int par4) {
+        return ((BlockExtension) Block.blocksList[left]).isLeaves(par1World, par2, par3 - 1, par4);
     }
 
     @Redirect(method = {"canSnowStay", "updateTick"}, at = @At(value = "INVOKE", target = "Lnet/minecraft/src/BlockSnow;dropBlockAsItem(Lnet/minecraft/src/World;IIIII)V"))

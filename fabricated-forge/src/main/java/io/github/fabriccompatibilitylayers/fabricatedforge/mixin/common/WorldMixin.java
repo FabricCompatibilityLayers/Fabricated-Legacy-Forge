@@ -178,6 +178,7 @@ public abstract class WorldMixin implements WorldExtension {
         addedTileEntityList = new ArrayList();
         entityRemoval = new ArrayList();
         playerEntities = new ArrayList();
+        weatherEffects = new ArrayList();
         cloudColour = 16777215L;
         skylightSubtracted = 0;
         updateLCG = (new Random()).nextInt();

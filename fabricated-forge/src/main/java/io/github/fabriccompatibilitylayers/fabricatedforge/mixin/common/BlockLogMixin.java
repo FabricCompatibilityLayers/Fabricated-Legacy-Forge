@@ -1,6 +1,12 @@
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,10 +19,15 @@ public abstract class BlockLogMixin extends Block implements BlockExtension {
         super(par1, par2Material);
     }
 
-    @Redirect(method = "breakBlock", at = @At(value = "FIELD", target = "Lnet/minecraft/src/BlockLeaves;blockID:I"))
-    private int forge$beginLeavesDecay$check(BlockLeaves instance, @Local(ordinal = 9) int var12) {
-        return (Block.blocksList[var12] != null)
-                ? var12 : -2;
+    @Definition(id = "leaves", field = "Lnet/minecraft/src/Block;leaves:Lnet/minecraft/src/BlockLeaves;")
+    @Definition(id = "blockID", field = "Lnet/minecraft/src/BlockLeaves;blockID:I")
+    @Expression("? == leaves.blockID")
+    @WrapOperation(method = "breakBlock", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private boolean forge$beginLeavesDecay$check(int left, int right, Operation<Boolean> original,
+                                                 @Share(namespace = "fabricated-forge", value = "block") LocalRef<Block> blockRef) {
+        Block block = Block.blocksList[left];
+        blockRef.set(block);
+        return block != null;
     }
 
     @Redirect(method = "breakBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockMetadata(III)I"))
@@ -25,8 +36,9 @@ public abstract class BlockLogMixin extends Block implements BlockExtension {
     }
 
     @Redirect(method = "breakBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;setBlockMetadata(IIII)Z"))
-    private boolean forge$beginLeavesDecay(World instance, int i, int j, int k, int l, @Local(ordinal = 9) int var12) {
-        ((BlockExtension) Block.blocksList[var12]).beginLeavesDecay(instance, i, j, k);
+    private boolean forge$beginLeavesDecay(World instance, int i, int j, int k, int l,
+                                           @Share(namespace = "fabricated-forge", value = "block") LocalRef<Block> blockRef) {
+        ((BlockExtension) blockRef.get()).beginLeavesDecay(instance, i, j, k);
         return true;
     }
 

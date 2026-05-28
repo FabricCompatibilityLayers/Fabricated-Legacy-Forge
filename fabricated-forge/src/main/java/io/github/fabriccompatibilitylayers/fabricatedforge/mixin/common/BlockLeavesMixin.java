@@ -41,37 +41,35 @@ public abstract class BlockLeavesMixin extends BlockLeavesBase implements BlockE
         return true;
     }
 
-    @Redirect(method = "updateTick", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Block;blockID:I"))
-    private int forge$canSustainLeaves(Block instance,
-                                       @Local(argsOnly = true) World par1World,
-                                       @Local(argsOnly = true, ordinal = 0) int par2,
-                                       @Local(argsOnly = true, ordinal = 1) int par3,
-                                       @Local(argsOnly = true, ordinal = 2) int par4,
-                                       @Local(ordinal = 7) int var12,
-                                       @Local(ordinal = 8) int var13,
-                                       @Local(ordinal = 9) int var14,
-                                       @Local(ordinal = 10) int var15,
-                                       @Share(value = "block", namespace = "fabricated-forge") LocalRef<Block> blockRef) {
-        Block block = Block.blocksList[var15];
-        blockRef.set(block);
-        return (block != null && ((BlockExtension) block).canSustainLeaves(par1World, par2 + var12, par3 + var13, par4 + var14))
-                ? var15 : -2;
+    @WrapOperation(method = "updateTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;getBlockId(III)I"))
+    private int forge$capturePos(World instance, int par2, int par3, int i, Operation<Integer> original,
+                                 @Share(namespace = "fabricated-forge", value = "pos") LocalRef<ChunkCoordinates> posRef) {
+        posRef.set(new ChunkCoordinates(par2, par3, i));
+        return original.call(instance, par2, par3, i);
     }
 
-    @Redirect(method = "updateTick", at = @At(value = "FIELD", target = "Lnet/minecraft/src/BlockLeaves;blockID:I"))
-    private int forge$isLeaves(BlockLeaves instance,
+    @Definition(id = "wood", field = "Lnet/minecraft/src/Block;wood:Lnet/minecraft/src/Block;")
+    @Definition(id = "blockID", field = "Lnet/minecraft/src/Block;blockID:I")
+    @Expression("? == wood.blockID")
+    @WrapOperation(method = "updateTick", at = @At(value = "MIXINEXTRAS:EXPRESSION"))
+    private boolean forge$canSustainLeaves(int left, int right, Operation<Boolean> original,
+                                           @Local(argsOnly = true) World par1World,
+                                           @Share(namespace = "fabricated-forge", value = "pos") LocalRef<ChunkCoordinates> posRef) {
+        Block block = Block.blocksList[left];
+        ChunkCoordinates pos = posRef.get();
+        return (block != null && ((BlockExtension) block).canSustainLeaves(par1World, pos.posX, pos.posY, pos.posZ));
+    }
+
+    @Definition(id = "blockID", field = "Lnet/minecraft/src/BlockLeaves;blockID:I")
+    @Definition(id = "leaves", field = "Lnet/minecraft/src/Block;leaves:Lnet/minecraft/src/BlockLeaves;")
+    @Expression("? == leaves.blockID")
+    @WrapOperation(method = "updateTick", at = @At(value = "MIXINEXTRAS:EXPRESSION"))
+    private boolean forge$isLeaves(int left, int right, Operation<Boolean> original,
                                @Local(argsOnly = true) World par1World,
-                               @Local(argsOnly = true, ordinal = 0) int par2,
-                               @Local(argsOnly = true, ordinal = 1) int par3,
-                               @Local(argsOnly = true, ordinal = 2) int par4,
-                               @Local(ordinal = 7) int var12,
-                               @Local(ordinal = 8) int var13,
-                               @Local(ordinal = 9) int var14,
-                               @Local(ordinal = 10) int var15,
-                               @Share(value = "block", namespace = "fabricated-forge") LocalRef<Block> blockRef) {
-        Block block = blockRef.get();
-        return (block != null && ((BlockExtension) block).isLeaves(par1World, par2 + var12, par3 + var13, par4 + var14))
-                ? var15 : -2;
+                               @Share(namespace = "fabricated-forge", value = "pos") LocalRef<ChunkCoordinates> posRef) {
+        Block block = Block.blocksList[left];
+        ChunkCoordinates pos = posRef.get();
+        return (block != null && ((BlockExtension) block).isLeaves(par1World, pos.posX, pos.posY, pos.posZ));
     }
 
     /**

@@ -121,14 +121,20 @@ public abstract class ChunkMixin implements ChunkExtension {
         }
     }
 
+    @WrapOperation(method = "generateHeightMap", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Chunk;getBlockID(III)I"))
+    private int forge$capturePos(Chunk instance, int par2, int par3, int i, Operation<Integer> original,
+                                 @Share(namespace = "fabricated-forge", value = "pos") LocalRef<ChunkCoordinates> posRef) {
+        posRef.set(new ChunkCoordinates(par2, par3, i));
+        return original.call(instance, par2, par3, i);
+    }
+
     @Definition(id = "lightOpacity", field = "Lnet/minecraft/src/Block;lightOpacity:[I")
     @Expression("lightOpacity[?]")
     @WrapOperation(method = "generateHeightMap", at = @At("MIXINEXTRAS:EXPRESSION"))
     private int forge$getBlockLightOpacity$generateHeightMap(int[] array, int index, Operation<Integer> original,
-                                                             @Local(ordinal = 1) int var2,
-                                                             @Local(ordinal = 2) int var3,
-                                                             @Local(ordinal = 3) int var4) {
-        return getBlockLightOpacity(var2, var4 - 1, var3);
+                                                             @Share(namespace = "fabricated-forge", value = "pos") LocalRef<ChunkCoordinates> posRef) {
+        ChunkCoordinates pos = posRef.get();
+        return getBlockLightOpacity(pos.posX, pos.posY, pos.posZ);
     }
 
     /**
@@ -153,7 +159,9 @@ public abstract class ChunkMixin implements ChunkExtension {
         return original.call(left, right) || par2 >> 4 < 0;
     }
 
-    @Inject(method = "setBlockIDWithMetadata", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Chunk;storageArrays:[Lnet/minecraft/src/ExtendedBlockStorage;", ordinal = 0), cancellable = true)
+    @Definition(id = "storageArrays", field = "Lnet/minecraft/src/Chunk;storageArrays:[Lnet/minecraft/src/ExtendedBlockStorage;")
+    @Expression("?.storageArrays[?]")
+    @Inject(method = "setBlockIDWithMetadata", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0), cancellable = true)
     private void forge$extraCheck(int par1, int par2, int par3, int par4, int par5, CallbackInfoReturnable<Boolean> cir) {
         if (par2 >> 4 >= storageArrays.length || par2 >> 4 < 0)
         {
@@ -164,21 +172,18 @@ public abstract class ChunkMixin implements ChunkExtension {
     @Definition(id = "blocksList", field = "Lnet/minecraft/src/Block;blocksList:[Lnet/minecraft/src/Block;")
     @Definition(id = "BlockContainer", type = BlockContainer.class)
     @Expression("blocksList[?] instanceof BlockContainer")
-    @WrapOperation(method = "setBlockIDWithMetadata", at = {
-            @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0),
-            @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 1)
-    })
-    private boolean forge$NonNullBlock(Object object, Operation<Boolean> original) {
+    @WrapOperation(method = "setBlockIDWithMetadata", at = {@At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0)})
+    private boolean forge$NonNullBlock1(Object object, Operation<Boolean> original) {
         return object != null;
     }
 
     @Definition(id = "par4", local = @Local(type = int.class, ordinal = 3, argsOnly = true))
     @Definition(id = "var8", local = @Local(type = int.class, ordinal = 7))
     @Expression("var8 != par4")
-    @WrapOperation(method = "setBlockIDWithMetadata", at = @At("MIXINEXTRAS:EXPRESSION"))
+    @WrapOperation(method = "setBlockIDWithMetadata", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 1))
     private boolean forge$hasTileEntity(int var8, int par4, Operation<Boolean> original,
                                         @Local(ordinal = 8) int var9) {
-        return Block.blocksList[var8] != null && ((BlockExtension) Block.blocksList[var8]).hasTileEntity(var9);
+        return ((BlockExtension) Block.blocksList[var8]).hasTileEntity(var9);
     }
 
     @Definition(id = "lightOpacity", field = "Lnet/minecraft/src/Block;lightOpacity:[I")
@@ -190,6 +195,15 @@ public abstract class ChunkMixin implements ChunkExtension {
                                                                   @Local(argsOnly = true, ordinal = 1) int par2,
                                                                   @Local(argsOnly = true, ordinal = 2) int par3) {
         return getBlockLightOpacity(par1, par2, par3);
+    }
+
+    @Definition(id = "blocksList", field = "Lnet/minecraft/src/Block;blocksList:[Lnet/minecraft/src/Block;")
+    @Definition(id = "BlockContainer", type = BlockContainer.class)
+    @Expression("blocksList[?] instanceof BlockContainer")
+    @WrapOperation(method = "setBlockIDWithMetadata", at = {@At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 1)})
+    private boolean forge$NonNullBlock2(Object object, Operation<Boolean> original,
+                                        @Local(ordinal = 4, argsOnly = true) int par5) {
+        return object != null && ((BlockExtension) object).hasTileEntity(par5);
     }
 
     @Definition(id = "BlockContainer", type = BlockContainer.class)
@@ -245,9 +259,14 @@ public abstract class ChunkMixin implements ChunkExtension {
         }
     }
 
-    @Inject(method = "addEntity", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Entity;addedToChunk:Z"))
-    private void forge$postEntityEventEnteringChunk(Entity par1Entity, CallbackInfo ci) {
+    @Definition(id = "addedToChunk", field = "Lnet/minecraft/src/Entity;addedToChunk:Z")
+    @Expression("?.addedToChunk = ?")
+    @WrapOperation(method = "addEntity", at = @At(value = "MIXINEXTRAS:EXPRESSION"))
+    private void forge$postEntityEventEnteringChunk(Entity instance, boolean value, Operation<Void> original,
+                                                    @Local(argsOnly = true, ordinal = 0) Entity par1Entity) {
         MinecraftForge.EVENT_BUS.post(new EntityEvent.EnteringChunk(par1Entity, this.xPosition, this.zPosition, par1Entity.chunkCoordX, par1Entity.chunkCoordZ));
+
+        original.call(instance, value);
     }
 
     @WrapOperation(method = "getChunkBlockTileEntity", at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))

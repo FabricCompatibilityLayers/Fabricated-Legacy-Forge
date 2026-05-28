@@ -80,7 +80,7 @@ public class WorldGenForestMixin {
     @Definition(id = "leaves", field = "Lnet/minecraft/src/Block;leaves:Lnet/minecraft/src/BlockLeaves;")
     @Definition(id = "blockID", field = "Lnet/minecraft/src/BlockLeaves;blockID:I")
     @Expression("? == leaves.blockID")
-    @WrapOperation(method = "generate", at = @At("MIXINEXTRAS:EXPRESSION"))
+    @WrapOperation(method = "generate", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 1))
     private boolean forge$isLeaves(int var20, int right, Operation<Boolean> original,
                                    @Local(argsOnly = true) World par1World,
                                    @Share(namespace = "fabricated-forge", value = "leavePos")LocalRef<ChunkCoordinates> posRef) {
