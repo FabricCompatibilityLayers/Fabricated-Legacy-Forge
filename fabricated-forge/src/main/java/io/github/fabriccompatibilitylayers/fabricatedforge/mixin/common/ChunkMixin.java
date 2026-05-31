@@ -302,7 +302,7 @@ public abstract class ChunkMixin implements ChunkExtension {
 
     @Definition(id = "var5", local = @Local(type = TileEntity.class))
     @Expression("var5 != null")
-    @WrapOperation(method = "getChunkBlockTileEntity", at = @At("MIXINEXTRAS:EXPRESSION"))
+    @WrapOperation(method = "getChunkBlockTileEntity", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 2))
     private boolean forge$hackCheck(Object left, Object right, Operation<Boolean> original) {
         return false;
     }

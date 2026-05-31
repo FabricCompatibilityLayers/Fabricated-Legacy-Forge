@@ -32,16 +32,7 @@ public class PatchConversionHelper {
      * shadow validator accepts the {@code static} shadow declaration that must be
      * present in the mixin class.
      */
-    public static void preApply(String mixinClassName, ClassNode targetClass) {
-        ClassNode mixinNode = new ClassNode();
-
-        try {
-            new ClassReader(mixinClassName.replace('.', '/'))
-                    .accept(mixinNode, ClassReader.SKIP_FRAMES);
-        } catch (IOException e) {
-            return;
-        }
-
+    public static void preApply(ClassNode mixinNode, ClassNode targetClass) {
         for (FieldNode mixinField : mixinNode.fields) {
             if (!hasAnnotation(mixinField.visibleAnnotations, MAKE_STATIC_DESC)) continue;
 

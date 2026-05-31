@@ -92,7 +92,7 @@ public class FabricatedFMLMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public void preApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-        PatchConversionHelper.preApply(mixinClassName, targetClass);
+        PatchConversionHelper.preApply(mixinInfo.getClassNode(0), targetClass);
     }
 
     @Override

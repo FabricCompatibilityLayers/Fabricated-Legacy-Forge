@@ -120,7 +120,8 @@
     "common.WorldMixin",
     "common.WorldProviderMixin",
     "common.WorldServerMixin",
-    "common.WorldTypeMixin"
+    "common.WorldTypeMixin",
+    "compat.legacyfabric.FabricItemGroupMixin"
   ],
   "client": [
     "client.EffectRendererMixin",

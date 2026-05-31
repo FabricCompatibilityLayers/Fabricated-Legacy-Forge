@@ -23,6 +23,7 @@
       "io.github.fabriccompatibilitylayers.fabricatedforge.remapper.ForgeRemapper"
     ],
     "mixinsquared": [
+      "io.github.fabriccompatibilitylayers.fabricatedforge.compat.lfapi.LFAPIMixinCanceller"
     ]
   },
   "depends": {
