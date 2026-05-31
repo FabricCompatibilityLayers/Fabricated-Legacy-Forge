@@ -1,5 +1,6 @@
 package net.minecraftforge.common;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.compat.java17.EnumFactoryJ17;
 import net.minecraft.src.*;
 import java.lang.reflect.*;
 import java.util.*;
@@ -105,9 +106,8 @@ public class EnumHelper
             newFieldAccessor       = Class.forName("sun.reflect.ReflectionFactory").getDeclaredMethod("newFieldAccessor", Field.class, boolean.class);
             fieldAccessorSet       = Class.forName("sun.reflect.FieldAccessor").getDeclaredMethod("set", Object.class, Object.class);
         }
-        catch (Exception e)
+        catch (Exception ignored)
         {
-            e.printStackTrace();
         }
 
         isSetup = true;
@@ -190,6 +190,10 @@ public class EnumHelper
     @SuppressWarnings("unchecked")
     public static <T extends Enum<? >> T addEnum(Class<T> enumType, String enumName, Class<?>[] paramTypes, Object[] paramValues)
     {
+        if (newConstructorAccessor == null) {
+            return EnumFactoryJ17.addEnum(enumType, enumName, paramTypes, paramValues);
+        }
+
         if (!isSetup)
         {
             setup();
