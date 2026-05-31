@@ -1,21 +1,16 @@
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.client;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import fr.catcore.cursedmixinextensions.annotations.Public;
-import net.minecraft.src.*;
+import net.minecraft.src.SoundManager;
+import net.minecraft.src.SoundPool;
+import net.minecraft.src.SoundPoolEntry;
 import net.minecraftforge.client.ModCompatibilityClient;
-import net.minecraftforge.client.event.sound.PlayBackgroundMusicEvent;
-import net.minecraftforge.client.event.sound.PlaySoundEffectEvent;
-import net.minecraftforge.client.event.sound.PlaySoundEffectSourceEvent;
-import net.minecraftforge.client.event.sound.PlaySoundEvent;
-import net.minecraftforge.client.event.sound.PlaySoundSourceEvent;
-import net.minecraftforge.client.event.sound.PlayStreamingEvent;
-import net.minecraftforge.client.event.sound.PlayStreamingSourceEvent;
-import net.minecraftforge.client.event.sound.SoundEvent;
-import net.minecraftforge.client.event.sound.SoundLoadEvent;
-import net.minecraftforge.client.event.sound.SoundSetupEvent;
+import net.minecraftforge.client.event.sound.*;
 import net.minecraftforge.common.MinecraftForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import paulscode.sound.SoundSystem;
 
 @Mixin(SoundManager.class)
 public class SoundManagerMixin {
@@ -52,9 +48,11 @@ public class SoundManagerMixin {
     // Pattern A (@Inject at NEW): injects before the SoundSystem constructor call so
     // both hooks fire after all codecs are registered but before the system initialises —
     // identical ordering to the patch, without needing to touch the constructor return value.
+    @Definition(id = "SoundSystem", type = SoundSystem.class)
+    @Expression("new SoundSystem()")
     @Inject(
-        method = "tryToSetLibraryAndCodecs",
-        at = @At(value = "NEW", target = "paulscode/sound/SoundSystem")
+            method = "tryToSetLibraryAndCodecs",
+            at = @At(value = "MIXINEXTRAS:EXPRESSION")
     )
     private void forge$soundSetup(CallbackInfo ci) {
         ModCompatibilityClient.audioModAddCodecs();

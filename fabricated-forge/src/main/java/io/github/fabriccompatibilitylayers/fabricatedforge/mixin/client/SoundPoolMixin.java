@@ -69,7 +69,7 @@ public class SoundPoolMixin implements SoundPoolExtension {
                 this.nameToSoundPoolEntriesMapping.put(var3, new ArrayList());
             }
 
-            SoundPoolEntry var4 = new SoundPoolEntry(var3, url);
+            SoundPoolEntry var4 = new SoundPoolEntry(par1Str, url);
             ((List) this.nameToSoundPoolEntriesMapping.get(var3)).add(var4);
             this.allSoundPoolEntries.add(var4);
             this.numberOfSoundPoolEntries++;
