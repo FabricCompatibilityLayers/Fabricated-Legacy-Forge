@@ -13,7 +13,7 @@
     "sources": "",
     "issues": ""
   },
-  "license": "CC0-1.0",
+  "license": ["OSL-3.0", "LGPL-2.1-only"],
   "icon": "assets/fabricated-fml/icon.png",
   "environment": "*",
   "entrypoints": {

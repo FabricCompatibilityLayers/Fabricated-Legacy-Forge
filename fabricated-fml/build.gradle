@@ -20,3 +20,17 @@ remapJar {
         enableMixinExtra()
     }
 }
+
+import com.diffplug.gradle.spotless.JavaExtension
+
+spotless {
+    format("fml", JavaExtension) {
+        licenseHeaderFile(file("FML_HEADER"))
+        target 'src/*/java/cpw/mods/fml/**/*.java', 'src/*/java/net/minecraft/src/**/*.java'
+    }
+}
+
+jar {
+    from("LICENSE-fml.txt")
+    from("CREDITS-fml.txt")
+}

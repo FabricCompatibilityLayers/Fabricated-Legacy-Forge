@@ -1,3 +1,8 @@
+/**
+ * Copyright (C) 2024-2025 Fabric Compatibility Layer Team
+ *
+ * Licensed under the Open Software License version 3.0
+ */
 package io.github.fabriccompatibilitylayers.fabricatedfml.remapper.asm;
 
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.MappingsHelper;

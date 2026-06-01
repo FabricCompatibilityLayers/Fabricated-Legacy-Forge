@@ -1,10 +1,14 @@
+/**
+ * Copyright (C) 2025-2026 Fabric Compatibility Layer Team
+ *
+ * Licensed under the Open Software License version 3.0
+ */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;

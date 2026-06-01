@@ -1,7 +1,11 @@
+/**
+ * Copyright (C) 2026 Fabric Compatibility Layer Team
+ *
+ * Licensed under the Open Software License version 3.0
+ */
 package io.github.fabriccompatibilitylayers.fabricatedfml.utils;
 
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.MappingsHelper;
-import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.AnnotationNode;
@@ -12,7 +16,6 @@ import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.spongepowered.asm.util.Annotations;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;

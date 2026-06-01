@@ -1,7 +1,11 @@
+/**
+ * Copyright (C) 2025-2026 Fabric Compatibility Layer Team
+ *
+ * Licensed under the Open Software License version 3.0
+ */
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.sugar.Local;
 import cpw.mods.fml.common.registry.VillagerRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -13,9 +17,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Desc;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityVillager.class)
 public abstract class EntityVillagerMixin extends EntityAgeable {

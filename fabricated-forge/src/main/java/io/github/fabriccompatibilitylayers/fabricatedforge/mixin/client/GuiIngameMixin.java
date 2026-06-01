@@ -1,8 +1,11 @@
+/**
+ * Copyright (C) 2026 Fabric Compatibility Layer Team
+ *
+ * Licensed under the Open Software License version 3.0
+ */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.client;
 
 import net.minecraft.src.EntityClientPlayerMP;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.GuiIngame;
 import net.minecraftforge.common.ForgeHooks;
 import org.spongepowered.asm.mixin.Mixin;

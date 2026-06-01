@@ -1,3 +1,8 @@
+/**
+ * Copyright (C) 2025-2026 Fabric Compatibility Layer Team
+ *
+ * Licensed under the Open Software License version 3.0
+ */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
 import com.llamalad7.mixinextras.expression.Definition;
@@ -12,7 +17,6 @@ import net.minecraft.src.Material;
 import net.minecraft.src.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(BlockMycelium.class)
 public abstract class BlockMyceliumMixin extends Block implements BlockExtension {

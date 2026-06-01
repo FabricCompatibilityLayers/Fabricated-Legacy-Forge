@@ -1,19 +1,19 @@
+/**
+ * Copyright (C) 2023-2026 Fabric Compatibility Layer Team
+ *
+ * Licensed under the Open Software License version 3.0
+ */
 package io.github.fabriccompatibilitylayers.fabricatedforge;
 
 import com.moulberry.mixinconstraints.MixinConstraints;
 import com.moulberry.mixinconstraints.mixin.MixinConstraintsBootstrap;
 import fr.catcore.cursedmixinextensions.CursedMixinExtensions;
-import fr.catcore.wfvaio.FabricVariants;
-import fr.catcore.wfvaio.WhichFabricVariantAmIOn;
 import io.github.fabriccompatibilitylayers.fabricatedfml.utils.PatchConversionHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;

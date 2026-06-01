@@ -1,6 +1,9 @@
+import com.diffplug.spotless.LineEnding
+
 plugins {
     id 'java'
     id 'xyz.wagyourtail.unimined' version '1.4.2-SNAPSHOT' apply false
+    id 'com.diffplug.spotless' version '7.2.1' apply false
 }
 
 group project.maven_group
@@ -28,6 +31,7 @@ def ornitheLibraries = [
 
 allprojects {
     apply(plugin: "xyz.wagyourtail.unimined")
+    apply(plugin: "com.diffplug.spotless")
 
     version project.version
 
@@ -237,6 +241,23 @@ allprojects {
                     "mc_version": rootProject.minecraft_version,
                     "mrapi_version": project.mod_remapping_api
         }
+    }
+
+    spotless {
+        java {
+            licenseHeaderFile(rootProject.file("HEADER"))
+            lineEndings = LineEnding.UNIX
+            removeUnusedImports()
+            trimTrailingWhitespace()
+            target 'src/*/java/io/github/fabriccompatibilitylayers/**/*.java'
+        }
+    }
+
+    jar {
+        from(rootProject.file("LICENSE")) {
+            rename { "${it}_${base.archivesName.get()}" }
+        }
+        from(rootProject.file("licensing.md"))
     }
 }
 

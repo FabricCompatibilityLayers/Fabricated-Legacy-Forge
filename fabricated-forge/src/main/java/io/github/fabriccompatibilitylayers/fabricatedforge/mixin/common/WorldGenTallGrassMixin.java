@@ -1,3 +1,8 @@
+/**
+ * Copyright (C) 2025-2026 Fabric Compatibility Layer Team
+ *
+ * Licensed under the Open Software License version 3.0
+ */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
 import com.llamalad7.mixinextras.expression.Definition;
@@ -8,7 +13,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import net.minecraft.src.Block;
 import net.minecraft.src.World;
-import net.minecraft.src.WorldGenDeadBush;
 import net.minecraft.src.WorldGenTallGrass;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

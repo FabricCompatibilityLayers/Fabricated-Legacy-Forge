@@ -1,3 +1,8 @@
+/**
+ * Copyright (C) 2025 Fabric Compatibility Layer Team
+ *
+ * Licensed under the Open Software License version 3.0
+ */
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client;
 
 import cpw.mods.fml.client.FMLTextureFX;
@@ -11,11 +16,8 @@ import net.minecraft.src.TextureCompassFX;
 import net.minecraft.src.TextureFX;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

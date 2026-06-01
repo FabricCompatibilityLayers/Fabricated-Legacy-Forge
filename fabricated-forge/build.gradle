@@ -20,3 +20,19 @@ remapJar {
 dependencies {
     implementation(project(":fabricated-fml"))
 }
+
+import com.diffplug.gradle.spotless.JavaExtension
+
+spotless {
+    format("minecraftForge", JavaExtension) {
+        licenseHeaderFile(file("FORGE_HEADER"))
+        target 'src/*/java/net/minecraftforge/**/*.java'
+    }
+}
+
+jar {
+    from("MinecraftForge-Credits.txt")
+    from("MinecraftForge-License.txt")
+    from("Paulscode IBXM Library License.txt")
+    from("Paulscode SoundSystem CodecIBXM License.txt")
+}

@@ -5,7 +5,7 @@
   "name": "Fabricated Legacy Forge",
   "description": "A compatibility layer to load Forge mods on FabricLoader.",
   "authors": [
-    "CatCore"
+    "Fabric Compatibility Layers"
   ],
   "contributors": [
     "MinecraftForge:\n- Eloraam\n- FlowerChild\n- Hawkye\n- MALfunction84\n- Scokeev9\n- SpaceToad\n- LexManos",
@@ -16,10 +16,10 @@
   ],
   "contact": {
     "homepage": "https://modrinth.com/mod/fabricated-forge",
-    "sources": "https://github.com/thecatcore/Fabricated-Legacy-Forge",
-    "issues": "https://github.com/thecatcore/Fabricated-Legacy-Forge/issues"
+    "sources": "https://github.com/FabricCompatibilityLayers/Fabricated-Legacy-Forge",
+    "issues": "https://github.com/FabricCompatibilityLayers/Fabricated-Legacy-Forge/issues"
   },
-  "license": "CC0-1.0",
+  "license": ["OSL-3.0", "LGPL-2.1-only", "MinecraftForge-v1.0", "BSD-3-Clause", "Paulscode-SoundSystem"],
   "icon": "assets/fabricated-forge/icon.png",
   "environment": "*",
   "entrypoints": {
