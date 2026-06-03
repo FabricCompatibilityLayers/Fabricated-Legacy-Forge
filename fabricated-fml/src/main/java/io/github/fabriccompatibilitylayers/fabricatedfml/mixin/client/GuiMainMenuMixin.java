@@ -12,6 +12,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import cpw.mods.fml.client.GuiModList;
 import cpw.mods.fml.common.FMLCommonHandler;
+import io.github.fabriccompatibilitylayers.fabricatedfml.utils.BrandingUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GuiButton;
@@ -51,6 +52,7 @@ public class GuiMainMenuMixin extends GuiScreen {
     @WrapOperation(method = "func_73863_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiMainMenu;func_73731_b(Lnet/minecraft/src/FontRenderer;Ljava/lang/String;III)V", ordinal = 0))
     private void fml$drawMultilineBranding(GuiMainMenu instance, FontRenderer fontRenderer, String s, int x, int y, int z, Operation<Void> original) {
         List<String> brandings = Lists.reverse(FMLCommonHandler.instance().getBrandings());
+        brandings.addAll(BrandingUtils.getBrandingInfo());
         brandings.add(s);
 
         for (int i = 0; i < brandings.size(); i++) {
