@@ -1,0 +1,22 @@
+unimined.minecraft {
+//    mappings {
+//        devFallbackNamespace("searge")
+//        devNamespace("forgeMCP")
+//    }
+}
+
+configurations {
+    production
+}
+
+artifacts {
+    production remapJar
+}
+
+dependencies {
+    implementation(project(":fabricated-fml"))
+    implementation(project(":fabricated-forge"))
+
+    mcpImplementation("maven.modrinth:codechicken-core:0.6.5")
+//    mcpImplementation("maven.modrinth:nei:1.4.0.5")
+}

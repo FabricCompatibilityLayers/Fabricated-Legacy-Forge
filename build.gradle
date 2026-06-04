@@ -67,7 +67,9 @@ allprojects {
 
     configurations {
         ornitheImplementation
+        mcpImplementation
         modImplementation.extendsFrom ornitheImplementation
+        modImplementation.extendsFrom mcpImplementation
     }
 
     unimined.minecraft(sourceSets.main, true) {
@@ -183,6 +185,11 @@ allprojects {
                     enableBaseMixin()
                     enableMixinExtra()
                 }
+            }
+
+            remap(configurations.mcpImplementation) {
+                namespace("official")
+                remapAtToLegacy = true
             }
         }
     }

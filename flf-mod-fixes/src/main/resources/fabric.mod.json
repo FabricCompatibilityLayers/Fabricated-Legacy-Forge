@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "id": "flf-mod-fixes",
+  "version": "${version}",
+  "name": "Fabricated Legacy Forge Mod Fixes",
+  "description": "",
+  "authors": [
+    "CatCore"
+  ],
+  "contributors": [],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/fabricated-forge",
+    "sources": "https://github.com/thecatcore/Fabricated-Legacy-Forge",
+    "issues": "https://github.com/thecatcore/Fabricated-Legacy-Forge/issues"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/fabricated-forge/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "mod-remapper-api:modremapper_v2": [
+      "io.github.fabriccompatibilitylayers.fabricatedforge.mods.ForgeModsRemapper"
+    ],
+    "preLaunch": [
+    ]
+  },
+  "mixins": [
+  ],
+  "depends": {
+    "fabricloader": ">0.14.3"
+  }
+}
