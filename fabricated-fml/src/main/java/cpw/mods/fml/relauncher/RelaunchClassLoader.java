@@ -75,6 +75,9 @@ public class RelaunchClassLoader extends URLClassLoader
 
         addTransformerExclusion("io.github.fabriccompatibilitylayers.fabricatedfml.");
         addClassLoaderExclusion("com.llamalad7.mixinextras.");
+        addClassLoaderExclusion("com.bawnorton.mixinsquared.");
+        addClassLoaderExclusion("com.moulberry.mixinconstraints.");
+        addClassLoaderExclusion("xyz.wagyourtail.");
     }
 
     public void registerTransformer(String transformerClassName)

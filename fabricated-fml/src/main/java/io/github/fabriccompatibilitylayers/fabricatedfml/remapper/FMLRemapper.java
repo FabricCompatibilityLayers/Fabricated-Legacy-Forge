@@ -11,6 +11,7 @@ import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.discoverer.Cor
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.discoverer.ForgeModsDiscoverer;
 import io.github.fabriccompatibilitylayers.modremappingapi.api.v2.*;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,8 +45,11 @@ public class FMLRemapper implements ModRemapper {
         );
     }
 
+    private List<ModCandidate> modCandidates;
+
     @Override
     public List<ModRemapper> collectSubRemappers(List<ModCandidate> list) {
+        modCandidates = list;
         return Collections.emptyList();
     }
 
@@ -61,7 +65,9 @@ public class FMLRemapper implements ModRemapper {
 
     @Override
     public void afterRemapping() {
-
+        for (ModCandidate candidate : modCandidates) {
+            FabricLauncherBase.getLauncher().addToClassPath(candidate.getDestination());
+        }
     }
 
     @Override

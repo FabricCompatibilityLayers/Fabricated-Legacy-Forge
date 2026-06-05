@@ -375,7 +375,7 @@ public class RelaunchLibraryManager
             {
                 downloadMonitor.updateProgressString("Loading coremod %s", coreMod.getName());
                 classLoader.addTransformerExclusion(fmlCorePlugin);
-                Class<?> coreModClass = Class.forName(fmlCorePlugin, true, classLoader);
+                Class<?> coreModClass = Class.forName(fmlCorePlugin, false, classLoader);
                 TransformerExclusions trExclusions = coreModClass.getAnnotation(TransformerExclusions.class);
                 if (trExclusions!=null)
                 {

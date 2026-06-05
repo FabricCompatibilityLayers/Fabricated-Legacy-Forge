@@ -76,7 +76,8 @@ public class ModDiscoverer
 
     public void findModDirMods(File modsDir)
     {
-        File[] modList = modsDir.listFiles();
+//        File[] modList = modsDir.listFiles();
+        File[] modList = new File[0];
         // Sort the files into alphabetical order first
         Arrays.sort(modList);
 
