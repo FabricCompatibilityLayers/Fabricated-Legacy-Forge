@@ -18,5 +18,5 @@ dependencies {
     implementation(project(":fabricated-forge"))
 
     mcpImplementation("maven.modrinth:codechicken-core:0.6.5")
-//    mcpImplementation("maven.modrinth:nei:1.4.0.5")
+    mcpAtImplementation("maven.modrinth:nei:1.4.0.5")
 }

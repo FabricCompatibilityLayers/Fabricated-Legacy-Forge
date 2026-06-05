@@ -68,8 +68,10 @@ allprojects {
     configurations {
         ornitheImplementation
         mcpImplementation
+        mcpAtImplementation
         modImplementation.extendsFrom ornitheImplementation
         modImplementation.extendsFrom mcpImplementation
+        modImplementation.extendsFrom mcpAtImplementation
     }
 
     unimined.minecraft(sourceSets.main, true) {
@@ -188,6 +190,10 @@ allprojects {
             }
 
             remap(configurations.mcpImplementation) {
+                namespace("official")
+            }
+
+            remap(configurations.mcpAtImplementation) {
                 namespace("official")
                 remapAtToLegacy = true
             }

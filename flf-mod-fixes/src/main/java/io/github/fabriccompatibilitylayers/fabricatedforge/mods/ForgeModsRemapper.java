@@ -52,7 +52,7 @@ public class ForgeModsRemapper implements ModRemapper {
 
     @Override
     public void afterAllRemappings() {
-        Mixins.addConfiguration("flf-mod-fixes.json");
+        Mixins.addConfiguration("flf-mod-fixes.mixins.json");
     }
 
     @Override
