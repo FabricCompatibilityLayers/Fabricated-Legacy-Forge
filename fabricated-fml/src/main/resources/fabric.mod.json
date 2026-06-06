@@ -24,7 +24,6 @@
       "io.github.fabriccompatibilitylayers.fabricatedfml.remapper.FMLRemapper"
     ],
     "mixinsquared": [
-      "io.github.fabriccompatibilitylayers.fabricatedfml.compat.osl.OSLMixinCanceller"
     ]
   },
   "depends": {

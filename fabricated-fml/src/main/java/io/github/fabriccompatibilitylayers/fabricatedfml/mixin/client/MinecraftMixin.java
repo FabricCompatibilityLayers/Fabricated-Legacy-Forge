@@ -5,36 +5,26 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.relauncher.ArgsWrapper;
 import cpw.mods.fml.relauncher.FMLRelauncher;
-import fr.catcore.cursedmixinextensions.annotations.Public;
 import io.github.fabriccompatibilitylayers.fabricatedfml.forged.ForgedGuiErrorScreen;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.MinecraftApplet;
 import net.minecraft.src.*;
 import net.minecraft.src.Timer;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.HashMap;
-
 @Mixin(Minecraft.class)
 public abstract class MinecraftMixin {
     @Shadow private Timer field_71428_T;
-
-    @Shadow
-    public static long func_71386_F() {
-        return 0;
-    }
 
     @Shadow public boolean field_71454_w;
 
@@ -85,82 +75,11 @@ public abstract class MinecraftMixin {
         if (this.field_71462_r instanceof ForgedGuiErrorScreen) ci.cancel();
     }
 
-    /**
-     * @author
-     * @reason
-     */
-    @Overwrite
-    public static void main(String[] p_main_0_)
+    @WrapMethod(method = "main")
+    private static void fml$main(String[] p_main_0_, Operation<Void> original)
     {
-        FMLRelauncher.handleClientRelaunch(new ArgsWrapper(p_main_0_));
-    }
-
-    @Public
-    private static void fmlReentry(ArgsWrapper wrapper) {
-        String[] p_main_0_ = wrapper.args;
-
-        HashMap var1 = new HashMap();
-        boolean var2 = false;
-        boolean var3 = true;
-        boolean var4 = false;
-        String var5 = "Player" + func_71386_F() % 1000L;
-        if (p_main_0_.length > 0) {
-            var5 = p_main_0_[0];
+        if (FMLRelauncher.handleClientRelaunch(new ArgsWrapper(p_main_0_))) {
+            original.call(p_main_0_);
         }
-
-        String var6 = "-";
-        if (p_main_0_.length > 1) {
-            var6 = p_main_0_[1];
-        }
-
-        for (int var7 = 2; var7 < p_main_0_.length; var7++) {
-            String var8 = p_main_0_[var7];
-            if (var7 == p_main_0_.length - 1) {
-                Object var10000 = null;
-            } else {
-                String var14 = p_main_0_[var7 + 1];
-            }
-
-            boolean var10 = false;
-            if (var8.equals("-demo") || var8.equals("--demo")) {
-                var2 = true;
-            } else if (var8.equals("--applet")) {
-                var3 = false;
-            }
-
-            if (var10) {
-                var7++;
-            }
-        }
-
-        var1.put("demo", "" + var2);
-        var1.put("stand-alone", "" + var3);
-        var1.put("username", var5);
-        var1.put("fullscreen", "" + var4);
-        var1.put("sessionid", var6);
-        Frame var11 = new Frame();
-        var11.setTitle("Minecraft");
-        var11.setBackground(Color.BLACK);
-        JPanel var12 = new JPanel();
-        var11.setLayout(new BorderLayout());
-        var12.setPreferredSize(new Dimension(854, 480));
-        var11.add(var12, "Center");
-        var11.pack();
-        var11.setLocationRelativeTo(null);
-        var11.setVisible(true);
-        var11.addWindowListener(new GameWindowListener());
-        MinecraftFakeLauncher var9 = new MinecraftFakeLauncher(var1);
-        MinecraftApplet var13 = new MinecraftApplet();
-        var13.setStub(var9);
-        var9.setLayout(new BorderLayout());
-        var9.add(var13, "Center");
-        var9.validate();
-        var11.removeAll();
-        var11.setLayout(new BorderLayout());
-        var11.add(var9, "Center");
-        var11.validate();
-        var13.init();
-        var13.start();
-        Runtime.getRuntime().addShutdownHook(new ThreadShutdown());
     }
 }
