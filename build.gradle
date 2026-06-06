@@ -2,7 +2,7 @@ import com.diffplug.spotless.LineEnding
 
 plugins {
     id 'java'
-    id 'xyz.wagyourtail.unimined' version '1.4.2-SNAPSHOT' apply false
+    id 'xyz.wagyourtail.unimined' version '1.4.20' apply false
     id 'com.diffplug.spotless' version '7.2.1' apply false
 }
 
@@ -13,20 +13,25 @@ base {
 }
 
 def ornitheLibraries = [
-        "com.google.code.gson:gson:2.10",
-        "commons-codec:commons-codec:1.9",
-        "commons-io:commons-io:2.4",
-        "commons-logging:commons-logging:1.1.3",
-        "it.unimi.dsi:fastutil:8.5.9",
-        "net.ornithemc:logger-config:1.0.0",
-        "org.apache.commons:commons-compress:1.8.1",
-        "org.apache.commons:commons-lang3:3.1",
-        "org.apache.httpcomponents:httpclient:4.3.3",
-        "org.apache.httpcomponents:httpcore:4.3.2",
+        "org.slf4j:slf4j-api:2.0.17",
+        "org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0",
         "org.apache.logging.log4j:log4j-api:2.19.0",
         "org.apache.logging.log4j:log4j-core:2.19.0",
-        "org.apache.logging.log4j:log4j-slf4j2-impl:2.19.0",
-        "org.slf4j:slf4j-api:2.0.1"
+        "it.unimi.dsi:fastutil:8.5.9",
+        "com.google.code.gson:gson:2.10",
+        "net.ornithemc:logger-config:1.0.0",
+        "net.ornithemc:log4j-patch:1.0.0",
+        "com.google.guava:guava:17.0",
+        "commons-codec:commons-codec:1.9",
+        "org.apache.commons:commons-compress:1.8.1",
+        "commons-io:commons-io:2.4",
+        "org.apache.commons:commons-lang3:3.1",
+        "commons-logging:commons-logging:1.1.3",
+        "org.apache.httpcomponents:httpcore:4.3.2",
+        "org.apache.httpcomponents:httpclient:4.3.3",
+        "net.sf.jopt-simple:jopt-simple:5.0.4",
+        "io.netty:netty-common:4.1.77.Final",
+        "io.netty:netty-buffer:4.1.77.Final"
 ]
 
 allprojects {
@@ -78,6 +83,7 @@ allprojects {
         version project.minecraft_version
 
         mappings {
+            ornitheGenVersion = 2
             calamus()
 
             forgeBuiltinMCP(project.forge_version)
@@ -93,55 +99,55 @@ allprojects {
                 c("ModTextureStatic", "net/minecraft/src/ModTextureStatic", "net/minecraft/unmapped/ModTextureStatic", "net/minecraft/ModTextureStatic", "net/minecraft/src/ModTextureStatic")
                 c("TradeEntry", "net/minecraft/src/TradeEntry", "net/minecraft/unmapped/TradeEntry", "net/minecraft/TradeEntry", "net/minecraft/src/TradeEntry")
 
-                c("ala", "relocated/argo/format/CompactJsonFormatter", "net/minecraft/unmapped/C_9199292", "net/minecraft/class_270", "relocated/argo/format/CompactJsonFormatter")
-                c("alb", "relocated/argo/format/CompactJsonFormatter_JsonNodeType", "net/minecraft/unmapped/C_9994818", "net/minecraft/class_271", "relocated/argo/format/CompactJsonFormatter_JsonNodeType")
-                c("alc", "relocated/argo/format/JsonEscapedString", "net/minecraft/unmapped/C_9126296", "net/minecraft/class_272", "relocated/argo/format/JsonEscapedString")
-                c("ald", "relocated/argo/format/JsonFormatter", "net/minecraft/unmapped/C_5014293", "net/minecraft/class_273", "relocated/argo/format/JsonFormatter")
-                c("ale", "relocated/argo/jdom/ChainedFunctor", "net/minecraft/unmapped/C_0979244", "net/minecraft/class_274", "relocated/argo/jdom/ChainedFunctor")
-                c("alf", "relocated/argo/jdom/Functor", "net/minecraft/unmapped/C_1043464", "net/minecraft/class_275", "relocated/argo/jdom/Functor")
-                c("alg", "relocated/argo/jdom/JdomParser", "net/minecraft/unmapped/C_7785042", "net/minecraft/class_276", "relocated/argo/jdom/JdomParser")
-                c("alh", "relocated/argo/jdom/JsonArray", "net/minecraft/unmapped/C_9017637", "net/minecraft/class_277", "relocated/argo/jdom/JsonArray")
-                c("ali", "relocated/argo/jdom/JsonArray_NodeList", "net/minecraft/unmapped/C_5870653", "net/minecraft/class_278", "relocated/argo/jdom/JsonArray_NodeList")
-                c("alj", "relocated/argo/jdom/JsonArrayNodeBuilder", "net/minecraft/unmapped/C_6674744", "net/minecraft/class_279", "relocated/argo/jdom/JsonArrayNodeBuilder")
-                c("alk", "relocated/argo/jdom/JsonConstants", "net/minecraft/unmapped/C_1466821", "net/minecraft/class_280", "relocated/argo/jdom/JsonConstants")
-                c("all", "relocated/argo/jdom/JsonFieldBuilder", "net/minecraft/unmapped/C_0704537", "net/minecraft/class_281", "relocated/argo/jdom/JsonFieldBuilder")
-                c("alm", "relocated/argo/jdom/JsonListenerToJdomAdapter", "net/minecraft/unmapped/C_1390297", "net/minecraft/class_282", "relocated/argo/jdom/JsonListenerToJdomAdapter")
-                c("aln", "relocated/argo/jdom/JsonListenerToJdomAdapter_Array", "net/minecraft/unmapped/C_9344203", "net/minecraft/class_283", "relocated/argo/jdom/JsonListenerToJdomAdapter_Array")
-                c("alo", "relocated/argo/jdom/JsonListenerToJdomAdapter_Object", "net/minecraft/unmapped/C_0107612", "net/minecraft/class_284", "relocated/argo/jdom/JsonListenerToJdomAdapter_Object")
-                c("alp", "relocated/argo/jdom/JsonListenerToJdomAdapter_Field", "net/minecraft/unmapped/C_1274722", "net/minecraft/class_285", "relocated/argo/jdom/JsonListenerToJdomAdapter_Field")
-                c("alq", "relocated/argo/jdom/JsonListenerToJdomAdapter_NodeContainer", "net/minecraft/unmapped/C_6205130", "net/minecraft/class_286", "relocated/argo/jdom/JsonListenerToJdomAdapter_NodeContainer")
-                c("alr", "relocated/argo/jdom/JsonNode", "net/minecraft/unmapped/C_0304196", "net/minecraft/class_287", "relocated/argo/jdom/JsonNode")
-                c("als", "relocated/argo/jdom/JsonNodeBuilder", "net/minecraft/unmapped/C_0087465", "net/minecraft/class_288", "relocated/argo/jdom/JsonNodeBuilder")
-                c("alt", "relocated/argo/jdom/JsonNodeBuilders", "net/minecraft/unmapped/C_8313918", "net/minecraft/class_289", "relocated/argo/jdom/JsonNodeBuilders")
-                c("alu", "relocated/argo/jdom/JsonNodeBuilders_Null", "net/minecraft/unmapped/C_0564609", "net/minecraft/class_290", "relocated/argo/jdom/JsonNodeBuilders_Null")
-                c("alv", "relocated/argo/jdom/JsonNodeBuilders_True", "net/minecraft/unmapped/C_8269353", "net/minecraft/class_291", "relocated/argo/jdom/JsonNodeBuilders_True")
-                c("alw", "relocated/argo/jdom/JsonNodeBuilders_False", "net/minecraft/unmapped/C_6065941", "net/minecraft/class_292", "relocated/argo/jdom/JsonNodeBuilders_False")
-                c("alx", "relocated/argo/jdom/JsonNodeDoesNotMatchChainedJsonNodeSelectorException", "net/minecraft/unmapped/C_1783083", "net/minecraft/class_293", "relocated/argo/jdom/JsonNodeDoesNotMatchChainedJsonNodeSelectorException")
-                c("aly", "relocated/argo/jdom/JsonNodeDoesNotMatchJsonNodeSelectorException", "net/minecraft/unmapped/C_2454420", "net/minecraft/class_294", "relocated/argo/jdom/JsonNodeDoesNotMatchJsonNodeSelectorException")
-                c("alz", "relocated/argo/jdom/JsonNodeDoesNotMatchPathElementsException", "net/minecraft/unmapped/C_9291467", "net/minecraft/class_295", "relocated/argo/jdom/JsonNodeDoesNotMatchPathElementsException")
-                c("ama", "relocated/argo/jdom/JsonNodeFactories", "net/minecraft/unmapped/C_4249662", "net/minecraft/class_297", "relocated/argo/jdom/JsonNodeFactories")
-                c("amb", "relocated/argo/jdom/JsonNodeSelector", "net/minecraft/unmapped/C_6263676", "net/minecraft/class_298", "relocated/argo/jdom/JsonNodeSelector")
-                c("amc", "relocated/argo/jdom/JsonNodeSelectors", "net/minecraft/unmapped/C_0632194", "net/minecraft/class_299", "relocated/argo/jdom/JsonNodeSelectors")
-                c("amd", "relocated/argo/jdom/JsonNodeSelectors_String", "net/minecraft/unmapped/C_8179293", "net/minecraft/class_300", "relocated/argo/jdom/JsonNodeSelectors_String")
-                c("ame", "relocated/argo/jdom/JsonNodeSelectors_Object", "net/minecraft/unmapped/C_4323228", "net/minecraft/class_301", "relocated/argo/jdom/JsonNodeSelectors_Object")
-                c("amf", "relocated/argo/jdom/JsonNodeSelectors_Field", "net/minecraft/unmapped/C_8644429", "net/minecraft/class_302", "relocated/argo/jdom/JsonNodeSelectors_Field")
-                c("amg", "relocated/argo/jdom/JsonNodeSelectors_Element", "net/minecraft/unmapped/C_2452333", "net/minecraft/class_303", "relocated/argo/jdom/JsonNodeSelectors_Element")
-                c("amh", "relocated/argo/jdom/JsonNodeSelectors_Array", "net/minecraft/unmapped/C_9418795", "net/minecraft/class_304", "relocated/argo/jdom/JsonNodeSelectors_Array")
-                c("ami", "relocated/argo/jdom/JsonNodeType", "net/minecraft/unmapped/C_9003983", "net/minecraft/class_305", "relocated/argo/jdom/JsonNodeType")
-                c("amj", "relocated/argo/jdom/JsonNumberNode", "net/minecraft/unmapped/C_8487891", "net/minecraft/class_306", "relocated/argo/jdom/JsonNumberNode")
-                c("amk", "relocated/argo/jdom/JsonNumberNodeBuilder", "net/minecraft/unmapped/C_0451770", "net/minecraft/class_307", "relocated/argo/jdom/JsonNumberNodeBuilder")
-                c("aml", "relocated/argo/jdom/JsonObject", "net/minecraft/unmapped/C_2107089", "net/minecraft/class_308", "relocated/argo/jdom/JsonObject")
-                c("amm", "relocated/argo/jdom/JsonObjectNodeBuilder", "net/minecraft/unmapped/C_7458519", "net/minecraft/class_309", "relocated/argo/jdom/JsonObjectNodeBuilder")
-                c("amn", "relocated/argo/jdom/JsonObjectNodeBuilder_List", "net/minecraft/unmapped/C_9955391", "net/minecraft/class_310", "relocated/argo/jdom/JsonObjectNodeBuilder_List")
-                c("amo", "relocated/argo/jdom/JsonRootNode", "net/minecraft/unmapped/C_6558469", "net/minecraft/class_311", "relocated/argo/jdom/JsonRootNode")
-                c("amp", "relocated/argo/jdom/JsonStringNode", "net/minecraft/unmapped/C_8781664", "net/minecraft/class_312", "relocated/argo/jdom/JsonStringNode")
-                c("amq", "relocated/argo/jdom/JsonStringNodeBuilder", "net/minecraft/unmapped/C_7729099", "net/minecraft/class_313", "relocated/argo/jdom/JsonStringNodeBuilder")
-                c("amr", "relocated/argo/jdom/LeafFunctor", "net/minecraft/unmapped/C_0802959", "net/minecraft/class_314", "relocated/argo/jdom/LeafFunctor")
-                c("ams", "relocated/argo/saj/InvalidSyntaxException", "net/minecraft/unmapped/C_2116274", "net/minecraft/class_315", "relocated/argo/saj/InvalidSyntaxException")
-                c("amt", "relocated/argo/saj/JsonListener", "net/minecraft/unmapped/C_7604698", "net/minecraft/class_316", "relocated/argo/saj/JsonListener")
-                c("amu", "relocated/argo/saj/PositionTrackingPushbackReader", "net/minecraft/unmapped/C_4184259", "net/minecraft/class_317", "relocated/argo/saj/PositionTrackingPushbackReader")
-                c("amv", "relocated/argo/saj/SajParser", "net/minecraft/unmapped/C_2752037", "net/minecraft/class_318", "relocated/argo/saj/SajParser")
-                c("amw", "relocated/argo/saj/ThingWithPosition", "net/minecraft/unmapped/C_0514978", "net/minecraft/class_319", "relocated/argo/saj/ThingWithPosition")
+                c("ala", "relocated/argo/format/CompactJsonFormatter", "net/minecraft/unmapped/C_98947689", "net/minecraft/class_270", "relocated/argo/format/CompactJsonFormatter")
+                c("alb", "relocated/argo/format/CompactJsonFormatter_JsonNodeType", "net/minecraft/unmapped/C_29312769", "net/minecraft/class_271", "relocated/argo/format/CompactJsonFormatter_JsonNodeType")
+                c("alc", "relocated/argo/format/JsonEscapedString", "net/minecraft/unmapped/C_73364496", "net/minecraft/class_272", "relocated/argo/format/JsonEscapedString")
+                c("ald", "relocated/argo/format/JsonFormatter", "net/minecraft/unmapped/C_96191056", "net/minecraft/class_273", "relocated/argo/format/JsonFormatter")
+                c("ale", "relocated/argo/jdom/ChainedFunctor", "net/minecraft/unmapped/C_42620053", "net/minecraft/class_274", "relocated/argo/jdom/ChainedFunctor")
+                c("alf", "relocated/argo/jdom/Functor", "net/minecraft/unmapped/C_18530764", "net/minecraft/class_275", "relocated/argo/jdom/Functor")
+                c("alg", "relocated/argo/jdom/JdomParser", "net/minecraft/unmapped/C_45909191", "net/minecraft/class_276", "relocated/argo/jdom/JdomParser")
+                c("alh", "relocated/argo/jdom/JsonArray", "net/minecraft/unmapped/C_80301944", "net/minecraft/class_277", "relocated/argo/jdom/JsonArray")
+                c("ali", "relocated/argo/jdom/JsonArray_NodeList", "net/minecraft/unmapped/C_58338291", "net/minecraft/class_278", "relocated/argo/jdom/JsonArray_NodeList")
+                c("alj", "relocated/argo/jdom/JsonArrayNodeBuilder", "net/minecraft/unmapped/C_62054333", "net/minecraft/class_279", "relocated/argo/jdom/JsonArrayNodeBuilder")
+                c("alk", "relocated/argo/jdom/JsonConstants", "net/minecraft/unmapped/C_34240353", "net/minecraft/class_280", "relocated/argo/jdom/JsonConstants")
+                c("all", "relocated/argo/jdom/JsonFieldBuilder", "net/minecraft/unmapped/C_52414917", "net/minecraft/class_281", "relocated/argo/jdom/JsonFieldBuilder")
+                c("alm", "relocated/argo/jdom/JsonListenerToJdomAdapter", "net/minecraft/unmapped/C_62514435", "net/minecraft/class_282", "relocated/argo/jdom/JsonListenerToJdomAdapter")
+                c("aln", "relocated/argo/jdom/JsonListenerToJdomAdapter_Array", "net/minecraft/unmapped/C_93410249", "net/minecraft/class_283", "relocated/argo/jdom/JsonListenerToJdomAdapter_Array")
+                c("alo", "relocated/argo/jdom/JsonListenerToJdomAdapter_Object", "net/minecraft/unmapped/C_46316363", "net/minecraft/class_284", "relocated/argo/jdom/JsonListenerToJdomAdapter_Object")
+                c("alp", "relocated/argo/jdom/JsonListenerToJdomAdapter_Field", "net/minecraft/unmapped/C_35499707", "net/minecraft/class_285", "relocated/argo/jdom/JsonListenerToJdomAdapter_Field")
+                c("alq", "relocated/argo/jdom/JsonListenerToJdomAdapter_NodeContainer", "net/minecraft/unmapped/C_30782412", "net/minecraft/class_286", "relocated/argo/jdom/JsonListenerToJdomAdapter_NodeContainer")
+                c("alr", "relocated/argo/jdom/JsonNode", "net/minecraft/unmapped/C_49105368", "net/minecraft/class_287", "relocated/argo/jdom/JsonNode")
+                c("als", "relocated/argo/jdom/JsonNodeBuilder", "net/minecraft/unmapped/C_18368714", "net/minecraft/class_288", "relocated/argo/jdom/JsonNodeBuilder")
+                c("alt", "relocated/argo/jdom/JsonNodeBuilders", "net/minecraft/unmapped/C_76028712", "net/minecraft/class_289", "relocated/argo/jdom/JsonNodeBuilders")
+                c("alu", "relocated/argo/jdom/JsonNodeBuilders_Null", "net/minecraft/unmapped/C_87562732", "net/minecraft/class_290", "relocated/argo/jdom/JsonNodeBuilders_Null")
+                c("alv", "relocated/argo/jdom/JsonNodeBuilders_True", "net/minecraft/unmapped/C_70104989", "net/minecraft/class_291", "relocated/argo/jdom/JsonNodeBuilders_True")
+                c("alw", "relocated/argo/jdom/JsonNodeBuilders_False", "net/minecraft/unmapped/C_20232373", "net/minecraft/class_292", "relocated/argo/jdom/JsonNodeBuilders_False")
+                c("alx", "relocated/argo/jdom/JsonNodeDoesNotMatchChainedJsonNodeSelectorException", "net/minecraft/unmapped/C_32029965", "net/minecraft/class_293", "relocated/argo/jdom/JsonNodeDoesNotMatchChainedJsonNodeSelectorException")
+                c("aly", "relocated/argo/jdom/JsonNodeDoesNotMatchJsonNodeSelectorException", "net/minecraft/unmapped/C_75444724", "net/minecraft/class_294", "relocated/argo/jdom/JsonNodeDoesNotMatchJsonNodeSelectorException")
+                c("alz", "relocated/argo/jdom/JsonNodeDoesNotMatchPathElementsException", "net/minecraft/unmapped/C_01635068", "net/minecraft/class_295", "relocated/argo/jdom/JsonNodeDoesNotMatchPathElementsException")
+                c("ama", "relocated/argo/jdom/JsonNodeFactories", "net/minecraft/unmapped/C_74529266", "net/minecraft/class_297", "relocated/argo/jdom/JsonNodeFactories")
+                c("amb", "relocated/argo/jdom/JsonNodeSelector", "net/minecraft/unmapped/C_03367835", "net/minecraft/class_298", "relocated/argo/jdom/JsonNodeSelector")
+                c("amc", "relocated/argo/jdom/JsonNodeSelectors", "net/minecraft/unmapped/C_41874688", "net/minecraft/class_299", "relocated/argo/jdom/JsonNodeSelectors")
+                c("amd", "relocated/argo/jdom/JsonNodeSelectors_String", "net/minecraft/unmapped/C_64509670", "net/minecraft/class_300", "relocated/argo/jdom/JsonNodeSelectors_String")
+                c("ame", "relocated/argo/jdom/JsonNodeSelectors_Object", "net/minecraft/unmapped/C_13412947", "net/minecraft/class_301", "relocated/argo/jdom/JsonNodeSelectors_Object")
+                c("amf", "relocated/argo/jdom/JsonNodeSelectors_Field", "net/minecraft/unmapped/C_64730384", "net/minecraft/class_302", "relocated/argo/jdom/JsonNodeSelectors_Field")
+                c("amg", "relocated/argo/jdom/JsonNodeSelectors_Element", "net/minecraft/unmapped/C_00522450", "net/minecraft/class_303", "relocated/argo/jdom/JsonNodeSelectors_Element")
+                c("amh", "relocated/argo/jdom/JsonNodeSelectors_Array", "net/minecraft/unmapped/C_59435135", "net/minecraft/class_304", "relocated/argo/jdom/JsonNodeSelectors_Array")
+                c("ami", "relocated/argo/jdom/JsonNodeType", "net/minecraft/unmapped/C_74834866", "net/minecraft/class_305", "relocated/argo/jdom/JsonNodeType")
+                c("amj", "relocated/argo/jdom/JsonNumberNode", "net/minecraft/unmapped/C_51673989", "net/minecraft/class_306", "relocated/argo/jdom/JsonNumberNode")
+                c("amk", "relocated/argo/jdom/JsonNumberNodeBuilder", "net/minecraft/unmapped/C_24101837", "net/minecraft/class_307", "relocated/argo/jdom/JsonNumberNodeBuilder")
+                c("aml", "relocated/argo/jdom/JsonObject", "net/minecraft/unmapped/C_05749010", "net/minecraft/class_308", "relocated/argo/jdom/JsonObject")
+                c("amm", "relocated/argo/jdom/JsonObjectNodeBuilder", "net/minecraft/unmapped/C_32542459", "net/minecraft/class_309", "relocated/argo/jdom/JsonObjectNodeBuilder")
+                c("amn", "relocated/argo/jdom/JsonObjectNodeBuilder_List", "net/minecraft/unmapped/C_28308777", "net/minecraft/class_310", "relocated/argo/jdom/JsonObjectNodeBuilder_List")
+                c("amo", "relocated/argo/jdom/JsonRootNode", "net/minecraft/unmapped/C_35971787", "net/minecraft/class_311", "relocated/argo/jdom/JsonRootNode")
+                c("amp", "relocated/argo/jdom/JsonStringNode", "net/minecraft/unmapped/C_65175111", "net/minecraft/class_312", "relocated/argo/jdom/JsonStringNode")
+                c("amq", "relocated/argo/jdom/JsonStringNodeBuilder", "net/minecraft/unmapped/C_64153253", "net/minecraft/class_313", "relocated/argo/jdom/JsonStringNodeBuilder")
+                c("amr", "relocated/argo/jdom/LeafFunctor", "net/minecraft/unmapped/C_46912152", "net/minecraft/class_314", "relocated/argo/jdom/LeafFunctor")
+                c("ams", "relocated/argo/saj/InvalidSyntaxException", "net/minecraft/unmapped/C_90210845", "net/minecraft/class_315", "relocated/argo/saj/InvalidSyntaxException")
+                c("amt", "relocated/argo/saj/JsonListener", "net/minecraft/unmapped/C_23604545", "net/minecraft/class_316", "relocated/argo/saj/JsonListener")
+                c("amu", "relocated/argo/saj/PositionTrackingPushbackReader", "net/minecraft/unmapped/C_72876972", "net/minecraft/class_317", "relocated/argo/saj/PositionTrackingPushbackReader")
+                c("amv", "relocated/argo/saj/SajParser", "net/minecraft/unmapped/C_84170137", "net/minecraft/class_318", "relocated/argo/saj/SajParser")
+                c("amw", "relocated/argo/saj/ThingWithPosition", "net/minecraft/unmapped/C_34685111", "net/minecraft/class_319", "relocated/argo/saj/ThingWithPosition")
             }
         }
 
@@ -216,7 +222,7 @@ allprojects {
 //        modImplementation(fabricApi.legacyFabricModule("legacy-fabric-logger-api-v1", "${project.legacyfabric_version}+${project.minecraft_version}")) {
 //            exclude(module: 'fabric-loader')
 //        }
-        modImplementation(fabricApi.legacyFabric("${project.legacyfabric_version}+${project.minecraft_version}")) {
+        ornitheImplementation("net.legacyfabric.ornithed.legacy-fabric-api:legacy-fabric-api:${project.legacyfabric_version}+${project.minecraft_version}") {
             exclude(module: 'fabric-loader')
         }
         modImplementation("maven.modrinth:spasm:0.2")
@@ -227,8 +233,11 @@ allprojects {
 
         modImplementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.2.0"))
         implementation("jvmdg-8.com.moulberry:mixinconstraints:1.0.9")
+        runtimeOnly("xyz.wagyourtail.jvmdowngrader:jvmdowngrader-java-api:1.3.6:downgraded-8") {
+            transitive = false
+        }
 
-        fabricApi.osl(project.minecraft_version, project.osl_version).forEach {
+        fabricApi.osl(2, project.minecraft_version, project.osl_version).forEach {
             ornitheImplementation(it)
         }
 
