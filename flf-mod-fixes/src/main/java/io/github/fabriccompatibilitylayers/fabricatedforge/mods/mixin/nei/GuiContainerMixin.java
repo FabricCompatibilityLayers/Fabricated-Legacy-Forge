@@ -9,7 +9,6 @@ import codechicken.nei.forge.GuiContainerManager;
 import codechicken.nei.forge.IContainerClientSide;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -21,13 +20,37 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
+import static net.minecraft.src.GuiContainer.itemRenderer;
+
 @Mixin(GuiContainer.class)
-public class GuiContainerMixin extends GuiScreen {
+public abstract class GuiContainerMixin extends GuiScreen {
+    @Shadow
+    protected int guiLeft;
+    @Shadow
+    protected int guiTop;
+
+    @Shadow
+    protected abstract void drawGuiContainerBackgroundLayer(float par1, int par2, int par3);
+
+    @Shadow
+    public Container inventorySlots;
+
+    @Shadow
+    protected abstract void drawSlotInventory(Slot par1Slot);
+
+    @Shadow
+    protected abstract boolean isMouseOverSlot(Slot par1Slot, int par2, int par3);
+
+    @Shadow
+    protected abstract void drawGuiContainerForegroundLayer();
+
     public GuiContainerManager manager;
 
     @Override
@@ -40,45 +63,109 @@ public class GuiContainerMixin extends GuiScreen {
 
     }
 
-    @Inject(method = "drawScreen", at = @At("HEAD"))
-    private void nei$draw$preDraw(int par1, int par2, float par3, CallbackInfo ci) {
+//    @Inject(method = "drawScreen", at = @At("HEAD"))
+//    private void nei$draw$preDraw(int par1, int par2, float par3, CallbackInfo ci) {
+//        this.manager.preDraw();
+//    }
+//
+//    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", ordinal = 1, shift = At.Shift.AFTER))
+//    private void nei$draw$objectUnderMouse(int par1, int par2, float par3, CallbackInfo ci,
+//                                           @Share(namespace = "nei", value = "objectUnderMouse") LocalIntRef ref) {
+//        ref.set(this.manager.objectUnderMouse(par1, par2) ? 1 : 0);
+//    }
+//
+//    @ModifyExpressionValue(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiContainer;isMouseOverSlot(Lnet/minecraft/src/Slot;II)Z"))
+//    private boolean nei$draw$isMouseOverSlot(boolean original,
+//                                             @Share(namespace = "nei", value = "objectUnderMouse") LocalIntRef ref) {
+//        return original && ref.get() == 0;
+//    }
+//
+//    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/InventoryPlayer;getItemStack()Lnet/minecraft/src/ItemStack;", ordinal = 0))
+//    private void nei$draw$renderObjects(int par1, int par2, float par3, CallbackInfo ci,
+//                                        @Local(ordinal = 3) int var4,
+//                                        @Local(ordinal = 4) int var5) {
+//        GL11.glTranslatef((float)(-var4), (float)(-var5), 200.0F);
+//        this.manager.renderObjects(par1, par2);
+//        GL11.glTranslatef((float)var4, (float)var5, -200.0F);
+//    }
+//
+//    @ModifyConstant(method = "drawScreen", constant = @Constant(floatValue = 200.0F))
+//    private float nei$draw$ModifyConstant(float constant) {
+//        return 500.0F;
+//    }
+//
+//    @Definition(id = "getItemStack", method = "Lnet/minecraft/src/InventoryPlayer;getItemStack()Lnet/minecraft/src/ItemStack;")
+//    @Expression("?.getItemStack() == null")
+//    @WrapOperation(method = "drawScreen", at = @At("MIXINEXTRAS:EXPRESSION"))
+//    private boolean nei$draw$renderTooltips(Object left, Object right, Operation<Boolean> original,
+//                                            @Local(argsOnly = true, ordinal = 0) int par1,
+//                                            @Local(argsOnly = true, ordinal = 1) int par2) {
+//        this.manager.renderToolTips(par1, par2);
+//        return false;
+//    }
+
+    /**
+     * @author CC
+     * @reason some bytecode issue with usual injections
+     */
+    @Overwrite
+    public void drawScreen(int par1, int par2, float par3) {
         this.manager.preDraw();
-    }
+        this.drawDefaultBackground();
+        int var4 = this.guiLeft;
+        int var5 = this.guiTop;
+        this.drawGuiContainerBackgroundLayer(par3, par1, par2);
+        GL11.glDisable(32826);
+        RenderHelper.disableStandardItemLighting();
+        GL11.glDisable(2896);
+        GL11.glDisable(2929);
+        super.drawScreen(par1, par2, par3);
+        RenderHelper.enableGUIStandardItemLighting();
+        GL11.glPushMatrix();
+        GL11.glTranslatef((float)var4, (float)var5, 0.0F);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        GL11.glEnable(32826);
+        Slot var6 = null;
+        short var7 = 240;
+        short var8 = 240;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)var7 / 1.0F, (float)var8 / 1.0F);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        boolean objectundermouse = this.manager.objectUnderMouse(par1, par2);
 
-    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", ordinal = 1, shift = At.Shift.AFTER))
-    private void nei$draw$objectUnderMouse(int par1, int par2, float par3, CallbackInfo ci,
-                                           @Share(namespace = "nei", value = "objectUnderMouse") LocalIntRef ref) {
-        ref.set(this.manager.objectUnderMouse(par1, par2) ? 1 : 0);
-    }
+        for(int var11 = 0; var11 < this.inventorySlots.inventorySlots.size(); ++var11) {
+            Slot var14 = (Slot)this.inventorySlots.inventorySlots.get(var11);
+            this.drawSlotInventory(var14);
+            if (this.isMouseOverSlot(var14, par1, par2) && !objectundermouse) {
+                GL11.glDisable(2896);
+                GL11.glDisable(2929);
+                int var9 = var14.xDisplayPosition;
+                int var10 = var14.yDisplayPosition;
+                this.drawGradientRect(var9, var10, var9 + 16, var10 + 16, -2130706433, -2130706433);
+                GL11.glEnable(2896);
+                GL11.glEnable(2929);
+            }
+        }
 
-    @ModifyExpressionValue(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiContainer;isMouseOverSlot(Lnet/minecraft/src/Slot;II)Z"))
-    private boolean nei$draw$isMouseOverSlot(boolean original,
-                                             @Share(namespace = "nei", value = "objectUnderMouse") LocalIntRef ref) {
-        return original && ref.get() == 0;
-    }
-
-    @Inject(method = "drawScreen", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/InventoryPlayer;getItemStack()Lnet/minecraft/src/ItemStack;", ordinal = 0))
-    private void nei$draw$renderObjects(int par1, int par2, float par3, CallbackInfo ci,
-                                        @Local(ordinal = 3) int var4,
-                                        @Local(ordinal = 4) int var5) {
+        this.drawGuiContainerForegroundLayer();
+        InventoryPlayer var12 = this.mc.thePlayer.inventory;
         GL11.glTranslatef((float)(-var4), (float)(-var5), 200.0F);
         this.manager.renderObjects(par1, par2);
         GL11.glTranslatef((float)var4, (float)var5, -200.0F);
-    }
+        if (var12.getItemStack() != null) {
+            GL11.glTranslatef(0.0F, 0.0F, 32.0F);
+            this.zLevel = 500.0F;
+            itemRenderer.zLevel = 500.0F;
+            itemRenderer.renderItemIntoGUI(this.fontRenderer, this.mc.renderEngine, var12.getItemStack(), par1 - var4 - 8, par2 - var5 - 8);
+            itemRenderer.renderItemOverlayIntoGUI(this.fontRenderer, this.mc.renderEngine, var12.getItemStack(), par1 - var4 - 8, par2 - var5 - 8);
+            this.zLevel = 0.0F;
+            itemRenderer.zLevel = 0.0F;
+        }
 
-    @ModifyConstant(method = "drawScreen", constant = @Constant(floatValue = 200.0F))
-    private float nei$draw$ModifyConstant(float constant) {
-        return 500.0F;
-    }
-
-    @Definition(id = "getItemStack", method = "Lnet/minecraft/src/InventoryPlayer;getItemStack()Lnet/minecraft/src/ItemStack;")
-    @Expression("?.getItemStack() == null")
-    @WrapOperation(method = "drawScreen", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private boolean nei$draw$renderTooltips(Object left, Object right, Operation<Boolean> original,
-                                            @Local(argsOnly = true, ordinal = 0) int par1,
-                                            @Local(argsOnly = true, ordinal = 1) int par2) {
         this.manager.renderToolTips(par1, par2);
-        return false;
+        GL11.glPopMatrix();
+        GL11.glEnable(2896);
+        GL11.glEnable(2929);
+        RenderHelper.enableStandardItemLighting();
     }
 
     public List handleTooltip(int mousex, int mousey, List currenttip) {
