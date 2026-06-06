@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.Charsets;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.NetHandlerExtension;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.NetLoginHandlerExtension;
 import io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common.NetLoginHandlerAccessor;
@@ -61,7 +62,7 @@ import cpw.mods.fml.common.registry.EntityRegistry.EntityRegistration;
 
 public class FMLNetworkHandler
 {
-    private static final int FML_HASH = Hashing.murmur3_32().hashString("FML").asInt();
+    private static final int FML_HASH = Hashing.murmur3_32().hashString("FML", Charsets.UTF_8).asInt();
     private static final int PROTOCOL_VERSION = 0x1;
     private static final FMLNetworkHandler INSTANCE = new FMLNetworkHandler();
 
