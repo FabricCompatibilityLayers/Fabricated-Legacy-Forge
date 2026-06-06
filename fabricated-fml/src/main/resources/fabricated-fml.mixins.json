@@ -47,7 +47,8 @@
     "common.WorldInfoMixin",
     "common.WorldMixin",
     "common.WorldProviderMixin",
-    "common.WorldTypeMixin"
+    "common.WorldTypeMixin",
+    "osl.LocaleMixin"
   ],
   "client": [
     "client.GameSettingsMixin",

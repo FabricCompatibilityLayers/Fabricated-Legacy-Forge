@@ -14,7 +14,7 @@
     "issues": ""
   },
   "license": ["OSL-3.0", "LGPL-2.1-only"],
-  "icon": "assets/fabricated-fml/icon.png",
+  "icon": "assets/fabricated-forge/icon.png",
   "environment": "*",
   "entrypoints": {
     "preLaunch": [
