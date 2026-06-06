@@ -215,6 +215,20 @@ public class FMLRemapper implements ModRemapper {
                         true
                 )
         );
+
+        if (!runningLegacyFabric) {
+            visitorInfos.registerMethodInvocation(
+                    "com/google/common/hash/HashFunction",
+                    "hashString",
+                    "(Ljava/lang/CharSequence;)Lcom/google/common/hash/HashCode;",
+                    VisitorInfos.classMember(
+                            "io/github/fabriccompatibilitylayers/fabricatedfml/compat/guava/GuavaStubs",
+                            "hash_HashFunction_hashString",
+                            "(Lcom/google/common/hash/HashFunction;Ljava/lang/CharSequence;)Lcom/google/common/hash/HashCode;",
+                            true
+                    )
+            );
+        }
     }
 
     private static final List<String> FORGE_EXCLUSIONS = Arrays.asList(
