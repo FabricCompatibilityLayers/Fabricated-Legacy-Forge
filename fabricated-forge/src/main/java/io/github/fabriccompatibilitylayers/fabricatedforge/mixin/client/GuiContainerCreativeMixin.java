@@ -194,7 +194,7 @@ public abstract class GuiContainerCreativeMixin extends InventoryEffectRenderer 
      * @reason Replace tab render loop with page-windowed version; add always-visible tabs and page guard.
      */
     @Overwrite
-    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
+    public void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         RenderHelper.enableGUIStandardItemLighting();
         int var4 = this.mc.renderEngine.getTexture("/gui/allitems.png");

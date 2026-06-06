@@ -794,7 +794,7 @@ public abstract class WorldMixin implements WorldExtension {
      * @reason Delegates weather update to WorldProvider for dimension overrides
      */
     @Overwrite
-    protected void updateWeather() {
+    public void updateWeather() {
         ((WorldProviderExtension) provider).updateWeather();
     }
 

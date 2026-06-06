@@ -49,7 +49,7 @@ public abstract class GuiControlsMixin extends GuiScreen {
      * @reason Remove key-binding capture logic; scroll panel handles it instead
      */
     @Overwrite
-    protected void actionPerformed(GuiButton par1GuiButton) {
+    public void actionPerformed(GuiButton par1GuiButton) {
         if (par1GuiButton.id == 200) {
             this.mc.displayGuiScreen(this.parentScreen);
         }
@@ -62,7 +62,7 @@ public abstract class GuiControlsMixin extends GuiScreen {
      * @reason Remove mouse key-binding capture; scroll panel handles input instead
      */
     @Overwrite
-    protected void mouseClicked(int par1, int par2, int par3) {
+    public void mouseClicked(int par1, int par2, int par3) {
         super.mouseClicked(par1, par2, par3);
     }
 
@@ -75,7 +75,7 @@ public abstract class GuiControlsMixin extends GuiScreen {
      * @reason Replace key-binding capture with scroll panel key handling
      */
     @Overwrite
-    protected void keyTyped(char par1, int par2) {
+    public void keyTyped(char par1, int par2) {
         if (scrollPane.keyTyped(par1, par2)) {
             super.keyTyped(par1, par2);
         }

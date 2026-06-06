@@ -67,7 +67,7 @@ public abstract class WorldClientMixin extends WorldMixin {
      * but WorldClient's own override bypassed it — super restores the chain.
      */
     @Overwrite
-    protected void updateWeather() {
+    public void updateWeather() {
         super.updateWeather();
     }
 
