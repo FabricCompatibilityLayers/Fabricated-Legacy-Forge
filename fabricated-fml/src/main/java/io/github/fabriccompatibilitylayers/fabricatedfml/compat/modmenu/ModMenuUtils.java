@@ -18,26 +18,35 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class ModMenuUtils {
     private static final List<Path> IGNORED_PATHS = new ArrayList<>();
+    private static final Map<FMLMod, Path> ICON_CACHE = new HashMap<>();
 
     public static BufferedImage createIcon(FabricIconHandler handler, FMLMod info) {
         try {
             FabricIconHandlerAccessor accessor = (FabricIconHandlerAccessor) handler;
 
-            URL url = info.container.getClass().getResource(info.container.getMetadata().logoFile);
+            Path iconPath = ICON_CACHE.getOrDefault(info, null);
 
-            if (url == null) {
-                return null;
+            if (iconPath == null) {
+                if (info.rootPath != null) {
+                    iconPath = info.rootPath.resolve(info.container.getMetadata().logoFile.replace("/", info.rootPath.getFileSystem().getSeparator()));
+                }
+
+                if (iconPath == null || !Files.exists(iconPath)) {
+                    URL url = info.container.getClass().getResource(info.container.getMetadata().logoFile);
+
+                    if (url == null) {
+                        return null;
+                    }
+
+                    iconPath = Paths.get(url.toURI());
+                }
             }
 
-            Path iconPath = Paths.get(url.toURI());
-
-            if (IGNORED_PATHS.contains(iconPath)) {
+            if (iconPath == null || IGNORED_PATHS.contains(iconPath)) {
                 return null;
             }
 
@@ -70,6 +79,8 @@ public class ModMenuUtils {
                     inputStream.close();
                 }
 
+                ICON_CACHE.put(info, iconPath);
+
                 return var8;
             }
 
@@ -85,6 +96,20 @@ public class ModMenuUtils {
             Mod mod = new FMLMod(modInfo);
 
             ModMenu.MODS.put(mod.getId(), mod);
+        }
+
+        Map<String, Mod> dummyParents = new HashMap();
+
+        for(Mod mod : ModMenu.MODS.values()) {
+            if (mod instanceof FMLMod) {
+                String parentId = mod.getParent();
+                if (parentId != null) {
+                    Mod parent = ModMenu.MODS.getOrDefault(parentId, (Mod) dummyParents.get(parentId));
+                    ModMenu.PARENT_MAP.put(parent, mod);
+                } else {
+                    ModMenu.ROOT_MODS.put(mod.getId(), mod);
+                }
+            }
         }
 
         ModMenu.clearModCountCache();
