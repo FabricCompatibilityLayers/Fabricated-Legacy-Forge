@@ -25,8 +25,8 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.16.10",
-    "fabricated-forge": "*"
+    "fabricated-forge": "*",
+    "minecraft": "${mc_version}"
   },
   "mixins": [
   ]

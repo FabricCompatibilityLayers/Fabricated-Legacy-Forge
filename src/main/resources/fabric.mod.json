@@ -26,7 +26,7 @@
   },
   "mixins": [],
   "depends": {
-    "fabricloader": ">0.14.3",
+    "fabricloader": ">=${fabric_loader_version}",
     "minecraft": "${mc_version}",
     "mod-remapping-api": ">=${mrapi_version}"
   }

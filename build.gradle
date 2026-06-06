@@ -152,7 +152,7 @@ allprojects {
         }
 
         legacyFabric {
-            loader project.fabric_version
+            loader project.fabric_loader_version
 
             if (project.hasProperty("access_widener") && !project.access_widener.isEmpty()) {
                 accessWidener(project.file(project.access_widener))
@@ -255,13 +255,15 @@ allprojects {
 
     processResources {
         inputs.property "version", project.version
+        inputs.property "fabric_loader_version", project.fabric_loader_version
         inputs.property "mc_version", project.minecraft_version
         inputs.property "mrapi_version", project.mod_remapping_api
 
         filesMatching("fabric.mod.json") {
             expand "version": project.version,
+                    "fabric_loader_version": rootProject.fabric_loader_version,
                     "mc_version": rootProject.minecraft_version,
-                    "mrapi_version": project.mod_remapping_api
+                    "mrapi_version": rootProject.mod_remapping_api
         }
     }
 

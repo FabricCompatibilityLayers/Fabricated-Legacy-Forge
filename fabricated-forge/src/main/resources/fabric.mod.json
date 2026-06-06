@@ -27,7 +27,10 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.16.10"
+    "fabricloader": ">=${fabric_loader_version}",
+    "minecraft": "${mc_version}",
+    "mod-remapping-api": ">=${mrapi_version}",
+    "fabricated-fml": "*"
   },
   "mixins": [
     "fabricated-forge.mixins.json"

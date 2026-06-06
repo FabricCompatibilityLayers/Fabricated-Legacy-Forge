@@ -27,7 +27,7 @@
     ]
   },
   "depends": {
-    "fabricloader": ">=0.16.10"
+    "fabricloader": ">=${fabric_loader_version}"
   },
   "mixins": [
     "fabricated-fml.mixins.json"
