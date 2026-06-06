@@ -71,10 +71,14 @@ allprojects {
     }
 
     configurations {
-        ornitheImplementation
+        if (rootProject.target == "legacy-fabric") {
+            ornitheImplementation
+        }
         mcpImplementation
         mcpAtImplementation
-        modImplementation.extendsFrom ornitheImplementation
+        if (rootProject.target == "legacy-fabric") {
+            modImplementation.extendsFrom ornitheImplementation
+        }
         modImplementation.extendsFrom mcpImplementation
         modImplementation.extendsFrom mcpAtImplementation
     }
@@ -85,6 +89,7 @@ allprojects {
         mappings {
             ornitheGenVersion = 2
             calamus()
+            legacyIntermediary()
 
             forgeBuiltinMCP(project.forge_version)
 
@@ -151,17 +156,33 @@ allprojects {
             }
         }
 
-        legacyFabric {
-            loader project.fabric_loader_version
+        if (rootProject.target == "legacy-fabric") {
+            legacyFabric {
+                loader project.fabric_loader_version
 
-            if (project.hasProperty("access_widener") && !project.access_widener.isEmpty()) {
-                accessWidener(project.file(project.access_widener))
+                if (project.hasProperty("access_widener") && !project.access_widener.isEmpty()) {
+                    accessWidener(project.file(project.access_widener))
 //                afterEvaluate {
 //                    mergeAws([
 //                            atLegacy2aw(project.file(project.access_transformer), project.file("converted_at.accesswidener"), "official"),
 //                            project.file("fabric-specific.accesswidener")
 //                    ], project.mappings)
 //                }
+                }
+            }
+        } else {
+            ornitheFabric {
+                loader project.fabric_loader_version
+
+                if (project.hasProperty("access_widener") && !project.access_widener.isEmpty()) {
+                    accessWidener(project.file(project.access_widener))
+//                afterEvaluate {
+//                    mergeAws([
+//                            atLegacy2aw(project.file(project.access_transformer), project.file("converted_at.accesswidener"), "official"),
+//                            project.file("fabric-specific.accesswidener")
+//                    ], project.mappings)
+//                }
+                }
             }
         }
 
@@ -186,12 +207,14 @@ allprojects {
                 }
             }
 
-            remap(configurations.ornitheImplementation) {
-                namespace("calamus")
+            if (rootProject.target == "legacy-fabric") {
+                remap(configurations.ornitheImplementation) {
+                    namespace("calamus")
 
-                mixinRemap {
-                    enableBaseMixin()
-                    enableMixinExtra()
+                    mixinRemap {
+                        enableBaseMixin()
+                        enableMixinExtra()
+                    }
                 }
             }
 
@@ -207,7 +230,9 @@ allprojects {
     }
 
     dependencies {
-        implementation("com.google.guava:guava:12.0.1")
+        if (rootProject.target == "legacy-fabric") {
+            implementation("com.google.guava:guava:12.0.1")
+        }
         implementation("fmllibs:argo:2.25")
 
         modImplementation("com.github.thecatcore.CursedMixinExtensions:fabric:1.0.0") {
@@ -222,9 +247,6 @@ allprojects {
 //        modImplementation(fabricApi.legacyFabricModule("legacy-fabric-logger-api-v1", "${project.legacyfabric_version}+${project.minecraft_version}")) {
 //            exclude(module: 'fabric-loader')
 //        }
-        ornitheImplementation("net.legacyfabric.ornithed.legacy-fabric-api:legacy-fabric-api:${project.legacyfabric_version}+${project.minecraft_version}") {
-            exclude(module: 'fabric-loader')
-        }
         modImplementation("maven.modrinth:spasm:0.2")
 
         modImplementation("com.github.thecatcore:WFVAIO:1.2.1") {
@@ -237,14 +259,34 @@ allprojects {
             transitive = false
         }
 
-        fabricApi.osl(2, project.minecraft_version, project.osl_version).forEach {
-            ornitheImplementation(it)
-        }
+        if (rootProject.target == "legacy-fabric") {
+            ornitheImplementation("net.legacyfabric.ornithed.legacy-fabric-api:legacy-fabric-api:${project.legacyfabric_version}+${project.minecraft_version}") {
+                exclude(module: 'fabric-loader')
+            }
 
-        ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
+            fabricApi.osl(2, project.minecraft_version, project.osl_version).forEach {
+                ornitheImplementation(it)
+            }
 
-        ornitheLibraries.forEach {
-            runtimeOnly(it)
+            ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
+
+            ornitheLibraries.forEach {
+                runtimeOnly(it)
+            }
+        } else {
+            modImplementation("net.legacyfabric.ornithed.legacy-fabric-api:legacy-fabric-api:${project.legacyfabric_version}+${project.minecraft_version}") {
+                exclude(module: 'fabric-loader')
+            }
+
+            fabricApi.osl(2, project.minecraft_version, project.osl_version).forEach {
+                modImplementation(it)
+            }
+
+            modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
+
+            ornitheLibraries.forEach {
+                implementation(it)
+            }
         }
     }
 
