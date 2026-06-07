@@ -8,6 +8,8 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mods.mixin.codechick
 import codechicken.core.ClassDiscoverer;
 import codechicken.core.IStringMatcher;
 import codechicken.core.asm.CodeChickenCorePlugin;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import cpw.mods.fml.common.ModClassLoader;
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.asm.ClassNodeHelper;
 import org.objectweb.asm.tree.ClassNode;
@@ -20,8 +22,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.zip.ZipException;
 
 @Mixin(ClassDiscoverer.class)
 public abstract class ClassDiscovererMixin {
@@ -46,6 +50,18 @@ public abstract class ClassDiscovererMixin {
     @Redirect(method = {"readFromZipFile", "readFromDirectory"}, at = @At(value = "INVOKE", target = "Lcodechicken/core/ClassDiscoverer;addClass(Ljava/lang/String;)V"), remap = false)
     private void checkClassBeforeLoadingIt(ClassDiscoverer instance, String resource) {
         checkAddClass(resource);
+    }
+
+    @WrapMethod(method = "readFromZipFile")
+    private void fixLwjgl3Crash(File file, Operation<Void> original) {
+        try {
+            original.call(file);
+        } catch (Exception e) {
+            if (e instanceof ZipException) {
+                return;
+            }
+            throw e;
+        }
     }
 
     /**
