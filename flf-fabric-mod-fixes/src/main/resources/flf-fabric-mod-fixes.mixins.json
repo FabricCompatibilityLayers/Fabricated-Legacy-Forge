@@ -12,8 +12,12 @@
     "common.osl.LocaleMixin"
   ],
   "client": [
+    "client.GuiAccessor",
     "client.modmenu.FabricIconHandlerAccessor",
-    "client.modmenu.self.LoaderMixin"
+    "client.modmenu.self.LoaderMixin",
+    "client.osl.self.fml.KeyBindingRegistryMixin",
+    "client.osl.self.fml.KeyHandlerMixin",
+    "client.osl.self.forge.GuiControlsScrollPanelMixin"
   ],
   "injectors": {
     "defaultRequire": 1
