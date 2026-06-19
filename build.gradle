@@ -260,30 +260,10 @@ allprojects {
         }
 
         if (rootProject.target == "legacy-fabric") {
-            ornitheImplementation("net.legacyfabric.ornithed.legacy-fabric-api:legacy-fabric-api:${project.legacyfabric_version}+${project.minecraft_version}") {
-                exclude(module: 'fabric-loader')
-            }
-
-            fabricApi.osl(2, project.minecraft_version, project.osl_version).forEach {
-                ornitheImplementation(it)
-            }
-
-            ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
-
             ornitheLibraries.forEach {
                 runtimeOnly(it)
             }
         } else {
-            modImplementation("net.legacyfabric.ornithed.legacy-fabric-api:legacy-fabric-api:${project.legacyfabric_version}+${project.minecraft_version}") {
-                exclude(module: 'fabric-loader')
-            }
-
-            fabricApi.osl(2, project.minecraft_version, project.osl_version).forEach {
-                modImplementation(it)
-            }
-
-            modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
-
             ornitheLibraries.forEach {
                 implementation(it)
             }

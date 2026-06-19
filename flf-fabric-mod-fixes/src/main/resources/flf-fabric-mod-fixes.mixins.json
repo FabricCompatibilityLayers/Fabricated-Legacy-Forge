@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixinextras": {
+    "minVersion": "0.5.0-rc.2"
+  },
+  "server": [],
+  "mixins": [
+    "common.legacyfabric.FabricItemGroupMixin",
+    "common.osl.LocaleMixin"
+  ],
+  "client": [
+    "client.modmenu.FabricIconHandlerAccessor",
+    "client.modmenu.self.LoaderMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "plugin": "io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.FabricModsMixinPlugin"
+}

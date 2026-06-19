@@ -14,12 +14,13 @@ package cpw.mods.fml.relauncher;
 
 import io.github.fabriccompatibilitylayers.fabricatedfml.forged.ClassLoaderUtils;
 import io.github.fabriccompatibiltylayers.modremappingapi.api.v1.ClassTransformer;
-import net.legacyfabric.fabric.api.logger.v1.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public interface IClassTransformer extends ClassTransformer
 {
@@ -27,7 +28,7 @@ public interface IClassTransformer extends ClassTransformer
 
     // Fabricated FML
     static final List<String> CLASS_NAMES = new ArrayList<>();
-    static final Logger LOGGER = Logger.get("Fabricated-FML", "ClassTransformers");
+    static final Logger LOGGER = Logger.getLogger("Fabricated-FML", "ClassTransformers");
 
     Map<IClassTransformer, List<String>> transformed = new HashMap<>();
 
@@ -37,7 +38,7 @@ public interface IClassTransformer extends ClassTransformer
         byte[] transformed = this.transform(name, original);
 
         if (original != transformed && !this.toString().startsWith("cpw.mods.fml.common.asm.transformers.SideTransformer")) {
-            LOGGER.debug(name + " transformed by " + this);
+            LOGGER.log(Level.FINE, name + " transformed by " + this);
         }
 
         return transformed;
@@ -59,7 +60,7 @@ public interface IClassTransformer extends ClassTransformer
         }
 
         if (transformed.get(this).contains(s)) {
-            LOGGER.warn("Detected transformation loop for class " + s + " in ClassTransformer " + className);
+            LOGGER.log(Level.WARNING, "Detected transformation loop for class " + s + " in ClassTransformer " + className);
             return false;
         }
 

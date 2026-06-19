@@ -30,4 +30,5 @@ rootProject.name = 'Fabricated-Legacy-Forge'
 include("fabricated-fml")
 include("fabricated-forge")
 include("fabricated-forge-server-stubs")
-include("flf-mod-fixes")
+include("flf-forge-mod-fixes")
+include("flf-fabric-mod-fixes")

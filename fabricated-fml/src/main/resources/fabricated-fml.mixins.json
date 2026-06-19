@@ -47,8 +47,7 @@
     "common.WorldInfoMixin",
     "common.WorldMixin",
     "common.WorldProviderMixin",
-    "common.WorldTypeMixin",
-    "osl.LocaleMixin"
+    "common.WorldTypeMixin"
   ],
   "client": [
     "client.GameSettingsMixin",
@@ -72,8 +71,7 @@
     "client.TexturePortalFXMixin",
     "client.TextureWatchFXMixin",
     "client.TextureWaterFlowFXMixin",
-    "client.TextureWaterFXMixin",
-    "modmenu.FabricIconHandlerAccessor"
+    "client.TextureWaterFXMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "id": "flf-fabric-mod-fixes",
+  "version": "${version}",
+  "name": "Fabricated Legacy Forge: Fabric Mod Fixes",
+  "description": "",
+  "authors": [
+    "CatCore"
+  ],
+  "contributors": [],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/fabricated-forge",
+    "sources": "https://github.com/thecatcore/Fabricated-Legacy-Forge",
+    "issues": "https://github.com/thecatcore/Fabricated-Legacy-Forge/issues"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/fabricated-forge/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "mod-remapper-api:modremapper_v2": [
+      "io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.ForgeModsRemapper"
+    ],
+    "preLaunch": [
+    ],
+    "mixinsquared": [
+      "io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.legacyfabric.LFAPIMixinCanceller"
+    ]
+  },
+  "mixins": [
+    "flf-fabric-mod-fixes.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "minecraft": "${mc_version}",
+    "mod-remapping-api": ">=${mrapi_version}",
+    "fabricated-fml": "*",
+    "fabricated-forge": "*"
+  }
+}

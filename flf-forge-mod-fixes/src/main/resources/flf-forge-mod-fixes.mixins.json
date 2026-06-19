@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.fabriccompatibilitylayers.fabricatedforge.mods.forge.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixinextras": {
+    "minVersion": "0.5.0-rc.2"
+  },
+  "server": [],
+  "mixins": [
+    "codechickencore.ClassDiscovererMixin",
+    "codechickencore.ClassMappingMixin",
+    "codechickencore.ClassOverriderMixin",
+    "codechickencore.FieldMappingMixin",
+    "codechickencore.MethodMappingMixin",
+    "nei.TMIUninstallerMixin"
+  ],
+  "client": [
+    "nei.GuiContainerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "plugin": "io.github.fabriccompatibilitylayers.fabricatedforge.mods.forge.ForgeModsMixinPlugin"
+}

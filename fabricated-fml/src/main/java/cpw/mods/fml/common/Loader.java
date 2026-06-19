@@ -21,10 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
-import io.github.fabriccompatibilitylayers.fabricatedfml.compat.modmenu.ModMenuUtils;
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.Constants;
 import io.github.fabriccompatibilitylayers.modremappingapi.api.v2.CacheHandler;
 import net.fabricmc.loader.api.FabricLoader;
@@ -39,14 +37,12 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultiset;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.collect.Multiset.Entry;
 import com.google.common.collect.Multisets;
 import com.google.common.collect.Ordering;
-import com.google.common.collect.Sets.SetView;
 import com.google.common.collect.TreeMultimap;
 
 import cpw.mods.fml.common.LoaderState.ModState;
@@ -645,7 +641,6 @@ public class Loader
         modController.transition(LoaderState.AVAILABLE);
         modController.distributeStateMessage(LoaderState.AVAILABLE);
         FMLLog.info("Forge Mod Loader has successfully loaded %d mod%s", mods.size(), mods.size()==1 ? "" : "s");
-        if (FabricLoader.getInstance().isModLoaded("modmenu")) ModMenuUtils.addFMLMods(mods);
     }
 
     public ICrashCallable getCallableCrashInformation()
