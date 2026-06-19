@@ -29,7 +29,7 @@ import cpw.mods.fml.common.versioning.DefaultArtifactVersion;
 import cpw.mods.fml.common.versioning.VersionRange;
 
 import net.minecraft.src.NetHandler;
-import net.minecraft.src.NetworkManager;
+import net.minecraft.src.INetworkManager;
 
 public class ModMissingPacket extends FMLPacket
 {
@@ -98,7 +98,7 @@ public class ModMissingPacket extends FMLPacket
     }
 
     @Override
-    public void execute(NetworkManager network, FMLNetworkHandler handler, NetHandler netHandler, String userName)
+    public void execute(INetworkManager network, FMLNetworkHandler handler, NetHandler netHandler, String userName)
     {
         FMLCommonHandler.instance().getSidedDelegate().displayMissingMods(this);
     }

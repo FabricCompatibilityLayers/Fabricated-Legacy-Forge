@@ -20,6 +20,7 @@ import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.TickType;
 import cpw.mods.fml.common.asm.SideOnly;
 
@@ -421,7 +422,7 @@ public abstract class BaseMod implements cpw.mods.fml.common.modloader.BaseModPr
      * Called when a client logs out of the server.
      */
     @Override
-    public void onClientLogout(NetworkManager mgr)
+    public void onClientLogout(INetworkManager mgr)
     {
 
     }

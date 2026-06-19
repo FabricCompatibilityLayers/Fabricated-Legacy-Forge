@@ -2,8 +2,6 @@ accessWidener	v2	named
 accessible	class	net/minecraft/src/ComponentVillage
 accessible	method	net/minecraft/src/BlockChest	func_72292_n	(Lnet/minecraft/src/World;III)Z
 accessible	method	net/minecraft/src/TileEntity	func_70306_a	(Ljava/lang/Class;Ljava/lang/String;)V
-accessible	field	net/minecraft/src/StringTranslate	field_74815_b	Ljava/util/Properties;
-accessible	field	net/minecraft/src/StringTranslate	field_74813_d	Ljava/lang/String;
 accessible	class	net/minecraft/src/GuiButtonMerchant
 accessible	field	net/minecraft/src/RenderEngine	field_78367_h	Ljava/util/List;
 accessible	field	net/minecraft/src/RenderEngine	field_78366_k	Lnet/minecraft/src/TexturePackList;
@@ -33,20 +31,28 @@ accessible	field	net/minecraft/src/RenderBlocks	field_78655_Y	I
 accessible	field	net/minecraft/src/RenderBlocks	field_78660_Z	I
 accessible	method	net/minecraft/src/RenderBlocks	func_78595_a	()V
 accessible	method	net/minecraft/src/RenderBlocks	func_78591_a	(DDDDDDFD)V
+accessible	method	net/minecraft/src/RenderBlocks	func_82774_a	(I)V
 accessible	method	net/minecraft/src/RenderBlocks	func_78602_a	(IIII)I
 accessible	method	net/minecraft/src/RenderBlocks	func_78596_a	(IIILnet/minecraft/src/Material;)F
+accessible	method	net/minecraft/src/RenderBlocks	func_82775_a	(Lnet/minecraft/src/BlockAnvil;III)Z
+accessible	method	net/minecraft/src/RenderBlocks	func_82777_a	(Lnet/minecraft/src/BlockAnvil;IIIIFFFFZZI)F
+accessible	method	net/minecraft/src/RenderBlocks	func_82776_a	(Lnet/minecraft/src/BlockAnvil;IIIIZ)Z
+accessible	method	net/minecraft/src/RenderBlocks	func_82778_a	(Lnet/minecraft/src/BlockBeacon;III)Z
 accessible	method	net/minecraft/src/RenderBlocks	func_78585_a	(Lnet/minecraft/src/BlockBrewingStand;III)Z
 accessible	method	net/minecraft/src/RenderBlocks	func_78615_a	(Lnet/minecraft/src/BlockCauldron;III)Z
 accessible	method	net/minecraft/src/RenderBlocks	func_78616_a	(Lnet/minecraft/src/BlockCocoa;III)Z
 accessible	method	net/minecraft/src/RenderBlocks	func_78618_a	(Lnet/minecraft/src/BlockDragonEgg;III)Z
 accessible	method	net/minecraft/src/RenderBlocks	func_78580_a	(Lnet/minecraft/src/BlockFenceGate;III)Z
 accessible	method	net/minecraft/src/RenderBlocks	func_78582_a	(Lnet/minecraft/src/BlockFence;III)Z
+accessible	method	net/minecraft/src/RenderBlocks	func_82780_a	(Lnet/minecraft/src/BlockFlowerPot;III)Z
 accessible	method	net/minecraft/src/RenderBlocks	func_78586_a	(Lnet/minecraft/src/BlockRail;III)Z
+accessible	method	net/minecraft/src/RenderBlocks	func_78565_t	(Lnet/minecraft/src/BlockStairs;III)Z
 accessible	method	net/minecraft/src/RenderBlocks	func_78592_a	(Lnet/minecraft/src/BlockPane;III)Z
 accessible	method	net/minecraft/src/RenderBlocks	func_78623_a	(Lnet/minecraft/src/Block;DDDDD)V
 accessible	method	net/minecraft/src/RenderBlocks	func_78613_a	(Lnet/minecraft/src/Block;DDDI)V
-accessible	method	net/minecraft/src/RenderBlocks	func_78599_a	(Lnet/minecraft/src/Block;IDDD)V
+accessible	method	net/minecraft/src/RenderBlocks	func_78579_b	(Lnet/minecraft/src/Block;IDDD)V
 accessible	method	net/minecraft/src/RenderBlocks	func_78575_a	(Lnet/minecraft/src/Block;IDDDD)V
+accessible	method	net/minecraft/src/RenderBlocks	func_78599_a	(Lnet/minecraft/src/Block;IDDDF)V
 accessible	method	net/minecraft/src/RenderBlocks	func_78600_a	(Lnet/minecraft/src/Block;IF)V
 accessible	method	net/minecraft/src/RenderBlocks	func_78606_a	(Lnet/minecraft/src/Block;IIDDDD)V
 accessible	method	net/minecraft/src/RenderBlocks	func_78583_a	(Lnet/minecraft/src/Block;III)V
@@ -54,6 +60,7 @@ accessible	method	net/minecraft/src/RenderBlocks	func_78578_a	(Lnet/minecraft/sr
 accessible	method	net/minecraft/src/RenderBlocks	func_78604_a	(Lnet/minecraft/src/Block;IIII)V
 accessible	method	net/minecraft/src/RenderBlocks	func_78587_a	(Lnet/minecraft/src/Block;IIIZ)V
 accessible	method	net/minecraft/src/RenderBlocks	func_78588_a	(Lnet/minecraft/src/Block;Lnet/minecraft/src/World;IIII)V
+accessible	method	net/minecraft/src/RenderBlocks	func_82779_a	(Lnet/minecraft/src/BlockWall;III)Z
 accessible	field	net/minecraft/src/RenderBlocks	field_78669_a	Lnet/minecraft/src/IBlockAccess;
 accessible	field	net/minecraft/src/RenderBlocks	field_78650_aA	F
 accessible	field	net/minecraft/src/RenderBlocks	field_78651_aB	F
@@ -99,7 +106,6 @@ accessible	field	net/minecraft/src/RenderBlocks	field_78663_az	F
 accessible	method	net/minecraft/src/RenderBlocks	func_78607_b	(DDDDDDFD)V
 accessible	method	net/minecraft/src/RenderBlocks	func_78597_b	(I)Z
 accessible	method	net/minecraft/src/RenderBlocks	func_78617_b	(Lnet/minecraft/src/Block;DDDI)V
-accessible	method	net/minecraft/src/RenderBlocks	func_78579_b	(Lnet/minecraft/src/Block;IDDD)V
 accessible	method	net/minecraft/src/RenderBlocks	func_78612_b	(Lnet/minecraft/src/Block;III)Z
 accessible	method	net/minecraft/src/RenderBlocks	func_78593_b	(Lnet/minecraft/src/Block;IIIZ)Z
 accessible	field	net/minecraft/src/RenderBlocks	field_78667_b	Z
@@ -145,24 +151,27 @@ accessible	method	net/minecraft/src/RenderBlocks	func_78581_r	(Lnet/minecraft/sr
 accessible	field	net/minecraft/src/RenderBlocks	field_78697_r	F
 accessible	method	net/minecraft/src/RenderBlocks	func_78584_s	(Lnet/minecraft/src/Block;III)Z
 accessible	field	net/minecraft/src/RenderBlocks	field_78695_s	F
-accessible	method	net/minecraft/src/RenderBlocks	func_78565_t	(Lnet/minecraft/src/Block;III)Z
-accessible	field	net/minecraft/src/RenderBlocks	field_78693_t	F
 accessible	method	net/minecraft/src/RenderBlocks	func_78601_u	(Lnet/minecraft/src/Block;III)Z
-accessible	field	net/minecraft/src/RenderBlocks	field_78691_u	F
+accessible	field	net/minecraft/src/RenderBlocks	field_78693_t	F
 accessible	method	net/minecraft/src/RenderBlocks	func_78567_v	(Lnet/minecraft/src/Block;III)Z
-accessible	field	net/minecraft/src/RenderBlocks	field_78689_v	F
+accessible	field	net/minecraft/src/RenderBlocks	field_78691_u	F
 accessible	method	net/minecraft/src/RenderBlocks	func_78574_w	(Lnet/minecraft/src/Block;III)Z
-accessible	field	net/minecraft/src/RenderBlocks	field_78687_w	F
+accessible	field	net/minecraft/src/RenderBlocks	field_78689_v	F
 accessible	method	net/minecraft/src/RenderBlocks	func_78610_x	(Lnet/minecraft/src/Block;III)Z
+accessible	field	net/minecraft/src/RenderBlocks	field_78687_w	F
 accessible	field	net/minecraft/src/RenderBlocks	field_78712_x	F
 accessible	field	net/minecraft/src/RenderBlocks	field_78710_y	F
 accessible	field	net/minecraft/src/RenderBlocks	field_78708_z	F
 accessible	field	net/minecraft/src/RenderManager	field_78729_o	Ljava/util/Map;
+accessible	class	net/minecraft/src/CallableMinecraftVersion
+accessible	method	net/minecraft/src/CallableMinecraftVersion	<init>	(Lnet/minecraft/src/CrashReport;)V
+accessible	field	net/minecraft/src/RenderBiped	field_82424_k	[Ljava/lang/String;
+mutable	field	net/minecraft/src/RenderBiped	field_82424_k	[Ljava/lang/String;
 accessible	field	net/minecraft/src/RenderPlayer	field_77110_j	[Ljava/lang/String;
 mutable	field	net/minecraft/src/RenderPlayer	field_77110_j	[Ljava/lang/String;
 accessible	field	net/minecraft/src/TileEntityRenderer	field_76966_m	Ljava/util/Map;
-accessible	class	net/minecraft/src/CallableMinecraftVersion
-accessible	method	net/minecraft/src/CallableMinecraftVersion	<init>	(Lnet/minecraft/src/CrashReport;)V
+accessible	field	net/minecraft/src/StringTranslate	field_74815_b	Ljava/util/Properties;
+accessible	field	net/minecraft/src/StringTranslate	field_74813_d	Ljava/lang/String;
 accessible	method	net/minecraft/src/EntityPlayerMP	func_71117_bO	()V
 accessible	field	net/minecraft/src/EntityPlayerMP	field_71139_cq	I
 accessible	method	net/minecraft/src/NetLoginHandler	func_72531_a	(Lnet/minecraft/src/NetLoginHandler;Z)Z
@@ -175,8 +184,8 @@ accessible	field	net/minecraft/src/EntityList	field_75625_b	Ljava/util/Map;
 accessible	field	net/minecraft/src/EntityList	field_75626_c	Ljava/util/Map;
 accessible	field	net/minecraft/src/EntityList	field_75623_d	Ljava/util/Map;
 accessible	field	net/minecraft/src/EntityLiving	field_70736_aM	I
-accessible	field	net/minecraft/src/EntityLiving	field_70714_bg	Lnet/minecraft/src/EntityAITasks;
 accessible	field	net/minecraft/src/EntityLiving	field_70703_bu	Z
+accessible	field	net/minecraft/src/EntityLiving	field_70714_bg	Lnet/minecraft/src/EntityAITasks;
 accessible	field	net/minecraft/src/EntityAITasks	field_75782_a	Ljava/util/List;
 accessible	class	net/minecraft/src/EntityAITaskEntry
 accessible	field	net/minecraft/src/EntityAnimal	field_70881_d	I

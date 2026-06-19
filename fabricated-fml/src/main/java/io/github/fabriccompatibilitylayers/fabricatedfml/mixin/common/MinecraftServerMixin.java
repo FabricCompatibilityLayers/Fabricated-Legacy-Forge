@@ -73,7 +73,7 @@ public class MinecraftServerMixin {
     }
 
     @IfModAbsent(value = "fabricated-forge")
-    @Inject(method = "func_71190_q", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Profiler;func_76318_c(Ljava/lang/String;)V", ordinal = 0))
+    @Inject(method = "func_71190_q", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Profiler;func_76319_b()V", ordinal = 2))
     private void fml$onPostWorldTick(CallbackInfo ci, @Local WorldServer var4) {
         FMLCommonHandler.instance().onPostWorldTick(var4);
     }

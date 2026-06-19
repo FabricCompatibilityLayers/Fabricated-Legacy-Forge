@@ -16,16 +16,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SlotCrafting.class)
 public class SlotCraftingMixin extends Slot {
-    @Shadow private EntityPlayer field_75238_b;
-
     @Shadow @Final private IInventory field_75239_a;
 
     public SlotCraftingMixin(IInventory p_i3616_1_, int p_i3616_2_, int p_i3616_3_, int p_i3616_4_) {
         super(p_i3616_1_, p_i3616_2_, p_i3616_3_, p_i3616_4_);
     }
 
-    @Inject(method = "func_75213_b", at = @At("HEAD"))
-    private void fml$onItemCrafted(ItemStack p_75213_1_, CallbackInfo ci) {
-        GameRegistry.onItemCrafted(field_75238_b, p_75213_1_, field_75239_a);
+    @Inject(method = "func_82870_a", at = @At("HEAD"))
+    private void fml$onItemCrafted(EntityPlayer p_82870_1_, ItemStack p_82870_2_, CallbackInfo ci) {
+        GameRegistry.onItemCrafted(p_82870_1_, p_82870_2_, field_75239_a);
     }
 }

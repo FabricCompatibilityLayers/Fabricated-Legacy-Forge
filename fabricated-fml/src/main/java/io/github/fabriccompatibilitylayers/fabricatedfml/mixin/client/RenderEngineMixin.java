@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import cpw.mods.fml.client.TextureFXManager;
 import cpw.mods.fml.common.FMLLog;
 import fr.catcore.cursedmixinextensions.annotations.Public;
@@ -26,7 +27,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.List;
@@ -93,49 +93,51 @@ public abstract class RenderEngineMixin {
         TextureFXManager.instance().onPreRegisterEffect(p_78355_1_);
     }
 
+    @Inject(method = "func_78343_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderEngine;func_82772_a(Lnet/minecraft/src/TextureFX;I)I"))
+    private void fml$onUpdateTextureEffect(CallbackInfo ci,
+                                           @Local(ordinal = 0)LocalIntRef var1,
+                                           @Local TextureFX var3) {
+        if (TextureFXManager.instance().onUpdateTextureEffect(var3)) {
+            var1.set(this.func_82772_a(var3, var1.get()));
+        }
+    }
+
     /**
-     * @author cpw?
-     * @reason changes to loop with extra jumps and operations
+     * @author CatCore
+     * @reason logic change
      */
     @Overwrite
-    public void func_78343_a() {
-        int var1 = -1;
+    public int func_82772_a(TextureFX p_82772_1_, int p_82772_2_) {
+        Dimension dim = TextureFXManager.instance().getTextureDimensions(p_82772_1_);
+        int tWidth  = dim.width >> 4;
+        int tHeight = dim.height >> 4;
+        int tLen = tWidth * tHeight << 2;
 
-        for (Object o : this.field_78367_h) {
-            TextureFX var3 = (TextureFX) o;
-            var3.field_76851_c = this.field_78365_j.field_74337_g;
-            if (!TextureFXManager.instance().onUpdateTextureEffect(var3)) {
-                continue;
-            }
+        if (p_82772_1_.field_76852_a.length == tLen)
+        {
+            this.field_78358_g.clear();
+            this.field_78358_g.put(p_82772_1_.field_76852_a);
+            this.field_78358_g.position(0).limit(p_82772_1_.field_76852_a.length);
+        }
+        else
+        {
+            TextureFXManager.instance().scaleTextureFXData(p_82772_1_.field_76852_a, field_78358_g, tWidth, tLen);
+        }
 
-            Dimension dim = TextureFXManager.instance().getTextureDimensions(var3);
-            int tWidth = dim.width >> 4;
-            int tHeight = dim.height >> 4;
-            int tLen = tWidth * tHeight << 2;
+        if (p_82772_1_.field_76850_b != p_82772_2_) {
+            p_82772_1_.func_76845_a((RenderEngine) (Object) this);
+            p_82772_2_ = p_82772_1_.field_76850_b;
+        }
 
-            if (var3.field_76852_a.length == tLen) {
-                ((Buffer) this.field_78358_g).clear();
-                this.field_78358_g.put(var3.field_76852_a);
-                ((Buffer) this.field_78358_g).position(0).limit(var3.field_76852_a.length);
-            } else {
-                TextureFXManager.instance().scaleTextureFXData(var3.field_76852_a, field_78358_g, tWidth, tLen);
-            }
-
-            if (var3.field_76850_b != var1) {
-                var3.func_76845_a((RenderEngine) (Object) this);
-                var1 = var3.field_76850_b;
-            }
-
-            for (int var4 = 0; var4 < var3.field_76849_e; ++var4) {
-                int xOffset = var3.field_76850_b % 16 * tWidth + var4 * tWidth;
-
-                for (int var5 = 0; var5 < var3.field_76849_e; ++var5) {
-                    int yOffset = var3.field_76850_b / 16 * tHeight + var5 * tHeight;
-                    GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, xOffset, yOffset, tWidth, tHeight, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, this.field_78358_g);
-                }
+        for(int var3 = 0; var3 < p_82772_1_.field_76849_e; ++var3) {
+            int xOffset = p_82772_1_.field_76850_b % 16 * tWidth + var3 * tWidth;
+            for(int var4 = 0; var4 < p_82772_1_.field_76849_e; ++var4) {
+                int yOffset = p_82772_1_.field_76850_b / 16 * tHeight + var4 * tHeight;
+                GL11.glTexSubImage2D(GL11.GL_TEXTURE_2D, 0, xOffset, yOffset, tWidth, tHeight, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, this.field_78358_g);
             }
         }
 
+        return p_82772_2_;
     }
 
     /**
@@ -144,7 +146,7 @@ public abstract class RenderEngineMixin {
      */
     @Overwrite
     public void func_78352_b() {
-        TexturePackBase var1 = this.field_78366_k.func_77292_e();
+        ITexturePack var1 = this.field_78366_k.func_77292_e();
 
         for(int var3 : (Set<Integer>)this.field_78360_e.func_76039_d()) {
             BufferedImage var4 = (BufferedImage)this.field_78360_e.func_76041_a(var3);
@@ -207,6 +209,5 @@ public abstract class RenderEngineMixin {
                 var6.printStackTrace();
             }
         }
-
     }
 }

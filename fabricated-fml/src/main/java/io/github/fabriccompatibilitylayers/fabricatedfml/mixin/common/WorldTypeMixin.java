@@ -41,13 +41,18 @@ public class WorldTypeMixin implements FMLWorldTypeExtension {
     @Override
     public WorldChunkManager getChunkManager(World world)
     {
-        return (Object) this == field_77138_c ? new WorldChunkManagerHell(BiomeGenBase.field_76772_c, 0.5F, 0.5F) : new WorldChunkManager(world);
+        if ((Object) this == field_77138_c) {
+            FlatGeneratorInfo var1 = FlatGeneratorInfo.func_82651_a(world.func_72912_H().func_82571_y());
+            return new WorldChunkManagerHell(BiomeGenBase.field_76773_a[var1.func_82648_a()], 0.5F, 0.5F);
+        } else {
+            return new WorldChunkManager(world);
+        }
     }
 
     @Override
-    public IChunkProvider getChunkGenerator(World world)
+    public IChunkProvider getChunkGenerator(World world, String generatorOptions)
     {
-        return ((Object) this == field_77138_c ? new ChunkProviderFlat(world, world.func_72905_C(), world.func_72912_H().func_76089_r()) : new ChunkProviderGenerate(world, world.func_72905_C(), world.func_72912_H().func_76089_r()));
+        return ((Object) this == field_77138_c ? new ChunkProviderFlat(world, world.func_72905_C(), world.func_72912_H().func_76089_r(), generatorOptions) : new ChunkProviderGenerate(world, world.func_72905_C(), world.func_72912_H().func_76089_r()));
     }
 
     @Override

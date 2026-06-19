@@ -91,7 +91,7 @@ public class RelaunchLibraryManager
             {
                 actualClassLoader.addTransformerExclusion(s);
                 Class<?> coreModClass = Class.forName(s, true, actualClassLoader);
-                TransformerExclusions trExclusions = coreModClass.getAnnotation(TransformerExclusions.class);
+                TransformerExclusions trExclusions = coreModClass.getAnnotation(IFMLLoadingPlugin.TransformerExclusions.class);
                 if (trExclusions!=null)
                 {
                     for (String st : trExclusions.value())
@@ -376,7 +376,7 @@ public class RelaunchLibraryManager
                 downloadMonitor.updateProgressString("Loading coremod %s", coreMod.getName());
                 classLoader.addTransformerExclusion(fmlCorePlugin);
                 Class<?> coreModClass = Class.forName(fmlCorePlugin, false, classLoader);
-                TransformerExclusions trExclusions = coreModClass.getAnnotation(TransformerExclusions.class);
+                TransformerExclusions trExclusions = coreModClass.getAnnotation(IFMLLoadingPlugin.TransformerExclusions.class);
                 if (trExclusions!=null)
                 {
                     for (String st : trExclusions.value())

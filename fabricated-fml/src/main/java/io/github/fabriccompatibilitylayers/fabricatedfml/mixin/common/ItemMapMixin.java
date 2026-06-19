@@ -13,7 +13,6 @@ import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemMap.class)
@@ -30,10 +29,5 @@ public class ItemMapMixin {
         }
 
         return -1;
-    }
-
-    @Inject(method = "func_77622_d", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/MapData;func_76185_a()V"))
-    private void fml$writeDimensionId(ItemStack p_77622_1_, World p_77622_2_, EntityPlayer p_77622_3_, CallbackInfo ci, @Local MapData var5) {
-        ((MapDataExtension) var5).setDimensionId(p_77622_2_.field_73011_w.field_76574_g);
     }
 }

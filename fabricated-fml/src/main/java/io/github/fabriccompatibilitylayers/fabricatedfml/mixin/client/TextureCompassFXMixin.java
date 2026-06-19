@@ -7,6 +7,7 @@ package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client;
 
 import cpw.mods.fml.client.FMLTextureFX;
 import fr.catcore.cursedmixinextensions.annotations.ChangeSuperClass;
+import fr.catcore.cursedmixinextensions.annotations.Public;
 import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
 import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.IFMLTextureFXExtension;
@@ -30,6 +31,15 @@ public abstract class TextureCompassFXMixin extends TextureFX implements IFMLTex
 
     @Shadow private Minecraft field_76865_g;
 
+    @Public
+    private static int stileSizeBase = 16;
+    @Public
+    private static int stileSizeSquare = 256;
+    @Public
+    private static int stileSizeMask = 15;
+    @Public
+    private static int stileSizeSquareMask = 255;
+
     public TextureCompassFXMixin(int icon) {
         super(icon);
     }
@@ -49,6 +59,10 @@ public abstract class TextureCompassFXMixin extends TextureFX implements IFMLTex
     @Override
     public void setup() {
         this.superSetup();
+        stileSizeBase = getTileSizeBase();
+        stileSizeSquare = getTileSizeSquare();
+        stileSizeMask = getTileSizeMask();
+        stileSizeSquareMask = getTileSizeSquareMask();
         field_76867_h = new int[getTileSizeSquare()];
         try
         {
@@ -61,42 +75,42 @@ public abstract class TextureCompassFXMixin extends TextureFX implements IFMLTex
         }
     }
 
-    @ModifyConstant(method = "func_76846_a", constant = @Constant(intValue = 256))
-    private int fml$changeTileSizeSquare(int constant) {
-        return getTileSizeSquare();
+    @ModifyConstant(method = "func_82390_a", constant = @Constant(intValue = 256))
+    private static int fml$changeTileSizeSquare(int constant) {
+        return stileSizeSquare;
     }
 
-    @ModifyConstant(method = "func_76846_a", constant = @Constant(intValue = 4, ordinal = 3))
-    private int fml$changeTileSizeBaseLoop1(int constant) {
-        return getTileSizeBase() >> 2;
+    @ModifyConstant(method = "func_82390_a", constant = @Constant(intValue = 4, ordinal = 3))
+    private static int fml$changeTileSizeBaseLoop1(int constant) {
+        return stileSizeBase >> 2;
     }
 
-    @ModifyConstant(method = "func_76846_a", constant = @Constant(intValue = -4, ordinal = 0))
-    private int fml$changeTileSizeBaseLoop2(int constant) {
-        return -(getTileSizeBase() >> 2);
+    @ModifyConstant(method = "func_82390_a", constant = @Constant(intValue = -4, ordinal = 0))
+    private static int fml$changeTileSizeBaseLoop2(int constant) {
+        return -(stileSizeBase >> 2);
     }
 
-    @ModifyConstant(method = "func_76846_a", constant = @Constant(doubleValue = 8.5f))
-    private double fml$changeTileSizeBaseFloat1(double constant) {
-        return (getTileSizeBase() >> 1) + 0.5D;
+    @ModifyConstant(method = "func_82390_a", constant = @Constant(doubleValue = 8.5f))
+    private static double fml$changeTileSizeBaseFloat1(double constant) {
+        return (stileSizeBase >> 1) + 0.5D;
     }
 
-    @ModifyConstant(method = "func_76846_a", constant = @Constant(doubleValue = 7.5f))
-    private double fml$changeTileSizeBaseFloat2(double constant) {
-        return (getTileSizeBase() >> 1) - 0.5D;
+    @ModifyConstant(method = "func_82390_a", constant = @Constant(doubleValue = 7.5f))
+    private static double fml$changeTileSizeBaseFloat2(double constant) {
+        return (stileSizeBase >> 1) - 0.5D;
     }
 
-    @ModifyConstant(method = "func_76846_a", constant = {
+    @ModifyConstant(method = "func_82390_a", constant = {
             @Constant(intValue = 16, ordinal = 1),
             @Constant(intValue = 16, ordinal = 2),
             @Constant(intValue = 16, ordinal = 3),
     })
-    private int fml$changeTileSizeBase(int constant) {
-        return getTileSizeBase();
+    private static int fml$changeTileSizeBase(int constant) {
+        return stileSizeBase;
     }
 
-    @ModifyConstant(method = "func_76846_a", constant = @Constant(intValue = -8))
-    private int fml$changeTileSizeBase2(int constant) {
-        return getTileSizeBase() >> 2;
+    @ModifyConstant(method = "func_82390_a", constant = @Constant(intValue = -8))
+    private static int fml$changeTileSizeBase2(int constant) {
+        return stileSizeBase >> 2;
     }
 }

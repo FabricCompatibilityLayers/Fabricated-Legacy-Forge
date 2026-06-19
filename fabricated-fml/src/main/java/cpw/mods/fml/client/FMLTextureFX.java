@@ -19,7 +19,8 @@ import java.util.logging.Logger;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.IFMLTextureFXExtension;
 import net.minecraft.src.RenderEngine;
 import net.minecraft.src.TextureFX;
-import net.minecraft.src.TexturePackBase;
+import net.minecraft.src.ITexturePack;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 
 public class FMLTextureFX extends TextureFX implements ITextureFX, IFMLTextureFXExtension
@@ -39,7 +40,7 @@ public class FMLTextureFX extends TextureFX implements ITextureFX, IFMLTextureFX
     @Override public void setErrored(boolean err){ errored = err; }
     @Override public boolean getErrored(){ return errored; }
     @Override
-    public void onTexturePackChanged(RenderEngine engine, TexturePackBase texturepack, Dimension dimensions)
+    public void onTexturePackChanged(RenderEngine engine, ITexturePack texturepack, Dimension dimensions)
     {
         onTextureDimensionsUpdate(dimensions.width, dimensions.height);
     }

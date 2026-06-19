@@ -20,8 +20,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.NetClientHandlerExtension;
-import io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client.NetClientHandlerAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.CrashReport;
@@ -335,7 +333,7 @@ public class FMLClientHandler implements IFMLSidedHandler
 
             if (entity instanceof IThrowableEntity)
             {
-                Entity thrower = client.field_71439_g.field_70157_k == packet.throwerId ? client.field_71439_g : wc.func_73024_a(packet.throwerId);
+                Entity thrower = client.field_71439_g.field_70157_k == packet.throwerId ? client.field_71439_g : wc.func_73045_a(packet.throwerId);
                 ((IThrowableEntity)entity).setThrower(thrower);
             }
 
@@ -379,7 +377,7 @@ public class FMLClientHandler implements IFMLSidedHandler
     @Override
     public void adjustEntityLocationOnClient(EntitySpawnAdjustmentPacket packet)
     {
-        Entity ent = client.field_71441_e.func_73024_a(packet.entityId);
+        Entity ent = client.field_71441_e.func_73045_a(packet.entityId);
         if (ent != null)
         {
             ent.field_70118_ct = packet.serverX;
@@ -436,18 +434,18 @@ public class FMLClientHandler implements IFMLSidedHandler
     @Override
     public void handleTinyPacket(NetHandler handler, Packet131MapData mapData)
     {
-        ((NetClientHandlerExtension)handler).fmlPacket131Callback(mapData);
+        ((NetClientHandler)handler).fmlPacket131Callback(mapData);
     }
 
     @Override
     public void setClientCompatibilityLevel(byte compatibilityLevel)
     {
-        NetClientHandlerAccessor.callSetConnectionCompatibilityLevel(compatibilityLevel);
+        NetClientHandler.setConnectionCompatibilityLevel(compatibilityLevel);
     }
 
     @Override
     public byte getClientCompatibilityLevel()
     {
-        return NetClientHandlerAccessor.callGetConnectionCompatibilityLevel();
+        return NetClientHandler.getConnectionCompatibilityLevel();
     }
 }

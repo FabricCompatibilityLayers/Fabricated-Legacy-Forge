@@ -25,6 +25,9 @@ public class WorldProviderMixin {
 
     @Shadow public boolean field_76576_e;
 
+    @Shadow
+    public String field_82913_c;
+
     /**
      * @author
      * @reason
@@ -42,7 +45,7 @@ public class WorldProviderMixin {
     @Overwrite
     public IChunkProvider func_76555_c()
     {
-        return ((FMLWorldTypeExtension) this.field_76577_b).getChunkGenerator(this.field_76579_a);
+        return ((FMLWorldTypeExtension) this.field_76577_b).getChunkGenerator(this.field_76579_a, field_82913_c);
     }
 
     @ModifyReturnValue(method = "func_76557_i", at = @At("RETURN"))

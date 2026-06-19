@@ -21,10 +21,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
-import io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common.NetLoginHandlerAccessor;
 import net.minecraft.src.NetHandler;
 import net.minecraft.src.NetLoginHandler;
-import net.minecraft.src.NetworkManager;
+import net.minecraft.src.INetworkManager;
 import net.minecraft.src.Packet250CustomPayload;
 
 import com.google.common.collect.Lists;
@@ -91,7 +90,7 @@ public class ModListResponsePacket extends FMLPacket
     }
 
     @Override
-    public void execute(NetworkManager network, FMLNetworkHandler handler, NetHandler netHandler, String userName)
+    public void execute(INetworkManager network, FMLNetworkHandler handler, NetHandler netHandler, String userName)
     {
         Map<String, ModContainer> indexedModList = Maps.newHashMap(Loader.instance().getIndexedModList());
         List<String> missingClientMods = Lists.newArrayList();

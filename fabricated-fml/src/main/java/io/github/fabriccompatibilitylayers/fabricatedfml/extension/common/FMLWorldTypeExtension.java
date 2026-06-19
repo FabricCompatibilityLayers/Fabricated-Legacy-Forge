@@ -15,7 +15,7 @@ import java.util.Random;
 public interface FMLWorldTypeExtension {
     WorldChunkManager getChunkManager(World world);
 
-    IChunkProvider getChunkGenerator(World world);
+    IChunkProvider getChunkGenerator(World world, String generatorOptions);
 
     int getMinimumSpawnHeight(World world);
 

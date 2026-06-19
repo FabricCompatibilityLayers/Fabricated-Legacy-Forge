@@ -30,8 +30,8 @@ public class RenderBlocksMixin {
     @Unique
     private static final List<Integer> VANILLA_MODEL_IDS = Arrays.asList(
             0, 31, 4, 13, 1, 19, 23, 6, 2, 3, 5, 8, 7, 9, 10, 27, 11,
-            12, 29, 30, 14, 15, 16, 17, 18, 20, 21,
-            24, 25, 26, 28
+            32, 12, 29, 30, 14, 15, 16, 17, 18, 20, 21,
+            24, 33, 35, 25, 26, 28, 34
     );
 
     @ModifyReturnValue(method = "func_78612_b", at = @At("RETURN"))
@@ -49,7 +49,7 @@ public class RenderBlocksMixin {
 
     @Unique
     private static final List<Integer> VANILLA_ITEM_MODEL_IDS_INVENTORY = Arrays.asList(
-            21, 11, 27, 10, 2, 6, 22, 13, 23, 19, 1, 0, 31, 16, 26
+            34, 35, 32, 21, 11, 27, 10, 2, 6, 22, 13, 23, 19, 1, 0, 31, 16, 26
     );
 
     @WrapOperation(method = "func_78600_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Block;func_71857_b()I", ordinal = 0))
@@ -68,7 +68,7 @@ public class RenderBlocksMixin {
 
     @Unique
     private static final List<Integer> VANILLA_ITEM_MODEL_IDS = Arrays.asList(
-            0, 31, 13, 10, 11, 27, 22, 21, 16, 26
+            0, 31, 13, 10, 11, 27, 22, 21, 16, 26, 32, 34, 35
     );
 
     @ModifyReturnValue(method = "func_78597_b", at = @At("RETURN"))

@@ -34,7 +34,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.src.ModTextureStatic;
 import net.minecraft.src.RenderEngine;
 import net.minecraft.src.TextureFX;
-import net.minecraft.src.TexturePackBase;
+import net.minecraft.src.ITexturePack;
 
 import org.lwjgl.opengl.GL11;
 
@@ -183,7 +183,7 @@ public class TextureFXManager
         return id;
     }
 
-    public void onTexturePackChange(RenderEngine engine, TexturePackBase texturepack, List<TextureFX> effects)
+    public void onTexturePackChange(RenderEngine engine, ITexturePack texturepack, List<TextureFX> effects)
     {
         pruneOldTextureFX(texturepack, effects);
 
@@ -200,7 +200,7 @@ public class TextureFXManager
 
     private HashMap<Integer, Dimension> textureDims = new HashMap<Integer, Dimension>();
     private IdentityHashMap<TextureFX, Integer> effectTextures = new IdentityHashMap<TextureFX, Integer>();
-    private TexturePackBase earlyTexturePack;
+    private ITexturePack earlyTexturePack;
     public void setTextureDimensions(int id, int width, int height, List<TextureFX> effects)
     {
         Dimension dim = new Dimension(width, height);
@@ -238,7 +238,7 @@ public class TextureFXManager
     }
 
 
-    public void loadTextures(TexturePackBase texturePack)
+    public void loadTextures(ITexturePack texturePack)
     {
         registerTextureOverrides(client.field_71446_o);
     }
@@ -273,7 +273,7 @@ public class TextureFXManager
     {
     }
 
-    public void onEarlyTexturePackLoad(TexturePackBase fallback)
+    public void onEarlyTexturePackLoad(ITexturePack fallback)
     {
         if (client==null) {
             // We're far too early- let's wait
@@ -284,7 +284,7 @@ public class TextureFXManager
     }
 
 
-    public void pruneOldTextureFX(TexturePackBase var1, List<TextureFX> effects)
+    public void pruneOldTextureFX(ITexturePack var1, List<TextureFX> effects)
     {
         ListIterator<TextureFX> li = addedTextureFX.listIterator();
         while (li.hasNext())
@@ -316,11 +316,6 @@ public class TextureFXManager
     public BufferedImage loadImageFromTexturePack(RenderEngine renderEngine, String path) throws IOException
     {
         InputStream image=client.field_71418_C.func_77292_e().func_77532_a(path);
-
-        if (image == null) {
-            image = client.field_71418_C.func_77292_e().func_77532_a("/" + path);
-        }
-
         if (image==null) {
             throw new RuntimeException(String.format("The requested image path %s is not found",path));
         }

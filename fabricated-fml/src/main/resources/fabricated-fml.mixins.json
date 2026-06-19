@@ -7,6 +7,7 @@
     "minVersion": "0.5.0-rc.2"
   },
   "server": [
+    "server.IBossDisplayDataMixin",
     "server.StringTranslateMixin"
   ],
   "mixins": [
@@ -18,14 +19,12 @@
     "common.EntityAIVillagerMateMixin",
     "common.EntityItemMixin",
     "common.EntityPlayerMixin",
-    "common.EntityPlayerMPMixin",
     "common.EntitySlimeMixin",
     "common.EntityTrackerEntryMixin",
     "common.EntityTrackerMixin",
     "common.EntityVillagerMixin",
     "common.GenLayerBiomeMixin",
     "common.ItemMapMixin",
-    "common.ItemMonsterPlacerMixin",
     "common.MapDataMixin",
     "common.MinecraftServerMixin",
     "common.NetHandlerMixin",

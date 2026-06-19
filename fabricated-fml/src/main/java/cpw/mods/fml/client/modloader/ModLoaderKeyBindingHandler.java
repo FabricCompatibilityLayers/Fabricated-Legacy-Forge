@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 
-import net.minecraft.src.BaseMod;
+import org.lwjgl.input.Mouse;
 
 import com.google.common.collect.ObjectArrays;
 import com.google.common.primitives.Booleans;
@@ -50,7 +50,7 @@ public class ModLoaderKeyBindingHandler extends KeyBindingRegistry.KeyHandler
 
     public void fireKeyEvent(KeyBinding kb)
     {
-        ((BaseMod)modContainer.getMod()).keyboardEvent(kb);
+        ((net.minecraft.src.BaseMod)modContainer.getMod()).keyboardEvent(kb);
     }
 
     @Override

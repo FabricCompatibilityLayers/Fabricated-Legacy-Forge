@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import net.minecraft.src.NetHandler;
-import net.minecraft.src.NetworkManager;
+import net.minecraft.src.INetworkManager;
 
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteArrayDataInput;
@@ -68,7 +68,7 @@ public class ModIdentifiersPacket extends FMLPacket
     }
 
     @Override
-    public void execute(NetworkManager network, FMLNetworkHandler handler, NetHandler netHandler, String userName)
+    public void execute(INetworkManager network, FMLNetworkHandler handler, NetHandler netHandler, String userName)
     {
         for (Entry<String,Integer> idEntry : modIds.entrySet())
         {

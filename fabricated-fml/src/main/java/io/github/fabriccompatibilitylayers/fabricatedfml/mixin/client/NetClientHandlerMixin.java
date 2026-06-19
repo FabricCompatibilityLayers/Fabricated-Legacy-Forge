@@ -25,7 +25,7 @@ import java.io.IOException;
 
 @Mixin(NetClientHandler.class)
 public abstract class NetClientHandlerMixin extends NetHandler implements NetClientHandlerExtension {
-    @Shadow private NetworkManager field_72555_g;
+    @Shadow private INetworkManager field_72555_g;
 
     @Shadow public abstract void func_72552_c(Packet par1);
 
@@ -49,7 +49,7 @@ public abstract class NetClientHandlerMixin extends NetHandler implements NetCli
         this.func_72552_c(FMLNetworkHandler.getFMLFakeLoginPacket());
     }
 
-    @Inject(method = "func_72455_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/NetClientHandler;func_72552_c(Lnet/minecraft/src/Packet;)V"))
+    @Inject(method = "func_72455_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GameSettings;func_82879_c()V"))
     private void fml$onConnectionEstablishedToServer(Packet1Login p_72455_1_, CallbackInfo ci) {
         FMLNetworkHandler.onConnectionEstablishedToServer(this, field_72555_g, p_72455_1_);
     }
