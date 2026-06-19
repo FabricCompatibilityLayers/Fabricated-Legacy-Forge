@@ -28,7 +28,7 @@ public interface IClassTransformer extends ClassTransformer
 
     // Fabricated FML
     static final List<String> CLASS_NAMES = new ArrayList<>();
-    static final Logger LOGGER = Logger.getLogger("Fabricated-FML", "ClassTransformers");
+    static final Logger LOGGER = Logger.getLogger("Fabricated-FML/ClassTransformers");
 
     Map<IClassTransformer, List<String>> transformed = new HashMap<>();
 
