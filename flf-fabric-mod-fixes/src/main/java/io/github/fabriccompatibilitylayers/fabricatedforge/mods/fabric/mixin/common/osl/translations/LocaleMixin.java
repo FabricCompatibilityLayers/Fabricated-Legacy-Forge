@@ -3,7 +3,7 @@
  *
  * Licensed under the Open Software License version 3.0
  */
-package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.common.osl;
+package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.common.osl.translations;
 
 import com.moulberry.mixinconstraints.annotations.IfModLoaded;
 import cpw.mods.fml.common.registry.LanguageRegistry;

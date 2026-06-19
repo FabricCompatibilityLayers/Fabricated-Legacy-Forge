@@ -12,6 +12,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import net.minecraft.src.Block;
 import net.minecraft.src.ChunkCoordinates;
@@ -22,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(WorldGenForest.class)
 public class WorldGenForestMixin {
+    @IfModAbsent("osl-blocks")
     @Expression("? != 0")
     @WrapOperation(method = "generate", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0))
     private boolean forge$NonNull(int blockId, int right, Operation<Boolean> original) {
@@ -69,6 +71,7 @@ public class WorldGenForestMixin {
         return block != null && !((BlockExtension) block).canBeReplacedByLeaves(par1World, pos.posX, pos.posY, pos.posZ);
     }
 
+    @IfModAbsent("osl-blocks")
     @Expression("? == 0")
     @WrapOperation(method = "generate", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0))
     private boolean forge$Null(int blockId, int right, Operation<Boolean> original) {

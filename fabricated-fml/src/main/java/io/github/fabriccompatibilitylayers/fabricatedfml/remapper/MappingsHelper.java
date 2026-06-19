@@ -39,4 +39,8 @@ public class MappingsHelper {
     public static String mapDescriptor(String desc) {
         return MappingUtils.mapDescriptor(Constants.CONTEXT_ID, desc);
     }
+
+    public static String unmapClass(String className) {
+        return MappingUtils.unmapClass(Constants.CONTEXT_ID, className.replace(".", "/")).replace("/", ".");
+    }
 }

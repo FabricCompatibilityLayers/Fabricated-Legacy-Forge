@@ -9,7 +9,16 @@
   "server": [],
   "mixins": [
     "common.legacyfabric.FabricItemGroupMixin",
-    "common.osl.LocaleMixin"
+    "common.osl.blocks.BlockMixin",
+    "common.osl.blocks.BlockRegistryImplMixin",
+    "common.osl.blocks.WorldGenDeadBushMixin",
+    "common.osl.blocks.WorldGenForestMixin",
+    "common.osl.blocks.WorldGenHugeTreesMixin",
+    "common.osl.blocks.WorldGenShrubMixin",
+    "common.osl.blocks.WorldGenTallGrassMixin",
+    "common.osl.items.ItemMixin",
+    "common.osl.items.ItemRegistryImplMixin",
+    "common.osl.translations.LocaleMixin"
   ],
   "client": [
     "client.GuiAccessor",

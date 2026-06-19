@@ -10,6 +10,7 @@ import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import fr.catcore.cursedmixinextensions.annotations.Public;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockContainerExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
@@ -274,6 +275,7 @@ public abstract class BlockMixin implements BlockExtension {
      * @param z Z position
      * @return True if the block considered air
      */
+    @IfModAbsent("osl-blocks")
     @Override
     public boolean isAirBlock(World world, int x, int y, int z)
     {
