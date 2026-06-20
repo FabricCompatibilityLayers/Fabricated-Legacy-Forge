@@ -151,14 +151,15 @@ public abstract class TessellatorMixin {
         } else {
             this.isDrawing = false;
             int offs = 0;
-
-            while (offs < this.vertexCount) {
-                int vtc;
-
-                if (this.drawMode == 7 && convertQuadsToTriangles) {
-                    vtc = Math.min(this.vertexCount - offs, trivertsInBuffer);
-                } else {
-                    vtc = Math.min(this.vertexCount - offs, nativeBufferSize >> 5);
+            while (offs < vertexCount) {
+                int vtc = 0;
+                if (drawMode == 7 && convertQuadsToTriangles)
+                {
+                    vtc = Math.min(vertexCount - offs, trivertsInBuffer);
+                }
+                else
+                {
+                    vtc = Math.min(vertexCount - offs, nativeBufferSize >> 5);
                 }
 
                 ((Buffer) intBuffer).clear();
@@ -167,18 +168,18 @@ public abstract class TessellatorMixin {
                 ((Buffer) byteBuffer).limit(vtc * 32);
                 offs += vtc;
 
-                if (useVBO) {
-                    this.vboIndex = (this.vboIndex + 1) % vboCount;
-                    ARBVertexBufferObject.glBindBufferARB(34962, vertexBuffers.get(this.vboIndex));
-                    ARBVertexBufferObject.glBufferDataARB(34962, byteBuffer, 35040);
+                if (this.useVBO) {
+                    this.vboIndex = (this.vboIndex + 1) % this.vboCount;
+                    ARBVertexBufferObject.glBindBufferARB(34962, this.vertexBuffers.get(this.vboIndex));
+                    ARBVertexBufferObject.glBufferDataARB(34962, this.byteBuffer, 35040);
                 }
 
                 if (this.hasTexture) {
-                    if (useVBO) {
+                    if (this.useVBO) {
                         GL11.glTexCoordPointer(2, 5126, 32, 12L);
                     } else {
                         ((Buffer) floatBuffer).position(3);
-                        GL11.glTexCoordPointer(2, 32, floatBuffer);
+                        GL11.glTexCoordPointer(2, 32, this.floatBuffer);
                     }
 
                     GL11.glEnableClientState(32888);
@@ -186,12 +187,11 @@ public abstract class TessellatorMixin {
 
                 if (this.hasBrightness) {
                     OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapTexUnit);
-
-                    if (useVBO) {
+                    if (this.useVBO) {
                         GL11.glTexCoordPointer(2, 5122, 32, 28L);
                     } else {
                         ((Buffer) shortBuffer).position(14);
-                        GL11.glTexCoordPointer(2, 32, shortBuffer);
+                        GL11.glTexCoordPointer(2, 32, this.shortBuffer);
                     }
 
                     GL11.glEnableClientState(32888);
@@ -199,36 +199,35 @@ public abstract class TessellatorMixin {
                 }
 
                 if (this.hasColor) {
-                    if (useVBO) {
+                    if (this.useVBO) {
                         GL11.glColorPointer(4, 5121, 32, 20L);
                     } else {
                         ((Buffer) byteBuffer).position(20);
-                        GL11.glColorPointer(4, true, 32, byteBuffer);
+                        GL11.glColorPointer(4, true, 32, this.byteBuffer);
                     }
 
                     GL11.glEnableClientState(32886);
                 }
 
                 if (this.hasNormals) {
-                    if (useVBO) {
+                    if (this.useVBO) {
                         GL11.glNormalPointer(5121, 32, 24L);
                     } else {
                         ((Buffer) byteBuffer).position(24);
-                        GL11.glNormalPointer(32, byteBuffer);
+                        GL11.glNormalPointer(32, this.byteBuffer);
                     }
 
                     GL11.glEnableClientState(32885);
                 }
 
-                if (useVBO) {
+                if (this.useVBO) {
                     GL11.glVertexPointer(3, 5126, 32, 0L);
                 } else {
                     ((Buffer) floatBuffer).position(0);
-                    GL11.glVertexPointer(3, 32, floatBuffer);
+                    GL11.glVertexPointer(3, 32, this.floatBuffer);
                 }
 
                 GL11.glEnableClientState(32884);
-
                 if (this.drawMode == 7 && convertQuadsToTriangles) {
                     GL11.glDrawArrays(4, 0, vtc);
                 } else {
@@ -236,7 +235,6 @@ public abstract class TessellatorMixin {
                 }
 
                 GL11.glDisableClientState(32884);
-
                 if (this.hasTexture) {
                     GL11.glDisableClientState(32888);
                 }
@@ -256,9 +254,10 @@ public abstract class TessellatorMixin {
                 }
             }
 
-            if (this.rawBufferSize > 0x20000 && this.rawBufferIndex < (this.rawBufferSize << 3)) {
-                this.rawBufferSize = 0;
-                this.rawBuffer = null;
+            if (rawBufferSize > 0x20000 && rawBufferIndex < (rawBufferSize << 3))
+            {
+                rawBufferSize = 0;
+                rawBuffer = null;
             }
 
             int var1 = this.rawBufferIndex * 4;
@@ -292,11 +291,9 @@ public abstract class TessellatorMixin {
         }
 
         ++this.addedVertices;
-
         if (this.drawMode == 7 && convertQuadsToTriangles && this.addedVertices % 4 == 0) {
-            for (int var7 = 0; var7 < 2; var7++) {
+            for(int var7 = 0; var7 < 2; ++var7) {
                 int var8 = 8 * (3 - var7);
-
                 if (this.hasTexture) {
                     this.rawBuffer[this.rawBufferIndex + 3] = this.rawBuffer[this.rawBufferIndex - var8 + 3];
                     this.rawBuffer[this.rawBufferIndex + 4] = this.rawBuffer[this.rawBufferIndex - var8 + 4];
@@ -313,14 +310,14 @@ public abstract class TessellatorMixin {
                 this.rawBuffer[this.rawBufferIndex + 0] = this.rawBuffer[this.rawBufferIndex - var8 + 0];
                 this.rawBuffer[this.rawBufferIndex + 1] = this.rawBuffer[this.rawBufferIndex - var8 + 1];
                 this.rawBuffer[this.rawBufferIndex + 2] = this.rawBuffer[this.rawBufferIndex - var8 + 2];
-                this.vertexCount++;
+                ++this.vertexCount;
                 this.rawBufferIndex += 8;
             }
         }
 
         if (this.hasTexture) {
-            this.rawBuffer[this.rawBufferIndex + 3] = Float.floatToRawIntBits((float) this.textureU);
-            this.rawBuffer[this.rawBufferIndex + 4] = Float.floatToRawIntBits((float) this.textureV);
+            this.rawBuffer[this.rawBufferIndex + 3] = Float.floatToRawIntBits((float)this.textureU);
+            this.rawBuffer[this.rawBufferIndex + 4] = Float.floatToRawIntBits((float)this.textureV);
         }
 
         if (this.hasBrightness) {
@@ -335,11 +332,11 @@ public abstract class TessellatorMixin {
             this.rawBuffer[this.rawBufferIndex + 6] = this.normal;
         }
 
-        this.rawBuffer[this.rawBufferIndex + 0] = Float.floatToRawIntBits((float) (par1 + this.xOffset));
-        this.rawBuffer[this.rawBufferIndex + 1] = Float.floatToRawIntBits((float) (par3 + this.yOffset));
-        this.rawBuffer[this.rawBufferIndex + 2] = Float.floatToRawIntBits((float) (par5 + this.zOffset));
+        this.rawBuffer[this.rawBufferIndex + 0] = Float.floatToRawIntBits((float)(par1 + this.xOffset));
+        this.rawBuffer[this.rawBufferIndex + 1] = Float.floatToRawIntBits((float)(par3 + this.yOffset));
+        this.rawBuffer[this.rawBufferIndex + 2] = Float.floatToRawIntBits((float)(par5 + this.zOffset));
         this.rawBufferIndex += 8;
-        this.vertexCount++;
+        ++this.vertexCount;
     }
 
 }

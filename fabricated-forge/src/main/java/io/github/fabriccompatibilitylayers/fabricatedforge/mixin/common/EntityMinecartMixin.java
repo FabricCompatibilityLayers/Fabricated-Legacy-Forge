@@ -85,6 +85,10 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
 
     @Shadow private boolean field_70499_f;
 
+    @Shadow
+    @Final
+    private IUpdatePlayerListBox field_82344_g;
+
     public EntityMinecartMixin(World par1World) {
         super(par1World);
     }
@@ -198,6 +202,10 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
      */
     @Overwrite
     public void onUpdate() {
+        if (this.field_82344_g != null) {
+            this.field_82344_g.update();
+        }
+
         if (this.func_70496_j() > 0) {
             this.func_70497_h(this.func_70496_j() - 1);
         }
@@ -206,7 +214,7 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
             this.setDamage(this.getDamage() - 1);
         }
 
-        if (this.posY < -64.0) {
+        if (this.posY < (double)-64.0F) {
             this.kill();
         }
 
@@ -216,33 +224,34 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
 
         if (this.worldObj.isRemote) {
             if (this.turnProgress > 0) {
-                double var45 = this.posX + (this.minecartX - this.posX) / this.turnProgress;
-                double var46 = this.posY + (this.minecartY - this.posY) / this.turnProgress;
-                double var5 = this.posZ + (this.minecartZ - this.posZ) / this.turnProgress;
-                double var7 = MathHelper.wrapAngleTo180_double(this.minecartYaw - this.rotationYaw);
-                this.rotationYaw = (float)(this.rotationYaw + var7 / this.turnProgress);
-                this.rotationPitch = (float)(this.rotationPitch + (this.minecartPitch - this.rotationPitch) / this.turnProgress);
-                this.turnProgress--;
+                double var45 = this.posX + (this.minecartX - this.posX) / (double)this.turnProgress;
+                double var46 = this.posY + (this.minecartY - this.posY) / (double)this.turnProgress;
+                double var5 = this.posZ + (this.minecartZ - this.posZ) / (double)this.turnProgress;
+                double var7 = MathHelper.wrapAngleTo180_double(this.minecartYaw - (double)this.rotationYaw);
+                this.rotationYaw = (float)((double)this.rotationYaw + var7 / (double)this.turnProgress);
+                this.rotationPitch = (float)((double)this.rotationPitch + (this.minecartPitch - (double)this.rotationPitch) / (double)this.turnProgress);
+                --this.turnProgress;
                 this.setPosition(var45, var46, var5);
                 this.setRotation(this.rotationYaw, this.rotationPitch);
             } else {
                 this.setPosition(this.posX, this.posY, this.posZ);
                 this.setRotation(this.rotationYaw, this.rotationPitch);
             }
+
         } else {
             this.prevPosX = this.posX;
             this.prevPosY = this.posY;
             this.prevPosZ = this.posZ;
-            this.motionY -= 0.04F;
+            this.motionY -= (double)0.04F;
             int var1 = MathHelper.floor_double(this.posX);
             int var2 = MathHelper.floor_double(this.posY);
             int var3 = MathHelper.floor_double(this.posZ);
             if (BlockRail.isRailBlockAt(this.worldObj, var1, var2 - 1, var3)) {
-                var2--;
+                --var2;
             }
 
             double var4 = 0.4;
-            double var6 = 0.0078125;
+            double var6 = (double)0.0078125F;
             int var8 = this.worldObj.getBlockId(var1, var2, var3);
             if (canUseRail() && BlockRail.isRailBlock(var8)) {
                 Vec3 var9 = this.func_70489_a(this.posX, this.posY, this.posZ);
@@ -259,14 +268,18 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
                     var10 &= 7;
                 }
 
+                if (var10 >= 2 && var10 <= 5) {
+                    this.posY = (double)(var2 + 1);
+                }
+
                 adjustSlopeVelocities(var10);
 
                 int[][] var13 = field_70500_g[var10];
-                double var14 = var13[1][0] - var13[0][0];
-                double var16 = var13[1][2] - var13[0][2];
+                double var14 = (double)(var13[1][0] - var13[0][0]);
+                double var16 = (double)(var13[1][2] - var13[0][2]);
                 double var18 = Math.sqrt(var14 * var14 + var16 * var16);
                 double var20 = this.motionX * var14 + this.motionZ * var16;
-                if (var20 < 0.0) {
+                if (var20 < (double)0.0F) {
                     var14 = -var14;
                     var16 = -var16;
                 }
@@ -278,8 +291,8 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
                     double var24 = this.riddenByEntity.motionX * this.riddenByEntity.motionX + this.riddenByEntity.motionZ * this.riddenByEntity.motionZ;
                     double var26 = this.motionX * this.motionX + this.motionZ * this.motionZ;
                     if (var24 > 1.0E-4 && var26 < 0.01) {
-                        this.motionX = this.motionX + this.riddenByEntity.motionX * 0.1;
-                        this.motionZ = this.motionZ + this.riddenByEntity.motionZ * 0.1;
+                        this.motionX += this.riddenByEntity.motionX * 0.1;
+                        this.motionZ += this.riddenByEntity.motionZ * 0.1;
                         var12 = false;
                     }
                 }
@@ -287,47 +300,45 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
                 if (var12 && shouldDoRailFunctions()) {
                     double var55 = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
                     if (var55 < 0.03) {
-                        this.motionX *= 0.0;
-                        this.motionY *= 0.0;
-                        this.motionZ *= 0.0;
+                        this.motionX *= (double)0.0F;
+                        this.motionY *= (double)0.0F;
+                        this.motionZ *= (double)0.0F;
                     } else {
-                        this.motionX *= 0.5;
-                        this.motionY *= 0.0;
-                        this.motionZ *= 0.5;
+                        this.motionX *= (double)0.5F;
+                        this.motionY *= (double)0.0F;
+                        this.motionZ *= (double)0.5F;
                     }
                 }
 
-                double var56 = 0.0;
-                double var58 = var1 + 0.5 + var13[0][0] * 0.5;
-                double var28 = var3 + 0.5 + var13[0][2] * 0.5;
-                double var30 = var1 + 0.5 + var13[1][0] * 0.5;
-                double var32 = var3 + 0.5 + var13[1][2] * 0.5;
+                double var56 = (double)0.0F;
+                double var58 = (double)var1 + (double)0.5F + (double)var13[0][0] * (double)0.5F;
+                double var28 = (double)var3 + (double)0.5F + (double)var13[0][2] * (double)0.5F;
+                double var30 = (double)var1 + (double)0.5F + (double)var13[1][0] * (double)0.5F;
+                double var32 = (double)var3 + (double)0.5F + (double)var13[1][2] * (double)0.5F;
                 var14 = var30 - var58;
                 var16 = var32 - var28;
-                if (var14 == 0.0) {
-                    this.posX = var1 + 0.5;
-                    var56 = this.posZ - var3;
-                } else if (var16 == 0.0) {
-                    this.posZ = var3 + 0.5;
-                    var56 = this.posX - var1;
+                if (var14 == (double)0.0F) {
+                    this.posX = (double)var1 + (double)0.5F;
+                    var56 = this.posZ - (double)var3;
+                } else if (var16 == (double)0.0F) {
+                    this.posZ = (double)var3 + (double)0.5F;
+                    var56 = this.posX - (double)var1;
                 } else {
                     double var34 = this.posX - var58;
                     double var36 = this.posZ - var28;
-                    var56 = (var34 * var14 + var36 * var16) * 2.0;
+                    var56 = (var34 * var14 + var36 * var16) * (double)2.0F;
                 }
 
                 this.posX = var58 + var14 * var56;
                 this.posZ = var28 + var16 * var56;
-                this.setPosition(this.posX, this.posY + this.yOffset, this.posZ);
+                this.setPosition(this.posX, this.posY + (double)this.yOffset, this.posZ);
 
                 moveMinecartOnRail(var1, var2, var3);
 
                 if (var13[0][1] != 0 && MathHelper.floor_double(this.posX) - var1 == var13[0][0] && MathHelper.floor_double(this.posZ) - var3 == var13[0][2]) {
-                    this.setPosition(this.posX, this.posY + var13[0][1], this.posZ);
-                } else if (var13[1][1] != 0 && MathHelper.floor_double(this.posX) - var1 == var13[1][0] && MathHelper.floor_double(this.posZ) - var3 == var13[1][2]
-                )
-                {
-                    this.setPosition(this.posX, this.posY + var13[1][1], this.posZ);
+                    this.setPosition(this.posX, this.posY + (double)var13[0][1], this.posZ);
+                } else if (var13[1][1] != 0 && MathHelper.floor_double(this.posX) - var1 == var13[1][0] && MathHelper.floor_double(this.posZ) - var3 == var13[1][2]) {
+                    this.setPosition(this.posX, this.posY + (double)var13[1][1], this.posZ);
                 }
 
                 applyDragAndPushForces();
@@ -336,7 +347,7 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
                 if (var62 != null && var9 != null) {
                     double var39 = (var9.yCoord - var62.yCoord) * 0.05;
                     var22 = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-                    if (var22 > 0.0) {
+                    if (var22 > (double)0.0F) {
                         this.motionX = this.motionX / var22 * (var22 + var39);
                         this.motionZ = this.motionZ / var22 * (var22 + var39);
                     }
@@ -348,8 +359,8 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
                 int var64 = MathHelper.floor_double(this.posZ);
                 if (var63 != var1 || var64 != var3) {
                     var22 = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
-                    this.motionX = var22 * (var63 - var1);
-                    this.motionZ = var22 * (var64 - var3);
+                    this.motionX = var22 * (double)(var63 - var1);
+                    this.motionZ = var22 * (double)(var64 - var3);
                 }
 
                 updatePushForces();
@@ -363,8 +374,8 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
                     double var66 = Math.sqrt(this.motionX * this.motionX + this.motionZ * this.motionZ);
                     if (var66 > 0.01) {
                         double var43 = 0.06;
-                        this.motionX = this.motionX + this.motionX / var66 * var43;
-                        this.motionZ = this.motionZ + this.motionZ / var66 * var43;
+                        this.motionX += this.motionX / var66 * var43;
+                        this.motionZ += this.motionZ / var66 * var43;
                     } else if (var10 == 1) {
                         if (this.worldObj.isBlockNormalCube(var1 - 1, var2, var3)) {
                             this.motionX = 0.02;
@@ -379,29 +390,29 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
                         }
                     }
                 }
-
-                this.doBlockCollisions();
             } else {
                 moveMinecartOffRail(var1, var2, var3);
             }
 
+            this.doBlockCollisions();
             this.rotationPitch = 0.0F;
             double var47 = this.prevPosX - this.posX;
             double var48 = this.prevPosZ - this.posZ;
             if (var47 * var47 + var48 * var48 > 0.001) {
-                this.rotationYaw = (float)(Math.atan2(var48, var47) * 180.0 / Math.PI);
+                this.rotationYaw = (float)(Math.atan2(var48, var47) * (double)180.0F / Math.PI);
                 if (this.field_70499_f) {
                     this.rotationYaw += 180.0F;
                 }
             }
 
-            double var49 = MathHelper.wrapAngleTo180_float(this.rotationYaw - this.prevRotationYaw);
-            if (var49 < -170.0 || var49 >= 170.0) {
+            double var49 = (double)MathHelper.wrapAngleTo180_float(this.rotationYaw - this.prevRotationYaw);
+            if (var49 < (double)-170.0F || var49 >= (double)170.0F) {
                 this.rotationYaw += 180.0F;
                 this.field_70499_f = !this.field_70499_f;
             }
 
             this.setRotation(this.rotationYaw, this.rotationPitch);
+
             AxisAlignedBB box = null;
             if (getCollisionHandler() != null)
             {
@@ -413,8 +424,9 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
             }
 
             List var15 = this.worldObj.getEntitiesWithinAABBExcludingEntity(this, box);
+
             if (var15 != null && !var15.isEmpty()) {
-                for (int var52 = 0; var52 < var15.size(); var52++) {
+                for(int var52 = 0; var52 < var15.size(); ++var52) {
                     Entity var17 = (Entity)var15.get(var52);
                     if (var17 != this.riddenByEntity && var17.canBePushed() && var17 instanceof EntityMinecart) {
                         var17.applyEntityCollision(this);

@@ -6,6 +6,8 @@
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.server;
 
 import io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common.MinecraftServerAccessor;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.GuiStatsComponent;
 import net.minecraft.src.TcpConnection;
@@ -19,6 +21,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import javax.swing.*;
 import java.text.DecimalFormat;
 
+@Environment(EnvType.SERVER)
 @Mixin(GuiStatsComponent.class)
 public class GuiStatsComponentMixin extends JComponent {
 
@@ -59,23 +62,24 @@ public class GuiStatsComponentMixin extends JComponent {
         System.gc();
         this.displayStrings[0] = "Memory use: " + var1 / 1024L / 1024L + " mb (" + Runtime.getRuntime().freeMemory() * 100L / Runtime.getRuntime().maxMemory() + "% free)";
         this.displayStrings[1] = "Threads: " + TcpConnection.field_74471_a.get() + " + " + TcpConnection.field_74469_b.get();
-        this.displayStrings[2] = "Avg tick: " + field_79020_a.format(this.func_79015_a(this.field_79017_e.tickTimeArray) * 1.0E-6D) + " ms";
-        this.displayStrings[3] = "Avg sent: " + (int) this.func_79015_a(this.field_79017_e.sentPacketCountArray) + ", Avg size: " + (int) this.func_79015_a(this.field_79017_e.sentPacketSizeArray);
-        this.displayStrings[4] = "Avg rec: " + (int) this.func_79015_a(this.field_79017_e.receivedPacketCountArray) + ", Avg size: " + (int) this.func_79015_a(this.field_79017_e.receivedPacketSizeArray);
-
+        this.displayStrings[2] = "Avg tick: " + field_79020_a.format(this.func_79015_a(this.field_79017_e.tickTimeArray) * 1.0E-6) + " ms";
+        this.displayStrings[3] = "Avg sent: " + (int)this.func_79015_a(this.field_79017_e.sentPacketCountArray) + ", Avg size: " + (int)this.func_79015_a(this.field_79017_e.sentPacketSizeArray);
+        this.displayStrings[4] = "Avg rec: " + (int)this.func_79015_a(this.field_79017_e.receivedPacketCountArray) + ", Avg size: " + (int)this.func_79015_a(this.field_79017_e.receivedPacketSizeArray);
         if (this.field_79017_e.worldServers != null) {
             int x = 0;
-            for (Integer id : DimensionManager.getIDs()) {
+            for(Integer id : DimensionManager.getIDs()) {
                 this.displayStrings[5 + x] = "Lvl " + id + " tick: " + field_79020_a.format(this.func_79015_a(((MinecraftServerAccessor) this.field_79017_e).getWorldTickTimes().get(id)) * 1.0E-6D) + " ms";
+
                 WorldServer world = DimensionManager.getWorld(id);
                 if (world != null && world.theChunkProviderServer != null) {
                     this.displayStrings[5 + x] = this.displayStrings[5 + x] + ", " + world.theChunkProviderServer.makeString();
+                    this.displayStrings[5 + x] = this.displayStrings[5 + x] + ", Vec3: " + world.func_82732_R().func_82590_d() + " / " + world.func_82732_R().func_82591_c();
                 }
                 x++;
             }
         }
 
-        this.memoryUse[this.updateCounter++ & 0xFF] = (int) (this.func_79015_a(this.field_79017_e.sentPacketSizeArray) * 100.0 / 12500.0);
+        this.memoryUse[this.updateCounter++ & 255] = (int)(this.func_79015_a(this.field_79017_e.sentPacketSizeArray) * (double)100.0F / (double)12500.0F);
         this.repaint();
     }
 }

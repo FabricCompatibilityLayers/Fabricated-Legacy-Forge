@@ -51,9 +51,7 @@ public class SpawnerAnimalsMixin {
 
     @Inject(method = "creatureSpecificInit", at = @At("HEAD"), cancellable = true)
     private static void forge$postLivingSpecialSpawnEvent(EntityLiving par0EntityLiving, World par1World, float par2, float par3, float par4, CallbackInfo ci) {
-        LivingSpecialSpawnEvent event = new LivingSpecialSpawnEvent(par0EntityLiving, par1World, par2, par3, par4);
-        MinecraftForge.EVENT_BUS.post(event);
-        if (event.isHandeled())
+        if (MinecraftForge.EVENT_BUS.post(new LivingSpecialSpawnEvent(par0EntityLiving, par1World, par2, par3, par4)))
         {
             ci.cancel();
         }

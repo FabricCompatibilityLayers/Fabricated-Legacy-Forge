@@ -1,4 +1,5 @@
 accessWidener	v2	named
+accessible	field	net/minecraft/src/StructureMineshaftPieces	mineshaftChestContents	[Lnet/minecraft/src/WeightedRandomChestContent;
 accessible	field	net/minecraft/src/ComponentScatteredFeatureDesertPyramid	itemsToGenerateInTemple	[Lnet/minecraft/src/WeightedRandomChestContent;
 accessible	field	net/minecraft/src/ComponentScatteredFeatureJunglePyramid	junglePyramidsChestContents	[Lnet/minecraft/src/WeightedRandomChestContent;
 accessible	field	net/minecraft/src/ComponentScatteredFeatureJunglePyramid	junglePyramidsDispenserContents	[Lnet/minecraft/src/WeightedRandomChestContent;
@@ -7,7 +8,6 @@ accessible	field	net/minecraft/src/ComponentStrongholdLibrary	strongholdLibraryC
 accessible	field	net/minecraft/src/ComponentStrongholdRoomCrossing	field_75014_c	[Lnet/minecraft/src/WeightedRandomChestContent;
 accessible	field	net/minecraft/src/ComponentVillageHouse2	villageBlacksmithChestContents	[Lnet/minecraft/src/WeightedRandomChestContent;
 accessible	class	net/minecraft/src/RailLogic
-#accessible	method	net/minecraft/src/RailLogic	a	(Lnet/minecraft/src/BlockRail;)I
 accessible	method	net/minecraft/src/RailLogic	getAdjacentTracks	(Lnet/minecraft/src/RailLogic;)I
 accessible	method	net/minecraft/src/Block	<init>	(IILnet/minecraft/src/Material;)V
 accessible	method	net/minecraft/src/Block	<init>	(ILnet/minecraft/src/Material;)V
@@ -17,12 +17,11 @@ accessible	method	net/minecraft/src/Block	setResistance	(F)Lnet/minecraft/src/Bl
 accessible	method	net/minecraft/src/Block	setTickRandomly	(Z)Lnet/minecraft/src/Block;
 accessible	method	net/minecraft/src/Block	setHardness	(F)Lnet/minecraft/src/Block;
 accessible	method	net/minecraft/src/Block	setLightOpacity	(I)Lnet/minecraft/src/Block;
-#accessible	method	net/minecraft/src/Block	p	()Lnet/minecraft/src/BlockPane;
-accessible	method	net/minecraft/src/Block	setBlockUnbreakable	()Lnet/minecraft/src/Block;
+accessible	method	net/minecraft/src/Block	p	()Lnet/minecraft/src/Block;
+accessible	method	net/minecraft/src/Block	q	()Lnet/minecraft/src/Block;
 accessible	field	net/minecraft/src/BlockLeavesBase	graphicsLevel	Z
 accessible	field	net/minecraft/src/TileEntity	worldObj	Lnet/minecraft/src/World;
 accessible	method	net/minecraft/src/EntityClientPlayerMP	joinEntityItemWithWorld	(Lnet/minecraft/src/EntityItem;)V
-accessible	field	net/minecraft/src/RenderGlobal	field_72738_E	Ljava/util/Map;
 accessible	field	net/minecraft/src/RenderGlobal	theWorld	Lnet/minecraft/src/WorldClient;
 accessible	field	net/minecraft/src/RenderGlobal	renderEngine	Lnet/minecraft/src/RenderEngine;
 accessible	field	net/minecraft/src/RenderGlobal	mc	Lnet/minecraft/client/Minecraft;
@@ -40,10 +39,12 @@ accessible	field	net/minecraft/src/SoundManager	soundPoolStreaming	Lnet/minecraf
 accessible	field	net/minecraft/src/SoundManager	soundPoolMusic	Lnet/minecraft/src/SoundPool;
 accessible	field	net/minecraft/src/WorldServer	bonusChestContent	[Lnet/minecraft/src/WeightedRandomChestContent;
 accessible	field	net/minecraft/src/NetServerHandler	ticksForFloatKick	I
-#accessible	method	net/minecraft/src/EntityItem	h	()Z
+accessible	method	net/minecraft/src/EntityMinecart	isMinecartPowered	()Z
 accessible	field	net/minecraft/src/EntityEnderman	carriableBlocks	[Z
 accessible	method	net/minecraft/src/EntityPlayer	joinEntityItemWithWorld	(Lnet/minecraft/src/EntityItem;)V
 accessible	method	net/minecraft/src/EntityPlayer	closeScreen	()V
+accessible	field	net/minecraft/src/ItemTool	efficiencyOnProperMaterial	F
+accessible	field	net/minecraft/src/ItemTool	damageVsEntity	I
 accessible	method	net/minecraft/src/ItemAxe	<init>	()V
 accessible	field	net/minecraft/src/ItemAxe	blocksEffectiveAgainst	[Lnet/minecraft/src/Block;
 accessible	method	net/minecraft/src/Item	setMaxDamage	(I)Lnet/minecraft/src/Item;
@@ -52,18 +53,19 @@ extendable	method	net/minecraft/src/Item	getIconIndex	(Lnet/minecraft/src/ItemSt
 accessible	method	net/minecraft/src/ItemPickaxe	<init>	()V
 accessible	field	net/minecraft/src/ItemPickaxe	blocksEffectiveAgainst	[Lnet/minecraft/src/Block;
 accessible	field	net/minecraft/src/ItemSpade	blocksEffectiveAgainst	[Lnet/minecraft/src/Block;
-accessible	field	net/minecraft/src/StructureMineshaftPieces	mineshaftChestContents	[Lnet/minecraft/src/WeightedRandomChestContent;
+accessible	field	net/minecraft/src/World	villageCollectionObj	Lnet/minecraft/src/VillageCollection;
+mutable	field	net/minecraft/src/World	villageCollectionObj	Lnet/minecraft/src/VillageCollection;
 
-accessible method net/minecraft/src/BlockFlower canThisPlantGrowOnThisBlockID (I)Z
-accessible field net/minecraft/src/Entity rand Ljava/util/Random;
-accessible class net/minecraft/src/PlayerInstance
-accessible field net/minecraft/src/ChunkProviderServer currentChunkLoader Lnet/minecraft/src/IChunkLoader;
-accessible class net/minecraft/src/ContainerCreative
+accessible	method	net/minecraft/src/BlockFlower	canThisPlantGrowOnThisBlockID	(I)Z
+accessible	field	net/minecraft/src/Entity	rand	Ljava/util/Random;
+accessible	class	net/minecraft/src/PlayerInstance
+accessible	field	net/minecraft/src/ChunkProviderServer	currentChunkLoader	Lnet/minecraft/src/IChunkLoader;
+accessible	class	net/minecraft/src/ContainerCreative
 accessible	method	net/minecraft/src/GuiSlot	overlayBackground	(IIII)V
-accessible method net/minecraft/src/Tessellator <init> (I)V
-accessible field net/minecraft/src/RenderBlocks overrideBlockTexture I
-accessible field net/minecraft/src/EntityLiving carryoverDamage I
-accessible field net/minecraft/src/WeightedRandomItem itemWeight I
-accessible field net/minecraft/src/World spawnHostileMobs Z
-accessible field net/minecraft/src/World spawnPeacefulMobs Z
-accessible field net/minecraft/src/AnvilChunkLoader chunkSaveLocation Ljava/io/File;
+accessible	method	net/minecraft/src/Tessellator	<init>	(I)V
+accessible	field	net/minecraft/src/RenderBlocks	overrideBlockTexture	I
+accessible	field	net/minecraft/src/EntityLiving	carryoverDamage	I
+accessible	field	net/minecraft/src/WeightedRandomItem	itemWeight	I
+accessible	field	net/minecraft/src/World	spawnHostileMobs	Z
+accessible	field	net/minecraft/src/World	spawnPeacefulMobs	Z
+accessible	field	net/minecraft/src/AnvilChunkLoader	chunkSaveLocation	Ljava/io/File;

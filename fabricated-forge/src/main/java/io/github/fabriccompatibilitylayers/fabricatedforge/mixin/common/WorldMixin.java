@@ -133,6 +133,9 @@ public abstract class WorldMixin implements WorldExtension {
 
     // == New fields section: start ==
 
+    @Shadow
+    public abstract Vec3Pool func_82732_R();
+
     @Public
     private static double MAX_ENTITY_RADIUS = 2.0D;
 
@@ -217,9 +220,24 @@ public abstract class WorldMixin implements WorldExtension {
     @Override
     public void finishSetup() {
         provider.registerWorld((World)(Object)this);
-        chunkProvider = createChunkProvider();
-        calculateInitialSkylight();
-        calculateInitialWeather();
+
+        this.mapStorage = new MapStorage(saveHandler);
+        VillageCollection var6 = (VillageCollection)this.mapStorage.loadData(VillageCollection.class, "villages");
+        if (var6 == null)
+        {
+            this.villageCollectionObj = new VillageCollection((World) (Object) this);
+            this.mapStorage.setData("villages", this.villageCollectionObj);
+        }
+        else
+        {
+            this.villageCollectionObj = var6;
+            this.villageCollectionObj.func_82566_a((World) (Object) this);
+        }
+
+        provider.registerWorld((World) (Object) this);
+        this.chunkProvider = this.createChunkProvider();
+        this.calculateInitialSkylight();
+        this.calculateInitialWeather();
     }
 
     // Pattern N (@Redirect on NEW): replaces the single MapStorage constructor call-site in the
@@ -394,7 +412,7 @@ public abstract class WorldMixin implements WorldExtension {
             var12 = var12 * (1.0F - var22) + 1.0F * var22;
         }
 
-        return Vec3.getVec3Pool().getVecFromPool((double)var10, (double)var11, (double)var12);
+        return this.func_82732_R().getVecFromPool((double)var10, (double)var11, (double)var12);
     }
 
     // Pattern D (@Overwrite) + Pattern J (extension interface): same delegation split as getSkyColor.
@@ -445,7 +463,7 @@ public abstract class WorldMixin implements WorldExtension {
             var6 = var6 * var10 + var15 * (1.0F - var10);
         }
 
-        return Vec3.getVec3Pool().getVecFromPool((double)var4, (double)var5, (double)var6);
+        return this.func_82732_R().getVecFromPool((double)var4, (double)var5, (double)var6);
     }
 
     @Definition(id = "blockMaterial", field = "Lnet/minecraft/src/Block;blockMaterial:Lnet/minecraft/src/Material;")
@@ -781,10 +799,10 @@ public abstract class WorldMixin implements WorldExtension {
 
     @Override
     public void calculateInitialWeatherBody() {
-        if (worldInfo.isRaining()) {
-            rainingStrength = 1.0F;
-            if (worldInfo.isThundering()) {
-                thunderingStrength = 1.0F;
+        if (this.worldInfo.isRaining()) {
+            this.rainingStrength = 1.0F;
+            if (this.worldInfo.isThundering()) {
+                this.thunderingStrength = 1.0F;
             }
         }
     }
@@ -1013,7 +1031,7 @@ public abstract class WorldMixin implements WorldExtension {
     }
 
     @ModifyConstant(
-            method = {"getEntitiesWithinAABBExcludingEntity", "getEntitiesWithinAABB"},
+            method = {"getEntitiesWithinAABBExcludingEntity", "func_82733_a"},
             constant = @Constant(doubleValue = 2.0D)
     )
     private double forge$maxEntityRadius(double constant) {
@@ -1035,19 +1053,13 @@ public abstract class WorldMixin implements WorldExtension {
         }
     }
 
-    @Definition(id = "par1", local = @Local(argsOnly = true, ordinal = 0, type = int.class))
-    @Expression("par1 > 0")
-    @WrapOperation(method = "canPlaceEntityOnSide", at = @At("MIXINEXTRAS:EXPRESSION"))
-    private boolean forge$isBlockReplaceable(int left, int right, Operation<Boolean> original,
-                                             @Local(ordinal = 0) LocalRef<Block> var9Ref,
+    @ModifyExpressionValue(method = "canPlaceEntityOnSide", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Material;isGroundCover()Z"))
+    private boolean forge$isBlockReplaceable(boolean original,
                                              @Local(argsOnly = true, ordinal = 1) int par2,
                                              @Local(argsOnly = true, ordinal = 2) int par3,
-                                             @Local(argsOnly = true, ordinal = 3) int par4) {
-        Block var9 = var9Ref.get();
-        if (var9 != null && ((BlockExtension) var9).isBlockReplaceable((World)(Object)this, par2, par3, par4)) {
-            var9Ref.set(null);
-        }
-        return original.call(left, right);
+                                             @Local(argsOnly = true, ordinal = 3) int par4,
+                                             @Local(ordinal = 0) Block var9) {
+        return original || ((BlockExtension) var9).isBlockReplaceable((World)(Object)this, par2, par3, par4);
     }
 
     /** @author FabricCompatibilityLayers

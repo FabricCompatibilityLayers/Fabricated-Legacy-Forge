@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(EntityRenderer.class)
-public class EntityRendererMixin {
+public abstract class EntityRendererMixin {
 
     @Shadow private Minecraft mc;
     @Shadow private float fovMultiplierTemp;
@@ -36,7 +36,6 @@ public class EntityRendererMixin {
     @Shadow private boolean cloudFog;
     @Shadow private boolean lightmapUpdateNeeded;
     @Shadow private double cameraZoom;
-    @Shadow private void updateLightmap() {}
     @Shadow public void getMouseOver(float par1) {}
     @Shadow private void updateFogColor(float par1) {}
     @Shadow private void setupCameraTransform(float par1, int par2) {}
@@ -51,6 +50,12 @@ public class EntityRendererMixin {
     @Shadow
     public static int anaglyphField;
 
+    @Shadow
+    protected abstract void updateLightmap(float par1);
+
+    @Shadow
+    protected abstract void func_82829_a(RenderGlobal par1RenderGlobal, float par2);
+
     /**
      * @author FabricCompatibilityLayers
      * @reason Guards the EntityPlayerSP cast with instanceof; falls back to mc.thePlayer when
@@ -58,11 +63,14 @@ public class EntityRendererMixin {
      */
     @Overwrite
     private void updateFovModifierHand() {
-        if (this.mc.renderViewEntity instanceof EntityPlayerSP) {
-            EntityPlayerSP var1 = (EntityPlayerSP) this.mc.renderViewEntity;
+        if (mc.renderViewEntity instanceof EntityPlayerSP)
+        {
+            EntityPlayerSP var1 = (EntityPlayerSP)this.mc.renderViewEntity;
             this.fovMultiplierTemp = var1.getFOVMultiplier();
-        } else {
-            this.fovMultiplierTemp = this.mc.thePlayer.getFOVMultiplier();
+        }
+        else
+        {
+            this.fovMultiplierTemp = mc.thePlayer.getFOVMultiplier();
         }
         this.fovModifierHandPrev = this.fovModifierHand;
         this.fovModifierHand += (this.fovMultiplierTemp - this.fovModifierHand) * 0.5F;
@@ -152,9 +160,9 @@ public class EntityRendererMixin {
                     var21 *= 0.1F;
                     var22 *= 0.1F;
                     var23 *= 0.1F;
-                    MovingObjectPosition var24 = this.mc.theWorld.rayTraceBlocks(Vec3.getVec3Pool().getVecFromPool(var4 + (double)var21, var6 + (double)var22, var8 + (double)var23), Vec3.getVec3Pool().getVecFromPool(var4 - var14 + (double)var21 + (double)var23, var6 - var18 + (double)var22, var8 - var16 + (double)var23));
+                    MovingObjectPosition var24 = this.mc.theWorld.rayTraceBlocks(this.mc.theWorld.func_82732_R().getVecFromPool(var4 + (double)var21, var6 + (double)var22, var8 + (double)var23), this.mc.theWorld.func_82732_R().getVecFromPool(var4 - var14 + (double)var21 + (double)var23, var6 - var18 + (double)var22, var8 - var16 + (double)var23));
                     if (var24 != null) {
-                        double var25 = var24.hitVec.distanceTo(Vec3.getVec3Pool().getVecFromPool(var4, var6, var8));
+                        double var25 = var24.hitVec.distanceTo(this.mc.theWorld.func_82732_R().getVecFromPool(var4, var6, var8));
                         if (var25 < var30) {
                             var30 = var25;
                         }
@@ -202,7 +210,7 @@ public class EntityRendererMixin {
     public void renderWorld(float par1, long par2) {
         this.mc.mcProfiler.startSection("lightTex");
         if (this.lightmapUpdateNeeded) {
-            this.updateLightmap();
+            this.updateLightmap(par1);
         }
 
         GL11.glEnable(2884);
@@ -266,6 +274,10 @@ public class EntityRendererMixin {
                         break;
                     }
                 }
+            }
+
+            if (var4.posY < (double)128.0F) {
+                this.func_82829_a(var5, par1);
             }
 
             this.setupFog(0, par1);
@@ -357,15 +369,8 @@ public class EntityRendererMixin {
             this.mc.mcProfiler.endStartSection("weather");
             this.renderRainSnow(par1);
             GL11.glDisable(2912);
-            if (this.mc.gameSettings.shouldRenderClouds()) {
-                this.mc.mcProfiler.endStartSection("clouds");
-                GL11.glPushMatrix();
-                this.setupFog(0, par1);
-                GL11.glEnable(2912);
-                var5.renderClouds(par1);
-                GL11.glDisable(2912);
-                this.setupFog(1, par1);
-                GL11.glPopMatrix();
+            if (var4.posY >= (double)128.0F) {
+                this.func_82829_a(var5, par1);
             }
 
             this.mc.mcProfiler.endStartSection("FRenderLast");

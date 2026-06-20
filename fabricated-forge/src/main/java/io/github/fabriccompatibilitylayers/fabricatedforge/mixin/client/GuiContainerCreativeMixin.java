@@ -10,18 +10,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.CreativeTabsExtension;
-import net.minecraft.src.ContainerCreative;
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.GuiButton;
-import net.minecraft.src.GuiContainerCreative;
-import net.minecraft.src.GuiInventory;
-import net.minecraft.src.GuiTextField;
-import net.minecraft.src.InventoryEffectRenderer;
-import net.minecraft.src.Item;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.RenderHelper;
-import net.minecraft.src.Slot;
-import net.minecraft.src.StringTranslate;
+import net.minecraft.src.*;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -59,10 +48,10 @@ public abstract class GuiContainerCreativeMixin extends InventoryEffectRenderer 
     // button-setup code immediately after it — user preference over @Inject AFTER-INVOKE.
     @WrapOperation(
             method = "initGui",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/src/GuiContainerCreative;func_74227_b(Lnet/minecraft/src/CreativeTabs;)V")
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Container;addCraftingToCrafters(Lnet/minecraft/src/ICrafting;)V")
     )
-    private void forge$initGuiAddPageButtons(GuiContainerCreative instance, CreativeTabs par1CreativeTabs, Operation<Void> original) {
-        original.call(instance, par1CreativeTabs);
+    private void forge$initGuiAddPageButtons(Container instance, ICrafting iCrafting, Operation<Void> original) {
+        original.call(instance, iCrafting);
         int tabCount = CreativeTabs.creativeTabArray.length;
         if (tabCount > 12) {
             this.controlList.add(new GuiButton(101, guiLeft, guiTop - 50, 20, 20, "<"));
@@ -137,14 +126,16 @@ public abstract class GuiContainerCreativeMixin extends InventoryEffectRenderer 
 
         this.wasClicking = var4;
         if (this.isScrolling) {
-            this.currentScroll = (par2 - var8 - 7.5F) / (var10 - var8 - 15.0F);
+            this.currentScroll = ((float)(par2 - var8) - 7.5F) / ((float)(var10 - var8) - 15.0F);
             if (this.currentScroll < 0.0F) {
                 this.currentScroll = 0.0F;
             }
+
             if (this.currentScroll > 1.0F) {
                 this.currentScroll = 1.0F;
             }
-            ((ContainerCreative) this.inventorySlots).scrollTo(this.currentScroll);
+
+            ((ContainerCreative)this.inventorySlots).scrollTo(this.currentScroll);
         }
 
         super.drawScreen(par1, par2, par3);
@@ -154,25 +145,28 @@ public abstract class GuiContainerCreativeMixin extends InventoryEffectRenderer 
         if (tabPage != 0) start += 2;
         boolean rendered = false;
 
-        for (int var13 = start; var13 < var12; ++var13) {
+        for (int var13 = start; var13 < var12; ++var13)
+        {
             CreativeTabs var14 = var11[var13];
-            if (var14 != null && this.renderCreativeInventoryHoveringText(var14, par1, par2)) {
+
+            if (var14 != null && renderCreativeInventoryHoveringText(var14, par1, par2))
+            {
                 rendered = true;
                 break;
             }
         }
 
-        if (!rendered && !this.renderCreativeInventoryHoveringText(CreativeTabs.tabAllSearch, par1, par2)) {
-            this.renderCreativeInventoryHoveringText(CreativeTabs.tabInventory, par1, par2);
+        if (!rendered && !renderCreativeInventoryHoveringText(CreativeTabs.tabAllSearch, par1, par2))
+        {
+            renderCreativeInventoryHoveringText(CreativeTabs.tabInventory, par1, par2);
         }
 
-        if (this.field_74235_v != null
-                && selectedTabIndex == CreativeTabs.tabInventory.getTabIndex()
-                && this.func_74188_c(this.field_74235_v.xDisplayPosition, this.field_74235_v.yDisplayPosition, 16, 16, par1, par2)) {
+        if (this.field_74235_v != null && selectedTabIndex == CreativeTabs.tabInventory.getTabIndex() && this.func_74188_c(this.field_74235_v.xDisplayPosition, this.field_74235_v.yDisplayPosition, 16, 16, par1, par2)) {
             this.drawCreativeTabHoveringText(StringTranslate.getInstance().translateKey("inventory.binSlot"), par1, par2);
         }
 
-        if (maxPages != 0) {
+        if (maxPages != 0)
+        {
             String page = String.format("%d / %d", tabPage + 1, maxPages + 1);
             int width = fontRenderer.getStringWidth(page);
             GL11.glDisable(GL11.GL_LIGHTING);
@@ -202,26 +196,35 @@ public abstract class GuiContainerCreativeMixin extends InventoryEffectRenderer 
         int var6 = this.mc.renderEngine.getTexture("/gui/creative_inv/" + var5.getBackgroundImageName());
 
         CreativeTabs[] var7 = CreativeTabs.creativeTabArray;
+        int var8 = var7.length;
+        int var9;
+
         int start = tabPage * 10;
-        int var8 = Math.min(var7.length, ((tabPage + 1) * 10 + 2));
+        var8 = Math.min(var7.length, ((tabPage + 1) * 10 + 2));
         if (tabPage != 0) start += 2;
 
-        for (int var9 = start; var9 < var8; ++var9) {
+        for (var9 = start; var9 < var8; ++var9)
+        {
             CreativeTabs var10 = var7[var9];
             this.mc.renderEngine.bindTexture(var4);
-            if (var10 != null && var10.getTabIndex() != selectedTabIndex) {
+
+            if (var10 != null && var10.getTabIndex() != selectedTabIndex)
+            {
                 this.renderCreativeTab(var10);
             }
         }
 
-        if (tabPage != 0) {
-            if (var5 != CreativeTabs.tabAllSearch) {
-                this.mc.renderEngine.bindTexture(var4);
-                this.renderCreativeTab(CreativeTabs.tabAllSearch);
+        if (tabPage != 0)
+        {
+            if (var5 != CreativeTabs.tabAllSearch)
+            {
+                mc.renderEngine.bindTexture(var4);
+                renderCreativeTab(CreativeTabs.tabAllSearch);
             }
-            if (var5 != CreativeTabs.tabInventory) {
-                this.mc.renderEngine.bindTexture(var4);
-                this.renderCreativeTab(CreativeTabs.tabInventory);
+            if (var5 != CreativeTabs.tabInventory)
+            {
+                mc.renderEngine.bindTexture(var4);
+                renderCreativeTab(CreativeTabs.tabInventory);
             }
         }
 
@@ -234,19 +237,21 @@ public abstract class GuiContainerCreativeMixin extends InventoryEffectRenderer 
         int var13 = var12 + 112;
         this.mc.renderEngine.bindTexture(var4);
 
-        if (var5 == null || ((CreativeTabsExtension) var5).getTabPage() != tabPage) {
-            if (var5 != CreativeTabs.tabAllSearch && var5 != CreativeTabs.tabInventory) {
+        if (var5 == null || ((CreativeTabsExtension) var5).getTabPage() != tabPage)
+        {
+            if (var5 != CreativeTabs.tabAllSearch && var5 != CreativeTabs.tabInventory)
+            {
                 return;
             }
         }
 
         if (var5.shouldHidePlayerInventory()) {
-            this.drawTexturedModalRect(var11, var12 + (int)((var13 - var12 - 17) * this.currentScroll), 232 + (this.needsScrollBars() ? 0 : 12), 0, 12, 15);
+            this.drawTexturedModalRect(var11, var12 + (int)((float)(var13 - var12 - 17) * this.currentScroll), 232 + (this.needsScrollBars() ? 0 : 12), 0, 12, 15);
         }
 
         this.renderCreativeTab(var5);
         if (var5 == CreativeTabs.tabInventory) {
-            GuiInventory.func_74223_a(this.mc, this.guiLeft + 43, this.guiTop + 45, 20, this.guiLeft + 43 - par2, this.guiTop + 45 - 30 - par3);
+            GuiInventory.func_74223_a(this.mc, this.guiLeft + 43, this.guiTop + 45, 20, (float)(this.guiLeft + 43 - par2), (float)(this.guiTop + 45 - 30 - par3));
         }
     }
 

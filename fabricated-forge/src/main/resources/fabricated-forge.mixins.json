@@ -58,7 +58,6 @@
     "common.ContainerFurnaceMixin",
     "common.CraftingManagerMixin",
     "common.CreativeTabsMixin",
-    "common.DedicatedServerMixin",
     "common.EnchantmentHelperMixin",
     "common.EnchantmentMixin",
     "common.EntityAccessor",
@@ -150,7 +149,6 @@
     "client.TessellatorAccessor",
     "client.TessellatorMixin",
     "client.ThreadDownloadResourcesMixin",
-    "client.TileEntityRendererMixin",
     "client.TileEntityRendererPistonMixin",
     "client.WorldClientMixin",
     "client.WorldRendererMixin"

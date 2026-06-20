@@ -6,7 +6,7 @@
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.TileEntityExtension;
-import net.minecraft.src.NetworkManager;
+import net.minecraft.src.INetworkManager;
 import net.minecraft.src.Packet132TileEntityData;
 import net.minecraft.src.TileEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,7 +33,7 @@ public class TileEntityMixin implements TileEntityExtension {
      * @param pkt The data packet
      */
     @Override
-    public void onDataPacket(NetworkManager net, Packet132TileEntityData pkt)
+    public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
     {
     }
 
@@ -43,14 +43,5 @@ public class TileEntityMixin implements TileEntityExtension {
     @Override
     public void onChunkUnload()
     {
-    }
-
-    /**
-     *  @return The maximum distance between the player and the TileEntity at which the TileEntitySpecialRenderer will be called
-     */
-    @Override
-    public double getRenderDistance()
-    {
-        return 64;
     }
 }

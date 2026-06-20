@@ -5,7 +5,6 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
-import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -63,11 +62,6 @@ public class NetServerHandlerMixin {
         return dist;
     }
 
-    @ModifyConstant(method = {"handleBlockDig", "handlePlace"}, constant = @Constant(intValue = 16))
-    private int forge$spawnProtectionSize(int constant) {
-        return ((MinecraftServerAccessor) mcServer).getSpawnProtectionSize();
-    }
-
     @Inject(method = "handleBlockDig", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/NetServerHandler;sendPacketToPlayer(Lnet/minecraft/src/Packet;)V", ordinal = 0))
     private void forge$onPlayerInteract(Packet14BlockDig par1, CallbackInfo ci,
                                         @Local(ordinal = 2) int var5,
@@ -76,10 +70,14 @@ public class NetServerHandlerMixin {
         ForgeEventFactory.onPlayerInteract(playerEntity, PlayerInteractEvent.Action.LEFT_CLICK_BLOCK, var5, var6, var7, 0);
     }
 
-    @WrapWithCondition(method = "handlePlace", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemInWorldManager;tryUseItem(Lnet/minecraft/src/EntityPlayer;Lnet/minecraft/src/World;Lnet/minecraft/src/ItemStack;)Z"))
-    private boolean forge$onPlayerInteract(ItemInWorldManager instance, EntityPlayer playerEntity, World par3ItemStack, ItemStack itemStack) {
+    @WrapOperation(method = "handlePlace", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemInWorldManager;tryUseItem(Lnet/minecraft/src/EntityPlayer;Lnet/minecraft/src/World;Lnet/minecraft/src/ItemStack;)Z"))
+    private boolean forge$onPlayerInteract(ItemInWorldManager instance, EntityPlayer playerEntity, World world, ItemStack itemStack, Operation<Boolean> original) {
         PlayerInteractEvent event = ForgeEventFactory.onPlayerInteract(playerEntity, PlayerInteractEvent.Action.RIGHT_CLICK_AIR, 0, 0, 0, -1);
-        return event.useItem != Event.Result.DENY;
+        if (event.useItem != Event.Result.DENY) {
+            return original.call(instance, playerEntity, world, itemStack);
+        } else {
+            return false;
+        }
     }
 
     @ModifyConstant(method = "handlePlace", constant = @Constant(doubleValue = 64.0D))

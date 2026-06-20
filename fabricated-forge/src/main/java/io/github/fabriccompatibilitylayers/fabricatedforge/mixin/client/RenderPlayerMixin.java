@@ -5,6 +5,8 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.client;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -29,7 +31,7 @@ public abstract class RenderPlayerMixin {
     // Pattern E (@WrapOperation INVOKE): intercepts the loadTexture call-site inside
     // setArmorModel to route the path through ForgeHooksClient.getArmorTexture — 1:1 translation.
     @WrapOperation(
-        method = "setArmorModel",
+        method = {"setArmorModel", "func_82439_b"},
         at = @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderPlayer;loadTexture(Ljava/lang/String;)V")
     )
     private void forge$getArmorTexture(RenderPlayer instance, String path, Operation<Void> original,
@@ -37,16 +39,28 @@ public abstract class RenderPlayerMixin {
         original.call(instance, ForgeHooksClient.getArmorTexture(var4, path));
     }
 
+    @WrapOperation(method = "renderSpecials", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemStack;getItem()Lnet/minecraft/src/Item;", ordinal = 0))
+    private Item forge$nullFix(ItemStack instance, Operation<Item> original) {
+        return instance == null ? null : original.call(instance);
+    }
+
+    @WrapOperation(method = "renderSpecials", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Item;shiftedIndex:I", ordinal = 0, opcode = Opcodes.GETFIELD))
+    private int forge$nullFix(Item instance, Operation<Integer> original) {
+        return instance == null ? 0 : original.call(instance);
+    }
+
     // Pattern E (@WrapOperation GETFIELD, ordinal = 0): intercepts the first Item.shiftedIndex
     // read in renderSpecials to replace `shiftedIndex < 256` with `instanceof ItemBlock` —
     // same technique as RenderBipedMixin. Receiver is the Item from var3.getItem().
+    @Definition(id = "shiftedIndex", field = "Lnet/minecraft/src/Item;shiftedIndex:I")
+    @Expression("?.shiftedIndex < 256")
     @WrapOperation(
-        method = "renderSpecials",
-        at = @At(value = "FIELD", target = "Lnet/minecraft/src/Item;shiftedIndex:I",
-                 opcode = Opcodes.GETFIELD, ordinal = 0)
+            method = "renderSpecials",
+            at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0)
     )
-    private int forge$instanceOfItemBlockCheckHelmet(Item item, Operation<Integer> original) {
-        return (item instanceof ItemBlock) ? 1 : Integer.MAX_VALUE;
+    private boolean forge$instanceOfItemBlockCheckHelmet(int left, int right, Operation<Boolean> original,
+                                                         @Local ItemStack var4) {
+        return var4 != null && var4.getItem() instanceof ItemBlock;
     }
 
     // Pattern E (@WrapOperation INVOKE, ordinal = 0): wraps the first renderItemIn3d call
@@ -57,11 +71,11 @@ public abstract class RenderPlayerMixin {
                  ordinal = 0)
     )
     private boolean forge$wrapRenderItemIn3dHelmet(int renderType, Operation<Boolean> original,
-            @Local ItemStack var3) {
+            @Local ItemStack var4) {
         IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(
-            var3, IItemRenderer.ItemRenderType.EQUIPPED);
+            var4, IItemRenderer.ItemRenderType.EQUIPPED);
         boolean is3D = customRenderer != null && customRenderer.shouldUseRenderHelper(
-            IItemRenderer.ItemRenderType.EQUIPPED, var3, IItemRenderer.ItemRendererHelper.BLOCK_3D);
+            IItemRenderer.ItemRenderType.EQUIPPED, var4, IItemRenderer.ItemRendererHelper.BLOCK_3D);
         return is3D || original.call(renderType);
     }
 

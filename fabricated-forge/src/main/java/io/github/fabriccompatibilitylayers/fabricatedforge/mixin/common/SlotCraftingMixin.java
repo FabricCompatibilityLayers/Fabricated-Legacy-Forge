@@ -25,27 +25,27 @@ public class SlotCraftingMixin extends Slot {
         super(par1IInventory, par2, par3, par4);
     }
 
-    @Redirect(method = "onPickupFromSlot", at = @At(value = "NEW", target = "(Lnet/minecraft/src/Item;)Lnet/minecraft/src/ItemStack;"))
+    @Redirect(method = "func_82870_a", at = @At(value = "NEW", target = "(Lnet/minecraft/src/Item;)Lnet/minecraft/src/ItemStack;"))
     private ItemStack forge$postPlayerDestroyItemEvent(Item item,
-                                                       @Local(ordinal = 1) ItemStack var3) {
-        ItemStack var4 = ((ItemExtension) var3.getItem()).getContainerItemStack(var3);
+                                                       @Local(ordinal = 1) ItemStack var4) {
+        ItemStack var5 = ((ItemExtension) var4.getItem()).getContainerItemStack(var4);
 
-        if (var4.isItemStackDamageable() && var4.getItemDamage() > var4.getMaxDamage())
+        if (var5.isItemStackDamageable() && var5.getItemDamage() > var5.getMaxDamage())
         {
-            MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(thePlayer, var4));
-            var4 = null;
+            MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(thePlayer, var5));
+            var5 = null;
         }
 
-        return var4;
+        return var5;
     }
 
-    @WrapOperation(method = "onPickupFromSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Item;doesContainerItemLeaveCraftingGrid(Lnet/minecraft/src/ItemStack;)Z"))
+    @WrapOperation(method = "func_82870_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Item;doesContainerItemLeaveCraftingGrid(Lnet/minecraft/src/ItemStack;)Z"))
     private boolean forge$NonNull1(Item instance, ItemStack itemStack, Operation<Boolean> original,
-                                   @Local(ordinal = 2) ItemStack var4) {
-        return var4 == null || original.call(instance, itemStack);
+                                   @Local(ordinal = 2) ItemStack var5) {
+        return var5 == null || original.call(instance, itemStack);
     }
 
-    @WrapOperation(method = "onPickupFromSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/InventoryPlayer;addItemStackToInventory(Lnet/minecraft/src/ItemStack;)Z"))
+    @WrapOperation(method = "func_82870_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/InventoryPlayer;addItemStackToInventory(Lnet/minecraft/src/ItemStack;)Z"))
     private boolean forge$NonNull2(InventoryPlayer instance, ItemStack itemStack, Operation<Boolean> original) {
         return itemStack == null || original.call(instance, itemStack);
     }

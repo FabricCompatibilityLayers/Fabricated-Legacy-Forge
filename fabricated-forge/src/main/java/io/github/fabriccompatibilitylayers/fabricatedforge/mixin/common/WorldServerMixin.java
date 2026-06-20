@@ -133,13 +133,13 @@ public abstract class WorldServerMixin extends World implements WorldServerExten
     // Logic delta: patch computed a boolean first then selected; here we reuse the original value (8)
     // directly in the ternary, avoiding a redundant re-hardcode.
     @ModifyExpressionValue(
-        method = "scheduleBlockUpdate(IIIII)V",
+        method = "func_82740_a(IIIIII)V",
         at = @At(value = "CONSTANT", args = "intValue=8")
     )
     private int forge$forcedChunkScheduleRange(int original,
-                                                @Local(ordinal = 0) NextTickListEntry var6) {
+                                                @Local(ordinal = 0) NextTickListEntry var7) {
         boolean isForced = ForgeChunkManager.getPersistentChunksFor(this)
-            .containsKey(new ChunkCoordIntPair(var6.xCoord >> 4, var6.zCoord >> 4));
+            .containsKey(new ChunkCoordIntPair(var7.xCoord >> 4, var7.zCoord >> 4));
         return isForced ? 0 : original;
     }
 
@@ -218,12 +218,13 @@ public abstract class WorldServerMixin extends World implements WorldServerExten
     // Logic delta: hardcoded 16 replaced with mcServer.spawnProtectionSize.
     @Override
     public boolean canMineBlockBody(EntityPlayer par1EntityPlayer, int par2, int par3, int par4) {
-        int var5 = MathHelper.abs_int(par2 - worldInfo.getSpawnX());
-        int var6 = MathHelper.abs_int(par4 - worldInfo.getSpawnZ());
+        int var5 = MathHelper.abs_int(par2 - this.worldInfo.getSpawnX());
+        int var6 = MathHelper.abs_int(par4 - this.worldInfo.getSpawnZ());
         if (var5 > var6) {
             var6 = var5;
         }
-        return var6 > ((MinecraftServerAccessor) mcServer).getSpawnProtectionSize()
+
+        return var6 > mcServer.func_82357_ak()
             || mcServer.getConfigurationManager().areCommandsAllowed(par1EntityPlayer.username)
             || mcServer.isSinglePlayer();
     }

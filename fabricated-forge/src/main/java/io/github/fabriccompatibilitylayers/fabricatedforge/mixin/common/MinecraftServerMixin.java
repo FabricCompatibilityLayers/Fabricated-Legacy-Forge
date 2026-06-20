@@ -7,7 +7,6 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import cpw.mods.fml.common.FMLCommonHandler;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.MinecraftServerExtension;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
@@ -27,7 +26,7 @@ import java.util.List;
 public abstract class MinecraftServerMixin implements MinecraftServerExtension {
 
     @Shadow @Final public Profiler theProfiler;
-    @Shadow @Final private List playersOnline;
+    @Shadow @Final private List<IUpdatePlayerListBox> playersOnline;
     @Shadow private ServerConfigurationManager serverConfigManager;
 
     @Shadow public abstract NetworkListenThread getNetworkThread();
@@ -68,46 +67,44 @@ public abstract class MinecraftServerMixin implements MinecraftServerExtension {
 
     // Forge Fields
     public Hashtable<Integer, long[]> worldTickTimes = new Hashtable<>();
-    public int spawnProtectionSize = 16;
 
     /**
      * @author
      * @reason full rewrite of loop
      */
     @Overwrite
-    public void loadAllWorlds(String par1Str, String par2Str, long par3, WorldType par5WorldType) {
+    public void loadAllWorlds(String par1Str, String par2Str, long par3, WorldType par5WorldType, String par6Str) {
         this.convertMapIfNeeded(par1Str);
         this.setUserMessage("menu.loadingLevel");
-        ISaveHandler var6 = this.anvilConverterForAnvilFile.getSaveLoader(par1Str, true);
-        WorldInfo var8 = var6.loadWorldInfo();
-        WorldSettings var7;
-        if (var8 == null) {
-            var7 = new WorldSettings(par3, this.getGameType(), this.canStructuresSpawn(), this.isHardcore(), par5WorldType);
+        ISaveHandler var7 = this.anvilConverterForAnvilFile.getSaveLoader(par1Str, true);
+        WorldInfo var9 = var7.loadWorldInfo();
+        WorldSettings var8;
+        if (var9 == null) {
+            var8 = new WorldSettings(par3, this.getGameType(), this.canStructuresSpawn(), this.isHardcore(), par5WorldType);
+            var8.func_82750_a(par6Str);
         } else {
-            var7 = new WorldSettings(var8);
+            var8 = new WorldSettings(var9);
         }
 
         if (this.enableBonusChest) {
-            var7.enableBonusChest();
+            var8.enableBonusChest();
         }
 
-        WorldServer overWorld = (isDemo() ? new DemoWorldServer((MinecraftServer) (Object) this, var6, par2Str, 0, theProfiler) : new WorldServer((MinecraftServer) (Object) this, var6, par2Str, 0, var7, theProfiler));
-        for (int dim : DimensionManager.getStaticDimensionIDs())
-        {
-            WorldServer world = (dim == 0 ? overWorld : new WorldServerMulti((MinecraftServer) (Object) this, var6, par2Str, dim, var7, overWorld, theProfiler));
+        WorldServer overWorld = (isDemo() ? new DemoWorldServer((MinecraftServer) (Object) this, var7, par2Str, 0, theProfiler) : new WorldServer((MinecraftServer) (Object) this, var7, par2Str, 0, var8, theProfiler));
+        for(int dim : DimensionManager.getStaticDimensionIDs()) {
+            WorldServer world = (dim == 0 ? overWorld : new WorldServerMulti((MinecraftServer) (Object) this, var7, par2Str, dim, var8, overWorld, theProfiler));
             world.addWorldAccess(new WorldManager((MinecraftServer) (Object) this, world));
 
-            if (!this.isSinglePlayer())
-            {
+            if (!this.isSinglePlayer()) {
                 world.getWorldInfo().setGameType(this.getGameType());
             }
 
             this.serverConfigManager.setPlayerManager(this.worldServers);
+
             MinecraftForge.EVENT_BUS.post(new WorldEvent.Load(world));
         }
 
         this.serverConfigManager.setPlayerManager(new WorldServer[]{ overWorld });
-
         this.setDifficultyForAllWorlds(this.getDifficulty());
         this.initialWorldChunkLoad();
     }
@@ -127,31 +124,24 @@ public abstract class MinecraftServerMixin implements MinecraftServerExtension {
     public void updateTimeLightAndEntities() {
         this.theProfiler.startSection("levels");
 
-        for (Integer id : DimensionManager.getIDs())
-        {
+        for(Integer id : DimensionManager.getIDs()) {
             long var2 = System.nanoTime();
-
-            if (id == 0 || this.getAllowNether())
-            {
+            if (id == 0 || this.getAllowNether()) {
                 WorldServer var4 = DimensionManager.getWorld(id);
                 this.theProfiler.startSection(var4.getWorldInfo().getWorldName());
+                this.theProfiler.startSection("pools");
+                var4.func_82732_R().clear();
+                this.theProfiler.endSection();
                 if (this.tickCounter % 20 == 0) {
                     this.theProfiler.startSection("timeSync");
-                    this.serverConfigManager.sendPacketToAllPlayersInDimension(new Packet4UpdateTime(var4.getWorldTime()), var4.provider.dimensionId);
+                    this.serverConfigManager.sendPacketToAllPlayersInDimension(new Packet4UpdateTime(var4.func_82737_E(), var4.getWorldTime()), var4.provider.dimensionId);
                     this.theProfiler.endSection();
                 }
 
                 this.theProfiler.startSection("tick");
-                FMLCommonHandler.instance().onPreWorldTick(var4);
                 var4.tick();
-                FMLCommonHandler.instance().onPostWorldTick(var4);
-                this.theProfiler.endStartSection("lights");
-
-                while(var4.updatingLighting()) {
-                }
-
-                this.theProfiler.endSection();
                 var4.updateEntities();
+                this.theProfiler.endSection();
                 this.theProfiler.startSection("tracker");
                 var4.getEntityTracker().updateTrackedEntities();
                 this.theProfiler.endSection();
@@ -169,7 +159,7 @@ public abstract class MinecraftServerMixin implements MinecraftServerExtension {
         this.serverConfigManager.sendPlayerInfoToAllPlayers();
         this.theProfiler.endStartSection("tickables");
 
-        for(IUpdatePlayerListBox var6 : (List<IUpdatePlayerListBox>) this.playersOnline) {
+        for(IUpdatePlayerListBox var6 : this.playersOnline) {
             var6.update();
         }
 
@@ -195,10 +185,5 @@ public abstract class MinecraftServerMixin implements MinecraftServerExtension {
     private void forge$deleteWorld(WorldServer var2, Operation<Void> original) {
         MinecraftForge.EVENT_BUS.post(new WorldEvent.Unload(var2));
         var2.flush();
-    }
-
-    @Override
-    public void setSpawnProtectionSize(int spawnProtectionSize) {
-        this.spawnProtectionSize = spawnProtectionSize;
     }
 }

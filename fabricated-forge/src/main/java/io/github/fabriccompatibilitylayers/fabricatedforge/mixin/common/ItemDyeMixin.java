@@ -10,6 +10,7 @@ import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.Item
 import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.Event;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,7 +36,7 @@ public abstract class ItemDyeMixin extends Item implements ItemExtension {
             return;
         }
 
-        if (event.isHandeled())
+        if (event.getResult() == Event.Result.ALLOW)
         {
             if (!par3World.isRemote)
             {

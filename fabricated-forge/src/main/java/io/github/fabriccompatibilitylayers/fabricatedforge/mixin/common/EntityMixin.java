@@ -9,10 +9,12 @@ import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityMinecartExtension;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,10 +24,22 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @Mixin(Entity.class)
-public class EntityMixin implements EntityExtension {
+public abstract class EntityMixin implements EntityExtension {
 
     @Shadow public Entity ridingEntity;
 
+    @Shadow
+    public World worldObj;
+    @Shadow
+    public double posX;
+    @Shadow
+    public double posY;
+
+    @Shadow
+    public abstract float getEyeHeight();
+
+    @Shadow
+    public double posZ;
     /** Forge: Used to store custom data for each entity. */
     private NBTTagCompound customEntityData;
     public boolean captureDrops = false;
@@ -74,6 +88,15 @@ public class EntityMixin implements EntityExtension {
         return original && ((EntityExtension) this.ridingEntity).shouldRiderSit();
     }
 
+    /**
+     * @author CatCore
+     * @reason redirect to forge extension method
+     */
+    @Overwrite
+    public float func_82146_a(Explosion par1Explosion, Block par2Block, int par3, int par4, int par5) {
+        return ((BlockExtension) par2Block).getExplosionResistance((Entity) (Object) this, worldObj, par3, par4, par5, posX, posY + (double) getEyeHeight(), posZ);
+    }
+
     /* ================================== Forge Start =====================================*/
     /**
      * Returns a NBTTagCompound that can be used to store custom data for this entity.
@@ -120,6 +143,18 @@ public class EntityMixin implements EntityExtension {
         else if ((Object) this instanceof EntityBoat)
         {
             return new ItemStack(Item.boat);
+        }
+        else if ((Object) this instanceof EntityItemFrame)
+        {
+            ItemStack held = ((EntityItemFrame) (Object)this).func_82335_i();
+            if (held == null)
+            {
+                return new ItemStack(Item.field_82802_bI);
+            }
+            else
+            {
+                return held.copy();
+            }
         }
         else
         {

@@ -23,6 +23,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.EntityItem;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ITexturePack;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemBlock;
 import net.minecraft.src.ItemStack;
@@ -32,7 +33,6 @@ import net.minecraft.src.RenderBlocks;
 import net.minecraft.src.RenderEngine;
 import net.minecraft.src.RenderGlobal;
 import net.minecraft.src.Tessellator;
-import net.minecraft.src.TexturePackBase;
 import net.minecraftforge.client.event.DrawBlockHighlightEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureLoadEvent;
@@ -307,7 +307,7 @@ public class ForgeHooksClient
 
             if(inColor)
             {
-                int color = Item.itemsList[item.itemID].getColorFromDamage(item.getItemDamage(), 0);
+                int color = Item.itemsList[item.itemID].func_82790_a(item, 0);
                 float r = (float)(color >> 16 & 0xff) / 255F;
                 float g = (float)(color >> 8 & 0xff) / 255F;
                 float b = (float)(color & 0xff) / 255F;
@@ -328,7 +328,7 @@ public class ForgeHooksClient
 
             if (inColor)
             {
-                int color = Item.itemsList[item.itemID].getColorFromDamage(item.getItemDamage(), 0);
+                int color = Item.itemsList[item.itemID].func_82790_a(item, 0);
                 float r = (float)(color >> 16 & 255) / 255.0F;
                 float g = (float)(color >> 8 & 255) / 255.0F;
                 float b = (float)(color & 255) / 255.0F;
@@ -393,7 +393,7 @@ public class ForgeHooksClient
         MinecraftForge.EVENT_BUS.post(new RenderWorldLastEvent(context, partialTicks));
     }
 
-    public static void onTextureLoad(String texture, TexturePackBase pack)
+    public static void onTextureLoad(String texture, ITexturePack pack)
     {
         MinecraftForge.EVENT_BUS.post(new TextureLoadEvent(texture, pack));
     }

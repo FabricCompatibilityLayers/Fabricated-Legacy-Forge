@@ -104,13 +104,14 @@ public class MinecraftMixin {
         if (this.objectMouseOver != null) {
             boolean var1 = this.thePlayer.capabilities.isCreativeMode;
 
-            if (!ForgeHooks.onPickBlock(this.objectMouseOver, this.thePlayer, this.theWorld)) {
+            if (!ForgeHooks.onPickBlock(this.objectMouseOver, this.thePlayer, this.theWorld))
+            {
                 return;
             }
 
             if (var1) {
-                int var11 = this.thePlayer.inventorySlots.inventorySlots.size() - 9 + this.thePlayer.inventory.currentItem;
-                this.playerController.sendSlotPacket(this.thePlayer.inventory.getStackInSlot(this.thePlayer.inventory.currentItem), var11);
+                int var12 = this.thePlayer.inventorySlots.inventorySlots.size() - 9 + this.thePlayer.inventory.currentItem;
+                this.playerController.sendSlotPacket(this.thePlayer.inventory.getStackInSlot(this.thePlayer.inventory.currentItem), var12);
             }
         }
     }

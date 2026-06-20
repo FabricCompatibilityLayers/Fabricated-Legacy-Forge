@@ -10,7 +10,9 @@ import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.Bloc
 import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.IPlantable;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -20,11 +22,14 @@ import java.util.ArrayList;
 
 @Mixin(BlockCrops.class)
 public abstract class BlockCropsMixin extends BlockFlower implements BlockExtension, IPlantable {
+    @Shadow
+    protected abstract int func_82532_h();
+
     protected BlockCropsMixin(int par1, int par2, Material par3Material) {
         super(par1, par2, par3Material);
     }
 
-    @Redirect(method = "getGrowthRate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Block;blockID:I", ordinal = 0))
+    @Redirect(method = "getGrowthRate", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Block;blockID:I", ordinal = 0, opcode = Opcodes.GETFIELD))
     private int forge$canSustainPlant(Block instance,
                                       @Local(argsOnly = true) World par1World,
                                       @Local(argsOnly = true, ordinal = 1) int par3,
@@ -41,7 +46,7 @@ public abstract class BlockCropsMixin extends BlockFlower implements BlockExtens
                 ? 1 : 0;
     }
 
-    @Inject(method = "dropBlockAsItemWithChance", at = @At(value = "FIELD", target = "Lnet/minecraft/src/World;isRemote:Z"), cancellable = true)
+    @Inject(method = "dropBlockAsItemWithChance", at = @At(value = "FIELD", target = "Lnet/minecraft/src/World;isRemote:Z", opcode = Opcodes.GETFIELD), cancellable = true)
     private void forge$cancelVanilla(World par2, int par3, int par4, int par5, int par6, float par7, int par8, CallbackInfo ci) {
         ci.cancel();
     }
@@ -49,18 +54,28 @@ public abstract class BlockCropsMixin extends BlockFlower implements BlockExtens
     @Override
     public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune)
     {
-        ArrayList<ItemStack> ret = new ArrayList<>();
+        ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
         if (metadata == 7)
         {
-            ret.add(new ItemStack(Item.wheat));
+            int count = quantityDropped(metadata, fortune, world.rand);
+            for(int i = 0; i < count; i++)
+            {
+                int id = idDropped(metadata, world.rand, 0);
+                if (id > 0)
+                {
+                    ret.add(new ItemStack(id, 1, damageDropped(metadata)));
+                }
+            }
         }
 
-        for (int n = 0; n < 3 + fortune; n++)
+        if (metadata >= 7)
         {
-
-            if (world.rand.nextInt(15) <= metadata)
+            for (int n = 0; n < 3 + fortune; n++)
             {
-                ret.add(new ItemStack(Item.seeds));
+                if (world.rand.nextInt(15) <= metadata)
+                {
+                    ret.add(new ItemStack(this.func_82532_h(), 1, 0));
+                }
             }
         }
 

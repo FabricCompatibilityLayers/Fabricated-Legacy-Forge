@@ -2,17 +2,27 @@
  * This software is provided under the terms of the Minecraft Forge Public
  * License v1.0.
  */
-package net.minecraftforge.event.entity;
+package net.minecraftforge.event.entity.player;
 
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.World;
 import net.minecraftforge.event.Cancelable;
-import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.Event;
 
 @Cancelable
+@Event.HasResult
 public class UseHoeEvent extends PlayerEvent
 {
+    /**
+     * This event is fired when a player attempts to use a Hoe on a block, it 
+     * can be canceled to completely prevent any further processing.
+     * 
+     * You can also set the result to ALLOW to mark the event as processed 
+     * and damage the hoe.
+     * 
+     * setResult(ALLOW) is the same as the old setHandeled();
+     */
 
     public final ItemStack current;
     public final World world;
@@ -30,15 +40,5 @@ public class UseHoeEvent extends PlayerEvent
         this.x = x;
         this.y = y;
         this.z = z;
-    }
-
-    public boolean isHandeled()
-    {
-        return handeled;
-    }
-    
-    public void setHandeled()
-    {
-        handeled = true;
     }
 }

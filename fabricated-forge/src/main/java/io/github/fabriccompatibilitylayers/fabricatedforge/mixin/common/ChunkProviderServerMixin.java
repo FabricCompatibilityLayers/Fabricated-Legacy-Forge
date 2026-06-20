@@ -68,7 +68,7 @@ public abstract class ChunkProviderServerMixin implements IChunkProvider {
                 this.chunksToUnload.remove(ChunkCoordIntPair.chunkXZ2Int(forced.chunkXPos, forced.chunkZPos));
             }
 
-            for (int var1 = 0; var1 < 100; var1++) {
+            for(int var1 = 0; var1 < 100; ++var1) {
                 if (!this.chunksToUnload.isEmpty()) {
                     Long var2 = (Long)this.chunksToUnload.iterator().next();
                     Chunk var3 = (Chunk)this.loadedChunkHashMap.getValueByKey(var2);

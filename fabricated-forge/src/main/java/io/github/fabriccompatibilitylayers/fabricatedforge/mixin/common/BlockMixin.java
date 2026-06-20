@@ -816,7 +816,7 @@ public abstract class BlockMixin implements BlockExtension {
         else
         {
             int id = world.getBlockId(x, y, z);
-            return id == Block.fence.blockID || id == Block.netherFence.blockID || id == Block.glass.blockID;
+            return id == Block.fence.blockID || id == Block.netherFence.blockID || id == Block.glass.blockID || id == Block.field_82515_ce.blockID;
         }
     }
 

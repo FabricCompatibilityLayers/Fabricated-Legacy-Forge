@@ -16,9 +16,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ContainerFurnace.class)
 public class ContainerFurnaceMixin {
-    @Redirect(method = "transferStackInSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/FurnaceRecipes;getSmeltingResult(I)Lnet/minecraft/src/ItemStack;"))
+    @Redirect(method = "func_82846_b", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/FurnaceRecipes;getSmeltingResult(I)Lnet/minecraft/src/ItemStack;"))
     private ItemStack forge$getSmeltingResult(FurnaceRecipes instance, int i,
-                                              @Local(ordinal = 1) ItemStack var4) {
-        return ((FurnaceRecipesExtension) instance).getSmeltingResult(var4);
+                                              @Local(ordinal = 1) ItemStack var5) {
+        return ((FurnaceRecipesExtension) instance).getSmeltingResult(var5);
     }
 }

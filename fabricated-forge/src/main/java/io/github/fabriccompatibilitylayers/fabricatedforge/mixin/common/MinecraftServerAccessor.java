@@ -13,9 +13,6 @@ import java.util.Hashtable;
 
 @Mixin(value = MinecraftServer.class, priority = 1001)
 public interface MinecraftServerAccessor {
-    @Accessor(value = "spawnProtectionSize", remap = false)
-    int getSpawnProtectionSize();
-
     @Accessor(value = "worldTickTimes", remap = false)
     Hashtable<Integer, long[]> getWorldTickTimes();
 }

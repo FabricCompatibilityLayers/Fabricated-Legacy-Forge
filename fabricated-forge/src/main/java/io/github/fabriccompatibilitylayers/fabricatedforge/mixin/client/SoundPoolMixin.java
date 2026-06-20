@@ -60,24 +60,22 @@ public class SoundPoolMixin implements SoundPoolExtension {
     public SoundPoolEntry addSound(String par1Str, URL url) {
         try {
             String var3 = par1Str;
-            var3 = var3.substring(0, var3.indexOf("."));
-
+            par1Str = par1Str.substring(0, par1Str.indexOf("."));
             if (this.isGetRandomSound) {
-                while (Character.isDigit(var3.charAt(var3.length() - 1))) {
-                    var3 = var3.substring(0, var3.length() - 1);
+                while(Character.isDigit(par1Str.charAt(par1Str.length() - 1))) {
+                    par1Str = par1Str.substring(0, par1Str.length() - 1);
                 }
             }
 
-            var3 = var3.replaceAll("/", ".");
-
-            if (!this.nameToSoundPoolEntriesMapping.containsKey(var3)) {
-                this.nameToSoundPoolEntriesMapping.put(var3, new ArrayList());
+            par1Str = par1Str.replaceAll("/", ".");
+            if (!this.nameToSoundPoolEntriesMapping.containsKey(par1Str)) {
+                this.nameToSoundPoolEntriesMapping.put(par1Str, new ArrayList());
             }
 
-            SoundPoolEntry var4 = new SoundPoolEntry(par1Str, url);
-            ((List) this.nameToSoundPoolEntriesMapping.get(var3)).add(var4);
+            SoundPoolEntry var4 = new SoundPoolEntry(var3, url);
+            ((List)this.nameToSoundPoolEntriesMapping.get(par1Str)).add(var4);
             this.allSoundPoolEntries.add(var4);
-            this.numberOfSoundPoolEntries++;
+            ++this.numberOfSoundPoolEntries;
             return var4;
         } catch (Exception var5) {
             var5.printStackTrace();

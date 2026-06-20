@@ -7,6 +7,7 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldProviderExtension;
 import net.minecraft.src.*;
@@ -52,14 +53,12 @@ public abstract class EntityPlayerMPMixin extends EntityPlayer implements ICraft
         }
     }
 
-    @Inject(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/InventoryPlayer;dropAllItems()V"))
-    private void forge$captureDrops$setup(DamageSource par1, CallbackInfo ci) {
+    @WrapOperation(method = "onDeath", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/InventoryPlayer;dropAllItems()V"))
+    private void forge$captureDrops$setup(InventoryPlayer instance, Operation<Void> original,
+                                          @Local(argsOnly = true) DamageSource par1DamageSource) {
         this.setCaptureDrops(true);
         this.getCapturedDrops().clear();
-    }
-
-    @Inject(method = "onDeath", at = @At("RETURN"))
-    private void forge$captureDrops$collect(DamageSource par1DamageSource, CallbackInfo ci) {
+        original.call(instance);
         this.setCaptureDrops(false);
         PlayerDropsEvent event = new PlayerDropsEvent(this, par1DamageSource, this.getCapturedDrops(), recentlyHit > 0);
         if (!MinecraftForge.EVENT_BUS.post(event))

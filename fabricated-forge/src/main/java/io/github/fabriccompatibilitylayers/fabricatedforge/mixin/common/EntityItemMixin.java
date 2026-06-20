@@ -17,6 +17,7 @@ import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.Enti
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.ItemExtension;
 import net.minecraft.src.*;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.Event;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import org.spongepowered.asm.mixin.Mixin;
@@ -121,6 +122,6 @@ public abstract class EntityItemMixin extends Entity implements EntityExtension 
     @WrapOperation(method = "onCollideWithPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/InventoryPlayer;addItemStackToInventory(Lnet/minecraft/src/ItemStack;)Z"))
     private boolean forge$modifyExpression(InventoryPlayer instance, ItemStack itemStack, Operation<Boolean> original,
                                            @Share(value = "event", namespace = "fabricated-forge") LocalRef<EntityItemPickupEvent> eventRef) {
-        return eventRef.get().isHandled() || itemStack.stackSize <= 0 || original.call(instance, itemStack);
+        return eventRef.get().getResult() == Event.Result.ALLOW || itemStack.stackSize <= 0 || original.call(instance, itemStack);
     }
 }

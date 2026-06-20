@@ -138,7 +138,7 @@ public abstract class EntityPlayerMixin extends EntityLiving implements ICommand
     public float getCurrentPlayerStrVsBlock(Block par1Block, int meta) {
         ItemStack stack = inventory.getCurrentItem();
         float var2 = (stack == null ? 1.0F : ((ItemExtension) stack.getItem()).getStrVsBlock(stack, par1Block, meta));
-        int var3 = EnchantmentHelper.getEfficiencyModifier(this.inventory);
+        int var3 = EnchantmentHelper.getEfficiencyModifier(this);
         if (var3 > 0 && ForgeHooks.canHarvestBlock(par1Block, (EntityPlayer) (Object) this, meta)) {
             var2 += var3 * var3 + 1;
         }
@@ -151,7 +151,7 @@ public abstract class EntityPlayerMixin extends EntityLiving implements ICommand
             var2 *= 1.0F - (this.getActivePotionEffect(Potion.digSlowdown).getAmplifier() + 1) * 0.2F;
         }
 
-        if (this.isInsideOfMaterial(Material.water) && !EnchantmentHelper.getAquaAffinityModifier(this.inventory)) {
+        if (this.isInsideOfMaterial(Material.water) && !EnchantmentHelper.getAquaAffinityModifier(this)) {
             var2 /= 5.0F;
         }
 

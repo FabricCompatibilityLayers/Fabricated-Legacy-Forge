@@ -77,7 +77,7 @@ public abstract class WorldRendererMixin {
             int var5 = this.posY + 16;
             int var6 = this.posZ + 16;
 
-            for (int var7 = 0; var7 < 2; var7++) {
+            for(int var7 = 0; var7 < 2; ++var7) {
                 this.skipRenderPass[var7] = true;
             }
 
@@ -86,22 +86,20 @@ public abstract class WorldRendererMixin {
             var21.addAll(this.tileEntityRenderers);
             this.tileEntityRenderers.clear();
             byte var8 = 1;
-            ChunkCache var9 = new ChunkCache(
-                this.worldObj, var1 - var8, var2 - var8, var3 - var8,
-                var4 + var8, var5 + var8, var6 + var8);
+            ChunkCache var9 = new ChunkCache(this.worldObj, var1 - var8, var2 - var8, var3 - var8, var4 + var8, var5 + var8, var6 + var8);
             if (!var9.extendedLevelsInChunkCache()) {
-                chunksUpdated++;
+                ++chunksUpdated;
                 RenderBlocks var10 = new RenderBlocks(var9);
                 this.bytesDrawn = 0;
 
-                for (int var11 = 0; var11 < 2; var11++) {
+                for(int var11 = 0; var11 < 2; ++var11) {
                     boolean var12 = false;
                     boolean var13 = false;
                     boolean var14 = false;
 
-                    for (int var15 = var2; var15 < var5; var15++) {
-                        for (int var16 = var3; var16 < var6; var16++) {
-                            for (int var17 = var1; var17 < var4; var17++) {
+                    for(int var15 = var2; var15 < var5; ++var15) {
+                        for(int var16 = var3; var16 < var6; ++var16) {
+                            for(int var17 = var1; var17 < var4; ++var17) {
                                 int var18 = var9.getBlockId(var17, var15, var16);
                                 if (var18 > 0) {
                                     if (!var14) {
@@ -115,14 +113,12 @@ public abstract class WorldRendererMixin {
                                         GL11.glTranslatef(8.0F, 8.0F, 8.0F);
                                         ForgeHooksClient.beforeRenderPass(var11);
                                         Tessellator.instance.startDrawingQuads();
-                                        Tessellator.instance.setTranslation(
-                                            (double) (-this.posX), (double) (-this.posY), (double) (-this.posZ));
+                                        Tessellator.instance.setTranslation((double)(-this.posX), (double)(-this.posY), (double)(-this.posZ));
                                     }
 
                                     Block var23 = Block.blocksList[var18];
                                     if (var23 != null) {
-                                        if (var11 == 0 && ((BlockExtension) var23).hasTileEntity(
-                                                var9.getBlockMetadata(var17, var15, var16))) {
+                                        if (var11 == 0 && ((BlockExtension) var23).hasTileEntity(var9.getBlockMetadata(var17, var15, var16))) {
                                             TileEntity var20 = var9.getBlockTileEntity(var17, var15, var16);
                                             if (TileEntityRenderer.instance.hasSpecialRenderer(var20)) {
                                                 this.tileEntityRenderers.add(var20);
@@ -133,9 +129,11 @@ public abstract class WorldRendererMixin {
                                         if (var24 > var11) {
                                             var12 = true;
                                         }
+
                                         if (!((BlockExtension) var23).canRenderInPass(var11)) {
                                             continue;
                                         }
+
                                         ForgeHooksClient.beforeBlockRender(var23, var10);
                                         var13 |= var10.renderBlockByRenderType(var23, var17, var15, var16);
                                         ForgeHooksClient.afterBlockRender(var23, var10);
@@ -150,7 +148,7 @@ public abstract class WorldRendererMixin {
                         this.bytesDrawn += Tessellator.instance.draw();
                         GL11.glPopMatrix();
                         GL11.glEndList();
-                        Tessellator.instance.setTranslation(0.0D, 0.0D, 0.0D);
+                        Tessellator.instance.setTranslation((double)0.0F, (double)0.0F, (double)0.0F);
                     } else {
                         var13 = false;
                     }

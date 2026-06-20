@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(CraftingManager.class)
 public class CraftingManagerMixin {
-    @Redirect(method = "findMatchingRecipe", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Item;isDamageable()Z"))
+    @Redirect(method = "func_82787_a", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Item;isDamageable()Z"))
     private boolean forge$isRepairable(Item instance) {
         return ((ItemExtension) instance).isRepairable();
     }

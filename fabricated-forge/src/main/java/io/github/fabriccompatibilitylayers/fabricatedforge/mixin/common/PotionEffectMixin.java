@@ -22,8 +22,8 @@ public class PotionEffectMixin implements PotionEffectExtension {
     /** List of ItemStack that can cure the potion effect **/
     private List<ItemStack> curativeItems;
 
-    @Inject(method = "<init>(III)V", at = @At("RETURN"))
-    private void forge$setupCurativeItems(int par1, int par2, int par3, CallbackInfo ci) {
+    @Inject(method = "<init>(IIIZ)V", at = @At("RETURN"))
+    private void forge$setupCurativeItems(int par1, int par2, int par3, boolean par4, CallbackInfo ci) {
         this.curativeItems = new ArrayList<>();
         this.curativeItems.add(new ItemStack(Item.bucketMilk));
     }

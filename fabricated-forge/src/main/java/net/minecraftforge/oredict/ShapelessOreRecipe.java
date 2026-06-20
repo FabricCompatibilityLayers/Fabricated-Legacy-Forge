@@ -14,6 +14,7 @@ import net.minecraft.src.InventoryCrafting;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ShapelessRecipes;
+import net.minecraft.src.World;
 
 public class ShapelessOreRecipe implements IRecipe 
 {
@@ -67,7 +68,7 @@ public class ShapelessOreRecipe implements IRecipe
     public ItemStack getCraftingResult(InventoryCrafting var1){ return output.copy(); }
     
     @Override
-    public boolean matches(InventoryCrafting var1) 
+    public boolean matches(InventoryCrafting var1, World world) 
     {
         ArrayList required = new ArrayList(input);
 

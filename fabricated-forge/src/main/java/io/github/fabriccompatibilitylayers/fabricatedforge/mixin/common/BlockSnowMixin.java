@@ -54,8 +54,8 @@ public abstract class BlockSnowMixin extends Block implements BlockExtension {
     @Overwrite
     public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6)
     {
-        dropBlockAsItem(par1World, par3, par4, par5, par6, 0);
-        par2EntityPlayer.addStat(StatList.mineBlockStatArray[this.blockID], 1);
+        super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
+        par1World.setBlockWithNotify(par3, par4, par5, 0);
     }
 
     /**

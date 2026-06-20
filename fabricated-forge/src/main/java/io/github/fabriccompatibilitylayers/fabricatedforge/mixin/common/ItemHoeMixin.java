@@ -8,7 +8,8 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.ItemExtension;
 import net.minecraft.src.*;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.UseHoeEvent;
+import net.minecraftforge.event.Event;
+import net.minecraftforge.event.entity.player.UseHoeEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -28,7 +29,7 @@ public abstract class ItemHoeMixin extends Item implements ItemExtension {
             cir.setReturnValue(false);
             return;
         }
-        if (event.isHandeled())
+        if (event.getResult() == Event.Result.ALLOW)
         {
             par1ItemStack.damageItem(1, par2EntityPlayer);
             cir.setReturnValue(true);

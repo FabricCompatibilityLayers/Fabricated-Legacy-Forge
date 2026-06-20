@@ -42,6 +42,9 @@ public abstract class EntityLivingMixin extends Entity implements EntityLivingEx
 
     @Shadow protected abstract void onFinishedPotionEffect(PotionEffect par1PotionEffect);
 
+    @Shadow
+    protected abstract void func_82160_b(boolean par1, int par2);
+
     public EntityLivingMixin(World par1World) {
         super(par1World);
     }
@@ -107,15 +110,16 @@ public abstract class EntityLivingMixin extends Entity implements EntityLivingEx
         if (!this.worldObj.isRemote) {
             int var3 = 0;
             if (var2 instanceof EntityPlayer) {
-                var3 = EnchantmentHelper.getLootingModifier(((EntityPlayer)var2).inventory);
+                var3 = EnchantmentHelper.getLootingModifier((EntityLiving)var2);
             }
 
             setCaptureDrops(true);
             getCapturedDrops().clear();
             int var4 = 0;
 
-            if (!this.isChild()) {
+            if (!this.isChild() && this.worldObj.func_82736_K().func_82766_b("doMobLoot")) {
                 this.dropFewItems(this.recentlyHit > 0, var3);
+                this.func_82160_b(this.recentlyHit > 0, var3);
                 if (this.recentlyHit > 0) {
                     var4 = this.rand.nextInt(200) - var3;
                     if (var4 < 5) {

@@ -9,6 +9,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -19,6 +20,8 @@ import io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common.BlockAcc
 import net.minecraft.src.*;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.common.ForgeHooks;
+import org.lwjgl.opengl.GL11;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -43,9 +46,21 @@ public abstract class EffectRendererMixin implements EffectRendererExtension {
     @Shadow
     public abstract void addBlockHitEffects(int par1, int par2, int par3, int par4);
 
+    @Shadow
+    private RenderEngine renderer;
     // New field merged into EffectRenderer by Mixin — groups custom-texture particles
     // by texture path for later update and render passes.
     private Multimap<String, EntityFX> effectList = ArrayListMultimap.create();
+
+    @WrapWithCondition(method = "updateEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityFX;onUpdate()V"))
+    private boolean forge$conditionalOnUpdate(EntityFX instance) {
+        return instance != null;
+    }
+
+    @WrapOperation(method = "updateEffects", at = @At(value = "FIELD", target = "Lnet/minecraft/src/EntityFX;isDead:Z", opcode = Opcodes.GETFIELD))
+    private boolean forge$nullCheck(EntityFX instance, Operation<Boolean> original) {
+        return instance != null && original.call(instance);
+    }
 
     // Pattern A (@Inject RETURN): appends effectList update after the vanilla fxLayers loop —
     // simple end-of-method hook, no cancellation needed.
@@ -61,20 +76,57 @@ public abstract class EffectRendererMixin implements EffectRendererExtension {
         }
     }
 
-    // Pattern A (@Inject RETURN): appends effectList render pass after the vanilla 3-layer loop.
-    // Captures var3–var7 (ActiveRenderInfo rotation values assigned at method top) via @Local.
-    // par2 float ordinal 0 is the method parameter itself; var3–var7 follow as ordinals 1–5.
-    @Inject(method = "renderParticles", at = @At("RETURN"))
-    private void forge$renderEffectList(Entity par1Entity, float par2, CallbackInfo ci,
-                                        @Local(ordinal = 1) float var3,
-                                        @Local(ordinal = 2) float var4,
-                                        @Local(ordinal = 3) float var5,
-                                        @Local(ordinal = 4) float var6,
-                                        @Local(ordinal = 5) float var7) {
+    /**
+     * @author CatCore
+     * @reason additional loop jumps
+     */
+    @Overwrite
+    public void renderParticles(Entity par1Entity, float par2) {
+        float var3 = ActiveRenderInfo.rotationX;
+        float var4 = ActiveRenderInfo.rotationZ;
+        float var5 = ActiveRenderInfo.rotationYZ;
+        float var6 = ActiveRenderInfo.rotationXY;
+        float var7 = ActiveRenderInfo.rotationXZ;
+        EntityFX.interpPosX = par1Entity.lastTickPosX + (par1Entity.posX - par1Entity.lastTickPosX) * (double)par2;
+        EntityFX.interpPosY = par1Entity.lastTickPosY + (par1Entity.posY - par1Entity.lastTickPosY) * (double)par2;
+        EntityFX.interpPosZ = par1Entity.lastTickPosZ + (par1Entity.posZ - par1Entity.lastTickPosZ) * (double)par2;
+
+        for(int var8 = 0; var8 < 3; ++var8) {
+            if (!this.fxLayers[var8].isEmpty()) {
+                int var9 = 0;
+                if (var8 == 0) {
+                    var9 = this.renderer.getTexture("/particles.png");
+                }
+
+                if (var8 == 1) {
+                    var9 = this.renderer.getTexture("/terrain.png");
+                }
+
+                if (var8 == 2) {
+                    var9 = this.renderer.getTexture("/gui/items.png");
+                }
+
+                GL11.glBindTexture(3553, var9);
+                Tessellator var10 = Tessellator.instance;
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                var10.startDrawingQuads();
+
+                for(int var11 = 0; var11 < this.fxLayers[var8].size(); ++var11) {
+                    EntityFX var12 = (EntityFX)this.fxLayers[var8].get(var11);
+                    if (var12 == null) continue;
+                    var10.setBrightness(var12.getBrightnessForRender(par2));
+                    var12.renderParticle(var10, par2, var3, var7, var4, var5, var6);
+                }
+
+                var10.draw();
+            }
+        }
+
         for (String key : effectList.keySet()) {
             ForgeHooksClient.bindTexture(key, 0);
 
             for (EntityFX entry : effectList.get(key)) {
+                if (entry == null) continue;
                 Tessellator tessellator = Tessellator.instance;
                 tessellator.startDrawingQuads();
 
@@ -87,6 +139,31 @@ public abstract class EffectRendererMixin implements EffectRendererExtension {
             }
 
             ForgeHooksClient.unbindTexture();
+        }
+    }
+
+    /**
+     * @author CatCore
+     * @reason additional loop jumps
+     */
+    @Overwrite
+    public void renderLitParticles(Entity par1Entity, float par2) {
+        float var4 = MathHelper.cos(par1Entity.rotationYaw * ((float)Math.PI / 180F));
+        float var5 = MathHelper.sin(par1Entity.rotationYaw * ((float)Math.PI / 180F));
+        float var6 = -var5 * MathHelper.sin(par1Entity.rotationPitch * ((float)Math.PI / 180F));
+        float var7 = var4 * MathHelper.sin(par1Entity.rotationPitch * ((float)Math.PI / 180F));
+        float var8 = MathHelper.cos(par1Entity.rotationPitch * ((float)Math.PI / 180F));
+        byte var9 = 3;
+        if (!this.fxLayers[var9].isEmpty()) {
+            Tessellator var10 = Tessellator.instance;
+
+            for(int var11 = 0; var11 < this.fxLayers[var9].size(); ++var11) {
+                EntityFX var12 = (EntityFX)this.fxLayers[var9].get(var11);
+                if (var12 == null) continue;
+                var10.setBrightness(var12.getBrightnessForRender(par2));
+                var12.renderParticle(var10, par2, var4, var8, var5, var6, var7);
+            }
+
         }
     }
 

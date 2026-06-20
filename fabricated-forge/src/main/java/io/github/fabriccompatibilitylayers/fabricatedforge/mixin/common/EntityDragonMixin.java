@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 
 @Mixin(EntityDragon.class)
-public class EntityDragonMixin extends EntityDragonBase {
+public abstract class EntityDragonMixin extends EntityLiving {
     public EntityDragonMixin(World par1World) {
         super(par1World);
     }
@@ -31,14 +31,13 @@ public class EntityDragonMixin extends EntityDragonBase {
         boolean var8 = false;
         boolean var9 = false;
 
-        for (int var10 = var2; var10 <= var5; var10++) {
-            for (int var11 = var3; var11 <= var6; var11++) {
-                for (int var12 = var4; var12 <= var7; var12++) {
+        for(int var10 = var2; var10 <= var5; ++var10) {
+            for(int var11 = var3; var11 <= var6; ++var11) {
+                for(int var12 = var4; var12 <= var7; ++var12) {
                     int var13 = this.worldObj.getBlockId(var10, var11, var12);
                     Block block = Block.blocksList[var13];
 
-                    if (block != null)
-                    {
+                    if (block != null) {
                         if (((BlockExtension) block).canDragonDestroy(worldObj, var10, var11, var12)) {
                             var9 = true;
                             this.worldObj.setBlockWithNotify(var10, var11, var12, 0);
@@ -51,10 +50,10 @@ public class EntityDragonMixin extends EntityDragonBase {
         }
 
         if (var9) {
-            double var16 = par1AxisAlignedBB.minX + (par1AxisAlignedBB.maxX - par1AxisAlignedBB.minX) * this.rand.nextFloat();
-            double var17 = par1AxisAlignedBB.minY + (par1AxisAlignedBB.maxY - par1AxisAlignedBB.minY) * this.rand.nextFloat();
-            double var14 = par1AxisAlignedBB.minZ + (par1AxisAlignedBB.maxZ - par1AxisAlignedBB.minZ) * this.rand.nextFloat();
-            this.worldObj.spawnParticle("largeexplode", var16, var17, var14, 0.0, 0.0, 0.0);
+            double var16 = par1AxisAlignedBB.minX + (par1AxisAlignedBB.maxX - par1AxisAlignedBB.minX) * (double)this.rand.nextFloat();
+            double var17 = par1AxisAlignedBB.minY + (par1AxisAlignedBB.maxY - par1AxisAlignedBB.minY) * (double)this.rand.nextFloat();
+            double var14 = par1AxisAlignedBB.minZ + (par1AxisAlignedBB.maxZ - par1AxisAlignedBB.minZ) * (double)this.rand.nextFloat();
+            this.worldObj.spawnParticle("largeexplode", var16, var17, var14, (double)0.0F, (double)0.0F, (double)0.0F);
         }
 
         return var8;

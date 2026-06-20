@@ -32,7 +32,9 @@ public abstract class RenderGlobalMixin implements RenderGlobalExtension {
     @Shadow public WorldClient theWorld;
     @Shadow @Final public RenderEngine renderEngine;
     @Shadow public RenderBlocks globalRenderBlocks;
-    @Shadow public Map field_72738_E;
+
+    @Shadow
+    private Map damagedBlocks;
 
     // Pattern P (@WrapMethod): wraps whole method to conditionally delegate sky rendering to a mod-
     // registered SkyProvider before running any vanilla sky logic. Preferred over @Inject(HEAD,
@@ -66,7 +68,7 @@ public abstract class RenderGlobalMixin implements RenderGlobalExtension {
         double var4 = par2EntityLiving.lastTickPosX + (par2EntityLiving.posX - par2EntityLiving.lastTickPosX) * (double)par3;
         double var6 = par2EntityLiving.lastTickPosY + (par2EntityLiving.posY - par2EntityLiving.lastTickPosY) * (double)par3;
         double var8 = par2EntityLiving.lastTickPosZ + (par2EntityLiving.posZ - par2EntityLiving.lastTickPosZ) * (double)par3;
-        if (!this.field_72738_E.isEmpty()) {
+        if (!this.damagedBlocks.isEmpty()) {
             GL11.glBlendFunc(774, 768);
             int var10 = this.renderEngine.getTexture("/terrain.png");
             GL11.glBindTexture(3553, var10);
@@ -79,7 +81,7 @@ public abstract class RenderGlobalMixin implements RenderGlobalExtension {
             par1Tessellator.startDrawingQuads();
             par1Tessellator.setTranslation(-var4, -var6, -var8);
             par1Tessellator.disableColor();
-            Iterator var11 = this.field_72738_E.values().iterator();
+            Iterator var11 = this.damagedBlocks.values().iterator();
 
             while(var11.hasNext()) {
                 DestroyBlockProgress var12 = (DestroyBlockProgress)var11.next();

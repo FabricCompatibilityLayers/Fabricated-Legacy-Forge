@@ -52,6 +52,7 @@ public abstract class EntitySheepMixin extends EntityAnimal implements IShearabl
         {
             ret.add(new ItemStack(Block.cloth.blockID, 1, getFleeceColor()));
         }
+        this.worldObj.playSoundAtEntity(this, "mob.sheep.shear", 1.0F, 1.0F);
         return ret;
     }
 }
