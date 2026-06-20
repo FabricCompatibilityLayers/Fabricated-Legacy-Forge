@@ -50,22 +50,22 @@ public class FabricatedFMLMixinPlugin implements IMixinConfigPlugin {
     }
 
     private static List<String> OPTIFINE_OVERRIDES = Arrays.asList(
-            "anz",
-            "aob",
-            "aov",
-            "apx",
-            "aus",
-            "auw",
-            "avb",
-            "avc",
-            "ave",
-            "avf",
-            "avg",
-            "avi",
-            "avk",
-            "avl",
-            "ik",
-            "jw"
+            "arc",
+            "are",
+            "asa",
+            "atf",
+            "ayo",
+            "ays",
+            "ayx",
+            "ayy",
+            "aza",
+            "azb",
+            "azc",
+            "aze",
+            "azg",
+            "azh",
+            "jx",
+            "lm"
     );
 
     @Override
