@@ -108,7 +108,7 @@ public abstract class WorldServerMixin extends World implements WorldServerExten
     // ordinal = 0 targets rand.nextInt(100000) — the first nextInt call in tickBlocksAndAmbiance.
     @WrapOperation(
         method = "tickBlocksAndAmbiance",
-        at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I", ordinal = 0)
+        at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I", ordinal = 0, remap = false)
     )
     private int forge$lightningGuard(Random instance, int bound, Operation<Integer> original,
                                       @Local(ordinal = 0) Chunk var7) {
@@ -120,7 +120,7 @@ public abstract class WorldServerMixin extends World implements WorldServerExten
     // Logic delta: same technique as forge$lightningGuard; ordinal = 1 targets rand.nextInt(16).
     @WrapOperation(
         method = "tickBlocksAndAmbiance",
-        at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I", ordinal = 1)
+        at = @At(value = "INVOKE", target = "Ljava/util/Random;nextInt(I)I", ordinal = 1, remap = false)
     )
     private int forge$iceSnowGuard(Random instance, int bound, Operation<Integer> original,
                                     @Local(ordinal = 0) Chunk var7) {
@@ -147,7 +147,7 @@ public abstract class WorldServerMixin extends World implements WorldServerExten
     // getPersistentChunks().isEmpty() so the 60-tick idle skip is suppressed when force-loaded chunks exist.
     @ModifyExpressionValue(
         method = "updateEntities",
-        at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z")
+        at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z", remap = false)
     )
     private boolean forge$checkPersistentChunksForIdle(boolean original) {
         return original && ForgeChunkManager.getPersistentChunksFor(this).isEmpty();

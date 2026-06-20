@@ -1100,7 +1100,7 @@ public abstract class WorldMixin implements WorldExtension {
 
     @WrapOperation(
             method = "joinEntityInSurroundings",
-            at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z")
+            at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", remap = false)
     )
     private boolean forge$entityJoinWorld(List list, Object entity, Operation<Boolean> original) {
         if (!MinecraftForge.EVENT_BUS.post(new EntityJoinWorldEvent((Entity) entity, (World) (Object) this))) {

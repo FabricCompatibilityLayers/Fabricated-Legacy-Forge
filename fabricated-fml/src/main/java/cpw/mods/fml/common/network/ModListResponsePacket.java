@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common.NetLoginHandlerAccessor;
 import net.minecraft.src.NetHandler;
 import net.minecraft.src.NetLoginHandler;
 import net.minecraft.src.INetworkManager;

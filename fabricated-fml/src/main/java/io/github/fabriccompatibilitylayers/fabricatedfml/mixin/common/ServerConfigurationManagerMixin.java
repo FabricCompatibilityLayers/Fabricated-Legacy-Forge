@@ -11,7 +11,7 @@ import cpw.mods.fml.common.network.FMLNetworkHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.NetServerHandler;
-import net.minecraft.src.NetworkManager;
+import net.minecraft.src.INetworkManager;
 import net.minecraft.src.ServerConfigurationManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerConfigurationManager.class)
 public class ServerConfigurationManagerMixin {
     @Inject(method = "func_72355_a", at = @At("RETURN"))
-    private void fml$handlePlayerLogin(NetworkManager p_72355_1_, EntityPlayerMP p_72355_2_, CallbackInfo ci, @Local NetServerHandler var6) {
+    private void fml$handlePlayerLogin(INetworkManager p_72355_1_, EntityPlayerMP p_72355_2_, CallbackInfo ci, @Local NetServerHandler var6) {
         FMLNetworkHandler.handlePlayerLogin(p_72355_2_, var6, p_72355_1_);
     }
 

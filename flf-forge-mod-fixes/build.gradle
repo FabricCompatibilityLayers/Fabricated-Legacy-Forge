@@ -17,6 +17,6 @@ dependencies {
     implementation(project(":fabricated-fml"))
     implementation(project(":fabricated-forge"))
 
-    mcpImplementation("maven.modrinth:codechicken-core:0.6.5")
-    mcpAtImplementation("maven.modrinth:nei:1.4.0.5")
+    if (!project.ccc_version.isEmpty()) mcpImplementation("maven.modrinth:codechicken-core:${project.ccc_version}")
+    if (!project.nei_version.isEmpty()) mcpAtImplementation("maven.modrinth:nei:${project.nei_version}")
 }

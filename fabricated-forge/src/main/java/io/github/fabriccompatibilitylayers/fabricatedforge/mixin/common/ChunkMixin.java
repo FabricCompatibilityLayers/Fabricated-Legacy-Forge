@@ -274,7 +274,7 @@ public abstract class ChunkMixin implements ChunkExtension {
         original.call(instance, value);
     }
 
-    @WrapOperation(method = "getChunkBlockTileEntity", at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0))
+    @WrapOperation(method = "getChunkBlockTileEntity", at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;", ordinal = 0, remap = false))
     private Object forge$removeInvalidTileEntity(Map chunkTileEntityMap, Object var4, Operation<Object> original) {
         TileEntity var5 = (TileEntity) original.call(chunkTileEntityMap, var4);
 
@@ -379,7 +379,7 @@ public abstract class ChunkMixin implements ChunkExtension {
     }
 
     @Environment(EnvType.CLIENT)
-    @Inject(method = "fillChunk", at = @At(value = "INVOKE", target = "Ljava/util/Map;values()Ljava/util/Collection;"))
+    @Inject(method = "fillChunk", at = @At(value = "INVOKE", target = "Ljava/util/Map;values()Ljava/util/Collection;", remap = false))
     private void forge$createLocal(byte[] par2, int par3, int par4, boolean par5, CallbackInfo ci,
                                    @Share(value = "invalidList", namespace = "fabricated-forge") LocalRef<List<TileEntity>> invalidListRef) {
         invalidListRef.set(new ArrayList<>());

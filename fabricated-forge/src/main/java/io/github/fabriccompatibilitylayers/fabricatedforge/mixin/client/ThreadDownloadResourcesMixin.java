@@ -21,7 +21,7 @@ public class ThreadDownloadResourcesMixin {
     // call needed since we're substituting the stream source with a timeout-configured URLConnection.
     @Redirect(
         method = "run",
-        at = @At(value = "INVOKE", target = "Ljava/net/URL;openStream()Ljava/io/InputStream;")
+        at = @At(value = "INVOKE", target = "Ljava/net/URL;openStream()Ljava/io/InputStream;", remap = false)
     )
     private InputStream forge$openXmlStreamWithTimeout(URL url) throws IOException {
         URLConnection con = url.openConnection();
@@ -34,7 +34,7 @@ public class ThreadDownloadResourcesMixin {
     // but scoped to downloadResource — adds connect/read timeouts to individual file downloads.
     @Redirect(
         method = "downloadResource(Ljava/net/URL;Ljava/io/File;J)V",
-        at = @At(value = "INVOKE", target = "Ljava/net/URL;openStream()Ljava/io/InputStream;")
+        at = @At(value = "INVOKE", target = "Ljava/net/URL;openStream()Ljava/io/InputStream;", remap = false)
     )
     private InputStream forge$openResourceStreamWithTimeout(URL url) throws IOException {
         URLConnection con = url.openConnection();

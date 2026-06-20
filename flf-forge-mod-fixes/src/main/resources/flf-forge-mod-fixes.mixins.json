@@ -8,15 +8,8 @@
   },
   "server": [],
   "mixins": [
-    "codechickencore.ClassDiscovererMixin",
-    "codechickencore.ClassMappingMixin",
-    "codechickencore.ClassOverriderMixin",
-    "codechickencore.FieldMappingMixin",
-    "codechickencore.MethodMappingMixin",
-    "nei.TMIUninstallerMixin"
   ],
   "client": [
-    "nei.GuiContainerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

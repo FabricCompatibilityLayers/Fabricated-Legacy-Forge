@@ -8,7 +8,7 @@ package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common;
 import cpw.mods.fml.common.network.FMLNetworkHandler;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.NetHandlerExtension;
 import net.minecraft.src.NetHandler;
-import net.minecraft.src.NetworkManager;
+import net.minecraft.src.INetworkManager;
 import net.minecraft.src.TcpConnection;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(TcpConnection.class)
-public abstract class TcpConnectionMixin implements NetworkManager {
+public abstract class TcpConnectionMixin implements INetworkManager {
     @Shadow private volatile boolean field_74472_n;
 
     @Shadow private List field_74473_o;

@@ -27,7 +27,7 @@ import java.util.Set;
 
 @Mixin(SpawnerAnimals.class)
 public class SpawnerAnimalsMixin {
-    @Redirect(method = "findChunksForSpawning", at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;"))
+    @Redirect(method = "findChunksForSpawning", at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;", remap = false))
     private static Iterator forge$shuffle(Set instance) {
         ArrayList tmp = new ArrayList<>(instance);
         Collections.shuffle(tmp);

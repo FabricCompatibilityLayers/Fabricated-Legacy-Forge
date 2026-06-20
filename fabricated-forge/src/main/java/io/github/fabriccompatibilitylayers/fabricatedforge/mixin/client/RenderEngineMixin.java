@@ -8,8 +8,8 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.client;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.src.ITexturePack;
 import net.minecraft.src.RenderEngine;
-import net.minecraft.src.TexturePackBase;
 import net.minecraftforge.client.ForgeHooksClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,7 +24,7 @@ public class RenderEngineMixin {
     // getTexture's try block — 1:1 with the patch insertion point, no local capture needed.
     @Inject(
         method = "getTexture",
-        at = @At(value = "INVOKE", target = "Ljava/nio/IntBuffer;clear()Ljava/nio/Buffer;", ordinal = 0)
+        at = @At(value = "INVOKE", target = "Ljava/nio/IntBuffer;clear()Ljava/nio/Buffer;", ordinal = 0, remap = false)
     )
     private void forge$onTextureLoadPre(String par1Str, CallbackInfoReturnable<Integer> cir) {
         ForgeHooksClient.onTextureLoadPre(par1Str);
@@ -39,7 +39,7 @@ public class RenderEngineMixin {
         at = @At(value = "RETURN", ordinal = 1)
     )
     private void forge$onTextureLoad(String par1Str, CallbackInfoReturnable<Integer> cir,
-                                     @Local(ordinal = 0) TexturePackBase var6) {
+                                     @Local(ordinal = 0) ITexturePack var6) {
         ForgeHooksClient.onTextureLoad(par1Str, var6);
     }
 }

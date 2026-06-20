@@ -18,7 +18,7 @@ dependencies {
     implementation(project(":fabricated-forge"))
 
     if (rootProject.target == "legacy-fabric") {
-        ornitheImplementation("net.legacyfabric.ornithed.legacy-fabric-api:legacy-fabric-api:${project.legacyfabric_version}+${project.minecraft_version}") {
+        ornitheImplementation("net.legacyfabric.ornithed.legacy-fabric-api:legacy-fabric-api:${project.legacyfabric_version}+${project.lf_minecraft_version}") {
             exclude(module: 'fabric-loader')
         }
 
@@ -26,9 +26,9 @@ dependencies {
             ornitheImplementation(it)
         }
 
-        ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
+        ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.modmenu_minecraft_version}")
     } else {
-        modImplementation("net.legacyfabric.ornithed.legacy-fabric-api:legacy-fabric-api:${project.legacyfabric_version}+${project.minecraft_version}") {
+        modImplementation("net.legacyfabric.ornithed.legacy-fabric-api:legacy-fabric-api:${project.legacyfabric_version}+${project.lf_minecraft_version}") {
             exclude(module: 'fabric-loader')
         }
 
@@ -36,6 +36,6 @@ dependencies {
             modImplementation(it)
         }
 
-        modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
+        modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.modmenu_minecraft_version}")
     }
 }
