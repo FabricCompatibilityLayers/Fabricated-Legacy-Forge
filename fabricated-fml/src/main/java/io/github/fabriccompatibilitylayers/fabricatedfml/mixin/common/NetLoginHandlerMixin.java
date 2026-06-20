@@ -5,15 +5,19 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import cpw.mods.fml.common.network.FMLNetworkHandler;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.NetLoginHandlerExtension;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.net.SocketAddress;
 
 @Mixin(NetLoginHandler.class)
 public abstract class NetLoginHandlerMixin extends NetHandler implements NetLoginHandlerExtension {
@@ -27,6 +31,9 @@ public abstract class NetLoginHandlerMixin extends NetHandler implements NetLogi
 
     @Shadow public boolean field_72539_c;
 
+    @Shadow
+    public abstract void func_72529_d();
+
     @ModifyConstant(method = "func_72532_c", constant = @Constant(intValue = 600))
     private int fml$increaseThreshold(int constant) {
         return 6000;
@@ -37,27 +44,34 @@ public abstract class NetLoginHandlerMixin extends NetHandler implements NetLogi
         FMLNetworkHandler.handleLoginPacketOnServer((NetLoginHandler) (Object) this, p_72455_1_);
     }
 
-    /**
-     * @author
-     * @reason
-     */
-    @Overwrite
-    public void func_72529_d() {
-        FMLNetworkHandler.onConnectionReceivedFromClient((NetLoginHandler) (Object) this, this.field_72534_f, this.field_72538_b.func_74430_c(), this.field_72543_h);
+    private boolean completeConnection = false;
+    private String completeConnectionReason;
+
+    @WrapMethod(method = "func_72529_d")
+    private void forge$onConnectionReceivedFromClient(Operation<Void> original) {
+        if (completeConnection) {
+            original.call();
+            completeConnection = false;
+            completeConnectionReason = null;
+        } else {
+            FMLNetworkHandler.onConnectionReceivedFromClient((NetLoginHandler) (Object) this, this.field_72534_f, this.field_72538_b.func_74430_c(), this.field_72543_h);
+        }
     }
 
     @Override
     public void completeConnection(String var1) {
-        if (var1 != null) {
-            this.func_72527_a(var1);
-        } else {
-            EntityPlayerMP var2 = this.field_72534_f.func_71203_ab().func_72366_a(this.field_72543_h);
-            if (var2 != null) {
-                this.field_72534_f.func_71203_ab().func_72355_a(this.field_72538_b, var2);
-            }
+        completeConnection = true;
+        completeConnectionReason = var1;
+        func_72529_d();
+    }
+
+    @WrapOperation(method = "func_72529_d", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ServerConfigurationManager;func_72399_a(Ljava/net/SocketAddress;Ljava/lang/String;)Ljava/lang/String;"))
+    private String fml$replaceReason(ServerConfigurationManager instance, SocketAddress socketAddress, String s, Operation<String> original) {
+        if (completeConnection) {
+            return completeConnectionReason;
         }
 
-        this.field_72539_c = true;
+        return original.call(instance, socketAddress, s);
     }
 
     @Override

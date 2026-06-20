@@ -7,6 +7,7 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -82,6 +83,9 @@ public abstract class BlockMixin implements BlockExtension {
 
     // Forge Fields
 
+    @Shadow
+    public abstract boolean hasTileEntity();
+
     protected String currentTexture = "/terrain.png";
     public boolean isDefaultTexture = true;
 
@@ -90,15 +94,16 @@ public abstract class BlockMixin implements BlockExtension {
         isDefaultTexture = (getTextureFile() != null && getTextureFile().equalsIgnoreCase("/terrain.png"));
     }
 
-    /**
-     * @author
-     * @reason
-     */
-    @Overwrite
-    @Deprecated //Forge: New Metadata sensitive version.
-    public boolean hasTileEntity()
-    {
-        return hasTileEntity(0);
+    private boolean hasTileEntity = false;
+
+    @WrapMethod(method = "hasTileEntity")
+    private boolean forge$hasTileEntity(Operation<Boolean> original) {
+        if (hasTileEntity) {
+            hasTileEntity = false;
+            return original.call();
+        } else {
+            return hasTileEntity(0);
+        }
     }
 
     @Environment(EnvType.CLIENT)
@@ -438,7 +443,7 @@ public abstract class BlockMixin implements BlockExtension {
     @Override
     public boolean hasTileEntity(int metadata)
     {
-        return isBlockContainer;
+        return hasTileEntity();
     }
 
     /**

@@ -134,6 +134,33 @@ public abstract class WorldMixin implements WorldExtension {
     // == New fields section: start ==
 
     @Shadow
+    public abstract BiomeGenBase getBiomeGenForCoords(int par1, int par2);
+
+    @Shadow
+    public abstract Vec3 getSkyColor(Entity par1Entity, float par2);
+
+    @Shadow
+    public abstract Vec3 drawClouds(float par1);
+
+    @Shadow
+    public abstract float getStarBrightness(float par1);
+
+    @Shadow
+    protected abstract void calculateInitialWeather();
+
+    @Shadow
+    protected abstract void updateWeather();
+
+    @Shadow
+    public abstract boolean canBlockFreeze(int par1, int par2, int par3, boolean par4);
+
+    @Shadow
+    public abstract boolean canSnowAt(int par1, int par2, int par3);
+
+    @Shadow
+    public abstract boolean canMineBlock(EntityPlayer par1EntityPlayer, int par2, int par3, int par4);
+
+    @Shadow
     public abstract Vec3Pool func_82732_R();
 
     @Public
@@ -146,25 +173,22 @@ public abstract class WorldMixin implements WorldExtension {
 
     // == Injections section: start ==
 
-    /**
-     * @author FabricCompatibilityLayers
-     * @reason Delegates to WorldProvider for dimension-aware biome resolution
-     */
-    @Overwrite
-    public BiomeGenBase getBiomeGenForCoords(int par1, int par2) {
-        return ((WorldProviderExtension) provider).getBiomeGenForCoords(par1, par2);
+    private boolean getBiomeGenForCoordsBody = false;
+
+    @WrapMethod(method = "getBiomeGenForCoords")
+    private BiomeGenBase forge$getBiomeGenForCoords(int par1, int par2, Operation<BiomeGenBase> original) {
+        if (getBiomeGenForCoordsBody) {
+            getBiomeGenForCoordsBody = false;
+            return original.call(par1, par2);
+        } else {
+            return ((WorldProviderExtension) provider).getBiomeGenForCoords(par1, par2);
+        }
     }
 
     @Override
     public BiomeGenBase getBiomeGenForCoordsBody(int par1, int par2) {
-        if (this.blockExists(par1, 0, par2)) {
-            Chunk var3 = this.getChunkFromBlockCoords(par1, par2);
-            if (var3 != null) {
-                return var3.getBiomeGenForWorldCoords(par1 & 15, par2 & 15, this.provider.worldChunkMgr);
-            }
-        }
-
-        return this.provider.worldChunkMgr.getBiomeGenAt(par1, par2);
+        getBiomeGenForCoordsBody = true;
+        return getBiomeGenForCoords(par1, par2);
     }
 
     @ShadowSuperConstructor
@@ -346,124 +370,43 @@ public abstract class WorldMixin implements WorldExtension {
         }
     }
 
-    // Pattern D (@Overwrite): single-line provider delegation.
-    /**
-     * @author FabricCompatibilityLayers
-     * @reason Delegates to WorldProvider for dimension-specific sky colour
-     */
-    @Overwrite
-    @Environment(EnvType.CLIENT)
-    public Vec3 getSkyColor(Entity par1Entity, float par2) {
-        return ((WorldProviderExtension) provider).getSkyColor(par1Entity, par2);
+    private boolean getSkyColorBody = false;
+
+    @WrapMethod(method = "getSkyColor")
+    private Vec3 forge$getSkyColor(Entity par1Entity, float par2, Operation<Vec3> original) {
+        if (getSkyColorBody) {
+            getSkyColorBody = false;
+            return original.call(par1Entity, par2);
+        } else {
+            return ((WorldProviderExtension) provider).getSkyColor(par1Entity, par2);
+        }
     }
 
     // Pattern J (extension interface): original vanilla sky-colour body for WorldProvider to call back into.
     @Environment(EnvType.CLIENT)
     @Override
     public Vec3 getSkyColorBody(Entity par1Entity, float par2) {
-        float var3 = this.getCelestialAngle(par2);
-        float var4 = MathHelper.cos(var3 * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
-        if (var4 < 0.0F) {
-            var4 = 0.0F;
-        }
-
-        if (var4 > 1.0F) {
-            var4 = 1.0F;
-        }
-
-        int var5 = MathHelper.floor_double(par1Entity.posX);
-        int var6 = MathHelper.floor_double(par1Entity.posZ);
-        BiomeGenBase var7 = this.getBiomeGenForCoords(var5, var6);
-        float var8 = var7.getFloatTemperature();
-        int var9 = var7.getSkyColorByTemp(var8);
-        float var10 = (float)(var9 >> 16 & 255) / 255.0F;
-        float var11 = (float)(var9 >> 8 & 255) / 255.0F;
-        float var12 = (float)(var9 & 255) / 255.0F;
-        var10 *= var4;
-        var11 *= var4;
-        var12 *= var4;
-        float var13 = this.getRainStrength(par2);
-        if (var13 > 0.0F) {
-            float var14 = (var10 * 0.3F + var11 * 0.59F + var12 * 0.11F) * 0.6F;
-            float var15 = 1.0F - var13 * 0.75F;
-            var10 = var10 * var15 + var14 * (1.0F - var15);
-            var11 = var11 * var15 + var14 * (1.0F - var15);
-            var12 = var12 * var15 + var14 * (1.0F - var15);
-        }
-
-        float var20 = this.getWeightedThunderStrength(par2);
-        if (var20 > 0.0F) {
-            float var21 = (var10 * 0.3F + var11 * 0.59F + var12 * 0.11F) * 0.2F;
-            float var16 = 1.0F - var20 * 0.75F;
-            var10 = var10 * var16 + var21 * (1.0F - var16);
-            var11 = var11 * var16 + var21 * (1.0F - var16);
-            var12 = var12 * var16 + var21 * (1.0F - var16);
-        }
-
-        if (this.lightningFlash > 0) {
-            float var22 = (float)this.lightningFlash - par2;
-            if (var22 > 1.0F) {
-                var22 = 1.0F;
-            }
-
-            var22 *= 0.45F;
-            var10 = var10 * (1.0F - var22) + 0.8F * var22;
-            var11 = var11 * (1.0F - var22) + 0.8F * var22;
-            var12 = var12 * (1.0F - var22) + 1.0F * var22;
-        }
-
-        return this.func_82732_R().getVecFromPool((double)var10, (double)var11, (double)var12);
+        getSkyColorBody = true;
+        return getSkyColor(par1Entity, par2);
     }
 
-    // Pattern D (@Overwrite) + Pattern J (extension interface): same delegation split as getSkyColor.
-    /**
-     * @author FabricCompatibilityLayers
-     * @reason Delegates to WorldProvider for dimension-specific cloud colour
-     */
-    @Overwrite
-    @Environment(EnvType.CLIENT)
-    public Vec3 drawClouds(float par1) {
-        return ((WorldProviderExtension) provider).drawClouds(par1);
+    private boolean drawCloudsBody = false;
+
+    @WrapMethod(method = "drawClouds")
+    private Vec3 forge$drawClouds(float par1, Operation<Vec3> original) {
+        if (drawCloudsBody) {
+            drawCloudsBody = false;
+            return original.call(par1);
+        } else {
+            return ((WorldProviderExtension) provider).drawClouds(par1);
+        }
     }
 
     @Environment(EnvType.CLIENT)
     @Override
     public Vec3 drawCloudsBody(float par1) {
-        float var2 = this.getCelestialAngle(par1);
-        float var3 = MathHelper.cos(var2 * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
-        if (var3 < 0.0F) {
-            var3 = 0.0F;
-        }
-
-        if (var3 > 1.0F) {
-            var3 = 1.0F;
-        }
-
-        float var4 = (float)(this.cloudColour >> 16 & 255L) / 255.0F;
-        float var5 = (float)(this.cloudColour >> 8 & 255L) / 255.0F;
-        float var6 = (float)(this.cloudColour & 255L) / 255.0F;
-        float var7 = this.getRainStrength(par1);
-        if (var7 > 0.0F) {
-            float var8 = (var4 * 0.3F + var5 * 0.59F + var6 * 0.11F) * 0.6F;
-            float var9 = 1.0F - var7 * 0.95F;
-            var4 = var4 * var9 + var8 * (1.0F - var9);
-            var5 = var5 * var9 + var8 * (1.0F - var9);
-            var6 = var6 * var9 + var8 * (1.0F - var9);
-        }
-
-        var4 *= var3 * 0.9F + 0.1F;
-        var5 *= var3 * 0.9F + 0.1F;
-        var6 *= var3 * 0.85F + 0.15F;
-        float var14 = this.getWeightedThunderStrength(par1);
-        if (var14 > 0.0F) {
-            float var15 = (var4 * 0.3F + var5 * 0.59F + var6 * 0.11F) * 0.2F;
-            float var10 = 1.0F - var14 * 0.95F;
-            var4 = var4 * var10 + var15 * (1.0F - var10);
-            var5 = var5 * var10 + var15 * (1.0F - var10);
-            var6 = var6 * var10 + var15 * (1.0F - var10);
-        }
-
-        return this.func_82732_R().getVecFromPool((double)var4, (double)var5, (double)var6);
+        drawCloudsBody = true;
+        return drawClouds(par1);
     }
 
     @Definition(id = "blockMaterial", field = "Lnet/minecraft/src/Block;blockMaterial:Lnet/minecraft/src/Material;")
@@ -493,31 +436,23 @@ public abstract class WorldMixin implements WorldExtension {
         return block == null || !((BlockExtension) block).isBlockFoliage((World)(Object)this, par1, var4, par2);
     }
 
-    // Pattern D (@Overwrite) + Pattern J (extension interface): same delegation split as getSkyColor.
-    /**
-     * @author FabricCompatibilityLayers
-     * @reason Delegates to WorldProvider for dimension-specific star brightness
-     */
-    @Overwrite
-    @Environment(EnvType.CLIENT)
-    public float getStarBrightness(float par1) {
-        return ((WorldProviderExtension) provider).getStarBrightness(par1);
+    private boolean getStarBrightnessBody = false;
+
+    @WrapMethod(method = "getStarBrightness")
+    private float forge$getStarBrightness(float par1, Operation<Float> original) {
+        if (getStarBrightnessBody) {
+            getStarBrightnessBody = false;
+            return original.call(par1);
+        } else {
+            return ((WorldProviderExtension) provider).getStarBrightness(par1);
+        }
     }
 
     @Environment(EnvType.CLIENT)
     @Override
     public float getStarBrightnessBody(float par1) {
-        float var2 = this.getCelestialAngle(par1);
-        float var3 = 1.0F - (MathHelper.cos(var2 * (float)Math.PI * 2.0F) * 2.0F + 0.25F);
-        if (var3 < 0.0F) {
-            var3 = 0.0F;
-        }
-
-        if (var3 > 1.0F) {
-            var3 = 1.0F;
-        }
-
-        return var3 * var3 * 0.5F;
+        getStarBrightnessBody = true;
+        return getStarBrightness(par1);
     }
 
     // Pattern D (@Overwrite): absorbs hunks 16, 17, and 18 — three structural changes to
@@ -788,102 +723,40 @@ public abstract class WorldMixin implements WorldExtension {
         ((WorldProviderExtension) provider).setAllowedSpawnTypes(par1, par2);
     }
 
-    /**
-     * @author FabricCompatibilityLayers
-     * @reason Delegates initial weather setup to WorldProvider for dimension overrides
-     */
-    @Overwrite
-    private void calculateInitialWeather() {
-        ((WorldProviderExtension) provider).calculateInitialWeather();
+    private boolean calculateInitialWeatherBody = false;
+
+    @WrapMethod(method = "calculateInitialWeather")
+    private void forge$calculateInitialWeather(Operation<Void> original) {
+        if (calculateInitialWeatherBody) {
+            calculateInitialWeatherBody = true;
+            original.call();
+        } else {
+            ((WorldProviderExtension) provider).calculateInitialWeather();
+        }
     }
 
     @Override
     public void calculateInitialWeatherBody() {
-        if (this.worldInfo.isRaining()) {
-            this.rainingStrength = 1.0F;
-            if (this.worldInfo.isThundering()) {
-                this.thunderingStrength = 1.0F;
-            }
-        }
+        calculateInitialWeatherBody = true;
+        calculateInitialWeather();
     }
 
-    /**
-     * @author FabricCompatibilityLayers
-     * @reason Delegates weather update to WorldProvider for dimension overrides
-     */
-    @Overwrite
-    public void updateWeather() {
-        ((WorldProviderExtension) provider).updateWeather();
+    private boolean updateWeatherBody = false;
+
+    @WrapMethod(method = "updateWeather")
+    private void forge$updateWeather(Operation<Void> original) {
+        if (updateWeatherBody) {
+            updateWeatherBody = false;
+            original.call();
+        } else {
+            ((WorldProviderExtension) provider).updateWeather();
+        }
     }
 
     @Override
     public void updateWeatherBody() {
-        if (!this.provider.hasNoSky) {
-            if (this.lastLightningBolt > 0) {
-                --this.lastLightningBolt;
-            }
-
-            int var1 = this.worldInfo.getThunderTime();
-            if (var1 <= 0) {
-                if (this.worldInfo.isThundering()) {
-                    this.worldInfo.setThunderTime(this.rand.nextInt(12000) + 3600);
-                } else {
-                    this.worldInfo.setThunderTime(this.rand.nextInt(168000) + 12000);
-                }
-            } else {
-                --var1;
-                this.worldInfo.setThunderTime(var1);
-                if (var1 <= 0) {
-                    this.worldInfo.setThundering(!this.worldInfo.isThundering());
-                }
-            }
-
-            int var2 = this.worldInfo.getRainTime();
-            if (var2 <= 0) {
-                if (this.worldInfo.isRaining()) {
-                    this.worldInfo.setRainTime(this.rand.nextInt(12000) + 12000);
-                } else {
-                    this.worldInfo.setRainTime(this.rand.nextInt(168000) + 12000);
-                }
-            } else {
-                --var2;
-                this.worldInfo.setRainTime(var2);
-                if (var2 <= 0) {
-                    this.worldInfo.setRaining(!this.worldInfo.isRaining());
-                }
-            }
-
-            this.prevRainingStrength = this.rainingStrength;
-            if (this.worldInfo.isRaining()) {
-                this.rainingStrength = (float)((double)this.rainingStrength + 0.01);
-            } else {
-                this.rainingStrength = (float)((double)this.rainingStrength - 0.01);
-            }
-
-            if (this.rainingStrength < 0.0F) {
-                this.rainingStrength = 0.0F;
-            }
-
-            if (this.rainingStrength > 1.0F) {
-                this.rainingStrength = 1.0F;
-            }
-
-            this.prevThunderingStrength = this.thunderingStrength;
-            if (this.worldInfo.isThundering()) {
-                this.thunderingStrength = (float)((double)this.thunderingStrength + 0.01);
-            } else {
-                this.thunderingStrength = (float)((double)this.thunderingStrength - 0.01);
-            }
-
-            if (this.thunderingStrength < 0.0F) {
-                this.thunderingStrength = 0.0F;
-            }
-
-            if (this.thunderingStrength > 1.0F) {
-                this.thunderingStrength = 1.0F;
-            }
-
-        }
+        updateWeatherBody = true;
+        updateWeather();
     }
 
     /**
@@ -905,82 +778,40 @@ public abstract class WorldMixin implements WorldExtension {
         activeChunkSet.addAll(getPersistentChunks().keySet());
     }
 
-    /**
-     * @author FabricCompatibilityLayers
-     * @reason Delegates to WorldProvider for dimension-specific freeze logic
-     */
-    @Overwrite
-    public boolean canBlockFreeze(int par1, int par2, int par3, boolean par4) {
-        return ((WorldProviderExtension) provider).canBlockFreeze(par1, par2, par3, par4);
+    private boolean canBlockFreezeBody = false;
+
+    @WrapMethod(method = "canBlockFreeze")
+    private boolean forge$canBlockFreeze(int par1, int par2, int par3, boolean par4, Operation<Boolean> original) {
+        if (canBlockFreezeBody) {
+            canBlockFreezeBody = false;
+            return original.call(par1, par2, par3, par4);
+        } else {
+            return ((WorldProviderExtension) provider).canBlockFreeze(par1, par2, par3, par4);
+        }
     }
 
     @Override
     public boolean canBlockFreezeBody(int par1, int par2, int par3, boolean par4) {
-        BiomeGenBase var5 = this.getBiomeGenForCoords(par1, par3);
-        float var6 = var5.getFloatTemperature();
-        if (var6 > 0.15F) {
-            return false;
-        } else {
-            if (par2 >= 0 && par2 < 256 && this.getSavedLightValue(EnumSkyBlock.Block, par1, par2, par3) < 10) {
-                int var7 = this.getBlockId(par1, par2, par3);
-                if ((var7 == Block.waterStill.blockID || var7 == Block.waterMoving.blockID) && this.getBlockMetadata(par1, par2, par3) == 0) {
-                    if (!par4) {
-                        return true;
-                    }
-
-                    boolean var8 = true;
-                    if (var8 && this.getBlockMaterial(par1 - 1, par2, par3) != Material.water) {
-                        var8 = false;
-                    }
-
-                    if (var8 && this.getBlockMaterial(par1 + 1, par2, par3) != Material.water) {
-                        var8 = false;
-                    }
-
-                    if (var8 && this.getBlockMaterial(par1, par2, par3 - 1) != Material.water) {
-                        var8 = false;
-                    }
-
-                    if (var8 && this.getBlockMaterial(par1, par2, par3 + 1) != Material.water) {
-                        var8 = false;
-                    }
-
-                    if (!var8) {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
+        canBlockFreezeBody = true;
+        return canBlockFreeze(par1, par2, par3, par4);
     }
 
-    /**
-     * @author FabricCompatibilityLayers
-     * @reason Delegates to WorldProvider for dimension-specific snow placement logic
-     */
-    @Overwrite
-    public boolean canSnowAt(int par1, int par2, int par3) {
-        return ((WorldProviderExtension) provider).canSnowAt(par1, par2, par3);
+    private boolean canSnowAtBody = false;
+
+    @WrapMethod(method = "canSnowAt")
+    private boolean forge$canSnowAt(int par1, int par2, int par3, Operation<Boolean> original) {
+        if (canSnowAtBody) {
+            canSnowAtBody = false;
+            return original.call(par1, par2, par3);
+        } else {
+            return ((WorldProviderExtension) provider).canSnowAt(par1, par2, par3);
+        }
     }
 
     @Override
     public boolean canSnowAtBody(int par1, int par2, int par3) {
-        BiomeGenBase var4 = this.getBiomeGenForCoords(par1, par3);
-        float var5 = var4.getFloatTemperature();
-        if (var5 > 0.15F) {
-            return false;
-        } else {
-            if (par2 >= 0 && par2 < 256 && this.getSavedLightValue(EnumSkyBlock.Block, par1, par2, par3) < 10) {
-                int var6 = this.getBlockId(par1, par2 - 1, par3);
-                int var7 = this.getBlockId(par1, par2, par3);
-                if (var7 == 0 && Block.snow.canPlaceBlockAt((World) (Object) this, par1, par2, par3) && var6 != 0 && var6 != Block.ice.blockID && Block.blocksList[var6].blockMaterial.blocksMovement()) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
+        canSnowAtBody = true;
+        return canSnowAt(par1, par2, par3);
     }
 
     @Definition(id = "lightValue", field = "Lnet/minecraft/src/Block;lightValue:[I")
@@ -1110,16 +941,22 @@ public abstract class WorldMixin implements WorldExtension {
         }
     }
 
-    /** @author FabricCompatibilityLayers
-     * @reason Delegates to WorldProvider for dimension-specific mine permissions */
-    @Overwrite
-    public boolean canMineBlock(EntityPlayer par1EntityPlayer, int par2, int par3, int par4) {
-        return ((WorldProviderExtension) provider).canMineBlock(par1EntityPlayer, par2, par3, par4);
+    private boolean canMineBlockBody = false;
+
+    @WrapMethod(method = "canMineBlock")
+    private boolean forge$canMineBlock(EntityPlayer par1EntityPlayer, int par2, int par3, int par4, Operation<Boolean> original) {
+        if (canMineBlockBody) {
+            canMineBlockBody = false;
+            return original.call(par1EntityPlayer, par2, par3, par4);
+        } else {
+            return ((WorldProviderExtension) provider).canMineBlock(par1EntityPlayer, par2, par3, par4);
+        }
     }
 
     @Override
     public boolean canMineBlockBody(EntityPlayer par1EntityPlayer, int par2, int par3, int par4) {
-        return true;
+        canMineBlockBody = true;
+        return canMineBlock(par1EntityPlayer, par2, par3, par4);
     }
 
     /** @author FabricCompatibilityLayers
