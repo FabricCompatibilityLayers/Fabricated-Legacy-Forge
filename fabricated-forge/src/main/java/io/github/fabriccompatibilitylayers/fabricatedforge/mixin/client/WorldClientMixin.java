@@ -7,6 +7,7 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.client;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -57,18 +58,16 @@ public abstract class WorldClientMixin extends WorldMixin {
         MinecraftForge.EVENT_BUS.post(new WorldEvent.Load((World)(Object)this));
     }
 
-    // Pattern D (@Overwrite): WorldClient.updateWeather() is a separate bytecode override that
-    // bypassed WorldMixin's provider delegation on World; calling super routes it back through
-    // World.updateWeather() → provider.updateWeather() → updateWeatherBody().
-    /**
-     * @author FabricCompatibilityLayers
-     * @reason Routes WorldClient.updateWeather() through the provider delegation chain;
-     * WorldMixin @Overwrites World.updateWeather() to call provider.updateWeather()
-     * but WorldClient's own override bypassed it — super restores the chain.
-     */
-    @Overwrite
-    public void updateWeather() {
-        super.updateWeather();
+    private boolean updateWeatherBody = false;
+
+    @WrapMethod(method = "updateWeather")
+    private void forge$updateWeather(Operation<Void> original) {
+        if (updateWeatherBody) {
+            updateWeatherBody = false;
+            original.call();
+        } else {
+            super.updateWeather();
+        }
     }
 
     // Pattern J (extension interface override): provides the WorldClient-specific updateWeatherBody()
@@ -77,42 +76,8 @@ public abstract class WorldClientMixin extends WorldMixin {
     // Logic delta: 1:1 translation of the original WorldClient.updateWeather() body.
     @Override
     public void updateWeatherBody() {
-        if (!this.provider.hasNoSky) {
-            if (this.lastLightningBolt > 0) {
-                --this.lastLightningBolt;
-            }
-
-            this.prevRainingStrength = this.rainingStrength;
-            if (this.worldInfo.isRaining()) {
-                this.rainingStrength = (float)((double)this.rainingStrength + 0.01);
-            } else {
-                this.rainingStrength = (float)((double)this.rainingStrength - 0.01);
-            }
-
-            if (this.rainingStrength < 0.0F) {
-                this.rainingStrength = 0.0F;
-            }
-
-            if (this.rainingStrength > 1.0F) {
-                this.rainingStrength = 1.0F;
-            }
-
-            this.prevThunderingStrength = this.thunderingStrength;
-            if (this.worldInfo.isThundering()) {
-                this.thunderingStrength = (float)((double)this.thunderingStrength + 0.01);
-            } else {
-                this.thunderingStrength = (float)((double)this.thunderingStrength - 0.01);
-            }
-
-            if (this.thunderingStrength < 0.0F) {
-                this.thunderingStrength = 0.0F;
-            }
-
-            if (this.thunderingStrength > 1.0F) {
-                this.thunderingStrength = 1.0F;
-            }
-
-        }
+        updateWeatherBody = true;
+        this.updateWeather();
     }
 
 }

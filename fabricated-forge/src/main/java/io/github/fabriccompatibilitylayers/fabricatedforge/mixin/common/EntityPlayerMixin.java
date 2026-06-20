@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -51,6 +52,9 @@ public abstract class EntityPlayerMixin extends EntityLiving implements ICommand
     @Shadow public ChunkCoordinates playerLocation;
 
     @Shadow public EntityFishHook fishEntity;
+
+    @Shadow
+    public abstract float getCurrentPlayerStrVsBlock(Block par1Block);
 
     public EntityPlayerMixin(World par1World) {
         super(par1World);
@@ -124,43 +128,54 @@ public abstract class EntityPlayerMixin extends EntityLiving implements ICommand
         return true;
     }
 
-    /**
-     * @author
-     * @reason
-     */
-    @Overwrite
-    public float getCurrentPlayerStrVsBlock(Block par1Block)
-    {
-        return getCurrentPlayerStrVsBlock(par1Block, 0);
+    private boolean getCurrentPlayerStrVsBlock = false;
+    private int getCurrentPlayerStrVsBlockMeta = 0;
+
+    @WrapMethod(method = "getCurrentPlayerStrVsBlock")
+    private float forge$getCurrentPlayerStrVsBlock(Block par1Block, Operation<Float> original) {
+        if (getCurrentPlayerStrVsBlock) {
+            float result = original.call(par1Block);
+            getCurrentPlayerStrVsBlock = false;
+            getCurrentPlayerStrVsBlockMeta = 0;
+            return result;
+        } else {
+            return getCurrentPlayerStrVsBlock(par1Block, 0);
+        }
     }
 
     @Override
     public float getCurrentPlayerStrVsBlock(Block par1Block, int meta) {
-        ItemStack stack = inventory.getCurrentItem();
-        float var2 = (stack == null ? 1.0F : ((ItemExtension) stack.getItem()).getStrVsBlock(stack, par1Block, meta));
-        int var3 = EnchantmentHelper.getEfficiencyModifier(this.inventory);
-        if (var3 > 0 && ForgeHooks.canHarvestBlock(par1Block, (EntityPlayer) (Object) this, meta)) {
-            var2 += var3 * var3 + 1;
-        }
+        getCurrentPlayerStrVsBlock = true;
+        getCurrentPlayerStrVsBlockMeta = meta;
+        return getCurrentPlayerStrVsBlock(par1Block);
+    }
 
-        if (this.isPotionActive(Potion.digSpeed)) {
-            var2 *= 1.0F + (this.getActivePotionEffect(Potion.digSpeed).getAmplifier() + 1) * 0.2F;
+    @WrapOperation(method = "getCurrentPlayerStrVsBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/InventoryPlayer;getStrVsBlock(Lnet/minecraft/src/Block;)F"))
+    private float forge$getCurrentPlayerStrVsBlock$initialStr(InventoryPlayer instance, Block block, Operation<Float> original) {
+        if (getCurrentPlayerStrVsBlock) {
+            ItemStack stack = instance.getCurrentItem();
+            return (stack == null ? 1.0F : ((ItemExtension) stack.getItem()).getStrVsBlock(stack, block, getCurrentPlayerStrVsBlockMeta));
+        } else {
+            return original.call(instance, block);
         }
+    }
 
-        if (this.isPotionActive(Potion.digSlowdown)) {
-            var2 *= 1.0F - (this.getActivePotionEffect(Potion.digSlowdown).getAmplifier() + 1) * 0.2F;
+    @WrapOperation(method = "getCurrentPlayerStrVsBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/InventoryPlayer;canHarvestBlock(Lnet/minecraft/src/Block;)Z"))
+    private boolean forge$getCurrentPlayerStrVsBlock$canHarvestBlock(InventoryPlayer instance, Block block, Operation<Boolean> original) {
+        if (getCurrentPlayerStrVsBlock) {
+            return ForgeHooks.canHarvestBlock(block, (EntityPlayer) (Object) this, getCurrentPlayerStrVsBlockMeta);
         }
+        return original.call(instance, block);
+    }
 
-        if (this.isInsideOfMaterial(Material.water) && !EnchantmentHelper.getAquaAffinityModifier(this.inventory)) {
-            var2 /= 5.0F;
+    @ModifyReturnValue(method = "getCurrentPlayerStrVsBlock", at = @At("RETURN"))
+    private float forge$getCurrentPlayerStrVsBlock$getBreakSpeed(float original,
+                                                                 @Local(argsOnly = true) Block par1Block) {
+        if (getCurrentPlayerStrVsBlock) {
+            original = ForgeEventFactory.getBreakSpeed((EntityPlayer) (Object) this, par1Block, getCurrentPlayerStrVsBlockMeta, original);
+            return (original < 0 ? 0 : original);
         }
-
-        if (!this.onGround) {
-            var2 /= 5.0F;
-        }
-
-        var2 = ForgeEventFactory.getBreakSpeed((EntityPlayer) (Object) this, par1Block, meta, var2);
-        return (var2 < 0 ? 0 : var2);
+        return original;
     }
 
     @ModifyReturnValue(method = "canHarvestBlock", at = @At("RETURN"))

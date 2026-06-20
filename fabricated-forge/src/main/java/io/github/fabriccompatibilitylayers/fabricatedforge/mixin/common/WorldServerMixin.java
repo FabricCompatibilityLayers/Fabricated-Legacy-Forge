@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -28,7 +29,9 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.File;
@@ -45,6 +48,9 @@ public abstract class WorldServerMixin extends World implements WorldServerExten
 
     @Shadow private MinecraftServer mcServer;
     @Shadow public ChunkProviderServer theChunkProviderServer;
+
+    @Shadow
+    public abstract boolean canMineBlock(EntityPlayer par1EntityPlayer, int par2, int par3, int par4);
 
     // Pattern: @Unique field — new instance field injected into WorldServer.
     // Logic delta: 1:1 translation; protected visibility preserved via @Unique.
@@ -202,15 +208,16 @@ public abstract class WorldServerMixin extends World implements WorldServerExten
         return var7;
     }
 
-    // Pattern D (@Overwrite): routes WorldServer.canMineBlock through super so WorldMixin's
-    // provider delegation fires, then bounces back to canMineBlockBody below.
-    /**
-     * @author FabricCompatibilityLayers
-     * @reason Delegates to provider via super; spawn-protection body moved to canMineBlockBody
-     */
-    @Overwrite
-    public boolean canMineBlock(EntityPlayer par1EntityPlayer, int par2, int par3, int par4) {
-        return super.canMineBlock(par1EntityPlayer, par2, par3, par4);
+    private boolean server_canMineBlockBody = false;
+
+    @WrapMethod(method = "canMineBlock")
+    private boolean forge$canMineBlock(EntityPlayer par1EntityPlayer, int par2, int par3, int par4, Operation<Boolean> original) {
+        if (server_canMineBlockBody) {
+            server_canMineBlockBody = false;
+            return original.call(par1EntityPlayer, par2, par3, par4);
+        } else {
+            return super.canMineBlock(par1EntityPlayer, par2, par3, par4);
+        }
     }
 
     // Pattern J (extension interface override): WorldServer-specific canMineBlockBody overrides
@@ -218,14 +225,13 @@ public abstract class WorldServerMixin extends World implements WorldServerExten
     // Logic delta: hardcoded 16 replaced with mcServer.spawnProtectionSize.
     @Override
     public boolean canMineBlockBody(EntityPlayer par1EntityPlayer, int par2, int par3, int par4) {
-        int var5 = MathHelper.abs_int(par2 - worldInfo.getSpawnX());
-        int var6 = MathHelper.abs_int(par4 - worldInfo.getSpawnZ());
-        if (var5 > var6) {
-            var6 = var5;
-        }
-        return var6 > ((MinecraftServerAccessor) mcServer).getSpawnProtectionSize()
-            || mcServer.getConfigurationManager().areCommandsAllowed(par1EntityPlayer.username)
-            || mcServer.isSinglePlayer();
+        server_canMineBlockBody = true;
+        return canMineBlock(par1EntityPlayer, par2, par3, par4);
+    }
+
+    @ModifyConstant(method = "canMineBlock", constant = @Constant(intValue = 16))
+    private int forge$spawnProtection(int constant) {
+        return ((MinecraftServerAccessor) mcServer).getSpawnProtectionSize();
     }
 
     // Pattern G (@WrapOperation + @Expression): intercepts the new WorldGeneratorBonusChest(...)

@@ -5,6 +5,8 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.common;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import cpw.mods.fml.common.network.FMLNetworkHandler;
@@ -32,61 +34,22 @@ public abstract class NetServerHandlerMixin extends NetHandler implements NetHan
         ref.set(FMLNetworkHandler.handleChatMessage(this, p_72481_1_));
     }
 
-    /**
-     * @author
-     * @reason
-     */
-    @Overwrite
-    public void func_72501_a(Packet250CustomPayload p_72501_1_)
-    {
-        FMLNetworkHandler.handlePacket250Packet(p_72501_1_, field_72575_b, this);
+    private boolean handleVanilla250Packet = false;
+
+    @WrapMethod(method = "func_72501_a")
+    private void fml$handlePacket250Packet(Packet250CustomPayload p_72501_1_, Operation<Void> original) {
+        if (handleVanilla250Packet) {
+            handleVanilla250Packet = false;
+            original.call(p_72501_1_);
+        } else {
+            FMLNetworkHandler.handlePacket250Packet(p_72501_1_, field_72575_b, this);
+        }
     }
 
     @Override
     public void handleVanilla250Packet(Packet250CustomPayload p_72501_1_) {
-        if ("MC|BEdit".equals(p_72501_1_.field_73630_a)) {
-            try {
-                DataInputStream var2 = new DataInputStream(new ByteArrayInputStream(p_72501_1_.field_73629_c));
-                ItemStack var3 = Packet.func_73276_c(var2);
-                if (!ItemWritableBook.func_77829_a(var3.func_77978_p())) {
-                    throw new IOException("Invalid book tag!");
-                }
-
-                ItemStack var4 = this.field_72574_e.field_71071_by.func_70448_g();
-                if (var3 != null && var3.field_77993_c == Item.field_77821_bF.field_77779_bT && var3.field_77993_c == var4.field_77993_c) {
-                    var4.func_77982_d(var3.func_77978_p());
-                }
-            } catch (Exception var7) {
-                var7.printStackTrace();
-            }
-        } else if ("MC|BSign".equals(p_72501_1_.field_73630_a)) {
-            try {
-                DataInputStream var8 = new DataInputStream(new ByteArrayInputStream(p_72501_1_.field_73629_c));
-                ItemStack var10 = Packet.func_73276_c(var8);
-                if (!ItemEditableBook.func_77828_a(var10.func_77978_p())) {
-                    throw new IOException("Invalid book tag!");
-                }
-
-                ItemStack var12 = this.field_72574_e.field_71071_by.func_70448_g();
-                if (var10 != null && var10.field_77993_c == Item.field_77823_bG.field_77779_bT && var12.field_77993_c == Item.field_77821_bF.field_77779_bT) {
-                    var12.func_77982_d(var10.func_77978_p());
-                    var12.field_77993_c = Item.field_77823_bG.field_77779_bT;
-                }
-            } catch (Exception var6) {
-                var6.printStackTrace();
-            }
-        } else if ("MC|TrSel".equals(p_72501_1_.field_73630_a)) {
-            try {
-                DataInputStream var9 = new DataInputStream(new ByteArrayInputStream(p_72501_1_.field_73629_c));
-                int var11 = var9.readInt();
-                Container var13 = this.field_72574_e.field_71070_bA;
-                if (var13 instanceof ContainerMerchant) {
-                    ((ContainerMerchant)var13).func_75175_c(var11);
-                }
-            } catch (Exception var5) {
-                var5.printStackTrace();
-            }
-        }
+        handleVanilla250Packet = true;
+        func_72501_a(p_72501_1_);
     }
 
     @Override

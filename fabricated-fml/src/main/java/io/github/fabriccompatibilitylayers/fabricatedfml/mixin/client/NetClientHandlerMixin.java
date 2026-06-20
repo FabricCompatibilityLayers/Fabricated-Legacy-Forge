@@ -5,6 +5,8 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import cpw.mods.fml.common.network.FMLNetworkHandler;
@@ -13,15 +15,10 @@ import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.NetCli
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
 
 @Mixin(NetClientHandler.class)
 public abstract class NetClientHandlerMixin extends NetHandler implements NetClientHandlerExtension {
@@ -66,63 +63,40 @@ public abstract class NetClientHandlerMixin extends NetHandler implements NetCli
         ref.set(FMLNetworkHandler.handleChatMessage(this, p_72481_1_));
     }
 
-    /**
-     * @author cpw?
-     * @reason redirecting to FMLNetworking system
-     */
-    @Overwrite
-    public void func_72494_a(Packet131MapData p_72494_1_)
-    {
-        FMLNetworkHandler.handlePacket131Packet(this, p_72494_1_);
+    private boolean fmlPacket131Callback = false;
+
+    @WrapMethod(method = "func_72494_a")
+    private void fml$handlePacket131Packet(Packet131MapData p_72494_1_, Operation<Void> original) {
+        if (fmlPacket131Callback) {
+            fmlPacket131Callback = false;
+            original.call(p_72494_1_);
+        } else {
+            FMLNetworkHandler.handlePacket131Packet(this, p_72494_1_);
+        }
     }
 
     @Override
     public void fmlPacket131Callback(Packet131MapData p_72494_1_) {
-        if (p_72494_1_.field_73438_a == Item.field_77744_bd.field_77779_bT) {
-            ItemMap.func_77874_a(p_72494_1_.field_73436_b, this.field_72563_h.field_71441_e).func_76192_a(p_72494_1_.field_73437_c);
-        } else {
-            System.out.println("Unknown itemid: " + p_72494_1_.field_73436_b);
-        }
+        fmlPacket131Callback = true;
+        func_72494_a(p_72494_1_);
     }
 
-    /**
-     * @author cpw?
-     * @reason redirecting to FMLNetworking system
-     */
-    @Overwrite
-    public void func_72501_a(Packet250CustomPayload p_72501_1_)
-    {
-        FMLNetworkHandler.handlePacket250Packet(p_72501_1_, field_72555_g, this);
+    private boolean handleVanilla250Packet = false;
+
+    @WrapMethod(method = "func_72501_a")
+    private void fml$handlePacket250Packet(Packet250CustomPayload p_72501_1_, Operation<Void> original) {
+        if (handleVanilla250Packet) {
+            handleVanilla250Packet = false;
+            original.call(p_72501_1_);
+        } else {
+            FMLNetworkHandler.handlePacket250Packet(p_72501_1_, field_72555_g, this);
+        }
     }
 
     @Override
     public void handleVanilla250Packet(Packet250CustomPayload p_72501_1_) {
-        if ("MC|TPack".equals(p_72501_1_.field_73630_a)) {
-            String[] var2 = (new String(p_72501_1_.field_73629_c)).split("\u0000");
-            String var3 = var2[0];
-            if (var2[1].equals("16")) {
-                if (this.field_72563_h.field_71418_C.func_77298_g()) {
-                    this.field_72563_h.field_71418_C.func_77296_a(var3);
-                } else if (this.field_72563_h.field_71418_C.func_77300_f()) {
-                    this.field_72563_h.func_71373_a(new GuiYesNo(new NetClientWebTextures((NetClientHandler) (Object) this, var3), StringTranslate.func_74808_a().func_74805_b("multiplayer.texturePrompt.line1"), StringTranslate.func_74808_a().func_74805_b("multiplayer.texturePrompt.line2"), 0));
-                }
-            }
-        } else if ("MC|TrList".equals(p_72501_1_.field_73630_a)) {
-            DataInputStream var8 = new DataInputStream(new ByteArrayInputStream(p_72501_1_.field_73629_c));
-
-            try {
-                int var9 = var8.readInt();
-                GuiScreen var4 = this.field_72563_h.field_71462_r;
-                if (var4 != null && var4 instanceof GuiMerchant && var9 == this.field_72563_h.field_71439_g.field_71070_bA.field_75152_c) {
-                    IMerchant var5 = ((GuiMerchant)var4).func_74199_h();
-                    MerchantRecipeList var6 = MerchantRecipeList.func_77204_a(var8);
-                    var5.func_70930_a(var6);
-                }
-            } catch (IOException var7) {
-                var7.printStackTrace();
-            }
-        }
-
+        handleVanilla250Packet = true;
+        func_72501_a(p_72501_1_);
     }
 
     @Override

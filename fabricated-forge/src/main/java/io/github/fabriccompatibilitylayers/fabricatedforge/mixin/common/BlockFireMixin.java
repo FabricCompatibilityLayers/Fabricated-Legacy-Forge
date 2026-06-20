@@ -5,6 +5,9 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
+import com.llamalad7.mixinextras.expression.Definition;
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -28,6 +31,9 @@ public abstract class BlockFireMixin extends Block implements BlockFireExtension
     @Shadow private int[] abilityToCatchFire;
 
     @Shadow private int[] chanceToEncourageFire;
+
+    @Shadow
+    protected abstract void tryToCatchBlockOnFire(World par1World, int par2, int par3, int par4, int par5, Random par6Random, int par7);
 
     public BlockFireMixin(int par1, Material par2Material) {
         super(par1, par2Material);
@@ -98,14 +104,18 @@ public abstract class BlockFireMixin extends Block implements BlockFireExtension
         ((BlockFireExtension) instance).tryToCatchBlockOnFire(par2, par3, par4, par5, par6Random, par7, i, NORTH);
     }
 
-    /**
-     * @author
-     * @reason
-     */
-    @Overwrite
-    private void tryToCatchBlockOnFire(World par1World, int par2, int par3, int par4, int par5, Random par6Random, int par7)
-    {
-        tryToCatchBlockOnFire(par1World, par2, par3, par4, par5, par6Random, par7, UP);
+    private boolean tryToCatchBlockOnFire = false;
+    private ForgeDirection tryToCatchBlockOnFireFace = null;
+
+    @WrapMethod(method = "tryToCatchBlockOnFire")
+    private void forge$tryToCatchBlockOnFire(World par1World, int par2, int par3, int par4, int par5, Random par6Random, int par7, Operation<Void> original) {
+        if (tryToCatchBlockOnFire) {
+            original.call(par1World, par2, par3, par4, par5, par6Random, par7);
+            tryToCatchBlockOnFire = false;
+            tryToCatchBlockOnFireFace = null;
+        } else {
+            tryToCatchBlockOnFire(par1World, par2, par3, par4, par5, par6Random, par7, UP);
+        }
     }
 
     /**
@@ -114,30 +124,32 @@ public abstract class BlockFireMixin extends Block implements BlockFireExtension
     @Override
     public void tryToCatchBlockOnFire(World par1World, int par2, int par3, int par4, int par5, Random par6Random, int par7, ForgeDirection face)
     {
-        int var8 = 0;
-        Block block = Block.blocksList[par1World.getBlockId(par2, par3, par4)];
-        if (block != null)
+        tryToCatchBlockOnFire = true;
+        tryToCatchBlockOnFireFace = face;
+        tryToCatchBlockOnFire(par1World, par2, par3, par4, par5, par6Random, par7);
+    }
+
+    @Definition(id = "abilityToCatchFire", field = "Lnet/minecraft/src/BlockFire;abilityToCatchFire:[I")
+    @Expression("?.abilityToCatchFire[?]")
+    @WrapOperation(method = "tryToCatchBlockOnFire", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private int forge$tryToCatchBlockOnFire$getFlammability(int[] array, int index, Operation<Integer> original,
+                                                            @Local(argsOnly = true) World par1World,
+                                                            @Local(ordinal = 0, argsOnly = true) int par2,
+                                                            @Local(ordinal = 1, argsOnly = true) int par3,
+                                                            @Local(ordinal = 2, argsOnly = true) int par4) {
+        if (tryToCatchBlockOnFire)
         {
-            var8 = ((BlockExtension) block).getFlammability(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), face);
-        }
-
-        if (par6Random.nextInt(par5) < var8) {
-            boolean var9 = par1World.getBlockId(par2, par3, par4) == Block.tnt.blockID;
-            if (par6Random.nextInt(par7 + 10) < 5 && !par1World.canLightningStrikeAt(par2, par3, par4)) {
-                int var10 = par7 + par6Random.nextInt(5) / 4;
-                if (var10 > 15) {
-                    var10 = 15;
-                }
-
-                par1World.setBlockAndMetadataWithNotify(par2, par3, par4, this.blockID, var10);
-            } else {
-                par1World.setBlockWithNotify(par2, par3, par4, 0);
+            int var8 = 0;
+            Block block = Block.blocksList[index];
+            if (block != null)
+            {
+                var8 = ((BlockExtension) block).getFlammability(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), tryToCatchBlockOnFireFace);
             }
 
-            if (var9) {
-                Block.tnt.onBlockDestroyedByPlayer(par1World, par2, par3, par4, 1);
-            }
+            return var8;
         }
+
+        return original.call(array, index);
     }
 
     @Redirect(method = "canNeighborBurn", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/BlockFire;canBlockCatchFire(Lnet/minecraft/src/IBlockAccess;III)Z", ordinal = 0))
