@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(value = RenderGlobal.class, priority = 9999)
 public abstract class RenderGlobalLateMixin implements RenderGlobalExtension {
-    @WidenedOverload(name = "a", desc = "(Lave;Log;F)V")
+    @WidenedOverload(name = "a", desc = "(Laza;Lqf;F)V")
     @Override
     public void drawBlockDamageTexture(Tessellator par1Tessellator, EntityLiving par2EntityLiving, float par3) {
         // placeholder body — replaced at post-apply with the narrow method's instructions
