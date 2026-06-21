@@ -34,5 +34,8 @@
   "mixins": [
     "fabricated-fml.mixins.json"
   ],
-  "accessWidener": "fabricated-fml.accesswidener"
+  "accessWidener": "fabricated-fml.accesswidener",
+  "custom": {
+    "flf:dummy1": "${flf_mappings}"
+  }
 }

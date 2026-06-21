@@ -32,5 +32,8 @@
   "mixins": [
     "fabricated-forge.mixins.json"
   ],
-  "accessWidener": "fabricated-forge.accesswidener"
+  "accessWidener": "fabricated-forge.accesswidener",
+  "custom": {
+    "flf:dummy1": "${flf_mappings}"
+  }
 }
