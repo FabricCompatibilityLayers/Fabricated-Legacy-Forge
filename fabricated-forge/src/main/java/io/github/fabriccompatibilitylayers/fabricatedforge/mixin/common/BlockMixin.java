@@ -443,6 +443,7 @@ public abstract class BlockMixin implements BlockExtension {
     @Override
     public boolean hasTileEntity(int metadata)
     {
+        hasTileEntity = true;
         return hasTileEntity();
     }
 

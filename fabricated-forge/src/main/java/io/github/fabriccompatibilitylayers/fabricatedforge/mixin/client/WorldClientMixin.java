@@ -11,21 +11,20 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common.WorldMixin;
-import net.minecraft.src.MapStorage;
-import net.minecraft.src.NetClientHandler;
-import net.minecraft.src.World;
-import net.minecraft.src.WorldClient;
+import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldExtension;
+import net.minecraft.src.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WorldClient.class)
-public abstract class WorldClientMixin extends WorldMixin {
+public abstract class WorldClientMixin extends World implements WorldExtension {
+    public WorldClientMixin(ISaveHandler par1ISaveHandler, String par2Str, WorldProvider par3WorldProvider, WorldSettings par4WorldSettings, Profiler par5Profiler) {
+        super(par1ISaveHandler, par2Str, par3WorldProvider, par4WorldSettings, par5Profiler);
+    }
 
     // Pattern A (two @Inject calls): inject #1 fires before the setSpawnLocation() INVOKE to set
     // mapStorage and isRemote before finishSetup() initialises the dimension — matching the order

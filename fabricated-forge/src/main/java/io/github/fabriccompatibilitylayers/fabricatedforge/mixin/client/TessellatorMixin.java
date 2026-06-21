@@ -9,7 +9,6 @@ import fr.catcore.cursedmixinextensions.annotations.NewConstructor;
 import fr.catcore.cursedmixinextensions.annotations.Public;
 import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
 import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
-import io.github.fabriccompatibilitylayers.fabricatedfml.utils.MakeStatic;
 import net.minecraft.src.GLAllocation;
 import net.minecraft.src.OpenGlHelper;
 import net.minecraft.src.Tessellator;
@@ -56,16 +55,16 @@ public abstract class TessellatorMixin {
     //       Step 2 (postApply, after @Overwrite injection): rewrites every GETFIELD/PUTFIELD that
     //       references these now-static fields to GETSTATIC/PUTSTATIC in all target methods,
     //       including the freshly-injected @Overwrite bodies.
-    @Shadow @MakeStatic private ByteBuffer byteBuffer;
-    @Shadow @MakeStatic private IntBuffer intBuffer;
-    @Shadow @MakeStatic private FloatBuffer floatBuffer;
-    @Shadow @MakeStatic private ShortBuffer shortBuffer;
+    @Shadow private ByteBuffer byteBuffer;
+    @Shadow private IntBuffer intBuffer;
+    @Shadow private FloatBuffer floatBuffer;
+    @Shadow private ShortBuffer shortBuffer;
 
     // Same two-step approach. vboCount's initializer (= 10) lives in the vanilla constructor;
     // postApply's PUTFIELD→PUTSTATIC rewrite picks it up there too.
-    @Shadow @MakeStatic private boolean useVBO;
-    @Shadow @MakeStatic private IntBuffer vertexBuffers;
-    @Shadow @MakeStatic private int vboCount;
+    @Shadow private boolean useVBO;
+    @Shadow private IntBuffer vertexBuffers;
+    @Shadow private int vboCount;
 
     @Shadow private static boolean convertQuadsToTriangles;
     @Shadow public boolean isDrawing;

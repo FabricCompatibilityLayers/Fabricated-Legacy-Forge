@@ -13,15 +13,11 @@ import cpw.mods.fml.common.network.FMLNetworkHandler;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.common.NetHandlerExtension;
 import net.minecraft.src.*;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
 
 @Mixin(NetServerHandler.class)
 public abstract class NetServerHandlerMixin extends NetHandler implements NetHandlerExtension {
