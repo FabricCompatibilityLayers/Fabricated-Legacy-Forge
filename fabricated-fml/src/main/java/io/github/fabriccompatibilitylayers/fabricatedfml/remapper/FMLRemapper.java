@@ -11,6 +11,8 @@ import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.discoverer.Cor
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.discoverer.ForgeModsDiscoverer;
 import io.github.fabriccompatibilitylayers.modremappingapi.api.v2.*;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 
 import java.util.Arrays;
@@ -20,6 +22,8 @@ import java.util.List;
 public class FMLRemapper implements ModRemapper {
     private static final String FORGE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.3.2-4.3.5.318/forge-1.3.2-4.3.5.318-universal.zip";
     private static final boolean runningLegacyFabric = WhichFabricVariantAmIOn.getVariant() == FabricVariants.LEGACY_FABRIC_V1;
+    private static final CustomValue.CvObject CV_MAPPINGS = FabricLoader.getInstance().getModContainer("fabricated-fml").get().getMetadata()
+            .getCustomValue("flf:mappings").getAsObject();
 
     @Override
     public String getContextId() {
@@ -102,18 +106,20 @@ public class FMLRemapper implements ModRemapper {
 
     @Override
     public void registerPreVisitors(VisitorInfos visitorInfos) {
+        String[] dimensionMapping = CV_MAPPINGS.get("net/minecraft/src/MapData.field_76200_c").getAsString().split("\\.");
+
         visitorInfos.registerFieldRef(
-                "adt",
-                "c",
+                dimensionMapping[0],
+                dimensionMapping[1],
                 "",
                 VisitorInfos.classMember(
-                        "adt",
+                        dimensionMapping[0],
                         "dimensionId",
                         null
                 )
         );
         visitorInfos.registerFieldRef(
-                "va",
+                CV_MAPPINGS.get("net/minecraft/src/WorldType").getAsString(),
                 "base11Biomes",
                 "",
                 VisitorInfos.classMember(
@@ -123,7 +129,7 @@ public class FMLRemapper implements ModRemapper {
                 )
         );
         visitorInfos.registerFieldRef(
-                "va",
+                CV_MAPPINGS.get("net/minecraft/src/WorldType").getAsString(),
                 "base12Biomes",
                 "",
                 VisitorInfos.classMember(

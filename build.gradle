@@ -1,4 +1,5 @@
 import com.diffplug.spotless.LineEnding
+import groovy.json.JsonOutput
 
 plugins {
     id 'java'
@@ -37,6 +38,52 @@ def ornitheLibraries = [
 allprojects {
     apply(plugin: "xyz.wagyourtail.unimined")
     apply(plugin: "com.diffplug.spotless")
+
+    def buildFlfMappingsJson = { proj ->
+        def raw = proj.hasProperty('flf_mappings') ? proj.flf_mappings as String : ''
+        if (raw.isEmpty() || proj.unimined.minecrafts.isEmpty()) return '{}'
+
+        def mc = proj.unimined.minecrafts.values().first()
+        // Accessing devNamespace triggers runBlocking { resolve() } if not yet done
+        def devNs = mc.mappings.devNamespace
+        def tree = mc.mappings.resolved
+        def officialNs = mc.mappings.unmappedNs.first()
+
+        // classesIter() avoids two dead ends:
+        //  - tree.getClass() is hijacked by Groovy's metaclass (Object.getClass() intercept)
+        //  - InternalName.Companion.read(String, boolean) can't be called from Groovy
+        //    because value-class-mangled method names aren't reachable via reflection either
+        // Build a lookup map up front so we only pay the iteration cost once.
+        def classLookup = [:]  // dev class name (String) -> [official name, ClassNode supplier]
+        tree.classesIter().each { pair ->
+            def devName = pair.first.get(devNs)?.toString()
+            if (devName != null) {
+                classLookup[devName] = [pair.first.get(officialNs)?.toString() ?: devName, pair.second]
+            }
+        }
+
+        def result = [:]
+        raw.split(',').each { String entry ->
+            entry = entry.trim()
+            int dot = entry.indexOf('.')
+            if (dot > 0) {
+                def className = entry.substring(0, dot)
+                def memberInfo = entry.substring(dot + 1)
+                def info = classLookup[className]
+                def mappedClass = info ? info[0] : className
+                // classNode.getFields(ns, name, desc) is invisible to Groovy because `fields` is
+                // also a property name — access the property directly and filter manually instead
+                def classNode = info ? info[1].invoke() : null
+                def fields = classNode?.fields?.resolve()?.findAll { it.getName(devNs) == memberInfo } ?: []
+                def mappedField = fields ? (fields.first().getName(officialNs)?.toString() ?: memberInfo) : memberInfo
+                result[entry] = "${mappedClass}.${mappedField}"
+            } else {
+                result[entry] = classLookup[entry] ? classLookup[entry][0] : entry
+            }
+        }
+
+        return "\", \"flf:mappings\": " + JsonOutput.toJson(result) + ", \"dummy\": \""
+    }
 
     version project.version
 
@@ -276,16 +323,19 @@ allprojects {
     }
 
     processResources {
-        inputs.property "version", project.version
-        inputs.property "fabric_loader_version", project.fabric_loader_version
-        inputs.property "mc_version", project.minecraft_version
-        inputs.property "mrapi_version", project.mod_remapping_api
+        def proj = project
+        inputs.property "version", proj.version
+        inputs.property "fabric_loader_version", proj.fabric_loader_version
+        inputs.property "mc_version", proj.minecraft_version
+        inputs.property "mrapi_version", proj.mod_remapping_api
+        inputs.property "flf_mappings", provider { buildFlfMappingsJson(proj) }
 
         filesMatching("fabric.mod.json") {
-            expand "version": project.version,
+            expand "version": proj.version,
                     "fabric_loader_version": rootProject.fabric_loader_version,
                     "mc_version": rootProject.minecraft_version,
-                    "mrapi_version": rootProject.mod_remapping_api
+                    "mrapi_version": rootProject.mod_remapping_api,
+                    "flf_mappings": buildFlfMappingsJson(proj)
         }
     }
 
