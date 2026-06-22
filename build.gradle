@@ -319,14 +319,8 @@ allprojects {
             transitive = false
         }
 
-        if (rootProject.target == "legacy-fabric") {
-            ornitheLibraries.forEach {
-                runtimeOnly(it)
-            }
-        } else {
-            ornitheLibraries.forEach {
-                implementation(it)
-            }
+        ornitheLibraries.forEach {
+            implementation(it)
         }
     }
 
