@@ -151,6 +151,7 @@ allprojects {
                 c("ModTextureStatic", "net/minecraft/src/ModTextureStatic", "net/minecraft/unmapped/ModTextureStatic", "net/minecraft/ModTextureStatic", "net/minecraft/src/ModTextureStatic")
                 c("TradeEntry", "net/minecraft/src/TradeEntry", "net/minecraft/unmapped/TradeEntry", "net/minecraft/TradeEntry", "net/minecraft/src/TradeEntry")
 
+                // argo
                 c("ala", "relocated/argo/format/CompactJsonFormatter", "net/minecraft/unmapped/C_98947689", "net/minecraft/class_270", "relocated/argo/format/CompactJsonFormatter")
                 c("alb", "relocated/argo/format/CompactJsonFormatter_JsonNodeType", "net/minecraft/unmapped/C_29312769", "net/minecraft/class_271", "relocated/argo/format/CompactJsonFormatter_JsonNodeType")
                 c("alc", "relocated/argo/format/JsonEscapedString", "net/minecraft/unmapped/C_73364496", "net/minecraft/class_272", "relocated/argo/format/JsonEscapedString")
@@ -200,6 +201,18 @@ allprojects {
                 c("amu", "relocated/argo/saj/PositionTrackingPushbackReader", "net/minecraft/unmapped/C_72876972", "net/minecraft/class_317", "relocated/argo/saj/PositionTrackingPushbackReader")
                 c("amv", "relocated/argo/saj/SajParser", "net/minecraft/unmapped/C_84170137", "net/minecraft/class_318", "relocated/argo/saj/SajParser")
                 c("amw", "relocated/argo/saj/ThingWithPosition", "net/minecraft/unmapped/C_34685111", "net/minecraft/class_319", "relocated/argo/saj/ThingWithPosition")
+            }
+
+            stubs(["searge", "calamus", "legacyIntermediary", "forgeMCP"]) {
+                // guava compat for Legacy Fabric target
+                c(["com/google/common/hash/HashFunction", "com/google/common/hash/HashFunction", "com/google/common/hash/HashFunction", "com/google/common/hash/HashFunction"]) {
+                    m(
+                            "hashUnencodedChars;(Ljava/lang/CharSequence;)Lcom/google/common/hash/HashCode;",
+                            "hashUnencodedChars;(Ljava/lang/CharSequence;)Lcom/google/common/hash/HashCode;",
+                            "hashString;(Ljava/lang/CharSequence;)Lcom/google/common/hash/HashCode;",
+                            "hashUnencodedChars;(Ljava/lang/CharSequence;)Lcom/google/common/hash/HashCode;"
+                    )
+                }
             }
         }
 
@@ -289,7 +302,7 @@ allprojects {
         modImplementation("maven.modrinth:mod-remapping-api:${project.mod_remapping_api}")
 
 //        // Local version of MRAPI
-//        modImplementation("io.github.fabriccompatibilitylayers:mod-remapping-api:1.27.0")
+//        modImplementation("io.github.fabriccompatibilitylayers:mod-remapping-api:1.30.0")
 
 //        modImplementation(fabricApi.legacyFabricModule("legacy-fabric-logger-api-v1", "${project.legacyfabric_version}+${project.minecraft_version}")) {
 //            exclude(module: 'fabric-loader')

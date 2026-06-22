@@ -3,7 +3,7 @@
  *
  * Licensed under the Open Software License version 3.0
  */
-package io.github.fabriccompatibilitylayers.fabricatedfml.compat.guava;
+package io.github.fabriccompatibilitylayers.fabricatedfml.compat.guava.g14;
 
 import com.google.common.base.Equivalence;
 

@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
-import io.github.fabriccompatibilitylayers.fabricatedfml.compat.guava.Equivalences;
+import io.github.fabriccompatibilitylayers.fabricatedfml.compat.guava.g14.Equivalences;
 import net.minecraft.src.BaseMod;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.Entity;
