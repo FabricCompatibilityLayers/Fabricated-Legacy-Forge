@@ -62,7 +62,7 @@ import cpw.mods.fml.common.registry.EntityRegistry.EntityRegistration;
 
 public class FMLNetworkHandler
 {
-    private static final int FML_HASH = Hashing.murmur3_32().hashString("FML", Charsets.UTF_8).asInt();
+    private static final int FML_HASH = Hashing.murmur3_32().hashUnencodedChars("FML").asInt();
     private static final int PROTOCOL_VERSION = 0x1;
     private static final FMLNetworkHandler INSTANCE = new FMLNetworkHandler();
 

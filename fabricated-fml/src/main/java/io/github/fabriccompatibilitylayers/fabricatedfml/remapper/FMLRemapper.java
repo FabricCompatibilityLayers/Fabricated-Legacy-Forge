@@ -81,7 +81,12 @@ public class FMLRemapper implements ModRemapper {
 
     @Override
     public void addRemappingLibraries(List<RemapLibrary> list, EnvType envType) {
-        list.add(RemapLibrary.of(FORGE_URL, "forge.zip", FORGE_EXCLUSIONS));
+        list.add(
+                RemapLibrary.builder("forge.zip")
+                        .url(FORGE_URL)
+                        .mergeWithMainJar(true)
+                        .build()
+        );
     }
 
     @Override
@@ -100,7 +105,18 @@ public class FMLRemapper implements ModRemapper {
 
         // Guava backward compatibility
         if (!runningLegacyFabric) {
-            mappingBuilder.addMapping("com/google/common/base/Equivalences", "io/github/fabriccompatibilitylayers/fabricatedfml/compat/guava/Equivalences");
+            // Moved in Guava 14.0
+            mappingBuilder.addMapping("com/google/common/collect/AbstractLinkedIterator", "com/google/common/collect/AbstractSequentialIterator");
+
+            // Moved in Guava 16.0
+            mappingBuilder.addMapping("com/google/common/hash/HashFunction")
+                    .method("hashString", "hashUnencodedChars", "(Ljava/lang/CharSequence;)Lcom/google/common/hash/HashCode;");
+            mappingBuilder.addMapping("com/google/common/hash/Hasher")
+                    .method("putString", "putUnencodedChars", "(Ljava/lang/CharSequence;)Lcom/google/common/hash/Hasher;");
+            mappingBuilder.addMapping("com/google/common/hash/PrimitiveSink")
+                    .method("putString", "putUnencodedChars", "(Ljava/lang/CharSequence;)Lcom/google/common/hash/PrimitiveSink;");
+            mappingBuilder.addMapping("com/google/common/hash/Funnels")
+                    .method("stringFunnel", "unencodedCharsFunnel", "()Lcom/google/common/hash/Funnel;");
         }
     }
 
@@ -223,196 +239,88 @@ public class FMLRemapper implements ModRemapper {
         );
 
         if (!runningLegacyFabric) {
+            // Removed in Guava 13.0
             visitorInfos.registerMethodInvocation(
-                    "com/google/common/hash/HashFunction",
-                    "hashString",
-                    "(Ljava/lang/CharSequence;)Lcom/google/common/hash/HashCode;",
+                    "com/google/common/io/Files",
+                    "getDigest",
+                    "(Ljava/io/File;Ljava/security/MessageDigest;)[B",
                     VisitorInfos.classMember(
-                            "io/github/fabriccompatibilitylayers/fabricatedfml/compat/guava/GuavaStubs",
-                            "hash_HashFunction_hashString",
-                            "(Lcom/google/common/hash/HashFunction;Ljava/lang/CharSequence;)Lcom/google/common/hash/HashCode;",
+                            "io/github/fabriccompatibilitylayers/fabricatedfml/compat/guava/g13/GuavaStubs",
+                            "io_Files_getDigest",
+                            "(Ljava/io/File;Ljava/security/MessageDigest;)[B",
+                            true
+                    )
+            );
+            visitorInfos.registerMethodInvocation(
+                    "com/google/common/io/ByteStreams",
+                    "getDigest",
+                    "(Lcom/google/common/io/InputSupplier;Ljava/security/MessageDigest;)[B",
+                    VisitorInfos.classMember(
+                            "io/github/fabriccompatibilitylayers/fabricatedfml/compat/guava/g13/GuavaStubs",
+                            "io_ByteStreams_getDigest",
+                            "(Lcom/google/common/io/InputSupplier;Ljava/security/MessageDigest;)[B",
+                            true
+                    )
+            );
+
+            // Moved in Guava 14.0
+            visitorInfos.registerMethodInvocation(
+                    "com/google/common/base/Equivalences",
+                    "equals",
+                    "()Lcom/google/common/base/Equivalence;",
+                    VisitorInfos.classMember(
+                            "com/google/common/base/Equivalence",
+                            "equals",
+                            "()Lcom/google/common/base/Equivalence;",
+                            true
+                    )
+            );
+            visitorInfos.registerMethodInvocation(
+                    "com/google/common/base/Equivalences",
+                    "identity",
+                    "()Lcom/google/common/base/Equivalence;",
+                    VisitorInfos.classMember(
+                            "com/google/common/base/Equivalence",
+                            "identity",
+                            "()Lcom/google/common/base/Equivalence;",
+                            true
+                    )
+            );
+
+            // Moved in Guava 16.0
+            visitorInfos.registerMethodInvocation(
+                    "com/google/common/hash/HashCodes",
+                    "fromBytes",
+                    "([B)Lcom/google/common/hash/HashCode;",
+                    VisitorInfos.classMember(
+                            "com/google/common/hash/HashCode",
+                            "fromBytes",
+                            "([B)Lcom/google/common/hash/HashCode;",
+                            true
+                    )
+            );
+            visitorInfos.registerMethodInvocation(
+                    "com/google/common/hash/HashCodes",
+                    "fromInt",
+                    "(I)Lcom/google/common/hash/HashCode;",
+                    VisitorInfos.classMember(
+                            "com/google/common/hash/HashCode",
+                            "fromInt",
+                            "(I)Lcom/google/common/hash/HashCode;",
+                            true
+                    )
+            );
+            visitorInfos.registerMethodInvocation(
+                    "com/google/common/hash/HashCodes",
+                    "fromLong",
+                    "(J)Lcom/google/common/hash/HashCode;",
+                    VisitorInfos.classMember(
+                            "com/google/common/hash/HashCode",
+                            "fromLong",
+                            "(J)Lcom/google/common/hash/HashCode;",
                             true
                     )
             );
         }
     }
-
-    private static final List<String> FORGE_EXCLUSIONS = Arrays.asList(
-            "a",
-            "aad",
-            "aae",
-            "aan",
-            "aar",
-            "aaw",
-            "abk",
-            "abu",
-            "acv",
-            "adt",
-            "adx",
-            "aeb",
-            "aed",
-            "aez",
-            "afa",
-            "afb",
-            "afe",
-            "afj",
-            "afp",
-            "afq",
-            "afu",
-            "afv",
-            "afy",
-            "agb",
-            "agj",
-            "agk",
-            "agm",
-            "agv",
-            "agx",
-            "agy",
-            "ahh",
-            "ahi",
-            "ahl",
-            "aho",
-            "ahy",
-            "aic",
-            "aig",
-            "aig$1",
-            "ail",
-            "aim",
-            "aio",
-            "aip",
-            "aiq",
-            "ais",
-            "aiy",
-            "ajd",
-            "aji",
-            "ajj",
-            "ajq",
-            "ak",
-            "amx",
-            "anz",
-            "aon",
-            "aoo",
-            "aou",
-            "aow",
-            "app",
-            "apz",
-            "aqn",
-            "art",
-            "arw",
-            "ash",
-            "aso",
-            "ast",
-            "asv",
-            "atc",
-            "atd",
-            "aub",
-            "aum",
-            "aus",
-            "auw",
-            "av",
-            "ava",
-            "avb",
-            "ave",
-            "avf",
-            "avg",
-            "avy",
-            "awg",
-            "awh",
-            "awr",
-            "awv",
-            "axc",
-            "axd",
-            "axf",
-            "axg",
-            "axh",
-            "axi",
-            "axj",
-            "axk",
-            "axp",
-            "axs",
-            "axv",
-            "axy",
-            "ayq",
-            "ayr",
-            "ays",
-            "ba",
-            "bb",
-            "cn",
-            "cp",
-            "cs",
-            "db",
-            "dc",
-            "el",
-            "et",
-            "ft",
-            "fy",
-            "ge",
-            "gm",
-            "gp",
-            "gq",
-            "gr",
-            "gu",
-            "gv",
-            "gw",
-            "gx",
-            "gz",
-            "ha",
-            "hu",
-            "it",
-            "jj",
-            "jn",
-            "jw",
-            "lc",
-            "mr",
-            "ms",
-            "mu",
-            "nd",
-            "nj",
-            "nk",
-            "ny",
-            "o",
-            "od",
-            "og",
-            "pg",
-            "ph",
-            "pq",
-            "pz",
-            "qb",
-            "qg",
-            "qt",
-            "qv",
-            "rg",
-            "rh",
-            "rl",
-            "rm",
-            "ro",
-            "rz",
-            "sa",
-            "si",
-            "tb",
-            "td",
-            "ts",
-            "tu",
-            "um",
-            "up",
-            "va",
-            "vc",
-            "ve",
-            "wl",
-            "wy",
-            "xc",
-            "xr",
-            "xw",
-            "ya",
-            "yf",
-            "yi",
-            "yj",
-            "yk",
-            "yl",
-            "yr",
-            "ys",
-            "yt",
-            "yu",
-            "za"
-    );
 }
