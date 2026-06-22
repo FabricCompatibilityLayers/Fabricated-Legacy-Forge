@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class FMLRemapper implements ModRemapper {
-    private static final String FORGE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.3.2-4.3.5.318/forge-1.3.2-4.3.5.318-universal.zip";
+    private static final String FORGE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.4.0-5.0.0.326/forge-1.4.0-5.0.0.326-universal.zip";
     private static final boolean runningLegacyFabric = WhichFabricVariantAmIOn.getVariant() == FabricVariants.LEGACY_FABRIC_V1;
     private static final CustomValue.CvObject CV_MAPPINGS = FabricLoader.getInstance().getModContainer("fabricated-fml").get().getMetadata()
             .getCustomValue("flf:mappings").getAsObject();
