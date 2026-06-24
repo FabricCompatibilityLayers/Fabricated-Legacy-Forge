@@ -8,6 +8,7 @@ package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client;
 import cpw.mods.fml.client.FMLTextureFX;
 import fr.catcore.cursedmixinextensions.annotations.ChangeSuperClass;
 import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
+import fr.catcore.cursedmixinextensions.annotations.ShadowSuper;
 import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.IFMLTextureFXExtension;
 import net.minecraft.client.Minecraft;
@@ -46,9 +47,12 @@ public abstract class TextureCompassFXMixin extends TextureFX implements IFMLTex
         this.setup();
     }
 
+    @ShadowSuper("setup")
+    public abstract void fmltexturefx$setup();
+
     @Override
     public void setup() {
-        this.superSetup();
+        this.fmltexturefx$setup();
         field_76867_h = new int[getTileSizeSquare()];
         try
         {

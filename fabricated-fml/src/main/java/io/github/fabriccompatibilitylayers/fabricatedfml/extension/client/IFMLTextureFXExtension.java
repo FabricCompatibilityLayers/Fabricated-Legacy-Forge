@@ -12,7 +12,6 @@ import java.util.logging.Logger;
 public interface IFMLTextureFXExtension extends ITextureFX {
     void setup();
 
-    void superSetup();
     int getTileSizeBase();
     int getTileSizeMask();
     int getTileSizeSquare();

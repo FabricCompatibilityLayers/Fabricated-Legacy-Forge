@@ -57,19 +57,13 @@ public class FMLTextureFX extends TextureFX implements ITextureFX, IFMLTextureFX
     @Override
     public void setup()
     {
-        this.superSetup();
+        field_76852_a = new byte[tileSizeSquare << 2];
     }
 
     public boolean unregister(RenderEngine engine, List<TextureFX> effects)
     {
         effects.remove(this);
         return true;
-    }
-
-    // Fabricated FML BEGINS
-    @Override
-    public void superSetup() {
-        field_76852_a = new byte[tileSizeSquare << 2];
     }
 
     @Override
