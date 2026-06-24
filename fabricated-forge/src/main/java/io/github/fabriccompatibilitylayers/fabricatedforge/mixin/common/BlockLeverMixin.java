@@ -5,8 +5,12 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.WorldExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.forged.ForgedBlock;
 import net.minecraft.src.Block;
 import net.minecraft.src.BlockLever;
 import net.minecraft.src.Material;
@@ -57,65 +61,14 @@ public abstract class BlockLeverMixin extends Block implements BlockExtension {
                 ((WorldExtension) par1World).isBlockSolidOnSide(par2, par3 + 1, par4, DOWN );
     }
 
-    @Redirect(method = "updateBlockMetadata", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z", ordinal = 0))
-    private boolean forge$isBlockSolidOnSideDown$updateBlockMetadata(World instance, int par2, int par3, int i) {
-        return ((WorldExtension) instance).isBlockSolidOnSide(par2, par3, i, DOWN);
+    @WrapOperation(method = {"updateBlockMetadata", "onNeighborBlockChange"}, at = {
+            @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z"),
+            @At(value = "INVOKE", target = "Lnet/minecraft/src/World;doesBlockHaveSolidTopSurface(III)Z")
+    })
+    private boolean forge$isBlockSolidOnSide(World instance, int x, int y, int z, Operation<Boolean> original,
+                                             @Local(argsOnly = true, ordinal = 0) int origX,
+                                             @Local(argsOnly = true, ordinal = 1) int origY,
+                                             @Local(argsOnly = true, ordinal = 2) int origZ) {
+        return ((WorldExtension) instance).isBlockSolidOnSide(x, y, z, ForgedBlock.findDirection(x, y, z, origX, origY, origZ));
     }
-
-    @Redirect(method = "updateBlockMetadata", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;doesBlockHaveSolidTopSurface(III)Z"))
-    private boolean forge$isBlockSolidOnSideUp$updateBlockMetadata(World instance, int par2, int par3, int i) {
-        return ((WorldExtension) instance).isBlockSolidOnSide(par2, par3, i, UP);
-    }
-
-    @Redirect(method = "updateBlockMetadata", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z", ordinal = 1))
-    private boolean forge$isBlockSolidOnSideNorth$updateBlockMetadata(World instance, int par2, int par3, int i) {
-        return ((WorldExtension) instance).isBlockSolidOnSide(par2, par3, i, NORTH);
-    }
-
-    @Redirect(method = "updateBlockMetadata", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z", ordinal = 2))
-    private boolean forge$isBlockSolidOnSideSouth$updateBlockMetadata(World instance, int par2, int par3, int i) {
-        return ((WorldExtension) instance).isBlockSolidOnSide(par2, par3, i, SOUTH);
-    }
-
-    @Redirect(method = "updateBlockMetadata", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z", ordinal = 3))
-    private boolean forge$isBlockSolidOnSideWest$updateBlockMetadata(World instance, int par2, int par3, int i) {
-        return ((WorldExtension) instance).isBlockSolidOnSide(par2, par3, i, WEST);
-    }
-
-    @Redirect(method = "updateBlockMetadata", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z", ordinal = 4))
-    private boolean forge$isBlockSolidOnSideEast$updateBlockMetadata(World instance, int par2, int par3, int i) {
-        return ((WorldExtension) instance).isBlockSolidOnSide(par2, par3, i, EAST);
-    }
-
-    @Redirect(method = "onNeighborBlockChange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z", ordinal = 0))
-    private boolean forge$isBlockSolidOnSideEast$onNeighborBlockChange(World instance, int par2, int par3, int i) {
-        return ((WorldExtension) instance).isBlockSolidOnSide(par2, par3, i, EAST);
-    }
-
-    @Redirect(method = "onNeighborBlockChange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z", ordinal = 1))
-    private boolean forge$isBlockSolidOnSideWest$onNeighborBlockChange(World instance, int par2, int par3, int i) {
-        return ((WorldExtension) instance).isBlockSolidOnSide(par2, par3, i, WEST);
-    }
-
-    @Redirect(method = "onNeighborBlockChange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z", ordinal = 2))
-    private boolean forge$isBlockSolidOnSideSouth$onNeighborBlockChange(World instance, int par2, int par3, int i) {
-        return ((WorldExtension) instance).isBlockSolidOnSide(par2, par3, i, SOUTH);
-    }
-
-    @Redirect(method = "onNeighborBlockChange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z", ordinal = 3))
-    private boolean forge$isBlockSolidOnSideNorth$onNeighborBlockChange(World instance, int par2, int par3, int i) {
-        return ((WorldExtension) instance).isBlockSolidOnSide(par2, par3, i, NORTH);
-    }
-
-    @Redirect(method = "onNeighborBlockChange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;doesBlockHaveSolidTopSurface(III)Z"))
-    private boolean forge$isBlockSolidOnSideUp$onNeighborBlockChange(World instance, int par2, int par3, int i) {
-        return ((WorldExtension) instance).isBlockSolidOnSide(par2, par3, i, UP);
-    }
-
-    @Redirect(method = "onNeighborBlockChange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z"),
-            slice = @Slice(from = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z", ordinal = 4)))
-    private boolean forge$isBlockSolidOnSideDown$onNeighborBlockChange(World instance, int par2, int par3, int i) {
-        return ((WorldExtension) instance).isBlockSolidOnSide(par2, par3, i, DOWN);
-    }
-
 }

@@ -5,11 +5,14 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityExtension;
 import net.minecraft.src.*;
 import net.minecraftforge.common.IShearable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
+import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.ArrayList;
 
@@ -19,26 +22,10 @@ public abstract class EntityMooshroomMixin extends EntityCow implements EntityEx
         super(par1World);
     }
 
-    /**
-     * @author
-     * @reason
-     */
-    @Overwrite
-    public boolean interact(EntityPlayer par1EntityPlayer) {
-        ItemStack var2 = par1EntityPlayer.inventory.getCurrentItem();
-        if (var2 != null && var2.itemID == Item.bowlEmpty.shiftedIndex && this.getGrowingAge() >= 0) {
-            if (var2.stackSize == 1) {
-                par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, new ItemStack(Item.bowlSoup));
-                return true;
-            }
-
-            if (par1EntityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.bowlSoup)) && !par1EntityPlayer.capabilities.isCreativeMode) {
-                par1EntityPlayer.inventory.decrStackSize(par1EntityPlayer.inventory.currentItem, 1);
-                return true;
-            }
-        }
-
-        return super.interact(par1EntityPlayer);
+    @Expression("? != null")
+    @WrapOperation(method = "interact", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 1))
+    private boolean forge$hackNullCheck(Object left, Object right, Operation<Boolean> original) {
+        return original.call(null, right);
     }
 
     @Override
