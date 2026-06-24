@@ -38,17 +38,25 @@ public class PatchConversionHelper {
             "L" + MakeStatic.class.getName().replace('.', '/') + ";";
     private static final String WIDENED_OVERLOAD_DESC =
             "L" + WidenedOverload.class.getName().replace('.', '/') + ";";
+    private static final String WIDENED_CATCH_DESC =
+            "L" + WidenedCatch.class.getName().replace('.', '/') + ";";
+    private static final String WIDENED_CATCH_LIST_DESC =
+            "L" + WidenedCatch.List.class.getName().replace('.', '/') + ";";
     private static final String SHADOW_DESC =
             "Lorg/spongepowered/asm/mixin/Shadow;";
 
     /**
      * Called from the MixinPlugin's {@code preApply} hook.
      *
-     * <p>Loads the mixin class and finds every {@code @Shadow @MakeStatic} field.
-     * For each such field the matching field in {@code targetClass} has its
-     * {@code ACC_STATIC} flag set (and {@code ACC_FINAL} cleared) so that Mixin's
-     * shadow validator accepts the {@code static} shadow declaration that must be
-     * present in the mixin class.
+     * <p>Performs two passes over the mixin class before it is merged into the target:
+     * <ol>
+     *   <li>Finds every {@code @Shadow @MakeStatic} field and sets {@code ACC_STATIC} (and
+     *       clears {@code ACC_FINAL}) on the matching field in {@code targetClass} so that
+     *       Mixin's shadow validator accepts the declaration.</li>
+     *   <li>Finds every {@code @Shadow} method that also carries {@link WidenedCatch} and
+     *       widens the matching catch clauses (and all type references within the method body)
+     *       in {@code targetClass} before any mixin injections are woven in.</li>
+     * </ol>
      */
     public static void preApply(ClassNode mixinNode, ClassNode targetClass) {
         for (FieldNode mixinField : mixinNode.fields) {
@@ -64,6 +72,8 @@ public class PatchConversionHelper {
                 }
             }
         }
+
+        processWidenedCatches(mixinNode, targetClass);
     }
 
     /**
@@ -236,6 +246,83 @@ public class PatchConversionHelper {
     }
 
     /**
+     * Scans every {@code @Shadow} method in {@code mixinNode} that also carries
+     * {@link WidenedCatch} (or its repeatable container {@link WidenedCatch.List}).
+     * For each such method, resolves the corresponding method in {@code targetClass} by name
+     * and descriptor (after stripping any shadow prefix), then applies the declared widenings:
+     * <ol>
+     *   <li>Replaces each {@link TryCatchBlockNode#type} matching a {@link WidenedCatch#from()}
+     *       value with the corresponding {@link WidenedCatch#to()} type.</li>
+     *   <li>Rewrites all instruction operands and local-variable descriptors that reference
+     *       the narrow exception type with the wide type — the same rewriting used by
+     *       {@link #processWidenedOverloads} for parameter types.</li>
+     * </ol>
+     *
+     * <p>Because shadow methods are never merged into the target class, no annotation stripping
+     * is needed.
+     */
+    private static void processWidenedCatches(ClassNode mixinNode, ClassNode targetClass) {
+        for (MethodNode mixinMethod : mixinNode.methods) {
+            if (!hasAnnotation(mixinMethod.visibleAnnotations, SHADOW_DESC)) continue;
+
+            Map<String, String> catchMap = collectCatchWidenings(mixinMethod);
+
+            if (catchMap.isEmpty()) continue;
+
+            String targetName = stripShadowPrefix(mixinMethod.name, mixinMethod.visibleAnnotations);
+            MethodNode targetMethod = findMethod(targetClass, targetName, mixinMethod.desc);
+
+            if (targetMethod == null) continue;
+
+            applyTypeMap(targetMethod, catchMap);
+        }
+    }
+
+    private static Map<String, String> collectCatchWidenings(MethodNode method) {
+        Map<String, String> map = new HashMap<>();
+
+        if (method.visibleAnnotations == null) return map;
+
+        for (AnnotationNode ann : method.visibleAnnotations) {
+            if (WIDENED_CATCH_DESC.equals(ann.desc)) {
+                addCatchWidening(map, ann);
+            } else if (WIDENED_CATCH_LIST_DESC.equals(ann.desc)) {
+                // Repeatable container: values = ["value", List<AnnotationNode>]
+                if (ann.values != null) {
+                    for (int i = 0; i + 1 < ann.values.size(); i += 2) {
+                        if ("value".equals(ann.values.get(i))) {
+                            @SuppressWarnings("unchecked")
+                            List<AnnotationNode> entries = (List<AnnotationNode>) ann.values.get(i + 1);
+
+                            for (AnnotationNode entry : entries) {
+                                addCatchWidening(map, entry);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return map;
+    }
+
+    private static void addCatchWidening(Map<String, String> map, AnnotationNode ann) {
+        String from = null;
+        String to = null;
+
+        if (ann.values != null) {
+            for (int i = 0; i + 1 < ann.values.size(); i += 2) {
+                String key = (String) ann.values.get(i);
+
+                if ("from".equals(key)) from = (String) ann.values.get(i + 1);
+                else if ("to".equals(key)) to = (String) ann.values.get(i + 1);
+            }
+        }
+
+        if (from != null && to != null) map.put(from, to);
+    }
+
+    /**
      * Deep-copies the instruction list (and associated try-catch blocks and local variable table)
      * from {@code source} into {@code dest}, replacing whatever body {@code dest} had.
      * Labels are cloned with a fresh mapping so the two methods remain independent.
@@ -316,6 +403,25 @@ public class PatchConversionHelper {
 
         if (typeMap.isEmpty()) return;
 
+        applyTypeMap(method, typeMap);
+    }
+
+    /**
+     * Applies {@code typeMap} (narrow internal name → wide internal name) to every
+     * type-bearing operand in {@code method}: instruction operands, exception-table handler
+     * types, and local-variable table descriptors.
+     *
+     * <p>Covered forms:
+     * <ul>
+     *   <li>CHECKCAST / INSTANCEOF / ANEWARRAY / NEW — {@link TypeInsnNode#desc}</li>
+     *   <li>INVOKEVIRTUAL / INVOKESPECIAL / etc. — {@link MethodInsnNode#owner} and {@code desc}</li>
+     *   <li>GETFIELD / PUTFIELD / etc. — {@link FieldInsnNode#owner} and {@code desc}</li>
+     *   <li>MULTIANEWARRAY — {@link MultiANewArrayInsnNode#desc}</li>
+     *   <li>Exception-table handler types — {@link TryCatchBlockNode#type}</li>
+     *   <li>Local-variable table descriptors — {@link LocalVariableNode#desc}</li>
+     * </ul>
+     */
+    private static void applyTypeMap(MethodNode method, Map<String, String> typeMap) {
         for (AbstractInsnNode insn : method.instructions) {
             if (insn instanceof TypeInsnNode) {
                 TypeInsnNode ti = (TypeInsnNode) insn;
@@ -415,15 +521,31 @@ public class PatchConversionHelper {
         return false;
     }
 
+    private static MethodNode findMethod(ClassNode classNode, String name, String desc) {
+        for (MethodNode method : classNode.methods) {
+            if (method.name.equals(name) && method.desc.equals(desc)) return method;
+        }
+
+        return null;
+    }
+
     /**
      * Returns the target field name that a {@code @Shadow}-annotated mixin field
-     * corresponds to.  Strips the Shadow prefix (default {@code "shadow$"}, or
-     * whatever is declared in {@code @Shadow(prefix = "...")}) when present.
+     * corresponds to.
      */
     private static String getShadowTargetName(FieldNode field) {
-        if (field.visibleAnnotations == null) return field.name;
+        return stripShadowPrefix(field.name, field.visibleAnnotations);
+    }
 
-        for (AnnotationNode ann : field.visibleAnnotations) {
+    /**
+     * Strips the Mixin shadow prefix (default {@code "shadow$"}, or whatever is declared in
+     * {@code @Shadow(prefix = "...")}) from {@code name} when present.
+     * Used for both field and method shadow name resolution.
+     */
+    private static String stripShadowPrefix(String name, List<AnnotationNode> visibleAnnotations) {
+        if (visibleAnnotations == null) return name;
+
+        for (AnnotationNode ann : visibleAnnotations) {
             if (!SHADOW_DESC.equals(ann.desc)) continue;
 
             String prefix = "shadow$"; // Mixin's built-in default
@@ -436,9 +558,9 @@ public class PatchConversionHelper {
                 }
             }
 
-            return field.name.startsWith(prefix) ? field.name.substring(prefix.length()) : field.name;
+            return name.startsWith(prefix) ? name.substring(prefix.length()) : name;
         }
 
-        return field.name;
+        return name;
     }
 }
