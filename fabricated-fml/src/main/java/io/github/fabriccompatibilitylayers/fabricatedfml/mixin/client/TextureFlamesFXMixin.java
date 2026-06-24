@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
 import cpw.mods.fml.client.FMLTextureFX;
 import fr.catcore.cursedmixinextensions.annotations.ChangeSuperClass;
+import fr.catcore.cursedmixinextensions.annotations.ShadowSuper;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.IFMLTextureFXExtension;
 import net.minecraft.src.TextureFX;
 import net.minecraft.src.TextureFlamesFX;
@@ -39,10 +40,13 @@ public abstract class TextureFlamesFXMixin extends TextureFX implements IFMLText
         this.setup();
     }
 
+    @ShadowSuper("setup")
+    public abstract void fmltexturefx$setup();
+
     @Override
     public void setup()
     {
-        this.superSetup();
+        this.fmltexturefx$setup();
         fireTileSize = getTileSizeBase() + (getTileSizeBase() >> 2);
         fireGridSize = fireTileSize * getTileSizeBase();
         field_76869_g = new float[fireGridSize];

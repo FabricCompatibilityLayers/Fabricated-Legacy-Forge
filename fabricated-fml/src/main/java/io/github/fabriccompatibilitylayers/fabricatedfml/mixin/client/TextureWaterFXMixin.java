@@ -7,6 +7,7 @@ package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client;
 
 import cpw.mods.fml.client.FMLTextureFX;
 import fr.catcore.cursedmixinextensions.annotations.ChangeSuperClass;
+import fr.catcore.cursedmixinextensions.annotations.ShadowSuper;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.IFMLTextureFXExtension;
 import net.minecraft.src.TextureFX;
 import net.minecraft.src.TextureWaterFX;
@@ -40,10 +41,13 @@ public abstract class TextureWaterFXMixin extends TextureFX implements IFMLTextu
         this.setup();
     }
 
+    @ShadowSuper("setup")
+    public abstract void fmltexturefx$setup();
+
     @Override
     public void setup()
     {
-        this.superSetup();
+        this.fmltexturefx$setup();
         field_76855_g = new float[getTileSizeSquare()];
         field_76858_h = new float[getTileSizeSquare()];
         field_76859_i = new float[getTileSizeSquare()];

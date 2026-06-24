@@ -8,6 +8,7 @@ package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client;
 import cpw.mods.fml.client.FMLTextureFX;
 import fr.catcore.cursedmixinextensions.annotations.ChangeSuperClass;
 import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
+import fr.catcore.cursedmixinextensions.annotations.ShadowSuper;
 import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.IFMLTextureFXExtension;
 import net.minecraft.src.Block;
@@ -40,9 +41,12 @@ public abstract class TexturePortalFXMixin extends TextureFX implements IFMLText
         this.setup();
     }
 
+    @ShadowSuper("setup")
+    public abstract void fmltexturefx$setup();
+
     @Override
     public void setup() {
-        this.superSetup();
+        this.fmltexturefx$setup();
         field_76854_h = new byte[32][getTileSizeSquare() << 4];
 
         Random var1 = new Random(100L);
