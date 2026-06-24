@@ -10,10 +10,10 @@ import com.google.common.collect.Lists;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import cpw.mods.fml.client.GuiModList;
 import cpw.mods.fml.common.FMLCommonHandler;
 import io.github.fabriccompatibilitylayers.fabricatedfml.utils.BrandingUtils;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.src.FontRenderer;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiMainMenu;
@@ -27,23 +27,22 @@ import java.util.List;
 
 @Mixin(GuiMainMenu.class)
 public class GuiMainMenuMixin extends GuiScreen {
+    @IfModAbsent("modmenu")
     @WrapOperation(method = "func_73866_w_", at = @At(value = "NEW", target = "Lnet/minecraft/src/GuiButton;", ordinal = 0))
     private GuiButton fml$moveTexturePackButton(int p_i3055_1_, int p_i3055_2_, int p_i3055_3_, String p_i3055_4_, Operation<GuiButton> original) {
-        if (FabricLoader.getInstance().isModLoaded("modmenu")) {
-            return original.call(p_i3055_1_, p_i3055_2_, p_i3055_3_, p_i3055_4_);
-        }
-
         return new GuiButton(p_i3055_1_, p_i3055_2_, p_i3055_3_, 98, 20, p_i3055_4_);
     }
 
+    @IfModAbsent("modmenu")
     @Inject(method = "func_73866_w_", at = @At(value = "FIELD", target = "Lnet/minecraft/client/Minecraft;field_71448_m:Z"))
     private void fml$addModsButton(CallbackInfo ci, @Local int var4) {
-        if (!FabricLoader.getInstance().isModLoaded("modmenu")) this.field_73887_h.add(new GuiButton(6, this.field_73880_f / 2 + 2, var4 + 48, 98, 20, "Mods"));
+        this.field_73887_h.add(new GuiButton(6, this.field_73880_f / 2 + 2, var4 + 48, 98, 20, "Mods"));
     }
 
+    @IfModAbsent("modmenu")
     @Inject(method = "func_73875_a", at = @At("RETURN"))
     private void fml$onModsButtonClicked(GuiButton p_73875_1_, CallbackInfo ci) {
-        if (!FabricLoader.getInstance().isModLoaded("modmenu") && p_73875_1_.field_73741_f == 6)
+        if (p_73875_1_.field_73741_f == 6)
         {
             this.field_73882_e.func_71373_a(new GuiModList(this));
         }

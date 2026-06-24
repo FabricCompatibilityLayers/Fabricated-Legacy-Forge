@@ -62,6 +62,7 @@
     "client.NetClientHandlerAccessor",
     "client.NetClientHandlerMixin",
     "client.RenderBlocksMixin",
+    "client.RenderEngineLateMixin",
     "client.RenderEngineMixin",
     "client.TextureCompassFXMixin",
     "client.TextureFlamesFXMixin",
