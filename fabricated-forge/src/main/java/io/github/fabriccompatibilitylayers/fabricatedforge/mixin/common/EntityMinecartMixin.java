@@ -53,10 +53,6 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
 
     @Shadow protected abstract void setMinecartPowered(boolean par1);
 
-    @Shadow public abstract void func_70494_i(int par1);
-
-    @Shadow public abstract int func_70493_k();
-
     @Shadow public abstract void func_70497_h(int par1);
 
     @Shadow public abstract void setDamage(int par1);
@@ -166,34 +162,10 @@ public abstract class EntityMinecartMixin extends Entity implements IInventory, 
         return canBePushed;
     }
 
-    /**
-     * @author
-     * @reason
-     */
-    @Overwrite
-    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2) {
-        if (!this.worldObj.isRemote && !this.isDead) {
-            this.func_70494_i(-this.func_70493_k());
-            this.func_70497_h(10);
-            this.setBeenAttacked();
-            this.setDamage(this.getDamage() + par2 * 10);
-            if (par1DamageSource.getEntity() instanceof EntityPlayer && ((EntityPlayer)par1DamageSource.getEntity()).capabilities.isCreativeMode) {
-                this.setDamage(100);
-            }
-
-            if (this.getDamage() > 40) {
-                if (this.riddenByEntity != null) {
-                    this.riddenByEntity.mountEntity(this);
-                }
-
-                this.setDead();
-                dropCartAsItem();
-            }
-
-            return true;
-        } else {
-            return true;
-        }
+    @Inject(method = "attackEntityFrom", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/EntityMinecart;dropItemWithOffset(IIF)Lnet/minecraft/src/EntityItem;", ordinal = 0), cancellable = true)
+    private void forge$dropCartAsItem(DamageSource par1, int par2, CallbackInfoReturnable<Boolean> cir) {
+        dropCartAsItem();
+        cir.setReturnValue(true);
     }
 
     /**
