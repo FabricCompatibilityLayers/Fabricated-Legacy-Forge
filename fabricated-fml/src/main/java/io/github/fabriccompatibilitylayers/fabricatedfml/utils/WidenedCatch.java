@@ -64,6 +64,8 @@ public @interface WidenedCatch {
     /** ASM internal name of the wide exception type to use instead (e.g. {@code "java/lang/Exception"}). */
     String to();
 
+    String modid() default "";
+
     /** Container annotation required by {@link Repeatable}. */
     @Target(ElementType.METHOD)
     @Retention(RetentionPolicy.RUNTIME)
