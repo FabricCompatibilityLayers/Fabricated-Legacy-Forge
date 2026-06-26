@@ -64,7 +64,7 @@ public abstract class BlockButtonMixin extends Block implements BlockExtension {
         dirRef.set(ForgeDirection.getOrientation(par5));
     }
 
-    @Redirect(method = "onNeighborBlockChange", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z"))
+    @Redirect(method = "updateBlockMetadata", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/World;isBlockNormalCube(III)Z"))
     private boolean forge$isBlockSolidOnSide$1(World instance, int x, int y, int z,
                                                @Local(argsOnly = true, ordinal = 0) int origX,
                                                @Local(argsOnly = true, ordinal = 1) int origY,

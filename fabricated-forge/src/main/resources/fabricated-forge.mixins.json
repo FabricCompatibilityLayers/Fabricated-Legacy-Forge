@@ -124,6 +124,7 @@
   "client": [
     "client.EffectRendererMixin",
     "client.EntityDiggingFXMixin",
+    "client.EntityRendererLateMixin",
     "client.EntityRendererMixin",
     "client.GuiAchievementsMixin",
     "client.GuiContainerCreativeMixin",

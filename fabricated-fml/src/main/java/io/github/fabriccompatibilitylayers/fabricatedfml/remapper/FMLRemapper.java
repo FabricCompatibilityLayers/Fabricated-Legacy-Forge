@@ -9,10 +9,9 @@ import fr.catcore.wfvaio.FabricVariants;
 import fr.catcore.wfvaio.WhichFabricVariantAmIOn;
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.discoverer.CoremodsDiscoverer;
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.discoverer.ForgeModsDiscoverer;
+import io.github.fabriccompatibilitylayers.fabricatedfml.utils.PortingHelper;
 import io.github.fabriccompatibilitylayers.modremappingapi.api.v2.*;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.metadata.CustomValue;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 
 import java.util.Arrays;
@@ -22,8 +21,6 @@ import java.util.List;
 public class FMLRemapper implements ModRemapper {
     private static final String FORGE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.4.0-5.0.0.326/forge-1.4.0-5.0.0.326-universal.zip";
     private static final boolean runningLegacyFabric = WhichFabricVariantAmIOn.getVariant() == FabricVariants.LEGACY_FABRIC_V1;
-    private static final CustomValue.CvObject CV_MAPPINGS = FabricLoader.getInstance().getModContainer("fabricated-fml").get().getMetadata()
-            .getCustomValue("flf:mappings").getAsObject();
 
     @Override
     public String getContextId() {
@@ -122,7 +119,7 @@ public class FMLRemapper implements ModRemapper {
 
     @Override
     public void registerPreVisitors(VisitorInfos visitorInfos) {
-        String[] dimensionMapping = CV_MAPPINGS.get("net/minecraft/src/MapData.field_76200_c").getAsString().split("\\.");
+        String[] dimensionMapping = PortingHelper.getMapping("fabricated-fml", "net/minecraft/src/MapData.field_76200_c").split("\\.");
 
         visitorInfos.registerFieldRef(
                 dimensionMapping[0],
@@ -135,7 +132,7 @@ public class FMLRemapper implements ModRemapper {
                 )
         );
         visitorInfos.registerFieldRef(
-                CV_MAPPINGS.get("net/minecraft/src/WorldType").getAsString(),
+                PortingHelper.getMapping("fabricated-fml", "net/minecraft/src/WorldType"),
                 "base11Biomes",
                 "",
                 VisitorInfos.classMember(
@@ -145,7 +142,7 @@ public class FMLRemapper implements ModRemapper {
                 )
         );
         visitorInfos.registerFieldRef(
-                CV_MAPPINGS.get("net/minecraft/src/WorldType").getAsString(),
+                PortingHelper.getMapping("fabricated-fml", "net/minecraft/src/WorldType"),
                 "base12Biomes",
                 "",
                 VisitorInfos.classMember(

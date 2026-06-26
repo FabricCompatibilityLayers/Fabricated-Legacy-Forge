@@ -7,18 +7,14 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.remapper;
 
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.Constants;
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.FMLMappingsConfig;
+import io.github.fabriccompatibilitylayers.fabricatedfml.utils.PortingHelper;
 import io.github.fabriccompatibilitylayers.modremappingapi.api.v2.*;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.metadata.CustomValue;
 
 import java.util.Collections;
 import java.util.List;
 
 public class ForgeRemapper implements ModRemapper {
-    private static final CustomValue.CvObject CV_MAPPINGS = FabricLoader.getInstance().getModContainer("fabricated-forge").get().getMetadata()
-            .getCustomValue("flf:mappings").getAsObject();
-
     @Override
     public String getContextId() {
         return Constants.CONTEXT_ID;
@@ -72,7 +68,7 @@ public class ForgeRemapper implements ModRemapper {
     @Override
     public void registerPreVisitors(VisitorInfos visitorInfos) {
         visitorInfos.registerFieldRef(
-                CV_MAPPINGS.get("net/minecraft/src/Block").getAsString(),
+                PortingHelper.getMapping("fabricated-forge", "net/minecraft/src/Block"),
                 "blockFireSpreadSpeed",
                 "",
                 VisitorInfos.classMember(
@@ -82,7 +78,7 @@ public class ForgeRemapper implements ModRemapper {
                 )
         );
         visitorInfos.registerFieldRef(
-                CV_MAPPINGS.get("net/minecraft/src/Block").getAsString(),
+                PortingHelper.getMapping("fabricated-forge", "net/minecraft/src/Block"),
                 "blockFlammability",
                 "",
                 VisitorInfos.classMember(

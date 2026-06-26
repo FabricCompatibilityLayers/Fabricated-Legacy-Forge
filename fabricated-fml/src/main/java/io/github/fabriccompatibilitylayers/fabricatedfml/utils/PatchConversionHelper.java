@@ -42,6 +42,10 @@ public class PatchConversionHelper {
             "L" + WidenedCatch.class.getName().replace('.', '/') + ";";
     private static final String WIDENED_CATCH_LIST_DESC =
             "L" + WidenedCatch.List.class.getName().replace('.', '/') + ";";
+    private static final String WIDENED_LOCAL_DESC =
+            "L" + WidenedLocal.class.getName().replace('.', '/') + ";";
+    private static final String WIDENED_LOCAL_LIST_DESC =
+            "L" + WidenedLocal.List.class.getName().replace('.', '/') + ";";
     private static final String SHADOW_DESC =
             "Lorg/spongepowered/asm/mixin/Shadow;";
 
@@ -74,6 +78,7 @@ public class PatchConversionHelper {
         }
 
         processWidenedCatches(mixinNode, targetClass);
+        processWidenedLocals(mixinNode, targetClass);
     }
 
     /**
@@ -278,6 +283,59 @@ public class PatchConversionHelper {
         }
     }
 
+    /**
+     * Scans every {@code @Shadow} method in {@code mixinNode} that also carries
+     * {@link WidenedLocal} (or its repeatable container {@link WidenedLocal.List}).
+     * For each such method, resolves the corresponding method in {@code targetClass} and
+     * applies the declared widenings to every type reference in the method body:
+     * instruction operands (CHECKCAST, INSTANCEOF, INVOKEVIRTUAL owners, etc.) and
+     * local-variable table descriptors.  Unlike {@link #processWidenedCatches}, this does
+     * not touch try-catch block types.
+     */
+    private static void processWidenedLocals(ClassNode mixinNode, ClassNode targetClass) {
+        for (MethodNode mixinMethod : mixinNode.methods) {
+            if (!hasAnnotation(mixinMethod.visibleAnnotations, SHADOW_DESC)) continue;
+
+            Map<String, String> localMap = collectLocalWidenings(mixinMethod);
+
+            if (localMap.isEmpty()) continue;
+
+            String targetName = stripShadowPrefix(mixinMethod.name, mixinMethod.visibleAnnotations);
+            MethodNode targetMethod = findMethod(targetClass, targetName, mixinMethod.desc);
+
+            if (targetMethod == null) continue;
+
+            applyTypeMap(targetMethod, localMap);
+        }
+    }
+
+    private static Map<String, String> collectLocalWidenings(MethodNode method) {
+        Map<String, String> map = new HashMap<>();
+
+        if (method.visibleAnnotations == null) return map;
+
+        for (AnnotationNode ann : method.visibleAnnotations) {
+            if (WIDENED_LOCAL_DESC.equals(ann.desc)) {
+                addCatchWidening(map, ann);
+            } else if (WIDENED_LOCAL_LIST_DESC.equals(ann.desc)) {
+                if (ann.values != null) {
+                    for (int i = 0; i + 1 < ann.values.size(); i += 2) {
+                        if ("value".equals(ann.values.get(i))) {
+                            @SuppressWarnings("unchecked")
+                            List<AnnotationNode> entries = (List<AnnotationNode>) ann.values.get(i + 1);
+
+                            for (AnnotationNode entry : entries) {
+                                addCatchWidening(map, entry);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return map;
+    }
+
     private static Map<String, String> collectCatchWidenings(MethodNode method) {
         Map<String, String> map = new HashMap<>();
 
@@ -309,6 +367,7 @@ public class PatchConversionHelper {
     private static void addCatchWidening(Map<String, String> map, AnnotationNode ann) {
         String from = null;
         String to = null;
+        String modid = null;
 
         if (ann.values != null) {
             for (int i = 0; i + 1 < ann.values.size(); i += 2) {
@@ -316,7 +375,13 @@ public class PatchConversionHelper {
 
                 if ("from".equals(key)) from = (String) ann.values.get(i + 1);
                 else if ("to".equals(key)) to = (String) ann.values.get(i + 1);
+                else if ("modid".equals(key)) modid = (String) ann.values.get(i + 1);
             }
+        }
+
+        if (modid != null && !modid.isEmpty()) {
+            if (from != null) from = PortingHelper.getMapping(modid, from);
+            if (to != null) to = PortingHelper.getMapping(modid, to);
         }
 
         if (from != null && to != null) map.put(from, to);
