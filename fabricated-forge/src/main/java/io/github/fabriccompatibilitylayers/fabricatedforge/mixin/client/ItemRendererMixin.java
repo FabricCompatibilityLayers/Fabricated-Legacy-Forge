@@ -20,6 +20,7 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -77,16 +78,24 @@ public abstract class ItemRendererMixin {
         return result;
     }
 
-    @WrapOperation(method = "renderItemInFirstPerson", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/MapItemRenderer;renderMap(Lnet/minecraft/src/EntityPlayer;Lnet/minecraft/src/RenderEngine;Lnet/minecraft/src/MapData;)V"))
-    private void forge$renderCustomMap(MapItemRenderer instance, EntityPlayer par2RenderEngine, RenderEngine par3MapData, MapData mapData, Operation<Void> original,
-                                       @Local ItemStack var17,
-                                       @Share(namespace = "forge", value = "custom") LocalRef<IItemRenderer> ref) {
+    @WrapOperation(method = "renderItemInFirstPerson", at = @At(value = "FIELD", target = "Lnet/minecraft/src/Item;map:Lnet/minecraft/src/ItemMap;", ordinal = 1, opcode = Opcodes.GETSTATIC))
+    private ItemMap forge$allowCustomMap(Operation<ItemMap> original,
+                                         @Local ItemStack var17) {
+        return (ItemMap) var17.getItem();
+    }
+
+    @WrapOperation(method = "renderItemInFirstPerson", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemMap;getMapData(Lnet/minecraft/src/ItemStack;Lnet/minecraft/src/World;)Lnet/minecraft/src/MapData;"))
+    private MapData forge$renderCustomMap(ItemMap instance, ItemStack stack, World world, Operation<MapData> original,
+                                          @Share(namespace = "forge", value = "custom") LocalRef<IItemRenderer> ref) {
         IItemRenderer custom = ref.get();
+        MapData mapData = original.call(instance, stack, world);
+
         if (custom != null) {
-            custom.renderItem(IItemRenderer.ItemRenderType.FIRST_PERSON_MAP, var17, this.mc.thePlayer, this.mc.renderEngine, mapData);
-        } else {
-            original.call(instance, this.mc.thePlayer, this.mc.renderEngine, mapData);
+            custom.renderItem(IItemRenderer.ItemRenderType.FIRST_PERSON_MAP, stack, this.mc.thePlayer, this.mc.renderEngine, mapData);
+            return null;
         }
+
+        return mapData;
     }
 
     @WrapOperation(method = "renderItemInFirstPerson", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", remap = false, ordinal = 3))

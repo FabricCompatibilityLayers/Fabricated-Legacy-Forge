@@ -45,7 +45,7 @@ public abstract class MinecraftMixin {
         FMLClientHandler.instance().onInitializationComplete();
     }
 
-    @Inject(method = "func_71411_J", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Profiler;func_76318_c(Ljava/lang/String;)V", ordinal = 3))
+    @Inject(method = "func_71411_J", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Profiler;func_76318_c(Ljava/lang/String;)V", ordinal = 2))
     private void fml$onRenderTickStart(CallbackInfo ci) {
         FMLCommonHandler.instance().onRenderTickStart(this.field_71428_T.field_74281_c);
     }

@@ -163,6 +163,10 @@ public abstract class WorldMixin implements WorldExtension {
     @Shadow
     public abstract Vec3Pool func_82732_R();
 
+    @Mutable
+    @Shadow
+    @Final
+    private Vec3Pool field_82741_K;
     @Public
     private static double MAX_ENTITY_RADIUS = 2.0D;
 
@@ -220,8 +224,8 @@ public abstract class WorldMixin implements WorldExtension {
         editingBlocks = false;
         rand = new Random();
         worldAccesses = new ArrayList();
-        villageCollectionObj = new VillageCollection((World)(Object)this);
         villageSiegeObj = new VillageSiege((World)(Object)this);
+        field_82741_K = new Vec3Pool(300, 2000);
         collidingBoundingBoxes = new ArrayList();
         spawnHostileMobs = true;
         spawnPeacefulMobs = true;

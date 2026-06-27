@@ -5,12 +5,11 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedfml.mixin.client;
 
+import com.llamalad7.mixinextras.expression.Expression;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import cpw.mods.fml.client.FMLTextureFX;
-import fr.catcore.cursedmixinextensions.annotations.ChangeSuperClass;
-import fr.catcore.cursedmixinextensions.annotations.Public;
-import fr.catcore.cursedmixinextensions.annotations.ReplaceConstructor;
-import fr.catcore.cursedmixinextensions.annotations.ShadowSuper;
-import fr.catcore.cursedmixinextensions.annotations.ShadowSuperConstructor;
+import fr.catcore.cursedmixinextensions.annotations.*;
 import io.github.fabriccompatibilitylayers.fabricatedfml.extension.client.IFMLTextureFXExtension;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.Item;
@@ -18,6 +17,7 @@ import net.minecraft.src.TextureCompassFX;
 import net.minecraft.src.TextureFX;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
@@ -32,6 +32,8 @@ public abstract class TextureCompassFXMixin extends TextureFX implements IFMLTex
 
     @Shadow private Minecraft field_76865_g;
 
+    @Shadow
+    public static TextureCompassFX field_82391_c;
     @Public
     private static int stileSizeBase = 16;
     @Public
@@ -77,6 +79,8 @@ public abstract class TextureCompassFXMixin extends TextureFX implements IFMLTex
         } catch (IOException var5) {
             var5.printStackTrace();
         }
+
+        field_82391_c = (TextureCompassFX) (Object) this;
     }
 
     @ModifyConstant(method = "func_82390_a", constant = @Constant(intValue = 256))
@@ -84,9 +88,10 @@ public abstract class TextureCompassFXMixin extends TextureFX implements IFMLTex
         return stileSizeSquare;
     }
 
-    @ModifyConstant(method = "func_82390_a", constant = @Constant(intValue = 4, ordinal = 3))
-    private static int fml$changeTileSizeBaseLoop1(int constant) {
-        return stileSizeBase >> 2;
+    @Expression("? <= 4")
+    @WrapOperation(method = "func_82390_a", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private static boolean fml$changeTileSizeBaseLoop1(int left, int right, Operation<Boolean> original) {
+        return original.call(left, stileSizeBase >> 2);
     }
 
     @ModifyConstant(method = "func_82390_a", constant = @Constant(intValue = -4, ordinal = 0))
@@ -115,6 +120,6 @@ public abstract class TextureCompassFXMixin extends TextureFX implements IFMLTex
 
     @ModifyConstant(method = "func_82390_a", constant = @Constant(intValue = -8))
     private static int fml$changeTileSizeBase2(int constant) {
-        return stileSizeBase >> 2;
+        return -(stileSizeBase >> 2);
     }
 }
