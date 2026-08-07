@@ -314,10 +314,7 @@ allprojects {
         }
 
         modImplementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.2.0"))
-        implementation("jvmdg-8.com.moulberry:mixinconstraints:1.0.9")
-        runtimeOnly("xyz.wagyourtail.jvmdowngrader:jvmdowngrader-java-api:1.3.6:downgraded-8") {
-            transitive = false
-        }
+        implementation("net.ornithemc:conditional-mixin:1.0.0-beta.1")
 
         ornitheLibraries.forEach {
             implementation(it)
@@ -362,6 +359,10 @@ allprojects {
         }
         from(rootProject.file("licensing.md"))
     }
+
+    tasks.withType(JavaCompile) {
+        options.deprecation = true
+    }
 }
 
 unimined.minecraft {
@@ -374,12 +375,7 @@ subprojects.forEach {
 dependencies {
     include("fmllibs:argo:2.25")
     include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.2.0")
-    include("jvmdg-8.com.moulberry:mixinconstraints:1.0.9") {
-        transitive = rootProject.target == "legacy-fabric"
-    }
-    include("xyz.wagyourtail.jvmdowngrader:jvmdowngrader-java-api:1.3.6:downgraded-8") {
-        transitive = false
-    }
+    include("net.ornithemc:conditional-mixin:1.0.0-beta.1")
 
     afterEvaluate {
         subprojects.forEach {

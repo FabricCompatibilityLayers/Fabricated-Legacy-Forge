@@ -5,7 +5,6 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.common.osl.blocks;
 
-import com.moulberry.mixinconstraints.annotations.IfModLoaded;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
@@ -13,12 +12,14 @@ import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.os
 import net.minecraft.src.Block;
 import net.minecraft.src.Material;
 import net.minecraft.src.World;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@IfModLoaded("osl-blocks")
+@Conditional(modLoaded = @Mod(value = "osl-blocks"))
 @Mixin(Block.class)
 public abstract class BlockMixin implements BlockExtension, net.ornithemc.osl.blocks.api.block.BlockExtension {
     @Inject(method = "<init>(ILnet/minecraft/src/Material;)V", at = @At("RETURN"))

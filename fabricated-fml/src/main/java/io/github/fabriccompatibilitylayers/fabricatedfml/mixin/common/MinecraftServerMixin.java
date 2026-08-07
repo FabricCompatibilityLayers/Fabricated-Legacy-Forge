@@ -9,7 +9,6 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Side;
 import cpw.mods.fml.relauncher.ArgsWrapper;
@@ -18,6 +17,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.src.WorldServer;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -66,13 +67,13 @@ public class MinecraftServerMixin {
         FMLCommonHandler.instance().onPostServerTick();
     }
 
-    @IfModAbsent(value = "fabricated-forge")
+    @Conditional(modAbsent = @Mod("fabricated-forge"))
     @Inject(method = "func_71190_q", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/WorldServer;func_72835_b()V"))
     private void fml$onPreWorldTick(CallbackInfo ci, @Local WorldServer var4) {
         FMLCommonHandler.instance().onPreWorldTick(var4);
     }
 
-    @IfModAbsent(value = "fabricated-forge")
+    @Conditional(modAbsent = @Mod("fabricated-forge"))
     @Inject(method = "func_71190_q", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Profiler;func_76318_c(Ljava/lang/String;)V", ordinal = 0))
     private void fml$onPostWorldTick(CallbackInfo ci, @Local WorldServer var4) {
         FMLCommonHandler.instance().onPostWorldTick(var4);

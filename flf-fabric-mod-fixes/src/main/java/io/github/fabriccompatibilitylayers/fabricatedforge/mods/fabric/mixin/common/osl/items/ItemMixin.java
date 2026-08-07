@@ -5,17 +5,18 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.common.osl.items;
 
-import com.moulberry.mixinconstraints.annotations.IfModLoaded;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.ItemRegistrationHelper;
 import net.minecraft.src.Item;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@IfModLoaded("osl-items")
+@Conditional(modLoaded = @Mod("osl-items"))
 @Mixin(Item.class)
 public class ItemMixin {
     @Inject(method = "<init>", at = @At("RETURN"))

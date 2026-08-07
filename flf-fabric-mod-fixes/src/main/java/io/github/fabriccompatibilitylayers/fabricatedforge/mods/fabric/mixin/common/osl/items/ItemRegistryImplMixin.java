@@ -5,8 +5,9 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.common.osl.items;
 
-import com.moulberry.mixinconstraints.annotations.IfModLoaded;
 import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.ItemRegistrationHelper;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import net.ornithemc.osl.items.impl.ItemRegistryImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -14,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@IfModLoaded("osl-items")
+@Conditional(modLoaded = @Mod("osl-items"))
 @Mixin(ItemRegistryImpl.class)
 public class ItemRegistryImplMixin {
     @Shadow

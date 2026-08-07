@@ -10,17 +10,18 @@ import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import net.minecraft.src.Block;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldGenTallGrass;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(WorldGenTallGrass.class)
 public class WorldGenTallGrassMixin {
-    @IfModAbsent("osl-blocks")
+    @Conditional(modAbsent = @Mod("osl-blocks"))
     @Expression("? == 0")
     @WrapOperation(method = "generate", at = @At("MIXINEXTRAS:EXPRESSION"))
     private boolean forge$NonNull(int blockId, int right, Operation<Boolean> original) {

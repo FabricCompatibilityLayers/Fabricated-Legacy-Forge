@@ -10,7 +10,6 @@ import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.moulberry.mixinconstraints.annotations.IfModLoaded;
 import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.client.GuiAccessor;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
@@ -24,6 +23,8 @@ import net.minecraft.src.GuiControls;
 import net.minecraft.src.KeyBinding;
 import net.minecraft.src.Tessellator;
 import net.minecraftforge.client.GuiControlsScrollPanel;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import net.ornithemc.osl.keybinds.api.keybind.KeyBindingExtension;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,7 +38,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-@IfModLoaded(value = "osl-keybinds", minVersion = "0.3.0-alpha.1+mcb1.8-pre1-mc1.6.4")
+@Conditional(modLoaded = @Mod(value = "osl-keybinds", version = ">=0.3.0-"))
 @Mixin(GuiControlsScrollPanel.class)
 public class GuiControlsScrollPanelMixin {
 

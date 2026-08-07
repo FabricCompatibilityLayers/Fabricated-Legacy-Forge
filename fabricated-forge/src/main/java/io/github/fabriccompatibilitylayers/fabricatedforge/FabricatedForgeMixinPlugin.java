@@ -5,28 +5,18 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge;
 
-import com.moulberry.mixinconstraints.MixinConstraints;
-import com.moulberry.mixinconstraints.mixin.MixinConstraintsBootstrap;
 import fr.catcore.cursedmixinextensions.CursedMixinExtensions;
 import io.github.fabriccompatibilitylayers.fabricatedfml.utils.PatchConversionHelper;
 import net.fabricmc.loader.api.FabricLoader;
+import net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin;
 import org.objectweb.asm.tree.ClassNode;
-import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
-
-    private String mixinPackage;
-
-    @Override
-    public void onLoad(String mixinPackage) {
-        this.mixinPackage = mixinPackage;
-        MixinConstraintsBootstrap.init(mixinPackage);
-    }
+public class FabricatedForgeMixinPlugin extends ConditionalMixinPlugin {
 
     @Override
     public String getRefMapperConfig() {
@@ -54,10 +44,6 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (this.mixinPackage != null && !mixinClassName.startsWith(this.mixinPackage)) {
-            return true;
-        }
-
         if (FabricLoader.getInstance().isModLoaded("optifabric")) {
             if (OPTIFINE_OVERRIDES.contains(FabricLoader.getInstance().getMappingResolver()
                     .unmapClassName("official", targetClassName)) && !mixinClassName.endsWith("Accessor") && !mixinClassName.contains(".optifine.")) {
@@ -66,7 +52,7 @@ public class FabricatedForgeMixinPlugin implements IMixinConfigPlugin {
             }
         }
 
-        return MixinConstraints.shouldApplyMixin(mixinClassName);
+        return super.shouldApplyMixin(targetClassName, mixinClassName);
     }
 
     @Override

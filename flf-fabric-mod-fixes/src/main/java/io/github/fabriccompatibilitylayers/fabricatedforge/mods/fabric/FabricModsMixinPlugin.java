@@ -5,23 +5,14 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric;
 
-import com.moulberry.mixinconstraints.MixinConstraints;
-import com.moulberry.mixinconstraints.mixin.MixinConstraintsBootstrap;
+import net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin;
 import org.objectweb.asm.tree.ClassNode;
-import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import java.util.List;
 import java.util.Set;
 
-public class FabricModsMixinPlugin implements IMixinConfigPlugin {
-    private String mixinPackage;
-
-    @Override
-    public void onLoad(String mixinPackage) {
-        this.mixinPackage = mixinPackage;
-        MixinConstraintsBootstrap.init(mixinPackage);
-    }
+public class FabricModsMixinPlugin extends ConditionalMixinPlugin {
 
     @Override
     public String getRefMapperConfig() {
@@ -30,11 +21,7 @@ public class FabricModsMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (this.mixinPackage != null && !mixinClassName.startsWith(this.mixinPackage)) {
-            return true;
-        }
-
-        return MixinConstraints.shouldApplyMixin(mixinClassName);
+        return super.shouldApplyMixin(targetClassName, mixinClassName);
     }
 
     @Override
