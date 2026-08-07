@@ -12,18 +12,19 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
 import net.minecraft.src.Block;
 import net.minecraft.src.ChunkCoordinates;
 import net.minecraft.src.World;
 import net.minecraft.src.WorldGenHugeTrees;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(WorldGenHugeTrees.class)
 public class WorldGenHugeTreesMixin {
-    @IfModAbsent("osl-blocks")
+    @Conditional(modAbsent = @Mod("osl-blocks"))
     @Expression("? != 0")
     @WrapOperation(method = "generate", at = @At("MIXINEXTRAS:EXPRESSION"))
     private boolean forge$NonNull(int blockId, int right, Operation<Boolean> original) {
@@ -58,7 +59,7 @@ public class WorldGenHugeTreesMixin {
         return !((BlockExtension) block).isWood(par1World, var10, var8, var11);
     }
 
-    @IfModAbsent("osl-blocks")
+    @Conditional(modAbsent = @Mod("osl-blocks"))
     @Expression("? == 0")
     @WrapOperation(method = "generate", at = @At("MIXINEXTRAS:EXPRESSION"))
     private boolean forge$Null(int blockId, int right, Operation<Boolean> original) {

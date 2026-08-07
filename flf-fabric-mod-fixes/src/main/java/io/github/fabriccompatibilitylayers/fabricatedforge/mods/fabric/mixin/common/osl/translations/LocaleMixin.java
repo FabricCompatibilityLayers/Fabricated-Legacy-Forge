@@ -5,8 +5,9 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.common.osl.translations;
 
-import com.moulberry.mixinconstraints.annotations.IfModLoaded;
 import cpw.mods.fml.common.registry.LanguageRegistry;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import net.ornithemc.osl.localization.api.language.Language;
 import net.ornithemc.osl.localization.impl.Locale;
 import net.ornithemc.osl.localization.impl.Localization;
@@ -21,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-@IfModLoaded("osl-localization")
+@Conditional(modLoaded = @Mod(value = "osl-localization"))
 @Mixin(Locale.class)
 public abstract class LocaleMixin {
     @Shadow

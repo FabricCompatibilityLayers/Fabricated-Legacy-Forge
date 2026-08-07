@@ -5,9 +5,11 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.client.modmenu;
 
-import com.moulberry.mixinconstraints.annotations.IfModLoaded;import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
+import com.terraformersmc.modmenu.util.mod.fabric.FabricIconHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
@@ -16,7 +18,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
-@IfModLoaded("modmenu")
+@Conditional(modLoaded = @Mod("modmenu"))
 @Mixin(value = FabricIconHandler.class, remap = false)
 public interface FabricIconHandlerAccessor {
     @Accessor(value = "modIconCache", remap = false)

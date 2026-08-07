@@ -11,7 +11,6 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.moulberry.mixinconstraints.annotations.IfModAbsent;
 import fr.catcore.cursedmixinextensions.annotations.Public;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockContainerExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
@@ -20,6 +19,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeHooks;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -280,7 +281,7 @@ public abstract class BlockMixin implements BlockExtension {
      * @param z Z position
      * @return True if the block considered air
      */
-    @IfModAbsent("osl-blocks")
+    @Conditional(modAbsent = @Mod("osl-blocks"))
     @Override
     public boolean isAirBlock(World world, int x, int y, int z)
     {
