@@ -29,8 +29,5 @@
     "fabricloader": ">=${fabric_loader_version}",
     "minecraft": "${mc_version}",
     "mod-remapping-api": ">=${mrapi_version}"
-  },
-  "breaks": {
-    "osl": ">=0.21.0-"
   }
 }

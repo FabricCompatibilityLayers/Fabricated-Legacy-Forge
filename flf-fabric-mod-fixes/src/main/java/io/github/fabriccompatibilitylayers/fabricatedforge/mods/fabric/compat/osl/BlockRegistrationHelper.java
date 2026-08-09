@@ -15,6 +15,7 @@ import net.ornithemc.osl.blocks.api.BlockRegistry;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 
+import java.util.Locale;
 import java.util.Map;
 
 public class BlockRegistrationHelper {
@@ -22,9 +23,8 @@ public class BlockRegistrationHelper {
     private static final Map<String, Multiset<String>> modOrdinals = Maps.newHashMap();
 
     public static void registerBlock(Block block, ModContainer mc) {
-        int blockId = block.blockID;
-        String modId = mc.getModId().replace("|", "__");
-        String blockType = MappingsHelper.unmapClass(block.getClass().getName());
+        String modId = mc.getModId().toLowerCase(Locale.ENGLISH).replace("|", "__");
+        String blockType = MappingsHelper.unmapClass(block.getClass().getName()).toLowerCase(Locale.ENGLISH);
 
         if (!modOrdinals.containsKey(modId)) {
             modOrdinals.put(modId, HashMultiset.create());
@@ -32,6 +32,6 @@ public class BlockRegistrationHelper {
 
         int ordinal = modOrdinals.getOrDefault(modId, HashMultiset.create()).add(blockType, 1);
         NamespacedIdentifier identifier = NamespacedIdentifiers.from(modId, blockType + "_" + ordinal);
-        BlockRegistry.register(blockId, identifier, block);
+        BlockRegistry.register(identifier, block);
     }
 }

@@ -9,6 +9,7 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.ItemRegistrationHelper;
 import net.minecraft.src.Item;
+import net.minecraft.src.ItemBlock;
 import net.ornithemc.conditionalmixin.annotations.Conditional;
 import net.ornithemc.conditionalmixin.annotations.Mod;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ItemMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void osl$registryFMLItems(int par1, CallbackInfo ci) {
-        if (ItemRegistrationHelper.ready) {
+        if (ItemRegistrationHelper.ready && !((Object)this instanceof ItemBlock)) {
             ModContainer container = Loader.instance().activeModContainer();
 
             if (container != null) {

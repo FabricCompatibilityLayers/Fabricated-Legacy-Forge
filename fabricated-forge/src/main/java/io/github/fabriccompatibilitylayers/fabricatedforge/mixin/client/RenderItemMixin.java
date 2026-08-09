@@ -16,6 +16,8 @@ import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.Bloc
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.ItemExtension;
 import net.minecraft.src.*;
 import net.minecraftforge.client.ForgeHooksClient;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,6 +36,7 @@ public abstract class RenderItemMixin extends Render {
 
     @Shadow public float zLevel;
 
+    @Conditional(modAbsent = @Mod("osl-items"))
     @Definition(id = "blocksList", field = "Lnet/minecraft/src/Block;blocksList:[Lnet/minecraft/src/Block;")
     @Expression("blocksList[?]")
     @WrapOperation(method = "doRenderItem", at = @At("MIXINEXTRAS:EXPRESSION"))
@@ -91,6 +94,7 @@ public abstract class RenderItemMixin extends Render {
         this.random.setSeed(187L); //Fixes Vanilla bug where layers would not render aligns properly.
     }
 
+    @Conditional(modAbsent = @Mod("osl-items"))
     @Definition(id = "par3", local = @Local(type = int.class, ordinal = 0, argsOnly = true))
     @Expression("par3 < 256")
     @WrapOperation(method = "drawItemIntoGui", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0))

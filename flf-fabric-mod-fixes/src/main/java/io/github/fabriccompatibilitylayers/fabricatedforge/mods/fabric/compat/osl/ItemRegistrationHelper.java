@@ -12,12 +12,14 @@ import cpw.mods.fml.common.ModContainer;
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.MappingsHelper;
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
+import net.minecraft.src.ItemBlock;
 import net.ornithemc.osl.blocks.api.BlockRegistry;
 import net.ornithemc.osl.blocks.api.block.Blocks;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifier;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.items.api.ItemRegistry;
 
+import java.util.Locale;
 import java.util.Map;
 
 public class ItemRegistrationHelper {
@@ -25,29 +27,26 @@ public class ItemRegistrationHelper {
     private static final Map<String, Multiset<String>> modOrdinals = Maps.newHashMap();
 
     public static void registerItem(Item item, ModContainer mc) {
-        int itemId = item.shiftedIndex;
-        String modId = mc.getModId().replace("|", "__");
-        String itemType = MappingsHelper.unmapClass(item.getClass().getName());
+        String modId = mc.getModId().toLowerCase(Locale.ENGLISH).replace("|", "__");
+        String itemType = MappingsHelper.unmapClass(item.getClass().getName()).toLowerCase(Locale.ENGLISH);
 
         if (!modOrdinals.containsKey(modId)) {
             modOrdinals.put(modId, HashMultiset.create());
         }
 
-        NamespacedIdentifier identifier = null;
+        int ordinal = modOrdinals.getOrDefault(modId, HashMultiset.create()).add(itemType, 1);
+        NamespacedIdentifier identifier = NamespacedIdentifiers.from(modId, itemType + "_" + ordinal);
 
-        if (itemId < 256 && Block.blocksList[itemId] != Blocks.AIR && Block.blocksList[itemId] != null) {
-            NamespacedIdentifier blockIdentifier = BlockRegistry.getKey(Block.blocksList[itemId]);
+        ItemRegistry.register(identifier, item);
+    }
 
-            if (ItemRegistry.getKey(item) == null) {
-                identifier = blockIdentifier;
-            }
+    public static void registerItemBlock(ItemBlock item, ModContainer mc) {
+        Block block = BlockRegistry.getBlock(item.getBlockID());
+
+        if (block == null || block == Blocks.AIR) {
+            registerItem(item, mc);
+        } else {
+            ItemRegistry.register(block, item);
         }
-
-        if (identifier == null) {
-            int ordinal = modOrdinals.getOrDefault(modId, HashMultiset.create()).add(itemType, 1);
-            identifier = NamespacedIdentifiers.from(modId, itemType + "_" + ordinal);
-        }
-
-        ItemRegistry.register(itemId, identifier, item);
     }
 }

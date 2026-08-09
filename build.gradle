@@ -113,6 +113,10 @@ allprojects {
         maven {
             url = "https://jvmdowngrader.wagyourtail.xyz/maven/"
         }
+        flatDir {
+            dirs rootProject.rootDir.toString() + "/mods"
+            group("mods")
+        }
 
         mavenLocal()
     }

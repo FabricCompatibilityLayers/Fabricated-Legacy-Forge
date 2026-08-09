@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(IntegratedServer.class)
+@Mixin(value = IntegratedServer.class, priority = 990)
 public abstract class IntegratedServerMixin extends MinecraftServerMixin {
 
     @Shadow @Final private WorldSettings theWorldSettings;
