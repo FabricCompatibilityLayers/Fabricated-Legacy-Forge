@@ -80,7 +80,7 @@ public abstract class TileEntityFurnaceMixin extends TileEntity implements TileE
     @Expression("? < 256")
     @WrapOperation(method = "getItemBurnTime", at = @At("MIXINEXTRAS:EXPRESSION"))
     private static boolean forge$ItemBlockCheck(int left, int right, Operation<Boolean> original,
-                                                @Local ItemStack var1) {
+                                                @Local(argsOnly = true) ItemStack var1) {
         return var1.getItem() instanceof ItemBlock;
     }
 

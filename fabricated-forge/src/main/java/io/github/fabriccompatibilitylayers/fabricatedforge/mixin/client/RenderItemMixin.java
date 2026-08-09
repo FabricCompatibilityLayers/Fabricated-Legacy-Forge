@@ -20,6 +20,7 @@ import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
@@ -33,8 +34,17 @@ public abstract class RenderItemMixin extends Render {
 
     @Shadow public float zLevel;
 
-    @Expression("? != null")
+    @Definition(id = "blocksList", field = "Lnet/minecraft/src/Block;blocksList:[Lnet/minecraft/src/Block;")
+    @Expression("blocksList[?]")
     @WrapOperation(method = "doRenderItem", at = @At("MIXINEXTRAS:EXPRESSION"))
+    private Block forge$fixOOB(Block[] array, int index, Operation<Block> original, @Local ItemStack var10) {
+        if (var10.getItem() instanceof ItemBlock)
+            return original.call(array, index);
+        return null;
+    }
+
+    @Expression("? != null")
+    @WrapOperation(method = "doRenderItem", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0))
     private boolean forge$customRendererAndIsItemBlock(Object left, Object right, Operation<Boolean> original,
                                                        @Local(argsOnly = true) EntityItem par1EntityItem,
                                                        @Local ItemStack var10,
@@ -48,12 +58,11 @@ public abstract class RenderItemMixin extends Render {
             return false;
         }
 
-        return var10.getItem() instanceof ItemBlock;
+        return original.call(left, right);
     }
 
     @WrapOperation(method = "doRenderItem", at = {
-            @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderItem;loadTexture(Ljava/lang/String;)V", ordinal = 0),
-            @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderItem;loadTexture(Ljava/lang/String;)V", ordinal = 1)
+            @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderItem;loadTexture(Ljava/lang/String;)V", ordinal = 0)
     })
     private void forge$getTextureFile$block(RenderItem instance, String s, Operation<Void> original,
                                             @Local Block var14) {
@@ -61,6 +70,7 @@ public abstract class RenderItemMixin extends Render {
     }
 
     @WrapOperation(method = "doRenderItem", at = {
+            @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderItem;loadTexture(Ljava/lang/String;)V", ordinal = 1),
             @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderItem;loadTexture(Ljava/lang/String;)V", ordinal = 2),
             @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderItem;loadTexture(Ljava/lang/String;)V", ordinal = 3)
     })
@@ -74,6 +84,11 @@ public abstract class RenderItemMixin extends Render {
     private boolean forge$getRenderPasses$1(int left, int right, Operation<Boolean> original,
                                           @Local ItemStack var10) {
         return original.call(left, ((ItemExtension) var10.getItem()).getRenderPasses(var10.getItemDamage()));
+    }
+
+    @Inject(method = "doRenderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Item;getIconFromDamageForRenderPass(II)I"))
+    private void forge$fixVanillaBug(EntityItem par1EntityItem, double par2, double par4, double par6, float par8, float par9, CallbackInfo ci) {
+        this.random.setSeed(187L); //Fixes Vanilla bug where layers would not render aligns properly.
     }
 
     @Definition(id = "par3", local = @Local(type = int.class, ordinal = 0, argsOnly = true))

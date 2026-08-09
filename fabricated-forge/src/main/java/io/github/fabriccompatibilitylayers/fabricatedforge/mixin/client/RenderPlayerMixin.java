@@ -5,6 +5,7 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.client;
 
+import com.llamalad7.mixinextras.expression.Expression;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -19,8 +20,6 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Slice;
 
 @Mixin(RenderPlayer.class)
@@ -93,23 +92,16 @@ public abstract class RenderPlayerMixin {
         return is3D || original.call(renderType);
     }
 
-    // Pattern F (@ModifyConstant + @Slice): replaces the hard-coded `<= 1` loop bound inside
-    // the requiresMultipleRenderPasses block with a value driven by getRenderPasses().
-    // @Slice scopes the intercept to after the requiresMultipleRenderPasses() call so no other
-    // int-1 constants in the method are affected. @Local MixinExtras sugar works on core Mixin
-    // injectors too.
-    // Logic delta: patch uses exclusive `< getRenderPasses()`; returning getRenderPasses()-1
-    // makes the existing `<= result` comparison semantically equivalent.
-    @ModifyConstant(
-        method = "renderSpecials",
-        constant = @Constant(intValue = 1),
-        slice = @Slice(
-            from = @At(value = "INVOKE",
-                       target = "Lnet/minecraft/src/Item;requiresMultipleRenderPasses()Z")
-        )
+    @Expression("? <= 1")
+    @WrapOperation(method = "renderSpecials",
+            slice = @Slice(
+                    from = @At(value = "INVOKE",
+                            target = "Lnet/minecraft/src/Item;requiresMultipleRenderPasses()Z")
+            ),
+            at = @At("MIXINEXTRAS:EXPRESSION")
     )
-    private int forge$getRenderPasses(int constant,
-            @Local(ordinal = 1) ItemStack var21) {
-        return ((ItemExtension) var21.getItem()).getRenderPasses(var21.getItemDamage()) - 1;
+    private boolean forge$getRenderPasses(int left, int right, Operation<Boolean> original,
+                                          @Local(ordinal = 1) ItemStack var21) {
+        return original.call(left, ((ItemExtension) var21.getItem()).getRenderPasses(var21.getItemDamage()) - 1);
     }
 }
