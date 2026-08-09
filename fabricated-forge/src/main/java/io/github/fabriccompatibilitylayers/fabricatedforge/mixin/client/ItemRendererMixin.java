@@ -98,15 +98,12 @@ public abstract class ItemRendererMixin {
         return mapData;
     }
 
-    @WrapOperation(method = "renderItemInFirstPerson", at = @At(value = "INVOKE", target = "Lorg/lwjgl/opengl/GL11;glColor4f(FFFF)V", remap = false, ordinal = 3))
-    private void forge$cancelGlColor4f(float red, float green, float blue, float alpha, Operation<Void> original) {
-
-    }
-
     @WrapOperation(method = "renderItemInFirstPerson", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/ItemRenderer;renderItem(Lnet/minecraft/src/EntityLiving;Lnet/minecraft/src/ItemStack;I)V", ordinal = 1))
     private void forge$renderAllPasses(ItemRenderer instance, EntityLiving par2ItemStack, ItemStack var17, int i, Operation<Void> original,
                                        @Local(ordinal = 5) float var18) {
-        for (int x = 1; x < ((ItemExtension) var17.getItem()).getRenderPasses(var17.getItemDamage()); x++) {
+        original.call(instance, par2ItemStack, var17, i);
+
+        for (int x = i + 1; x < ((ItemExtension) var17.getItem()).getRenderPasses(var17.getItemDamage()); x++) {
             int var59 = Item.itemsList[var17.itemID].func_82790_a(var17, x);
             float var63 = (float)(var59 >> 16 & 255) / 255.0F;
             float var68 = (float)(var59 >> 8 & 255) / 255.0F;
