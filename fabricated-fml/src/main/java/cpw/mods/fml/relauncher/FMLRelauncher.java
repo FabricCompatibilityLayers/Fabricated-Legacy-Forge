@@ -133,7 +133,7 @@ public class FMLRelauncher
     private Class<? super Object> setupNewClientHome(File minecraftHome)
     {
         Class<? super Object> client = ReflectionHelper.getClass(classLoader, "net.minecraft.client.Minecraft");
-        ReflectionHelper.setPrivateValue(client, null, minecraftHome, "field_71463_am", "am", "minecraftDir");
+        ReflectionHelper.setPrivateValue(client, null, minecraftHome, "field_71463_am", "an", "minecraftDir");
         return client;
     }
 
@@ -205,7 +205,7 @@ public class FMLRelauncher
 //        if (str != null)
 //        {
 //            str = str.replace('/', File.separatorChar);
-//            ReflectionHelper.setPrivateValue(mcMaster, null, new File(str), "minecraftDir", "am", "minecraftDir");
+//            ReflectionHelper.setPrivateValue(mcMaster, null, new File(str), "minecraftDir", "an", "minecraftDir");
 //        }
 //        // We force minecraft to setup it's homedir very early on so we can
 //        // inject stuff into it
@@ -218,7 +218,7 @@ public class FMLRelauncher
 //        {
 //            // Hmmm
 //        }
-//        File minecraftHome = ReflectionHelper.getPrivateValue(mcMaster, null, "field_71463_am", "am", "minecraftDir");
+//        File minecraftHome = ReflectionHelper.getPrivateValue(mcMaster, null, "field_71463_am", "an", "minecraftDir");
 //        return minecraftHome;
     }
 

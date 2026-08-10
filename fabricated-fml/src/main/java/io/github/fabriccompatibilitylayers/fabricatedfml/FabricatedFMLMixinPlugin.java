@@ -40,22 +40,22 @@ public class FabricatedFMLMixinPlugin extends ConditionalMixinPlugin {
     }
 
     private static List<String> OPTIFINE_OVERRIDES = Arrays.asList(
-            "arc",
-            "are",
-            "asa",
-            "atf",
-            "ayo",
-            "ays",
-            "ayx",
+            "ard",
+            "arf",
+            "asb",
+            "atg",
+            "ayp",
+            "ayt",
             "ayy",
-            "aza",
+            "ayz",
             "azb",
             "azc",
-            "aze",
-            "azg",
+            "azd",
+            "azf",
             "azh",
-            "jx",
-            "lm"
+            "azi",
+            "jy",
+            "ln"
     );
 
     @Override

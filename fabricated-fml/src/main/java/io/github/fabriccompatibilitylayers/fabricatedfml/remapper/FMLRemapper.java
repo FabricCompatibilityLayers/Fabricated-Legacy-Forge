@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class FMLRemapper implements ModRemapper {
-    private static final String FORGE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.4.0-5.0.0.326/forge-1.4.0-5.0.0.326-universal.zip";
+    private static final String FORGE_URL = "https://maven.minecraftforge.net/net/minecraftforge/forge/1.4.1-6.0.0.329/forge-1.4.1-6.0.0.329-universal.zip";
     private static final boolean runningLegacyFabric = WhichFabricVariantAmIOn.getVariant() == FabricVariants.LEGACY_FABRIC_V1;
 
     @Override
