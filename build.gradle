@@ -314,7 +314,7 @@ allprojects {
         }
 
         modImplementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.2.0"))
-        implementation("net.ornithemc:conditional-mixin:1.0.0-beta.1")
+        implementation("net.ornithemc:conditional-mixin:1.0.0-beta.2")
 
         ornitheLibraries.forEach {
             implementation(it)
@@ -375,7 +375,7 @@ subprojects.forEach {
 dependencies {
     include("fmllibs:argo:2.25")
     include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.2.0")
-    include("net.ornithemc:conditional-mixin:1.0.0-beta.1")
+    include("net.ornithemc:conditional-mixin:1.0.0-beta.2")
 
     afterEvaluate {
         subprojects.forEach {
