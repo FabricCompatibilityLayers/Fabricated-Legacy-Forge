@@ -1,7 +1,5 @@
 package net.minecraft.src;
 
-import org.lwjgl.opengl.GL11;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +23,9 @@ public class ModelRenderer {
     public List childModels;
     public final String boxName;
     private ModelBase baseModel;
+    public float field_82906_o;
+    public float field_82908_p;
+    public float field_82907_q;
 
     public ModelRenderer(ModelBase par1ModelBase, String par2Str) {
         this.textureWidth = 64.0F;

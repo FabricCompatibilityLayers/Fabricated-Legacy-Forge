@@ -111,7 +111,7 @@ public abstract class RenderPlayerMixin {
                     from = @At(value = "INVOKE",
                             target = "Lnet/minecraft/src/Item;requiresMultipleRenderPasses()Z")
             ),
-            at = @At("MIXINEXTRAS:EXPRESSION")
+            at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0)
     )
     private boolean forge$getRenderPasses(int left, int right, Operation<Boolean> original,
                                           @Local(ordinal = 1) ItemStack var21) {

@@ -35,18 +35,18 @@ public abstract class RenderBipedMixin {
         return var5.getItem() instanceof ItemBlock;
     }
 
-    @Expression("? < 256")
-    @WrapOperation(method = "renderEquippedItems", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 1))
-    private boolean forge$isItemBlock(int left, int right, Operation<Boolean> original) {
-        return Item.itemsList[left] instanceof ItemBlock;
-    }
-
     @WrapOperation(method = "renderEquippedItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderBlocks;renderItemIn3d(I)Z", ordinal = 0))
     private boolean forge$renderItemIn3d(int renderType, Operation<Boolean> original,
                                          @Local(ordinal = 1) ItemStack var5) {
         IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(var5, EQUIPPED);
         boolean is3D = (customRenderer != null && customRenderer.shouldUseRenderHelper(EQUIPPED, var5, BLOCK_3D));
         return is3D || original.call(renderType);
+    }
+
+    @Expression("? < 256")
+    @WrapOperation(method = "renderEquippedItems", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 1))
+    private boolean forge$isItemBlock(int left, int right, Operation<Boolean> original) {
+        return Item.itemsList[left] instanceof ItemBlock;
     }
 
     // Pattern E (@WrapOperation INVOKE): wraps the static renderItemIn3d call to prepend the

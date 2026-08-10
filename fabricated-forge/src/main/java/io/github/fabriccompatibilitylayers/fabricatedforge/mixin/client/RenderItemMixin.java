@@ -21,6 +21,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Random;
@@ -80,10 +81,12 @@ public abstract class RenderItemMixin extends Render {
     }
 
     @Expression("? <= 1")
-    @WrapOperation(method = "doRenderItem", at = @At("MIXINEXTRAS:EXPRESSION"))
+    @WrapOperation(method = "doRenderItem", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0), slice = @Slice(
+            from = @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderItem;loadTexture(Ljava/lang/String;)V", ordinal = 1)
+    ))
     private boolean forge$getRenderPasses$1(int left, int right, Operation<Boolean> original,
                                           @Local ItemStack var10) {
-        return original.call(left, ((ItemExtension) var10.getItem()).getRenderPasses(var10.getItemDamage()));
+        return original.call(left, ((ItemExtension) var10.getItem()).getRenderPasses(var10.getItemDamage()) - 1);
     }
 
     @Inject(method = "doRenderItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/src/Item;getIconFromDamageForRenderPass(II)I"))
@@ -102,8 +105,8 @@ public abstract class RenderItemMixin extends Render {
             @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderEngine;getTexture(Ljava/lang/String;)I", ordinal = 0)
     })
     private int forge$getTextureFile$block(RenderEngine instance, String s, Operation<Integer> original,
-                                           @Local(ordinal = 2) int par3) {
-        return original.call(instance, ((BlockExtension) Block.blocksList[par3]).getTextureFile());
+                                           @Local(ordinal = 2) int var6) {
+        return original.call(instance, ((BlockExtension) Block.blocksList[var6]).getTextureFile());
     }
 
     @WrapOperation(method = "renderItemIntoGUI", at = {
@@ -112,16 +115,17 @@ public abstract class RenderItemMixin extends Render {
             @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderEngine;getTexture(Ljava/lang/String;)I", ordinal = 3)
     })
     private int forge$getTextureFile$item(RenderEngine instance, String s, Operation<Integer> original,
-                                           @Local(ordinal = 2) int par3) {
-        return original.call(instance, ((ItemExtension) Item.itemsList[par3]).getTextureFile());
+                                           @Local(ordinal = 2) int var6) {
+        return original.call(instance, ((ItemExtension) Item.itemsList[var6]).getTextureFile());
     }
 
     @Expression("? <= 1")
-    @WrapOperation(method = "renderItemIntoGUI", at = @At("MIXINEXTRAS:EXPRESSION"))
+    @WrapOperation(method = "renderItemIntoGUI", at = @At(value = "MIXINEXTRAS:EXPRESSION", ordinal = 0), slice = @Slice(
+            from = @At(value = "INVOKE", target = "Lnet/minecraft/src/RenderEngine;bindTexture(I)V", ordinal = 1)
+    ))
     private boolean forge$getRenderPasses$2(int left, int right, Operation<Boolean> original,
-                                            @Local(ordinal = 2) int par3,
-                                            @Local(ordinal = 3) int par4) {
-        return original.call(left, ((ItemExtension) Item.itemsList[par3]).getRenderPasses(par4));
+                                            @Local(argsOnly = true) ItemStack par3ItemStack) {
+        return original.call(left, ((ItemExtension) par3ItemStack.getItem()).getRenderPasses(par3ItemStack.getItemDamage()) - 1);
     }
 
     @WrapWithCondition(
