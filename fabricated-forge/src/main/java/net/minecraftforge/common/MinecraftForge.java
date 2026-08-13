@@ -12,6 +12,8 @@ import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModContainer;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.forged.HarvestData;
+import io.github.fabriccompatibilitylayers.fabricatedforge.forged.ToolData;
 import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeHooks.GrassEntry;
 import net.minecraftforge.common.ForgeHooks.SeedEntry;
@@ -66,7 +68,7 @@ public class MinecraftForge
      */
    public static void setToolClass(Item tool, String toolClass, int harvestLevel)
    {
-       ForgeHooks.toolClasses.put(tool, Arrays.asList(toolClass, harvestLevel));
+       ForgeHooks.toolClasses.put(tool, new ToolData(toolClass, harvestLevel));
    }
 
    /**
@@ -85,7 +87,7 @@ public class MinecraftForge
     */
    public static void setBlockHarvestLevel(Block block, int metadata, String toolClass, int harvestLevel)
    {
-       List key = Arrays.asList(block, metadata, toolClass);
+       HarvestData key = new HarvestData(block, metadata, toolClass);
        ForgeHooks.toolHarvestLevels.put(key, harvestLevel);
        ForgeHooks.toolEffectiveness.add(key);
    }
@@ -104,7 +106,7 @@ public class MinecraftForge
     */
    public static void removeBlockEffectiveness(Block block, int metadata, String toolClass)
    {
-       List key = Arrays.asList(block, metadata, toolClass);
+       HarvestData key = new HarvestData(block, metadata, toolClass);
        ForgeHooks.toolEffectiveness.remove(key);
    }
 
@@ -124,9 +126,7 @@ public class MinecraftForge
    {
        for (int metadata = 0; metadata < 16; metadata++)
        {
-           List key = Arrays.asList(block, metadata, toolClass);
-           ForgeHooks.toolHarvestLevels.put(key, harvestLevel);
-           ForgeHooks.toolEffectiveness.add(key);
+           setBlockHarvestLevel(block, metadata, toolClass, harvestLevel);
        }
    }
 
@@ -142,8 +142,8 @@ public class MinecraftForge
    public static int getBlockHarvestLevel(Block block, int metadata, String toolClass)
    {
        ForgeHooks.initTools();
-       List key = Arrays.asList(block, metadata, toolClass);
-       Integer harvestLevel = (Integer)ForgeHooks.toolHarvestLevels.get(key);
+       HarvestData key = new HarvestData(block, metadata, toolClass);
+       Integer harvestLevel = ForgeHooks.toolHarvestLevels.get(key);
        if(harvestLevel == null)
        {
            return -1;
@@ -166,8 +166,7 @@ public class MinecraftForge
    {
        for (int metadata = 0; metadata < 16; metadata++)
        {
-           List key = Arrays.asList(block, metadata, toolClass);
-           ForgeHooks.toolEffectiveness.remove(key);
+           removeBlockEffectiveness(block, metadata, toolClass);
        }
    }
 

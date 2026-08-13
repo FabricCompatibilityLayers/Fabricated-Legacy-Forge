@@ -59,34 +59,19 @@ public abstract class WorldMixin implements WorldExtension {
     @Shadow public abstract int getBlockId(int par1, int par2, int par3);
     @Shadow public abstract int getBlockLightOpacity(int par1, int par2, int par3);
     @Shadow public abstract boolean blockExists(int par1, int par2, int par3);
-    @Shadow public abstract Chunk getChunkFromBlockCoords(int par1, int par2);
     @Shadow public abstract Chunk getChunkFromChunkCoords(int par1, int par2);
     @Shadow public abstract int getBlockMetadata(int par1, int par2, int par3);
     @Shadow protected abstract IChunkProvider createChunkProvider();
     @Shadow public abstract void calculateInitialSkylight();
-    @Shadow protected float rainingStrength;
-    @Shadow protected float prevRainingStrength;
-    @Shadow protected float thunderingStrength;
-    @Shadow protected float prevThunderingStrength;
     @Shadow protected int lastLightningBolt;
     @Shadow public Random rand;
     @Shadow protected Set activeChunkSet;
-    @Shadow public abstract float getCelestialAngle(float par1);
-    @Shadow public abstract float getRainStrength(float par1);
-    @Shadow public abstract float getWeightedThunderStrength(float par1);
     @Shadow public int lightningFlash;
     @Shadow private long cloudColour;
     @Shadow public void updateEntity(Entity par1Entity) {}
     @Shadow protected void releaseEntitySkin(Entity par1Entity) {}
     @Shadow protected void obtainEntitySkin(Entity par1Entity) {}
     @Shadow protected boolean chunkExists(int par1, int par2) { return false; }
-    @Shadow public abstract boolean checkChunksExist(int par1, int par2, int par3, int par4, int par5, int par6);
-
-    @Shadow
-    public abstract int getSavedLightValue(EnumSkyBlock par1EnumSkyBlock, int par2, int par3, int par4);
-
-    @Shadow
-    public abstract Material getBlockMaterial(int par1, int par2, int par3);
 
     @Shadow
     private int ambientTickCountdown;
@@ -126,8 +111,6 @@ public abstract class WorldMixin implements WorldExtension {
     protected boolean spawnHostileMobs;
     @Shadow
     protected boolean spawnPeacefulMobs;
-    @Shadow
-    public MapStorage mapStorage;
 
     // == Shadowed members section: end ==
 

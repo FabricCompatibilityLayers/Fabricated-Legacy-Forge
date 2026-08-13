@@ -27,7 +27,8 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class RenderBlocksMixin {
 
     @Shadow public IBlockAccess blockAccess;
-    @Shadow private int overrideBlockTexture;
+    @Shadow
+    public int overrideBlockTexture;
 
     // Pattern N (@Redirect INVOKESTATIC): replaces BlockBed.getDirection(metadata) with
     // getBedDirection(IBlockAccess, x, y, z) — Forge API delegates direction logic to the block.

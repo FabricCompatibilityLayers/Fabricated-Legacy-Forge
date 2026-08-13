@@ -17,6 +17,8 @@ import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.Bloc
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.EntityPlayerExtension;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.ItemExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.forged.HarvestData;
+import io.github.fabriccompatibilitylayers.fabricatedforge.forged.ToolData;
 import io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common.EntityAccessor;
 import net.minecraft.src.*;
 import net.minecraftforge.event.ForgeEventFactory;
@@ -38,7 +40,7 @@ public class ForgeHooks
         }
     }
 
-    static class SeedEntry extends WeightedRandomItem
+    public static class SeedEntry extends WeightedRandomItem
     {
         public final ItemStack seed;
         public SeedEntry(ItemStack seed, int weight)
@@ -71,9 +73,9 @@ public class ForgeHooks
     }
 
     private static boolean toolInit = false;
-    static HashMap<Item, List> toolClasses = new HashMap<Item, List>();
-    static HashMap<List, Integer> toolHarvestLevels = new HashMap<List, Integer>();
-    static HashSet<List> toolEffectiveness = new HashSet<List>();
+    static HashMap<Item, ToolData> toolClasses = new HashMap<>();
+    static HashMap<HarvestData, Integer> toolHarvestLevels = new HashMap<>();
+    static HashSet<HarvestData> toolEffectiveness = new HashSet<>();
 
     public static boolean canHarvestBlock(Block block, EntityPlayer player, int metadata)
     {
@@ -88,17 +90,16 @@ public class ForgeHooks
             return player.canHarvestBlock(block);
         }
 
-        List info = (List)toolClasses.get(stack.getItem());
+        ToolData info = toolClasses.get(stack.getItem());
         if (info == null)
         {
             return player.canHarvestBlock(block);
         }
 
-        Object[] tmp = info.toArray();
-        String toolClass = (String)tmp[0];
-        int harvestLevel = (Integer)tmp[1];
+        String toolClass = info.type;
+        int harvestLevel = info.level;
 
-        Integer blockHarvestLevel = (Integer)toolHarvestLevels.get(Arrays.asList(block, metadata, toolClass));
+        Integer blockHarvestLevel = toolHarvestLevels.get(new HarvestData(block, metadata, toolClass));
         if (blockHarvestLevel == null)
         {
             return player.canHarvestBlock(block);
@@ -133,12 +134,12 @@ public class ForgeHooks
 
     public static boolean isToolEffective(ItemStack stack, Block block, int metadata)
     {
-        List toolClass = (List)toolClasses.get(stack.getItem());
+        ToolData toolClass = toolClasses.get(stack.getItem());
         if (toolClass == null)
         {
             return false;
         }
-        return toolEffectiveness.contains(Arrays.asList(block, metadata, (String)toolClass.get(0)));
+        return toolEffectiveness.contains(new HarvestData(block, metadata, toolClass.type));
     }
 
     static void initTools()
