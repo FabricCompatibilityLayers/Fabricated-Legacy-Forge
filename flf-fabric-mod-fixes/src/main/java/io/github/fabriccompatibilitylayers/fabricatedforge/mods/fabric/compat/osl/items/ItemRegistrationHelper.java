@@ -3,7 +3,7 @@
  *
  * Licensed under the Open Software License version 3.0
  */
-package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl;
+package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.items;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Maps;

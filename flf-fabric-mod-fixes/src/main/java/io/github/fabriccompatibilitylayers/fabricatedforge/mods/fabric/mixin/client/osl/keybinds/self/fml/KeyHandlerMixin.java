@@ -3,12 +3,12 @@
  *
  * Licensed under the Open Software License version 3.0
  */
-package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.client.osl.self.fml;
+package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.client.osl.keybinds.self.fml;
 
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
-import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.KeyHandlerAccessor;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.keybinds.KeyHandlerAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.src.KeyBinding;

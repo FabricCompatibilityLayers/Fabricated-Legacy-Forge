@@ -6,8 +6,8 @@
 package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.common.osl.registries;
 
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
-import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.BlockRegistrationHelper;
-import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.ItemRegistrationHelper;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.blocks.BlockRegistrationHelper;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.items.ItemRegistrationHelper;
 import net.ornithemc.conditionalmixin.annotations.Conditional;
 import net.ornithemc.conditionalmixin.annotations.Mod;
 import net.ornithemc.osl.registries.impl.registry.RegistriesImpl;

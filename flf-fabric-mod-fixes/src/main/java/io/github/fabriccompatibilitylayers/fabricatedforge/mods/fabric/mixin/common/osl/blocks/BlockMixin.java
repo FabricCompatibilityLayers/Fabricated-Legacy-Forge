@@ -8,7 +8,7 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.co
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.BlockExtension;
-import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.BlockRegistrationHelper;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.blocks.BlockRegistrationHelper;
 import net.minecraft.src.Block;
 import net.minecraft.src.Material;
 import net.minecraft.src.World;

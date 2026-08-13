@@ -3,7 +3,7 @@
  *
  * Licensed under the Open Software License version 3.0
  */
-package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.client.modmenu.self;
+package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.client.modmenu.self.fml;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;

@@ -7,7 +7,7 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.co
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.ModContainer;
-import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.ItemRegistrationHelper;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.items.ItemRegistrationHelper;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemBlock;
 import net.ornithemc.conditionalmixin.annotations.Conditional;

@@ -336,6 +336,7 @@ allprojects {
         inputs.property "fabric_loader_version", proj.fabric_loader_version
         inputs.property "mc_version", proj.minecraft_version
         inputs.property "mrapi_version", proj.mod_remapping_api
+        inputs.property "osl_version", proj.osl_version
         inputs.property "flf_mappings", provider { buildFlfMappingsJson(proj) }
 
         filesMatching("fabric.mod.json") {
@@ -343,6 +344,7 @@ allprojects {
                     "fabric_loader_version": rootProject.fabric_loader_version,
                     "mc_version": rootProject.minecraft_version,
                     "mrapi_version": rootProject.mod_remapping_api,
+                    "osl_version": proj.osl_version,
                     "flf_mappings": buildFlfMappingsJson(proj)
         }
     }
