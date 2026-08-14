@@ -3,7 +3,7 @@ import groovy.json.JsonOutput
 
 plugins {
     id 'java'
-    id 'xyz.wagyourtail.unimined' version '1.4.20' apply false
+    id 'xyz.wagyourtail.unimined' version '1.4.2-SNAPSHOT' apply false
     id 'com.diffplug.spotless' version '7.2.1' apply false
 }
 
