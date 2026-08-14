@@ -5,11 +5,12 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.forged;
 
+import io.github.fabriccompatibilitylayers.fabricatedforge.utils.FakeList;
 import net.minecraft.src.Item;
 
 import java.util.Objects;
 
-public final class ItemData {
+public final class ItemData extends FakeList {
     public final Item item;
     public final int damage;
 
@@ -35,5 +36,13 @@ public final class ItemData {
     @Override
     public int hashCode() {
         return Objects.hash(item, damage);
+    }
+
+    @Override
+    public Object get(int index) {
+        if (index == 0) return item.shiftedIndex;
+        if (index == 1) return damage;
+
+        return null;
     }
 }
