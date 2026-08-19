@@ -3,7 +3,7 @@
  *
  * Licensed under the Open Software License version 3.0
  */
-package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.common.osl.items.self.forge;
+package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.common.osl.items;
 
 import io.github.fabriccompatibilitylayers.fabricatedforge.forged.ItemData;
 import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.items.Object2ItemStackMapMapper;
