@@ -16,8 +16,8 @@ import net.ornithemc.conditionalmixin.annotations.Mod;
 import net.ornithemc.osl.core.api.util.NamespacedIdentifiers;
 import net.ornithemc.osl.registries.api.registry.RegistryKeys;
 import net.ornithemc.osl.registries.api.registry.SyncedRegistries;
-import net.ornithemc.osl.registries.api.registry.sync.DynamicArrays;
-import net.ornithemc.osl.registries.api.registry.sync.ObjectArrayMapper;
+import net.ornithemc.osl.registries.api.registry.sync.ArrayMapper;
+import net.ornithemc.osl.registries.api.registry.sync.DynamicArray;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -34,12 +34,15 @@ public class MinecraftForgeClientMixin {
 
     @Inject(method = "registerItemRenderer", at = @At("HEAD"))
     private static void osl$growArray(int itemID, IItemRenderer renderer, CallbackInfo ci) {
-        customItemRenderers = DynamicArrays.grow(customItemRenderers, itemID + 1);
+        customItemRenderers = DynamicArray.grow(customItemRenderers, itemID + 1);
     }
 
     @Unique
     @Subscribe
     public void osl$registerMapper(FMLLoadCompleteEvent complete) {
-        SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("forge", "minecraft_forge_client/custom_item_renderers"), ObjectArrayMapper.of(customItemRenderers));
+        SyncedRegistries.registerMapper(RegistryKeys.ITEM, NamespacedIdentifiers.from("forge", "minecraft_forge_client/custom_item_renderers"), ArrayMapper.of(
+                () -> customItemRenderers,
+                a -> customItemRenderers = a
+        ));
     }
 }
