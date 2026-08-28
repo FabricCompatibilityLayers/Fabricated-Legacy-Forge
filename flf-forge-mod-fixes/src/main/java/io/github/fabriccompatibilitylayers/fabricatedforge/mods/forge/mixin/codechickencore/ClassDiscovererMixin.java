@@ -13,10 +13,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import cpw.mods.fml.common.ModClassLoader;
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.asm.ClassNodeHelper;
 import org.objectweb.asm.tree.ClassNode;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -27,6 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.zip.ZipException;
 
+@Pseudo
 @Mixin(ClassDiscoverer.class)
 public abstract class ClassDiscovererMixin {
     @Shadow(remap = false) public ArrayList classes;
