@@ -6,15 +6,19 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: gradle/actions/wrapper-validation@v6
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: 17
       - name: Grant execute permission
         run: chmod +x ./gradlew
-      - name: Build with Gradle
+      - name: Publish Ornithe build
         run: ./gradlew spotlessCheck build modrinth
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+      - name: Publish Legacy Fabric build
+        run: "./gradlew -Ptarget=legacy-fabric clean build modrinth"
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
