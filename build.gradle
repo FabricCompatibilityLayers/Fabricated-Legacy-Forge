@@ -5,6 +5,7 @@ plugins {
     id 'java'
     id 'xyz.wagyourtail.unimined' version '1.4.2-SNAPSHOT' apply false
     id 'com.diffplug.spotless' version '7.2.1' apply false
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 group project.maven_group
@@ -386,6 +387,41 @@ dependencies {
     afterEvaluate {
         subprojects.forEach {
             include(project(path: "${it.path}", configuration: 'production'))
+        }
+    }
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN") == null ? "dev" : System.getenv("MODRINTH_TOKEN") // This is the default. Remember to have the MODRINTH_TOKEN environment variable set or else this will fail, or set it to whatever you want - just make sure it stays private!
+    projectId = "JpHZ1Cyv" // This can be the project ID or the slug. Either will work!
+    versionNumber = project.version + "+" + project.minecraft_version + "+" + project.target
+    versionName = project.version + "+" + project.minecraft_version
+    changelog = """
+- Implement a simple block and item id saving system to saves
+- [Ornithe] Update OSL Compatibility to 0.21
+- [Ornithe] Add support for OSL block and item registry system
+- [Ornithe] Add barebone OSL compatibility to Buildcraft
+"""
+    uploadFile = remapJar
+    gameVersions = [project.minecraft_version] // Must be an array, even with only one version
+    loaders.add(project.target)
+    dependencies { // A special DSL for creating dependencies
+        // scope.type
+        // The scope can be `required`, `optional`, `incompatible`, or `embedded`
+        // The type can either be `project` or `version`
+
+        // Common dependencies
+        required.project("mod-remapping-api")
+        optional.project("legacy-fabric-api")
+
+        // FML mods compat
+        optional.project("codechicken-core")
+        optional.project("nei")
+
+        if (project.target == "ornithe") {
+            optional.project("osl")
+            optional.project("modmenu-ornithe")
+            optional.project("moehreag-legacy-lwjgl3")
         }
     }
 }
