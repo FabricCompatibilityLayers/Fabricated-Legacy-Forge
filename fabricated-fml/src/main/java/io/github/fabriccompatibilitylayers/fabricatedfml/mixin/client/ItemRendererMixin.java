@@ -18,6 +18,8 @@ import net.minecraft.src.Block;
 import net.minecraft.src.ItemRenderer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.Tessellator;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,6 +28,7 @@ import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
 @Mixin(ItemRenderer.class)
 public class ItemRendererMixin {
+    @Conditional(modAbsent = @Mod("osl-items"))
     @Definition(id = "field_71973_m", field = "Lnet/minecraft/src/Block;field_71973_m:[Lnet/minecraft/src/Block;")
     @Definition(id = "p_78443_2_", local = @Local(type = ItemStack.class))
     @Definition(id = "field_77993_c", field = "Lnet/minecraft/src/ItemStack;field_77993_c:I")

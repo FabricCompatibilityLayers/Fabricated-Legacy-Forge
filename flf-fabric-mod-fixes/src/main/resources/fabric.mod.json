@@ -23,7 +23,8 @@
     "preLaunch": [
     ],
     "mixinsquared": [
-      "io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.legacyfabric.LFAPIMixinCanceller"
+      "io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.legacyfabric.LFAPIMixinCanceller",
+      "io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.osl.OSLMixinCanceller"
     ]
   },
   "mixins": [

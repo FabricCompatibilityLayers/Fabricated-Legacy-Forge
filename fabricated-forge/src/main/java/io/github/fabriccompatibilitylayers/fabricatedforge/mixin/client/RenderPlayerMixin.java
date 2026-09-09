@@ -17,6 +17,8 @@ import net.minecraft.src.RenderPlayer;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,9 +38,7 @@ public abstract class RenderPlayerMixin {
         original.call(instance, ForgeHooksClient.getArmorTexture(var4, path));
     }
 
-    // Pattern E (@WrapOperation GETFIELD, ordinal = 0): intercepts the first Item.shiftedIndex
-    // read in renderSpecials to replace `shiftedIndex < 256` with `instanceof ItemBlock` —
-    // same technique as RenderBipedMixin. Receiver is the Item from var3.getItem().
+    @Conditional(modAbsent = @Mod("osl-items"))
     @WrapOperation(
         method = "renderSpecials",
         at = @At(value = "FIELD", target = "Lnet/minecraft/src/Item;shiftedIndex:I",
@@ -64,9 +64,7 @@ public abstract class RenderPlayerMixin {
         return is3D || original.call(renderType);
     }
 
-    // Pattern E (@WrapOperation GETFIELD, ordinal = 1): intercepts the second ItemStack.itemID
-    // read in renderSpecials (the `var21.itemID < 256` guard) to replace it with `instanceof
-    // ItemBlock` — ordinal 0 is var3.itemID inside the helmet renderItemIn3d call (line 123).
+    @Conditional(modAbsent = @Mod("osl-items"))
     @WrapOperation(
         method = "renderSpecials",
         at = @At(value = "FIELD", target = "Lnet/minecraft/src/ItemStack;itemID:I",

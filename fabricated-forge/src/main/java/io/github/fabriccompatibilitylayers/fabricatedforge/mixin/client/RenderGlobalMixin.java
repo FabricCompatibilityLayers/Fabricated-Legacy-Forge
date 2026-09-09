@@ -14,7 +14,6 @@ import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.Worl
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import net.minecraftforge.client.SkyProvider;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,7 +24,6 @@ public abstract class RenderGlobalMixin implements RenderGlobalExtension {
 
     @Shadow public Minecraft mc;
     @Shadow public WorldClient theWorld;
-    @Shadow @Final public RenderEngine renderEngine;
 
     // Pattern P (@WrapMethod): wraps whole method to conditionally delegate sky rendering to a mod-
     // registered SkyProvider before running any vanilla sky logic. Preferred over @Inject(HEAD,

@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import java.util.Hashtable;
 import java.util.List;
 
-@Mixin(MinecraftServer.class)
+@Mixin(value = MinecraftServer.class, priority = 990)
 public abstract class MinecraftServerMixin implements MinecraftServerExtension {
 
     @Shadow @Final public Profiler theProfiler;

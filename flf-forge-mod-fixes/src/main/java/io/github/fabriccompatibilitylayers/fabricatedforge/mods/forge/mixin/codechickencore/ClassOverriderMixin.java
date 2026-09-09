@@ -8,12 +8,14 @@ package io.github.fabriccompatibilitylayers.fabricatedforge.mods.forge.mixin.cod
 import codechicken.core.asm.ClassOverrider;
 import codechicken.core.asm.ObfuscationManager;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.io.File;
 
+@Pseudo
 @Mixin(ClassOverrider.class)
 public class ClassOverriderMixin {
     @Inject(method = "overrideBytes", remap = false, at = @At("HEAD"), cancellable = true)

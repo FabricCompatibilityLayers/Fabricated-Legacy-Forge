@@ -3,7 +3,7 @@ import groovy.json.JsonOutput
 
 plugins {
     id 'java'
-    id 'xyz.wagyourtail.unimined' version '1.4.20' apply false
+    id 'xyz.wagyourtail.unimined' version '1.4.2-SNAPSHOT' apply false
     id 'com.diffplug.spotless' version '7.2.1' apply false
 }
 
@@ -112,6 +112,10 @@ allprojects {
         maven { url = "https://maven.bawnorton.com/releases" }
         maven {
             url = "https://jvmdowngrader.wagyourtail.xyz/maven/"
+        }
+        flatDir {
+            dirs rootProject.rootDir.toString() + "/mods"
+            group("mods")
         }
 
         mavenLocal()
@@ -313,7 +317,7 @@ allprojects {
             exclude(module: 'fabric-loader')
         }
 
-        modImplementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.2.0"))
+        modImplementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.3"))
         implementation("net.ornithemc:conditional-mixin:1.0.0-beta.2")
 
         ornitheLibraries.forEach {
@@ -332,6 +336,7 @@ allprojects {
         inputs.property "fabric_loader_version", proj.fabric_loader_version
         inputs.property "mc_version", proj.minecraft_version
         inputs.property "mrapi_version", proj.mod_remapping_api
+        inputs.property "osl_version", proj.osl_version
         inputs.property "flf_mappings", provider { buildFlfMappingsJson(proj) }
 
         filesMatching("fabric.mod.json") {
@@ -339,6 +344,7 @@ allprojects {
                     "fabric_loader_version": rootProject.fabric_loader_version,
                     "mc_version": rootProject.minecraft_version,
                     "mrapi_version": rootProject.mod_remapping_api,
+                    "osl_version": proj.osl_version,
                     "flf_mappings": buildFlfMappingsJson(proj)
         }
     }
@@ -374,7 +380,7 @@ subprojects.forEach {
 
 dependencies {
     include("fmllibs:argo:2.25")
-    include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.2.0")
+    include("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.3.7-beta.3")
     include("net.ornithemc:conditional-mixin:1.0.0-beta.2")
 
     afterEvaluate {
