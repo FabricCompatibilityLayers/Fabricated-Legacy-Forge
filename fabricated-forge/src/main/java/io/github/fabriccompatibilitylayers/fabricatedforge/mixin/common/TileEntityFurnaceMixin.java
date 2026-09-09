@@ -16,6 +16,8 @@ import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.Tile
 import net.minecraft.src.*;
 import net.minecraftforge.common.ForgeDirection;
 import net.minecraftforge.common.ISidedInventory;
+import net.ornithemc.conditionalmixin.annotations.Conditional;
+import net.ornithemc.conditionalmixin.annotations.Mod;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -77,6 +79,7 @@ public abstract class TileEntityFurnaceMixin extends TileEntity implements TileE
         original.call(instance, value - 1 + var1.stackSize);
     }
 
+    @Conditional(modAbsent = @Mod("osl-items"))
     @Expression("? < 256")
     @WrapOperation(method = "getItemBurnTime", at = @At("MIXINEXTRAS:EXPRESSION"))
     private static boolean forge$ItemBlockCheck(int left, int right, Operation<Boolean> original,

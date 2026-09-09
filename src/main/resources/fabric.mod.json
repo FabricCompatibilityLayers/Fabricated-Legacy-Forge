@@ -31,6 +31,6 @@
     "mod-remapping-api": ">=${mrapi_version}"
   },
   "breaks": {
-    "osl": ">=0.21.0-"
+    "osl": "<${osl_version}"
   }
 }

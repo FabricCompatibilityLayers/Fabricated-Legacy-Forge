@@ -3,7 +3,7 @@
  *
  * Licensed under the Open Software License version 3.0
  */
-package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.client.osl.self.forge;
+package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.client.osl.keybinds.self.forge;
 
 import com.llamalad7.mixinextras.expression.Definition;
 import com.llamalad7.mixinextras.expression.Expression;

@@ -21,15 +21,11 @@ import java.net.SocketAddress;
 
 @Mixin(NetLoginHandler.class)
 public abstract class NetLoginHandlerMixin extends NetHandler implements NetLoginHandlerExtension {
-    @Shadow public abstract void func_72527_a(String p_72527_1_);
-
     @Shadow private MinecraftServer field_72534_f;
 
     @Shadow public String field_72543_h;
 
     @Shadow public TcpConnection field_72538_b;
-
-    @Shadow public boolean field_72539_c;
 
     @Shadow
     public abstract void func_72529_d();

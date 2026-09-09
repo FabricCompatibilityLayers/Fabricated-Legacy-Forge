@@ -16,7 +16,19 @@ artifacts {
 dependencies {
     implementation(project(":fabricated-fml"))
     implementation(project(":fabricated-forge"))
+    implementation(project(":flf-fabric-mod-fixes"))
+
+    if (rootProject.target == "legacy-fabric") {
+        fabricApi.osl(2, project.minecraft_version, project.osl_version).forEach {
+            ornitheImplementation(it)
+        }
+    } else {
+        fabricApi.osl(2, project.minecraft_version, project.osl_version).forEach {
+            modImplementation(it)
+        }
+    }
 
     if (!project.ccc_version.isEmpty()) mcpImplementation("maven.modrinth:codechicken-core:${project.ccc_version}")
     if (!project.nei_version.isEmpty()) mcpAtImplementation("maven.modrinth:nei:${project.nei_version}")
+    if (!project.buildcraft_version.isEmpty()) mcpImplementation("maven.modrinth:buildcraft:${project.buildcraft_version}")
 }

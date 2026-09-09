@@ -5,18 +5,14 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mods.forge;
 
+import net.ornithemc.conditionalmixin.mixin.ConditionalMixinPlugin;
 import org.objectweb.asm.tree.ClassNode;
-import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 import java.util.List;
 import java.util.Set;
 
-public class ForgeModsMixinPlugin implements IMixinConfigPlugin {
-    @Override
-    public void onLoad(String mixinPackage) {
-    }
-
+public class ForgeModsMixinPlugin extends ConditionalMixinPlugin {
     @Override
     public String getRefMapperConfig() {
         return null;
@@ -24,7 +20,7 @@ public class ForgeModsMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        return true;
+        return super.shouldApplyMixin(targetClassName, mixinClassName);
     }
 
     @Override

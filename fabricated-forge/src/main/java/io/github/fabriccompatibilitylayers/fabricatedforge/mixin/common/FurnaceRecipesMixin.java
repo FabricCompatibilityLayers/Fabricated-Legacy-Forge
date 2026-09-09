@@ -6,21 +6,21 @@
 package io.github.fabriccompatibilitylayers.fabricatedforge.mixin.common;
 
 import io.github.fabriccompatibilitylayers.fabricatedforge.extension.common.FurnaceRecipesExtension;
+import io.github.fabriccompatibilitylayers.fabricatedforge.forged.ItemData;
 import net.minecraft.src.FurnaceRecipes;
 import net.minecraft.src.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(FurnaceRecipes.class)
 public class FurnaceRecipesMixin implements FurnaceRecipesExtension {
-    @Shadow private Map smeltingList;
+    @Shadow private Map<Integer, ItemStack> smeltingList;
 
 
-    private Map metaSmeltingList = new HashMap();
+    private Map<ItemData, ItemStack> metaSmeltingList = new HashMap<>();
 
     /**
      * Add a metadata-sensitive furnace recipe
@@ -31,7 +31,7 @@ public class FurnaceRecipesMixin implements FurnaceRecipesExtension {
     @Override
     public void addSmelting(int itemID, int metadata, ItemStack itemstack)
     {
-        metaSmeltingList.put(Arrays.asList(itemID, metadata), itemstack);
+        metaSmeltingList.put(new ItemData(itemID, metadata), itemstack);
     }
 
     /**
@@ -46,11 +46,11 @@ public class FurnaceRecipesMixin implements FurnaceRecipesExtension {
         {
             return null;
         }
-        ItemStack ret = (ItemStack)metaSmeltingList.get(Arrays.asList(item.itemID, item.getItemDamage()));
+        ItemStack ret = metaSmeltingList.get(new ItemData(item.getItem(), item.getItemDamage()));
         if (ret != null)
         {
             return ret;
         }
-        return (ItemStack)smeltingList.get(Integer.valueOf(item.itemID));
+        return smeltingList.get(Integer.valueOf(item.itemID));
     }
 }
