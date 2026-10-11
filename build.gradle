@@ -397,6 +397,12 @@ modrinth {
     versionNumber = project.version + "+" + project.minecraft_version + "+" + project.target
     versionName = project.version + "+" + project.minecraft_version + "+" + project.target
     changelog = """
+# 3.3.0
+- Implement a simple block and item id saving system to saves
+- [Ornithe] Update OSL Compatibility to 0.21
+- [Ornithe] Add support for OSL block and item registry system
+
+# 3.4.0
 - Add entity and biome to the id saving system
 - [Ornithe] Update OSL Compatibility to 0.22
 - [Ornithe] Add support for OSL block entity, entity and biome registry system
