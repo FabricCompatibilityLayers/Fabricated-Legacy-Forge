@@ -9,8 +9,8 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
-import cpw.mods.fml.common.ModContainer;
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.MappingsHelper;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.IdUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.src.Block;
 import net.minecraft.src.NBTTagCompound;
@@ -29,8 +29,8 @@ public class BlockRegistrationHelper {
     private static final Map<Block, String> blockIdentifiers = Maps.newHashMap();
     private static boolean identifiersSanitized = false;
 
-    public static void registerBlock(Block block, ModContainer mc) {
-        String modId = mc.getModId().toLowerCase(Locale.ENGLISH).replace("|", "__");
+    public static void registerBlock(Block block) {
+        String modId = IdUtils.getModId();
         String blockType = MappingsHelper.unmapClass(block.getClass().getName()).toLowerCase(Locale.ENGLISH);
 
         if (!modOrdinals.containsKey(modId)) {

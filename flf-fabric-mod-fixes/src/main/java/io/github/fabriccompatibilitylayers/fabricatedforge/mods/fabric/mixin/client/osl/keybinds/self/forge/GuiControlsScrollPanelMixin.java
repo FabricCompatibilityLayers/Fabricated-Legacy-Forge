@@ -25,6 +25,7 @@ import net.minecraft.src.Tessellator;
 import net.minecraftforge.client.GuiControlsScrollPanel;
 import net.ornithemc.conditionalmixin.annotations.Conditional;
 import net.ornithemc.conditionalmixin.annotations.Mod;
+import net.ornithemc.conditionalmixin.annotations.Version;
 import net.ornithemc.osl.keybinds.api.keybind.KeyBindingExtension;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -38,7 +39,7 @@ import java.util.Comparator;
 import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
-@Conditional(modLoaded = @Mod(value = "osl-keybinds", version = ">=0.3.0-"))
+@Conditional(modLoaded = @Mod(value = "osl-keybinds", version = @Version(">=0.3.0-")))
 @Mixin(GuiControlsScrollPanel.class)
 public class GuiControlsScrollPanelMixin {
 

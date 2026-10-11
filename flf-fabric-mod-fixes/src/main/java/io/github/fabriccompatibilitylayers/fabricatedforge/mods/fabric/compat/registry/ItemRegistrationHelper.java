@@ -9,8 +9,8 @@ import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multiset;
 import com.google.common.collect.Sets;
-import cpw.mods.fml.common.ModContainer;
 import io.github.fabriccompatibilitylayers.fabricatedfml.remapper.MappingsHelper;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.IdUtils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.src.Block;
 import net.minecraft.src.Item;
@@ -32,8 +32,8 @@ public class ItemRegistrationHelper {
     private static final Map<Item, String> itemIdentifiers = Maps.newHashMap();
     private static boolean identifiersSanitized = false;
 
-    public static void registerItem(Item item, ModContainer mc) {
-        String modId = mc.getModId().toLowerCase(Locale.ENGLISH).replace("|", "__");
+    public static void registerItem(Item item) {
+        String modId = IdUtils.getModId();
         String itemType = MappingsHelper.unmapClass(item.getClass().getName()).toLowerCase(Locale.ENGLISH);
 
         if (!modOrdinals.containsKey(modId)) {
@@ -51,7 +51,7 @@ public class ItemRegistrationHelper {
         }
     }
 
-    public static void registerItemBlock(ItemBlock item, ModContainer mc) {
+    public static void registerItemBlock(ItemBlock item) {
         Block block;
 
         if (FabricLoader.getInstance().isModLoaded("osl-items")) {
@@ -61,7 +61,7 @@ public class ItemRegistrationHelper {
         }
 
         if (block == null || block.blockID == 0) {
-            registerItem(item, mc);
+            registerItem(item);
         } else {
             String blockIdentifier = BlockRegistrationHelper.getId(block);
             itemIdentifiers.put(item, blockIdentifier);

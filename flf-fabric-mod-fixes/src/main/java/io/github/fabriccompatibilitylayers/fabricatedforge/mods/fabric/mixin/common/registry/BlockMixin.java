@@ -5,8 +5,7 @@
  */
 package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.common.registry;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.IdUtils;
 import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.registry.BlockRegistrationHelper;
 import net.minecraft.src.Block;
 import net.minecraft.src.Material;
@@ -28,10 +27,8 @@ public abstract class BlockMixin {
         if (this.blockID == 0) return;
 
         if (BlockRegistrationHelper.ready) {
-            ModContainer container = Loader.instance().activeModContainer();
-
-            if (container != null) {
-                BlockRegistrationHelper.registerBlock((Block) (Object) this, container);
+            if (IdUtils.isForgeModLoading()) {
+                BlockRegistrationHelper.registerBlock((Block) (Object) this);
             }
         }
     }
