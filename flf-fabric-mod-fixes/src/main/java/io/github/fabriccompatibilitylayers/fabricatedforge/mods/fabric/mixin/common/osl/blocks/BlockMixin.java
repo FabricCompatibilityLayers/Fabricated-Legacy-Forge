@@ -12,9 +12,9 @@ import net.ornithemc.conditionalmixin.annotations.Conditional;
 import net.ornithemc.conditionalmixin.annotations.Mod;
 import org.spongepowered.asm.mixin.Mixin;
 
-@Conditional(modLoaded = @Mod(value = "osl-blocks"))
+@Conditional(modLoaded = @Mod(value = "osl-blockstates"))
 @Mixin(Block.class)
-public abstract class BlockMixin implements BlockExtension, net.ornithemc.osl.blocks.api.block.BlockExtension {
+public abstract class BlockMixin implements BlockExtension, net.ornithemc.osl.blockstates.api.block.BlockExtension {
     @Override
     public boolean isAirBlock(World world, int x, int y, int z) {
         return this.isAir();

@@ -14,13 +14,14 @@ import net.fabricmc.api.Environment;
 import net.minecraft.src.KeyBinding;
 import net.ornithemc.conditionalmixin.annotations.Conditional;
 import net.ornithemc.conditionalmixin.annotations.Mod;
+import net.ornithemc.conditionalmixin.annotations.Version;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
-@Conditional(modLoaded = @Mod(value = "osl-keybinds", version = ">=0.3.0-"))
+@Conditional(modLoaded = @Mod(value = "osl-keybinds", version = @Version(">=0.3.0-")))
 @Mixin(KeyBindingRegistry.KeyHandler.class)
 public class KeyHandlerMixin implements KeyHandlerAccessor {
     private String modId;
