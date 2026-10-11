@@ -1,6 +1,9 @@
 name: Build and Publish
 
-on: [create]
+on:
+  push:
+    tags:
+      "*\+*"
 
 jobs:
   build:
