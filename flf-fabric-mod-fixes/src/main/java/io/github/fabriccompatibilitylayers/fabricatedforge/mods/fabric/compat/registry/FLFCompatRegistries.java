@@ -11,7 +11,9 @@ import java.util.function.Consumer;
 
 public enum FLFCompatRegistries {
     BLOCK("minecraft:block", BlockRegistrationHelper::write),
-    ITEM("minecraft:item", ItemRegistrationHelper::write);
+    ITEM("minecraft:item", ItemRegistrationHelper::write),
+    BIOME("minecraft:biome", BiomeRegistrationHelper::write),
+    ENTITY_TYPE("minecraft:entity_type", EntityRegistrationHelper::write);
 
     private final String key;
     private final Consumer<NBTTagCompound> saveHandler;

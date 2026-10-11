@@ -6,6 +6,7 @@
 package io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.mixin.common.registry;
 
 import cpw.mods.fml.common.Loader;
+import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.registry.BiomeRegistrationHelper;
 import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.registry.BlockRegistrationHelper;
 import io.github.fabriccompatibilitylayers.fabricatedforge.mods.fabric.compat.registry.ItemRegistrationHelper;
 import net.ornithemc.conditionalmixin.annotations.Conditional;
@@ -22,5 +23,6 @@ public class LoaderMixin {
     private void flf$isReady(CallbackInfo ci) {
         BlockRegistrationHelper.ready = true;
         ItemRegistrationHelper.ready = true;
+        BiomeRegistrationHelper.ready = true;
     }
 }

@@ -12,11 +12,11 @@ import net.minecraft.src.Block;
 import net.minecraft.src.WorldGenHugeTrees;
 import net.ornithemc.conditionalmixin.annotations.Conditional;
 import net.ornithemc.conditionalmixin.annotations.Mod;
-import net.ornithemc.osl.blocks.api.block.BlockExtension;
+import net.ornithemc.osl.blockstates.api.block.BlockExtension;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Conditional(modLoaded = @Mod(value = "osl-blocks"))
+@Conditional(modLoaded = @Mod(value = "osl-blockstates"))
 @Mixin(WorldGenHugeTrees.class)
 public class WorldGenHugeTreesMixin {
     @Expression("? != 0")

@@ -13,6 +13,7 @@ import net.minecraft.src.GameSettings;
 import net.minecraft.src.KeyBinding;
 import net.ornithemc.conditionalmixin.annotations.Conditional;
 import net.ornithemc.conditionalmixin.annotations.Mod;
+import net.ornithemc.conditionalmixin.annotations.Version;
 import net.ornithemc.osl.keybinds.api.KeybindRegistry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
@@ -21,7 +22,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
-@Conditional(modLoaded = @Mod(value = "osl-keybinds", version = ">=0.3.0-"))
+@Conditional(modLoaded = @Mod(value = "osl-keybinds", version = @Version(">=0.3.0-")))
 @Mixin(KeyBindingRegistry.class)
 public class KeyBindingRegistryMixin {
     @Shadow
