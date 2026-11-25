@@ -397,9 +397,7 @@ modrinth {
     versionNumber = project.version + "+" + project.minecraft_version + "+" + project.target
     versionName = project.version + "+" + project.minecraft_version + "+" + project.target
     changelog = """
-- Add entity and biome to the id saving system
-- [Ornithe] Update OSL Compatibility to 0.22
-- [Ornithe] Add support for OSL block entity, entity and biome registry system
+- [Ornithe] Update OSL Compatibility to 0.26
 """
     uploadFile = remapJar
     gameVersions = [project.minecraft_version] // Must be an array, even with only one version
