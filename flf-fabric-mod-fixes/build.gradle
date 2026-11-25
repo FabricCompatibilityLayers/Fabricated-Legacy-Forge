@@ -23,19 +23,24 @@ dependencies {
         }
 
         fabricApi.osl(2, project.minecraft_version, project.osl_version).forEach {
-            ornitheImplementation(it)
+            if (!it.contains("networking")) ornitheImplementation(it)
         }
 
-        ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
+        ornitheImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}") {
+            exclude(group: 'net.ornithemc')
+        }
     } else {
         modImplementation("net.legacyfabric.ornithed.legacy-fabric-api:legacy-fabric-api:${project.legacyfabric_version}+${project.minecraft_version}") {
             exclude(module: 'fabric-loader')
         }
 
         fabricApi.osl(2, project.minecraft_version, project.osl_version).forEach {
-            modImplementation(it)
+            println(it)
+            if (!it.contains("networking")) modImplementation(it)
         }
 
-        modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}")
+        modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}+mc${project.minecraft_version}") {
+            exclude(group: 'net.ornithemc')
+        }
     }
 }

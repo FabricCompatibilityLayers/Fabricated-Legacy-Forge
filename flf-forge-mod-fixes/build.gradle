@@ -20,11 +20,11 @@ dependencies {
 
     if (rootProject.target == "legacy-fabric") {
         fabricApi.osl(2, project.minecraft_version, project.osl_version).forEach {
-            ornitheImplementation(it)
+            if (!it.contains("networking")) ornitheImplementation(it)
         }
     } else {
         fabricApi.osl(2, project.minecraft_version, project.osl_version).forEach {
-            modImplementation(it)
+            if (!it.contains("networking")) modImplementation(it)
         }
     }
 
